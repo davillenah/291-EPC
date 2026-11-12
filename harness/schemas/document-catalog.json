@@ -1,0 +1,157 @@
+{
+  "schema_version": "1.1",
+  "description": "The documents each discipline delivers. `code` is the letter of the discipline; `systems` are the families that hang from the general part (2 letters); each document has its `type` (3 letters), its `group` (analysis, drawings, calculation, specification, report) and what it comes `after` (it is not worked on until those are in review or delivered). A deliverable requirement ticks from this list and ticking a document brings what it comes after; each tick is one deliverable, however many sheets it has. `tool` is where engineering works on it. Code of a deliverable: <project>-<discipline>-<system>-<type>-<number>. `generated` marks a document the platform makes from others (it is not written by hand). `source` (optional) is the kind of text the document is written in inside engineering (csv or md); without it the format decides (xlsx: csv, pdf: md).",
+  "disciplines": {
+    "architecture": {
+      "code": "A",
+      "systems": [
+        {"key": "general", "code": "GN", "es": "General", "en": "General"}
+      ],
+      "documents": [
+        {"key": "program_analysis", "system": "general", "type": "ANL", "es": "Análisis del programa de necesidades", "en": "Space program analysis", "format": "pdf", "tool": "files", "group": "analysis", "after": []},
+        {"key": "code_analysis", "system": "general", "type": "ANL", "es": "Análisis normativo de edificación", "en": "Building code analysis", "format": "pdf", "tool": "files", "group": "analysis", "after": []},
+        {"key": "floor_plan", "system": "general", "type": "PLN", "es": "Plano de planta", "en": "Floor plan", "format": "dxf", "tool": "layout", "group": "drawings", "after": [], "per_floor": true},
+        {"key": "sections", "system": "general", "type": "SEC", "es": "Cortes", "en": "Sections", "format": "dxf", "tool": "layout", "group": "drawings", "after": ["floor_plan"]},
+        {"key": "elevations", "system": "general", "type": "ELV", "es": "Fachadas", "en": "Elevations", "format": "dxf", "tool": "layout", "group": "drawings", "after": ["floor_plan"]},
+        {"key": "details", "system": "general", "type": "DET", "es": "Detalles constructivos", "en": "Construction details", "format": "dxf", "tool": "layout", "group": "drawings", "after": ["floor_plan"]},
+        {"key": "room_schedule", "system": "general", "type": "SCH", "es": "Planilla de locales", "en": "Room schedule", "format": "xlsx", "tool": "layout", "group": "calculation", "after": ["floor_plan"]},
+        {"key": "architecture_spec", "system": "general", "type": "SPC", "es": "Pliego técnico de arquitectura", "en": "Architectural specification", "format": "pdf", "tool": "files", "group": "specification", "after": ["floor_plan"]},
+        {"key": "architecture_report", "system": "general", "type": "RPT", "es": "Informe técnico de arquitectura", "en": "Architectural technical report", "format": "pdf", "tool": "files", "group": "report", "after": ["floor_plan"]}
+      ]
+    },
+    "electrical": {
+      "code": "E",
+      "systems": [
+        {"key": "general", "code": "GN", "es": "General", "en": "General"},
+        {"key": "lighting", "code": "LG", "es": "Iluminación", "en": "Lighting"},
+        {"key": "receptacles", "code": "RC", "es": "Tomacorrientes", "en": "Receptacles"},
+        {"key": "hvac_power", "code": "HV", "es": "Climatización", "en": "HVAC power"},
+        {"key": "power", "code": "PW", "es": "Fuerza motriz", "en": "Motor power"}
+      ],
+      "documents": [
+        {"key": "load_analysis", "system": "general", "type": "ANL", "es": "Análisis de cargas y demanda", "en": "Load and demand analysis", "format": "pdf", "tool": "loads", "group": "analysis", "after": [], "source": "csv"},
+        {"key": "board_list", "system": "general", "type": "TAB", "es": "Listado de tableros", "en": "Board list", "format": "xlsx", "tool": "loads", "group": "analysis", "after": ["load_analysis"], "source": "csv", "generated": true},
+        {"key": "circuit_list", "system": "general", "type": "CIR", "es": "Listado de circuitos", "en": "Circuit list", "format": "xlsx", "tool": "loads", "group": "analysis", "after": ["board_list"], "source": "csv", "generated": true},
+        {"key": "short_circuit_study", "system": "general", "type": "ANL", "es": "Estudio de cortocircuito", "en": "Short-circuit study", "format": "pdf", "tool": "files", "group": "analysis", "after": ["calc_memo"], "source": "md", "generated": true},
+        {"key": "selectivity_study", "system": "general", "type": "ANL", "es": "Estudio de selectividad de protecciones", "en": "Protection coordination study", "format": "pdf", "tool": "files", "group": "analysis", "after": ["short_circuit_study"], "source": "md", "generated": true},
+        {"key": "earthing_study", "system": "general", "type": "ANL", "es": "Estudio de puesta a tierra", "en": "Earthing study", "format": "pdf", "tool": "files", "group": "analysis", "after": ["short_circuit_study"], "source": "md", "generated": true},
+        {"key": "reactive_study", "system": "general", "type": "ANL", "es": "Estudio de compensación de energía reactiva", "en": "Reactive power compensation study", "format": "pdf", "tool": "files", "group": "analysis", "after": ["load_analysis"], "source": "md", "generated": true},
+        {"key": "lightning_study", "system": "general", "type": "ANL", "es": "Estudio de protección contra descargas atmosféricas", "en": "Lightning protection study", "format": "pdf", "tool": "files", "group": "analysis", "after": ["load_analysis"], "source": "md", "generated": true},
+        {"key": "hvac_load_study", "system": "hvac_power", "type": "ANL", "es": "Estudio de carga térmica de climatización", "en": "HVAC thermal load study", "format": "pdf", "tool": "files", "group": "analysis", "after": ["load_analysis"], "source": "md", "generated": true},
+        {"key": "material_list", "system": "general", "type": "LST", "es": "Listado de materiales", "en": "Bill of materials", "format": "xlsx", "tool": "files", "group": "report", "after": ["calc_memo"], "source": "csv", "generated": true},
+        {"key": "backup_study", "system": "general", "type": "ANL", "es": "Estudio de grupo electrógeno y UPS", "en": "Generator set and UPS study", "format": "pdf", "tool": "files", "group": "analysis", "after": ["load_analysis"], "source": "md", "generated": true},
+        {"key": "calc_memo", "system": "general", "type": "CAL", "es": "Memoria de cálculo", "en": "Calculation memo", "format": "pdf", "tool": "memos", "group": "calculation", "after": ["circuit_list"]},
+        {"key": "sld", "system": "general", "type": "SLD", "es": "Diagrama unifilar", "en": "Single-line diagram", "format": "dxf", "tool": "sld", "group": "drawings", "after": ["calc_memo"]},
+        {"key": "mld", "system": "general", "type": "MLD", "es": "Diagrama multifilar", "en": "Multi-line diagram", "format": "dxf", "tool": "sld", "group": "drawings", "after": ["sld"]},
+        {"key": "load_schedule", "system": "general", "type": "SCH", "es": "Planilla de cargas", "en": "Load schedule", "format": "xlsx", "tool": "files", "group": "calculation", "after": ["calc_memo"], "source": "csv", "generated": true},
+        {"key": "tray_plan", "system": "general", "type": "PLN", "es": "Plano troncal de bandejas y canalizaciones", "en": "Trunk cable tray and raceway plan", "format": "dxf", "tool": "layout", "group": "drawings", "after": ["calc_memo"], "per_floor": true},
+        {"key": "raceway_memo", "system": "general", "type": "CAL", "es": "Memoria de cables y canalizaciones", "en": "Cables and raceways memo", "format": "pdf", "tool": "files", "group": "calculation", "after": ["calc_memo"], "source": "md", "generated": true},
+        {"key": "cable_list", "system": "general", "type": "LST", "es": "Lista de cables", "en": "Cable list", "format": "xlsx", "tool": "files", "group": "report", "after": ["calc_memo"], "source": "csv", "generated": true},
+        {"key": "electrical_spec", "system": "general", "type": "SPC", "es": "Pliego técnico eléctrico", "en": "Electrical specification", "format": "pdf", "tool": "files", "group": "specification", "after": ["calc_memo"]},
+        {"key": "electrical_report", "system": "general", "type": "RPT", "es": "Informe técnico eléctrico", "en": "Electrical technical report", "format": "pdf", "tool": "files", "group": "report", "after": ["calc_memo"], "source": "md", "generated": true},
+        {"key": "lighting_study", "system": "lighting", "type": "ANL", "es": "Análisis de iluminación", "en": "Lighting analysis", "format": "pdf", "tool": "files", "group": "analysis", "after": []},
+        {"key": "lighting_calc", "system": "lighting", "type": "CAL", "es": "Memoria de cálculo de iluminación", "en": "Lighting calculation memo", "format": "pdf", "tool": "memos", "group": "calculation", "after": ["lighting_study"]},
+        {"key": "lighting_plan", "system": "lighting", "type": "PLN", "es": "Plano de iluminación", "en": "Lighting plan", "format": "dxf", "tool": "layout", "group": "drawings", "after": ["lighting_calc"], "per_floor": true},
+        {"key": "lighting_trays", "system": "lighting", "type": "PLN", "es": "Plano de planta con bandejas y canalizaciones puntuales de iluminación", "en": "Floor plan with lighting cable trays and raceways", "format": "dxf", "tool": "layout", "group": "drawings", "after": ["tray_plan", "lighting_plan"], "per_floor": true},
+        {"key": "lighting_cables", "system": "lighting", "type": "LST", "es": "Listado de cables de iluminación", "en": "Lighting cable list", "format": "xlsx", "tool": "files", "group": "report", "after": ["lighting_trays"], "source": "csv", "generated": true},
+        {"key": "receptacles_study", "system": "receptacles", "type": "ANL", "es": "Análisis de tomacorrientes", "en": "Receptacles analysis", "format": "pdf", "tool": "files", "group": "analysis", "after": []},
+        {"key": "receptacles_calc", "system": "receptacles", "type": "CAL", "es": "Memoria de cálculo de tomacorrientes", "en": "Receptacles calculation memo", "format": "pdf", "tool": "memos", "group": "calculation", "after": ["receptacles_study"]},
+        {"key": "receptacles_plan", "system": "receptacles", "type": "PLN", "es": "Plano de tomacorrientes", "en": "Receptacles plan", "format": "dxf", "tool": "layout", "group": "drawings", "after": ["receptacles_calc"], "per_floor": true},
+        {"key": "receptacles_trays", "system": "receptacles", "type": "PLN", "es": "Plano de planta con bandejas y canalizaciones puntuales de tomacorrientes", "en": "Floor plan with receptacle cable trays and raceways", "format": "dxf", "tool": "layout", "group": "drawings", "after": ["tray_plan", "receptacles_plan"], "per_floor": true},
+        {"key": "receptacles_cables", "system": "receptacles", "type": "LST", "es": "Listado de cables de tomacorrientes", "en": "Receptacles cable list", "format": "xlsx", "tool": "files", "group": "report", "after": ["receptacles_trays"], "source": "csv", "generated": true},
+        {"key": "hvac_power_study", "system": "hvac_power", "type": "ANL", "es": "Análisis de climatización", "en": "HVAC power analysis", "format": "pdf", "tool": "files", "group": "analysis", "after": [], "source": "md", "generated": true},
+        {"key": "hvac_power_calc", "system": "hvac_power", "type": "CAL", "es": "Memoria de cálculo de climatización", "en": "HVAC power calculation memo", "format": "pdf", "tool": "memos", "group": "calculation", "after": ["hvac_power_study"]},
+        {"key": "hvac_power_plan", "system": "hvac_power", "type": "PLN", "es": "Plano de climatización", "en": "HVAC power plan", "format": "dxf", "tool": "layout", "group": "drawings", "after": ["hvac_power_calc"], "per_floor": true},
+        {"key": "hvac_power_trays", "system": "hvac_power", "type": "PLN", "es": "Plano de planta con bandejas y canalizaciones puntuales de climatización", "en": "Floor plan with HVAC power cable trays and raceways", "format": "dxf", "tool": "layout", "group": "drawings", "after": ["tray_plan", "hvac_power_plan"], "per_floor": true},
+        {"key": "hvac_power_cables", "system": "hvac_power", "type": "LST", "es": "Listado de cables de climatización", "en": "HVAC power cable list", "format": "xlsx", "tool": "files", "group": "report", "after": ["hvac_power_trays"], "source": "csv", "generated": true},
+        {"key": "power_study", "system": "power", "type": "ANL", "es": "Análisis de fuerza motriz", "en": "Motor power analysis", "format": "pdf", "tool": "files", "group": "analysis", "after": [], "source": "md", "generated": true},
+        {"key": "power_calc", "system": "power", "type": "CAL", "es": "Memoria de cálculo de fuerza motriz", "en": "Motor power calculation memo", "format": "pdf", "tool": "memos", "group": "calculation", "after": ["power_study"]},
+        {"key": "lightning_plan", "system": "general", "type": "PLN", "es": "Plano de protección contra descargas atmosféricas", "en": "Lightning protection plan", "format": "dxf", "tool": "layout", "group": "drawings", "after": ["lightning_study"]},
+        {"key": "power_plan", "system": "power", "type": "PLN", "es": "Plano de fuerza motriz", "en": "Motor power plan", "format": "dxf", "tool": "layout", "group": "drawings", "after": ["power_calc"], "per_floor": true},
+        {"key": "power_trays", "system": "power", "type": "PLN", "es": "Plano de planta con bandejas y canalizaciones puntuales de fuerza motriz", "en": "Floor plan with motor power cable trays and raceways", "format": "dxf", "tool": "layout", "group": "drawings", "after": ["tray_plan", "power_plan"], "per_floor": true},
+        {"key": "power_cables", "system": "power", "type": "LST", "es": "Listado de cables de fuerza motriz", "en": "Motor power cable list", "format": "xlsx", "tool": "files", "group": "report", "after": ["power_trays"], "source": "csv", "generated": true}
+      ]
+    },
+    "civil": {
+      "code": "C",
+      "systems": [
+        {"key": "general", "code": "GN", "es": "General", "en": "General"}
+      ],
+      "documents": [
+        {"key": "soil_analysis", "system": "general", "type": "ANL", "es": "Análisis de suelos", "en": "Soil analysis", "format": "pdf", "tool": "files", "group": "analysis", "after": []},
+        {"key": "structural_memo", "system": "general", "type": "CAL", "es": "Memoria de cálculo estructural", "en": "Structural calculation memo", "format": "pdf", "tool": "files", "group": "calculation", "after": ["soil_analysis"]},
+        {"key": "foundation_plan", "system": "general", "type": "PLN", "es": "Plano de fundaciones", "en": "Foundation plan", "format": "dxf", "tool": "files", "group": "drawings", "after": ["structural_memo"]},
+        {"key": "civil_quantities", "system": "general", "type": "SCH", "es": "Cómputo de materiales de obra civil", "en": "Civil works quantities", "format": "xlsx", "tool": "files", "group": "calculation", "after": ["foundation_plan"]},
+        {"key": "civil_spec", "system": "general", "type": "SPC", "es": "Pliego técnico civil", "en": "Civil specification", "format": "pdf", "tool": "files", "group": "specification", "after": ["structural_memo"]},
+        {"key": "civil_report", "system": "general", "type": "RPT", "es": "Informe técnico civil", "en": "Civil technical report", "format": "pdf", "tool": "files", "group": "report", "after": ["structural_memo"]}
+      ]
+    },
+    "mechanical": {
+      "code": "M",
+      "systems": [
+        {"key": "general", "code": "GN", "es": "General", "en": "General"}
+      ],
+      "documents": [
+        {"key": "mechanical_analysis", "system": "general", "type": "ANL", "es": "Análisis de equipos y disposición", "en": "Equipment and layout analysis", "format": "pdf", "tool": "files", "group": "analysis", "after": []},
+        {"key": "mechanical_memo", "system": "general", "type": "CAL", "es": "Memoria de equipos mecánicos", "en": "Mechanical equipment memo", "format": "pdf", "tool": "files", "group": "calculation", "after": ["mechanical_analysis"]},
+        {"key": "equipment_layout", "system": "general", "type": "PLN", "es": "Plano de disposición de equipos", "en": "Equipment layout", "format": "dxf", "tool": "files", "group": "drawings", "after": ["mechanical_memo"]},
+        {"key": "mechanical_list", "system": "general", "type": "LST", "es": "Lista de equipos mecánicos", "en": "Mechanical equipment list", "format": "xlsx", "tool": "files", "group": "report", "after": ["equipment_layout"]},
+        {"key": "mechanical_report", "system": "general", "type": "RPT", "es": "Informe técnico mecánico", "en": "Mechanical technical report", "format": "pdf", "tool": "files", "group": "report", "after": ["mechanical_memo"]}
+      ]
+    },
+    "instrumentation": {
+      "code": "I",
+      "systems": [
+        {"key": "general", "code": "GN", "es": "General", "en": "General"}
+      ],
+      "documents": [
+        {"key": "control_analysis", "system": "general", "type": "ANL", "es": "Análisis de lazos y criticidad", "en": "Loop and criticality analysis", "format": "pdf", "tool": "files", "group": "analysis", "after": []},
+        {"key": "control_memo", "system": "general", "type": "CAL", "es": "Memoria de filosofía de control", "en": "Control philosophy memo", "format": "pdf", "tool": "files", "group": "calculation", "after": ["control_analysis"]},
+        {"key": "loop_diagram", "system": "general", "type": "DGM", "es": "Diagrama de lazos de control", "en": "Control loop diagram", "format": "dxf", "tool": "files", "group": "drawings", "after": ["control_memo"]},
+        {"key": "instrument_list", "system": "general", "type": "LST", "es": "Lista de instrumentos", "en": "Instrument list", "format": "xlsx", "tool": "files", "group": "report", "after": ["loop_diagram"]},
+        {"key": "instrumentation_report", "system": "general", "type": "RPT", "es": "Informe técnico de instrumentación", "en": "Instrumentation technical report", "format": "pdf", "tool": "files", "group": "report", "after": ["control_memo"]}
+      ]
+    },
+    "hvac": {
+      "code": "H",
+      "systems": [
+        {"key": "general", "code": "GN", "es": "General", "en": "General"}
+      ],
+      "documents": [
+        {"key": "thermal_analysis", "system": "general", "type": "ANL", "es": "Análisis de carga térmica y ventilación", "en": "Thermal load and ventilation analysis", "format": "pdf", "tool": "files", "group": "analysis", "after": []},
+        {"key": "thermal_memo", "system": "general", "type": "CAL", "es": "Memoria de cargas térmicas", "en": "Thermal load memo", "format": "pdf", "tool": "files", "group": "calculation", "after": ["thermal_analysis"]},
+        {"key": "duct_plan", "system": "general", "type": "PLN", "es": "Plano de conductos", "en": "Duct plan", "format": "dxf", "tool": "files", "group": "drawings", "after": ["thermal_memo"]},
+        {"key": "hvac_list", "system": "general", "type": "LST", "es": "Lista de equipos de climatización", "en": "HVAC equipment list", "format": "xlsx", "tool": "files", "group": "report", "after": ["duct_plan"]},
+        {"key": "hvac_spec", "system": "general", "type": "SPC", "es": "Pliego técnico de HVAC", "en": "HVAC specification", "format": "pdf", "tool": "files", "group": "specification", "after": ["thermal_memo"]},
+        {"key": "hvac_report", "system": "general", "type": "RPT", "es": "Informe técnico de HVAC", "en": "HVAC technical report", "format": "pdf", "tool": "files", "group": "report", "after": ["thermal_memo"]}
+      ]
+    },
+    "fire": {
+      "code": "F",
+      "systems": [
+        {"key": "general", "code": "GN", "es": "General", "en": "General"}
+      ],
+      "documents": [
+        {"key": "fire_risk_analysis", "system": "general", "type": "ANL", "es": "Análisis de riesgo de incendio", "en": "Fire risk analysis", "format": "pdf", "tool": "files", "group": "analysis", "after": []},
+        {"key": "sprinkler_memo", "system": "general", "type": "CAL", "es": "Memoria hidráulica de rociadores", "en": "Sprinkler hydraulic memo", "format": "pdf", "tool": "files", "group": "calculation", "after": ["fire_risk_analysis"]},
+        {"key": "fire_network_plan", "system": "general", "type": "PLN", "es": "Plano de red contra incendio", "en": "Fire protection network plan", "format": "dxf", "tool": "files", "group": "drawings", "after": ["sprinkler_memo"]},
+        {"key": "fire_materials", "system": "general", "type": "LST", "es": "Lista de materiales contra incendio", "en": "Fire protection materials list", "format": "xlsx", "tool": "files", "group": "report", "after": ["fire_network_plan"]},
+        {"key": "detection_spec", "system": "general", "type": "SPC", "es": "Pliego de detección y alarma", "en": "Detection and alarm specification", "format": "pdf", "tool": "files", "group": "specification", "after": ["sprinkler_memo"]},
+        {"key": "fire_report", "system": "general", "type": "RPT", "es": "Informe técnico contra incendio", "en": "Fire protection technical report", "format": "pdf", "tool": "files", "group": "report", "after": ["sprinkler_memo"]}
+      ]
+    },
+    "telecom": {
+      "code": "T",
+      "systems": [
+        {"key": "general", "code": "GN", "es": "General", "en": "General"}
+      ],
+      "documents": [
+        {"key": "network_analysis", "system": "general", "type": "ANL", "es": "Análisis de requerimientos de red", "en": "Network requirements analysis", "format": "pdf", "tool": "files", "group": "analysis", "after": []},
+        {"key": "network_memo", "system": "general", "type": "CAL", "es": "Memoria de red de datos", "en": "Data network memo", "format": "pdf", "tool": "files", "group": "calculation", "after": ["network_analysis"]},
+        {"key": "cabling_plan", "system": "general", "type": "PLN", "es": "Plano de cableado estructurado", "en": "Structured cabling plan", "format": "dxf", "tool": "files", "group": "drawings", "after": ["network_memo"]},
+        {"key": "network_points", "system": "general", "type": "LST", "es": "Lista de puntos de red", "en": "Network points list", "format": "xlsx", "tool": "files", "group": "report", "after": ["cabling_plan"]},
+        {"key": "telecom_report", "system": "general", "type": "RPT", "es": "Informe técnico de telecomunicaciones", "en": "Telecom technical report", "format": "pdf", "tool": "files", "group": "report", "after": ["network_memo"]}
+      ]
+    }
+  }
+}

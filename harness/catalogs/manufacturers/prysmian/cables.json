@@ -1,0 +1,11 @@
+{
+  "manufacturer": "prysmian",
+  "category": "cables",
+  "products": [
+    {"id": "prysmian-afumex-750", "family": "Afumex 750", "type": "cable_building_wire", "status": "unverified", "source": "https://ar.prysmian.com/sites/ar.prysmian.com/files/media/documents/PRY2020_Afumex%20750.pdf", "voltage": "450/750 V", "standards": ["IRAM 62267", "IRAM NM IEC 60332-1", "IRAM NM IEC 60332-3-24"], "construction": "N07M-K, low smoke zero halogen"},
+    {"id": "prysmian-afumex-1000", "family": "Afumex 1000+", "type": "cable_power", "status": "unverified", "source": "https://ar.prysmian.com/sites/ar.prysmian.com/files/media/documents/PRY2020_Afumex%201000%2B_v2.pdf", "voltage": "0.6/1 kV", "standards": ["IRAM 62266"], "construction": "RZ1-R, low smoke zero halogen", "temperature_c": 90},
+    {"id": "prysmian-sintenax-valio", "family": "Sintenax Valio", "type": "cable_power", "status": "unverified", "source": "https://ambiente.cba.gov.ar/wp-content/uploads/2023/09/Obra-electrica-5.pdf", "voltage": "0.6/1.1 kV", "standards": ["IRAM 2178"], "construction": "VV-K, PVC", "notes": "IRAM 2268 also appears in the control version; confirm which norm applies to each version."},
+    {"id": "prysmian-retenax-preensamblado", "family": "Retenax preensamblado", "type": "cable_overhead", "status": "unverified", "source": "https://ar.prysmian.com/sites/ar.prysmian.com/files/media/documents/PRY2020_Retenax_preensamblado.pdf", "standards": ["IRAM 2263"], "notes": "Pre-assembled aerial cable."},
+    {"id": "prysmian-vn202", "family": "VN 202", "type": "cable_flexible", "status": "unverified", "source": "https://ar.prysmian.com/sites/ar.prysmian.com/files/media/documents/PRY2026_VN202_v2.pdf", "voltage": "300/300 V", "standards": ["IRAM NM 247-5", "IEC 60227-5"]}
+  ]
+}

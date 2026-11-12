@@ -1,0 +1,11 @@
+{
+  "manufacturer": "abb",
+  "category": "breakers",
+  "products": [
+    {"id": "abb-tmax-xt1", "family": "SACE Tmax XT1", "type": "mccb", "status": "unverified", "source": "https://library.e.abb.com/public/6558b17fc13e48b0bd8d785535102bf8/1SDC210033D0704%20TC%20Tmax%20XT%20IEC%20ES.pdf", "rated_current_a": {"max": 160}, "standards": ["IEC 60947-2"], "breaking_capacity": [
+      {"class": "B", "voltage_v": 380, "icu_ka": 18}, {"class": "C", "voltage_v": 380, "icu_ka": 25}, {"class": "N", "voltage_v": 380, "icu_ka": 36}, {"class": "S", "voltage_v": 380, "icu_ka": 50}, {"class": "H", "voltage_v": 380, "icu_ka": 70}],
+     "notes": "Icu at 380 V as the source gives it. At 220-240 V the same classes give 25, 40, 65, 85 and 100 kA."},
+    {"id": "abb-tmax-xt", "family": "SACE Tmax XT", "type": "mccb", "status": "unverified", "source": "https://library.e.abb.com/public/6558b17fc13e48b0bd8d785535102bf8/1SDC210033D0704%20TC%20Tmax%20XT%20IEC%20ES.pdf", "rated_current_a": {"max": 250}, "notes": "Family of molded-case breakers up to 250 A; sizes XT1 to XT4 to load."},
+    {"id": "abb-sace-formula", "family": "SACE Formula", "type": "mccb", "status": "unverified", "source": "https://electrification.us.abb.com/publibrary/product/13308?page=2048", "rated_current_a": {"max": 630}, "notes": "The source is the North American catalog; check the IEC version sold in Argentina."}
+  ]
+}

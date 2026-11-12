@@ -1,0 +1,9 @@
+{
+  "manufacturer": "schneider-electric",
+  "category": "breakers",
+  "products": [
+    {"id": "se-acti9-ic60", "family": "Acti9 iC60", "type": "mcb", "status": "unverified", "source": "https://www.se.com/my/en/product-range/7556", "construction": "DIN rail miniature circuit breaker", "voltage": "up to 440 V AC", "notes": "Ratings and breaking capacity per version (N, H, L) still to load from the current catalog."},
+    {"id": "se-compact-nsxm", "family": "ComPacT NSXm", "type": "mccb", "status": "unverified", "source": "https://se.com/mx/es/product-range/63429-compact-nsxm", "rated_current_a": {"min": 16, "max": 160}, "notes": "Versions seen at distributors: NSXmF 80 A 3P at 36 kA and an 80 A 3P at 50 kA; the voltage they refer to is not confirmed."},
+    {"id": "se-compact-nsx160n", "family": "ComPacT NSX160N", "type": "mccb", "status": "unverified", "source": "https://cdn.shopify.com/s/files/1/0579/1930/7961/files/FICHA_TECNICA_-_Schneider_Electric_Compact-NSX-4x112-160A.pdf", "rated_current_a": {"min": 112, "max": 160}, "notes": "The data sheet found gives UL 508 values (10 kA at 600 V, 85 kA at 240 V); the IEC 60947-2 values are still to load."}
+  ]
+}

@@ -1,0 +1,77 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Intake answers (guided form, PRD section 11)",
+  "description": "Answers of the engineer to the guided intake form. Earthing scheme and available short-circuit level are mandatory (D24); they are never defaulted.",
+  "type": "object",
+  "required": ["project_code", "client", "site", "supply", "language"],
+  "properties": {
+    "project_code": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]{1,31}$"},
+    "client": {
+      "type": "object",
+      "required": ["name"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1},
+        "contact": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    },
+    "site": {
+      "type": "object",
+      "required": ["address", "installation_type"],
+      "properties": {
+        "address": {"type": "string", "minLength": 1},
+        "country": {"type": "string", "pattern": "^[A-Z]{2}$"},
+        "installation_type": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    },
+    "supply": {
+      "type": "object",
+      "required": ["earthing_system", "short_circuit_level"],
+      "properties": {
+        "source": {"type": "string", "minLength": 1},
+        "voltage": {
+          "type": "object",
+          "required": ["value", "unit"],
+          "properties": {
+            "value": {"type": "number", "exclusiveMinimum": 0},
+            "unit": {"type": "string", "enum": ["V"]}
+          },
+          "additionalProperties": false
+        },
+        "earthing_system": {"type": "string", "enum": ["TT", "TN", "IT"]},
+        "short_circuit_level": {
+          "type": "object",
+          "description": "Available short-circuit current at the supply point and where the figure comes from.",
+          "required": ["value", "unit", "origin"],
+          "properties": {
+            "value": {"type": "number", "exclusiveMinimum": 0},
+            "unit": {"type": "string", "enum": ["kA"]},
+            "origin": {"type": "string", "minLength": 1}
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "criteria": {
+      "type": "object",
+      "properties": {
+        "set": {"type": "string", "minLength": 1},
+        "exceptions": {"type": "array", "items": {"type": "string", "minLength": 1}}
+      },
+      "additionalProperties": false
+    },
+    "engineer_of_record": {
+      "type": "object",
+      "properties": {
+        "name": {"type": "string", "minLength": 1},
+        "registration": {"type": "string", "minLength": 1},
+        "college": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    },
+    "language": {"type": "string", "enum": ["es", "en"]}
+  },
+  "additionalProperties": false
+}

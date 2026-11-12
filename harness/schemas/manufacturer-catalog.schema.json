@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Manufacturer catalog file",
+  "oneOf": [
+    {
+      "type": "object",
+      "required": ["id", "name", "categories"],
+      "properties": {
+        "id": {"type": "string"},
+        "name": {"type": "string"},
+        "country": {"type": "string"},
+        "web": {"type": "string"},
+        "categories": {"type": "array", "items": {"type": "string"}, "minItems": 1}
+      }
+    },
+    {
+      "type": "object",
+      "required": ["manufacturer", "category", "products"],
+      "properties": {
+        "manufacturer": {"type": "string"},
+        "category": {"type": "string"},
+        "products": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "family", "type", "status", "source"],
+            "properties": {
+              "id": {"type": "string"},
+              "family": {"type": "string"},
+              "type": {"type": "string"},
+              "status": {"enum": ["unverified", "verified"]},
+              "source": {"type": "string"},
+              "rated_current_a": {"type": "object", "properties": {"min": {"type": "number"}, "max": {"type": "number"}}},
+              "voltage": {"type": "string"},
+              "poles": {"type": "array", "items": {"type": "integer"}},
+              "breaking_capacity": {"type": "array", "items": {"type": "object", "required": ["voltage_v", "icu_ka"], "properties": {"standard": {"type": "string"}, "class": {"type": "string"}, "voltage_v": {"type": "number"}, "icu_ka": {"type": "number"}}}},
+              "standards": {"type": "array", "items": {"type": "string"}},
+              "construction": {"type": "string"},
+              "temperature_c": {"type": "number"},
+              "notes": {"type": "string"}
+            }
+          }
+        }
+      }
+    }
+  ]
+}

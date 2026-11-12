@@ -1,0 +1,103 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Project profile (PRD section 10.3)",
+  "description": "projects/<code>/project_profile.json. Written only by the pipeline (stage 1). A `template` profile (projects/_template) may hold nulls; once the status is `draft` the identity, site and supply data that the intake form makes mandatory (project code, client name, site address and type, earthing scheme, short-circuit level; D24) can no longer be null. Optional data that the engineer did not give stays null.",
+  "type": "object",
+  "required": ["schema_version", "status", "project_code", "client", "site", "supply", "normative_profile", "criteria", "language", "engineer_of_record"],
+  "properties": {
+    "schema_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+$"},
+    "status": {"type": "string", "enum": ["template", "draft"]},
+    "project_code": {"type": ["string", "null"], "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]{1,31}$"},
+    "client": {
+      "type": "object",
+      "required": ["name", "contact"],
+      "properties": {"name": {"type": ["string", "null"], "minLength": 1}, "contact": {"type": ["string", "null"], "minLength": 1}},
+      "additionalProperties": false
+    },
+    "site": {
+      "type": "object",
+      "required": ["address", "country", "installation_type"],
+      "properties": {
+        "address": {"type": ["string", "null"], "minLength": 1},
+        "country": {"type": "string", "pattern": "^[A-Z]{2}$"},
+        "installation_type": {"type": ["string", "null"], "minLength": 1}
+      },
+      "additionalProperties": false
+    },
+    "supply": {
+      "type": "object",
+      "required": ["source", "voltage", "earthing_system", "short_circuit_level"],
+      "properties": {
+        "source": {"type": ["string", "null"], "minLength": 1},
+        "voltage": {
+          "type": ["object", "null"],
+          "required": ["value", "unit"],
+          "properties": {"value": {"type": "number", "exclusiveMinimum": 0}, "unit": {"type": "string", "enum": ["V"]}},
+          "additionalProperties": false
+        },
+        "earthing_system": {"type": ["string", "null"], "enum": ["TT", "TN", "IT", null]},
+        "short_circuit_level": {
+          "type": ["object", "null"],
+          "required": ["value", "unit", "origin"],
+          "properties": {
+            "value": {"type": "number", "exclusiveMinimum": 0},
+            "unit": {"type": "string", "enum": ["kA"]},
+            "origin": {"type": "string", "minLength": 1}
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "normative_profile": {
+      "type": "object",
+      "required": ["jurisdiction", "revisions"],
+      "properties": {
+        "jurisdiction": {"type": "string", "pattern": "^[A-Z]{2}$"},
+        "revisions": {
+          "type": "object",
+          "required": ["90364-7-771", "90364-7-770", "90364-7-701", "90364-7-722", "parts_4_and_5"],
+          "properties": {
+            "90364-7-771": {"type": "string", "minLength": 1},
+            "90364-7-770": {"type": "string", "minLength": 1},
+            "90364-7-701": {"type": "string", "minLength": 1},
+            "90364-7-722": {"type": "string", "minLength": 1},
+            "parts_4_and_5": {"type": ["string", "null"], "minLength": 1}
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "criteria": {
+      "type": "object",
+      "required": ["set", "exceptions"],
+      "properties": {
+        "set": {"type": ["string", "null"], "minLength": 1},
+        "exceptions": {"type": "array", "items": {"type": "string", "minLength": 1}}
+      },
+      "additionalProperties": false
+    },
+    "language": {"type": "string", "enum": ["es", "en"]},
+    "engineer_of_record": {
+      "type": "object",
+      "required": ["name", "registration", "college"],
+      "properties": {
+        "name": {"type": ["string", "null"], "minLength": 1},
+        "registration": {"type": ["string", "null"], "minLength": 1},
+        "college": {"type": ["string", "null"], "minLength": 1}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "if": {"required": ["status"], "properties": {"status": {"enum": ["template"]}}},
+  "else": {
+    "properties": {
+      "project_code": {"type": "string"},
+      "client": {"properties": {"name": {"type": "string"}}},
+      "site": {"properties": {"address": {"type": "string"}, "installation_type": {"type": "string"}}},
+      "supply": {"properties": {"earthing_system": {"type": "string"}, "short_circuit_level": {"type": "object"}}}
+    }
+  }
+}

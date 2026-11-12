@@ -1,0 +1,9 @@
+{
+  "manufacturer": "siemens",
+  "category": "breakers",
+  "products": [
+    {"id": "siemens-sentron-3va", "family": "SENTRON 3VA", "type": "mccb", "status": "unverified", "source": "https://assets.new.siemens.com/siemens/assets/api/uuid:9271d31f-5b58-447d-8565-c21924b182e3/guia-distribucion-2020-si-lp.pdf", "rated_current_a": {"max": 1600}, "notes": "Standard-class example at a distributor: 3VA11 of 32 A, 3 poles, 36 kA at 415 V."},
+    {"id": "siemens-sentron-3wl", "family": "SENTRON 3WL / 3WA", "type": "acb", "status": "unverified", "source": "https://assets.new.siemens.com/siemens/assets/api/uuid:9271d31f-5b58-447d-8565-c21924b182e3/guia-distribucion-2020-si-lp.pdf", "rated_current_a": {"max": 6300}, "notes": "The 3WA series appears as the newer open-frame line; check which is on sale locally."},
+    {"id": "siemens-sentron-5sl", "family": "SENTRON 5SL", "type": "mcb", "status": "unverified", "source": "https://documentacion.generadordeprecios.info/documentaciontecnica/siemens/siemens_bt_cat.pdf", "notes": "Versions of 6 kA and 10 kA; the current-rating range is still to load."}
+  ]
+}

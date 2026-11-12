@@ -1,0 +1,57 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Master project state (PRD section 10.3)",
+  "description": "projects/<code>/master_project_state.json: stage status, revisions and open findings of the project. Written only by the pipeline after every stage. A `template` state is empty; once the status is not `template` a pipeline run id is mandatory. Open findings use the finding shape (docs/harness/seeds/finding.schema.json).",
+  "type": "object",
+  "required": ["schema_version", "status", "pipeline_run_id", "stages", "revisions", "open_findings", "signatures"],
+  "properties": {
+    "schema_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+$"},
+    "status": {"type": "string", "enum": ["template", "running", "blocked", "failed", "paused", "completed"]},
+    "pipeline_run_id": {"type": ["string", "null"], "minLength": 1},
+    "stages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["number", "slug", "status", "started", "finished", "finding_count"],
+        "properties": {
+          "number": {"type": "integer", "minimum": 1},
+          "slug": {"type": "string", "pattern": "^[a-z_]+$"},
+          "status": {"type": "string", "enum": ["ok", "not_available", "blocked", "failed"]},
+          "started": {"type": ["string", "null"]},
+          "finished": {"type": ["string", "null"]},
+          "finding_count": {"type": "integer", "minimum": 0}
+        },
+        "additionalProperties": false
+      }
+    },
+    "revisions": {"type": "array", "items": {"type": "object"}},
+    "open_findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "run_id", "verifier", "severity", "document", "field", "value", "expected", "clause", "action", "evidence"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^F-[0-9]{4}$"},
+          "run_id": {"type": "string"},
+          "verifier": {"type": "string", "enum": ["format-check", "calc-check", "document-check", "input-verifier", "standards-reviewer", "final-auditor"]},
+          "severity": {"type": "string", "enum": ["blocking", "major", "minor", "note"]},
+          "document": {"type": "string"},
+          "field": {"type": "string"},
+          "value": {},
+          "expected": {},
+          "clause": {"type": "string"},
+          "action": {"type": "string"},
+          "evidence": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+          "unreviewed_values": {"type": "array", "items": {"type": "string"}},
+          "merged_from": {"type": "array", "items": {"type": "string"}},
+          "status": {"type": "string", "enum": ["open", "accepted", "fixed", "rejected"]}
+        },
+        "additionalProperties": false
+      }
+    },
+    "signatures": {"type": "array", "items": {"type": "object"}}
+  },
+  "additionalProperties": false,
+  "if": {"required": ["status"], "properties": {"status": {"enum": ["template"]}}},
+  "else": {"properties": {"pipeline_run_id": {"type": "string"}}}
+}

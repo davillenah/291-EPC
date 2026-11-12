@@ -1,0 +1,24 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Client requirements and design-basis items (PRD section 11)",
+  "type": "object",
+  "required": ["schema_version", "items"],
+  "properties": {
+    "schema_version": {"type": "string", "enum": ["1.0"]},
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "text", "source", "status"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^R-[0-9]{3,}$"},
+          "text": {"type": "string", "minLength": 1},
+          "source": {"type": "string", "minLength": 1, "description": "Where it comes from: client document, meeting minutes, engineer."},
+          "status": {"type": "string", "enum": ["open", "confirmed", "assumed", "rejected"]}
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

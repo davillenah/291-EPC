@@ -1,0 +1,7 @@
+{
+ "decision": "D16 (owner, 2026-11-10): the project defines ONE electrical system. U0 (phase-to-earth voltage) follows from it and every safety check uses it. 230/400 V is the transformer-secondary system, 220/380 V the points-of-use system.",
+ "systems": [
+  {"un_v": 400.0, "u0_v": 230.0, "label": "230/400 V"},
+  {"un_v": 380.0, "u0_v": 220.0, "label": "220/380 V"}
+ ]
+}

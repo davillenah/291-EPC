@@ -1,0 +1,85 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://epc-291.local/schemas/norm-register.schema.json",
+  "title": "Norm register file",
+  "description": "One topic file of the norm register of an engine: engine/<pkg>/src/epc_<pkg>/norm_register/<topic>.json. A record lists one norm-based value (or a set of values) with its clause, source and review state. Records of type json only POINT to the data (single source of truth); records of type code carry the literal in `value`.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "engine", "topic", "records"],
+  "properties": {
+    "schema_version": {"type": "string", "const": "1.0"},
+    "engine": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+    "topic": {"type": "string", "pattern": "^[a-z][a-z0-9_-]*$"},
+    "records": {"type": "array", "items": {"$ref": "#/definitions/record"}}
+  },
+  "definitions": {
+    "nullable_string": {"type": ["string", "null"]},
+    "localized": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["es", "en"],
+      "properties": {"es": {"type": "string", "minLength": 1}, "en": {"type": "string", "minLength": 1}}
+    },
+    "page": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["printed", "pdf"],
+      "properties": {"printed": {"type": ["integer", "string", "null"]}, "pdf": {"type": ["integer", "null"]}}
+    },
+    "location": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type", "file", "pointer"],
+          "properties": {
+            "type": {"const": "json"},
+            "file": {"type": "string", "minLength": 1},
+            "pointer": {"type": "string", "pattern": "^(/[^/]*)*$"}
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type", "file", "symbol", "line"],
+          "properties": {
+            "type": {"const": "code"},
+            "file": {"type": "string", "pattern": "\\.py$"},
+            "symbol": {"type": ["string", "null"], "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"},
+            "line": {"type": "integer", "minimum": 1}
+          }
+        }
+      ]
+    },
+    "record": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "title", "norm", "edition", "clause", "page", "unit", "applies_to", "provenance", "verification", "confidence", "location", "review_point", "status", "verified_by", "verified_at", "issues", "note"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9_-]*(\\.[a-z0-9_-]+)+$"},
+        "kind": {"enum": ["table", "constant", "rule_set", "criterion", "typical", "code_constant"]},
+        "title": {"$ref": "#/definitions/localized"},
+        "norm": {"$ref": "#/definitions/nullable_string"},
+        "edition": {"$ref": "#/definitions/nullable_string"},
+        "clause": {"$ref": "#/definitions/nullable_string"},
+        "page": {"$ref": "#/definitions/page"},
+        "unit": {"$ref": "#/definitions/nullable_string"},
+        "applies_to": {"$ref": "#/definitions/nullable_string"},
+        "provenance": {"enum": ["norm", "typical", "teaching", "illustrative", "design-default", "convention", "physics"]},
+        "verification": {"enum": ["text", "ocr", "visual", "from_memory", "unverified"]},
+        "confidence": {"enum": ["high", "medium", "low"]},
+        "location": {"$ref": "#/definitions/location"},
+        "value": {},
+        "review_point": {"$ref": "#/definitions/nullable_string"},
+        "status": {"enum": ["pending", "verified", "rejected"]},
+        "verified_by": {"$ref": "#/definitions/nullable_string"},
+        "verified_at": {"$ref": "#/definitions/nullable_string"},
+        "issues": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "note": {"type": ["string", "null"], "maxLength": 240}
+      },
+      "if": {"properties": {"location": {"properties": {"type": {"const": "code"}}, "required": ["type"]}}, "required": ["location"]},
+      "then": {"required": ["value"]},
+      "else": {"not": {"required": ["value"]}}
+    }
+  }
+}
