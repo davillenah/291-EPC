@@ -2,6 +2,6 @@
 
 Status: **in development**
 
-Seed of the golden projects: a copy of the 55 reference cases of the AEA 90364 engine (`harness/src/engines/calculation/aea90364/reference_cases/cases`). The originals stay where they are until MIG-37; the engine tooling (`harness/tools/build/reference_cases.py`) still reads the originals. These copies are not read by any tool yet.
+The 55 reference cases of the AEA 90364 engine live in one place only: `harness/src/engines/calculation/aea90364/reference_cases/cases` (single source of truth, ADR-0012). The engine tooling (`harness/tools/build/reference_cases.py`) reads them there.
 
-Golden results are regenerated once, officially, after the norm values are verified (decision D27); nothing here is edited by the migration loop.
+Golden results are regenerated once, officially, after the norm values are verified (decision D27).
