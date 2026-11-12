@@ -1,0 +1,150 @@
+{
+  "schema_version": 1,
+  "agents": [
+    {
+      "name": "orchestrator",
+      "role": "Runs the pipeline, routes work, writes progress, never calculates",
+      "model": "claude-sonnet-5-5",
+      "effort": "medium",
+      "tools": [
+        "Read",
+        "Grep",
+        "Glob",
+        "Bash",
+        "mcp__epc__epc_stage_table",
+        "mcp__epc__epc_engine_list",
+        "mcp__epc__epc_engine_info",
+        "mcp__epc__epc_norm_records",
+        "mcp__epc__epc_project_status",
+        "mcp__epc__epc_project_init",
+        "mcp__epc__epc_pipeline_run",
+        "mcp__epc__epc_project_issue"
+      ],
+      "skills": [],
+      "max_turns": 40,
+      "summary_prompt_rules": [
+        "Summarize each run as: stages run, stages not available, findings by severity, next step.",
+        "Say which agent or person must act next; never claim a deliverable is approved.",
+        "Explain to the engineer in Spanish; product content (documents, findings, labels) stays in English and uses the es/en i18n of the deliverable.",
+        "Report only values that came from an engine call or from the SSOT; if a value is not available, write 'not available' and raise a finding.",
+        "Cite the stage, the engine version and the norm record for every number you mention."
+      ]
+    },
+    {
+      "name": "electrical_lv",
+      "role": "Interprets inputs and criteria, calls engines through MCP/CLI",
+      "model": "claude-sonnet-5-5",
+      "effort": "medium",
+      "tools": [
+        "Read",
+        "Grep",
+        "Glob",
+        "Bash",
+        "mcp__epc__epc_stage_table",
+        "mcp__epc__epc_engine_list",
+        "mcp__epc__epc_engine_info",
+        "mcp__epc__epc_norm_records",
+        "mcp__epc__epc_project_status"
+      ],
+      "skills": [
+        "structure-customer-input",
+        "design-board"
+      ],
+      "max_turns": 30,
+      "summary_prompt_rules": [
+        "Summarize assumptions separately from confirmed inputs; mark each assumption for the engineer's confirmation.",
+        "List open questions to the engineer before any engine call that depends on them.",
+        "Explain to the engineer in Spanish; product content (documents, findings, labels) stays in English and uses the es/en i18n of the deliverable.",
+        "Report only values that came from an engine call or from the SSOT; if a value is not available, write 'not available' and raise a finding.",
+        "Cite the stage, the engine version and the norm record for every number you mention."
+      ]
+    },
+    {
+      "name": "calc_check",
+      "role": "Deterministic checks first; judgment review second; consolidates findings",
+      "model": "claude-sonnet-5-5",
+      "effort": "medium",
+      "tools": [
+        "Read",
+        "Grep",
+        "Glob",
+        "Bash",
+        "Write",
+        "mcp__epc__epc_stage_table",
+        "mcp__epc__epc_engine_list",
+        "mcp__epc__epc_engine_info",
+        "mcp__epc__epc_norm_records",
+        "mcp__epc__epc_project_status",
+        "mcp__epc__epc_project_review"
+      ],
+      "skills": [
+        "analyze-standard"
+      ],
+      "max_turns": 30,
+      "summary_prompt_rules": [
+        "Report deterministic findings first, judgment observations second, each in the finding schema.",
+        "State the checks that passed as well as those that failed; never edit or re-run what you verify to change its result.",
+        "Explain to the engineer in Spanish; product content (documents, findings, labels) stays in English and uses the es/en i18n of the deliverable.",
+        "Report only values that came from an engine call or from the SSOT; if a value is not available, write 'not available' and raise a finding.",
+        "Cite the stage, the engine version and the norm record for every number you mention."
+      ]
+    },
+    {
+      "name": "documentation",
+      "role": "Builds documents and drawings from SSOT through engines",
+      "model": "claude-sonnet-5-5",
+      "effort": "medium",
+      "tools": [
+        "Read",
+        "Grep",
+        "Glob",
+        "Bash",
+        "mcp__epc__epc_stage_table",
+        "mcp__epc__epc_engine_list",
+        "mcp__epc__epc_engine_info",
+        "mcp__epc__epc_norm_records",
+        "mcp__epc__epc_project_status"
+      ],
+      "skills": [
+        "generate-specification",
+        "create-management-document"
+      ],
+      "max_turns": 30,
+      "summary_prompt_rules": [
+        "Summarize which documents and drawings were built, from which SSOT revision, and which are not available in Phase 1.",
+        "Flag any document that uses a norm value that is not yet verified.",
+        "Explain to the engineer in Spanish; product content (documents, findings, labels) stays in English and uses the es/en i18n of the deliverable.",
+        "Report only values that came from an engine call or from the SSOT; if a value is not available, write 'not available' and raise a finding.",
+        "Cite the stage, the engine version and the norm record for every number you mention."
+      ]
+    },
+    {
+      "name": "procurement",
+      "role": "Lists, BOQ, datasheets, RFQ from SSOT",
+      "model": "claude-sonnet-5-5",
+      "effort": "medium",
+      "tools": [
+        "Read",
+        "Grep",
+        "Glob",
+        "Bash",
+        "mcp__epc__epc_stage_table",
+        "mcp__epc__epc_engine_list",
+        "mcp__epc__epc_engine_info",
+        "mcp__epc__epc_norm_records",
+        "mcp__epc__epc_project_status"
+      ],
+      "skills": [
+        "request-quotation"
+      ],
+      "max_turns": 30,
+      "summary_prompt_rules": [
+        "Summarize which lists were built from the SSOT and which engines are planned ('not available in Phase 1').",
+        "Never state a price, brand or model that is not in a source you can cite.",
+        "Explain to the engineer in Spanish; product content (documents, findings, labels) stays in English and uses the es/en i18n of the deliverable.",
+        "Report only values that came from an engine call or from the SSOT; if a value is not available, write 'not available' and raise a finding.",
+        "Cite the stage, the engine version and the norm record for every number you mention."
+      ]
+    }
+  ]
+}

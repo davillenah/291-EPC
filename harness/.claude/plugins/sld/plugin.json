@@ -1,0 +1,82 @@
+{
+  "id": "sld",
+  "version": "0.1.4",
+  "kind": "generator",
+  "description": "Single-line diagram (SLD) of a board on IRAM sheets from a circuit Excel: SVG and DXF per sheet plus a circuit calculation table sheet. Draws the calculation of epc_aea90364 (with the project's design criteria) when it is provided.",
+  "discipline": [
+    "electrical"
+  ],
+  "jurisdiction": [
+    "AR"
+  ],
+  "requires": {
+    "aea-calc": "^1.8.0",
+    "dxf-output": "^0.1.0",
+    "iec-symbols": "^0.4.19",
+    "iram-titleblock": "^0.5.4"
+  },
+  "consumes": [
+    "Board",
+    "Circuit",
+    "CircuitCalculation"
+  ],
+  "produces": [
+    "Drawing:SLD"
+  ],
+  "outputs": [
+    {
+      "format": "svg",
+      "channel": "internal"
+    },
+    {
+      "format": "dxf",
+      "channel": "internal+deliverable"
+    },
+    {
+      "format": "json",
+      "channel": "internal"
+    }
+  ],
+  "entitlement": "feature.drawing.sld",
+  "python": {
+    "requires": [
+      "ezdxf",
+      "lxml",
+      "openpyxl",
+      "shapely",
+      "svgelements",
+      "vtracer"
+    ],
+    "optional": [
+      "cairosvg"
+    ]
+  },
+  "skills": [],
+  "legacy": {
+    "name": "sld-generator",
+    "source": "sld-generator",
+    "changes": [
+      "resolves sibling plugins from the hub instead of vendor/*.plugin",
+      "supports iec-symbols >= 0.4.14 file naming",
+      "cairosvg optional",
+      "titleblocks use sys.executable"
+    ]
+  },
+  "engine": [
+    "aea90364",
+    "calc_common",
+    "dxf",
+    "feeder_sizing",
+    "grounding",
+    "load_balance",
+    "selectivity",
+    "short_circuit",
+    "sld",
+    "symbols",
+    "titleblock",
+    "voltage_drop"
+  ],
+  "owns": [
+    "sld"
+  ]
+}

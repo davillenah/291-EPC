@@ -1,0 +1,84 @@
+{
+  "id": "board-design",
+  "version": "0.2.1",
+  "kind": "workflow",
+  "description": "Designs a low-voltage board end to end: the project's design criteria govern the circuit calculation (epc_aea90364) and that calculation feeds the single-line (SLD) and multi-line (MLD) diagrams on IRAM sheets (SVG, DXF, PDF).",
+  "discipline": [
+    "electrical"
+  ],
+  "jurisdiction": [
+    "AR"
+  ],
+  "requires": {
+    "aea-calc": "^1.8.0",
+    "dxf-output": "^0.1.0",
+    "iram-titleblock": "^0.5.4",
+    "mld": "^0.2.2",
+    "sld": "^0.1.4"
+  },
+  "consumes": [
+    "DesignCriteria",
+    "Board",
+    "Circuit"
+  ],
+  "produces": [
+    "CircuitCalculation",
+    "Drawing:SLD",
+    "Drawing:MLD"
+  ],
+  "outputs": [
+    {
+      "format": "json",
+      "channel": "internal"
+    },
+    {
+      "format": "svg",
+      "channel": "internal"
+    },
+    {
+      "format": "dxf",
+      "channel": "internal+deliverable"
+    },
+    {
+      "format": "pdf",
+      "channel": "internal+deliverable"
+    }
+  ],
+  "entitlement": "feature.design.board",
+  "python": {
+    "requires": [
+      "ezdxf",
+      "lxml",
+      "matplotlib",
+      "openpyxl",
+      "shapely",
+      "svgelements",
+      "vtracer"
+    ]
+  },
+  "skills": [
+    {
+      "id": "design-board",
+      "role": "owner"
+    }
+  ],
+  "engine": [
+    "aea90364",
+    "calc_common",
+    "drawing",
+    "dxf",
+    "feeder_sizing",
+    "grounding",
+    "load_balance",
+    "mld",
+    "selectivity",
+    "short_circuit",
+    "sld",
+    "symbols",
+    "titleblock",
+    "voltage_drop"
+  ],
+  "owns": [
+    "drawing"
+  ]
+}

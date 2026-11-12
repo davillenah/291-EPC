@@ -1,0 +1,41 @@
+{
+  "create-management-document": {
+    "owner": "pm2-docs",
+    "legacy_id": "create-pm2-document",
+    "status": "active"
+  },
+  "generate-specification": {
+    "owner": "spec-writer",
+    "legacy_id": "generar-pliego",
+    "status": "active"
+  },
+  "design-board": {
+    "owner": "board-design",
+    "status": "active"
+  },
+  "request-quotation": {
+    "owner": "procurement",
+    "legacy_id": "get-cotizacion",
+    "status": "active"
+  },
+  "create-electrical-line-diagram": {
+    "owner": null,
+    "status": "superseded",
+    "note": "kept only in _legacy"
+  },
+  "electrical-dimensioning (template copy)": {
+    "owner": null,
+    "status": "superseded",
+    "note": "kept only in _legacy"
+  },
+  "memoria-calculos": {
+    "owner": null,
+    "status": "superseded",
+    "note": "kept only in _legacy"
+  },
+  "sintesis-memoria": {
+    "owner": null,
+    "status": "superseded",
+    "note": "kept only in _legacy"
+  }
+}

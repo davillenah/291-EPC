@@ -1,0 +1,57 @@
+{
+  "id": "iram-titleblock",
+  "version": "0.5.4",
+  "kind": "generator",
+  "description": "IRAM A0-A4 drawing sheets (frame, coordinates, IRAM 4504/4508 title block) with custom company/client blocks and logos.",
+  "discipline": [
+    "general"
+  ],
+  "jurisdiction": [
+    "AR"
+  ],
+  "standards": [
+    "IRAM 4504",
+    "IRAM 4508"
+  ],
+  "requires": {
+    "dxf-output": "^0.1.0"
+  },
+  "consumes": [
+    "TitleBlock"
+  ],
+  "produces": [
+    "Sheet"
+  ],
+  "outputs": [
+    {
+      "format": "svg",
+      "channel": "internal"
+    },
+    {
+      "format": "dxf",
+      "channel": "internal+deliverable"
+    }
+  ],
+  "entitlement": "feature.drawing.sheets",
+  "python": {
+    "requires": [
+      "ezdxf",
+      "lxml",
+      "shapely",
+      "svgelements",
+      "vtracer"
+    ]
+  },
+  "skills": [],
+  "legacy": {
+    "name": "iram-titleblock-plugin",
+    "source": "291_G_IRAM_Custom_TitleBlocks_Generator"
+  },
+  "engine": [
+    "dxf",
+    "titleblock"
+  ],
+  "owns": [
+    "titleblock"
+  ]
+}

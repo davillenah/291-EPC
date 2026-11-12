@@ -1,0 +1,267 @@
+{
+  "schema_version": "1.0",
+  "plugins": {
+    "aea-calc": {
+      "version": "1.8.0",
+      "kind": "calc",
+      "status": "active",
+      "requires": {},
+      "skills": [],
+      "engine": [
+        "aea90364",
+        "calc_common",
+        "feeder_sizing",
+        "grounding",
+        "load_balance",
+        "selectivity",
+        "short_circuit",
+        "voltage_drop"
+      ],
+      "hash": "ea29ab96c089ae94"
+    },
+    "board-design": {
+      "version": "0.2.1",
+      "kind": "workflow",
+      "status": "active",
+      "requires": {
+        "aea-calc": "^1.8.0",
+        "dxf-output": "^0.1.0",
+        "iram-titleblock": "^0.5.4",
+        "mld": "^0.2.2",
+        "sld": "^0.1.4"
+      },
+      "skills": [
+        "design-board"
+      ],
+      "engine": [
+        "aea90364",
+        "calc_common",
+        "drawing",
+        "dxf",
+        "feeder_sizing",
+        "grounding",
+        "load_balance",
+        "mld",
+        "selectivity",
+        "short_circuit",
+        "sld",
+        "symbols",
+        "titleblock",
+        "voltage_drop"
+      ],
+      "hash": "7fd3b5382f3c0093"
+    },
+    "doc-quality": {
+      "version": "0.1.0",
+      "kind": "workflow",
+      "status": "active",
+      "requires": {},
+      "skills": [],
+      "engine": [
+        "documents"
+      ],
+      "hash": "07113a5b8fe1fa79"
+    },
+    "dxf-output": {
+      "version": "0.1.0",
+      "kind": "generator",
+      "status": "active",
+      "requires": {},
+      "skills": [],
+      "engine": [
+        "dxf"
+      ],
+      "hash": "9e2e928a906395fd"
+    },
+    "equipment-catalog": {
+      "version": "0.1.0",
+      "kind": "knowledge",
+      "status": "active",
+      "requires": {},
+      "skills": [],
+      "engine": [],
+      "hash": "5bdc1c926c810f0e"
+    },
+    "iec-symbols": {
+      "version": "0.4.19",
+      "kind": "knowledge",
+      "status": "active",
+      "requires": {},
+      "skills": [],
+      "engine": [
+        "symbols"
+      ],
+      "hash": "701b4a9dacbd8606"
+    },
+    "intake-analysis": {
+      "version": "0.1.0",
+      "kind": "workflow",
+      "status": "active",
+      "requires": {},
+      "skills": [
+        "structure-customer-input"
+      ],
+      "engine": [],
+      "hash": "40d509910df7f5f4"
+    },
+    "iram-titleblock": {
+      "version": "0.5.4",
+      "kind": "generator",
+      "status": "active",
+      "requires": {
+        "dxf-output": "^0.1.0"
+      },
+      "skills": [],
+      "engine": [
+        "dxf",
+        "titleblock"
+      ],
+      "hash": "5464f81fb05dfe52"
+    },
+    "mld": {
+      "version": "0.2.2",
+      "kind": "generator",
+      "status": "active",
+      "requires": {
+        "aea-calc": "^1.8.0",
+        "dxf-output": "^0.1.0",
+        "iec-symbols": "^0.4.19",
+        "iram-titleblock": "^0.5.4"
+      },
+      "skills": [],
+      "engine": [
+        "aea90364",
+        "calc_common",
+        "dxf",
+        "feeder_sizing",
+        "grounding",
+        "load_balance",
+        "mld",
+        "selectivity",
+        "short_circuit",
+        "symbols",
+        "titleblock",
+        "voltage_drop"
+      ],
+      "hash": "a25da083856df7c4"
+    },
+    "plan-drawing": {
+      "version": "0.1.0",
+      "kind": "generator",
+      "status": "active",
+      "requires": {
+        "dxf-output": "^0.1.0"
+      },
+      "skills": [],
+      "engine": [
+        "dxf",
+        "plan"
+      ],
+      "hash": "081670016af19050"
+    },
+    "pm2-docs": {
+      "version": "0.1.0",
+      "kind": "workflow",
+      "status": "active",
+      "requires": {
+        "doc-quality": "^0.1.0"
+      },
+      "skills": [
+        "create-management-document"
+      ],
+      "engine": [
+        "documents"
+      ],
+      "hash": "72daa543041929ec"
+    },
+    "procurement": {
+      "version": "0.1.0",
+      "kind": "connector",
+      "status": "active",
+      "requires": {
+        "equipment-catalog": "^0.1.0"
+      },
+      "skills": [
+        "request-quotation"
+      ],
+      "engine": [],
+      "hash": "9aff2afd8ff59f37"
+    },
+    "sld": {
+      "version": "0.1.4",
+      "kind": "generator",
+      "status": "active",
+      "requires": {
+        "aea-calc": "^1.8.0",
+        "dxf-output": "^0.1.0",
+        "iec-symbols": "^0.4.19",
+        "iram-titleblock": "^0.5.4"
+      },
+      "skills": [],
+      "engine": [
+        "aea90364",
+        "calc_common",
+        "dxf",
+        "feeder_sizing",
+        "grounding",
+        "load_balance",
+        "selectivity",
+        "short_circuit",
+        "sld",
+        "symbols",
+        "titleblock",
+        "voltage_drop"
+      ],
+      "hash": "8a80ccf6bb39d98c"
+    },
+    "spec-writer": {
+      "version": "0.1.0",
+      "kind": "workflow",
+      "status": "needs-neutral-templates",
+      "requires": {
+        "doc-quality": "^0.1.0"
+      },
+      "skills": [
+        "generate-specification"
+      ],
+      "engine": [
+        "documents"
+      ],
+      "hash": "49fae3751a1f8488"
+    },
+    "standard-ingest": {
+      "version": "0.1.0",
+      "kind": "workflow",
+      "status": "active",
+      "requires": {},
+      "skills": [
+        "analyze-standard"
+      ],
+      "engine": [
+        "rules",
+        "standards"
+      ],
+      "hash": "93b8a262983e9ce0"
+    }
+  },
+  "skills": {
+    "analyze-standard": {
+      "owner": "standard-ingest"
+    },
+    "create-management-document": {
+      "owner": "pm2-docs"
+    },
+    "design-board": {
+      "owner": "board-design"
+    },
+    "generate-specification": {
+      "owner": "spec-writer"
+    },
+    "request-quotation": {
+      "owner": "procurement"
+    },
+    "structure-customer-input": {
+      "owner": "intake-analysis"
+    }
+  }
+}
