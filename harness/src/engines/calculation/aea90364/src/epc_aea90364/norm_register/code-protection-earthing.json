@@ -297,7 +297,7 @@
    "verified_by": null,
    "verified_at": null,
    "issues": [
-    "same value as aea90364.code.board_memo.u0_v (230 V); backend zs.py derives U0 = voltage/sqrt(3) (219 V at 380 V): see aea90364.code.backend.zs.u0_v"
+    "same value as aea90364.code.board_memo.u0_v (230 V); the removed web backend derived U0 = voltage/sqrt(3) (219 V at 380 V); see decision D16"
    ],
    "note": "Check U0 = 230 V as the default phase-to-earth voltage."
   },
@@ -434,7 +434,7 @@
    "verified_by": null,
    "verified_at": null,
    "issues": [
-    "conflicts with aea90364.code.backend.zs.u0_v: zs.py uses voltage_v/sqrt(3) (219 V at 380 V), board_memo uses fixed 230 V",
+    "the removed web backend used voltage_v/sqrt(3) (219 V at 380 V) while board_memo uses fixed 230 V (decision D16)",
     "no clause in code",
     "decision D16: unify with the project's system (230/400 -> 230 V, 220/380 -> 220 V); left as is in ENG-14",
     "MIG-36f: the constant U0_V of board_memo no longer exists; U0 comes from system_voltage.system_u0 and this record points to the 400 V system row of data/system_voltages.json (value unchanged, still pending review)"

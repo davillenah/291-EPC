@@ -601,7 +601,7 @@ Motores nuevos, o ampliaciones de `epc_aea90364`, con la skill `epc291-engine-bu
 ## Otras áreas (eléctricas: iluminación, tomacorrientes y el editor de planos)
 Van después de la disciplina eléctrica, salvo que una tarea eléctrica las necesite (entonces se nombra en esa tarea).
 
-### Iluminación (`ILU`) · detalle e historial en [BACKLOG_ILUMINACION.md](BACKLOG_ILUMINACION.md)
+### Iluminación (`ILU`)
 
 *Pendientes (lo que quedó sin hacer o sin verificar) › De tu lado (no los puede hacer el programa)*
 - [ ] **ILU-01** **Revisar y aprobar los niveles del Decreto 351/79** en la pantalla de normas ("Niveles de iluminación"). Mientras estén pendientes no alimentan ninguna meta.
@@ -635,7 +635,7 @@ Van después de la disciplina eléctrica, salvo que una tarea eléctrica las nec
 *Mejoras › Entregables*
 - [x] **ILU-22** (2026-11-09) Versión en Word de la memoria de iluminación: sale en Emitir como `.docx` opcional (`E4-03`).
 
-### Tomacorrientes (`TOM`) · detalle e historial en [BACKLOG_TOMACORRIENTES.md](BACKLOG_TOMACORRIENTES.md)
+### Tomacorrientes (`TOM`)
 
 *Pendiente › De tu lado*
 - [ ] **TOM-01** **Confirmar en la página de normas los valores típicos** de «Tomacorrientes · valores típicos»: solo el depósito (un tomacorriente cada 9 m de perímetro, mínimo 2) viene de una cláusula; el resto es práctica habitual con confianza 0,4.
@@ -652,7 +652,7 @@ Van después de la disciplina eléctrica, salvo que una tarea eléctrica las nec
 - [ ] **TOM-08** Exportar a DXF queda **en espera** con todo lo de optimizar el DXF.
 - [ ] **TOM-09** La pantalla de normas con la unidad nueva no se probó en el navegador (sí por API y pruebas).
 
-### Trazado (editor de planos) (`TRZ`) · detalle e historial en [BACKLOG_TRAZADO.md](BACKLOG_TRAZADO.md)
+### Trazado (editor de planos) (`TRZ`)
 
 *Prioridad alta (orden sugerido)*
 - [x] **TRZ-01** (2026-11-09) Ya estaba hecho y probado en el editor: Imán (snap) a nodos y vértices del fondo, con la grilla opcional.
@@ -680,7 +680,7 @@ Van después de la disciplina eléctrica, salvo que una tarea eléctrica las nec
 - [ ] **TRZ-20** Probar a mano en el navegador lo que solo tiene prueba automática: matriz de copias, plantillas, copiar a otros niveles, reservar espacio, comentarios fijados, herramienta Ruta, alinear y recortar el fondo, exportar PNG e imprimir, historial con comparar.
 
 
-### Pliegos técnicos (`PLG`) · detalle e historial en [BACKLOG_PLIEGOS.md](BACKLOG_PLIEGOS.md)
+### Pliegos técnicos (`PLG`)
 
 *Pendientes*
 - [ ] **PLG-01** **Tres convenciones de estructura conviven.** El agente nuevo usa 16 secciones en un solo archivo; el skill y el agente anterior usaban 9 capítulos (Alcance, Informe descriptivo, Normas, Materiales y equipos, Ejecución, Controles de calidad, Documentación de entrega, Garantías, Responsabilidades) y el verificador espera 10 archivos `NN_Nombre.md` con `00_Index_and_Control.md`. Decidir una sola y alinear las otras dos. Correspondencia aproximada del modelo de 9 capítulos al nuevo: Alcance y generalidades → Objetivo + Alcance; Informe descriptivo → Memoria Descriptiva; Normas → Marco Normativo; Materiales y equipos + Ejecución → Condiciones Generales de Ejecución + Requisitos Técnicos; Controles de calidad → Ensayos + Criterios de Aceptación; Documentación de entrega → Documentación Técnica; Garantías y Responsabilidades → Responsabilidades del Contratista + Recepción Provisoria y Final.
@@ -706,7 +706,7 @@ Se retoma cuando el dueño lo pida: reconocimiento de arquitectura, cloacas y ot
 
 - [ ] **AGT-02** Mismos agentes especialistas para las demás disciplinas (civil, mecánica, climatización, cañerías, instrumentación, telecomunicaciones, incendio), uno por cada especialidad, con el mismo formato.
 
-### Arquitectura (`epc_arch`) (`ARQ`) · detalle e historial en [BACKLOG_ARQUITECTURA.md](BACKLOG_ARQUITECTURA.md)
+### Arquitectura (`epc_arch`) (`ARQ`)
 *Reconocimiento*
 - [ ] **ARQ-01** Puertas finas del baño en PNG (p1 y p6): 4 de 6. Se ven completas en la imagen; una (0,6 m) no pasa los criterios de `swings.doors_at_wall_ends`. Falta instrumentar arco, espacio libre y hoja para ese caso.
 - [ ] **ARQ-02** IoU de muros en PNG de p1, p3 y p6: 0,50 a 0,70 (meta 0,90). Muros de 12 cm pierden en la lectura de imagen.

@@ -4,22 +4,22 @@ Generado por `python harness/tools/build/norm_register.py --report`; no se edita
 
 ## Resumen
 
-- Registros a mano: **298** en 33 archivos.
+- Registros a mano: **282** en 32 archivos.
 - Reglas indexadas automáticamente: **200**.
-- Sin cláusula: **196**.
-- Conflictos o duplicados señalados: **24**.
+- Sin cláusula: **182**.
+- Conflictos o duplicados señalados: **21**.
 
 ### Registros a mano por motor, procedencia y estado
 
 | Motor | Procedencia | Estado | Registros |
 |---|---|---|---:|
-| src | convention | pending | 27 |
-| src | design-default | pending | 63 |
+| src | convention | pending | 23 |
+| src | design-default | pending | 56 |
 | src | illustrative | pending | 3 |
-| src | norm | pending | 135 |
+| src | norm | pending | 133 |
 | src | physics | pending | 14 |
 | src | teaching | pending | 6 |
-| src | typical | pending | 50 |
+| src | typical | pending | 47 |
 
 ### Reglas indexadas por motor
 
@@ -27,29 +27,6 @@ Generado por `python harness/tools/build/norm_register.py --report`; no se edita
 |---|---:|---:|
 | aea90364 | 177 | 0 |
 | lighting | 23 | 0 |
-
-## aea90364 / code-backend
-
-Archivo: `harness/src/engines/calculation/aea90364/src/epc_aea90364/norm_register/code-backend.json` (16 registros)
-
-| id | norma | cláusula | página | valor / ubicación | unidad | procedencia | confianza | estado | problemas |
-|---|---|---|---|---|---|---|---|---|---|
-| `aea90364.code.backend.hvac_load.design` | ASHRAE | - | - | `{"t_out_c": 35.0, "t_in_c": 24.0, "w_out_kg_kg": 0.018, "...` | C; kg/kg; K | typical | low | pending | comment in code: typical, the person gives the ones of the place; no clause in code |
-| `aea90364.code.backend.hvac_load.small_large` | - | - | - | `{"small": 0.9, "large": 1.5}` | - | design-default | low | pending | engineering criterion in code comment; no clause in code |
-| `aea90364.code.backend.earthing.horizontal` | - | - | - | `{"diameter_m": 0.01, "depth_m": 0.6, "max_m": 200, "step_...` | m | design-default | low | pending | no clause in code |
-| `aea90364.code.backend.earthing.plate` | - | - | - | `{"diameter_m": 0.5, "depth_m": 0.8}` | m | design-default | low | pending | no clause in code |
-| `aea90364.code.backend.earthing.mesh` | - | - | - | `{"spacing_m": 5.0, "depth_m": 0.6, "max_side_m": 100, "st...` | m | design-default | low | pending | no clause in code |
-| `aea90364.code.backend.earthing.rod` | - | - | - | `{"length_m": 2.4, "diameter_m": 0.016}` | m | typical | low | pending | comment: a typical commercial rod, assumed independent in parallel; no clause in code |
-| `aea90364.code.backend.earthing.phase_volts` | - | - | - | `{"default_line_v": 380.0, "divisor": "sqrt(3)", "rounded"...` | V | convention | low | pending | U0 = 219 V at 380 V, while board_memo and aea_protection use fixed 230 V; no clause in code |
-| `aea90364.code.backend.earthing.u0_min` | AEA 90364-7-771 (2006) | 771.18 | - | `50.0` | V | norm | low | pending | - |
-| `aea90364.code.backend.zs.u0_v` | - | - | - | `{"default_line_v": 380.0, "divisor": "sqrt(3)", "rounded"...` | V | convention | low | pending | conflicts with aea90364.code.board_memo.u0_v: 219 V here at 380 V vs fixed 230 V in board_memo and aea_protection; no clause in code |
-| `aea90364.code.backend.zs.ia` | - | - | - | `{"ia": "k_max * In"}` | A | design-default | low | pending | uses the upper magnetic limit of K_MAG (e.g. 10 for C); no clause in code |
-| `aea90364.code.backend.backup.norm_771_d8` | AEA 90364-7-771 (2006) | 771-D.8 | - | `{"transfer_poles": 4, "generator_neutral_earth_max_ohm": ...` | ohm | norm | medium | pending | rule written only in the study text, not as a constant |
-| `aea90364.code.backend.backup.default_volts` | - | - | - | `400.0` | V | convention | low | pending | conflicts with aea90364.code.backend.models.voltage_v: 380 V default elsewhere; no clause in code |
-| `aea90364.code.backend.models.voltage_v` | - | - | - | `380.0` | V | convention | low | pending | same as JSON criterion aea90364.criterion.nominal-voltage-v; no clause in code |
-| `aea90364.code.backend.models.defaults` | - | - | - | `{"icc_ka": 10, "fp_default": 0.85, "trafo_uk_pct": 6, "fr...` | - | design-default | low | pending | engineering defaults, no clause; no clause in code |
-| `aea90364.code.backend.validation.limites_tablero` | - | - | - | `{"voltage_v": [50, 1000], "icc_ka": [0.1, 100], "fp_defau...` | - | typical | low | pending | engineering typical bounds, not norm values; no clause in code |
-| `aea90364.code.backend.validation.limites_cantidad` | - | - | - | `150` | count | design-default | low | pending | MAX_GROUPED = 20 on the next line (not in value); the aea_route validator also caps circuits per segment at 20; no clause in code |
 
 ## aea90364 / code-commercial-series
 
@@ -181,11 +158,11 @@ Archivo: `harness/src/engines/calculation/aea90364/src/epc_aea90364/norm_registe
 | `aea90364.code.aea_earthing.resistance_conductor_horizontal.exacta` | AEA 90364-7-771 (2006) | 771-C.10 | - | `{"ln_4L_d": 1, "ln_L_h": 1, "constant": -2, "term_2h_L": ...` | - | norm | medium | pending | docstring says the series is truncated at the terms cited |
 | `aea90364.code.aea_earthing.resistencia_placa_circular.coeficientes` | AEA 90364-7-771 (2006) | 771-C.10 | - | `{"first": 0.5, "D_over_4_pi_h": 1, "cubic": "7/384", "qui...` | - | norm | medium | pending | docstring says the series is truncated at the terms cited |
 | `aea90364.code.aea_earthing.resistencia_malla.sverak` | IEEE Std 80 | - | - | `{"area_factor": 20.0, "default_depth_m": 0.6}` | - | norm | low | pending | marked [VERIFICAR] in the code; not an AEA norm; no clause in code |
-| `aea90364.code.aea_protection.verifica_tn_u0_v_default` | AEA 90364-4-41 | 41.3 | - | `230.0` | V | convention | medium | pending | same value as aea90364.code.board_memo.u0_v (230 V); backend zs.py derives U0 = voltage/sqrt(3) (219 V at 380 V): see aea90364.code.backend.zs.u0_v |
+| `aea90364.code.aea_protection.verifica_tn_u0_v_default` | AEA 90364-4-41 | 41.3 | - | `230.0` | V | convention | medium | pending | same value as aea90364.code.board_memo.u0_v (230 V); the removed web backend derived U0 = voltage/sqrt(3) (219 V at 380 V); see decision D16 |
 | `aea90364.code.aea_protection.verifica_it_segunda_falla.u_v_default` | AEA 90364-4-41 | 41.3 | - | `400.0` | V | convention | medium | pending | other modules default to 380 V line voltage (TENSION_V, nominal_voltage_v) |
 | `aea90364.code.system_voltage.u0_380` | - | - | - | `system_voltages.json#/systems/1/u0_v` | V | convention | medium | pending | owner decision D16 (2026-11-10): 230/400 V -> U0 = 230 V; 220/380 V -> U0 = 220 V; no clause cited; added by MIG-36f; pending review |
 | `aea90364.code.board_memo.k_mag` | IEC 60898-1 / IEC 60947-2 | - | - | `aea_tables.json#/constantes/curva_disparo_magnetico_k` | x In | norm | medium | pending | MCCB (5, 10) is a project assumption of adjustable magnetic trip, not a standard range; same B/C/D upper limits as aea_pipeline.K_MAGNETICO_C for C (10); no clause in code |
-| `aea90364.code.board_memo.u0_v` | - | - | - | `system_voltages.json#/systems/0/u0_v` | V | convention | medium | pending | conflicts with aea90364.code.backend.zs.u0_v: zs.py uses voltage_v/sqrt(3) (219 V at 380 V), board_memo uses fixed 230 V; no clause in code; decision D16: unify with the project's system (230/400 -> 230 V, 220/380 -> 220 V); left as is in ENG-14; MIG-36f: the constant U0_V of board_memo no longer exists; U0 comes from system_voltage.system_u0 and this record points to the 400 V system row of data/system_voltages.json (value unchanged, still pending review) |
+| `aea90364.code.board_memo.u0_v` | - | - | - | `system_voltages.json#/systems/0/u0_v` | V | convention | medium | pending | the removed web backend used voltage_v/sqrt(3) (219 V at 380 V) while board_memo uses fixed 230 V (decision D16); no clause in code; decision D16: unify with the project's system (230/400 -> 230 V, 220/380 -> 220 V); left as is in ENG-14; MIG-36f: the constant U0_V of board_memo no longer exists; U0 comes from system_voltage.system_u0 and this record points to the 400 V system row of data/system_voltages.json (value unchanged, still pending review) |
 | `aea90364.code.board_memo.ratio_termico` | - | - | - | `aea_tables.json#/constantes/termico_ratio_min` | - | typical | low | pending | rule of thumb; no standard cited in code; no clause in code |
 | `aea90364.code.board_memo.curve_band.t_convencional` | IEC 60898-1 / IEC 60947-2 | - | - | `aea_tables.json#/constantes/curva_banda_tiempos/valor/t_convencional` | s | norm | medium | pending | same 63 A boundary used for MCB: aea_pipeline.IN_MAX_MCB_A; no clause in code |
 | `aea90364.code.board_memo.curve_band.punto_2_55` | IEC 60898-1 | - | - | `aea_tables.json#/constantes/curva_banda_tiempos/valor/punto_2_55` | s | norm | medium | pending | no clause in code |
@@ -608,20 +585,6 @@ Archivo: `harness/src/engines/calculation/transformer_sizing/src/epc_transformer
 - `aea90364.code.aea_special_locations.mu0` (-; hand)
 - `aea90364.code.aea_special_locations.radio_zona2_m` (AEA 90364-7-701; hand)
 - `aea90364.code.aea_voltage_drop.tension_defecto` (-; hand)
-- `aea90364.code.backend.backup.default_volts` (-; hand)
-- `aea90364.code.backend.earthing.horizontal` (-; hand)
-- `aea90364.code.backend.earthing.mesh` (-; hand)
-- `aea90364.code.backend.earthing.phase_volts` (-; hand)
-- `aea90364.code.backend.earthing.plate` (-; hand)
-- `aea90364.code.backend.earthing.rod` (-; hand)
-- `aea90364.code.backend.hvac_load.design` (ASHRAE; hand)
-- `aea90364.code.backend.hvac_load.small_large` (-; hand)
-- `aea90364.code.backend.models.defaults` (-; hand)
-- `aea90364.code.backend.models.voltage_v` (-; hand)
-- `aea90364.code.backend.validation.limites_cantidad` (-; hand)
-- `aea90364.code.backend.validation.limites_tablero` (-; hand)
-- `aea90364.code.backend.zs.ia` (-; hand)
-- `aea90364.code.backend.zs.u0_v` (-; hand)
 - `aea90364.code.board_figures.default.tablero` (-; hand)
 - `aea90364.code.board_memo.curve_band.punto_2_55` (IEC 60898-1; hand)
 - `aea90364.code.board_memo.curve_band.t_convencional` (IEC 60898-1 / IEC 60947-2; hand)
@@ -766,10 +729,7 @@ Archivo: `harness/src/engines/calculation/transformer_sizing/src/epc_transformer
 - `aea90364.code.aea_pipeline.default.insulation`: conflicts with aea90364.criterion.insulation: design-criteria.json default is XLPE, code fallback is PVC
 - `aea90364.code.aea_pipeline.margin_motor`: duplicated literal; same 1.25 as aea90364.code.aea_demand.corriente_alimentador_motores.factor
 - `aea90364.code.aea_pipeline.serie_s_mm2`: conflicts with aea90364.code.aea_export.serie_s_mm2: the export series is wider (0.5 to 630 mm2)
-- `aea90364.code.backend.backup.default_volts`: conflicts with aea90364.code.backend.models.voltage_v: 380 V default elsewhere
-- `aea90364.code.backend.zs.u0_v`: conflicts with aea90364.code.board_memo.u0_v: 219 V here at 380 V vs fixed 230 V in board_memo and aea_protection
 - `aea90364.code.board_figures.default.tablero`: duplicated literals of the pipeline defaults
-- `aea90364.code.board_memo.u0_v`: conflicts with aea90364.code.backend.zs.u0_v: zs.py uses voltage_v/sqrt(3) (219 V at 380 V), board_memo uses fixed 230 V
 - `aea90364.code.grouping.default.tablero`: duplicated literals of the pipeline defaults
 - `aea90364.constant.771-13-i-secciones-minimas-mm2`: duplicated literal: aea90364.criterion.min-section-lighting-mm2 (1.5), aea90364.criterion.min-section-sockets-mm2 (2.5)
 - `aea90364.constant.771-19-limites-caida-pct`: duplicated literal: aea90364.criterion.vd-sectional-pct (1), aea90364.criterion.vd-lighting-sockets-pct (3), aea90364.criterion.vd-motors-pct (5)
