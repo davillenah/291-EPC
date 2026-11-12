@@ -1,0 +1,40 @@
+{
+ "schema_version": "1.0",
+ "engine": "transformer_sizing",
+ "topic": "params",
+ "records": [
+  {
+   "id": "transformer_sizing.params.standard_ratings",
+   "kind": "table",
+   "title": {
+    "es": "Potencias nominales normalizadas de transformadores",
+    "en": "Standard transformer ratings"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "kVA",
+   "applies_to": "transformer rating selection",
+   "provenance": "convention",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/transformer_sizing/src/epc_transformer_sizing/data/standard_ratings.json",
+    "pointer": "/ratings_kva"
+   },
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause: convention; values to verify against the supply authority or manufacturer catalog"
+   ],
+   "note": "Preferred kVA series 25..2500; pending review, not taken from a clause."
+  }
+ ]
+}

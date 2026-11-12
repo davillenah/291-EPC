@@ -1,0 +1,13 @@
+{
+  "source": "Owner decision D6 (2026-11-10). Not a norm value: a project rule. A role missing from this table is NOT decided by D6 and keeps the criteria insulation (or the engine fallback).",
+  "by_role": {
+    "seccional": "xlpe",
+    "iluminacion": "pvc",
+    "tomacorrientes": "pvc"
+  },
+  "roles_note": {
+    "seccional": "feeders, incoming supplies (acometidas) and sectional lines",
+    "iluminacion": "terminal lighting circuits",
+    "tomacorrientes": "terminal receptacle circuits"
+  }
+}

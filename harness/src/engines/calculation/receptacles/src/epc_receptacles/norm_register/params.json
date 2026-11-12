@@ -1,0 +1,74 @@
+{
+ "schema_version": "1.0",
+ "engine": "receptacles",
+ "topic": "params",
+ "records": [
+  {
+   "id": "receptacles.params.corner_clearance_m",
+   "kind": "constant",
+   "title": {
+    "es": "Separación a esquinas",
+    "en": "Corner clearance"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "m",
+   "applies_to": "outlet placement",
+   "provenance": "design-default",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/receptacles/src/epc_receptacles/params.json",
+    "pointer": "/corner_clearance_m"
+   },
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "algorithm setting, no clause"
+   ],
+   "note": "0.3 m; design default, confirm if a norm sets it."
+  },
+  {
+   "id": "receptacles.params.default_mount_height_m",
+   "kind": "constant",
+   "title": {
+    "es": "Altura de montaje por defecto",
+    "en": "Default mounting height"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "m",
+   "applies_to": "outlets with no height",
+   "provenance": "design-default",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/receptacles/src/epc_receptacles/params.json",
+    "pointer": "/default_mount_height_m"
+   },
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "0.3 m vs 771 min 0.15 and 770 band 0.2-0.3",
+    "criterion socket_height_m default 0.3 (aea90364 design-criteria): duplicated value"
+   ],
+   "note": "0.3 m; ensure single source with the design criterion."
+  }
+ ]
+}

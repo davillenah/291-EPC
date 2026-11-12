@@ -1,0 +1,40 @@
+{
+ "schema_version": "1.0",
+ "engine": "terminal_blocks",
+ "topic": "params",
+ "records": [
+  {
+   "id": "terminal_blocks.params.terminal_sizes",
+   "kind": "table",
+   "title": {
+    "es": "Tamanos genericos de bornes: secciones admitidas y corriente asignada",
+    "en": "Generic terminal-block sizes: accepted sections and rated current"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "mm2, A",
+   "applies_to": "terminal-block list: terminal size lookup",
+   "provenance": "convention",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/quality/terminal_blocks/src/epc_terminal_blocks/data/terminal_sizes.json",
+    "pointer": "/terminal_sizes"
+   },
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause: catalog/convention; values to verify against the chosen manufacturer catalog"
+   ],
+   "note": "Generic terminal sizes 2.5..70 mm2 with placeholder rated currents; pending review, not taken from a clause."
+  }
+ ]
+}

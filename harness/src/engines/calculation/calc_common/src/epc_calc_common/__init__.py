@@ -1,0 +1,1 @@
+"""epc_calc_common: shared infrastructure of the calculation engines: the norm-data loader, the norm tables, the protection parameters, argument validation, number formatting and rounding (split from epc_aea90364 in MIG-37b)."""

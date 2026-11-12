@@ -1,0 +1,41 @@
+{
+ "id": "c1_icc_barra_infinita",
+ "title_es": "Cortocircuito en bornes de trafo 1000 kVA, uk 6 %, red infinita",
+ "quantity": "ik_trifasica_inicial_A",
+ "inputs": {
+  "Sn_kVA": 1000,
+  "uk_pct": 6.0,
+  "Un_V": 400.0,
+  "c": 1.05,
+  "red": "infinita"
+ },
+ "formula": "Z_T = uk/100*Un^2/Sn = 0.06*160000/1e6 = 0.009600 ohm (R_T=0 sin Pcu); Ik'' = c*Un/(sqrt(3)*Z_T) = 1.05*400/(1.73205*0.009600) = 25259.07 A. c = 1,05 = c_fuente_max de los datos del repo (coincide con short_circuit.C_MAX_BT_TOL_6 y aea_pipeline.C_MAX_BT).",
+ "expected": {
+  "value": 25259.0743,
+  "unit": "A",
+  "tolerance_pct": 0.01
+ },
+ "expected_source": "closed_form",
+ "engine_call": {
+  "module": "short_circuit",
+  "function": "calcular_ik",
+  "adapter": "sc_basic",
+  "mapping": "un_v=400, c=factor_c(6), red=None, trafo={sn_va:1e6, uk_pct:6}"
+ },
+ "severity_if_fails": "safety",
+ "note_es": "Verifica la implementación de la impedancia del transformador y de Ik''. El valor de c es el del motor (no se discute aquí la norma).",
+ "repo_refs": [
+  {
+   "file": "harness/src/engines/calculation/aea90364/src/epc_aea90364/aea_tables.json",
+   "pointer": "/constantes/impedancias_estandar/c_fuente_max",
+   "value": 1.05,
+   "what": "c"
+  }
+ ],
+ "owner_verdict": {
+  "date": "2026-11-10",
+  "action": "ok",
+  "decision": null,
+  "note": "Correct; no action."
+ }
+}

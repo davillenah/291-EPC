@@ -1,0 +1,75 @@
+{
+ "schema_version": "1.0",
+ "engine": "plan",
+ "topic": "rules",
+ "records": [
+  {
+   "id": "plan.clash.rules",
+   "kind": "typical",
+   "title": {
+    "es": "Separaciones entre disciplinas",
+    "en": "Default clearances between disciplines"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "m",
+   "applies_to": "clash detection",
+   "provenance": "typical",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/cad/plan/src/epc_plan/clash_rules.json",
+    "pointer": "/rules"
+   },
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "file says typical values, not a standard",
+    "0.30 m electrical-to-sewer has no clause"
+   ],
+   "note": "0.0 m generic and 0.30 m electrica_BT/sanitaria_cloacas; confirm if a norm sets distances."
+  },
+  {
+   "id": "plan.knowledge.sanitaria_cloacas.pendiente_minima",
+   "kind": "table",
+   "title": {
+    "es": "Pendiente mínima de cloacas por diámetro (vacía)",
+    "en": "Minimum sewer slope by diameter (empty)"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "% (diameter mm)",
+   "applies_to": "sanitaria_cloacas profile",
+   "provenance": "norm",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/cad/plan/src/epc_plan/knowledge/rules.json",
+    "pointer": "/rules/0/table"
+   },
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "slope_pct values are all null: waiting for the sewer standard the owner provides",
+    "source norma/edicion/clausula empty: no clause"
+   ],
+   "note": "Nothing to verify yet; fill from the sewer standard (diameters 63, 110, 160, 200 mm)."
+  }
+ ]
+}

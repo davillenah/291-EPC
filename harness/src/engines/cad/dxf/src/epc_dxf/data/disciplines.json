@@ -1,0 +1,105 @@
+{
+  "schema_version": "1.0",
+  "note": "How the layers of the catalog are grouped by discipline: a layer belongs to the discipline whose prefix its name starts with. `profile` is the drawing profile of the plan editor (null: no tools of its own yet).",
+  "disciplines": [
+    {
+      "id": "arquitectura",
+      "prefix": "ARQ-",
+      "profile": "arquitectura",
+      "name": {
+        "es": "Arquitectura",
+        "en": "Architecture"
+      }
+    },
+    {
+      "id": "civil",
+      "prefix": "CIV-",
+      "profile": "civil",
+      "name": {
+        "es": "Civil",
+        "en": "Civil"
+      }
+    },
+    {
+      "id": "mecanica",
+      "prefix": "MEC-",
+      "profile": "mecanica",
+      "name": {
+        "es": "Mecánica",
+        "en": "Mechanical"
+      }
+    },
+    {
+      "id": "electrica",
+      "prefix": "ELEC-",
+      "profile": "electrica_BT",
+      "name": {
+        "es": "Electricidad",
+        "en": "Electrical"
+      }
+    },
+    {
+      "id": "hvac",
+      "prefix": "HVAC-",
+      "profile": "hvac",
+      "name": {
+        "es": "HVAC (climatización)",
+        "en": "HVAC"
+      }
+    },
+    {
+      "id": "pci",
+      "prefix": "PCI-",
+      "profile": "pci",
+      "name": {
+        "es": "Protección contra incendios",
+        "en": "Fire protection"
+      }
+    },
+    {
+      "id": "instrumentacion",
+      "prefix": "INS-",
+      "profile": "instrumentacion",
+      "name": {
+        "es": "Instrumentación",
+        "en": "Instrumentation"
+      }
+    },
+    {
+      "id": "comunicaciones",
+      "prefix": "COM-",
+      "profile": "comunicaciones",
+      "name": {
+        "es": "Comunicaciones",
+        "en": "Communications"
+      }
+    },
+    {
+      "id": "sanitaria",
+      "prefix": "SAN-",
+      "profile": "sanitaria_cloacas",
+      "name": {
+        "es": "Sanitaria (cloacas)",
+        "en": "Plumbing (sewer)"
+      }
+    },
+    {
+      "id": "general",
+      "prefix": "PLAN-",
+      "profile": null,
+      "name": {
+        "es": "General del plano",
+        "en": "Plan (general)"
+      }
+    },
+    {
+      "id": "diagramas",
+      "prefix": "291-",
+      "profile": null,
+      "name": {
+        "es": "Diagramas unifilares y multifilares",
+        "en": "Single-line and multi-line diagrams"
+      }
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+ "id": "l3_tn_verifica_producto",
+ "title_es": "Lazo TN: Zs x Ia frente a U0 (el caso debe FALLAR)",
+ "quantity": "zs_ia_V",
+ "inputs": {
+  "L_m": 150.0,
+  "S_fase_mm2": 2.5,
+  "S_PE_mm2": 2.5,
+  "Icc_barras_kA": 2.0,
+  "U0_V": 230.0,
+  "protección": "C16",
+  "Ia_A": 160.0,
+  "nota": "U0 = 230 V"
+ },
+ "formula": "Zs x Ia = 2.78060*160 = 444.90 V > U0 = 230 V -> no cumple (Zs 2.781 ohm > Zs_max 1.366 ohm). Se espera que el motor reporte 'no cumple'.",
+ "expected": {
+  "value": 444.8953,
+  "unit": "V",
+  "tolerance_pct": 1.0
+ },
+ "expected_source": "closed_form",
+ "engine_call": {
+  "module": "aea_protection",
+  "function": "verifica_tn",
+  "adapter": "tn_verify",
+  "mapping": "zs = aea_earthing.zs_lazo(...)['zs_ohm'], ia_a=160, u0_v=230; lee zs_ia_v y cumple"
+ },
+ "severity_if_fails": "safety",
+ "note_es": "Si el motor dijera 'cumple' sería un defecto de seguridad; se informa también el veredicto.",
+ "repo_refs": [
+  {
+   "file": "harness/src/engines/calculation/aea90364/src/epc_aea90364/aea_tables.json",
+   "pointer": "/constantes/impedancias_estandar/r20_ohm_km/2.5",
+   "value": 7.41,
+   "what": "R20 2,5 mm2"
+  },
+  {
+   "file": "harness/src/engines/calculation/aea90364/src/epc_aea90364/aea_tables.json",
+   "pointer": "/constantes/impedancias_estandar/reactancia_ohm_km",
+   "value": 0.08,
+   "what": "X"
+  },
+  {
+   "file": "harness/src/engines/calculation/aea90364/src/epc_aea90364/aea_tables.json",
+   "pointer": "/constantes/impedancias_estandar/c_fuente_max",
+   "value": 1.05,
+   "what": "c max fuente"
+  },
+  {
+   "file": "harness/src/engines/calculation/aea90364/src/epc_aea90364/aea_tables.json",
+   "pointer": "/constantes/impedancias_estandar/c_tension_min",
+   "value": 0.95,
+   "what": "c min"
+  }
+ ],
+ "owner_verdict": {
+  "date": "2026-11-10",
+  "action": "ok",
+  "decision": null,
+  "note": "Correct; no action."
+ }
+}

@@ -1,0 +1,8 @@
+{
+  "ratings_kva": [25, 50, 63, 100, 160, 250, 315, 400, 500, 630, 800, 1000, 1250, 1600, 2000, 2500],
+  "unit": "kVA",
+  "provenance": "convention; no clause located",
+  "clause": "no clause",
+  "review_status": "pending review",
+  "note": "Commonly published preferred distribution-transformer ratings (IEC/IEEE style). Pending review: values to be verified by the owner against the supply authority / manufacturer catalog."
+}

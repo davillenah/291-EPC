@@ -1,0 +1,40 @@
+{
+ "id": "r3_tomas_estar_20m2",
+ "title_es": "Tomacorrientes de una sala de estar de 20 m2",
+ "quantity": "bocas_requeridas",
+ "inputs": {
+  "uso": "living",
+  "largo_m": 4.0,
+  "ancho_m": 5.0,
+  "area_m2": 20.0
+ },
+ "formula": "Texto fuente: «AEA 90364-7-771 (2006), Tabla 771.8.III (viviendas): una boca cada 6 m² o fracción, mínimo dos». ceil(20/6) = ceil(3,33) = 4 bocas (mínimo 2).",
+ "expected": {
+  "value": 4.0,
+  "unit": "bocas",
+  "tolerance_pct": 0.01
+ },
+ "expected_source": "repo_data:harness/src/engines/calculation/receptacles/src/epc_receptacles/data/uses.json#/uses/living/source",
+ "engine_call": {
+  "module": "epc_receptacles",
+  "function": "run",
+  "adapter": "recept",
+  "mapping": "documento con un local: use, length_m, width_m, receptacle='tug'; lee rooms[0].required"
+ },
+ "severity_if_fails": "minor",
+ "note_es": "Control: debe coincidir.",
+ "repo_refs": [
+  {
+   "file": "harness/src/engines/calculation/receptacles/src/epc_receptacles/data/uses.json",
+   "pointer": "/uses/living/source",
+   "value": "AEA 90364-7-771 (2006), Tabla 771.8.III (viviendas): una boca cada 6 m² o fracción, mínimo dos",
+   "what": "texto fuente estar"
+  }
+ ],
+ "owner_verdict": {
+  "date": "2026-11-10",
+  "action": "ok",
+  "decision": null,
+  "note": "Correct; no action."
+ }
+}

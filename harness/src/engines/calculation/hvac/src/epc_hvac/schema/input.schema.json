@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "epc_hvac input",
+  "type": "object",
+  "required": ["design", "spaces"],
+  "properties": {
+    "design": {
+      "type": "object",
+      "required": ["t_out_c", "t_in_c", "w_out_kg_kg", "w_in_kg_kg", "supply_delta_t_k"],
+      "properties": {
+        "t_out_c": {"type": "number"},
+        "t_in_c": {"type": "number"},
+        "w_out_kg_kg": {"type": "number"},
+        "w_in_kg_kg": {"type": "number"},
+        "supply_delta_t_k": {"type": "number", "exclusiveMinimum": 0}
+      }
+    },
+    "spaces": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "area_m2"],
+        "properties": {
+          "id": {"type": "string"},
+          "name": {"type": "string"},
+          "area_m2": {"type": "number", "exclusiveMinimum": 0},
+          "height_m": {"type": "number", "exclusiveMinimum": 0},
+          "use": {"type": "string"},
+          "occupants": {"type": "number", "minimum": 0},
+          "lighting_w_m2": {"type": "number", "minimum": 0},
+          "equipment_w_m2": {"type": "number", "minimum": 0},
+          "infiltration_ach": {"type": "number", "minimum": 0},
+          "envelope": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["u_w_m2k", "area_m2"],
+              "properties": {
+                "kind": {"enum": ["wall", "roof", "floor", "window"]},
+                "u_w_m2k": {"type": "number", "minimum": 0},
+                "area_m2": {"type": "number", "minimum": 0},
+                "delta_t_k": {"type": "number"},
+                "shgc": {"type": "number", "minimum": 0, "maximum": 1},
+                "orientation": {"enum": ["N", "NE", "E", "SE", "S", "SW", "W", "NW", "H"]}
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

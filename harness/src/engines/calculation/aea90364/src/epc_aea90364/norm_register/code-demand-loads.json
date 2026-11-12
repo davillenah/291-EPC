@@ -1,0 +1,436 @@
+{
+ "schema_version": "1.0",
+ "engine": "aea90364",
+ "topic": "code-demand-loads",
+ "records": [
+  {
+   "id": "aea90364.code.aea_demand.u_mono_v",
+   "kind": "constant",
+   "title": {
+    "es": "Tensión monofásica nominal 220 V",
+    "en": "Nominal single-phase voltage 220 V"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "V",
+   "applies_to": "I_B = DPMS/220",
+   "provenance": "convention",
+   "verification": "from_memory",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/tension_nominal_defecto_v/valor/mono"
+   },
+   "review_point": "table:aea-calculo|const:tension_nominal_defecto_v",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "docstring HIPOTESIS: 220/380 V (AEA 771/770); no clause",
+    "other modules default to 220 V too (aea_voltage_drop) and 230 V U0 (board_memo, aea_protection)",
+    "no clause in code"
+   ],
+   "note": "Check 220 V (single-phase) and that U0 = 230 V elsewhere is consistent. Moved from code to aea_tables.json by ENG-13 (2026-11-10); the module reads it from there."
+  },
+  {
+   "id": "aea90364.code.aea_demand.u_tri_v",
+   "kind": "constant",
+   "title": {
+    "es": "Tensión trifásica nominal 380 V",
+    "en": "Nominal three-phase voltage 380 V"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "V",
+   "applies_to": "I_B = DPMS/(sqrt(3)*380)",
+   "provenance": "convention",
+   "verification": "from_memory",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/tension_nominal_defecto_v/valor/tri"
+   },
+   "review_point": "table:aea-calculo|const:tension_nominal_defecto_v",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "docstring HIPOTESIS: 220/380 V (AEA 771/770); no clause",
+    "aea_protection default line voltage is 400 V",
+    "no clause in code"
+   ],
+   "note": "Check 380 V (three-phase) vs 400 V used as default in aea_protection. Moved from code to aea_tables.json by ENG-13 (2026-11-10); the module reads it from there."
+  },
+  {
+   "id": "aea90364.code.aea_demand.va_boca_vivienda",
+   "kind": "constant",
+   "title": {
+    "es": "Potencia por boca de iluminación en vivienda 150 VA",
+    "en": "Power per lighting point in dwellings 150 VA"
+   },
+   "norm": "AEA 90364-7-771",
+   "edition": "2006",
+   "clause": "771.9.1",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "VA",
+   "applies_to": "Lighting general: 66 % of n x 150 VA",
+   "provenance": "norm",
+   "verification": "from_memory",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/771.9.1_va_boca_vivienda"
+   },
+   "review_point": "table:aea-calculo|const:771.9.1_va_boca_vivienda",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [],
+   "note": "Check 150 VA per lighting outlet (771.9.1). Moved from code to aea_tables.json by ENG-13 (2026-11-10); the module reads it from there."
+  },
+  {
+   "id": "aea90364.code.aea_demand.va_boca_770",
+   "kind": "constant",
+   "title": {
+    "es": "Potencia por boca de iluminación (770) 60 VA",
+    "en": "Power per lighting point (770) 60 VA"
+   },
+   "norm": "AEA 90364-7-770",
+   "edition": "2017",
+   "clause": "770.8.I",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "VA",
+   "applies_to": "Lighting general: 2/3 of n x 60 VA",
+   "provenance": "norm",
+   "verification": "from_memory",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/770.8.I_va_boca"
+   },
+   "review_point": "table:aea-calculo|const:770.8.I_va_boca",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [],
+   "note": "Check 60 VA per lighting outlet (table 770.8.I). Moved from code to aea_tables.json by ENG-13 (2026-11-10); the module reads it from there."
+  },
+  {
+   "id": "aea90364.code.aea_demand.va_tug",
+   "kind": "constant",
+   "title": {
+    "es": "Potencia por circuito TUG (y alumbrado con tomas) 2200 VA",
+    "en": "Power per TUG circuit (and lighting with sockets) 2200 VA"
+   },
+   "norm": "AEA 90364-7-771",
+   "edition": "2006",
+   "clause": "771.9",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "VA",
+   "applies_to": "General-use sockets",
+   "provenance": "norm",
+   "verification": "from_memory",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/771.9_va_tug"
+   },
+   "review_point": "table:aea-calculo|const:771.9_va_tug",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "docstring of the module: §9; the table number (771.9.I per the JSON title) is not cited in code"
+   ],
+   "note": "Check 2200 VA per TUG circuit (minimum power per circuit, 771.9). Moved from code to aea_tables.json by ENG-13 (2026-11-10); the module reads it from there."
+  },
+  {
+   "id": "aea90364.code.aea_demand.va_tue",
+   "kind": "constant",
+   "title": {
+    "es": "Potencia por circuito TUE 3300 VA",
+    "en": "Power per TUE circuit 3300 VA"
+   },
+   "norm": "AEA 90364-7-771",
+   "edition": "2006",
+   "clause": "771.9",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "VA",
+   "applies_to": "Specific-use sockets",
+   "provenance": "norm",
+   "verification": "from_memory",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/771.9_va_tue"
+   },
+   "review_point": "table:aea-calculo|const:771.9_va_tue",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "docstring of the module: §9; the table number is not cited in code"
+   ],
+   "note": "Check 3300 VA per TUE circuit (771.9). Moved from code to aea_tables.json by ENG-13 (2026-11-10); the module reads it from there."
+  },
+  {
+   "id": "aea90364.code.aea_demand.desequilibrio_max_pct",
+   "kind": "constant",
+   "title": {
+    "es": "Desequilibrio máximo entre fases 30 %",
+    "en": "Maximum phase imbalance 30 %"
+   },
+   "norm": "AEA 90364-7-770",
+   "edition": "2017",
+   "clause": "770.8.3.4",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "%",
+   "applies_to": "(Imax - Imin)/Imax",
+   "provenance": "norm",
+   "verification": "from_memory",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/770.8.3.4_desequilibrio_max_pct"
+   },
+   "review_point": "table:aea-calculo|const:770.8.3.4_desequilibrio_max_pct",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [],
+   "note": "Check the 30 % phase imbalance limit (770.8.3.4). Moved from code to aea_tables.json by ENG-13 (2026-11-10); the module reads it from there."
+  },
+  {
+   "id": "aea90364.code.aea_demand.grados_771",
+   "kind": "constant",
+   "title": {
+    "es": "Grados de electrificación por superficie y DPMS de referencia (771)",
+    "en": "Electrification grades by area and reference DPMS (771)"
+   },
+   "norm": "AEA 90364-7-771",
+   "edition": "2006",
+   "clause": "771.8.I, 771.8.IV, 771.8.IX",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "m2; kVA",
+   "applies_to": "(max area m2, grade, reference DPMS kVA) for vivienda, oficina, local",
+   "provenance": "norm",
+   "verification": "from_memory",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/771.8_grados_electrificacion"
+   },
+   "review_point": "table:aea-calculo|const:771.8_grados_electrificacion",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "last row limit is math.inf in code, written as null; the file mixes tables 771.8.I (dwellings), 771.8.IV (offices and shops) and 771.8.IX (other premises): which table feeds 'local' is not stated"
+   ],
+   "note": "Check area limits and reference kVA of each grade against tables 771.8.I, 771.8.IV and 771.8.IX. Moved from code to aea_tables.json by ENG-13 (2026-11-10); the module reads it from there."
+  },
+  {
+   "id": "aea90364.code.aea_demand.conjuntos_771_iii",
+   "kind": "constant",
+   "title": {
+    "es": "Coeficientes de simultaneidad para conjuntos de unidades (Tabla 771.9.III)",
+    "en": "Simultaneity coefficients for groups of units (Table 771.9.III)"
+   },
+   "norm": "AEA 90364-7-771",
+   "edition": "2006",
+   "clause": "771.9.III",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "-",
+   "applies_to": "(min units, Min/Medio coefficient, Elev/Sup coefficient)",
+   "provenance": "norm",
+   "verification": "from_memory",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/771.9.III_conjuntos_coeficientes"
+   },
+   "review_point": "table:aea-calculo|const:771.9.III_conjuntos_coeficientes",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "threshold 15.5 units is not an integer: check against the table"
+   ],
+   "note": "Check the thresholds 26/15.5/5/2 and coefficients against table 771.9.III (15.5 looks odd). Moved from code to aea_tables.json by ENG-13 (2026-11-10); the module reads it from there."
+  },
+  {
+   "id": "aea90364.code.aea_demand.grade_electrification_770.umbrales",
+   "kind": "constant",
+   "title": {
+    "es": "Grado 770 por superficie equivalente (60/130/200 m2; semicubierta al 50 %)",
+    "en": "Grade 770 by equivalent area (60/130/200 m2; half-covered at 50 %)"
+   },
+   "norm": "AEA 90364-7-770",
+   "edition": "2017",
+   "clause": "770.7.I",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "m2",
+   "applies_to": "Area = covered + 50 % semi-covered",
+   "provenance": "norm",
+   "verification": "from_memory",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/770.7.I_grados_electrificacion"
+   },
+   "review_point": "table:aea-calculo|const:770.7.I_grados_electrificacion",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "same 60/130/200 limits as the dwelling grades of _GRADOS_771 (771.8.I)"
+   ],
+   "note": "Check the area limits and the 50 % semi-covered factor of table 770.7.I. Moved from code to aea_tables.json by ENG-13 (2026-11-10); the module reads it from there."
+  },
+  {
+   "id": "aea90364.code.aea_demand.requiere_trifasico",
+   "kind": "constant",
+   "title": {
+    "es": "Trifásico recomendado si DPMS > 7 kVA o I > 32 A",
+    "en": "Three-phase recommended if DPMS > 7 kVA or I > 32 A"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "VA; A",
+   "applies_to": "requiere_trifasico",
+   "provenance": "typical",
+   "verification": "from_memory",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/demanda_trifasico_recomendado"
+   },
+   "review_point": "table:aea-calculo|const:demanda_trifasico_recomendado",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause in code"
+   ],
+   "note": "Find the source of 7 kVA / 32 A for the three-phase recommendation. Moved from code to aea_tables.json by ENG-13 (2026-11-10); the module reads it from there."
+  },
+  {
+   "id": "aea90364.code.aea_demand.corriente_alimentador_motores.factor",
+   "kind": "constant",
+   "title": {
+    "es": "Alimentador de motores: 1,25·In(mayor) + Σ In(resto)·fs",
+    "en": "Motor feeder: 1.25*In(largest) + sum In(rest)*fs"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "-",
+   "applies_to": "Feeder of several motors",
+   "provenance": "norm",
+   "verification": "from_memory",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/motor_alimentador_factor_mayor"
+   },
+   "review_point": "table:aea-calculo|const:motor_alimentador_factor_mayor",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "same 1.25 as aea90364.code.aea_pipeline.margin_motor (used for In of one motor)",
+    "no clause in code"
+   ],
+   "note": "Find the clause for 1.25 x largest motor current in motor feeders and check it. Moved from code to aea_tables.json by ENG-13 (2026-11-10); the module reads it from there."
+  },
+  {
+   "id": "aea90364.code.aea_demand.factor_parallel",
+   "kind": "constant",
+   "title": {
+    "es": "Paralelo: fs 1 (2 y 4 unipolares), 0,8 en otros casos, x0,85 con radiación solar",
+    "en": "Parallel: fs 1 (2 and 4 single-core), 0.8 otherwise, x0.85 with solar radiation"
+   },
+   "norm": "IEC 60364-5-52",
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "-",
+   "applies_to": "Cables in parallel per phase",
+   "provenance": "norm",
+   "verification": "from_memory",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/conductores_paralelo_factores"
+   },
+   "review_point": "table:aea-calculo|const:conductores_paralelo_factores",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "module NORMA line cites IEC 60364-5-52 (paralelo) with [VERIFICAR]; no clause in code",
+    "no clause in code"
+   ],
+   "note": "Find the clause for the parallel-cable factors and the solar radiation factor and check them. Moved from code to aea_tables.json by ENG-13 (2026-11-10); the module reads it from there."
+  }
+ ]
+}

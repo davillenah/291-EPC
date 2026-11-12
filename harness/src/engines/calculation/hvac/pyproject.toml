@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "epc-hvac"
+version = "0.1.0"
+description = "EPC-291 HVAC engine: cooling load of a space (conduction, solar, people, lighting, equipment, infiltration and ventilation), its supply air flow and the ventilation it needs, by the basic method of ASHRAE"
+requires-python = ">=3.10"
+dependencies = []
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+epc_hvac = ["data/*.json", "schema/*.json"]

@@ -1,0 +1,74 @@
+{
+ "schema_version": "1.0",
+ "engine": "aea90364",
+ "topic": "jurisdiction",
+ "records": [
+  {
+   "id": "aea90364.jurisdiction.ar.voltages_lv",
+   "kind": "constant",
+   "title": {
+    "es": "Tensiones nominales BT de Argentina",
+    "en": "Argentina LV nominal voltages"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "V",
+   "applies_to": "jurisdiction AR",
+   "provenance": "norm",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/jurisdiction.json",
+    "pointer": "/voltages_lv"
+   },
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "230/400 here vs nominal_voltage_v options 220/380/400 (default 380) in aea90364 design-criteria.json: conflicting values",
+    "no norm or clause cited"
+   ],
+   "note": "Confirm nominal LV voltages for AR and align with the design criterion options."
+  },
+  {
+   "id": "aea90364.jurisdiction.ar.frequency_hz",
+   "kind": "constant",
+   "title": {
+    "es": "Frecuencia nominal",
+    "en": "Nominal frequency"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "Hz",
+   "applies_to": "jurisdiction AR",
+   "provenance": "norm",
+   "verification": "unverified",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/jurisdiction.json",
+    "pointer": "/frequency_hz"
+   },
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "design-criteria frequency_hz allows 50 or 60 (default 50): duplicate"
+   ],
+   "note": "50 Hz; check."
+  }
+ ]
+}

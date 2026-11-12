@@ -1,0 +1,37 @@
+{
+ "id": "t1_aislacion_por_defecto",
+ "title_es": "Aislación por defecto sin criterios de diseño",
+ "quantity": "aislacion",
+ "inputs": {
+  "criterios": null
+ },
+ "formula": "El archivo de criterios de diseño del repo (data/design-criteria.json, criterio insulation) propone por defecto XLPE. El pipeline sin criterios resuelve la aislación por su propio texto por defecto.",
+ "expected": {
+  "value": "xlpe",
+  "unit": "",
+  "tolerance_pct": 0
+ },
+ "expected_source": "repo_data:harness/src/engines/calculation/aea90364/src/epc_aea90364/data/design-criteria.json#/criteria/9/default",
+ "engine_call": {
+  "module": "aea_pipeline",
+  "function": "resolver_criterios",
+  "adapter": "default_ins",
+  "mapping": "resolver_criterios(None)[3]"
+ },
+ "severity_if_fails": "major",
+ "note_es": "Si el pipeline se usa sin pasar criterios, dimensiona con PVC mientras el dato del repo dice XLPE: dos defaults distintos para el mismo dato. Con criterios explícitos no hay problema.",
+ "repo_refs": [
+  {
+   "file": "harness/src/engines/calculation/aea90364/src/epc_aea90364/data/design-criteria.json",
+   "pointer": "/criteria/9/default",
+   "value": "XLPE",
+   "what": "default de insulation"
+  }
+ ],
+ "owner_verdict": {
+  "date": "2026-11-10",
+  "action": "correct",
+  "decision": "D6",
+  "note": "Apply D6 (insulation by circuit role); recompute the case."
+ }
+}

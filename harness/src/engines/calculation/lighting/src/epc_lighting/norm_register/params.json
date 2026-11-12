@@ -1,0 +1,307 @@
+{
+ "schema_version": "1.0",
+ "engine": "lighting",
+ "topic": "params",
+ "records": [
+  {
+   "id": "lighting.params.defaults.work_plane_height_m",
+   "kind": "constant",
+   "title": {
+    "es": "Altura del plano de trabajo por defecto",
+    "en": "Default work plane height"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "m",
+   "applies_to": "room work plane",
+   "provenance": "design-default",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/lighting/src/epc_lighting/params.json",
+    "pointer": "/defaults/work_plane_height_m"
+   },
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause cited; params note says typical values are not normative"
+   ],
+   "note": "0.85 m; confirm with the project standard (D351-79 or other)."
+  },
+  {
+   "id": "lighting.params.defaults.area_beam_utilisation",
+   "kind": "constant",
+   "title": {
+    "es": "Aprovechamiento del haz por defecto (exterior)",
+    "en": "Default area beam utilisation (exterior)"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "ratio",
+   "applies_to": "exterior floodlight method",
+   "provenance": "design-default",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/lighting/src/epc_lighting/params.json",
+    "pointer": "/defaults/area_beam_utilisation"
+   },
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause",
+    "range 0.6-0.9 in beam_utilisation_range; source of 0.75 not cited"
+   ],
+   "note": "0.75 within 0.6-0.9; confirm."
+  },
+  {
+   "id": "lighting.params.beam_utilisation_range",
+   "kind": "constant",
+   "title": {
+    "es": "Rango admitido de aprovechamiento del haz",
+    "en": "Allowed beam utilisation range"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "ratio",
+   "applies_to": "exterior floodlight method",
+   "provenance": "design-default",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/lighting/src/epc_lighting/params.json",
+    "pointer": "/beam_utilisation_range"
+   },
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause"
+   ],
+   "note": "[0.6, 0.9]; confirm source (UNAC chapter III?) - code cites none."
+  },
+  {
+   "id": "lighting.params.cavity.rcr_factor",
+   "kind": "constant",
+   "title": {
+    "es": "Factor de la relación de cavidad (RCR)",
+    "en": "Room cavity ratio factor"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "-",
+   "applies_to": "cavity ratio 5h(L+W)/(LW)",
+   "provenance": "physics",
+   "verification": "unverified",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/lighting/src/epc_lighting/params.json",
+    "pointer": "/cavity/rcr_factor"
+   },
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "standard IES zonal-cavity definition; no clause cited"
+   ],
+   "note": "Check that 5.0 is the factor of the RCR formula used by the zonal method."
+  },
+  {
+   "id": "lighting.params.conformity.direct_factor",
+   "kind": "criterion",
+   "title": {
+    "es": "Factor del chequeo de iluminancia directa",
+    "en": "Direct-illuminance check factor"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "ratio",
+   "applies_to": "conformity check: direct average >= factor * target",
+   "provenance": "design-default",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/lighting/src/epc_lighting/params.json",
+    "pointer": "/conformity/direct_factor"
+   },
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause; code says typical value to confirm with project standard"
+   ],
+   "note": "0.9; confirm criterion or source."
+  },
+  {
+   "id": "lighting.params.uniformity_limits",
+   "kind": "criterion",
+   "title": {
+    "es": "Límites de uniformidad",
+    "en": "Uniformity limits"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "ratio",
+   "applies_to": "illuminance map checks (min/avg, max/avg, max/min)",
+   "provenance": "design-default",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/lighting/src/epc_lighting/params.json",
+    "pointer": "/uniformity_limits"
+   },
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause",
+    "min/avg 1/3, max/avg 3, max/min 10 look like rules of thumb"
+   ],
+   "note": "Confirm limits against the project standard."
+  },
+  {
+   "id": "lighting.params.emergency",
+   "kind": "criterion",
+   "title": {
+    "es": "Criterios de iluminación de emergencia antipánico",
+    "en": "Antipanic emergency lighting criteria"
+   },
+   "norm": "EN 1838 (as recalled in code)",
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "lx, ratio, m",
+   "applies_to": "antipanic grid: e_min 0.5 lx, max/min 40, band 0.5 m, step 0.5 m, n_max 400, spacing 1.5",
+   "provenance": "typical",
+   "verification": "from_memory",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/lighting/src/epc_lighting/params.json",
+    "pointer": "/emergency"
+   },
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause: code says 'as recalled, EN 1838'",
+    "Argentine requirements not referenced"
+   ],
+   "note": "Verify 0.5 lx minimum and 40:1 ratio against the applicable emergency lighting norm; also band, step, n_max, spacing."
+  },
+  {
+   "id": "lighting.params.point_grid",
+   "kind": "constant",
+   "title": {
+    "es": "Paso y máximo de la grilla de puntos",
+    "en": "Point grid step and maximum points"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "m",
+   "applies_to": "illuminance map computation",
+   "provenance": "design-default",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/lighting/src/epc_lighting/params.json",
+    "pointer": "/point_grid"
+   },
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "numerical setting; not a norm value"
+   ],
+   "note": "Step 0.5 m, 2500 points: algorithm setting, no check needed unless a norm prescribes the grid."
+  },
+  {
+   "id": "lighting.params.photometry_max_output_ratio",
+   "kind": "constant",
+   "title": {
+    "es": "Relación máxima de flujo de salida admitida",
+    "en": "Maximum photometric output ratio"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "ratio",
+   "applies_to": "photometry data validation",
+   "provenance": "design-default",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/lighting/src/epc_lighting/params.json",
+    "pointer": "/photometry_max_output_ratio"
+   },
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "tolerance setting, no source"
+   ],
+   "note": "1.02 tolerance for LOR/flux; engine tolerance, not a norm."
+  }
+ ]
+}

@@ -1,0 +1,627 @@
+{
+ "schema_version": "1.0",
+ "engine": "aea90364",
+ "topic": "criteria",
+ "records": [
+  {
+   "id": "aea90364.criterion.nominal-voltage-v",
+   "kind": "criterion",
+   "title": {
+    "es": "Tensión nominal (trifásica)",
+    "en": "Nominal voltage (three-phase)"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "V",
+   "applies_to": "AR electrical projects",
+   "provenance": "design-default",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/design-criteria.json",
+    "pointer": "/criteria/0"
+   },
+   "review_point": "criterion:ar-electrical|nominal_voltage_v",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause in data",
+    "criteria file is marked validated=false"
+   ],
+   "note": "Starting value proposed by the platform (default 380); confirm it or find the clause that fixes it."
+  },
+  {
+   "id": "aea90364.criterion.frequency-hz",
+   "kind": "criterion",
+   "title": {
+    "es": "Frecuencia",
+    "en": "Frequency"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "Hz",
+   "applies_to": "AR electrical projects",
+   "provenance": "design-default",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/design-criteria.json",
+    "pointer": "/criteria/1"
+   },
+   "review_point": "criterion:ar-electrical|frequency_hz",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause in data",
+    "criteria file is marked validated=false"
+   ],
+   "note": "Starting value proposed by the platform (default 50); confirm it or find the clause that fixes it."
+  },
+  {
+   "id": "aea90364.criterion.socket-height-m",
+   "kind": "criterion",
+   "title": {
+    "es": "Altura de tomacorrientes",
+    "en": "Socket outlets height"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "m",
+   "applies_to": "AR electrical projects",
+   "provenance": "design-default",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/design-criteria.json",
+    "pointer": "/criteria/2"
+   },
+   "review_point": "criterion:ar-electrical|socket_height_m",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause in data",
+    "criteria file is marked validated=false"
+   ],
+   "note": "Starting value proposed by the platform (default 0.3); confirm it or find the clause that fixes it."
+  },
+  {
+   "id": "aea90364.criterion.switch-height-m",
+   "kind": "criterion",
+   "title": {
+    "es": "Altura de llaves de luz",
+    "en": "Light switches height"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "m",
+   "applies_to": "AR electrical projects",
+   "provenance": "design-default",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/design-criteria.json",
+    "pointer": "/criteria/3"
+   },
+   "review_point": "criterion:ar-electrical|switch_height_m",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause in data",
+    "criteria file is marked validated=false"
+   ],
+   "note": "Starting value proposed by the platform (default 1.1); confirm it or find the clause that fixes it."
+  },
+  {
+   "id": "aea90364.criterion.board-height-m",
+   "kind": "criterion",
+   "title": {
+    "es": "Altura de operación de tableros (máxima)",
+    "en": "Board operating height (top)"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "m",
+   "applies_to": "AR electrical projects",
+   "provenance": "design-default",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/design-criteria.json",
+    "pointer": "/criteria/4"
+   },
+   "review_point": "criterion:ar-electrical|board_height_m",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause in data",
+    "criteria file is marked validated=false"
+   ],
+   "note": "Starting value proposed by the platform (default 1.8); confirm it or find the clause that fixes it."
+  },
+  {
+   "id": "aea90364.criterion.vd-sectional-pct",
+   "kind": "criterion",
+   "title": {
+    "es": "Caída máxima en líneas seccionales",
+    "en": "Maximum drop in sectional lines (feeders)"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "%",
+   "applies_to": "AR electrical projects",
+   "provenance": "design-default",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/design-criteria.json",
+    "pointer": "/criteria/5"
+   },
+   "review_point": "criterion:ar-electrical|vd_sectional_pct",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause in data",
+    "criteria file is marked validated=false",
+    "duplicated literal: default also stated by aea90364.constant.771-19-limites-caida-pct"
+   ],
+   "note": "Starting value proposed by the platform (default 1); confirm it or find the clause that fixes it."
+  },
+  {
+   "id": "aea90364.criterion.vd-lighting-sockets-pct",
+   "kind": "criterion",
+   "title": {
+    "es": "Caída máxima en circuitos de iluminación y tomacorrientes",
+    "en": "Maximum drop in lighting and socket circuits"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "%",
+   "applies_to": "AR electrical projects",
+   "provenance": "design-default",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/design-criteria.json",
+    "pointer": "/criteria/6"
+   },
+   "review_point": "criterion:ar-electrical|vd_lighting_sockets_pct",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause in data",
+    "criteria file is marked validated=false",
+    "duplicated literal: default also stated by aea90364.constant.771-19-limites-caida-pct"
+   ],
+   "note": "Starting value proposed by the platform (default 3); confirm it or find the clause that fixes it."
+  },
+  {
+   "id": "aea90364.criterion.vd-motors-pct",
+   "kind": "criterion",
+   "title": {
+    "es": "Caída máxima en circuitos de motores",
+    "en": "Maximum drop in motor circuits"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "%",
+   "applies_to": "AR electrical projects",
+   "provenance": "design-default",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/design-criteria.json",
+    "pointer": "/criteria/7"
+   },
+   "review_point": "criterion:ar-electrical|vd_motors_pct",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause in data",
+    "criteria file is marked validated=false",
+    "duplicated literal: default also stated by aea90364.constant.771-19-limites-caida-pct"
+   ],
+   "note": "Starting value proposed by the platform (default 5); confirm it or find the clause that fixes it."
+  },
+  {
+   "id": "aea90364.criterion.conductor-material",
+   "kind": "criterion",
+   "title": {
+    "es": "Material del conductor",
+    "en": "Conductor material"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": null,
+   "applies_to": "AR electrical projects",
+   "provenance": "design-default",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/design-criteria.json",
+    "pointer": "/criteria/8"
+   },
+   "review_point": "criterion:ar-electrical|conductor_material",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause in data",
+    "criteria file is marked validated=false"
+   ],
+   "note": "Starting value proposed by the platform (default \"cobre\"); confirm it or find the clause that fixes it."
+  },
+  {
+   "id": "aea90364.criterion.insulation",
+   "kind": "criterion",
+   "title": {
+    "es": "Aislación",
+    "en": "Insulation"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": null,
+   "applies_to": "AR electrical projects",
+   "provenance": "design-default",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/design-criteria.json",
+    "pointer": "/criteria/9"
+   },
+   "review_point": "criterion:ar-electrical|insulation",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause in data",
+    "criteria file is marked validated=false"
+   ],
+   "note": "Starting value proposed by the platform (default \"XLPE\"); confirm it or find the clause that fixes it."
+  },
+  {
+   "id": "aea90364.criterion.min-section-lighting-mm2",
+   "kind": "criterion",
+   "title": {
+    "es": "Sección mínima, circuitos de iluminación",
+    "en": "Minimum section, lighting circuits"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "mm²",
+   "applies_to": "AR electrical projects",
+   "provenance": "design-default",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/design-criteria.json",
+    "pointer": "/criteria/10"
+   },
+   "review_point": "criterion:ar-electrical|min_section_lighting_mm2",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause in data",
+    "criteria file is marked validated=false",
+    "duplicated literal: default also stated by aea90364.constant.771-13-i-secciones-minimas-mm2"
+   ],
+   "note": "Starting value proposed by the platform (default 1.5); confirm it or find the clause that fixes it."
+  },
+  {
+   "id": "aea90364.criterion.min-section-sockets-mm2",
+   "kind": "criterion",
+   "title": {
+    "es": "Sección mínima, circuitos de tomacorrientes",
+    "en": "Minimum section, socket circuits"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "mm²",
+   "applies_to": "AR electrical projects",
+   "provenance": "design-default",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/design-criteria.json",
+    "pointer": "/criteria/11"
+   },
+   "review_point": "criterion:ar-electrical|min_section_sockets_mm2",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause in data",
+    "criteria file is marked validated=false",
+    "duplicated literal: default also stated by aea90364.constant.771-13-i-secciones-minimas-mm2"
+   ],
+   "note": "Starting value proposed by the platform (default 2.5); confirm it or find the clause that fixes it."
+  },
+  {
+   "id": "aea90364.criterion.rcd-sensitivity-ma",
+   "kind": "criterion",
+   "title": {
+    "es": "Sensibilidad del interruptor diferencial",
+    "en": "Residual current device sensitivity"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "mA",
+   "applies_to": "AR electrical projects",
+   "provenance": "design-default",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/design-criteria.json",
+    "pointer": "/criteria/12"
+   },
+   "review_point": "criterion:ar-electrical|rcd_sensitivity_ma",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause in data",
+    "criteria file is marked validated=false"
+   ],
+   "note": "Starting value proposed by the platform (default 30); confirm it or find the clause that fixes it."
+  },
+  {
+   "id": "aea90364.criterion.board-spare-pct",
+   "kind": "criterion",
+   "title": {
+    "es": "Reserva en tableros",
+    "en": "Spare capacity in boards"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "%",
+   "applies_to": "AR electrical projects",
+   "provenance": "design-default",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/design-criteria.json",
+    "pointer": "/criteria/13"
+   },
+   "review_point": "criterion:ar-electrical|board_spare_pct",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause in data",
+    "criteria file is marked validated=false"
+   ],
+   "note": "Starting value proposed by the platform (default 20); confirm it or find the clause that fixes it."
+  },
+  {
+   "id": "aea90364.criterion.raceway-fill-max-pct",
+   "kind": "criterion",
+   "title": {
+    "es": "Ocupación máxima de canalizaciones",
+    "en": "Maximum raceway fill"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "%",
+   "applies_to": "AR electrical projects",
+   "provenance": "design-default",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/design-criteria.json",
+    "pointer": "/criteria/14"
+   },
+   "review_point": "criterion:ar-electrical|raceway_fill_max_pct",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause in data",
+    "criteria file is marked validated=false"
+   ],
+   "note": "Starting value proposed by the platform (default 40); confirm it or find the clause that fixes it."
+  },
+  {
+   "id": "aea90364.criterion.ambient-temp-c",
+   "kind": "criterion",
+   "title": {
+    "es": "Temperatura ambiente (aire)",
+    "en": "Ambient air temperature"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "°C",
+   "applies_to": "AR electrical projects",
+   "provenance": "design-default",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/design-criteria.json",
+    "pointer": "/criteria/15"
+   },
+   "review_point": "criterion:ar-electrical|ambient_temp_c",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause in data",
+    "criteria file is marked validated=false",
+    "duplicated literal: default also stated by aea90364.table.771-16-i"
+   ],
+   "note": "Starting value proposed by the platform (default 40); confirm it or find the clause that fixes it."
+  },
+  {
+   "id": "aea90364.criterion.soil-temp-c",
+   "kind": "criterion",
+   "title": {
+    "es": "Temperatura del suelo (cables enterrados)",
+    "en": "Soil temperature (buried cables)"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "°C",
+   "applies_to": "AR electrical projects",
+   "provenance": "design-default",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/design-criteria.json",
+    "pointer": "/criteria/16"
+   },
+   "review_point": "criterion:ar-electrical|soil_temp_c",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause in data",
+    "criteria file is marked validated=false",
+    "duplicated literal: default also stated by aea90364.table.771-16-v"
+   ],
+   "note": "Starting value proposed by the platform (default 25); confirm it or find the clause that fixes it."
+  },
+  {
+   "id": "aea90364.criterion.soil-resistivity-kmw",
+   "kind": "criterion",
+   "title": {
+    "es": "Resistividad térmica del terreno",
+    "en": "Soil thermal resistivity"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "K·m/W",
+   "applies_to": "AR electrical projects",
+   "provenance": "design-default",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/design-criteria.json",
+    "pointer": "/criteria/17"
+   },
+   "review_point": "criterion:ar-electrical|soil_resistivity_kmw",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause in data",
+    "criteria file is marked validated=false",
+    "duplicated literal: default also stated by aea90364.table.771-16-v"
+   ],
+   "note": "Starting value proposed by the platform (default 1); confirm it or find the clause that fixes it."
+  }
+ ]
+}

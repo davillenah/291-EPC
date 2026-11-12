@@ -1,0 +1,376 @@
+{
+ "schema_version": "1.0",
+ "engine": "lighting",
+ "topic": "data",
+ "records": [
+  {
+   "id": "lighting.data.levels",
+   "kind": "table",
+   "title": {
+    "es": "Niveles de iluminancia por actividad (material didáctico)",
+    "en": "Maintained illuminance by activity (teaching material)"
+   },
+   "norm": "UNE-EN 12464-1:2003 (quoted by UPV lumen-method article) and ICARO manual",
+   "edition": "2003",
+   "clause": "tables 6.2.1-6.2.3 (education rows); ICARO I.1 2.1 (task/room rows)",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "lx (UGRL, Ra dimensionless)",
+   "applies_to": "rooms by activity; default target if no target_lux",
+   "provenance": "teaching",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/lighting/src/epc_lighting/data/levels.json",
+    "pointer": "/activities"
+   },
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "European norm via a teaching article, not an Argentine norm",
+    "D351-79 rules also give levels: two sets of levels, not reconciled (e.g. classroom/office values differ in source)",
+    "ICARO rows give no norm and no UGR/Ra",
+    "edition 2003 is superseded by later EN 12464-1 editions"
+   ],
+   "note": "Compare each row with the project norm (D351-79 Anexo IV or current EN 12464-1); decide which set the engine should use."
+  },
+  {
+   "id": "lighting.data.reflectances.defaults",
+   "kind": "constant",
+   "title": {
+    "es": "Reflectancias por defecto (techo/paredes/piso)",
+    "en": "Default reflectances (ceiling/walls/floor)"
+   },
+   "norm": "UPV lumen-method article (no standard)",
+   "edition": null,
+   "clause": "sentence after table 4",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "ratio 0-1",
+   "applies_to": "room reflectances when none given",
+   "provenance": "teaching",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/lighting/src/epc_lighting/data/reflectances.json",
+    "pointer": "/defaults"
+   },
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "rule of thumb from a teaching article, not a norm"
+   ],
+   "note": "0.5/0.3/0.1 as quoted by the article; confirm as acceptable default or replace with project values."
+  },
+  {
+   "id": "lighting.data.reflectances.materials",
+   "kind": "table",
+   "title": {
+    "es": "Rangos de reflectancia por material",
+    "en": "Reflectance ranges by material"
+   },
+   "norm": "UPV lumen-method article",
+   "edition": null,
+   "clause": "table 4",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "ratio 0-1",
+   "applies_to": "material to reflectance (midpoint of range)",
+   "provenance": "teaching",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/lighting/src/epc_lighting/data/reflectances.json",
+    "pointer": "/materials"
+   },
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "teaching article table, 30 materials",
+    "midpoint of range used with reduced confidence (0.7)"
+   ],
+   "note": "Check ranges against a lighting reference (manufacturer or CIE/IES tables)."
+  },
+  {
+   "id": "lighting.data.maintenance.interior",
+   "kind": "table",
+   "title": {
+    "es": "Factor de mantenimiento interior (limpio/sucio)",
+    "en": "Interior maintenance factor (clean/dirty)"
+   },
+   "norm": "UPV lumen-method article",
+   "edition": null,
+   "clause": "table 6",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "ratio",
+   "applies_to": "interior luminaires, lumen method",
+   "provenance": "typical",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/lighting/src/epc_lighting/data/maintenance.json",
+    "pointer": "/interior"
+   },
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "annual cleaning assumed; typical, not normative"
+   ],
+   "note": "0.8 clean, 0.6 dirty; confirm with the project maintenance plan."
+  },
+  {
+   "id": "lighting.data.maintenance.interior_range",
+   "kind": "constant",
+   "title": {
+    "es": "Rango usual de factor de mantenimiento interior",
+    "en": "Usual interior maintenance factor range"
+   },
+   "norm": "UNAC chapter III",
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "ratio",
+   "applies_to": "interior luminaires",
+   "provenance": "typical",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/lighting/src/epc_lighting/data/maintenance.json",
+    "pointer": "/interior_range"
+   },
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "UNAC chapter III cited, no section/table number"
+   ],
+   "note": "Range 0.5-0.8; locate the exact section in UNAC chapter III."
+  },
+  {
+   "id": "lighting.data.maintenance.exterior",
+   "kind": "table",
+   "title": {
+    "es": "Factor de mantenimiento exterior (proyector abierto/cerrado)",
+    "en": "Exterior maintenance factor (open/closed fixture)"
+   },
+   "norm": "UNAC chapter III",
+   "edition": null,
+   "clause": "section 5",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "ratio",
+   "applies_to": "exterior floodlights",
+   "provenance": "typical",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/lighting/src/epc_lighting/data/maintenance.json",
+    "pointer": "/exterior"
+   },
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "typical, not normative"
+   ],
+   "note": "0.65 open, 0.85 closed; confirm in UNAC chapter III section 5."
+  },
+  {
+   "id": "lighting.data.spacing.by_room_height",
+   "kind": "table",
+   "title": {
+    "es": "Distancia máxima entre luminarias según altura del local",
+    "en": "Maximum luminaire spacing by room height"
+   },
+   "norm": "UPV lumen-method article",
+   "edition": null,
+   "clause": "table 7",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "multiple of h",
+   "applies_to": "spacing e <= ratio*h",
+   "provenance": "teaching",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/lighting/src/epc_lighting/data/spacing.json",
+    "pointer": "/by_room_height"
+   },
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "rows 'extensive 6-10' and 'semi-extensive 4-6' have the same ratio 1.5 and two rows are called 'extensive': check against the source table"
+   ],
+   "note": "Verify the four ratios and the height bands against table 7 of the article."
+  },
+  {
+   "id": "lighting.data.lighting_systems.systems",
+   "kind": "table",
+   "title": {
+    "es": "Sistemas de iluminación: fórmula de índice, separación y suspensión",
+    "en": "Lighting systems: index formula, spacing ratio, suspension group"
+   },
+   "norm": "UPV lumen-method article; UNAC chapter III",
+   "edition": null,
+   "clause": "UPV tables 1-3; UNAC 1 and 2.6",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "multiple of h",
+   "applies_to": "room index k and max spacing per system",
+   "provenance": "teaching",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/lighting/src/epc_lighting/data/lighting_systems.json",
+    "pointer": "/systems"
+   },
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "spacing_ratio null where sources give none"
+   ],
+   "note": "Check spacing ratios (1.2/1.5/1.6) and index_formula per system against UNAC 2.6 and UPV table 3."
+  },
+  {
+   "id": "lighting.data.lighting_systems.suspension_rules",
+   "kind": "rule_set",
+   "title": {
+    "es": "Altura de suspensión automática (fracción de H-h')",
+    "en": "Automatic suspension height (fraction of H-h')"
+   },
+   "norm": "UPV lumen-method article",
+   "edition": null,
+   "clause": "table 2",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "fraction",
+   "applies_to": "suspension_mode auto_min / auto_optimal",
+   "provenance": "teaching",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/lighting/src/epc_lighting/data/lighting_systems.json",
+    "pointer": "/suspension_rules"
+   },
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "indirect auto_min 0.8 vs auto_optimal 0.75: minimum is larger than optimal, check source"
+   ],
+   "note": "Direct 2/3 and 4/5; indirect 4/5 and 3/4. Confirm against UPV table 2."
+  },
+  {
+   "id": "lighting.data.cu_generic",
+   "kind": "table",
+   "title": {
+    "es": "Tabla de coeficiente de utilización genérica (ERCO downlight)",
+    "en": "Generic coefficient-of-utilisation table (ERCO downlight)"
+   },
+   "norm": "UPV lumen-method article",
+   "edition": null,
+   "clause": "table 5",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "percent",
+   "applies_to": "fallback when luminaire has no cu / cu_table",
+   "provenance": "illustrative",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/lighting/src/epc_lighting/data/cu_generic.json",
+    "pointer": "/cu_table"
+   },
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "manufacturer table of one luminaire used as generic fallback (warning, confidence 0.4)",
+    "values above 100 appear",
+    "orientation of 'values' (rows by k or by reflectance set) is not stated in the file: verify the engine reads it as in the source"
+   ],
+   "note": "Illustrative only; verify transcription and matrix orientation against table 5."
+  },
+  {
+   "id": "lighting.data.luminaires",
+   "kind": "table",
+   "title": {
+    "es": "Luminarias genéricas ilustrativas",
+    "en": "Illustrative generic luminaires"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "lm, W, cd/klm",
+   "applies_to": "starting catalogue",
+   "provenance": "illustrative",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/lighting/src/epc_lighting/data/luminaires.json",
+    "pointer": "/luminaires"
+   },
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "flux and power are typical of the kind, not of a maker; flagged illustrative"
+   ],
+   "note": "Not normative. Replace with maker data; no check against a standard needed."
+  }
+ ]
+}

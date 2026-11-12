@@ -1,0 +1,739 @@
+{
+ "schema_version": "1.0",
+ "engine": "aea90364",
+ "topic": "code-defaults",
+ "records": [
+  {
+   "id": "aea90364.code.aea_pipeline.default.tension_v",
+   "kind": "code_constant",
+   "title": {
+    "es": "Tensión de línea por defecto 380 V",
+    "en": "Default line voltage 380 V"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "V",
+   "applies_to": "Board voltage when missing",
+   "provenance": "design-default",
+   "verification": "from_memory",
+   "confidence": "low",
+   "location": {
+    "type": "code",
+    "file": "harness/src/engines/calculation/aea90364/src/epc_aea90364/aea_pipeline.py",
+    "symbol": null,
+    "line": 350
+   },
+   "value": 380.0,
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "same value as JSON criterion aea90364.criterion.nominal-voltage-v (380)",
+    "duplicated in grouping.py, board_figures.py, aea_feeder_report.py and backend models.py",
+    "no clause in code"
+   ],
+   "note": "Check 380 V as the default system voltage."
+  },
+  {
+   "id": "aea90364.code.aea_pipeline.default.icc_ka",
+   "kind": "code_constant",
+   "title": {
+    "es": "Icc en barras por defecto 10 kA",
+    "en": "Default busbar Icc 10 kA"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "kA",
+   "applies_to": "Board Icc when missing",
+   "provenance": "design-default",
+   "verification": "from_memory",
+   "confidence": "low",
+   "location": {
+    "type": "code",
+    "file": "harness/src/engines/calculation/aea90364/src/epc_aea90364/aea_pipeline.py",
+    "symbol": null,
+    "line": 351
+   },
+   "value": 10.0,
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "duplicated in grouping.py, aea_feeder_report.py, board_memo (10) and backend models.py",
+    "no clause in code"
+   ],
+   "note": "Check 10 kA as the default short-circuit current."
+  },
+  {
+   "id": "aea90364.code.aea_pipeline.default.fp",
+   "kind": "code_constant",
+   "title": {
+    "es": "Factor de potencia por defecto 0,85",
+    "en": "Default power factor 0.85"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "-",
+   "applies_to": "Circuits without FP",
+   "provenance": "design-default",
+   "verification": "from_memory",
+   "confidence": "low",
+   "location": {
+    "type": "code",
+    "file": "harness/src/engines/calculation/aea90364/src/epc_aea90364/aea_pipeline.py",
+    "symbol": null,
+    "line": 352
+   },
+   "value": 0.85,
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "duplicated in grouping.py, board_figures.py and backend models.py",
+    "no clause in code"
+   ],
+   "note": "Check cos phi 0.85 as the default."
+  },
+  {
+   "id": "aea90364.code.aea_pipeline.default.insulation",
+   "kind": "code_constant",
+   "title": {
+    "es": "Aislación por defecto si faltan criterios: PVC",
+    "en": "Fallback insulation when criteria are missing: PVC"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": null,
+   "applies_to": "resolver_criterios",
+   "provenance": "design-default",
+   "verification": "from_memory",
+   "confidence": "low",
+   "location": {
+    "type": "code",
+    "file": "harness/src/engines/calculation/aea90364/src/epc_aea90364/aea_pipeline.py",
+    "symbol": null,
+    "line": 310
+   },
+   "value": "PVC",
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "conflicts with aea90364.criterion.insulation: design-criteria.json default is XLPE, code fallback is PVC",
+    "no clause in code"
+   ],
+   "note": "Decide one default insulation: code falls back to PVC, design criteria say XLPE."
+  },
+  {
+   "id": "aea90364.code.aea_pipeline.default.material",
+   "kind": "code_constant",
+   "title": {
+    "es": "Material por defecto: cobre",
+    "en": "Default material: copper"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": null,
+   "applies_to": "resolver_criterios",
+   "provenance": "design-default",
+   "verification": "from_memory",
+   "confidence": "low",
+   "location": {
+    "type": "code",
+    "file": "harness/src/engines/calculation/aea90364/src/epc_aea90364/aea_pipeline.py",
+    "symbol": null,
+    "line": 309
+   },
+   "value": "cobre",
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "same as aea90364.criterion.conductor-material default (cobre)",
+    "no clause in code"
+   ],
+   "note": "Check copper as the default conductor."
+  },
+  {
+   "id": "aea90364.code.aea_pipeline.default.rcd_ma",
+   "kind": "code_constant",
+   "title": {
+    "es": "Sensibilidad del diferencial por defecto 30 mA",
+    "en": "Default RCD sensitivity 30 mA"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "mA",
+   "applies_to": "resolver_criterios",
+   "provenance": "norm",
+   "verification": "from_memory",
+   "confidence": "low",
+   "location": {
+    "type": "code",
+    "file": "harness/src/engines/calculation/aea90364/src/epc_aea90364/aea_pipeline.py",
+    "symbol": null,
+    "line": 313
+   },
+   "value": 30.0,
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "same value as aea90364.criterion.rcd-sensitivity-ma (30)",
+    "no clause in code"
+   ],
+   "note": "Check 30 mA high-sensitivity RCD default for sockets."
+  },
+  {
+   "id": "aea90364.code.aea_pipeline.default.ambient_c",
+   "kind": "code_constant",
+   "title": {
+    "es": "Temperatura ambiente por defecto 40 C",
+    "en": "Default ambient temperature 40 C"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "C",
+   "applies_to": "resolver_instalacion",
+   "provenance": "norm",
+   "verification": "from_memory",
+   "confidence": "low",
+   "location": {
+    "type": "code",
+    "file": "harness/src/engines/calculation/aea90364/src/epc_aea90364/aea_pipeline.py",
+    "symbol": null,
+    "line": 319
+   },
+   "value": 40.0,
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "same value as aea90364.criterion.ambient-temp-c (40); 40 C is the reference of table 771.16.I",
+    "no clause in code"
+   ],
+   "note": "Check 40 C ambient reference."
+  },
+  {
+   "id": "aea90364.code.aea_pipeline.default.soil_c",
+   "kind": "code_constant",
+   "title": {
+    "es": "Temperatura del suelo por defecto 25 C",
+    "en": "Default soil temperature 25 C"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "C",
+   "applies_to": "resolver_instalacion",
+   "provenance": "norm",
+   "verification": "from_memory",
+   "confidence": "low",
+   "location": {
+    "type": "code",
+    "file": "harness/src/engines/calculation/aea90364/src/epc_aea90364/aea_pipeline.py",
+    "symbol": null,
+    "line": 319
+   },
+   "value": 25.0,
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "same value as aea90364.criterion.soil-temp-c (25)",
+    "no clause in code"
+   ],
+   "note": "Check 25 C soil reference."
+  },
+  {
+   "id": "aea90364.code.aea_pipeline.default.rho_kmw",
+   "kind": "code_constant",
+   "title": {
+    "es": "Resistividad térmica del suelo por defecto 1,0 K·m/W",
+    "en": "Default soil thermal resistivity 1.0 K*m/W"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "K*m/W",
+   "applies_to": "resolver_instalacion",
+   "provenance": "norm",
+   "verification": "from_memory",
+   "confidence": "low",
+   "location": {
+    "type": "code",
+    "file": "harness/src/engines/calculation/aea90364/src/epc_aea90364/aea_pipeline.py",
+    "symbol": null,
+    "line": 319
+   },
+   "value": 1.0,
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "same value as aea90364.criterion.soil-resistivity-kmw (1)",
+    "no clause in code"
+   ],
+   "note": "Check 1.0 K*m/W soil reference."
+  },
+  {
+   "id": "aea90364.code.aea_ampacity.default.ambiente_suelo_rho",
+   "kind": "code_constant",
+   "title": {
+    "es": "Defaults de aea_ampacity: 40 C aire, 25 C suelo, 1,0 K·m/W",
+    "en": "aea_ampacity defaults: 40 C air, 25 C soil, 1.0 K*m/W"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": null,
+   "applies_to": "parse of circuit parameters",
+   "provenance": "design-default",
+   "verification": "from_memory",
+   "confidence": "low",
+   "location": {
+    "type": "code",
+    "file": "harness/src/engines/calculation/feeder_sizing/src/epc_feeder_sizing/aea_ampacity.py",
+    "symbol": null,
+    "line": 95
+   },
+   "value": {
+    "ambient_c": 40.0,
+    "soil_c": 25.0,
+    "rho_kmw": 1.0
+   },
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "duplicated literals of the pipeline defaults",
+    "no clause in code"
+   ],
+   "note": "Same installation references as the pipeline defaults."
+  },
+  {
+   "id": "aea90364.code.aea_pipeline.default.rendimiento",
+   "kind": "code_constant",
+   "title": {
+    "es": "Rendimiento por defecto 1,0",
+    "en": "Default efficiency 1.0"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "-",
+   "applies_to": "Motor efficiency when not given",
+   "provenance": "design-default",
+   "verification": "from_memory",
+   "confidence": "low",
+   "location": {
+    "type": "code",
+    "file": "harness/src/engines/calculation/aea90364/src/epc_aea90364/aea_pipeline.py",
+    "symbol": null,
+    "line": 220
+   },
+   "value": 1.0,
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause in code"
+   ],
+   "note": "Check efficiency 1.0 default is acceptable for motors in kW."
+  },
+  {
+   "id": "aea90364.code.aea_pipeline.default.temp_c",
+   "kind": "code_constant",
+   "title": {
+    "es": "Temperatura de conductor por defecto 70 C",
+    "en": "Default conductor temperature 70 C"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "C",
+   "applies_to": "calculate options",
+   "provenance": "design-default",
+   "verification": "from_memory",
+   "confidence": "low",
+   "location": {
+    "type": "code",
+    "file": "harness/src/engines/calculation/aea90364/src/epc_aea90364/aea_pipeline.py",
+    "symbol": null,
+    "line": 505
+   },
+   "value": 70.0,
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "CLI also defaults to 70 C; XLPE uses 90 C via aea_ampacity.temp_conductor",
+    "no clause in code"
+   ],
+   "note": "Check 70 C default conductor temperature."
+  },
+  {
+   "id": "aea90364.code.aea_pipeline.hp_w",
+   "kind": "code_constant",
+   "title": {
+    "es": "1 HP = 745,7 W",
+    "en": "1 HP = 745.7 W"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "W",
+   "applies_to": "Load unit conversion",
+   "provenance": "physics",
+   "verification": "from_memory",
+   "confidence": "high",
+   "location": {
+    "type": "code",
+    "file": "harness/src/engines/calculation/aea90364/src/epc_aea90364/aea_pipeline.py",
+    "symbol": "HP_W",
+    "line": 73
+   },
+   "value": 745.7,
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause in code"
+   ],
+   "note": "Check 745.7 W per mechanical horsepower."
+  },
+  {
+   "id": "aea90364.code.aea_pipeline.hp_cv_w",
+   "kind": "code_constant",
+   "title": {
+    "es": "1 CV = 735,49875 W",
+    "en": "1 CV = 735.49875 W"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "W",
+   "applies_to": "Load unit conversion",
+   "provenance": "physics",
+   "verification": "from_memory",
+   "confidence": "high",
+   "location": {
+    "type": "code",
+    "file": "harness/src/engines/calculation/aea90364/src/epc_aea90364/aea_pipeline.py",
+    "symbol": "HP_CV_W",
+    "line": 74
+   },
+   "value": 735.49875,
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause in code"
+   ],
+   "note": "Check 735.49875 W per metric horsepower (cv)."
+  },
+  {
+   "id": "aea90364.code.grouping.default.max_circuits",
+   "kind": "code_constant",
+   "title": {
+    "es": "Agrupación: máximo 6 circuitos por grupo",
+    "en": "Grouping: at most 6 circuits per group"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "circuits",
+   "applies_to": "Group splitting",
+   "provenance": "design-default",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "code",
+    "file": "harness/src/engines/calculation/aea90364/src/epc_aea90364/grouping.py",
+    "symbol": null,
+    "line": 57
+   },
+   "value": 6,
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause in code"
+   ],
+   "note": "Check 6 circuits per group default."
+  },
+  {
+   "id": "aea90364.code.grouping.default.max_ib_a",
+   "kind": "code_constant",
+   "title": {
+    "es": "Agrupación: máximo 40 A por grupo",
+    "en": "Grouping: at most 40 A per group"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "A",
+   "applies_to": "Group splitting",
+   "provenance": "design-default",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "code",
+    "file": "harness/src/engines/calculation/aea90364/src/epc_aea90364/grouping.py",
+    "symbol": null,
+    "line": 57
+   },
+   "value": 40,
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "also default 40 in solutions.py validation",
+    "no clause in code"
+   ],
+   "note": "Check 40 A per group default."
+  },
+  {
+   "id": "aea90364.code.grouping.default.tablero",
+   "kind": "code_constant",
+   "title": {
+    "es": "Defaults de agrupación: 380 V, FP 0,85, Icc 10 kA",
+    "en": "Grouping defaults: 380 V, PF 0.85, Icc 10 kA"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": null,
+   "applies_to": "grouping context",
+   "provenance": "design-default",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "code",
+    "file": "harness/src/engines/calculation/aea90364/src/epc_aea90364/grouping.py",
+    "symbol": null,
+    "line": 27
+   },
+   "value": {
+    "voltage_v": 380.0,
+    "fp": 0.85,
+    "icc_ka": 10.0
+   },
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "duplicated literals of the pipeline defaults",
+    "no clause in code"
+   ],
+   "note": "Same defaults as the pipeline."
+  },
+  {
+   "id": "aea90364.code.board_figures.default.tablero",
+   "kind": "code_constant",
+   "title": {
+    "es": "Defaults de láminas: 380 V, FP 0,85, 50 Hz",
+    "en": "Sheet defaults: 380 V, PF 0.85, 50 Hz"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": null,
+   "applies_to": "board_figures",
+   "provenance": "design-default",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "code",
+    "file": "harness/src/engines/calculation/aea90364/src/epc_aea90364/board_figures.py",
+    "symbol": null,
+    "line": 56
+   },
+   "value": {
+    "voltage_v": 380.0,
+    "fp": 0.85,
+    "frequency_hz": 50
+   },
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "duplicated literals of the pipeline defaults",
+    "no clause in code"
+   ],
+   "note": "Same defaults as the pipeline; 50 Hz."
+  },
+  {
+   "id": "aea90364.code.aea_feeder_report.default.tablero",
+   "kind": "code_constant",
+   "title": {
+    "es": "Defaults del informe de alimentador: 380 V, 10 kA",
+    "en": "Feeder report defaults: 380 V, 10 kA"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": null,
+   "applies_to": "aea_feeder_report",
+   "provenance": "design-default",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "code",
+    "file": "harness/src/engines/calculation/aea90364/src/epc_aea90364/aea_feeder_report.py",
+    "symbol": null,
+    "line": 63
+   },
+   "value": {
+    "voltage_v": 380.0,
+    "icc_ka": 10.0
+   },
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "duplicated literals; the report text also hardcodes reactance 0,08 ohm/km",
+    "no clause in code"
+   ],
+   "note": "Same defaults as the pipeline."
+  },
+  {
+   "id": "aea90364.code.conductor_selection.cli.fp",
+   "kind": "code_constant",
+   "title": {
+    "es": "CLI: cos phi por defecto 0,9",
+    "en": "CLI: default cos phi 0.9"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "-",
+   "applies_to": "Command line of conductor_selection",
+   "provenance": "design-default",
+   "verification": "from_memory",
+   "confidence": "low",
+   "location": {
+    "type": "code",
+    "file": "harness/src/engines/calculation/feeder_sizing/src/epc_feeder_sizing/conductor_selection.py",
+    "symbol": null,
+    "line": 204
+   },
+   "value": 0.9,
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "differs from the 0.85 default of the pipeline",
+    "no clause in code"
+   ],
+   "note": "Check 0.9 CLI default vs 0.85 pipeline."
+  }
+ ]
+}

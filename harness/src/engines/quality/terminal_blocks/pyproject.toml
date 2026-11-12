@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "epc-terminal-blocks"
+version = "0.1.0"
+description = "EPC-291 quality engine: terminal-block list (planilla de bornes) of a calculated board: terminal rows per circuit, sequential terminal ids, terminal size lookup"
+requires-python = ">=3.10"
+dependencies = []
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+epc_terminal_blocks = ["data/*.json", "norm_register/*.json"]

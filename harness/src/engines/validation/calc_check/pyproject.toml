@@ -1,0 +1,13 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "epc-calc-check"
+version = "0.1.0"
+description = "EPC-291 calc_check: deterministic checks (recalculation, invariants, format, cross-document consistency) of what the engines produced, reported as findings"
+requires-python = ">=3.10"
+dependencies = ["epc-aea90364"]
+
+[tool.setuptools.packages.find]
+where = ["src"]

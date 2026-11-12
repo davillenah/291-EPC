@@ -1,0 +1,110 @@
+{
+ "schema_version": "1.0",
+ "engine": "hvac",
+ "topic": "constants",
+ "records": [
+  {
+   "id": "hvac.code.air_sensible_w_per_ls_k",
+   "kind": "code_constant",
+   "title": {
+    "es": "Calor sensible del aire estándar",
+    "en": "Sensible heat of standard air"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "W per (L/s) per K",
+   "applies_to": "hvac load/airflow conversions",
+   "provenance": "physics",
+   "verification": "unverified",
+   "confidence": "medium",
+   "location": {
+    "type": "code",
+    "file": "harness/src/engines/calculation/hvac/src/epc_hvac/config.py",
+    "symbol": "AIR_SENSIBLE_W_PER_LS_K",
+    "line": 11
+   },
+   "value": 1.23,
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "1.23 vs RHO_AIRE x CP_AIRE = 1.2 x 1.006 = 1.207 in harness/src/engines/calculation/aea90364 hvac_airflow.py (both marked [VERIFICAR] there): about 2 % apart, two sources"
+   ],
+   "note": "1.23 W/(L/s.K); reconcile with the aea90364 air properties."
+  },
+  {
+   "id": "hvac.code.air_latent_w_per_ls_kgkg",
+   "kind": "code_constant",
+   "title": {
+    "es": "Calor latente del aire estándar",
+    "en": "Latent heat of standard air"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "W per (L/s) per kg/kg",
+   "applies_to": "hvac load/airflow conversions",
+   "provenance": "physics",
+   "verification": "unverified",
+   "confidence": "medium",
+   "location": {
+    "type": "code",
+    "file": "harness/src/engines/calculation/hvac/src/epc_hvac/config.py",
+    "symbol": "AIR_LATENT_W_PER_LS_KGKG",
+    "line": 12
+   },
+   "value": 3010.0,
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "aea90364 hvac_airflow has no latent constant to compare; 3010 implies rho 1.2 x hfg ~2508 kJ/kg"
+   ],
+   "note": "3010; check rho and latent heat of vaporization assumed."
+  },
+  {
+   "id": "hvac.code.watts_per_refrigeration_ton",
+   "kind": "code_constant",
+   "title": {
+    "es": "Vatios por tonelada de refrigeración",
+    "en": "Watts per refrigeration ton"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "W/TR",
+   "applies_to": "hvac load/airflow conversions",
+   "provenance": "convention",
+   "verification": "unverified",
+   "confidence": "medium",
+   "location": {
+    "type": "code",
+    "file": "harness/src/engines/calculation/hvac/src/epc_hvac/config.py",
+    "symbol": "WATTS_PER_REFRIGERATION_TON",
+    "line": 13
+   },
+   "value": 3516.85,
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [],
+   "note": "3516.85 W per ton (12000 Btu/h); check conversion."
+  }
+ ]
+}

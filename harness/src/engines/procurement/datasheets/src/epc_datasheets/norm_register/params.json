@@ -1,0 +1,139 @@
+{
+ "schema_version": "1.0",
+ "engine": "datasheets",
+ "topic": "params",
+ "records": [
+  {
+   "id": "datasheets.params.catalog_abb_breakers",
+   "kind": "table",
+   "title": {
+    "es": "Catalogo de fabricante ABB: interruptores (valores sin verificar)",
+    "en": "Manufacturer catalog ABB: breakers (unverified values)"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "A, kA, V",
+   "applies_to": "datasheets: candidate products compared against the requirements (rated current, breaking capacity, type; cable insulation text)",
+   "provenance": "convention",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/catalogs/manufacturers/abb/breakers.json",
+    "pointer": "/products"
+   },
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause: manufacturer catalog (unverified); every product has status unverified and a source URL to check"
+   ],
+   "note": "Catalog values read by datasheets as candidate data; pending review, never verified here."
+  },
+  {
+   "id": "datasheets.params.catalog_schneider_electric_breakers",
+   "kind": "table",
+   "title": {
+    "es": "Catalogo de fabricante Schneider Electric: interruptores (valores sin verificar)",
+    "en": "Manufacturer catalog Schneider Electric: breakers (unverified values)"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "A, kA, V",
+   "applies_to": "datasheets: candidate products compared against the requirements (rated current, breaking capacity, type; cable insulation text)",
+   "provenance": "convention",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/catalogs/manufacturers/schneider-electric/breakers.json",
+    "pointer": "/products"
+   },
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause: manufacturer catalog (unverified); every product has status unverified and a source URL to check"
+   ],
+   "note": "Catalog values read by datasheets as candidate data; pending review, never verified here."
+  },
+  {
+   "id": "datasheets.params.catalog_siemens_breakers",
+   "kind": "table",
+   "title": {
+    "es": "Catalogo de fabricante Siemens: interruptores (valores sin verificar)",
+    "en": "Manufacturer catalog Siemens: breakers (unverified values)"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "A, kA, V",
+   "applies_to": "datasheets: candidate products compared against the requirements (rated current, breaking capacity, type; cable insulation text)",
+   "provenance": "convention",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/catalogs/manufacturers/siemens/breakers.json",
+    "pointer": "/products"
+   },
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause: manufacturer catalog (unverified); every product has status unverified and a source URL to check"
+   ],
+   "note": "Catalog values read by datasheets as candidate data; pending review, never verified here."
+  },
+  {
+   "id": "datasheets.params.catalog_prysmian_cables",
+   "kind": "table",
+   "title": {
+    "es": "Catalogo de fabricante Prysmian: cables (valores sin verificar)",
+    "en": "Manufacturer catalog Prysmian: cables (unverified values)"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": null,
+   "applies_to": "datasheets: candidate products compared against the requirements (rated current, breaking capacity, type; cable insulation text)",
+   "provenance": "convention",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/catalogs/manufacturers/prysmian/cables.json",
+    "pointer": "/products"
+   },
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause: manufacturer catalog (unverified); every product has status unverified and a source URL to check"
+   ],
+   "note": "Catalog values read by datasheets as candidate data; pending review, never verified here."
+  }
+ ]
+}

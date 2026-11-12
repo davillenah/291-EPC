@@ -1,0 +1,535 @@
+{
+ "schema_version": "1.0",
+ "engine": "aea90364",
+ "topic": "tables",
+ "records": [
+  {
+   "id": "aea90364.table.771-16-i",
+   "kind": "table",
+   "title": {
+    "es": "Intensidad de corriente admisible [A], temperatura ambiente de cálculo 40 °C",
+    "en": "Current-carrying capacity, ambient 40 C, 70 C conductor"
+   },
+   "norm": "AEA 90364-7-771",
+   "edition": "2006",
+   "clause": "771.16.I",
+   "page": {
+    "printed": null,
+    "pdf": 105
+   },
+   "unit": "A",
+   "applies_to": null,
+   "provenance": "norm",
+   "verification": "text",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/tablas_capacidad/771.16.I"
+   },
+   "review_point": "table:aea-calculo|cap:771.16.I",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no printed page in data (PDF page only)"
+   ],
+   "note": "Compare every value with table 771.16.I (PDF page 105); the file is a DRAFT (meta.estado)."
+  },
+  {
+   "id": "aea90364.table.771-16-iii",
+   "kind": "table",
+   "title": {
+    "es": "Intensidades de corriente admisibles [A], temperatura ambiente 40 °C (métodos B2, C, E, F, G)",
+    "en": "Current-carrying capacity, ambient 40 C, methods B2/C/E/F/G (PVC and XLPE)"
+   },
+   "norm": "AEA 90364-7-771",
+   "edition": "2006",
+   "clause": "771.16.III",
+   "page": {
+    "printed": null,
+    "pdf": 107
+   },
+   "unit": "A",
+   "applies_to": null,
+   "provenance": "norm",
+   "verification": "text",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/tablas_capacidad/771.16.III"
+   },
+   "review_point": "table:aea-calculo|cap:771.16.III",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no printed page in data (PDF page only)"
+   ],
+   "note": "Compare every value with table 771.16.III (PDF page 107); the file is a DRAFT (meta.estado)."
+  },
+  {
+   "id": "aea90364.table.771-16-v",
+   "kind": "table",
+   "title": {
+    "es": "Intensidad de corriente admisible [A], terreno 25 °C y 1 K·m/W (método D1, caño enterrado)",
+    "en": "Current-carrying capacity, buried in duct (method D1), soil 25 C"
+   },
+   "norm": "AEA 90364-7-771",
+   "edition": "2006",
+   "clause": "771.16.V",
+   "page": {
+    "printed": null,
+    "pdf": 113
+   },
+   "unit": "A",
+   "applies_to": null,
+   "provenance": "norm",
+   "verification": "text",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/tablas_capacidad/771.16.V"
+   },
+   "review_point": "table:aea-calculo|cap:771.16.V",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no printed page in data (PDF page only)"
+   ],
+   "note": "Compare every value with table 771.16.V (PDF page 113); the file is a DRAFT (meta.estado)."
+  },
+  {
+   "id": "aea90364.table.771-16-vi",
+   "kind": "table",
+   "title": {
+    "es": "Intensidad de corriente admisible [A], terreno 25 °C y 1 K·m/W (método D2, directamente enterrado)",
+    "en": "Current-carrying capacity, directly buried (method D2), soil 25 C"
+   },
+   "norm": "AEA 90364-7-771",
+   "edition": "2006",
+   "clause": "771.16.VI",
+   "page": {
+    "printed": null,
+    "pdf": 115
+   },
+   "unit": "A",
+   "applies_to": null,
+   "provenance": "norm",
+   "verification": "text",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/tablas_capacidad/771.16.VI"
+   },
+   "review_point": "table:aea-calculo|cap:771.16.VI",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no printed page in data (PDF page only)"
+   ],
+   "note": "Compare every value with table 771.16.VI (PDF page 115); the file is a DRAFT (meta.estado)."
+  },
+  {
+   "id": "aea90364.table.771-16-viii",
+   "kind": "table",
+   "title": {
+    "es": "Intensidad de corriente admisible [A], cables preensamblados en líneas aéreas de baja tensión",
+    "en": "Current-carrying capacity, aerial pre-assembled LV cables"
+   },
+   "norm": "AEA 90364-7-771",
+   "edition": "2006",
+   "clause": "771.16.VIII",
+   "page": {
+    "printed": null,
+    "pdf": 121
+   },
+   "unit": "A",
+   "applies_to": null,
+   "provenance": "norm",
+   "verification": "text",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/tablas_capacidad/771.16.VIII"
+   },
+   "review_point": "table:aea-calculo|cap:771.16.VIII",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no printed page in data (PDF page only)"
+   ],
+   "note": "Compare every value with table 771.16.VIII (PDF page 121); the file is a DRAFT (meta.estado)."
+  },
+  {
+   "id": "aea90364.table.771-16-xi",
+   "kind": "table",
+   "title": {
+    "es": "Corrientes admisibles para cables flexibles (equipos móviles o portátiles)",
+    "en": "Current-carrying capacity, flexible cables (mobile or portable equipment)"
+   },
+   "norm": "AEA 90364-7-771",
+   "edition": "2006",
+   "clause": "771.16.XI",
+   "page": {
+    "printed": null,
+    "pdf": 121
+   },
+   "unit": "A",
+   "applies_to": null,
+   "provenance": "norm",
+   "verification": "text",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/tablas_capacidad/771.16.XI"
+   },
+   "review_point": "table:aea-calculo|cap:771.16.XI",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no printed page in data (PDF page only)"
+   ],
+   "note": "Compare every value with table 771.16.XI (PDF page 121); the file is a DRAFT (meta.estado)."
+  },
+  {
+   "id": "aea90364.table.771-16-ii-a",
+   "kind": "table",
+   "title": {
+    "es": "Factor de corrección por temperatura ambiente distinta de 40 °C",
+    "en": "Correction factor for ambient temperature other than 40 C"
+   },
+   "norm": "AEA 90364-7-771",
+   "edition": "2006",
+   "clause": "771.16.II.a",
+   "page": {
+    "printed": null,
+    "pdf": 106
+   },
+   "unit": null,
+   "applies_to": "tables 771.16.I, 771.16.III, 771.16.V, 771.16.VI, 771.16.VIII",
+   "provenance": "norm",
+   "verification": "text",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/factores_correccion/771.16.II.a"
+   },
+   "review_point": "table:aea-calculo|fac:771.16.II.a",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no printed page in data (PDF page only)"
+   ],
+   "note": "Compare every value with table 771.16.II.a (PDF page 106); the file is a DRAFT (meta.estado)."
+  },
+  {
+   "id": "aea90364.table.771-16-ii-b",
+   "kind": "table",
+   "title": {
+    "es": "Factor de corrección por agrupamiento de circuitos en un mismo caño",
+    "en": "Grouping factor for circuits in one conduit"
+   },
+   "norm": "AEA 90364-7-771",
+   "edition": "2006",
+   "clause": "771.16.II.b",
+   "page": {
+    "printed": null,
+    "pdf": 106
+   },
+   "unit": null,
+   "applies_to": null,
+   "provenance": "norm",
+   "verification": "text",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/factores_correccion/771.16.II.b"
+   },
+   "review_point": "table:aea-calculo|fac:771.16.II.b",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no printed page in data (PDF page only)"
+   ],
+   "note": "Compare every value with table 771.16.II.b (PDF page 106); the file is a DRAFT (meta.estado)."
+  },
+  {
+   "id": "aea90364.table.771-16-iv",
+   "kind": "table",
+   "title": {
+    "es": "Factores de reducción por agrupamiento de más de un circuito o cable multipolar (en aire)",
+    "en": "Grouping reduction factors in air"
+   },
+   "norm": "AEA 90364-7-771",
+   "edition": "2006",
+   "clause": "771.16.IV",
+   "page": {
+    "printed": null,
+    "pdf": 110
+   },
+   "unit": null,
+   "applies_to": null,
+   "provenance": "norm",
+   "verification": "text",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/factores_correccion/771.16.IV"
+   },
+   "review_point": "table:aea-calculo|fac:771.16.IV",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no printed page in data (PDF page only)"
+   ],
+   "note": "Compare every value with table 771.16.IV (PDF page 110); the file is a DRAFT (meta.estado)."
+  },
+  {
+   "id": "aea90364.table.771-16-vii-a",
+   "kind": "table",
+   "title": {
+    "es": "Factor de corrección por temperatura del suelo distinta de 25 °C",
+    "en": "Correction factor for soil temperature other than 25 C"
+   },
+   "norm": "AEA 90364-7-771",
+   "edition": "2006",
+   "clause": "771.16.VII.a",
+   "page": {
+    "printed": null,
+    "pdf": 119
+   },
+   "unit": null,
+   "applies_to": null,
+   "provenance": "norm",
+   "verification": "text",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/factores_correccion/771.16.VII.a"
+   },
+   "review_point": "table:aea-calculo|fac:771.16.VII.a",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no printed page in data (PDF page only)"
+   ],
+   "note": "Compare every value with table 771.16.VII.a (PDF page 119); the file is a DRAFT (meta.estado)."
+  },
+  {
+   "id": "aea90364.table.771-16-vii-b",
+   "kind": "table",
+   "title": {
+    "es": "Factor de corrección por resistividad térmica del terreno distinta de 1 K·m/W",
+    "en": "Correction factor for soil thermal resistivity"
+   },
+   "norm": "AEA 90364-7-771",
+   "edition": "2006",
+   "clause": "771.16.VII.b",
+   "page": {
+    "printed": null,
+    "pdf": 119
+   },
+   "unit": null,
+   "applies_to": null,
+   "provenance": "norm",
+   "verification": "text",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/factores_correccion/771.16.VII.b"
+   },
+   "review_point": "table:aea-calculo|fac:771.16.VII.b",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no printed page in data (PDF page only)"
+   ],
+   "note": "Compare every value with table 771.16.VII.b (PDF page 119); the file is a DRAFT (meta.estado)."
+  },
+  {
+   "id": "aea90364.table.771-16-vii-c",
+   "kind": "table",
+   "title": {
+    "es": "Factores de reducción para más de un circuito, cables directamente enterrados",
+    "en": "Reduction factors, several directly buried circuits"
+   },
+   "norm": "AEA 90364-7-771",
+   "edition": "2006",
+   "clause": "771.16.VII.c",
+   "page": {
+    "printed": null,
+    "pdf": 120
+   },
+   "unit": null,
+   "applies_to": null,
+   "provenance": "norm",
+   "verification": "text",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/factores_correccion/771.16.VII.c"
+   },
+   "review_point": "table:aea-calculo|fac:771.16.VII.c",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no printed page in data (PDF page only)"
+   ],
+   "note": "Compare every value with table 771.16.VII.c (PDF page 120); the file is a DRAFT (meta.estado)."
+  },
+  {
+   "id": "aea90364.table.771-16-vii-d1",
+   "kind": "table",
+   "title": {
+    "es": "Factores de reducción para agrupamiento de caños enterrados, un cable multipolar por caño",
+    "en": "Reduction factors, buried ducts, one multicore cable per duct"
+   },
+   "norm": "AEA 90364-7-771",
+   "edition": "2006",
+   "clause": "771.16.VII.d1",
+   "page": {
+    "printed": null,
+    "pdf": 120
+   },
+   "unit": null,
+   "applies_to": null,
+   "provenance": "norm",
+   "verification": "text",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/factores_correccion/771.16.VII.d1"
+   },
+   "review_point": "table:aea-calculo|fac:771.16.VII.d1",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no printed page in data (PDF page only)"
+   ],
+   "note": "Compare every value with table 771.16.VII.d1 (PDF page 120); the file is a DRAFT (meta.estado)."
+  },
+  {
+   "id": "aea90364.table.771-16-vii-d2",
+   "kind": "table",
+   "title": {
+    "es": "Factores de reducción para agrupamiento de caños enterrados, un cable unipolar por caño no metálico",
+    "en": "Reduction factors, buried ducts, one single-core cable per non-metallic duct"
+   },
+   "norm": "AEA 90364-7-771",
+   "edition": "2006",
+   "clause": "771.16.VII.d2",
+   "page": {
+    "printed": null,
+    "pdf": 120
+   },
+   "unit": null,
+   "applies_to": null,
+   "provenance": "norm",
+   "verification": "text",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/factores_correccion/771.16.VII.d2"
+   },
+   "review_point": "table:aea-calculo|fac:771.16.VII.d2",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no printed page in data (PDF page only)"
+   ],
+   "note": "Compare every value with table 771.16.VII.d2 (PDF page 120); the file is a DRAFT (meta.estado)."
+  },
+  {
+   "id": "aea90364.table.771-16-ix",
+   "kind": "table",
+   "title": {
+    "es": "Factores de corrección para distintas temperaturas ambiente (cables preensamblados)",
+    "en": "Ambient temperature correction, pre-assembled cables"
+   },
+   "norm": "AEA 90364-7-771",
+   "edition": "2006",
+   "clause": "771.16.IX",
+   "page": {
+    "printed": null,
+    "pdf": 121
+   },
+   "unit": null,
+   "applies_to": null,
+   "provenance": "norm",
+   "verification": "text",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/factores_correccion/771.16.IX"
+   },
+   "review_point": "table:aea-calculo|fac:771.16.IX",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no printed page in data (PDF page only)"
+   ],
+   "note": "Compare every value with table 771.16.IX (PDF page 121); the file is a DRAFT (meta.estado)."
+  },
+  {
+   "id": "aea90364.table.771-16-x",
+   "kind": "table",
+   "title": {
+    "es": "Factores de reducción por agrupamiento de cables preensamblados",
+    "en": "Grouping reduction factors, pre-assembled cables"
+   },
+   "norm": "AEA 90364-7-771",
+   "edition": "2006",
+   "clause": "771.16.X",
+   "page": {
+    "printed": null,
+    "pdf": 121
+   },
+   "unit": null,
+   "applies_to": null,
+   "provenance": "norm",
+   "verification": "text",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/factores_correccion/771.16.X"
+   },
+   "review_point": "table:aea-calculo|fac:771.16.X",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no printed page in data (PDF page only)"
+   ],
+   "note": "Compare every value with table 771.16.X (PDF page 121); the file is a DRAFT (meta.estado)."
+  }
+ ]
+}

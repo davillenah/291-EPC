@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "epc-datasheets"
+version = "0.1.0"
+description = "EPC-291 procurement engine: draft equipment datasheet records; for each protective-device and cable requirement of a calculated board, the manufacturer-catalog products that satisfy it by comparison (no winner is chosen, no electrical value is calculated)"
+requires-python = ">=3.10"
+dependencies = []
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+epc_datasheets = ["norm_register/*.json"]

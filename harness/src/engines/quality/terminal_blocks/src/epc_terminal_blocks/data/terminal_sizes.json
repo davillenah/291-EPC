@@ -1,0 +1,17 @@
+{
+  "terminal_sizes": [
+    {"size_mm2": 2.5, "accepts_min_mm2": 1.5, "accepts_max_mm2": 2.5, "rated_current_a": 24},
+    {"size_mm2": 4, "accepts_min_mm2": 2.5, "accepts_max_mm2": 4, "rated_current_a": 32},
+    {"size_mm2": 6, "accepts_min_mm2": 4, "accepts_max_mm2": 6, "rated_current_a": 41},
+    {"size_mm2": 10, "accepts_min_mm2": 6, "accepts_max_mm2": 10, "rated_current_a": 57},
+    {"size_mm2": 16, "accepts_min_mm2": 10, "accepts_max_mm2": 16, "rated_current_a": 76},
+    {"size_mm2": 35, "accepts_min_mm2": 25, "accepts_max_mm2": 35, "rated_current_a": 125},
+    {"size_mm2": 70, "accepts_min_mm2": 50, "accepts_max_mm2": 70, "rated_current_a": 192}
+  ],
+  "unit_section": "mm2",
+  "unit_current": "A",
+  "provenance": "catalog/convention; no clause located",
+  "clause": "no clause",
+  "review_status": "pending review",
+  "note": "Generic terminal-block sizes: each size accepts its own section and the standard section below it (a conductor of a section between two listed sizes is not accepted by a smaller size). Rated currents are generic placeholders. Pending review: verify every value against the chosen manufacturer catalog."
+}

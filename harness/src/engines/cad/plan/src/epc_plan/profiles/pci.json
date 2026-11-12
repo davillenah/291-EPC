@@ -1,0 +1,208 @@
+{
+  "id": "pci",
+  "nombre": {
+    "es": "Protección contra incendios",
+    "en": "Fire protection"
+  },
+  "subdisciplinas": [
+    {
+      "id": "rociadores",
+      "nombre": {
+        "es": "Rociadores",
+        "en": "Sprinklers"
+      },
+      "tipos": [
+        "TA",
+        "RO"
+      ]
+    },
+    {
+      "id": "deteccion",
+      "nombre": {
+        "es": "Detección y alarma",
+        "en": "Detection and alarm"
+      },
+      "tipos": [
+        "DH",
+        "PM",
+        "SI",
+        "CF"
+      ]
+    },
+    {
+      "id": "extincion",
+      "nombre": {
+        "es": "Hidrantes y extintores",
+        "en": "Hydrants and extinguishers"
+      },
+      "tipos": [
+        "HI",
+        "EX",
+        "TA"
+      ]
+    }
+  ],
+  "disciplina_proyecto": "fire",
+  "tramos": [
+    {
+      "id": "TA",
+      "etiqueta": {
+        "es": "Cañería de agua contra incendio",
+        "en": "Fire water pipe"
+      },
+      "prefijo_tag": "TA",
+      "atributos": [
+        "diametro_mm",
+        "material"
+      ],
+      "simbolo_2d": "linea_simple",
+      "capa_dxf": "PCI-TUBERIA",
+      "geom": {
+        "z_m": 2.8,
+        "ancho_m": 0.06,
+        "alto_m": 0.06
+      }
+    },
+    {
+      "id": "CF",
+      "etiqueta": {
+        "es": "Cableado de detección",
+        "en": "Detection wiring"
+      },
+      "prefijo_tag": "CF",
+      "atributos": [
+        "tipo"
+      ],
+      "simbolo_2d": "linea_simple",
+      "capa_dxf": "PCI-DETECTOR",
+      "geom": {
+        "z_m": 2.8,
+        "ancho_m": 0.02,
+        "alto_m": 0.02
+      }
+    }
+  ],
+  "nodos": [
+    {
+      "id": "RO",
+      "etiqueta": {
+        "es": "Rociador",
+        "en": "Sprinkler"
+      },
+      "prefijo_tag": "RO",
+      "atributos": [
+        "tipo"
+      ],
+      "simbolo_2d": "rociador",
+      "capa_dxf": "PCI-ROCIADOR",
+      "geom": {
+        "z_m": 2.8,
+        "ancho_m": 0.15,
+        "alto_m": 0.15
+      }
+    },
+    {
+      "id": "DH",
+      "etiqueta": {
+        "es": "Detector de humo",
+        "en": "Smoke detector"
+      },
+      "prefijo_tag": "DH",
+      "atributos": [
+        "tipo"
+      ],
+      "simbolo_2d": "detector",
+      "capa_dxf": "PCI-DETECTOR",
+      "geom": {
+        "z_m": 2.8,
+        "ancho_m": 0.15,
+        "alto_m": 0.15
+      }
+    },
+    {
+      "id": "HI",
+      "etiqueta": {
+        "es": "Boca de incendio / hidrante",
+        "en": "Hydrant cabinet"
+      },
+      "prefijo_tag": "HI",
+      "atributos": [
+        "dimensiones"
+      ],
+      "simbolo_2d": "caja_pase",
+      "capa_dxf": "PCI-HIDRANTE",
+      "geom": {
+        "z_m": 0.0,
+        "ancho_m": 0.6,
+        "alto_m": 0.25
+      }
+    },
+    {
+      "id": "EX",
+      "etiqueta": {
+        "es": "Extintor",
+        "en": "Extinguisher"
+      },
+      "prefijo_tag": "EX",
+      "atributos": [
+        "tipo"
+      ],
+      "simbolo_2d": "extintor",
+      "capa_dxf": "PCI-EXTINTOR",
+      "geom": {
+        "z_m": 0.0,
+        "ancho_m": 0.25,
+        "alto_m": 0.25
+      }
+    },
+    {
+      "id": "PM",
+      "etiqueta": {
+        "es": "Pulsador manual",
+        "en": "Manual pull station"
+      },
+      "prefijo_tag": "PM",
+      "atributos": [
+        "tipo"
+      ],
+      "simbolo_2d": "pulsador",
+      "capa_dxf": "PCI-PULSADOR",
+      "geom": {
+        "z_m": 1.4,
+        "ancho_m": 0.12,
+        "alto_m": 0.12
+      }
+    },
+    {
+      "id": "SI",
+      "etiqueta": {
+        "es": "Sirena",
+        "en": "Siren"
+      },
+      "prefijo_tag": "SI",
+      "atributos": [
+        "tipo"
+      ],
+      "simbolo_2d": "sirena",
+      "capa_dxf": "PCI-PULSADOR",
+      "geom": {
+        "z_m": 2.4,
+        "ancho_m": 0.2,
+        "alto_m": 0.2
+      }
+    }
+  ],
+  "calculos": [
+    "longitud",
+    "cantidad"
+  ],
+  "normas": [],
+  "atajos_teclado": {
+    "t": "TA",
+    "r": "RO",
+    "d": "DH",
+    "h": "HI",
+    "e": "EX"
+  },
+  "unidades_salida": "m"
+}

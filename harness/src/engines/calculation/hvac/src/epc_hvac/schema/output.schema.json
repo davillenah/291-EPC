@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "epc_hvac output",
+  "type": "object",
+  "required": ["schema_version", "counts", "warnings", "totals", "spaces"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "counts": {"type": "object", "required": ["spaces"], "properties": {"spaces": {"type": "integer"}}},
+    "warnings": {"type": "array", "items": {"type": "string"}},
+    "totals": {"type": "object", "required": ["sensible_w", "latent_w", "total_w", "total_tr", "supply_ls", "ventilation_ls"]},
+    "spaces": {
+      "type": "array",
+      "items": {"type": "object", "required": ["id", "sensible_w", "latent_w", "total_w", "total_tr", "supply_ls", "ventilation_ls", "parts_w"]}
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "_note": "Typical values of the basic method, to be confirmed by the owner on the norms page. Nothing here is a value of the standard.",
+  "params": {
+    "person_sensible_w": 75,
+    "person_latent_w": 55,
+    "default_infiltration_ach": 0.3,
+    "default_lighting_use_factor": 1.0,
+    "typical_cop": 3.0
+  },
+  "solar": {"N": 100, "NE": 300, "E": 450, "SE": 350, "S": 200, "SW": 450, "W": 500, "NW": 350, "H": 800},
+  "ventilation": {
+    "office": {"per_person_ls": 2.5, "per_m2_ls": 0.3},
+    "meeting_room": {"per_person_ls": 2.5, "per_m2_ls": 0.3},
+    "retail": {"per_person_ls": 3.8, "per_m2_ls": 0.3},
+    "classroom": {"per_person_ls": 5.0, "per_m2_ls": 0.6},
+    "restaurant": {"per_person_ls": 3.8, "per_m2_ls": 0.9},
+    "default": {"per_person_ls": 2.5, "per_m2_ls": 0.3}
+  }
+}

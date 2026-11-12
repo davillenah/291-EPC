@@ -1,0 +1,30 @@
+{
+ "id": "e3_kappa_X0",
+ "title_es": "Factor de pico kappa con X = 0 (R>0)",
+ "quantity": "kappa",
+ "inputs": {
+  "R_ohm": 0.01,
+  "X_ohm": 0.0
+ },
+ "formula": "Límite R/X -> infinito: exp(-3*R/X) -> 0, kappa -> 1.02. (El cociente R/X no se puede evaluar con X=0; se toma el límite.)",
+ "expected": {
+  "value": 1.02,
+  "unit": "-",
+  "tolerance_pct": 0.01
+ },
+ "expected_source": "closed_form",
+ "engine_call": {
+  "module": "short_circuit",
+  "function": "factor_kappa",
+  "adapter": "sc_kappa",
+  "mapping": "r_ohm=R, x_ohm=X"
+ },
+ "severity_if_fails": "minor",
+ "note_es": "Caso límite: el motor devuelve 1,02 sin dividir por cero.",
+ "owner_verdict": {
+  "date": "2026-11-10",
+  "action": "ok",
+  "decision": null,
+  "note": "Correct; no action."
+ }
+}

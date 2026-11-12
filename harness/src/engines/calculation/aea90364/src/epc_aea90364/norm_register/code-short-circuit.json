@@ -1,0 +1,454 @@
+{
+ "schema_version": "1.0",
+ "engine": "aea90364",
+ "topic": "code-short-circuit",
+ "records": [
+  {
+   "id": "aea90364.code.short_circuit.c_max_bt_tol_10",
+   "kind": "constant",
+   "title": {
+    "es": "Factor de tensión c_max BT (tolerancia 10 %) = 1,10",
+    "en": "Voltage factor c_max LV (10 % tolerance) = 1.10"
+   },
+   "norm": "IEC 60909-0",
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "-",
+   "applies_to": "Max Ik'' in LV networks",
+   "provenance": "norm",
+   "verification": "from_memory",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/icc_c_max_tol_10"
+   },
+   "review_point": "table:aea-calculo|const:icc_c_max_tol_10",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "marked [VERIFICAR] in code",
+    "no clause in code",
+    "also read by aea_icc_factors.C_MAX_RED (same constant icc_c_max_tol_10)"
+   ],
+   "note": "Check c_max = 1.10 for 10 % tolerance LV. Moved from code to aea_tables.json by ENG-14 (2026-11-10); the module reads it from there."
+  },
+  {
+   "id": "aea90364.code.short_circuit.temp_min_c",
+   "kind": "constant",
+   "title": {
+    "es": "Temperatura del conductor para Ik mínima = 70 °C",
+    "en": "Conductor temperature for minimum Ik = 70 C"
+   },
+   "norm": "IEC 60909-0",
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "C",
+   "applies_to": "R of copper cable in ik_barras(minima=True)",
+   "provenance": "norm",
+   "verification": "from_memory",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/icc_temp_min_c"
+   },
+   "review_point": "table:aea-calculo|const:icc_temp_min_c",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "marked [VERIFICAR] in code",
+    "fixed 70 C even for XLPE (90 C service temperature in aea_ampacity.TEMP_CONDUCTOR_C); JSON uses a factor 1.2 at service temperature",
+    "no clause in code"
+   ],
+   "note": "Check the conductor temperature for minimum Ik (70 C) and whether XLPE (90 C) needs another value. Moved from code to aea_tables.json by ENG-14 (2026-11-10); the module reads it from there."
+  },
+  {
+   "id": "aea90364.code.short_circuit.xr_red_defecto",
+   "kind": "constant",
+   "title": {
+    "es": "Relación X/R por defecto de la red aguas arriba = 10",
+    "en": "Default X/R ratio of the upstream network = 10"
+   },
+   "norm": "IEC 60909-0",
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "-",
+   "applies_to": "R_Q = 0.1*X_Q when only Sk'' or Ik'' is given",
+   "provenance": "typical",
+   "verification": "from_memory",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/icc_xr_red_defecto"
+   },
+   "review_point": "table:aea-calculo|const:icc_xr_red_defecto",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "marked [VERIFICAR] in code",
+    "no clause in code"
+   ],
+   "note": "Check X/R = 10 default for the upstream network is acceptable. Moved from code to aea_tables.json by ENG-14 (2026-11-10); the module reads it from there."
+  },
+  {
+   "id": "aea90364.code.short_circuit.umbral_motores_despreciable",
+   "kind": "constant",
+   "title": {
+    "es": "Umbral de aporte de motores despreciable = 5 % de Ik''",
+    "en": "Negligible motor contribution threshold = 5 % of Ik''"
+   },
+   "norm": "IEC 60909-0",
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "fraction",
+   "applies_to": "motors_negligible()",
+   "provenance": "norm",
+   "verification": "from_memory",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/icc_motores_despreciable_pct"
+   },
+   "review_point": "table:aea-calculo|const:icc_motores_despreciable_pct",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "marked [VERIFICAR] in code",
+    "no clause in code",
+    "also read by aea_icc_factors.LIM_MOTORES_I_PCT (same constant icc_motores_despreciable_pct, 5 %, eq. [108])"
+   ],
+   "note": "Check the 5 % limit of motor contribution (see eq. [108] of AEA IT 90909-1). Moved from code to aea_tables.json by ENG-14 (2026-11-10); the module reads it from there."
+  },
+  {
+   "id": "aea90364.code.short_circuit.factor_kt.coeficientes",
+   "kind": "constant",
+   "title": {
+    "es": "Factor K_T = 0,95·c/(1+0,6·x_T)",
+    "en": "Factor K_T = 0.95*c/(1+0.6*x_T)"
+   },
+   "norm": "AEA IT 90909-1",
+   "edition": "2005",
+   "clause": "eq. [65]",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "-",
+   "applies_to": "Transformer impedance correction, only if aplicar_kt=True",
+   "provenance": "norm",
+   "verification": "from_memory",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/icc_factor_kt"
+   },
+   "review_point": "table:aea-calculo|const:icc_factor_kt",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "marked [VERIFICAR] in code; equation number [65] comes from the aea_icc_factors docstring"
+   ],
+   "note": "Check K_T = 0.95*c_max/(1+0.6*x_T) (eq. [65]). Moved from code to aea_tables.json by ENG-14 (2026-11-10); the module reads it from there."
+  },
+  {
+   "id": "aea90364.code.short_circuit.factor_kappa.coeficientes",
+   "kind": "constant",
+   "title": {
+    "es": "Factor kappa = 1,02 + 0,98·exp(−3·R/X)",
+    "en": "Factor kappa = 1.02 + 0.98*exp(-3*R/X)"
+   },
+   "norm": "AEA IT 90909-1",
+   "edition": "2005",
+   "clause": "eq. [68]",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "-",
+   "applies_to": "Peak current i_p = kappa*sqrt(2)*Ik''",
+   "provenance": "norm",
+   "verification": "from_memory",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/icc_factor_kappa"
+   },
+   "review_point": "table:aea-calculo|const:icc_factor_kappa",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "marked [VERIFICAR] in code; equation [68] is cited in the aea_icc_factors/aea_icc_decay docstrings"
+   ],
+   "note": "Check kappa = 1.02 + 0.98*exp(-3R/X) (eq. [68]). Moved from code to aea_tables.json by ENG-14 (2026-11-10); the module reads it from there."
+  },
+  {
+   "id": "aea90364.code.short_circuit.factor_kappa.x_cero",
+   "kind": "constant",
+   "title": {
+    "es": "kappa = 1,02 cuando X = 0",
+    "en": "kappa = 1.02 when X = 0"
+   },
+   "norm": "AEA IT 90909-1",
+   "edition": "2005",
+   "clause": "eq. [68]",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "-",
+   "applies_to": "Limit case of factor_kappa",
+   "provenance": "convention",
+   "verification": "from_memory",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/icc_factor_kappa/valor/base"
+   },
+   "review_point": "table:aea-calculo|const:icc_factor_kappa",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "limit case chosen in code; not stated in the standard excerpt cited"
+   ],
+   "note": "Check the limit value of kappa when X = 0. Moved from code to aea_tables.json by ENG-14 (2026-11-10); the module reads it from there."
+  },
+  {
+   "id": "aea90364.code.aea_icc_factors.rigido_max_u_ratio",
+   "kind": "constant",
+   "title": {
+    "es": "Defecto a tierra rígido si U_L,E/U_Y,E <= 1,4",
+    "en": "Solidly earthed fault if U_L,E/U_Y,E <= 1.4"
+   },
+   "norm": "AEA IT 90909-1",
+   "edition": "2005",
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "-",
+   "applies_to": "Earth-fault classification",
+   "provenance": "norm",
+   "verification": "from_memory",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/icc_rigido_max_u_ratio"
+   },
+   "review_point": "table:aea-calculo|const:icc_rigido_max_u_ratio",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "stated only in the FORMULAS part of the docstring, no equation number",
+    "no clause in code"
+   ],
+   "note": "Check the 1.4 limit for a solidly earthed system. Moved from code to aea_tables.json by ENG-14 (2026-11-10); the module reads it from there."
+  },
+  {
+   "id": "aea90364.code.aea_icc_factors.lim_motores_suma_irm_pct",
+   "kind": "constant",
+   "title": {
+    "es": "Motores despreciables si suma I_rM <= 1 % de Ik''Q",
+    "en": "Motors negligible if sum I_rM <= 1 % of Ik''Q"
+   },
+   "norm": "AEA IT 90909-1",
+   "edition": "2005",
+   "clause": "eq. [110]",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "%",
+   "applies_to": "Motor contribution (I_LR/I_rM = 5 assumed)",
+   "provenance": "norm",
+   "verification": "from_memory",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/icc_motores_suma_irm_pct"
+   },
+   "review_point": "table:aea-calculo|const:icc_motores_suma_irm_pct",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [],
+   "note": "Check the 1 % limit of eq. [110] (assumes I_LR/I_rM = 5). Moved from code to aea_tables.json by ENG-14 (2026-11-10); the module reads it from there."
+  },
+  {
+   "id": "aea90364.code.aea_icc_decay.u_fmax",
+   "kind": "constant",
+   "title": {
+    "es": "U_FMAX por tipo de rotor y caso (1,3 / 1,6 / 1,6 / 2,0)",
+    "en": "U_FMAX by rotor type and case (1.3 / 1.6 / 1.6 / 2.0)"
+   },
+   "norm": "AEA IT 90909-1",
+   "edition": "2005",
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "-",
+   "applies_to": "Generator excitation ceiling factors (cylindrical, salient pole)",
+   "provenance": "norm",
+   "verification": "from_memory",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/icc_u_fmax"
+   },
+   "review_point": "table:aea-calculo|const:icc_u_fmax",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "not used anywhere in the engine code (only defined); meaning is not documented in the module",
+    "keys are tuples (rotor, case) rendered as Python tuple text in value (validator form)",
+    "no clause in code"
+   ],
+   "note": "Identify what U_FMAX is in the standard (excitation ceiling?) and check values; it is unused in code. Moved from code to aea_tables.json by ENG-14 (2026-11-10); the module reads it from there."
+  },
+  {
+   "id": "aea90364.code.aea_icc_decay.n_factor.t2_sobre_t1",
+   "kind": "code_constant",
+   "title": {
+    "es": "Aproximación T''d ≈ 0,1·T'd en el factor n",
+    "en": "Approximation T''d ~ 0.1*T'd in the n factor"
+   },
+   "norm": "AEA IT 90909-1",
+   "edition": "2005",
+   "clause": "eq. [102b]",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "-",
+   "applies_to": "Thermal effect factor n",
+   "provenance": "norm",
+   "verification": "from_memory",
+   "confidence": "medium",
+   "location": {
+    "type": "code",
+    "file": "harness/src/engines/calculation/short_circuit/src/epc_short_circuit/aea_icc_decay.py",
+    "symbol": null,
+    "line": 176
+   },
+   "value": {
+    "t2_over_t1": 0.1
+   },
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "coefficients 20, 10, 11, 5 and 5.5 in the expression derive from 0.1 (T''dN = 0.1*T'dN)"
+   ],
+   "note": "Check eq. [102b] expression and the 0.1 relation T''dN = 0.1*T'dN."
+  },
+  {
+   "id": "aea90364.code.aea_pipeline.c_max_bt",
+   "kind": "code_constant",
+   "title": {
+    "es": "c_max BT 1,05 en el pipeline (tolerancia 6 %)",
+    "en": "LV c_max 1.05 in the pipeline (6 % tolerance)"
+   },
+   "norm": "AEA 90909-0",
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "-",
+   "applies_to": "Source impedance in current_sc_min",
+   "provenance": "norm",
+   "verification": "from_memory",
+   "confidence": "medium",
+   "location": {
+    "type": "code",
+    "file": "harness/src/engines/calculation/aea90364/src/epc_aea90364/aea_pipeline.py",
+    "symbol": "C_MAX_BT",
+    "line": 81
+   },
+   "value": 1.05,
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "duplicated literal; same value as aea90364.code.short_circuit.c_max_bt_tol_6 (1.05) and JSON /constantes/impedancias_estandar/c_fuente_max (1.05)",
+    "no clause in code"
+   ],
+   "note": "Check c_max = 1.05 (comment in code: AEA 90909-0, tolerance 6 %)."
+  },
+  {
+   "id": "aea90364.code.aea_pipeline.c_min_bt",
+   "kind": "code_constant",
+   "title": {
+    "es": "c_min BT 0,95 en el pipeline",
+    "en": "LV c_min 0.95 in the pipeline"
+   },
+   "norm": "AEA 90909-0",
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "-",
+   "applies_to": "Minimum Icc at end of circuit",
+   "provenance": "norm",
+   "verification": "from_memory",
+   "confidence": "medium",
+   "location": {
+    "type": "code",
+    "file": "harness/src/engines/calculation/aea90364/src/epc_aea90364/aea_pipeline.py",
+    "symbol": "C_MIN_BT",
+    "line": 82
+   },
+   "value": 0.95,
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "alias of short_circuit.C_MIN_BT (JSON /constantes/impedancias_estandar/c_tension_min, 0.95); no own literal since D13",
+    "no clause in code"
+   ],
+   "note": "Check c_min = 0.95 for minimum short-circuit current."
+  }
+ ]
+}

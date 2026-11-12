@@ -1,0 +1,13 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "epc-selectivity"
+version = "0.1.0"
+description = "EPC-291 calculation engine: protection against indirect contact by supply scheme and coordination of the protective devices"
+requires-python = ">=3.10"
+dependencies = ["epc-calc-common", "epc-grounding", "epc-load-balance"]
+
+[tool.setuptools.packages.find]
+where = ["src"]

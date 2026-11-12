@@ -1,0 +1,61 @@
+{
+ "id": "l1_tn_zs_lazo",
+ "title_es": "Lazo TN: Zs al final de 150 m, 2,5 mm2 fase y PE, Icc barras 2 kA",
+ "quantity": "zs_ohm",
+ "inputs": {
+  "L_m": 150.0,
+  "S_fase_mm2": 2.5,
+  "S_PE_mm2": 2.5,
+  "Icc_barras_kA": 2.0,
+  "U0_V": 230.0,
+  "protección": "C16",
+  "Ia_A": 160.0
+ },
+ "formula": "R70 = R20*(1+alpha*50) = 7.41*(1+0.00393*50) = 8.8661 ohm/km; R lazo = (R_fase+R_PE)*L = 2*8.8661*0.15 = 2.6598 ohm; X lazo = 0.08*0.15 = 0.0120 ohm; Z fuente = c*U0/Icc = 1.05*230/2000 = 0.12075 ohm; Zs = |(Z_fuente+R) + jX| = hypot(2.78057, 0.0120) = 2.78060 ohm. (alpha_Cu = 0,00393 /K es dato declarado del caso; el motor usa un factor plano 1,2.)",
+ "expected": {
+  "value": 2.780595,
+  "unit": "ohm",
+  "tolerance_pct": 1.0
+ },
+ "expected_source": "closed_form",
+ "engine_call": {
+  "module": "aea_earthing",
+  "function": "zs_lazo",
+  "adapter": "tn_zs",
+  "mapping": "u0_v=230, icc_barras_ka=2, s_fase_mm2=2.5, s_pe_mm2=2.5, largo_m=150"
+ },
+ "severity_if_fails": "safety",
+ "note_es": "El motor usa 1,2 como factor de temperatura (equivale a unos 71 C); con alpha a 70 C da 1,1965: 0,3 % de diferencia en R. Tolerancia 1 % (criterio del autor).",
+ "repo_refs": [
+  {
+   "file": "harness/src/engines/calculation/aea90364/src/epc_aea90364/aea_tables.json",
+   "pointer": "/constantes/impedancias_estandar/r20_ohm_km/2.5",
+   "value": 7.41,
+   "what": "R20 2,5 mm2"
+  },
+  {
+   "file": "harness/src/engines/calculation/aea90364/src/epc_aea90364/aea_tables.json",
+   "pointer": "/constantes/impedancias_estandar/reactancia_ohm_km",
+   "value": 0.08,
+   "what": "X"
+  },
+  {
+   "file": "harness/src/engines/calculation/aea90364/src/epc_aea90364/aea_tables.json",
+   "pointer": "/constantes/impedancias_estandar/c_fuente_max",
+   "value": 1.05,
+   "what": "c max fuente"
+  },
+  {
+   "file": "harness/src/engines/calculation/aea90364/src/epc_aea90364/aea_tables.json",
+   "pointer": "/constantes/impedancias_estandar/c_tension_min",
+   "value": 0.95,
+   "what": "c min"
+  }
+ ],
+ "owner_verdict": {
+  "date": "2026-11-10",
+  "action": "ok",
+  "decision": null,
+  "note": "Correct; no action."
+ }
+}

@@ -1,0 +1,870 @@
+{
+ "big_paginated_sld_mld": {
+  "circuits": 24,
+  "files": {
+   "MLD_T1_H1.dxf": {
+    "entities": {
+     "ACDBDICTIONARYWDFLT": 1,
+     "ACDBPLACEHOLDER": 1,
+     "APPID": 3,
+     "BLOCK": 2,
+     "BLOCK_RECORD": 2,
+     "CLASS": 15,
+     "DICTIONARY": 12,
+     "DICTIONARYVAR": 2,
+     "DIMSTYLE": 1,
+     "ENDBLK": 2,
+     "ENDSEC": 6,
+     "ENDTAB": 9,
+     "EOF": 1,
+     "HATCH": 84,
+     "LAYER": 6,
+     "LAYOUT": 2,
+     "LINE": 635,
+     "LTYPE": 5,
+     "LWPOLYLINE": 228,
+     "MATERIAL": 3,
+     "MLEADERSTYLE": 1,
+     "MLINESTYLE": 1,
+     "SECTION": 6,
+     "STYLE": 3,
+     "TABLE": 9,
+     "TEXT": 409,
+     "VPORT": 1
+    },
+    "lines": 69000,
+    "sha256": "20344c17219e75e2412fea84ea22c9be74345c0cf7f901e89bf8e6e50bdac12f"
+   },
+   "MLD_T1_H1.svg": {
+    "elements": {
+     "circle": 33,
+     "g": 138,
+     "line": 635,
+     "path": 140,
+     "polygon": 3,
+     "rect": 53,
+     "svg": 1,
+     "text": 415,
+     "title": 1,
+     "tspan": 4
+    },
+    "lines": 1564,
+    "sha256": "a43b2a324285d43304cbe19ddefc9cc256511d66730f618445939e84ed665373"
+   },
+   "MLD_T1_H2.dxf": {
+    "entities": {
+     "ACDBDICTIONARYWDFLT": 1,
+     "ACDBPLACEHOLDER": 1,
+     "APPID": 3,
+     "BLOCK": 2,
+     "BLOCK_RECORD": 2,
+     "CLASS": 15,
+     "DICTIONARY": 12,
+     "DICTIONARYVAR": 2,
+     "DIMSTYLE": 1,
+     "ENDBLK": 2,
+     "ENDSEC": 6,
+     "ENDTAB": 9,
+     "EOF": 1,
+     "HATCH": 105,
+     "LAYER": 6,
+     "LAYOUT": 2,
+     "LINE": 476,
+     "LTYPE": 5,
+     "LWPOLYLINE": 191,
+     "MATERIAL": 3,
+     "MLEADERSTYLE": 1,
+     "MLINESTYLE": 1,
+     "SECTION": 6,
+     "STYLE": 3,
+     "TABLE": 9,
+     "TEXT": 307,
+     "VPORT": 1
+    },
+    "lines": 61046,
+    "sha256": "b9b10c0d29bdcb3d961ec235421bcb467228dc98fa887f472d2badc1f33ec1c4"
+   },
+   "MLD_T1_H2.svg": {
+    "elements": {
+     "circle": 42,
+     "g": 78,
+     "line": 476,
+     "path": 129,
+     "polygon": 3,
+     "rect": 18,
+     "svg": 1,
+     "text": 313,
+     "title": 1,
+     "tspan": 4
+    },
+    "lines": 1189,
+    "sha256": "a5b475517878f57600bde8d17c427cdfef00f56bb50ff9a4a1ba0286b1de7eba"
+   },
+   "SLD_T1_H1.dxf": {
+    "entities": {
+     "ACDBDICTIONARYWDFLT": 1,
+     "ACDBPLACEHOLDER": 1,
+     "APPID": 3,
+     "BLOCK": 2,
+     "BLOCK_RECORD": 2,
+     "CLASS": 15,
+     "DICTIONARY": 12,
+     "DICTIONARYVAR": 2,
+     "DIMSTYLE": 1,
+     "ENDBLK": 2,
+     "ENDSEC": 6,
+     "ENDTAB": 9,
+     "EOF": 1,
+     "HATCH": 26,
+     "LAYER": 6,
+     "LAYOUT": 2,
+     "LINE": 319,
+     "LTYPE": 6,
+     "LWPOLYLINE": 123,
+     "MATERIAL": 3,
+     "MLEADERSTYLE": 1,
+     "MLINESTYLE": 1,
+     "SECTION": 6,
+     "STYLE": 3,
+     "TABLE": 9,
+     "TEXT": 249,
+     "VPORT": 1
+    },
+    "lines": 32798,
+    "sha256": "f0f3a8fb6386f1523d66ec36ca32d6f1a8708a1e12626919bf276c58df04ea16"
+   },
+   "SLD_T1_H1.svg": {
+    "elements": {
+     "circle": 2,
+     "g": 180,
+     "line": 319,
+     "path": 105,
+     "polygon": 3,
+     "rect": 14,
+     "svg": 1,
+     "text": 255,
+     "title": 1,
+     "tspan": 4
+    },
+    "lines": 1095,
+    "sha256": "07f2423d5285f996f28155d67124dc86114400779c7302e6abd30c7c65ddf91d"
+   },
+   "SLD_T1_H1_calculo.json": {
+    "lines": 49,
+    "sha256": "64fe9c8075b0ad2d49a8a7e45f72b12eb8120d6693e79ae5880fc005061fac92"
+   },
+   "SLD_T1_H2.dxf": {
+    "entities": {
+     "ACDBDICTIONARYWDFLT": 1,
+     "ACDBPLACEHOLDER": 1,
+     "APPID": 3,
+     "BLOCK": 2,
+     "BLOCK_RECORD": 2,
+     "CLASS": 15,
+     "DICTIONARY": 12,
+     "DICTIONARYVAR": 2,
+     "DIMSTYLE": 1,
+     "ENDBLK": 2,
+     "ENDSEC": 6,
+     "ENDTAB": 9,
+     "EOF": 1,
+     "HATCH": 18,
+     "LAYER": 6,
+     "LAYOUT": 2,
+     "LINE": 309,
+     "LTYPE": 6,
+     "LWPOLYLINE": 106,
+     "MATERIAL": 3,
+     "MLEADERSTYLE": 1,
+     "MLINESTYLE": 1,
+     "SECTION": 6,
+     "STYLE": 3,
+     "TABLE": 9,
+     "TEXT": 192,
+     "VPORT": 1
+    },
+    "lines": 26894,
+    "sha256": "25d72c69ef9c2730d8f4d04617ee36dd5f266c15f69c8c457ba3cbfdeaddbe0a"
+   },
+   "SLD_T1_H2.svg": {
+    "elements": {
+     "circle": 2,
+     "g": 125,
+     "line": 309,
+     "path": 78,
+     "polygon": 3,
+     "rect": 24,
+     "svg": 1,
+     "text": 198,
+     "title": 1,
+     "tspan": 4
+    },
+    "lines": 896,
+    "sha256": "7065d625bd25fed131208a867445d4fe25ae23d546edf83921b33da0f225960f"
+   },
+   "SLD_T1_H2_calculo.json": {
+    "lines": 41,
+    "sha256": "5bfd10e284ac9baa542f48d3473c6753e8923e2656b64663f30a8e414b6b2d4e"
+   },
+   "SLD_T1_H3.dxf": {
+    "entities": {
+     "ACDBDICTIONARYWDFLT": 1,
+     "ACDBPLACEHOLDER": 1,
+     "APPID": 3,
+     "BLOCK": 2,
+     "BLOCK_RECORD": 2,
+     "CLASS": 15,
+     "DICTIONARY": 12,
+     "DICTIONARYVAR": 2,
+     "DIMSTYLE": 1,
+     "ENDBLK": 2,
+     "ENDSEC": 6,
+     "ENDTAB": 9,
+     "EOF": 1,
+     "HATCH": 23,
+     "LAYER": 6,
+     "LAYOUT": 2,
+     "LINE": 286,
+     "LTYPE": 6,
+     "LWPOLYLINE": 107,
+     "MATERIAL": 3,
+     "MLEADERSTYLE": 1,
+     "MLINESTYLE": 1,
+     "SECTION": 6,
+     "STYLE": 3,
+     "TABLE": 9,
+     "TEXT": 197,
+     "VPORT": 1
+    },
+    "lines": 25556,
+    "sha256": "f93e8d8528030ec4c4158320d0c27f5fd10e33f8fd24b78052549192975eccb4"
+   },
+   "SLD_T1_H3.svg": {
+    "elements": {
+     "circle": 2,
+     "g": 129,
+     "line": 286,
+     "path": 87,
+     "polygon": 3,
+     "rect": 16,
+     "svg": 1,
+     "text": 203,
+     "title": 1,
+     "tspan": 4
+    },
+    "lines": 894,
+    "sha256": "17261190f2d3504954f532cb84c938fd1403eafdb559f15b09b25c23382c490d"
+   },
+   "SLD_T1_H3_calculo.json": {
+    "lines": 57,
+    "sha256": "c8a5e4ede00901da7564ed6329225a7b8ab62e0f8413493810932241cb075f40"
+   },
+   "SLD_T1_H4.dxf": {
+    "entities": {
+     "ACDBDICTIONARYWDFLT": 1,
+     "ACDBPLACEHOLDER": 1,
+     "APPID": 3,
+     "BLOCK": 2,
+     "BLOCK_RECORD": 2,
+     "CLASS": 15,
+     "DICTIONARY": 12,
+     "DICTIONARYVAR": 2,
+     "DIMSTYLE": 1,
+     "ENDBLK": 2,
+     "ENDSEC": 6,
+     "ENDTAB": 9,
+     "EOF": 1,
+     "HATCH": 26,
+     "LAYER": 6,
+     "LAYOUT": 2,
+     "LINE": 277,
+     "LTYPE": 6,
+     "LWPOLYLINE": 108,
+     "MATERIAL": 3,
+     "MLEADERSTYLE": 1,
+     "MLINESTYLE": 1,
+     "SECTION": 6,
+     "STYLE": 3,
+     "TABLE": 9,
+     "TEXT": 187,
+     "VPORT": 1
+    },
+    "lines": 26394,
+    "sha256": "78c83c9d2411b614cae708c3f3cda01393f32e8cd114efba3fb65b3bd98d1528"
+   },
+   "SLD_T1_H4.svg": {
+    "elements": {
+     "circle": 2,
+     "g": 140,
+     "line": 277,
+     "path": 89,
+     "polygon": 3,
+     "rect": 15,
+     "svg": 1,
+     "text": 193,
+     "title": 1,
+     "tspan": 4
+    },
+    "lines": 902,
+    "sha256": "caf1671df2ae3ce3c78e2e798fecbc52372f316fd652397979fae76b236bebcd"
+   },
+   "SLD_T1_H4_calculo.json": {
+    "lines": 49,
+    "sha256": "02f676873357a8e2dd562874d686b4e5018832e2a14a9b4f27ecb6415680bebc"
+   },
+   "SLD_T1_TABLA.dxf": {
+    "entities": {
+     "ACDBDICTIONARYWDFLT": 1,
+     "ACDBPLACEHOLDER": 1,
+     "APPID": 3,
+     "BLOCK": 2,
+     "BLOCK_RECORD": 2,
+     "CLASS": 15,
+     "DICTIONARY": 12,
+     "DICTIONARYVAR": 2,
+     "DIMSTYLE": 1,
+     "ENDBLK": 2,
+     "ENDSEC": 6,
+     "ENDTAB": 9,
+     "EOF": 1,
+     "HATCH": 1,
+     "LAYER": 6,
+     "LAYOUT": 2,
+     "LINE": 104,
+     "LTYPE": 3,
+     "LWPOLYLINE": 9,
+     "MATERIAL": 3,
+     "MLEADERSTYLE": 1,
+     "MLINESTYLE": 1,
+     "SECTION": 6,
+     "STYLE": 3,
+     "TABLE": 9,
+     "TEXT": 373,
+     "VPORT": 1
+    },
+    "lines": 20238,
+    "sha256": "32a6db07aa9f126d06fe08c7f7c92a2818727da6b611476dd483ab0f6ee8396b"
+   },
+   "SLD_T1_TABLA.svg": {
+    "elements": {
+     "circle": 2,
+     "g": 14,
+     "line": 104,
+     "polygon": 3,
+     "rect": 5,
+     "svg": 1,
+     "text": 379,
+     "title": 1,
+     "tspan": 4
+    },
+    "lines": 520,
+    "sha256": "53d5a5460c21a7ddcf142c876db10c0be358298e74c47fc083c629c5cc959e48"
+   },
+   "SLD_T1_TABLA_calculo.json": {
+    "lines": 193,
+    "sha256": "f593f7d6aab755ac2ce556cc77ef44399d542b5092233421933b74d2250ea9ec"
+   },
+   "T1_MC.md": {
+    "lines": 141,
+    "sha256": "5c24fa92721f310307b8fa3fc1891c24d0352885109f304c3f3cf582487698b7"
+   },
+   "T1_SP.md": {
+    "lines": 22,
+    "sha256": "bbfbdec0b10737063e3838c98bae796e327b621be04b749aac96faf518e907f3"
+   },
+   "T1_acometidas.json": {
+    "lines": 1,
+    "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+   },
+   "T1_cifras.json": {
+    "lines": 75,
+    "sha256": "b3f69f113d03b8e09df56afc2c1c17800214cd61299d54b93bc81a6a5e25a474"
+   },
+   "T1_criterios.json": {
+    "lines": 13,
+    "sha256": "e3fb0ff80513ae3b472ef1890d090756edf1f6d8b30639776378307a512955ad"
+   },
+   "T1_dimensionado.json": {
+    "lines": 194,
+    "sha256": "8f6ba4a8520c626329a050469b469a666f02870558fad637b71bb1b39007e66a"
+   },
+   "T1_dimensionado_detalle.json": {
+    "lines": 1262,
+    "sha256": "cfefd6b0cd7702b4dc10125be649ed17cae48e3ffd43d831b9964d265dfd6c9d"
+   },
+   "T1_entregable.json": {
+    "lines": 184,
+    "sha256": "4c402b4fb0791879f5eb3ca174d7fcf14996197804073696bdf09c87a605c8f3"
+   },
+   "T1_memoria.json": {
+    "lines": 2252,
+    "sha256": "86a5fe14748c8094a08d29a965e609be41119fd4ee9568ae580e5f624b64bafc"
+   },
+   "summary.json": {
+    "lines": 49,
+    "sha256": "7fc9e34263843de35d1143f4ea366c7879c1039f589ec7471b5a71baefdd85cf"
+   }
+  },
+  "non_compliant": [],
+  "ok": true
+ },
+ "big_tight_criteria_sld": {
+  "circuits": 24,
+  "files": {
+   "SLD_T1_H1.dxf": {
+    "entities": {
+     "ACDBDICTIONARYWDFLT": 1,
+     "ACDBPLACEHOLDER": 1,
+     "APPID": 3,
+     "BLOCK": 2,
+     "BLOCK_RECORD": 2,
+     "CLASS": 15,
+     "DICTIONARY": 12,
+     "DICTIONARYVAR": 2,
+     "DIMSTYLE": 1,
+     "ENDBLK": 2,
+     "ENDSEC": 6,
+     "ENDTAB": 9,
+     "EOF": 1,
+     "HATCH": 30,
+     "LAYER": 6,
+     "LAYOUT": 2,
+     "LINE": 378,
+     "LTYPE": 6,
+     "LWPOLYLINE": 142,
+     "MATERIAL": 3,
+     "MLEADERSTYLE": 1,
+     "MLINESTYLE": 1,
+     "SECTION": 6,
+     "STYLE": 3,
+     "TABLE": 9,
+     "TEXT": 276,
+     "VPORT": 1
+    },
+    "lines": 37596,
+    "sha256": "8c3696593b4e79328f1a287caf0189a8542b3e844142a7e5c761c92ac441c50e"
+   },
+   "SLD_T1_H1.svg": {
+    "elements": {
+     "circle": 2,
+     "g": 218,
+     "line": 378,
+     "path": 114,
+     "polygon": 3,
+     "rect": 24,
+     "svg": 1,
+     "text": 282,
+     "title": 1,
+     "tspan": 4
+    },
+    "lines": 1282,
+    "sha256": "d67fc38c905529e6ede87f0e88fafcd53e46819fb4237ea7802e989cef8076c1"
+   },
+   "SLD_T1_H1_calculo.json": {
+    "lines": 65,
+    "sha256": "c19075314decf6f58ebae2230d525f5413c916ba730fc66c2a38837565db10ad"
+   },
+   "SLD_T1_H2.dxf": {
+    "entities": {
+     "ACDBDICTIONARYWDFLT": 1,
+     "ACDBPLACEHOLDER": 1,
+     "APPID": 3,
+     "BLOCK": 2,
+     "BLOCK_RECORD": 2,
+     "CLASS": 15,
+     "DICTIONARY": 12,
+     "DICTIONARYVAR": 2,
+     "DIMSTYLE": 1,
+     "ENDBLK": 2,
+     "ENDSEC": 6,
+     "ENDTAB": 9,
+     "EOF": 1,
+     "HATCH": 31,
+     "LAYER": 6,
+     "LAYOUT": 2,
+     "LINE": 319,
+     "LTYPE": 6,
+     "LWPOLYLINE": 126,
+     "MATERIAL": 3,
+     "MLEADERSTYLE": 1,
+     "MLINESTYLE": 1,
+     "SECTION": 6,
+     "STYLE": 3,
+     "TABLE": 9,
+     "TEXT": 226,
+     "VPORT": 1
+    },
+    "lines": 29912,
+    "sha256": "21fddff479b4899c30cde06d8fff18ade5859a58f073d0d3772eb11e05cdf98f"
+   },
+   "SLD_T1_H2.svg": {
+    "elements": {
+     "circle": 2,
+     "g": 171,
+     "line": 319,
+     "path": 102,
+     "polygon": 3,
+     "rect": 20,
+     "svg": 1,
+     "text": 232,
+     "title": 1,
+     "tspan": 4
+    },
+    "lines": 1077,
+    "sha256": "a5b9900f4c1ef00d3854d8771e7dda576df53c9a6c9bf5ae3637bc85807bf442"
+   },
+   "SLD_T1_H2_calculo.json": {
+    "lines": 73,
+    "sha256": "2a07a7c0b0fb246e845e9ed3e9b3d9d196ec80b10bd521b73ba8cb853c2d5117"
+   },
+   "SLD_T1_H3.dxf": {
+    "entities": {
+     "ACDBDICTIONARYWDFLT": 1,
+     "ACDBPLACEHOLDER": 1,
+     "APPID": 3,
+     "BLOCK": 2,
+     "BLOCK_RECORD": 2,
+     "CLASS": 15,
+     "DICTIONARY": 12,
+     "DICTIONARYVAR": 2,
+     "DIMSTYLE": 1,
+     "ENDBLK": 2,
+     "ENDSEC": 6,
+     "ENDTAB": 9,
+     "EOF": 1,
+     "HATCH": 30,
+     "LAYER": 6,
+     "LAYOUT": 2,
+     "LINE": 289,
+     "LTYPE": 6,
+     "LWPOLYLINE": 116,
+     "MATERIAL": 3,
+     "MLEADERSTYLE": 1,
+     "MLINESTYLE": 1,
+     "SECTION": 6,
+     "STYLE": 3,
+     "TABLE": 9,
+     "TEXT": 197,
+     "VPORT": 1
+    },
+    "lines": 28118,
+    "sha256": "5ff3127cd2003045167b32ccf118d0dd9ff446ff91f7bc5c3ed26448b3397bd7"
+   },
+   "SLD_T1_H3.svg": {
+    "elements": {
+     "circle": 2,
+     "g": 159,
+     "line": 289,
+     "path": 96,
+     "polygon": 3,
+     "rect": 16,
+     "svg": 1,
+     "text": 203,
+     "title": 1,
+     "tspan": 4
+    },
+    "lines": 977,
+    "sha256": "9ff3aef2eca5a325a612b7272d0bea4342f6c1f4169d076770f2045f1e358051"
+   },
+   "SLD_T1_H3_calculo.json": {
+    "lines": 57,
+    "sha256": "6aeeae7d365e8577bf4000f1f7f87b2e4e134b53efce74fd5b240c10e8c3e32b"
+   },
+   "SLD_T1_TABLA.dxf": {
+    "entities": {
+     "ACDBDICTIONARYWDFLT": 1,
+     "ACDBPLACEHOLDER": 1,
+     "APPID": 3,
+     "BLOCK": 2,
+     "BLOCK_RECORD": 2,
+     "CLASS": 15,
+     "DICTIONARY": 12,
+     "DICTIONARYVAR": 2,
+     "DIMSTYLE": 1,
+     "ENDBLK": 2,
+     "ENDSEC": 6,
+     "ENDTAB": 9,
+     "EOF": 1,
+     "HATCH": 1,
+     "LAYER": 6,
+     "LAYOUT": 2,
+     "LINE": 104,
+     "LTYPE": 3,
+     "LWPOLYLINE": 9,
+     "MATERIAL": 3,
+     "MLEADERSTYLE": 1,
+     "MLINESTYLE": 1,
+     "SECTION": 6,
+     "STYLE": 3,
+     "TABLE": 9,
+     "TEXT": 373,
+     "VPORT": 1
+    },
+    "lines": 20238,
+    "sha256": "a155fb6b93173131e55127c5945ac28c7c21bd1eff210590b07e16cb330f7e2a"
+   },
+   "SLD_T1_TABLA.svg": {
+    "elements": {
+     "circle": 2,
+     "g": 14,
+     "line": 104,
+     "polygon": 3,
+     "rect": 5,
+     "svg": 1,
+     "text": 379,
+     "title": 1,
+     "tspan": 4
+    },
+    "lines": 520,
+    "sha256": "5b95c2ee385e297e4d5a7dda5b97ab92afeb44315d43eff106404fb63555590f"
+   },
+   "SLD_T1_TABLA_calculo.json": {
+    "lines": 193,
+    "sha256": "f593f7d6aab755ac2ce556cc77ef44399d542b5092233421933b74d2250ea9ec"
+   },
+   "T1_MC.md": {
+    "lines": 141,
+    "sha256": "18d11425285a990388748a79ba4fd4436c11da7c1c162635646dcad7dbddd2d2"
+   },
+   "T1_SP.md": {
+    "lines": 22,
+    "sha256": "06c940dd1aecdefba970139f6bc05182ff512703cda82354bb239cd410e9686c"
+   },
+   "T1_acometidas.json": {
+    "lines": 1,
+    "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+   },
+   "T1_cifras.json": {
+    "lines": 75,
+    "sha256": "07ff3700061eccc0d3e1193902873518ee481e848befec9453c1ae07d1be9679"
+   },
+   "T1_criterios.json": {
+    "lines": 16,
+    "sha256": "bb4c4208273f245bfce322a50a9523222a753a7ce2689ad3caa883bc7141dcd5"
+   },
+   "T1_dimensionado.json": {
+    "lines": 194,
+    "sha256": "8f6ba4a8520c626329a050469b469a666f02870558fad637b71bb1b39007e66a"
+   },
+   "T1_dimensionado_detalle.json": {
+    "lines": 1262,
+    "sha256": "59acc9d9ff3253248836f9004ea9e77eb10319d3cf820bb20c24f1e856174beb"
+   },
+   "T1_entregable.json": {
+    "lines": 106,
+    "sha256": "d63b810b965059651300204d82795ccb1c6578d97de25c6973ba8addc5a6fdbd"
+   },
+   "T1_memoria.json": {
+    "lines": 2252,
+    "sha256": "d798986afcaf35049915e3e47a98a6c0492c9e5e6e4e1d3b7e260a81342c8b17"
+   },
+   "summary.json": {
+    "lines": 44,
+    "sha256": "9a0a1e1ddda647e1a1e0be4d885b43ebd87ca60529bf5e942e8ee42f2ee9df84"
+   }
+  },
+  "non_compliant": [],
+  "ok": true
+ },
+ "small_sld_mld": {
+  "circuits": 4,
+  "files": {
+   "MLD_T1.dxf": {
+    "entities": {
+     "ACDBDICTIONARYWDFLT": 1,
+     "ACDBPLACEHOLDER": 1,
+     "APPID": 3,
+     "BLOCK": 2,
+     "BLOCK_RECORD": 2,
+     "CLASS": 15,
+     "DICTIONARY": 12,
+     "DICTIONARYVAR": 2,
+     "DIMSTYLE": 1,
+     "ENDBLK": 2,
+     "ENDSEC": 6,
+     "ENDTAB": 9,
+     "EOF": 1,
+     "HATCH": 27,
+     "LAYER": 6,
+     "LAYOUT": 2,
+     "LINE": 235,
+     "LTYPE": 5,
+     "LWPOLYLINE": 73,
+     "MATERIAL": 3,
+     "MLEADERSTYLE": 1,
+     "MLINESTYLE": 1,
+     "SECTION": 6,
+     "STYLE": 3,
+     "TABLE": 9,
+     "TEXT": 183,
+     "VPORT": 1
+    },
+    "lines": 29758,
+    "sha256": "4695e5e4f76f332dc77100c90cc98de5b012a97d2f1c23b3c900ac7e7aa0ec7b"
+   },
+   "MLD_T1.svg": {
+    "elements": {
+     "circle": 18,
+     "g": 46,
+     "line": 235,
+     "path": 28,
+     "polygon": 3,
+     "rect": 25,
+     "svg": 1,
+     "text": 189,
+     "title": 1,
+     "tspan": 4
+    },
+    "lines": 599,
+    "sha256": "291af653eb8889ff89763e2b3ea6fe1926deefd2fa206c53b97680719aa8ba1e"
+   },
+   "SLD_T1.dxf": {
+    "entities": {
+     "ACDBDICTIONARYWDFLT": 1,
+     "ACDBPLACEHOLDER": 1,
+     "APPID": 3,
+     "BLOCK": 2,
+     "BLOCK_RECORD": 2,
+     "CLASS": 15,
+     "DICTIONARY": 12,
+     "DICTIONARYVAR": 2,
+     "DIMSTYLE": 1,
+     "ENDBLK": 2,
+     "ENDSEC": 6,
+     "ENDTAB": 9,
+     "EOF": 1,
+     "HATCH": 12,
+     "LAYER": 6,
+     "LAYOUT": 2,
+     "LINE": 266,
+     "LTYPE": 6,
+     "LWPOLYLINE": 88,
+     "MATERIAL": 3,
+     "MLEADERSTYLE": 1,
+     "MLINESTYLE": 1,
+     "SECTION": 6,
+     "STYLE": 3,
+     "TABLE": 9,
+     "TEXT": 179,
+     "VPORT": 1
+    },
+    "lines": 23348,
+    "sha256": "244f998e64538b52a3a36facd7a9ecf94a7ae5599bbbda2f5eb3e0bdeb04daf6"
+   },
+   "SLD_T1.svg": {
+    "elements": {
+     "circle": 2,
+     "g": 95,
+     "line": 267,
+     "path": 68,
+     "polygon": 3,
+     "rect": 16,
+     "svg": 1,
+     "text": 185,
+     "title": 1,
+     "tspan": 4
+    },
+    "lines": 751,
+    "sha256": "d84a68ca65d73176f4227e61a31ec5da02f28440d8886ae46ad7abe9d5c1301f"
+   },
+   "SLD_T1_TABLA.dxf": {
+    "entities": {
+     "ACDBDICTIONARYWDFLT": 1,
+     "ACDBPLACEHOLDER": 1,
+     "APPID": 3,
+     "BLOCK": 2,
+     "BLOCK_RECORD": 2,
+     "CLASS": 15,
+     "DICTIONARY": 12,
+     "DICTIONARYVAR": 2,
+     "DIMSTYLE": 1,
+     "ENDBLK": 2,
+     "ENDSEC": 6,
+     "ENDTAB": 9,
+     "EOF": 1,
+     "HATCH": 1,
+     "LAYER": 6,
+     "LAYOUT": 2,
+     "LINE": 84,
+     "LTYPE": 3,
+     "LWPOLYLINE": 9,
+     "MATERIAL": 3,
+     "MLEADERSTYLE": 1,
+     "MLINESTYLE": 1,
+     "SECTION": 6,
+     "STYLE": 3,
+     "TABLE": 9,
+     "TEXT": 133,
+     "VPORT": 1
+    },
+    "lines": 11038,
+    "sha256": "feef502e63f6e9962d8cbc119ca4991cbc27dc3422b4fb63ea118c23b6ac8f6b"
+   },
+   "SLD_T1_TABLA.svg": {
+    "elements": {
+     "circle": 2,
+     "g": 14,
+     "line": 84,
+     "polygon": 3,
+     "rect": 5,
+     "svg": 1,
+     "text": 139,
+     "title": 1,
+     "tspan": 4
+    },
+    "lines": 260,
+    "sha256": "856172bbc8f6839780eb52bb2d858e808480ca9f223b47db27ee2a37185701c5"
+   },
+   "SLD_T1_TABLA_calculo.json": {
+    "lines": 33,
+    "sha256": "134db65222deea5b6a1ec575a0971b1b1fa3194cfbe8c4f3dc22ecb773575cc4"
+   },
+   "SLD_T1_calculo.json": {
+    "lines": 33,
+    "sha256": "134db65222deea5b6a1ec575a0971b1b1fa3194cfbe8c4f3dc22ecb773575cc4"
+   },
+   "T1_MC.md": {
+    "lines": 84,
+    "sha256": "fc5727fa523c1591086b68b3ae904c9dfe7603a8412ad3aa8c7df89878fa66f8"
+   },
+   "T1_SP.md": {
+    "lines": 21,
+    "sha256": "581216612dfa2f3c834a338e2f8c2fb8dff2206422265cb51e7011e04317e6d3"
+   },
+   "T1_acometidas.json": {
+    "lines": 1,
+    "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+   },
+   "T1_cifras.json": {
+    "lines": 73,
+    "sha256": "200a966abc693c6164187a908b53f4f05a6b3b242fe3d874a3ef46a223b2aef9"
+   },
+   "T1_criterios.json": {
+    "lines": 13,
+    "sha256": "e3fb0ff80513ae3b472ef1890d090756edf1f6d8b30639776378307a512955ad"
+   },
+   "T1_dimensionado.json": {
+    "lines": 34,
+    "sha256": "07e6eecd13f4168fd59c91e7fdcab4c97294f2fdba4edfe635cf0830441018e7"
+   },
+   "T1_dimensionado_detalle.json": {
+    "lines": 212,
+    "sha256": "64b32e07045c7b2039497008f9c56f44cc14cc77fe1dfd9eca43c827dbcbbc51"
+   },
+   "T1_entregable.json": {
+    "lines": 80,
+    "sha256": "9b2873868326817439b880a1a9ac882a4bafb199c955a1eab63625d1315d852d"
+   },
+   "T1_memoria.json": {
+    "lines": 436,
+    "sha256": "28bfa7b1e2baf3c1b4541e6079d82845ef1aec49a9a1c8f5ce49b66f74e71ced"
+   },
+   "summary.json": {
+    "lines": 44,
+    "sha256": "45b952ec5fac1188d6b9db027c846db81bb7962edf9de3be4e7dbe56f5e05a03"
+   }
+  },
+  "non_compliant": [],
+  "ok": true
+ }
+}

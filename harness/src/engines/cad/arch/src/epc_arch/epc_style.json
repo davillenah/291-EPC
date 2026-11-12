@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0",
+  "note": "One graphic standard for every exporter (SVG, DXF, PNG, PDF). Widths are paper millimetres at the scale of the sheet (ISO 128 / IRAM 4502). Colours are fixed greys (monochrome output).",
+  "pens": {"pen_050": 0.50, "pen_035": 0.35, "pen_025": 0.25, "pen_018": 0.18, "pen_013": 0.13},
+  "linetypes": {"CONTINUOUS": [], "DASHED": [4.0, 2.0], "HIDDEN": [2.0, 1.0], "CENTER": [8.0, 2.0, 1.0, 2.0]},
+  "text_styles": {"TXT_18": 1.8, "TXT_25": 2.5, "TXT_35": 3.5, "TXT_50": 5.0},
+  "font": {"family": "Arial", "fallback": "Helvetica, sans-serif", "files": ["arial.ttf", "Arial.ttf", "LiberationSans-Regular.ttf", "DejaVuSans.ttf"], "pdf_font": "ArialMT", "pdf_font_bold": "Arial-BoldMT"},
+  "layers": [
+    {"name": "A-BACKGROUND",   "pen": "pen_013", "linetype": "CONTINUOUS", "aci": 9,   "hex": "#B4B4B4"},
+    {"name": "A-ROOM",         "pen": null,      "linetype": "CONTINUOUS", "aci": 254, "hex": "#EDEDED"},
+    {"name": "A-WALL-FILL",    "pen": "pen_013", "linetype": "CONTINUOUS", "aci": 253, "hex": "#8C8C8C"},
+    {"name": "A-WALL-CUT",     "pen": "pen_050", "linetype": "CONTINUOUS", "aci": 7,   "hex": "#111111"},
+    {"name": "A-OPENING",      "pen": "pen_018", "linetype": "HIDDEN",     "aci": 252, "hex": "#555555"},
+    {"name": "A-DOOR-SWING",   "pen": "pen_018", "linetype": "DASHED",     "aci": 250, "hex": "#333333"},
+    {"name": "A-DOOR",         "pen": "pen_035", "linetype": "CONTINUOUS", "aci": 250, "hex": "#333333"},
+    {"name": "A-WINDOW",       "pen": "pen_035", "linetype": "CONTINUOUS", "aci": 250, "hex": "#222222"},
+    {"name": "A-WINDOW-GLASS", "pen": "pen_013", "linetype": "CONTINUOUS", "aci": 253, "hex": "#777777"},
+    {"name": "A-FURN",         "pen": "pen_018", "linetype": "CONTINUOUS", "aci": 252, "hex": "#6F6F6F"},
+    {"name": "A-GRID",         "pen": "pen_013", "linetype": "CENTER",     "aci": 8,   "hex": "#8A8A8A"},
+    {"name": "A-DIM",          "pen": "pen_018", "linetype": "CONTINUOUS", "aci": 251, "hex": "#444444"},
+    {"name": "A-ANNO",         "pen": "pen_018", "linetype": "CONTINUOUS", "aci": 251, "hex": "#444444"},
+    {"name": "A-ROOM-TAG",     "pen": "pen_025", "linetype": "CONTINUOUS", "aci": 7,   "hex": "#1A1A1A"},
+    {"name": "A-TITLE",        "pen": "pen_025", "linetype": "CONTINUOUS", "aci": 7,   "hex": "#111111"}
+  ],
+  "sheet": {
+    "default": "A1", "default_scale": 100, "scales": [20, 25, 50, 75, 100, 125, 150, 200, 250, 500, 1000],
+    "sizes_mm": {"A4": [297, 210], "A3": [420, 297], "A2": [594, 420], "A1": [841, 594], "A0": [1189, 841]},
+    "margin_mm": {"left": 20, "other": 10}, "block_mm": [180, 60], "block_min_mm": [120, 40]
+  }
+}

@@ -1,0 +1,42 @@
+{
+ "id": "d1_icc_red_500MVA",
+ "title_es": "Cortocircuito en bornes de trafo 1000 kVA con red de 500 MVA, X/R 10",
+ "quantity": "ik_trifasica_inicial_A",
+ "inputs": {
+  "Sn_kVA": 1000,
+  "uk_pct": 6.0,
+  "Un_V": 400.0,
+  "c": 1.05,
+  "Sk_MVA": 500,
+  "X_R_red": 10.0
+ },
+ "formula": "Z_Q = c*Un^2/Sk = 1.05*160000/5e8 = 3.360000e-04 ohm; R_Q = Z_Q/sqrt(1+10^2) = 3.343325e-05; X_Q = 10*R_Q = 3.343325e-04; Z_T = 0.009600 (puramente reactiva); R = 3.343325e-05, X = 0.009934; |Z| = 0.009934 ohm; Ik'' = c*Un/(sqrt(3)*|Z|) = 24408.86 A",
+ "expected": {
+  "value": 24408.8609,
+  "unit": "A",
+  "tolerance_pct": 0.01
+ },
+ "expected_source": "closed_form",
+ "engine_call": {
+  "module": "short_circuit",
+  "function": "calcular_ik",
+  "adapter": "sc_basic",
+  "mapping": "un_v=400, c=factor_c(6), red={sk_va:5e8, x_r:10}, trafo={sn_va:1e6, uk_pct:6}"
+ },
+ "severity_if_fails": "safety",
+ "note_es": "Verifica la suma de impedancias red + trafo y la descomposición R/X de la red.",
+ "repo_refs": [
+  {
+   "file": "harness/src/engines/calculation/aea90364/src/epc_aea90364/aea_tables.json",
+   "pointer": "/constantes/impedancias_estandar/c_fuente_max",
+   "value": 1.05,
+   "what": "c"
+  }
+ ],
+ "owner_verdict": {
+  "date": "2026-11-10",
+  "action": "ok",
+  "decision": null,
+  "note": "Correct; no action."
+ }
+}

@@ -1,0 +1,13 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "epc-short-circuit"
+version = "0.1.0"
+description = "EPC-291 calculation engine: short-circuit currents: symmetrical current at a point, decay with distance and the factors of the calculation"
+requires-python = ">=3.10"
+dependencies = ["epc-calc-common", "epc-feeder-sizing"]
+
+[tool.setuptools.packages.find]
+where = ["src"]

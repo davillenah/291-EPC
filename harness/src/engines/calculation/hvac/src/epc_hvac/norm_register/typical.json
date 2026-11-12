@@ -1,0 +1,667 @@
+{
+ "schema_version": "1.0",
+ "engine": "hvac",
+ "topic": "typical",
+ "records": [
+  {
+   "id": "hvac.typical.params.person_sensible_w",
+   "kind": "typical",
+   "title": {
+    "es": "Calor sensible por persona",
+    "en": "Sensible heat per person"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "W",
+   "applies_to": "basic load method",
+   "provenance": "typical",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/hvac/src/epc_hvac/data/typical.json",
+    "pointer": "/params/person_sensible_w"
+   },
+   "review_point": "table:hvac-valores-tipicos|params:person_sensible_w",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "file says nothing here is a standard value; no clause"
+   ],
+   "note": "Confirm with the project method (e.g. ASHRAE data) before use."
+  },
+  {
+   "id": "hvac.typical.params.person_latent_w",
+   "kind": "typical",
+   "title": {
+    "es": "Calor latente por persona",
+    "en": "Latent heat per person"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "W",
+   "applies_to": "basic load method",
+   "provenance": "typical",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/hvac/src/epc_hvac/data/typical.json",
+    "pointer": "/params/person_latent_w"
+   },
+   "review_point": "table:hvac-valores-tipicos|params:person_latent_w",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "file says nothing here is a standard value; no clause"
+   ],
+   "note": "Confirm with the project method (e.g. ASHRAE data) before use."
+  },
+  {
+   "id": "hvac.typical.params.default_infiltration_ach",
+   "kind": "typical",
+   "title": {
+    "es": "Infiltración por defecto",
+    "en": "Default infiltration"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "ach",
+   "applies_to": "basic load method",
+   "provenance": "typical",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/hvac/src/epc_hvac/data/typical.json",
+    "pointer": "/params/default_infiltration_ach"
+   },
+   "review_point": "table:hvac-valores-tipicos|params:default_infiltration_ach",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "file says nothing here is a standard value; no clause"
+   ],
+   "note": "Confirm with the project method (e.g. ASHRAE data) before use."
+  },
+  {
+   "id": "hvac.typical.params.default_lighting_use_factor",
+   "kind": "typical",
+   "title": {
+    "es": "Factor de uso de iluminación",
+    "en": "Lighting use factor"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "ratio",
+   "applies_to": "basic load method",
+   "provenance": "typical",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/hvac/src/epc_hvac/data/typical.json",
+    "pointer": "/params/default_lighting_use_factor"
+   },
+   "review_point": "table:hvac-valores-tipicos|params:default_lighting_use_factor",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "file says nothing here is a standard value; no clause"
+   ],
+   "note": "Confirm with the project method (e.g. ASHRAE data) before use."
+  },
+  {
+   "id": "hvac.typical.params.typical_cop",
+   "kind": "typical",
+   "title": {
+    "es": "COP típico",
+    "en": "Typical COP"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "-",
+   "applies_to": "basic load method",
+   "provenance": "typical",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/hvac/src/epc_hvac/data/typical.json",
+    "pointer": "/params/typical_cop"
+   },
+   "review_point": "table:hvac-valores-tipicos|params:typical_cop",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "file says nothing here is a standard value; no clause"
+   ],
+   "note": "Confirm with the project method (e.g. ASHRAE data) before use."
+  },
+  {
+   "id": "hvac.typical.solar.n",
+   "kind": "typical",
+   "title": {
+    "es": "Irradiancia solar pico, orientación N",
+    "en": "Peak solar irradiance, orientation N"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "W/m2",
+   "applies_to": "solar gains; H = horizontal",
+   "provenance": "typical",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/hvac/src/epc_hvac/data/typical.json",
+    "pointer": "/solar/N"
+   },
+   "review_point": "table:hvac-valores-tipicos|solar:N",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause or latitude; Argentine (southern hemisphere) orientation vs values to check"
+   ],
+   "note": "Confirm irradiance for the project latitude and orientation convention."
+  },
+  {
+   "id": "hvac.typical.solar.ne",
+   "kind": "typical",
+   "title": {
+    "es": "Irradiancia solar pico, orientación NE",
+    "en": "Peak solar irradiance, orientation NE"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "W/m2",
+   "applies_to": "solar gains; H = horizontal",
+   "provenance": "typical",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/hvac/src/epc_hvac/data/typical.json",
+    "pointer": "/solar/NE"
+   },
+   "review_point": "table:hvac-valores-tipicos|solar:NE",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause or latitude"
+   ],
+   "note": "Confirm irradiance for the project latitude and orientation convention."
+  },
+  {
+   "id": "hvac.typical.solar.e",
+   "kind": "typical",
+   "title": {
+    "es": "Irradiancia solar pico, orientación E",
+    "en": "Peak solar irradiance, orientation E"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "W/m2",
+   "applies_to": "solar gains; H = horizontal",
+   "provenance": "typical",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/hvac/src/epc_hvac/data/typical.json",
+    "pointer": "/solar/E"
+   },
+   "review_point": "table:hvac-valores-tipicos|solar:E",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause or latitude"
+   ],
+   "note": "Confirm irradiance for the project latitude and orientation convention."
+  },
+  {
+   "id": "hvac.typical.solar.se",
+   "kind": "typical",
+   "title": {
+    "es": "Irradiancia solar pico, orientación SE",
+    "en": "Peak solar irradiance, orientation SE"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "W/m2",
+   "applies_to": "solar gains; H = horizontal",
+   "provenance": "typical",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/hvac/src/epc_hvac/data/typical.json",
+    "pointer": "/solar/SE"
+   },
+   "review_point": "table:hvac-valores-tipicos|solar:SE",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause or latitude"
+   ],
+   "note": "Confirm irradiance for the project latitude and orientation convention."
+  },
+  {
+   "id": "hvac.typical.solar.s",
+   "kind": "typical",
+   "title": {
+    "es": "Irradiancia solar pico, orientación S",
+    "en": "Peak solar irradiance, orientation S"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "W/m2",
+   "applies_to": "solar gains; H = horizontal",
+   "provenance": "typical",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/hvac/src/epc_hvac/data/typical.json",
+    "pointer": "/solar/S"
+   },
+   "review_point": "table:hvac-valores-tipicos|solar:S",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause or latitude; Argentine (southern hemisphere) orientation vs values to check"
+   ],
+   "note": "Confirm irradiance for the project latitude and orientation convention."
+  },
+  {
+   "id": "hvac.typical.solar.sw",
+   "kind": "typical",
+   "title": {
+    "es": "Irradiancia solar pico, orientación SW",
+    "en": "Peak solar irradiance, orientation SW"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "W/m2",
+   "applies_to": "solar gains; H = horizontal",
+   "provenance": "typical",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/hvac/src/epc_hvac/data/typical.json",
+    "pointer": "/solar/SW"
+   },
+   "review_point": "table:hvac-valores-tipicos|solar:SW",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause or latitude"
+   ],
+   "note": "Confirm irradiance for the project latitude and orientation convention."
+  },
+  {
+   "id": "hvac.typical.solar.w",
+   "kind": "typical",
+   "title": {
+    "es": "Irradiancia solar pico, orientación W",
+    "en": "Peak solar irradiance, orientation W"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "W/m2",
+   "applies_to": "solar gains; H = horizontal",
+   "provenance": "typical",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/hvac/src/epc_hvac/data/typical.json",
+    "pointer": "/solar/W"
+   },
+   "review_point": "table:hvac-valores-tipicos|solar:W",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause or latitude"
+   ],
+   "note": "Confirm irradiance for the project latitude and orientation convention."
+  },
+  {
+   "id": "hvac.typical.solar.nw",
+   "kind": "typical",
+   "title": {
+    "es": "Irradiancia solar pico, orientación NW",
+    "en": "Peak solar irradiance, orientation NW"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "W/m2",
+   "applies_to": "solar gains; H = horizontal",
+   "provenance": "typical",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/hvac/src/epc_hvac/data/typical.json",
+    "pointer": "/solar/NW"
+   },
+   "review_point": "table:hvac-valores-tipicos|solar:NW",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause or latitude"
+   ],
+   "note": "Confirm irradiance for the project latitude and orientation convention."
+  },
+  {
+   "id": "hvac.typical.solar.h",
+   "kind": "typical",
+   "title": {
+    "es": "Irradiancia solar pico, orientación H",
+    "en": "Peak solar irradiance, orientation H"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "W/m2",
+   "applies_to": "solar gains; H = horizontal",
+   "provenance": "typical",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/hvac/src/epc_hvac/data/typical.json",
+    "pointer": "/solar/H"
+   },
+   "review_point": "table:hvac-valores-tipicos|solar:H",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause or latitude"
+   ],
+   "note": "Confirm irradiance for the project latitude and orientation convention."
+  },
+  {
+   "id": "hvac.typical.ventilation.office",
+   "kind": "typical",
+   "title": {
+    "es": "Aire exterior: office",
+    "en": "Outdoor air rate: office"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "L/s per person; L/s per m2",
+   "applies_to": "ventilation load by use",
+   "provenance": "typical",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/hvac/src/epc_hvac/data/typical.json",
+    "pointer": "/ventilation/office"
+   },
+   "review_point": "table:hvac-valores-tipicos|ventilation:office",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause; values resemble ASHRAE 62.1 style rates but no norm is cited"
+   ],
+   "note": "Compare with the ventilation norm adopted by the project (clause needed)."
+  },
+  {
+   "id": "hvac.typical.ventilation.meeting_room",
+   "kind": "typical",
+   "title": {
+    "es": "Aire exterior: meeting_room",
+    "en": "Outdoor air rate: meeting_room"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "L/s per person; L/s per m2",
+   "applies_to": "ventilation load by use",
+   "provenance": "typical",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/hvac/src/epc_hvac/data/typical.json",
+    "pointer": "/ventilation/meeting_room"
+   },
+   "review_point": "table:hvac-valores-tipicos|ventilation:meeting_room",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause; values resemble ASHRAE 62.1 style rates but no norm is cited"
+   ],
+   "note": "Compare with the ventilation norm adopted by the project (clause needed)."
+  },
+  {
+   "id": "hvac.typical.ventilation.retail",
+   "kind": "typical",
+   "title": {
+    "es": "Aire exterior: retail",
+    "en": "Outdoor air rate: retail"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "L/s per person; L/s per m2",
+   "applies_to": "ventilation load by use",
+   "provenance": "typical",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/hvac/src/epc_hvac/data/typical.json",
+    "pointer": "/ventilation/retail"
+   },
+   "review_point": "table:hvac-valores-tipicos|ventilation:retail",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause; values resemble ASHRAE 62.1 style rates but no norm is cited"
+   ],
+   "note": "Compare with the ventilation norm adopted by the project (clause needed)."
+  },
+  {
+   "id": "hvac.typical.ventilation.classroom",
+   "kind": "typical",
+   "title": {
+    "es": "Aire exterior: classroom",
+    "en": "Outdoor air rate: classroom"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "L/s per person; L/s per m2",
+   "applies_to": "ventilation load by use",
+   "provenance": "typical",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/hvac/src/epc_hvac/data/typical.json",
+    "pointer": "/ventilation/classroom"
+   },
+   "review_point": "table:hvac-valores-tipicos|ventilation:classroom",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause; values resemble ASHRAE 62.1 style rates but no norm is cited"
+   ],
+   "note": "Compare with the ventilation norm adopted by the project (clause needed)."
+  },
+  {
+   "id": "hvac.typical.ventilation.restaurant",
+   "kind": "typical",
+   "title": {
+    "es": "Aire exterior: restaurant",
+    "en": "Outdoor air rate: restaurant"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "L/s per person; L/s per m2",
+   "applies_to": "ventilation load by use",
+   "provenance": "typical",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/hvac/src/epc_hvac/data/typical.json",
+    "pointer": "/ventilation/restaurant"
+   },
+   "review_point": "table:hvac-valores-tipicos|ventilation:restaurant",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause; values resemble ASHRAE 62.1 style rates but no norm is cited"
+   ],
+   "note": "Compare with the ventilation norm adopted by the project (clause needed)."
+  },
+  {
+   "id": "hvac.typical.ventilation.default",
+   "kind": "typical",
+   "title": {
+    "es": "Aire exterior: default",
+    "en": "Outdoor air rate: default"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "L/s per person; L/s per m2",
+   "applies_to": "ventilation load by use",
+   "provenance": "typical",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/hvac/src/epc_hvac/data/typical.json",
+    "pointer": "/ventilation/default"
+   },
+   "review_point": "table:hvac-valores-tipicos|ventilation:default",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause; values resemble ASHRAE 62.1 style rates but no norm is cited"
+   ],
+   "note": "Compare with the ventilation norm adopted by the project (clause needed)."
+  }
+ ]
+}

@@ -1,0 +1,692 @@
+{
+ "schema_version": "1.0",
+ "engine": "aea90364",
+ "topic": "code-protection-earthing",
+ "records": [
+  {
+   "id": "aea90364.code.aea_earthing.ra_maxima.factor_adopcion",
+   "kind": "constant",
+   "title": {
+    "es": "Factor de adopción 0,5 sobre UL/IDn en ra_maxima",
+    "en": "Adoption factor 0.5 applied to UL/IDn in ra_maxima"
+   },
+   "norm": "AEA 90364-7-771",
+   "edition": "2006",
+   "clause": "771.3.I",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "-",
+   "applies_to": "Adopted Ra = min(0.5*24/IDn, 40 ohm)",
+   "provenance": "norm",
+   "verification": "from_memory",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/771.18_ra_factor_adopcion"
+   },
+   "review_point": "table:aea-calculo|const:771.18_ra_factor_adopcion",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "the code does not explain why 0.5 (half of UL/IDn); check it is in the table or is a project margin",
+    "adopted in aea_earthing.ra_maxima (decision D11); aea_protection and board_memo call it (one function)"
+   ],
+   "note": "Check that the adopted Ra = min(0.5*UL/IDn, 40 ohm) is what table 771.3.I gives. Moved from code to aea_tables.json by ENG-14 (2026-11-10); the module reads it from there."
+  },
+  {
+   "id": "aea90364.code.aea_earthing.resistance_rod.simplificada",
+   "kind": "code_constant",
+   "title": {
+    "es": "Jabalina simplificada: 0,75 / 1,0 / 1,2 · rho/L según L/d (25 a 3000)",
+    "en": "Simplified rod: 0.75 / 1.0 / 1.2 * rho/L by L/d (25 to 3000)"
+   },
+   "norm": "AEA 90364-7-771",
+   "edition": "2006",
+   "clause": "771-C.10",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "-",
+   "applies_to": "Vertical rod R = k*rho/L",
+   "provenance": "norm",
+   "verification": "from_memory",
+   "confidence": "medium",
+   "location": {
+    "type": "code",
+    "file": "harness/src/engines/calculation/grounding/src/epc_grounding/aea_earthing.py",
+    "symbol": null,
+    "line": 89
+   },
+   "value": {
+    "ld_min": 25,
+    "ld_max": 3000,
+    "k_ld_to_100": 0.75,
+    "k_ld_100_to_600": 1.0,
+    "k_ld_600_to_3000": 1.2
+   },
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [],
+   "note": "Check the coefficients and the L/d bands of the simplified rod formula (annex 771-C.10)."
+  },
+  {
+   "id": "aea90364.code.aea_earthing.resistance_rod.exacta",
+   "kind": "code_constant",
+   "title": {
+    "es": "Jabalina exacta R = rho/(2 pi L)(ln(8L/d) - 1)",
+    "en": "Exact rod R = rho/(2 pi L)(ln(8L/d) - 1)"
+   },
+   "norm": "AEA 90364-7-771",
+   "edition": "2006",
+   "clause": "771-C.10",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "-",
+   "applies_to": "Vertical rod",
+   "provenance": "norm",
+   "verification": "from_memory",
+   "confidence": "medium",
+   "location": {
+    "type": "code",
+    "file": "harness/src/engines/calculation/grounding/src/epc_grounding/aea_earthing.py",
+    "symbol": null,
+    "line": 91
+   },
+   "value": {
+    "ln_argument_factor": 8,
+    "subtracted": 1
+   },
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [],
+   "note": "Check the constants 8 and 1 in the exact rod formula (annex 771-C.10)."
+  },
+  {
+   "id": "aea90364.code.aea_earthing.resistance_conductor_horizontal.simplificada",
+   "kind": "code_constant",
+   "title": {
+    "es": "Conductor horizontal simplificado R = 2 rho/L",
+    "en": "Simplified horizontal conductor R = 2 rho/L"
+   },
+   "norm": "AEA 90364-7-771",
+   "edition": "2006",
+   "clause": "771-C.10",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "-",
+   "applies_to": "Bare horizontal buried conductor",
+   "provenance": "norm",
+   "verification": "from_memory",
+   "confidence": "medium",
+   "location": {
+    "type": "code",
+    "file": "harness/src/engines/calculation/grounding/src/epc_grounding/aea_earthing.py",
+    "symbol": null,
+    "line": 99
+   },
+   "value": 2.0,
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [],
+   "note": "Check the factor 2 of the simplified horizontal-conductor formula (annex 771-C.10)."
+  },
+  {
+   "id": "aea90364.code.aea_earthing.resistance_conductor_horizontal.exacta",
+   "kind": "code_constant",
+   "title": {
+    "es": "Conductor horizontal: coeficientes de la fórmula exacta",
+    "en": "Horizontal conductor: coefficients of the exact formula"
+   },
+   "norm": "AEA 90364-7-771",
+   "edition": "2006",
+   "clause": "771-C.10",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "-",
+   "applies_to": "Bare horizontal buried conductor",
+   "provenance": "norm",
+   "verification": "from_memory",
+   "confidence": "medium",
+   "location": {
+    "type": "code",
+    "file": "harness/src/engines/calculation/grounding/src/epc_grounding/aea_earthing.py",
+    "symbol": null,
+    "line": 101
+   },
+   "value": {
+    "ln_4L_d": 1,
+    "ln_L_h": 1,
+    "constant": -2,
+    "term_2h_L": 2,
+    "term_h2_L2": -1,
+    "term_h4_2L4": 0.5
+   },
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "docstring says the series is truncated at the terms cited"
+   ],
+   "note": "Check the terms: ln(4L/d)+ln(L/h)-2+2h/L-h^2/L^2+h^4/(2L^4)."
+  },
+  {
+   "id": "aea90364.code.aea_earthing.resistencia_placa_circular.coeficientes",
+   "kind": "code_constant",
+   "title": {
+    "es": "Placa circular: coeficientes 1/2, 7/384, 99/81920",
+    "en": "Circular plate: coefficients 1/2, 7/384, 99/81920"
+   },
+   "norm": "AEA 90364-7-771",
+   "edition": "2006",
+   "clause": "771-C.10",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "-",
+   "applies_to": "Circular plate of diameter D at depth h",
+   "provenance": "norm",
+   "verification": "from_memory",
+   "confidence": "medium",
+   "location": {
+    "type": "code",
+    "file": "harness/src/engines/calculation/grounding/src/epc_grounding/aea_earthing.py",
+    "symbol": null,
+    "line": 110
+   },
+   "value": {
+    "first": 0.5,
+    "D_over_4_pi_h": 1,
+    "cubic": "7/384",
+    "quintic": "99/81920"
+   },
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "docstring says the series is truncated at the terms cited"
+   ],
+   "note": "Check R = rho/(2D)(1/2 + D/(4 pi h) + 7D^3/(384h^3) + 99D^5/(81920h^5))."
+  },
+  {
+   "id": "aea90364.code.aea_earthing.resistencia_malla.sverak",
+   "kind": "code_constant",
+   "title": {
+    "es": "Malla de tierra (Sverak, IEEE 80): factor 20 y profundidad por defecto 0,6 m",
+    "en": "Earthing mesh (Sverak, IEEE 80): factor 20 and default depth 0.6 m"
+   },
+   "norm": "IEEE Std 80",
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "-",
+   "applies_to": "R = rho*[1/L + 1/sqrt(20A)*(1 + 1/(1 + h*sqrt(20/A)))]",
+   "provenance": "norm",
+   "verification": "from_memory",
+   "confidence": "low",
+   "location": {
+    "type": "code",
+    "file": "harness/src/engines/calculation/grounding/src/epc_grounding/aea_earthing.py",
+    "symbol": null,
+    "line": 183
+   },
+   "value": {
+    "area_factor": 20.0,
+    "default_depth_m": 0.6
+   },
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "marked [VERIFICAR] in the code; not an AEA norm",
+    "no clause in code"
+   ],
+   "note": "Check the Sverak formula and the default depth 0.6 m against IEEE 80."
+  },
+  {
+   "id": "aea90364.code.aea_protection.verifica_tn_u0_v_default",
+   "kind": "code_constant",
+   "title": {
+    "es": "U0 por defecto 230 V en verifica_tn",
+    "en": "Default U0 230 V in verifica_tn"
+   },
+   "norm": "AEA 90364-4-41",
+   "edition": null,
+   "clause": "41.3",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "V",
+   "applies_to": "TN: Zs*Ia <= U0",
+   "provenance": "convention",
+   "verification": "from_memory",
+   "confidence": "medium",
+   "location": {
+    "type": "code",
+    "file": "harness/src/engines/calculation/selectivity/src/epc_selectivity/aea_protection.py",
+    "symbol": null,
+    "line": 48
+   },
+   "value": 230.0,
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "same value as aea90364.code.board_memo.u0_v (230 V); backend zs.py derives U0 = voltage/sqrt(3) (219 V at 380 V): see aea90364.code.backend.zs.u0_v"
+   ],
+   "note": "Check U0 = 230 V as the default phase-to-earth voltage."
+  },
+  {
+   "id": "aea90364.code.aea_protection.verifica_it_segunda_falla.u_v_default",
+   "kind": "code_constant",
+   "title": {
+    "es": "U (línea) por defecto 400 V en verificación IT",
+    "en": "Default line voltage U 400 V in IT check"
+   },
+   "norm": "AEA 90364-4-41",
+   "edition": null,
+   "clause": "41.3",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "V",
+   "applies_to": "IT second fault: 2*Ia*Zs <= U",
+   "provenance": "convention",
+   "verification": "from_memory",
+   "confidence": "medium",
+   "location": {
+    "type": "code",
+    "file": "harness/src/engines/calculation/selectivity/src/epc_selectivity/aea_protection.py",
+    "symbol": null,
+    "line": 70
+   },
+   "value": 400.0,
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "other modules default to 380 V line voltage (TENSION_V, nominal_voltage_v)"
+   ],
+   "note": "Check 400 V vs 380 V line voltage default and the IT second-fault limits U / U0."
+  },
+  {
+   "id": "aea90364.code.system_voltage.u0_380",
+   "kind": "constant",
+   "title": {
+    "es": "U0 = 220 V en el sistema 220/380 V",
+    "en": "U0 = 220 V in the 220/380 V system"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "V",
+   "applies_to": "phase-to-earth voltage of the 380 V line system: Zs max, fault current, minimum Icc, memo",
+   "provenance": "convention",
+   "verification": "from_memory",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/system_voltages.json",
+    "pointer": "/systems/1/u0_v"
+   },
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "owner decision D16 (2026-11-10): 230/400 V -> U0 = 230 V; 220/380 V -> U0 = 220 V; no clause cited",
+    "added by MIG-36f; pending review"
+   ],
+   "note": "Check the U0 of the 220/380 V system against the standard."
+  },
+  {
+   "id": "aea90364.code.board_memo.k_mag",
+   "kind": "constant",
+   "title": {
+    "es": "Disparo magnético por curva [x In]: (no dispara, debe disparar)",
+    "en": "Magnetic trip by curve [x In]: (must not trip, must trip)"
+   },
+   "norm": "IEC 60898-1 / IEC 60947-2",
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "x In",
+   "applies_to": "Curves B, C, D (MCB) and MCCB; used for Icc min check and selectivity",
+   "provenance": "norm",
+   "verification": "from_memory",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/curva_disparo_magnetico_k"
+   },
+   "review_point": "table:aea-calculo|const:curva_disparo_magnetico_k",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "MCCB (5, 10) is a project assumption of adjustable magnetic trip, not a standard range",
+    "same B/C/D upper limits as aea_pipeline.K_MAGNETICO_C for C (10)",
+    "no clause in code"
+   ],
+   "note": "Check B 3-5, C 5-10, D 10-20 x In against IEC 60898-1; MCCB 5-10 is an assumption. Moved from code to aea_tables.json by ENG-14 (2026-11-10); the module reads it from there."
+  },
+  {
+   "id": "aea90364.code.board_memo.u0_v",
+   "kind": "constant",
+   "title": {
+    "es": "U0 = 230 V en la memoria de tablero",
+    "en": "U0 = 230 V in the board memo"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "V",
+   "applies_to": "Zs max = U0/IDn in the RCD table",
+   "provenance": "convention",
+   "verification": "from_memory",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/system_voltages.json",
+    "pointer": "/systems/0/u0_v"
+   },
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "conflicts with aea90364.code.backend.zs.u0_v: zs.py uses voltage_v/sqrt(3) (219 V at 380 V), board_memo uses fixed 230 V",
+    "no clause in code",
+    "decision D16: unify with the project's system (230/400 -> 230 V, 220/380 -> 220 V); left as is in ENG-14",
+    "MIG-36f: the constant U0_V of board_memo no longer exists; U0 comes from system_voltage.system_u0 and this record points to the 400 V system row of data/system_voltages.json (value unchanged, still pending review)"
+   ],
+   "note": "Check U0 = 230 V is right for 380/220 V systems or derive it from the board voltage."
+  },
+  {
+   "id": "aea90364.code.board_memo.ratio_termico",
+   "kind": "constant",
+   "title": {
+    "es": "Relación térmica mínima de selectividad 1,6",
+    "en": "Minimum thermal selectivity ratio 1.6"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "-",
+   "applies_to": "In upstream / In downstream >= 1.6",
+   "provenance": "typical",
+   "verification": "from_memory",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/termico_ratio_min"
+   },
+   "review_point": "table:aea-calculo|const:termico_ratio_min",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "rule of thumb; no standard cited in code",
+    "no clause in code"
+   ],
+   "note": "Check the 1.6 In ratio for thermal selectivity (typical practice, manufacturer tables prevail). Moved from code to aea_tables.json by ENG-14 (2026-11-10); the module reads it from there."
+  },
+  {
+   "id": "aea90364.code.board_memo.curve_band.t_convencional",
+   "kind": "constant",
+   "title": {
+    "es": "Tiempo convencional de la banda: 3600 s hasta 63 A, 7200 s por encima",
+    "en": "Conventional time of the band: 3600 s up to 63 A, 7200 s above"
+   },
+   "norm": "IEC 60898-1 / IEC 60947-2",
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "s",
+   "applies_to": "Trip band plotted for MCB and MCCB",
+   "provenance": "norm",
+   "verification": "from_memory",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/curva_banda_tiempos/valor/t_convencional"
+   },
+   "review_point": "table:aea-calculo|const:curva_banda_tiempos",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "same 63 A boundary used for MCB: aea_pipeline.IN_MAX_MCB_A",
+    "no clause in code"
+   ],
+   "note": "Check conventional time 1 h (In<=63 A) and 2 h (above) in IEC 60898-1 / 60947-2. Moved from code to aea_tables.json by ENG-14 (2026-11-10); the module reads it from there."
+  },
+  {
+   "id": "aea90364.code.board_memo.curve_band.punto_2_55",
+   "kind": "constant",
+   "title": {
+    "es": "Punto 2,55·In: t máx 60 s (In<=32 A) o 120 s, t mín 1 s",
+    "en": "2.55*In point: t max 60 s (In<=32 A) or 120 s, t min 1 s"
+   },
+   "norm": "IEC 60898-1",
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "s",
+   "applies_to": "MCB/MCCB band",
+   "provenance": "norm",
+   "verification": "from_memory",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/curva_banda_tiempos/valor/punto_2_55"
+   },
+   "review_point": "table:aea-calculo|const:curva_banda_tiempos",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause in code"
+   ],
+   "note": "Check the 2.55*In point (1 s min; 60 s max up to 32 A, 120 s above) in IEC 60898-1. Moved from code to aea_tables.json by ENG-14 (2026-11-10); the module reads it from there."
+  },
+  {
+   "id": "aea90364.code.board_memo.curve_band.tiempos_magneticos",
+   "kind": "constant",
+   "title": {
+    "es": "Tiempos del tramo magnético de la banda: 0,1 s y 0,01 s",
+    "en": "Times of the magnetic part of the band: 0.1 s and 0.01 s"
+   },
+   "norm": "IEC 60898-1 / IEC 60947-2",
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "s",
+   "applies_to": "Log-log plot points",
+   "provenance": "convention",
+   "verification": "from_memory",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/curva_banda_tiempos/valor/tiempos_magneticos"
+   },
+   "review_point": "table:aea-calculo|const:curva_banda_tiempos",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "plot construction values, not a normative time",
+    "no clause in code"
+   ],
+   "note": "Check that 0.1 s and 0.01 s are only plotting points of the trip band. Moved from code to aea_tables.json by ENG-14 (2026-11-10); the module reads it from there."
+  },
+  {
+   "id": "aea90364.code.board_memo.curve_letter",
+   "kind": "code_constant",
+   "title": {
+    "es": "Curva adoptada: D en motores con MCB/RCBO, C en el resto, MCCB ajustable",
+    "en": "Adopted curve: D for motors with MCB/RCBO, C otherwise, adjustable MCCB"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": null,
+   "applies_to": "Curve choice per circuit",
+   "provenance": "design-default",
+   "verification": "from_memory",
+   "confidence": "medium",
+   "location": {
+    "type": "code",
+    "file": "harness/src/engines/calculation/aea90364/src/epc_aea90364/board_memo.py",
+    "symbol": null,
+    "line": 78
+   },
+   "value": {
+    "motors_mcb_rcbo": "D",
+    "other": "C",
+    "mccb": "MCCB"
+   },
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "project assumption stated in the memo ('supuestos')",
+    "no clause in code"
+   ],
+   "note": "Check the curve choice (C general, D for motors on MCB) is acceptable as a project default."
+  },
+  {
+   "id": "aea90364.code.board_memo.selectividad.curva_aguas_arriba_defecto",
+   "kind": "code_constant",
+   "title": {
+    "es": "Curva aguas arriba por defecto: MCCB si In>63 A, si no C",
+    "en": "Default upstream curve: MCCB if In>63 A, else C"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "A",
+   "applies_to": "Selectivity with a board upstream",
+   "provenance": "design-default",
+   "verification": "from_memory",
+   "confidence": "low",
+   "location": {
+    "type": "code",
+    "file": "harness/src/engines/calculation/aea90364/src/epc_aea90364/board_memo.py",
+    "symbol": null,
+    "line": 185
+   },
+   "value": {
+    "in_limit_a": 63,
+    "above": "MCCB",
+    "below": "C"
+   },
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause in code"
+   ],
+   "note": "Check the default assumption of the upstream device type when it is not given."
+  },
+  {
+   "id": "aea90364.code.aea_earthing.tiempo_seccional_max_s.selectividad",
+   "kind": "constant",
+   "title": {
+    "es": "Tiempo de desconexión TN en líneas seccionales con selectividad: 5 s",
+    "en": "TN sectional disconnection time when selectivity justifies it: 5 s"
+   },
+   "norm": "AEA 90364-7-771",
+   "edition": "2006",
+   "clause": "771.18",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "s",
+   "applies_to": "aea_earthing.tiempo_seccional_max_s(esquema, selectividad=True)",
+   "provenance": "norm",
+   "verification": "from_memory",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/771.18_t_seccional_selectividad_tn_s"
+   },
+   "review_point": "table:aea-calculo|const:771.18_t_seccional_selectividad_tn_s",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "owner decision D25: TN sectional 2 s by default; up to 5 s only when selectivity justifies it"
+   ],
+   "note": "Check the 5 s limit and the selectivity condition in 771.18. Added by ENG-14 (2026-11-10)."
+  }
+ ]
+}

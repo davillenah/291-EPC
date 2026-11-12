@@ -1,0 +1,34 @@
+{
+ "id": "m_jabalina_continuidad_L_d_100",
+ "title_es": "Continuidad del modo simplificado en el borde L/d = 100",
+ "quantity": "salto_relativo_pct",
+ "inputs": {
+  "rho_ohm_m": 100.0,
+  "L_m": 3.0,
+  "d_antes_m": 0.03,
+  "d_despues_m": 0.0299,
+  "L_d_antes": 100.0,
+  "L_d_despues": 100.33444816053512
+ },
+ "formula": "La resistencia real de una jabalina varía de forma continua con d: según Dwight R(0.03)=30.1578 y R(0.0299)=30.1755, salto = +0.059 %. Se espera un salto cercano a 0; la tolerancia es 1 punto porcentual absoluto.",
+ "expected": {
+  "value": 0.058736,
+  "unit": "% (puntos)",
+  "tolerance_pct": 1.0
+ },
+ "expected_source": "closed_form",
+ "engine_call": {
+  "module": "aea_earthing",
+  "function": "resistance_rod",
+  "adapter": "rod_jump",
+  "mapping": "salto % entre simplificada(d_despues) y simplificada(d_antes)"
+ },
+ "severity_if_fails": "minor",
+ "note_es": "El factor k de la simplificada es escalonado (0,75 / 1,0 / 1,2): en el borde la resistencia salta de golpe. Solo ocurre con simplificada=True.",
+ "owner_verdict": {
+  "date": "2026-11-10",
+  "action": "pending_d26",
+  "decision": "D26",
+  "note": "Frozen: do not remove or correct the simplified rod formula until its origin is identified."
+ }
+}

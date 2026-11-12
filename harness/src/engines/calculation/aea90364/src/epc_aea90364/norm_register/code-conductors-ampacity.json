@@ -1,0 +1,542 @@
+{
+ "schema_version": "1.0",
+ "engine": "aea90364",
+ "topic": "code-conductors-ampacity",
+ "records": [
+  {
+   "id": "aea90364.code.aea_conductors.alfa_cu",
+   "kind": "constant",
+   "title": {
+    "es": "Coeficiente de temperatura del cobre 0,00393 1/C",
+    "en": "Copper temperature coefficient 0.00393 1/C"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "1/C",
+   "applies_to": "R(T) = R20*(1 + alfa*(T-20))",
+   "provenance": "physics",
+   "verification": "from_memory",
+   "confidence": "high",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/conductor_alfa_cu"
+   },
+   "review_point": "table:aea-calculo|const:conductor_alfa_cu",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause in code"
+   ],
+   "note": "Check alpha_20 of copper (0.00393 1/C). Moved from code to aea_tables.json by ENG-13 (2026-11-10); the module reads it from there."
+  },
+  {
+   "id": "aea90364.code.aea_conductors.factors_harmonics",
+   "kind": "constant",
+   "title": {
+    "es": "Factor por armónicos según THD de 3.º armónica (Tabla 771.16.XIII)",
+    "en": "Harmonic factor by 3rd-harmonic THD (Table 771.16.XIII)"
+   },
+   "norm": "AEA 90364-7-771",
+   "edition": "2006",
+   "clause": "771.16.XIII",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "-",
+   "applies_to": "(THD max %, factor, applied to line/neutral)",
+   "provenance": "norm",
+   "verification": "from_memory",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/771.16.XIII_factores_armonicos"
+   },
+   "review_point": "table:aea-calculo|const:771.16.XIII_factores_armonicos",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "not in aea_tables.json (the JSON meta lists XII as unreadable; XIII is simply absent): value lives only in code",
+    "last row upper limit is math.inf in code, written as null in value"
+   ],
+   "note": "Check the THD bands and factors against table 771.16.XIII; consider moving it to the JSON. Moved from code to aea_tables.json by ENG-13 (2026-11-10); the module reads it from there."
+  },
+  {
+   "id": "aea90364.code.aea_conductors.pe_section.pasos",
+   "kind": "constant",
+   "title": {
+    "es": "Escalones de PE: =S hasta 16, 16 hasta 35, S/2 por encima, mínimo 2,5 mm2",
+    "en": "PE steps: =S up to 16, 16 up to 35, S/2 above, minimum 2.5 mm2"
+   },
+   "norm": "AEA 90364-7-771",
+   "edition": "2006",
+   "clause": "771.18.3",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "mm2",
+   "applies_to": "PE from phase section (same material)",
+   "provenance": "norm",
+   "verification": "from_memory",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/771.18.3_pe_pasos"
+   },
+   "review_point": "table:aea-calculo|const:771.18.3_pe_pasos",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "one implementation (ENG-14): aea_earthing.seccion_pe_mm2 calls aea_conductors.pe_section; clause cited as 771.18.3 here and as 771-C.II in the earthing docstring",
+    "the S/2 result is rounded up to the next commercial section of Table 771.16.I (47.5 -> 50 mm2), cases s1 and s2; the series is read from the 771.16.I data",
+    "board_figures.py note also hardcodes 'S/2 si S>35 mm2' as text"
+   ],
+   "note": "Check PE steps and minimum 2.5 mm2 against 771.18.3 / table 771-C.II. Moved to aea_tables.json by ENG-13; ENG-14: one implementation, rounded up to the commercial series (cases s1, s2)."
+  },
+  {
+   "id": "aea90364.code.aea_conductors.neutral_section.umbral",
+   "kind": "constant",
+   "title": {
+    "es": "Neutro igual a fase hasta 16 mm2; por encima, la mitad en serie comercial",
+    "en": "Neutral equals phase up to 16 mm2; above, half rounded up to the commercial series"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "mm2",
+   "applies_to": "Neutral section of 3-phase circuits",
+   "provenance": "norm",
+   "verification": "from_memory",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/neutro_seccion_igual_hasta_mm2"
+   },
+   "review_point": "table:aea-calculo|const:neutro_seccion_igual_hasta_mm2",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause cited; the 16 mm2 threshold is the copper one: aluminium is usually 25 mm2 in IEC 60364-5-52 (check, not changed)",
+    "no clause in code"
+   ],
+   "note": "Find the clause for the reduced neutral and check the threshold (16 mm2 Cu) and whether Al needs another. Moved from code to aea_tables.json by ENG-13 (2026-11-10); the module reads it from there."
+  },
+  {
+   "id": "aea90364.code.aea_ampacity.seccion_min_al_mm2",
+   "kind": "constant",
+   "title": {
+    "es": "Sección mínima del aluminio 16 mm2",
+    "en": "Minimum aluminium section 16 mm2"
+   },
+   "norm": "AEA 90364-7-771",
+   "edition": "2006",
+   "clause": "771.13",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "mm2",
+   "applies_to": "Aluminium conductors",
+   "provenance": "norm",
+   "verification": "from_memory",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/771.13_seccion_minima_al_mm2"
+   },
+   "review_point": "table:aea-calculo|const:771.13_seccion_minima_al_mm2",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "module docstring: 'Aluminio solo desde 16 mm2 (AEA 771.13)' [VERIFICAR]",
+    "related JSON value is the PEN minimum Al 16 (/constantes/771.13_pen_minima_mm2/al), not a general Al minimum"
+   ],
+   "note": "Check that 16 mm2 is the minimum section for aluminium conductors in 771.13. Moved from code to aea_tables.json by ENG-13 (2026-11-10); the module reads it from there."
+  },
+  {
+   "id": "aea90364.code.aea_ampacity.alfa",
+   "kind": "constant",
+   "title": {
+    "es": "Coeficiente de temperatura Cu 0,00393 y Al 0,00403",
+    "en": "Temperature coefficient Cu 0.00393 and Al 0.00403"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "1/C",
+   "applies_to": "R(T) for voltage drop",
+   "provenance": "physics",
+   "verification": "from_memory",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/conductor_alfa_al"
+   },
+   "review_point": "table:aea-calculo|const:conductor_alfa_al",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "cu entry is aea_conductors.ALFA_CU (not a literal here); the Al value 0.00403 is only here",
+    "no clause in code"
+   ],
+   "note": "Check alpha of aluminium (0.00403 1/C). Moved from code to aea_tables.json by ENG-13 (2026-11-10); the module reads it from there."
+  },
+  {
+   "id": "aea90364.code.aea_ampacity.r20_al_ohm_km",
+   "kind": "constant",
+   "title": {
+    "es": "Resistencia del aluminio a 20 C por sección (IEC 60228 clase 2)",
+    "en": "Aluminium resistance at 20 C by section (IEC 60228 class 2)"
+   },
+   "norm": "IEC 60228",
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "ohm/km",
+   "applies_to": "Voltage drop with aluminium",
+   "provenance": "norm",
+   "verification": "from_memory",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/conductor_r20_al_ohm_km"
+   },
+   "review_point": "table:aea-calculo|const:conductor_r20_al_ohm_km",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "differs from Cu x JSON factor_aluminio (1.64): the table ratios Al/Cu are 1.65 to 1.68 (e.g. 10 mm2: 3.08 vs 1.83x1.64=3.00)",
+    "used by aea_ampacity; aea_earthing._r_km uses Cu x 1.64 instead: two Al resistances in the engine",
+    "no clause in code"
+   ],
+   "note": "Check Al resistances per section against IEC 60228 class 2 and unify with the 1.64 factor. Moved from code to aea_tables.json by ENG-13 (2026-11-10); the module reads it from there."
+  },
+  {
+   "id": "aea90364.code.aea_ampacity.fuentes",
+   "kind": "constant",
+   "title": {
+    "es": "Método de instalación -> tabla/columna de 771.16 (B1 a D2)",
+    "en": "Installation method -> 771.16 table/column (B1 to D2)"
+   },
+   "norm": "AEA 90364-7-771",
+   "edition": "2006",
+   "clause": "771.16",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": null,
+   "applies_to": "Choice of ampacity table per method",
+   "provenance": "norm",
+   "verification": "from_memory",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/771.16_metodos_tabla_fuente"
+   },
+   "review_point": "table:aea-calculo|const:771.16_metodos_tabla_fuente",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "rule encoded in lambdas: value is a transcription, not a literal",
+    "any method not listed falls back to D2 (771.16.VI)"
+   ],
+   "note": "Check each installation method is mapped to the right table and column of 771.16. Moved from code to aea_tables.json by ENG-13 (2026-11-10); the module reads it from there."
+  },
+  {
+   "id": "aea90364.code.aea_ampacity.agrupamiento",
+   "kind": "constant",
+   "title": {
+    "es": "Método -> tabla del factor de agrupamiento (771.16.II.b/IV/VII)",
+    "en": "Method -> grouping factor table (771.16.II.b/IV/VII)"
+   },
+   "norm": "AEA 90364-7-771",
+   "edition": "2006",
+   "clause": "771.16",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": null,
+   "applies_to": "Grouping factor for n > 1 circuits",
+   "provenance": "norm",
+   "verification": "from_memory",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/771.16_metodos_agrupamiento"
+   },
+   "review_point": "table:aea-calculo|const:771.16_metodos_agrupamiento",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "rule encoded in lambdas: value is a transcription; the item numbers refer to table 771.16.IV items",
+    "clause cited only as 771.16"
+   ],
+   "note": "Check each method uses the right grouping table/item and that G has factor 1. Moved from code to aea_tables.json by ENG-13 (2026-11-10); the module reads it from there."
+  },
+  {
+   "id": "aea90364.code.aea_ampacity.factores.clase5",
+   "kind": "constant",
+   "title": {
+    "es": "Factor 0,95 para conductores clase 5 (flexibles)",
+    "en": "Factor 0.95 for class 5 (flexible) conductors"
+   },
+   "norm": "AEA 90364-7-771",
+   "edition": "2006",
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "-",
+   "applies_to": "f_clase in Iz",
+   "provenance": "norm",
+   "verification": "from_memory",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/771.16_factor_clase5"
+   },
+   "review_point": "table:aea-calculo|const:771.16_factor_clase5",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "docstring of aea_tables states 0.95 for class 5, no clause",
+    "no clause in code"
+   ],
+   "note": "Find the clause for the 0.95 class 5 factor and check it. Moved from code to aea_tables.json by ENG-13 (2026-11-10); the module reads it from there."
+  },
+  {
+   "id": "aea90364.code.aea_route.kinds",
+   "kind": "constant",
+   "title": {
+    "es": "Tipo de tramo -> método de instalación (multipolar, unipolares)",
+    "en": "Run kind -> installation method (multicore, single-core)"
+   },
+   "norm": "AEA 90364-7-771",
+   "edition": "2006",
+   "clause": "771.16",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": null,
+   "applies_to": "Route segments",
+   "provenance": "norm",
+   "verification": "from_memory",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/ruta_tipos_tramo_metodos"
+   },
+   "review_point": "table:aea-calculo|const:ruta_tipos_tramo_metodos",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "mapping chosen in code; module header cites 771.16.I a VII and IEC 60364-5-52"
+   ],
+   "note": "Check each run kind maps to the right installation method (e.g. chamber=E/F, road crossing=D1). Moved from code to aea_tables.json by ENG-13 (2026-11-10); the module reads it from there."
+  },
+  {
+   "id": "aea90364.code.aea_route.limites_validacion",
+   "kind": "code_constant",
+   "title": {
+    "es": "Límites de validación de tramos (longitud, circuitos, T, rho, profundidad)",
+    "en": "Segment validation bounds (length, circuits, T, rho, depth)"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": null,
+   "applies_to": "Input validation",
+   "provenance": "design-default",
+   "verification": "from_memory",
+   "confidence": "low",
+   "location": {
+    "type": "code",
+    "file": "harness/src/engines/calculation/feeder_sizing/src/epc_feeder_sizing/aea_route.py",
+    "symbol": null,
+    "line": 80
+   },
+   "value": {
+    "length_m": [
+     0,
+     5000
+    ],
+    "circuits": [
+     1,
+     20
+    ],
+    "ambient_c": [
+     0,
+     80
+    ],
+    "soil_c": [
+     0,
+     60
+    ],
+    "rho_kmw": [
+     0.3,
+     5
+    ],
+    "depth_m": [
+     0,
+     5
+    ],
+    "max_segments": 20
+   },
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "engineering bounds, not norm values; rho 0.3-5 K*m/W should cover the soil-resistivity table",
+    "no clause in code"
+   ],
+   "note": "Check the bounds are wide enough for the tables (rho 0.3-5, soil 0-60 C, ambient 0-80 C)."
+  },
+  {
+   "id": "aea90364.code.cable_thermal.t_adiabatico_max_s",
+   "kind": "constant",
+   "title": {
+    "es": "Tiempo máximo del supuesto adiabático 5 s",
+    "en": "Maximum time of the adiabatic assumption 5 s"
+   },
+   "norm": "IEC 60364-4-43",
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "s",
+   "applies_to": "Warning in verificar_i2t",
+   "provenance": "norm",
+   "verification": "from_memory",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/cable_t_adiabatico_max_s"
+   },
+   "review_point": "table:aea-calculo|const:cable_t_adiabatico_max_s",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "marked [VERIFICAR] in code",
+    "no clause in code"
+   ],
+   "note": "Check the 5 s limit of the adiabatic equation. Moved from code to aea_tables.json by ENG-14 (2026-11-10); the module reads it from there."
+  },
+  {
+   "id": "aea90364.code.cable_thermal.t_corto_s",
+   "kind": "constant",
+   "title": {
+    "es": "Tiempo bajo el cual usar la integral de Joule 0,1 s",
+    "en": "Time below which the Joule integral must be used 0.1 s"
+   },
+   "norm": "IEC 60364-4-43",
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "s",
+   "applies_to": "Warning in verificar_i2t",
+   "provenance": "norm",
+   "verification": "from_memory",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/cable_t_corto_s"
+   },
+   "review_point": "table:aea-calculo|const:cable_t_corto_s",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "marked [VERIFICAR] in code",
+    "no clause in code"
+   ],
+   "note": "Check the 0.1 s limit below which the device let-through energy applies. Moved from code to aea_tables.json by ENG-14 (2026-11-10); the module reads it from there."
+  },
+  {
+   "id": "aea90364.code.aea_conductors.k_adiabatico_771.alias",
+   "kind": "constant",
+   "title": {
+    "es": "Tabla 771.19.II: aislación -> clave de k; el PVC se parte en 300 mm2",
+    "en": "Table 771.19.II: insulation -> k key; PVC is split at 300 mm2"
+   },
+   "norm": "AEA 90364-7-771",
+   "edition": "2006",
+   "clause": "771.19.II",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": null,
+   "applies_to": "adiabatic k lookup by insulation name and conductor section (decision D12)",
+   "provenance": "norm",
+   "verification": "from_memory",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/771.19.II_k_aislaciones"
+   },
+   "review_point": "table:aea-calculo|const:771.19.II_k_aislaciones",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [],
+   "note": "Check that the 300 mm2 limit and the aliases (xlpe -> epr_xlpe) match Table 771.19.II. Added by ENG-14 (2026-11-10)."
+  }
+ ]
+}

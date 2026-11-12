@@ -1,0 +1,112 @@
+{
+ "schema_version": "1.0",
+ "engine": "aea90364",
+ "topic": "code-motor-backup-reactive-lightning",
+ "records": [
+  {
+   "id": "aea90364.code.aea_pipeline.margin_motor",
+   "kind": "code_constant",
+   "title": {
+    "es": "Margen 1,25 · Ib para In de circuitos de motor",
+    "en": "1.25 * Ib margin for the In of motor circuits"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "-",
+   "applies_to": "In >= 1.25*Ib in motors (also checked in board_figures)",
+   "provenance": "typical",
+   "verification": "from_memory",
+   "confidence": "low",
+   "location": {
+    "type": "code",
+    "file": "harness/src/engines/calculation/aea90364/src/epc_aea90364/aea_pipeline.py",
+    "symbol": "MARGIN_MOTOR",
+    "line": 80
+   },
+   "value": 1.25,
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "duplicated literal; same 1.25 as aea90364.code.aea_demand.corriente_alimentador_motores.factor",
+    "no clause in code"
+   ],
+   "note": "Find the basis of In >= 1.25*Ib for motors and check it."
+  },
+  {
+   "id": "aea90364.code.aea_backup.arranque_defecto",
+   "kind": "code_constant",
+   "title": {
+    "es": "Múltiplo de arranque por defecto 1,0 si la topología es desconocida",
+    "en": "Default starting multiple 1.0 for an unknown topology"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "x In",
+   "applies_to": "Generator sizing; the table is in JSON /constantes/respaldo_grupo_ups",
+   "provenance": "design-default",
+   "verification": "from_memory",
+   "confidence": "low",
+   "location": {
+    "type": "code",
+    "file": "harness/src/engines/calculation/aea90364/src/epc_aea90364/aea_backup.py",
+    "symbol": null,
+    "line": 55
+   },
+   "value": 1.0,
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause in code"
+   ],
+   "note": "Check that an unknown starter is treated as multiple 1.0."
+  },
+  {
+   "id": "aea90364.code.aea_lightning.superficie_captacion.radio_3h",
+   "kind": "constant",
+   "title": {
+    "es": "Radio de captación 3 · altura de la estructura",
+    "en": "Collection radius 3 x structure height"
+   },
+   "norm": "IEC 62305-2",
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "x H",
+   "applies_to": "A_d = L*W + 2*(3H)*(L+W) + pi*(3H)^2",
+   "provenance": "norm",
+   "verification": "from_memory",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/descargas_radio_captacion_factor_altura"
+   },
+   "review_point": "table:aea-calculo|const:descargas_radio_captacion_factor_altura",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "header: rules not reviewed, values typical; no clause in code",
+    "no clause in code"
+   ],
+   "note": "Check the collection area rule (3 x height) in IEC 62305-2. Moved from code to aea_tables.json by ENG-14 (2026-11-10); the module reads it from there."
+  }
+ ]
+}

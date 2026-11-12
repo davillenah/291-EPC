@@ -1,0 +1,215 @@
+{
+ "schema_version": "1.0",
+ "engine": "aea90364",
+ "topic": "code-voltage-drop",
+ "records": [
+  {
+   "id": "aea90364.code.aea_voltage_drop.fraccion_ilum_771",
+   "kind": "constant",
+   "title": {
+    "es": "Fracción de la corriente de iluminación en el extremo (771): 66 %",
+    "en": "Lighting current fraction at the far end (771): 66 %"
+   },
+   "norm": "AEA 90364-7-771",
+   "edition": "2006",
+   "clause": "771.9.1",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "-",
+   "applies_to": "corriente_extremo for lighting",
+   "provenance": "norm",
+   "verification": "from_memory",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/771.9.1_fraccion_iluminacion"
+   },
+   "review_point": "table:aea-calculo|const:771.9.1_fraccion_iluminacion",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "clause 771.9.1 is cited for the same 66 % in aea_demand, not in this module"
+   ],
+   "note": "Check that 66 % of the lighting current is the concentrated far-end load per 771. Moved from code to aea_tables.json by ENG-13 (2026-11-10); the module reads it from there."
+  },
+  {
+   "id": "aea90364.code.aea_voltage_drop.fraccion_ilum_770",
+   "kind": "constant",
+   "title": {
+    "es": "Fracción de la corriente de iluminación en el extremo (770): 2/3",
+    "en": "Lighting current fraction at the far end (770): 2/3"
+   },
+   "norm": "AEA 90364-7-770",
+   "edition": "2017",
+   "clause": "770.8.I",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "-",
+   "applies_to": "corriente_extremo for lighting",
+   "provenance": "norm",
+   "verification": "from_memory",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/770.8.I_fraccion_iluminacion"
+   },
+   "review_point": "table:aea-calculo|const:770.8.I_fraccion_iluminacion",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "clause 770.8.I is cited for 2/3 in aea_demand; value is the expression 2.0 / 3.0 in code"
+   ],
+   "note": "Check that 2/3 of the lighting current is the far-end load per 770. Moved from code to aea_tables.json by ENG-13 (2026-11-10); the module reads it from there."
+  },
+  {
+   "id": "aea90364.code.aea_voltage_drop.tension_defecto",
+   "kind": "constant",
+   "title": {
+    "es": "Tensión nominal por defecto: 220 V monofásico / 380 V trifásico",
+    "en": "Default nominal voltage: 220 V single-phase / 380 V three-phase"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "V",
+   "applies_to": "caida_gdc, longitud_maxima, seccion_minima",
+   "provenance": "convention",
+   "verification": "from_memory",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/tension_nominal_defecto_v"
+   },
+   "review_point": "table:aea-calculo|const:tension_nominal_defecto_v",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "hardcoded three times in this module (lines of caida_gdc, longitud_maxima, seccion_minima)",
+    "same values as aea_demand.U_MONO_V / U_TRI_V and the 380 V defaults of the pipeline",
+    "no clause in code"
+   ],
+   "note": "Check 220/380 V as the default system voltages for Argentina. Moved from code to aea_tables.json by ENG-13 (2026-11-10); the module reads it from there."
+  },
+  {
+   "id": "aea90364.code.aea_voltage_drop.gdc_arranque.rango_secciones",
+   "kind": "constant",
+   "title": {
+    "es": "GDC de arranque definido hasta 70 mm2; columna 1 si S<=25",
+    "en": "Start-up GDC defined up to 70 mm2; first column if S<=25"
+   },
+   "norm": "AEA 90364-7-771",
+   "edition": "2006",
+   "clause": "771.19",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "mm2",
+   "applies_to": "coeficiente_gdc(arranque=True)",
+   "provenance": "norm",
+   "verification": "from_memory",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/771.19_gdc_arranque_secciones_mm2"
+   },
+   "review_point": "table:aea-calculo|const:771.19_gdc_arranque_secciones_mm2",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "docstring: 'GDC de arranque definido para 1,5-25 mm2 y 35-70 mm2'",
+    "same 70 mm2 cut in aea_motor.caida_arranque (reads the same JSON constant)"
+   ],
+   "note": "Check the section ranges where start-up GDC is defined (1.5-25 and 35-70 mm2). Moved from code to aea_tables.json by ENG-13 (2026-11-10); the module reads it from there."
+  },
+  {
+   "id": "aea90364.code.aea_pipeline.du_acum_max_pct",
+   "kind": "code_constant",
+   "title": {
+    "es": "Caída de tensión acumulada máxima 5 % en el pipeline",
+    "en": "Maximum accumulated voltage drop 5 % in the pipeline"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "%",
+   "applies_to": "Selection and 'cumple' of each circuit",
+   "provenance": "norm",
+   "verification": "from_memory",
+   "confidence": "low",
+   "location": {
+    "type": "code",
+    "file": "harness/src/engines/calculation/aea90364/src/epc_aea90364/aea_pipeline.py",
+    "symbol": "DU_ACUM_MAX_PCT",
+    "line": 84
+   },
+   "value": 5.0,
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause in the code; related to 3 % + 1 % + ... limits of AEA 771.19 (total 5 %)",
+    "same 5 % as JSON aea90364.constant.771-19-limites-caida-pct motor_regimen (coincidence of values, different meaning) and as aea_export.DU_AVISO_PCT",
+    "no clause in code"
+   ],
+   "note": "Find the clause for the 5 % total accumulated drop and check it applies to every circuit type."
+  },
+  {
+   "id": "aea90364.code.aea_export.du_aviso_pct",
+   "kind": "code_constant",
+   "title": {
+    "es": "Aviso de caída de tensión sobre 5 % en la exportación",
+    "en": "Voltage drop warning above 5 % in the export"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "%",
+   "applies_to": "Warning when a circuit dU exceeds it",
+   "provenance": "design-default",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "code",
+    "file": "harness/src/engines/calculation/aea90364/src/epc_aea90364/aea_export.py",
+    "symbol": "DU_AVISO_PCT",
+    "line": 40
+   },
+   "value": 5.0,
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "duplicated literal; same 5 % as aea90364.code.aea_pipeline.du_acum_max_pct",
+    "no clause in code"
+   ],
+   "note": "Check the 5 % warning level of the export and keep it equal to the pipeline limit."
+  }
+ ]
+}

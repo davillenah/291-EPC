@@ -1,0 +1,257 @@
+{
+ "schema_version": "1.0",
+ "engine": "aea90364",
+ "topic": "code-non-aea",
+ "records": [
+  {
+   "id": "aea90364.code.hazen_williams.constante_hw",
+   "kind": "code_constant",
+   "title": {
+    "es": "Constante de Hazen-Williams 6,05e5 (Q L/min, d mm, bar/m)",
+    "en": "Hazen-Williams constant 6.05e5 (Q L/min, d mm, bar/m)"
+   },
+   "norm": "NFPA 13",
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "-",
+   "applies_to": "Water pipe friction loss",
+   "provenance": "norm",
+   "verification": "from_memory",
+   "confidence": "medium",
+   "location": {
+    "type": "code",
+    "file": "harness/src/engines/calculation/aea90364/src/epc_aea90364/hazen_williams.py",
+    "symbol": "CONSTANTE_HW",
+    "line": 56
+   },
+   "value": 605000.0,
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "docstring: NFPA 13 use is [VERIFICAR], form and constant from memory, no clauses",
+    "no clause in code"
+   ],
+   "note": "Check 6.05e5 (docstring cross-checks it against 10.67 SI form: -0.24 %)."
+  },
+  {
+   "id": "aea90364.code.hazen_williams.exp_q",
+   "kind": "code_constant",
+   "title": {
+    "es": "Exponente del caudal 1,85",
+    "en": "Flow exponent 1.85"
+   },
+   "norm": "NFPA 13",
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "-",
+   "applies_to": "Water pipe friction loss",
+   "provenance": "norm",
+   "verification": "from_memory",
+   "confidence": "medium",
+   "location": {
+    "type": "code",
+    "file": "harness/src/engines/calculation/aea90364/src/epc_aea90364/hazen_williams.py",
+    "symbol": "EXP_Q",
+    "line": 57
+   },
+   "value": 1.85,
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "docstring: NFPA 13 use is [VERIFICAR], form and constant from memory, no clauses",
+    "no clause in code"
+   ],
+   "note": "Check exponent 1.85 (SI form uses 1.852)."
+  },
+  {
+   "id": "aea90364.code.hazen_williams.exp_d",
+   "kind": "code_constant",
+   "title": {
+    "es": "Exponente del diámetro 4,87",
+    "en": "Diameter exponent 4.87"
+   },
+   "norm": "NFPA 13",
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "-",
+   "applies_to": "Water pipe friction loss",
+   "provenance": "norm",
+   "verification": "from_memory",
+   "confidence": "medium",
+   "location": {
+    "type": "code",
+    "file": "harness/src/engines/calculation/aea90364/src/epc_aea90364/hazen_williams.py",
+    "symbol": "EXP_D",
+    "line": 58
+   },
+   "value": 4.87,
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "docstring: NFPA 13 use is [VERIFICAR], form and constant from memory, no clauses",
+    "no clause in code"
+   ],
+   "note": "Check exponent 4.87 (SI form uses 4.8704)."
+  },
+  {
+   "id": "aea90364.code.hazen_williams.rho_agua",
+   "kind": "code_constant",
+   "title": {
+    "es": "Densidad del agua 1000 kg/m3",
+    "en": "Water density 1000 kg/m3"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "kg/m3",
+   "applies_to": "Water pipe friction loss",
+   "provenance": "physics",
+   "verification": "unverified",
+   "confidence": "medium",
+   "location": {
+    "type": "code",
+    "file": "harness/src/engines/calculation/aea90364/src/epc_aea90364/hazen_williams.py",
+    "symbol": "RHO_AGUA",
+    "line": 59
+   },
+   "value": 1000.0,
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause in code"
+   ],
+   "note": "Check 1000 kg/m3 water density."
+  },
+  {
+   "id": "aea90364.code.hazen_williams.g",
+   "kind": "code_constant",
+   "title": {
+    "es": "Aceleración de la gravedad 9,80665 m/s2",
+    "en": "Gravity 9.80665 m/s2"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "m/s2",
+   "applies_to": "Water pipe friction loss",
+   "provenance": "physics",
+   "verification": "from_memory",
+   "confidence": "medium",
+   "location": {
+    "type": "code",
+    "file": "harness/src/engines/calculation/aea90364/src/epc_aea90364/hazen_williams.py",
+    "symbol": "G",
+    "line": 60
+   },
+   "value": 9.80665,
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause in code"
+   ],
+   "note": "Check standard gravity."
+  },
+  {
+   "id": "aea90364.code.hvac_airflow.rho_aire",
+   "kind": "code_constant",
+   "title": {
+    "es": "Densidad del aire 1,2 kg/m3",
+    "en": "Air density 1.2 kg/m3"
+   },
+   "norm": "ASHRAE Fundamentals",
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "kg/m3",
+   "applies_to": "Sensible load Q = rho*cp*V*dT",
+   "provenance": "physics",
+   "verification": "from_memory",
+   "confidence": "medium",
+   "location": {
+    "type": "code",
+    "file": "harness/src/engines/calculation/aea90364/src/epc_aea90364/hvac_airflow.py",
+    "symbol": "RHO_AIRE",
+    "line": 45
+   },
+   "value": 1.2,
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "DIFFERENT from the air constant of engine/hvac config AIR_SENSIBLE_W_PER_LS_K (1.23 W per L/s per K): rho*cp here = 1.2*1.006 = 1.207 kW/(m3/s*K), 1.9 % lower than 1.23",
+    "no clause in code"
+   ],
+   "note": "Decide one air constant set: rho 1.2 and cp 1.006 here vs 1.23 W/(L/s*K) in engine/hvac."
+  },
+  {
+   "id": "aea90364.code.hvac_airflow.cp_aire",
+   "kind": "code_constant",
+   "title": {
+    "es": "Calor específico del aire 1,006 kJ/(kg·K)",
+    "en": "Air specific heat 1.006 kJ/(kg*K)"
+   },
+   "norm": "ASHRAE Fundamentals",
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "kJ/(kg*K)",
+   "applies_to": "Sensible load",
+   "provenance": "physics",
+   "verification": "from_memory",
+   "confidence": "medium",
+   "location": {
+    "type": "code",
+    "file": "harness/src/engines/calculation/aea90364/src/epc_aea90364/hvac_airflow.py",
+    "symbol": "CP_AIRE",
+    "line": 46
+   },
+   "value": 1.006,
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "DIFFERENT from the air constant of engine/hvac config AIR_SENSIBLE_W_PER_LS_K (1.23): see aea90364.code.hvac_airflow.rho_aire",
+    "no clause in code"
+   ],
+   "note": "Check cp = 1.006 kJ/(kg*K) and unify with engine/hvac."
+  }
+ ]
+}

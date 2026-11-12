@@ -1,0 +1,767 @@
+{
+ "schema_version": "1.0",
+ "engine": "aea90364",
+ "topic": "constants",
+ "records": [
+  {
+   "id": "aea90364.constant.771-13-i-secciones-minimas-mm2",
+   "kind": "constant",
+   "title": {
+    "es": "Secciones mínimas de conductor por tipo de circuito",
+    "en": "Minimum conductor sections by circuit type"
+   },
+   "norm": "AEA 90364-7-771",
+   "edition": "2006",
+   "clause": "771.13.I",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "mm2",
+   "applies_to": null,
+   "provenance": "norm",
+   "verification": "text",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/771.13.I_secciones_minimas_mm2"
+   },
+   "review_point": "table:aea-calculo|const:771.13.I_secciones_minimas_mm2",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "duplicated literal: aea90364.criterion.min-section-lighting-mm2 (1.5), aea90364.criterion.min-section-sockets-mm2 (2.5)"
+   ],
+   "note": "Check each minimum section against table 771.13.I."
+  },
+  {
+   "id": "aea90364.constant.771-13-pen-minima-mm2",
+   "kind": "constant",
+   "title": {
+    "es": "Sección mínima del conductor PEN (Cu y Al)",
+    "en": "Minimum PEN conductor section (Cu and Al)"
+   },
+   "norm": "AEA 90364-7-771",
+   "edition": "2006",
+   "clause": "771.13",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "mm2",
+   "applies_to": null,
+   "provenance": "norm",
+   "verification": "text",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/771.13_pen_minima_mm2"
+   },
+   "review_point": "table:aea-calculo|const:771.13_pen_minima_mm2",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [],
+   "note": "Check the minimum PEN sections in 771.13."
+  },
+  {
+   "id": "aea90364.constant.771-19-ii-k-adiabatico",
+   "kind": "constant",
+   "title": {
+    "es": "Constante k adiabática por aislación y metal",
+    "en": "Adiabatic k constant by insulation and metal"
+   },
+   "norm": "AEA 90364-7-771",
+   "edition": "2006",
+   "clause": "771.19.II",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "A*s^0.5/mm2",
+   "applies_to": null,
+   "provenance": "norm",
+   "verification": "text",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/771.19.II_k_adiabatico"
+   },
+   "review_point": "table:aea-calculo|const:771.19.II_k_adiabatico",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "one lookup (ENG-14, decision D12): cable_thermal.k_material calls aea_conductors.k_adiabatico_771; PVC above 300 mm2 uses Cu 103 / Al 68 when the section is passed (None behaves as up to 300 mm2)"
+   ],
+   "note": "Check each k against table 771.19.II (insulation and metal)."
+  },
+  {
+   "id": "aea90364.constant.771-19-iv-caida-unitaria-va-km",
+   "kind": "constant",
+   "title": {
+    "es": "Caída unitaria de tensión por sección",
+    "en": "Unit voltage drop by section"
+   },
+   "norm": "AEA 90364-7-771",
+   "edition": "2006",
+   "clause": "771.19.IV",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "V/(A*km)",
+   "applies_to": null,
+   "provenance": "norm",
+   "verification": "text",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/771.19.IV_caida_unitaria_va_km"
+   },
+   "review_point": "table:aea-calculo|const:771.19.IV_caida_unitaria_va_km",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [],
+   "note": "Check the unit drop per section against table 771.19.IV."
+  },
+  {
+   "id": "aea90364.constant.771-19-gdc-comun",
+   "kind": "constant",
+   "title": {
+    "es": "Coeficiente de caída (gdc) en régimen, por material y fases",
+    "en": "Voltage drop coefficient (steady state) by material and phases"
+   },
+   "norm": "AEA 90364-7-771",
+   "edition": "2006",
+   "clause": "771.19",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": null,
+   "applies_to": null,
+   "provenance": "norm",
+   "verification": "text",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/771.19_gdc_comun"
+   },
+   "review_point": "table:aea-calculo|const:771.19_gdc_comun",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause in data beyond 771.19 (table not named)"
+   ],
+   "note": "Confirm where in 771.19 these coefficients come from and their values."
+  },
+  {
+   "id": "aea90364.constant.771-19-gdc-arranque",
+   "kind": "constant",
+   "title": {
+    "es": "Coeficiente de caída (gdc) en arranque, por material y fases",
+    "en": "Voltage drop coefficient (starting) by material and phases"
+   },
+   "norm": "AEA 90364-7-771",
+   "edition": "2006",
+   "clause": "771.19",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": null,
+   "applies_to": null,
+   "provenance": "norm",
+   "verification": "text",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/771.19_gdc_arranque"
+   },
+   "review_point": "table:aea-calculo|const:771.19_gdc_arranque",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause in data beyond 771.19 (table not named)"
+   ],
+   "note": "Confirm the source and the two values (min, max) of each pair."
+  },
+  {
+   "id": "aea90364.constant.771-19-limites-caida-pct",
+   "kind": "constant",
+   "title": {
+    "es": "Límites de caída de tensión por tipo de circuito",
+    "en": "Voltage drop limits by circuit type"
+   },
+   "norm": "AEA 90364-7-771",
+   "edition": "2006",
+   "clause": "771.19",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "%",
+   "applies_to": null,
+   "provenance": "norm",
+   "verification": "text",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/771.19_limites_caida_pct"
+   },
+   "review_point": "table:aea-calculo|const:771.19_limites_caida_pct",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "duplicated literal: aea90364.criterion.vd-sectional-pct (1), aea90364.criterion.vd-lighting-sockets-pct (3), aea90364.criterion.vd-motors-pct (5)",
+    "motor_arranque 15 also in constantes/fuerza_motriz/caida_arranque_max_pct"
+   ],
+   "note": "Check each limit in 771.19. Same values as the design criteria vd_*."
+  },
+  {
+   "id": "aea90364.constant.771-18-iii-tiempos-desconexion-s",
+   "kind": "constant",
+   "title": {
+    "es": "Tiempos máximos de desconexión TN/TT por tensión",
+    "en": "Maximum disconnection times TN/TT by voltage"
+   },
+   "norm": "AEA 90364-7-771",
+   "edition": "2006",
+   "clause": "771.18.III",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "s",
+   "applies_to": null,
+   "provenance": "norm",
+   "verification": "text",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/771.18.III_tiempos_desconexion_s"
+   },
+   "review_point": "table:aea-calculo|const:771.18.III_tiempos_desconexion_s",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "the official table number must be verified: the JSON key says 771.18.III, the engine code used to say Tabla 771.18.I (code comment fixed in ENG-14; one table, no copy in code)"
+   ],
+   "note": "Check [V, t, t2] triples for TN and TT against table 771.18.III."
+  },
+  {
+   "id": "aea90364.constant.771-18-t-seccional-s",
+   "kind": "constant",
+   "title": {
+    "es": "Tiempo máximo de desconexión en líneas seccionales",
+    "en": "Maximum disconnection time on sectional lines"
+   },
+   "norm": "AEA 90364-7-771",
+   "edition": "2006",
+   "clause": "771.18",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "s",
+   "applies_to": null,
+   "provenance": "norm",
+   "verification": "text",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/771.18_t_seccional_s"
+   },
+   "review_point": "table:aea-calculo|const:771.18_t_seccional_s",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "TN changed from 5 s to 2 s by owner decision D25 (ENG-14, 2026-11-10); up to 5 s only with selectivity: see 771.18_t_seccional_selectividad_tn_s"
+   ],
+   "note": "Check the times for TT and TN in 771.18. TN is 2 s by decision D25."
+  },
+  {
+   "id": "aea90364.constant.771-18-ra-max-ohm",
+   "kind": "constant",
+   "title": {
+    "es": "Resistencia de puesta a tierra máxima (Ra)",
+    "en": "Maximum earth resistance (Ra)"
+   },
+   "norm": "AEA 90364-7-771",
+   "edition": "2006",
+   "clause": "771.18",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "ohm",
+   "applies_to": null,
+   "provenance": "norm",
+   "verification": "text",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/771.18_ra_max_ohm"
+   },
+   "review_point": "table:aea-calculo|const:771.18_ra_max_ohm",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [],
+   "note": "Check the 40 ohm limit in 771.18."
+  },
+  {
+   "id": "aea90364.constant.771-18-ul-v",
+   "kind": "constant",
+   "title": {
+    "es": "Tensión límite convencional de contacto UL",
+    "en": "Conventional touch voltage limit UL"
+   },
+   "norm": "AEA 90364-7-771",
+   "edition": "2006",
+   "clause": "771.18",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "V",
+   "applies_to": null,
+   "provenance": "norm",
+   "verification": "text",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/771.18_ul_v"
+   },
+   "review_point": "table:aea-calculo|const:771.18_ul_v",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "decision D11: UL = 24 V (general) is the only one used by the engine for the TT limit; col1 (50 V) is read only when a function asks for it explicitly"
+   ],
+   "note": "Check UL values (general and column 1) in 771.18."
+  },
+  {
+   "id": "aea90364.constant.770-coef-grado-771",
+   "kind": "constant",
+   "title": {
+    "es": "Coeficiente por grado de electrificación",
+    "en": "Coefficient by electrification grade"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": null,
+   "applies_to": null,
+   "provenance": "norm",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/770_coef_grado_771"
+   },
+   "review_point": "table:aea-calculo|const:770_coef_grado_771",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause in data (key names only part 770)",
+    "norm edition not stated in data"
+   ],
+   "note": "Find the 770 clause and edition for these coefficients; then check each value."
+  },
+  {
+   "id": "aea90364.constant.770-coef-circuitos",
+   "kind": "constant",
+   "title": {
+    "es": "Coeficiente de simultaneidad por número de circuitos",
+    "en": "Simultaneity coefficient by number of circuits"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": null,
+   "applies_to": null,
+   "provenance": "norm",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/770_coef_circuitos"
+   },
+   "review_point": "table:aea-calculo|const:770_coef_circuitos",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause in data (key names only part 770)",
+    "norm edition not stated in data"
+   ],
+   "note": "Find the 770 clause and edition; check the [circuits, coefficient] pairs."
+  },
+  {
+   "id": "aea90364.constant.proteccion-k-max-i2-iz",
+   "kind": "constant",
+   "title": {
+    "es": "Relación máxima I2/Iz de la protección contra sobrecarga",
+    "en": "Maximum I2/Iz ratio for overload protection"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": null,
+   "applies_to": null,
+   "provenance": "norm",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/proteccion_k_max_i2_iz"
+   },
+   "review_point": "table:aea-calculo|const:proteccion_k_max_i2_iz",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause in data",
+    "norm part not stated in data (meta says Parte 4)"
+   ],
+   "note": "Find the clause (overload protection) and confirm 1.45."
+  },
+  {
+   "id": "aea90364.constant.proteccion-k2-convencional",
+   "kind": "constant",
+   "title": {
+    "es": "Factor convencional de actuación I2 por tipo de dispositivo",
+    "en": "Conventional operating factor I2 by device type"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": null,
+   "applies_to": null,
+   "provenance": "norm",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/proteccion_k2_convencional"
+   },
+   "review_point": "table:aea-calculo|const:proteccion_k2_convencional",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause in data",
+    "norm part not stated in data (meta says Parte 4)"
+   ],
+   "note": "Check mcb, mccb and fuse factors against the device standard and the clause that uses them."
+  },
+  {
+   "id": "aea90364.constant.proteccion-k1-no-disparo",
+   "kind": "constant",
+   "title": {
+    "es": "Factor convencional de no actuación I1 por dispositivo",
+    "en": "Conventional non-tripping factor I1 by device"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": null,
+   "applies_to": null,
+   "provenance": "norm",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/proteccion_k1_no_disparo"
+   },
+   "review_point": "table:aea-calculo|const:proteccion_k1_no_disparo",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause in data",
+    "norm part not stated in data (meta says Parte 4)"
+   ],
+   "note": "Check mcb and mccb non-tripping factors against the device standard."
+  },
+  {
+   "id": "aea90364.constant.compensacion-reactiva",
+   "kind": "typical",
+   "title": {
+    "es": "Compensación de reactiva: pasos y factores típicos",
+    "en": "Reactive compensation: typical steps and factors"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": null,
+   "applies_to": null,
+   "provenance": "typical",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/compensacion_reactiva"
+   },
+   "review_point": "table:aea-calculo|const:compensacion_reactiva",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause in data"
+   ],
+   "note": "Typical values marked 'a revisar' in the data; confirm or replace each one."
+  },
+  {
+   "id": "aea90364.constant.descargas-atmosfericas",
+   "kind": "typical",
+   "title": {
+    "es": "Protección contra descargas: frecuencia base, factores y niveles",
+    "en": "Lightning protection: base frequency, risk factors and levels"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": null,
+   "applies_to": null,
+   "provenance": "typical",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/descargas_atmosfericas"
+   },
+   "review_point": "table:aea-calculo|const:descargas_atmosfericas",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause in data",
+    "norm not stated in data"
+   ],
+   "note": "Typical values marked 'a revisar'; identify the source standard and check factors c2-c5 and level parameters."
+  },
+  {
+   "id": "aea90364.constant.equipotencialidad-principal",
+   "kind": "constant",
+   "title": {
+    "es": "Conductor de equipotencialidad principal: factor y límites",
+    "en": "Main equipotential bonding conductor: factor and limits"
+   },
+   "norm": "AEA 90364-5-54",
+   "edition": "2006",
+   "clause": "544.1.1",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "mm2",
+   "applies_to": null,
+   "provenance": "norm",
+   "verification": "text",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/equipotencialidad_principal"
+   },
+   "review_point": "table:aea-calculo|const:equipotencialidad_principal",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [],
+   "note": "Check half of the largest PE, 6 mm2 minimum and 25 mm2 limit (Cu) in 544.1.1."
+  },
+  {
+   "id": "aea90364.constant.impedancias-estandar",
+   "kind": "typical",
+   "title": {
+    "es": "Impedancias estándar del lazo de falla (r20, reactancia, factores)",
+    "en": "Standard fault-loop impedances (r20, reactance, factors)"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "ohm/km",
+   "applies_to": null,
+   "provenance": "typical",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/impedancias_estandar"
+   },
+   "review_point": "table:aea-calculo|const:impedancias_estandar",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause in data",
+    "norm not stated in data"
+   ],
+   "note": "Standard values marked 'a revisar'; check r20 per section and the temperature, reactance and aluminium factors."
+  },
+  {
+   "id": "aea90364.constant.factores-demanda-sistema",
+   "kind": "constant",
+   "title": {
+    "es": "Factores de demanda por tipo de carga (1,0 por defecto)",
+    "en": "Demand factors by load type (1.0 default)"
+   },
+   "norm": "AEA 90364-7-771",
+   "edition": "2006",
+   "clause": "771.9",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": null,
+   "applies_to": null,
+   "provenance": "design-default",
+   "verification": "text",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/factores_demanda_sistema"
+   },
+   "review_point": "table:aea-calculo|const:factores_demanda_sistema",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "data says 771.9 gives no factor per load type: 1.0 until the project sets one"
+   ],
+   "note": "Confirm 771.9.1/771.9.2 really gives no per-type factor, so 1.0 is a placeholder."
+  },
+  {
+   "id": "aea90364.constant.fuerza-motriz",
+   "kind": "typical",
+   "title": {
+    "es": "Fuerza motriz: caída de arranque 15 % y datos típicos de protección",
+    "en": "Motors: 15 % starting drop and typical protection data"
+   },
+   "norm": "AEA 90364-7-770",
+   "edition": "2017",
+   "clause": "770.15.6",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "%",
+   "applies_to": null,
+   "provenance": "typical",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/fuerza_motriz"
+   },
+   "review_point": "table:aea-calculo|const:fuerza_motriz",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "mixed content: caida_arranque_max_pct (15) cites the norm, the rest is typical",
+    "duplicated literal: 15 also in constantes/771.19_limites_caida_pct/motor_arranque"
+   ],
+   "note": "Check 15 % in 770.15.6 (also 525 2 of part 5-52); the service factor, trip class, magnetic multiple and relay ranges are typical."
+  },
+  {
+   "id": "aea90364.constant.respaldo-grupo-ups",
+   "kind": "typical",
+   "title": {
+    "es": "Grupo electrógeno y UPS: valores típicos",
+    "en": "Generator set and UPS: typical values"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "kVA",
+   "applies_to": null,
+   "provenance": "typical",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/respaldo_grupo_ups"
+   },
+   "review_point": "table:aea-calculo|const:respaldo_grupo_ups",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause in data"
+   ],
+   "note": "Typical values marked 'a revisar'; confirm starting multiples, loading limit, standard ratings and UPS parameters."
+  }
+ ]
+}

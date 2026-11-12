@@ -1,0 +1,9 @@
+{
+  "source": "Owner decision D14 (2026-11-10). Not a norm value: a controlled vocabulary that maps the explicit installation_type of a project to the simultaneity rule. A value that is not listed here is NOT guessed: the engine keeps the plain sum of the children and reports it.",
+  "dwelling": ["dwelling", "dwellings", "housing", "residential"],
+  "other": ["office", "offices", "shop", "shops", "retail", "service_building", "service_buildings", "industry", "industrial"],
+  "rules": {
+    "dwelling": "Table 771.9.II by degree of electrification (criteria key electrification_grade)",
+    "other": "the factor defined for the board or project (criteria key simultaneity_factor); when none is given, Table 771.9.III by number of units and degree of electrification (criteria key electrification_grade)"
+  }
+}

@@ -1,0 +1,713 @@
+{
+ "schema_version": "1.0",
+ "engine": "receptacles",
+ "topic": "data",
+ "records": [
+  {
+   "id": "receptacles.data.uses.general",
+   "kind": "typical",
+   "title": {
+    "es": "Tomacorrientes por uso: Local de uso general",
+    "en": "Outlets per use: General room"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "outlets (per m2 / per m of perimeter / fixed)",
+   "applies_to": "room use general",
+   "provenance": "typical",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/receptacles/src/epc_receptacles/data/uses.json",
+    "pointer": "/uses/general"
+   },
+   "review_point": "table:receptacles-valores-tipicos|uses:general",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause: 'typical value, to verify'"
+   ],
+   "note": "1 outlet per 10 m2, min 2; typical value, find a source."
+  },
+  {
+   "id": "receptacles.data.uses.office",
+   "kind": "typical",
+   "title": {
+    "es": "Tomacorrientes por uso: Oficina (salón general)",
+    "en": "Outlets per use: Office (open-plan)"
+   },
+   "norm": "AEA 90364-7-771",
+   "edition": "2006",
+   "clause": "Tabla 771.8.VI (oficinas y locales)",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "outlets (per m2 / per m of perimeter / fixed)",
+   "applies_to": "room use office",
+   "provenance": "norm",
+   "verification": "unverified",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/receptacles/src/epc_receptacles/data/uses.json",
+    "pointer": "/uses/office"
+   },
+   "review_point": "table:receptacles-valores-tipicos|uses:office",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "uses.json note says only the warehouse perimeter rule comes from a norm clause and the rest is usual practice; this entry's source field says otherwise (or is 'typical value, to verify')"
+   ],
+   "note": "1 outlet per 9 m2 or fraction, min 2; check Tabla 771.8.VI."
+  },
+  {
+   "id": "receptacles.data.uses.classroom",
+   "kind": "typical",
+   "title": {
+    "es": "Tomacorrientes por uso: Aula",
+    "en": "Outlets per use: Classroom"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "outlets (per m2 / per m of perimeter / fixed)",
+   "applies_to": "room use classroom",
+   "provenance": "typical",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/receptacles/src/epc_receptacles/data/uses.json",
+    "pointer": "/uses/classroom"
+   },
+   "review_point": "table:receptacles-valores-tipicos|uses:classroom",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause: 'typical value, to verify'",
+    "AEA rules tomacorrientes.escuelas_aulas_pizarron exists for classrooms; compare"
+   ],
+   "note": "1 per 4 m of perimeter, min 4; typical value."
+  },
+  {
+   "id": "receptacles.data.uses.bedroom",
+   "kind": "typical",
+   "title": {
+    "es": "Tomacorrientes por uso: Dormitorio",
+    "en": "Outlets per use: Bedroom"
+   },
+   "norm": "AEA 90364-7-771",
+   "edition": "2006",
+   "clause": "Tabla 771.8.III (viviendas)",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "outlets (per m2 / per m of perimeter / fixed)",
+   "applies_to": "room use bedroom",
+   "provenance": "norm",
+   "verification": "unverified",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/receptacles/src/epc_receptacles/data/uses.json",
+    "pointer": "/uses/bedroom"
+   },
+   "review_point": "table:receptacles-valores-tipicos|uses:bedroom",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "fixed count 3 ignores area: source text says three for 10-36 m2 and two if under 10 m2; larger than 36 m2 not covered",
+    "uses.json note says only the warehouse perimeter rule comes from a norm clause and the rest is usual practice; this entry's source field says otherwise (or is 'typical value, to verify')"
+   ],
+   "note": "Fixed min 3; source gives 2 for rooms under 10 m2 and 3 for 10-36 m2. Check Tabla 771.8.III."
+  },
+  {
+   "id": "receptacles.data.uses.bedroom.small_room",
+   "kind": "typical",
+   "title": {
+    "es": "Tomacorrientes por uso: Dormitorio menor de 10 m2",
+    "en": "Outlets per use: Bedroom under 10 m2"
+   },
+   "norm": "AEA 90364-7-771",
+   "edition": "2006",
+   "clause": "Tabla 771.8.III (viviendas)",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "outlets",
+   "applies_to": "room use bedroom",
+   "provenance": "norm",
+   "verification": "unverified",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/receptacles/src/epc_receptacles/data/uses.json",
+    "pointer": "/uses/bedroom/small_room"
+   },
+   "review_point": "table:receptacles-valores-tipicos|uses:bedroom.small_room",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "added by MIG-36i from the owner verdict of 2026-11-10 (r1_tomas_dormitorio_8m2: bedroom under 10 m2 gets 2 receptacles); the value 2 and the limit 10 m2 are the ones of the source text of the bedroom record; pending review, not verified against the printed table"
+   ],
+   "note": "Bedroom under 10 m2: 2 outlets (owner verdict r1, 2026-11-10); from 10 m2 the fixed count of the bedroom record applies. Check Tabla 771.8.III."
+  },
+  {
+   "id": "receptacles.data.uses.living",
+   "kind": "typical",
+   "title": {
+    "es": "Tomacorrientes por uso: Sala de estar o comedor",
+    "en": "Outlets per use: Living or dining room"
+   },
+   "norm": "AEA 90364-7-771",
+   "edition": "2006",
+   "clause": "Tabla 771.8.III (viviendas)",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "outlets (per m2 / per m of perimeter / fixed)",
+   "applies_to": "room use living",
+   "provenance": "norm",
+   "verification": "unverified",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/receptacles/src/epc_receptacles/data/uses.json",
+    "pointer": "/uses/living"
+   },
+   "review_point": "table:receptacles-valores-tipicos|uses:living",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "uses.json note says only the warehouse perimeter rule comes from a norm clause and the rest is usual practice; this entry's source field says otherwise (or is 'typical value, to verify')"
+   ],
+   "note": "1 per 6 m2 or fraction, min 2; check Tabla 771.8.III."
+  },
+  {
+   "id": "receptacles.data.uses.kitchen",
+   "kind": "typical",
+   "title": {
+    "es": "Tomacorrientes por uso: Cocina",
+    "en": "Outlets per use: Kitchen"
+   },
+   "norm": "AEA 90364-7-771",
+   "edition": "2006",
+   "clause": "Tabla 771.8.III (viviendas)",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "outlets (per m2 / per m of perimeter / fixed)",
+   "applies_to": "room use kitchen",
+   "provenance": "norm",
+   "verification": "unverified",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/receptacles/src/epc_receptacles/data/uses.json",
+    "pointer": "/uses/kitchen"
+   },
+   "review_point": "table:receptacles-valores-tipicos|uses:kitchen",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "source text 'tres bocas más dos tomacorrientes (grado mínimo y medio)' is reduced to fixed 5; grade dependence lost",
+    "uses.json note says only the warehouse perimeter rule comes from a norm clause and the rest is usual practice; this entry's source field says otherwise (or is 'typical value, to verify')"
+   ],
+   "note": "Fixed 5 (3 + 2); check Tabla 771.8.III and whether it depends on electrification grade."
+  },
+  {
+   "id": "receptacles.data.uses.bathroom",
+   "kind": "typical",
+   "title": {
+    "es": "Tomacorrientes por uso: Baño",
+    "en": "Outlets per use: Bathroom"
+   },
+   "norm": "AEA 90364-7-771",
+   "edition": "2006",
+   "clause": "Tabla 771.8.III (viviendas)",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "outlets (per m2 / per m of perimeter / fixed)",
+   "applies_to": "room use bathroom",
+   "provenance": "norm",
+   "verification": "unverified",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/receptacles/src/epc_receptacles/data/uses.json",
+    "pointer": "/uses/bathroom"
+   },
+   "review_point": "table:receptacles-valores-tipicos|uses:bathroom",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "uses.json note says only the warehouse perimeter rule comes from a norm clause and the rest is usual practice; this entry's source field says otherwise (or is 'typical value, to verify')"
+   ],
+   "note": "Fixed 1; check Tabla 771.8.III and AEA 701 constraints."
+  },
+  {
+   "id": "receptacles.data.uses.corridor",
+   "kind": "typical",
+   "title": {
+    "es": "Tomacorrientes por uso: Pasillo",
+    "en": "Outlets per use: Corridor"
+   },
+   "norm": "AEA 90364-7-771",
+   "edition": "2006",
+   "clause": "Tabla 771.8.VI (oficinas y locales) y Tabla 771.8.III (viviendas)",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "outlets (per m2 / per m of perimeter / fixed)",
+   "applies_to": "room use corridor",
+   "provenance": "norm",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/receptacles/src/epc_receptacles/data/uses.json",
+    "pointer": "/uses/corridor"
+   },
+   "review_point": "table:receptacles-valores-tipicos|uses:corridor",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "basis is perimeter with per_m 10 while the source text says one outlet per 5 m of length (10 m of perimeter only for narrow corridors): basis/divisor ambiguous",
+    "uses.json note says only the warehouse perimeter rule comes from a norm clause and the rest is usual practice; this entry's source field says otherwise (or is 'typical value, to verify')",
+    "MIG-36i: basis is now `length` with per_m 5 (from the source text) and the perimeter rule moved to `narrow`; both values pending review"
+   ],
+   "note": "Perimeter basis, 1 per 10 m, min 1; source says 1 per 5 m of length. Clarify the basis."
+  },
+  {
+   "id": "receptacles.data.uses.corridor.narrow",
+   "kind": "typical",
+   "title": {
+    "es": "Tomacorrientes por uso: Pasillo angosto (clasificacion explicita)",
+    "en": "Outlets per use: Narrow corridor (explicit classification)"
+   },
+   "norm": "AEA 90364-7-771",
+   "edition": "2006",
+   "clause": "Tabla 771.8.VI (oficinas y locales) y Tabla 771.8.III (viviendas)",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "outlets",
+   "applies_to": "room use corridor",
+   "provenance": "norm",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/receptacles/src/epc_receptacles/data/uses.json",
+    "pointer": "/uses/corridor/narrow"
+   },
+   "review_point": "table:receptacles-valores-tipicos|uses:corridor.narrow",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "added by MIG-36i from the owner verdict of 2026-11-10 (r4_tomas_pasillo: narrow-corridor rule only when the normative classification applies explicitly); one outlet per 10 m of perimeter is taken from the source text of the corridor record; what counts as narrow is not defined in the data: the person states it with the room key `narrow`; pending review, not verified against the printed table"
+   ],
+   "note": "Narrow corridor, stated by the person (`narrow: true`): 1 per 10 m of perimeter. Otherwise the corridor record applies: 1 per 5 m of its length (per_m 5, taken from the source text, pending review)."
+  },
+  {
+   "id": "receptacles.data.uses.workshop",
+   "kind": "typical",
+   "title": {
+    "es": "Tomacorrientes por uso: Taller",
+    "en": "Outlets per use: Workshop"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "outlets (per m2 / per m of perimeter / fixed)",
+   "applies_to": "room use workshop",
+   "provenance": "typical",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/receptacles/src/epc_receptacles/data/uses.json",
+    "pointer": "/uses/workshop"
+   },
+   "review_point": "table:receptacles-valores-tipicos|uses:workshop",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause: 'typical value, to verify'"
+   ],
+   "note": "1 per 6 m of perimeter, min 2; typical value."
+  },
+  {
+   "id": "receptacles.data.uses.warehouse",
+   "kind": "typical",
+   "title": {
+    "es": "Tomacorrientes por uso: Depósito (salón general)",
+    "en": "Outlets per use: Warehouse (general hall)"
+   },
+   "norm": "AEA 90364-7-771",
+   "edition": "2006",
+   "clause": "771.8.3.3.3.1 a 771.8.3.3.3.4 (via AEA rule tomacorrientes.deposito_perimetro)",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "outlets (per m2 / per m of perimeter / fixed)",
+   "applies_to": "room use warehouse",
+   "provenance": "norm",
+   "verification": "unverified",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/receptacles/src/epc_receptacles/data/uses.json",
+    "pointer": "/uses/warehouse"
+   },
+   "review_point": "table:receptacles-valores-tipicos|uses:warehouse",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "source field names the AEA rule id, not a clause; clause/page taken from harness/src/engines/calculation/aea90364 rules/tomacorrientes.json (p. 36 printed)",
+    "the same rule adds one special-use outlet per 18 m (grades medium and above): not modelled here"
+   ],
+   "note": "1 per 9 m of perimeter, min 2; check 771.8.3.3.3."
+  },
+  {
+   "id": "receptacles.data.uses.meeting_room",
+   "kind": "typical",
+   "title": {
+    "es": "Tomacorrientes por uso: Sala de reuniones",
+    "en": "Outlets per use: Meeting room"
+   },
+   "norm": "AEA 90364-7-771",
+   "edition": "2006",
+   "clause": "Tabla 771.8.VI (oficinas y locales)",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "outlets (per m2 / per m of perimeter / fixed)",
+   "applies_to": "room use meeting_room",
+   "provenance": "norm",
+   "verification": "unverified",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/receptacles/src/epc_receptacles/data/uses.json",
+    "pointer": "/uses/meeting_room"
+   },
+   "review_point": "table:receptacles-valores-tipicos|uses:meeting_room",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "uses.json note says only the warehouse perimeter rule comes from a norm clause and the rest is usual practice; this entry's source field says otherwise (or is 'typical value, to verify')"
+   ],
+   "note": "1 per 9 m2 or fraction, min 2; check Tabla 771.8.VI."
+  },
+  {
+   "id": "receptacles.data.uses.private_office",
+   "kind": "typical",
+   "title": {
+    "es": "Tomacorrientes por uso: Despacho privado",
+    "en": "Outlets per use: Private office"
+   },
+   "norm": "AEA 90364-7-771",
+   "edition": "2006",
+   "clause": "Tabla 771.8.VI (oficinas y locales)",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "outlets (per m2 / per m of perimeter / fixed)",
+   "applies_to": "room use private_office",
+   "provenance": "norm",
+   "verification": "unverified",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/receptacles/src/epc_receptacles/data/uses.json",
+    "pointer": "/uses/private_office"
+   },
+   "review_point": "table:receptacles-valores-tipicos|uses:private_office",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "uses.json note says only the warehouse perimeter rule comes from a norm clause and the rest is usual practice; this entry's source field says otherwise (or is 'typical value, to verify')"
+   ],
+   "note": "Fixed 2; check Tabla 771.8.VI."
+  },
+  {
+   "id": "receptacles.data.uses.reception",
+   "kind": "typical",
+   "title": {
+    "es": "Tomacorrientes por uso: Vestíbulo o recepción",
+    "en": "Outlets per use: Lobby or reception"
+   },
+   "norm": "AEA 90364-7-771",
+   "edition": "2006",
+   "clause": "Tabla 771.8.VI (oficinas y locales)",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "outlets (per m2 / per m of perimeter / fixed)",
+   "applies_to": "room use reception",
+   "provenance": "norm",
+   "verification": "unverified",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/receptacles/src/epc_receptacles/data/uses.json",
+    "pointer": "/uses/reception"
+   },
+   "review_point": "table:receptacles-valores-tipicos|uses:reception",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "uses.json note says only the warehouse perimeter rule comes from a norm clause and the rest is usual practice; this entry's source field says otherwise (or is 'typical value, to verify')"
+   ],
+   "note": "1 per 18 m2 or fraction, min 1; check Tabla 771.8.VI."
+  },
+  {
+   "id": "receptacles.data.mounting.771",
+   "kind": "typical",
+   "title": {
+    "es": "Altura de montaje de tomacorrientes (771)",
+    "en": "Receptacle mounting height (771)"
+   },
+   "norm": "AEA 90364-7-771",
+   "edition": "2006",
+   "clause": "771.8.6.2",
+   "page": {
+    "printed": 44,
+    "pdf": null
+   },
+   "unit": "m",
+   "applies_to": "lower edge of box above finished floor",
+   "provenance": "norm",
+   "verification": "unverified",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/receptacles/src/epc_receptacles/data/uses.json",
+    "pointer": "/mounting/771"
+   },
+   "review_point": "table:receptacles-valores-tipicos|mounting:771",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "clause/page taken from AEA rule tomacorrientes.altura_arista_inferior_771; the uses file only names the rule",
+    "min 0.15 m vs engine default 0.3 m (params.json) and criterion socket_height_m default 0.3"
+   ],
+   "note": "Min 0.15 m from lower edge of box; confirm clause 771.8.6.2."
+  },
+  {
+   "id": "receptacles.data.mounting.770",
+   "kind": "typical",
+   "title": {
+    "es": "Altura de montaje de tomacorrientes en viviendas (770)",
+    "en": "Receptacle mounting height, dwellings (770)"
+   },
+   "norm": "AEA 90364-7-770",
+   "edition": "2017",
+   "clause": "770.7.2",
+   "page": {
+    "printed": 13,
+    "pdf": null
+   },
+   "unit": "m",
+   "applies_to": "lower edge of box above finished floor",
+   "provenance": "norm",
+   "verification": "unverified",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/receptacles/src/epc_receptacles/data/uses.json",
+    "pointer": "/mounting/770"
+   },
+   "review_point": "table:receptacles-valores-tipicos|mounting:770",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "clause/page taken from AEA rule tomacorrientes.altura_arista_inferior_770",
+    "different edition (2017) than the 771 data (2006)"
+   ],
+   "note": "Between 0.2 and 0.3 m; confirm clause 770.7.2."
+  },
+  {
+   "id": "receptacles.data.mounting.wet_min_m",
+   "kind": "typical",
+   "title": {
+    "es": "Altura mínima en locales con agua o baldeo",
+    "en": "Minimum height in wet or hosed-down rooms"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "m",
+   "applies_to": "wet rooms",
+   "provenance": "typical",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/receptacles/src/epc_receptacles/data/uses.json",
+    "pointer": "/mounting/wet_min_m"
+   },
+   "review_point": "table:receptacles-valores-tipicos|mounting:wet_min_m",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause in the data",
+    "AEA rules tomacorrientes.baldeado_771 / baldeado_770 exist; compare value"
+   ],
+   "note": "0.20 m; compare with AEA rules baldeado_771/770."
+  },
+  {
+   "id": "receptacles.data.circuits.tug",
+   "kind": "typical",
+   "title": {
+    "es": "Máximo de tomacorrientes por circuito TUG",
+    "en": "Maximum outlets per circuit TUG"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "outlets",
+   "applies_to": "circuit grouping",
+   "provenance": "typical",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/receptacles/src/epc_receptacles/data/uses.json",
+    "pointer": "/circuits/TUG"
+   },
+   "review_point": "table:receptacles-valores-tipicos|circuits:TUG",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause: 'typical value, to verify'",
+    "plan typical-values design.families repeats max_outlets (TUG 15, TUE 1): two copies"
+   ],
+   "note": "Max 15 outlets per circuit; typical value. Check AEA 771 limits."
+  },
+  {
+   "id": "receptacles.data.circuits.tue",
+   "kind": "typical",
+   "title": {
+    "es": "Máximo de tomacorrientes por circuito TUE",
+    "en": "Maximum outlets per circuit TUE"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "outlets",
+   "applies_to": "circuit grouping",
+   "provenance": "typical",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/receptacles/src/epc_receptacles/data/uses.json",
+    "pointer": "/circuits/TUE"
+   },
+   "review_point": "table:receptacles-valores-tipicos|circuits:TUE",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause: 'typical value, to verify'",
+    "plan typical-values design.families repeats max_outlets (TUG 15, TUE 1): two copies"
+   ],
+   "note": "Max 1 outlet per circuit; typical value. Check AEA 771 limits."
+  },
+  {
+   "id": "receptacles.data.receptacles",
+   "kind": "table",
+   "title": {
+    "es": "Tomacorrientes genéricos ilustrativos (IRAM 2071)",
+    "en": "Illustrative generic socket outlets (IRAM 2071)"
+   },
+   "norm": "IRAM 2071 (named in titles)",
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "A, VA, m",
+   "applies_to": "starting catalogue",
+   "provenance": "illustrative",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/receptacles/src/epc_receptacles/data/receptacles.json",
+    "pointer": "/receptacles"
+   },
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "rating/power are typical, flagged illustrative",
+    "TUE height_m 1.2 and power 2200 VA are typical values; other outlets 0.3 m",
+    "height 0.3 m vs mounting limits above"
+   ],
+   "note": "Check IRAM 2071 plug types/ratings named in the titles; heights vs AEA limits."
+  }
+ ]
+}

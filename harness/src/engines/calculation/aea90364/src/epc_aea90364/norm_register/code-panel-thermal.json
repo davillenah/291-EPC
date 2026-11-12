@@ -1,0 +1,170 @@
+{
+ "schema_version": "1.0",
+ "engine": "aea90364",
+ "topic": "code-panel-thermal",
+ "records": [
+  {
+   "id": "aea90364.code.aea_panel_thermal.k_e",
+   "kind": "constant",
+   "title": {
+    "es": "Factor K_e = 0,85 de corriente nominal equivalente",
+    "en": "Equivalent nominal current factor K_e = 0.85"
+   },
+   "norm": "AEA 90364-7-770",
+   "edition": "2017",
+   "clause": "770-B",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "-",
+   "applies_to": "I_nq = I_ne*K_e",
+   "provenance": "norm",
+   "verification": "from_memory",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/770-B_k_e"
+   },
+   "review_point": "table:aea-calculo|const:770-B_k_e",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "annex B only (module header); the table number is not cited in code"
+   ],
+   "note": "Check K_e = 0.85 in annex B of 770. Moved from code to aea_tables.json by ENG-13 (2026-11-10); the module reads it from there."
+  },
+  {
+   "id": "aea90364.code.aea_panel_thermal.k_cableado",
+   "kind": "constant",
+   "title": {
+    "es": "Recargo de 20 % por conexiones y cableado",
+    "en": "20 % allowance for connections and wiring"
+   },
+   "norm": "AEA 90364-7-770",
+   "edition": "2017",
+   "clause": "770-B",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "-",
+   "applies_to": "P_tot = P_dp + 0.2*P_dp + P_au",
+   "provenance": "norm",
+   "verification": "from_memory",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/770-B_k_cableado"
+   },
+   "review_point": "table:aea-calculo|const:770-B_k_cableado",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "annex B only (module header); table number not cited"
+   ],
+   "note": "Check the +20 % wiring/connection dissipation allowance. Moved from code to aea_tables.json by ENG-13 (2026-11-10); the module reads it from there."
+  },
+  {
+   "id": "aea90364.code.aea_panel_thermal.k_circuitos",
+   "kind": "constant",
+   "title": {
+    "es": "Factor K por cantidad de circuitos (10:0,5; 6:0,6; 4:0,7; 2:0,8)",
+    "en": "K factor by number of circuits (10:0.5; 6:0.6; 4:0.7; 2:0.8)"
+   },
+   "norm": "AEA 90364-7-770",
+   "edition": "2017",
+   "clause": "770-B.XII",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "-",
+   "applies_to": "(min circuits, K)",
+   "provenance": "norm",
+   "verification": "from_memory",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/770-B.XII_k_circuitos"
+   },
+   "review_point": "table:aea-calculo|const:770-B.XII_k_circuitos",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "docstring lists the bands as 2-3, 4-5, 6-9, >=10"
+   ],
+   "note": "Check K by number of circuits against table 770-B.XII. Moved from code to aea_tables.json by ENG-13 (2026-11-10); the module reads it from there."
+  },
+  {
+   "id": "aea90364.code.aea_panel_thermal.pd_polo",
+   "kind": "constant",
+   "title": {
+    "es": "Potencia disipada por polo según In [W/polo]",
+    "en": "Power dissipated per pole by In [W/pole]"
+   },
+   "norm": "AEA 90364-7-770",
+   "edition": "2017",
+   "clause": "770-B.XI",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "W/pole",
+   "applies_to": "(In max A, W per pole) up to 125 A",
+   "provenance": "norm",
+   "verification": "from_memory",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/770-B.XI_pd_polo_w"
+   },
+   "review_point": "table:aea-calculo|const:770-B.XI_pd_polo_w",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [],
+   "note": "Check each W/pole against table 770-B.XI. Moved from code to aea_tables.json by ENG-13 (2026-11-10); the module reads it from there."
+  },
+  {
+   "id": "aea90364.code.aea_panel_thermal.pdc_dif",
+   "kind": "constant",
+   "title": {
+    "es": "Poder de corte mínimo de diferenciales por In [A -> valor]",
+    "en": "Minimum breaking capacity of RCDs by In [A -> value]"
+   },
+   "norm": "AEA 90364-7-770",
+   "edition": "2017",
+   "clause": "770-B.X",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "A (breaking capacity)",
+   "applies_to": "(In max A, minimum breaking capacity) 2P and 4P up to 100 A",
+   "provenance": "norm",
+   "verification": "from_memory",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/770-B.X_pdc_diferencial_a"
+   },
+   "review_point": "table:aea-calculo|const:770-B.X_pdc_diferencial_a",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "unit of the second value is not stated in code (500 to 1000, presumably A)"
+   ],
+   "note": "Check minimum RCD breaking capacity per In against table 770-B.X and its unit. Moved from code to aea_tables.json by ENG-13 (2026-11-10); the module reads it from there."
+  }
+ ]
+}

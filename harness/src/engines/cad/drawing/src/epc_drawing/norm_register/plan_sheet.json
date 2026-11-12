@@ -1,0 +1,179 @@
+{
+ "schema_version": "1.0",
+ "engine": "drawing",
+ "topic": "plan_sheet",
+ "records": [
+  {
+   "id": "drawing.code.standard_scales",
+   "kind": "table",
+   "title": {
+    "es": "Escalas normalizadas",
+    "en": "Standard scales"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "1:n",
+   "applies_to": "plan sheet scale selection",
+   "provenance": "convention",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "code",
+    "file": "harness/src/engines/cad/drawing/src/epc_drawing/export/plan_sheet.py",
+    "symbol": "STANDARD_SCALES",
+    "line": 16
+   },
+   "value": [
+    1,
+    2,
+    5,
+    10,
+    20,
+    25,
+    50,
+    75,
+    100,
+    125,
+    150,
+    200,
+    250,
+    500,
+    750,
+    1000,
+    1500,
+    2000,
+    5000
+   ],
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause: code does not cite the scale standard (IRAM 4505?)",
+    "list includes 1:75, 1:125, 1:150, 1:1500, 1:2000, 1:5000: check which are standard"
+   ],
+   "note": "Confirm the list against the IRAM scales standard."
+  },
+  {
+   "id": "drawing.code.formats",
+   "kind": "table",
+   "title": {
+    "es": "Formatos admitidos",
+    "en": "Accepted formats"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "-",
+   "applies_to": "plan sheet",
+   "provenance": "convention",
+   "verification": "unverified",
+   "confidence": "medium",
+   "location": {
+    "type": "code",
+    "file": "harness/src/engines/cad/drawing/src/epc_drawing/export/plan_sheet.py",
+    "symbol": "FORMATS",
+    "line": 17
+   },
+   "value": [
+    "A0",
+    "A1",
+    "A2",
+    "A3",
+    "A4"
+   ],
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "duplicates titleblock FORMATOS keys (names only): duplicates a value defined elsewhere (ADR-0012 single source)"
+   ],
+   "note": "Names A0-A4 only; take from titleblock."
+  },
+  {
+   "id": "drawing.code.gap",
+   "kind": "constant",
+   "title": {
+    "es": "Margen libre entre plano y marco/rótulo",
+    "en": "Clear paper gap between plan and frame/title block"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "mm",
+   "applies_to": "plan placement",
+   "provenance": "design-default",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "code",
+    "file": "harness/src/engines/cad/drawing/src/epc_drawing/export/plan_sheet.py",
+    "symbol": "GAP",
+    "line": 18
+   },
+   "value": 5.0,
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "duplicates arch sheet_iram.GAP (5.0): duplicates a value defined elsewhere (ADR-0012 single source)",
+    "no clause"
+   ],
+   "note": "5.0 mm design default."
+  },
+  {
+   "id": "drawing.code.unit_mm",
+   "kind": "table",
+   "title": {
+    "es": "Unidades DXF (INSUNITS) a mm",
+    "en": "DXF INSUNITS to mm"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "mm per unit",
+   "applies_to": "DXF import",
+   "provenance": "physics",
+   "verification": "unverified",
+   "confidence": "medium",
+   "location": {
+    "type": "code",
+    "file": "harness/src/engines/cad/drawing/src/epc_drawing/export/plan_sheet.py",
+    "symbol": "UNIT_MM",
+    "line": 19
+   },
+   "value": {
+    "4": 1.0,
+    "5": 10.0,
+    "6": 1000.0
+   },
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "codes 4/5/6 = mm/cm/m of DXF $INSUNITS"
+   ],
+   "note": "Check INSUNITS code meanings against the DXF reference."
+  }
+ ]
+}

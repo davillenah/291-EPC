@@ -1,0 +1,13 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "epc-boq"
+version = "0.1.0"
+description = "EPC-291 procurement engine: draft bill of quantities (computo) of a calculated board: cable lengths per specification, protective-device counts, terminal-block counts and the enclosure; quantities only, no prices"
+requires-python = ">=3.10"
+dependencies = []
+
+[tool.setuptools.packages.find]
+where = ["src"]

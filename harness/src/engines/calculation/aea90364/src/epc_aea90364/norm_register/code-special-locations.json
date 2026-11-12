@@ -1,0 +1,274 @@
+{
+ "schema_version": "1.0",
+ "engine": "aea90364",
+ "topic": "code-special-locations",
+ "records": [
+  {
+   "id": "aea90364.code.aea_special_locations.mu0",
+   "kind": "code_constant",
+   "title": {
+    "es": "Permeabilidad magnética del vacío mu0",
+    "en": "Vacuum permeability mu0"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "H/m",
+   "applies_to": "B = mu0*i/(2 pi R)",
+   "provenance": "physics",
+   "verification": "from_memory",
+   "confidence": "high",
+   "location": {
+    "type": "code",
+    "file": "harness/src/engines/calculation/aea90364/src/epc_aea90364/aea_special_locations.py",
+    "symbol": "MU0",
+    "line": 33
+   },
+   "value": 1.2566370614359173e-06,
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "written as 4.0e-7*math.pi, an expression",
+    "no clause in code"
+   ],
+   "note": "Physical constant 4 pi 1e-7 H/m."
+  },
+  {
+   "id": "aea90364.code.aea_special_locations.b_lim_t",
+   "kind": "constant",
+   "title": {
+    "es": "Inducción magnética admisible 2,5e-5 T (baños)",
+    "en": "Admissible magnetic induction 2.5e-5 T (bathrooms)"
+   },
+   "norm": "AEA 90364-7-701",
+   "edition": "2012",
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "T",
+   "applies_to": "Bathrooms",
+   "provenance": "norm",
+   "verification": "from_memory",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/701_b_lim_t"
+   },
+   "review_point": "table:aea-calculo|const:701_b_lim_t",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause in code"
+   ],
+   "note": "Check the 25 microtesla induction limit of 701. Moved from code to aea_tables.json by ENG-14 (2026-11-10); the module reads it from there."
+  },
+  {
+   "id": "aea90364.code.aea_special_locations.radio_zona2_m",
+   "kind": "constant",
+   "title": {
+    "es": "Radio de la zona 2 con tabique: 0,60 m menos el ancho",
+    "en": "Radius of zone 2 with a partition: 0.60 m minus its width"
+   },
+   "norm": "AEA 90364-7-701",
+   "edition": "2012",
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "m",
+   "applies_to": "Bathrooms",
+   "provenance": "norm",
+   "verification": "from_memory",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/701_radio_zona2_m"
+   },
+   "review_point": "table:aea-calculo|const:701_radio_zona2_m",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause in code"
+   ],
+   "note": "Check the 0.60 m zone 2 radius of 701. Moved from code to aea_tables.json by ENG-14 (2026-11-10); the module reads it from there."
+  },
+  {
+   "id": "aea90364.code.aea_special_locations.max_outlets_load_multiple",
+   "kind": "constant",
+   "title": {
+    "es": "Carga múltiple EV: máximo 8 tomacorrientes",
+    "en": "EV multiple load: at most 8 sockets"
+   },
+   "norm": "AEA 90364-7-722",
+   "edition": "2018",
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "count",
+   "applies_to": "EV supply",
+   "provenance": "norm",
+   "verification": "from_memory",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/722_carga_multiple/valor/max_tomas"
+   },
+   "review_point": "table:aea-calculo|const:722_carga_multiple",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause in code"
+   ],
+   "note": "Check the maximum of 8 sockets for a multiple load in 722. Moved from code to aea_tables.json by ENG-14 (2026-11-10); the module reads it from there."
+  },
+  {
+   "id": "aea90364.code.aea_special_locations.i_min_load_multiple_to",
+   "kind": "constant",
+   "title": {
+    "es": "Carga múltiple EV: circuito de al menos 10 A",
+    "en": "EV multiple load: circuit of at least 10 A"
+   },
+   "norm": "AEA 90364-7-722",
+   "edition": "2018",
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "A",
+   "applies_to": "EV supply",
+   "provenance": "norm",
+   "verification": "from_memory",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/722_carga_multiple/valor/i_min_a"
+   },
+   "review_point": "table:aea-calculo|const:722_carga_multiple",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause in code"
+   ],
+   "note": "Check the 10 A minimum circuit current for a multiple load in 722. Moved from code to aea_tables.json by ENG-14 (2026-11-10); the module reads it from there."
+  },
+  {
+   "id": "aea90364.code.aea_special_locations.load_multiple_complies.mitad",
+   "kind": "constant",
+   "title": {
+    "es": "Carga múltiple EV: circuito >= 0,5 · bocas · I máx",
+    "en": "EV multiple load: circuit >= 0.5 * outlets * max current"
+   },
+   "norm": "AEA 90364-7-722",
+   "edition": "2018",
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "-",
+   "applies_to": "EV supply",
+   "provenance": "norm",
+   "verification": "from_memory",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/722_carga_multiple/valor/fraccion_bocas"
+   },
+   "review_point": "table:aea-calculo|const:722_carga_multiple",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause in code"
+   ],
+   "note": "Check the 'half of the outlets at maximum current' rule in 722. Moved from code to aea_tables.json by ENG-14 (2026-11-10); the module reads it from there."
+  },
+  {
+   "id": "aea90364.code.aea_special_locations.idn_diferencial_ev_ma",
+   "kind": "constant",
+   "title": {
+    "es": "Diferencial EV: 30 mA",
+    "en": "EV differential: 30 mA"
+   },
+   "norm": "AEA 90364-7-722",
+   "edition": "2018",
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "mA",
+   "applies_to": "EV supply (class A with DC detection or class B)",
+   "provenance": "norm",
+   "verification": "from_memory",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/ev_idn_diferencial_ma"
+   },
+   "review_point": "table:aea-calculo|const:ev_idn_diferencial_ma",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause in code"
+   ],
+   "note": "Check the 30 mA RCD rating for EV supply in 722. Moved from code to aea_tables.json by ENG-14 (2026-11-10); the module reads it from there."
+  },
+  {
+   "id": "aea90364.code.aea_special_locations.i_cc_deteccion_ma",
+   "kind": "constant",
+   "title": {
+    "es": "Detección de corriente continua en el diferencial EV: 6 mA",
+    "en": "DC detection in the EV differential: 6 mA"
+   },
+   "norm": "AEA 90364-7-722",
+   "edition": "2018",
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "mA",
+   "applies_to": "Class A RCD with DC detection above 6 mA",
+   "provenance": "norm",
+   "verification": "from_memory",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/config/normative/AR/electrical/aea90364/aea_tables.json",
+    "pointer": "/constantes/ev_i_cc_deteccion_ma"
+   },
+   "review_point": "table:aea-calculo|const:ev_i_cc_deteccion_ma",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause in code"
+   ],
+   "note": "Check the 6 mA DC detection level in 722. Moved from code to aea_tables.json by ENG-14 (2026-11-10); the module reads it from there."
+  }
+ ]
+}

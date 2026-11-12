@@ -1,0 +1,78 @@
+{
+ "schema_version": "1.0",
+ "engine": "lighting",
+ "topic": "d351_79",
+ "records": [
+  {
+   "id": "lighting.standard.d351-79.edition",
+   "kind": "constant",
+   "title": {
+    "es": "Decreto 351/79: edición y base del texto (Anexo IV)",
+    "en": "Decree 351/79: edition and basis of the text (Annex IV)"
+   },
+   "norm": "Decreto 351/79 (Ley 19587), Cap. 12, Anexo IV",
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": null,
+   "applies_to": "lighting engine, D351-79 rules",
+   "provenance": "norm",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/lighting/src/epc_lighting/standards/D351-79.json",
+    "pointer": "/edition"
+   },
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "edition is 'to verify' (file says '1979 (texto vigente a verificar)')",
+    "based_on says IRAM-AADL J 20-06 (not cited anywhere else)",
+    "industrial rows of Tabla 2 not loaded"
+   ],
+   "note": "Confirm the in-force text/edition of Decreto 351/79 Anexo IV and the IRAM-AADL J 20-06 reference; the file leaves the edition open."
+  },
+  {
+   "id": "lighting.rules.d351-79.rule_set",
+   "kind": "rule_set",
+   "title": {
+    "es": "Decreto 351/79 Anexo IV, Tabla 2: 23 niveles de iluminación (reglas)",
+    "en": "Decree 351/79 Annex IV, Table 2: 23 illuminance rules"
+   },
+   "norm": "Decreto 351/79 (Ley 19587)",
+   "edition": null,
+   "clause": "Anexo IV, Tabla 2",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "lx",
+   "applies_to": "rooms by activity (offices, banks, ...); target_rule",
+   "provenance": "norm",
+   "verification": "unverified",
+   "confidence": "medium",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/lighting/src/epc_lighting/rules/D351-79.rules.json",
+    "pointer": "/rules"
+   },
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "rules carry clause text but no edition and no page",
+    "second set of levels exists in data/levels.json (European norm via teaching article) - two sets of levels coexist",
+    "rules auto-indexed individually by the validator",
+    "industrial rows of Tabla 2 not loaded"
+   ],
+   "note": "Each rule is reviewed individually in the norms page (lighting-rule units). Check value, plane and clause of every rule against Anexo IV Tabla 2; add edition and page."
+  }
+ ]
+}
