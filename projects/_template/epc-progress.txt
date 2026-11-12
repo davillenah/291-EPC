@@ -1,0 +1,2 @@
+EPC project progress log (human-readable; the pipeline appends one line per stage).
+Template: no project data yet.

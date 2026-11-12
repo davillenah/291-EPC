@@ -1,0 +1,15 @@
+{
+  "schema_version": "0.1",
+  "status": "template",
+  "project_code": null,
+  "client": {"name": null, "contact": null},
+  "site": {"address": null, "country": "AR", "installation_type": null},
+  "supply": {"source": null, "voltage": null, "earthing_system": null, "short_circuit_level": null},
+  "normative_profile": {
+    "jurisdiction": "AR",
+    "revisions": {"90364-7-771": "2006", "90364-7-770": "2017", "90364-7-701": "2012", "90364-7-722": "2018", "parts_4_and_5": null}
+  },
+  "criteria": {"set": null, "exceptions": []},
+  "language": "es",
+  "engineer_of_record": {"name": null, "registration": null, "college": null}
+}
