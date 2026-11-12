@@ -29,16 +29,20 @@ Checks
 The engine packages are put on PYTHONPATH, so no installation is needed. Exit code 0 only when every check passes.
 """
 import argparse
+import concurrent.futures
 import os
 import shutil
 import subprocess
 import sys
 import tempfile
+import threading
 import time
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import epc_paths as P  # noqa: E402
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import affected  # noqa: E402
 
 REPO = P.REPO
 
@@ -57,6 +61,7 @@ AREAS = ("aea90364", "calc_common", "load_balance", "voltage_drop", "feeder_sizi
 BUILD = first(REPO / "harness" / "tools" / "build" / "epc_build.py")
 CONFLICTS = first(REPO / "harness" / "tools" / "ci" / "check_skill_conflicts.py")
 RESULTS = []
+LOCK = threading.Lock()
 COV_DIR = REPO / ".cov"
 ENGINE_ENV = {"PYTHONPATH": os.pathsep.join([str(P.engine_src(a)) for a in AREAS if P.engine_src(a).is_dir()] + [os.environ.get("PYTHONPATH", "")])}
 
@@ -84,13 +89,17 @@ def run(name, cmd, cwd, must_not_contain=None, env=None):
     p = subprocess.run(cmd, cwd=str(cwd), capture_output=True, text=True, env=dict(os.environ, **(env or {})))
     out = (p.stdout or "") + (p.stderr or "")
     ok = p.returncode == 0 and not (must_not_contain and must_not_contain in out)
-    RESULTS.append((name, ok, round(time.time() - t0, 1), out.strip().splitlines()[-3:] if not ok else []))
-    keep_failure(name, ok, out)
+    with LOCK:
+        RESULTS.append((name, ok, round(time.time() - t0, 1), out.strip().splitlines()[-3:] if not ok else []))
+        keep_failure(name, ok, out)
     return ok
 
 
 def main():
     ap = argparse.ArgumentParser()
+    ap.add_argument("--changed", nargs="?", const="", metavar="BASE",
+                    help="incremental: run only the engine suites a change since BASE can affect (default BASE: origin/main, else HEAD~1); the other checks always run")
+    ap.add_argument("--jobs", type=int, default=4, help="suites run at the same time (1 = one after the other)")
     a = ap.parse_args()
     py = str(PYTHON)
     shutil.rmtree(COV_DIR, ignore_errors=True)
@@ -102,16 +111,24 @@ def main():
     run("single-source", [py, str(REPO / "harness" / "tools" / "ci" / "check_single_source.py")], REPO)
     run("dev-credentials", [py, str(REPO / "harness" / "tools" / "ci" / "check_dev_credentials.py")], REPO)
     run("complexity", [py, str(REPO / "harness" / "tools" / "ci" / "check_complexity.py")], REPO)
-    for area in AREAS:
+    areas = list(AREAS)
+    if a.changed is not None:
+        areas = affected.affected(affected.changed_files(a.changed or affected.default_base()), list(AREAS))
+        print(f"incremental gate: {len(areas)} of {len(AREAS)} engine suites ({', '.join(areas) or 'none'})")
+    jobs = []
+    for area in areas:
         d = P.engine_dir(area)
         if (d / "tests").is_dir():
-            run(f"engine-{area}", covered(py, str(d / "src")) + ["unittest", "discover", "-s", "tests"], d, env=cov_env(ENGINE_ENV))
-    run("coverage", [py, str(REPO / "harness" / "tools" / "ci" / "check_coverage.py")], REPO)
+            jobs.append((f"engine-{area}", covered(py, str(d / "src")) + ["unittest", "discover", "-s", "tests"], d, {"env": cov_env(ENGINE_ENV)}))
     intake = PLUGINS / "intake-analysis" / "scripts"
     if intake.is_dir():
-        run("intake", [py, "-m", "unittest", "test_intake"], intake)
-
-    run("harness-tests", [py, "-m", "pytest", "harness/tests", "-q", "-p", "no:cacheprovider"], REPO, env=HARNESS_ENV)
+        jobs.append(("intake", [py, "-m", "unittest", "test_intake"], intake, {}))
+    jobs.append(("harness-tests", [py, "-m", "pytest", "harness/tests", "-q", "-p", "no:cacheprovider"], REPO, {"env": HARNESS_ENV}))
+    jobs.sort(key=lambda j: j[0] != "harness-tests")                       # the longest first, so the workers stay busy
+    with concurrent.futures.ThreadPoolExecutor(max_workers=max(1, a.jobs)) as pool:
+        for future in [pool.submit(run, name, cmd, cwd, **kw) for name, cmd, cwd, kw in jobs]:
+            future.result()
+    run("coverage", [py, str(REPO / "harness" / "tools" / "ci" / "check_coverage.py"), "--areas", ",".join(f"engine-{x}" for x in areas)], REPO)
 
     run("impact-map", [py, str(REPO / "harness" / "tools" / "build" / "impact_map.py"), "--check"], REPO)
     run("agents", [py, str(REPO / "harness" / "tools" / "build" / "regen_agents.py"), "--check"], REPO)
@@ -122,7 +139,6 @@ def main():
         out = Path(tempfile.mkdtemp(prefix="gate_sld_"))
         run("sld-smoke", [py, "-m", "epc_drawing.board_design", "--xlsx", str(example / "input_for_sld_V1.xlsx"), "--out", str(out), "--name", "SLD_V1"],
             REPO, must_not_contain="AVISO", env=ENGINE_ENV)
-
 
     claude = shutil.which("claude")
     if claude and BUILD:

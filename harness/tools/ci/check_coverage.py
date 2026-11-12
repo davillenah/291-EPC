@@ -54,6 +54,7 @@ def combine() -> dict:
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--update", action="store_true")
+    ap.add_argument("--areas", help="comma-separated areas to check (incremental gate: only the suites that ran); default: all")
     a = ap.parse_args(argv)
     now = combine()
     if not now:
@@ -67,7 +68,10 @@ def main(argv=None) -> int:
         return 0
     floor = json.loads(FLOOR.read_text(encoding="utf-8")) if FLOOR.is_file() else {}
     bad = []
+    only = set(a.areas.split(",")) if a.areas else None
     for area, v in now.items():
+        if only is not None and area not in only:
+            continue
         want = floor.get(area, 0.0)
         mark = "FAIL" if v["percent"] < want else "ok  "
         print(f"{mark} {area:18s} {v['percent']:6.2f} %  ({v['covered']}/{v['statements']} statements)  floor {want}")
