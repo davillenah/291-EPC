@@ -35,7 +35,7 @@ This plugin is packaging only. The code lives in `harness/src/engines/calculatio
 | Es dueño de | `drawing` |
 | Necesita (plugins) | `aea-calc`, `dxf-output`, `iram-titleblock`, `mld`, `sld` |
 | Lo necesitan | — |
-| Paquetes de Python | `ezdxf`, `lxml`, `matplotlib`, `openpyxl`, `shapely`, `svgelements`, `vtracer` |
+| Paquetes de Python | `ezdxf`, `lxml`, `matplotlib`, `numpy`, `openpyxl`, `pillow`, `shapely`, `svgelements`, `vtracer` |
 | Si lo modificas, revisa | plugins —; módulos del backend — |
 
 Generado por `python harness/tools/build/regen_plugins.py`; el mapa completo está en `harness/docs/architecture/DEPENDENCIAS.md`.

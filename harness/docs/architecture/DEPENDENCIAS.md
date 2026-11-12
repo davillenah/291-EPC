@@ -59,7 +59,7 @@ Lo declarado en `pyproject.toml` frente a lo que el código importa de verdad.
 | `descriptive_report` | — | — | — |
 | `design_basis` | — | — | — |
 | `documents` | `playwright`, `pypdf`, `python-docx` | `playwright`, `pypdf`, `python-docx` | — |
-| `drawing` | `ezdxf`, `matplotlib`, `numpy`, `openpyxl`, `pillow`, `svgelements` | `epc-aea90364`, `epc-mld`, `epc-sld`, `epc-titleblock`, `ezdxf`, `matplotlib`, `openpyxl` | `numpy`, `pillow`, `svgelements` |
+| `drawing` | `ezdxf`, `matplotlib`, `numpy`, `openpyxl`, `pillow`, `svgelements` | `epc-aea90364`, `epc-mld`, `epc-sld`, `epc-titleblock`, `ezdxf`, `matplotlib`, `numpy`, `openpyxl`, `pillow`, `svgelements` | — |
 | `dxf` | `ezdxf`, `lxml`, `shapely`, `svgelements`, `vtracer` | `ezdxf`, `lxml`, `shapely`, `svgelements`, `vtracer` | — |
 | `feeder_sizing` | — | `epc-calc-common`, `epc-voltage-drop` | — |
 | `grounding` | — | `epc-calc-common`, `epc-feeder-sizing` | — |

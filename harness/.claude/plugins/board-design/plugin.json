@@ -50,7 +50,9 @@
       "ezdxf",
       "lxml",
       "matplotlib",
+      "numpy",
       "openpyxl",
+      "pillow",
       "shapely",
       "svgelements",
       "vtracer"
