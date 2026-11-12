@@ -1,0 +1,30 @@
+{
+ "id": "e1_kappa_R0",
+ "title_es": "Factor de pico kappa con R/X = 0",
+ "quantity": "kappa",
+ "inputs": {
+  "R_ohm": 0.0,
+  "X_ohm": 0.0096
+ },
+ "formula": "kappa = 1.02 + 0.98*exp(-3*R/X) = 1.02 + 0.98*exp(0) = 2.00",
+ "expected": {
+  "value": 2.0,
+  "unit": "-",
+  "tolerance_pct": 0.01
+ },
+ "expected_source": "closed_form",
+ "engine_call": {
+  "module": "short_circuit",
+  "function": "factor_kappa",
+  "adapter": "sc_kappa",
+  "mapping": "r_ohm=R, x_ohm=X"
+ },
+ "severity_if_fails": "safety",
+ "note_es": "La fórmula de kappa es la que declara el motor ([VERIFICAR] en su código); el caso verifica límites y la implementación, no el valor normativo de la fórmula.",
+ "owner_verdict": {
+  "date": "2026-11-10",
+  "action": "ok",
+  "decision": null,
+  "note": "Correct; no action."
+ }
+}

@@ -1,0 +1,56 @@
+{
+ "id": "j_tt_ra_300ma_protection",
+ "title_es": "Ra máxima TT con IΔn = 300 mA (protection)",
+ "quantity": "ra_max_ohm",
+ "inputs": {
+  "I_dn_A": 0.3,
+  "esquema": "TT"
+ },
+ "formula": "Dato del repo: tabla de reglas/puesta_a_tierra.json, fila IΔn=0.3 A, columna 3 (Ra máximo permitido) = 40 ohm; coincide con min(0,5*24/IΔn, 40) = min(40.0, 40) = 40.0 ohm y con la constante 771.18_ra_max_ohm = 40.",
+ "expected": {
+  "value": 40.0,
+  "unit": "ohm",
+  "tolerance_pct": 0.5
+ },
+ "expected_source": "repo_data:harness/src/engines/calculation/aea90364/src/epc_aea90364/rules/puesta_a_tierra.json#/reglas/1/tabla/filas/6/3",
+ "engine_call": {
+  "module": "aea_protection",
+  "function": "ra_maxima_tt",
+  "adapter": "tt_ra_protection",
+  "mapping": "ia_a=IΔn (ul_v por defecto 50 V)"
+ },
+ "severity_if_fails": "safety",
+ "note_es": "aea_protection.ra_maxima_tt usa UL=50 V por defecto y no aplica el tope de 40 ohm: da una Ra máxima muy mayor que la regla del repo (lado inseguro si se usa para verificar una puesta a tierra).",
+ "repo_refs": [
+  {
+   "file": "harness/src/engines/calculation/aea90364/src/epc_aea90364/rules/puesta_a_tierra.json",
+   "pointer": "/reglas/1/tabla/filas/6/3",
+   "value": 40,
+   "what": "Ra max adoptada IΔn=0.3 A"
+  },
+  {
+   "file": "harness/src/engines/calculation/aea90364/src/epc_aea90364/aea_tables.json",
+   "pointer": "/constantes/771.18_ra_max_ohm",
+   "value": 40.0,
+   "what": "Ra max permanente"
+  },
+  {
+   "file": "harness/src/engines/calculation/aea90364/src/epc_aea90364/aea_tables.json",
+   "pointer": "/constantes/771.18_ul_v/general",
+   "value": 24.0,
+   "what": "UL columna 2"
+  },
+  {
+   "file": "harness/src/engines/calculation/aea90364/src/epc_aea90364/rules/puesta_a_tierra.json",
+   "pointer": "/reglas/0/parametros/ra_max_ohm",
+   "value": 40,
+   "what": "regla 541.3"
+  }
+ ],
+ "owner_verdict": {
+  "date": "2026-11-10",
+  "action": "correct",
+  "decision": "D11",
+  "note": "Apply D11: UL = 24 V, Ra = min(0.5*24/IDn; 40 ohm)."
+ }
+}

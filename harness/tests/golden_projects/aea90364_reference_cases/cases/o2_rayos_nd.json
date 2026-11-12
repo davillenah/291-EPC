@@ -1,0 +1,39 @@
+{
+ "id": "o2_rayos_nd",
+ "title_es": "Impactos directos anuales, Ng 2, estructura aislada",
+ "quantity": "nd_por_anio",
+ "inputs": {
+  "Ng_km2_anio": 2.0,
+  "Ad_m2": 3449.5574,
+  "Cd": 1.0
+ },
+ "formula": "Nd = Ng*Ad*Cd*1e-6 = 2.0*3449.557*1.0*1e-6 = 6.899115e-03 por año (Cd = 1.0 de entorno_cd.aislada en los datos del repo)",
+ "expected": {
+  "value": 0.006899114736935442,
+  "unit": "1/año",
+  "tolerance_pct": 0.01
+ },
+ "expected_source": "repo_data:harness/src/engines/calculation/aea90364/src/epc_aea90364/aea_tables.json#/constantes/descargas_atmosfericas/entorno_cd/aislada",
+ "engine_call": {
+  "module": "aea_lightning",
+  "function": "impactos_directos_anuales",
+  "adapter": "light_nd",
+  "mapping": "ng=2, ad_m2=Ad, entorno='aislada'"
+ },
+ "severity_if_fails": "minor",
+ "note_es": "Los valores de Cd son 'típicos, a revisar' según el propio módulo.",
+ "repo_refs": [
+  {
+   "file": "harness/src/engines/calculation/aea90364/src/epc_aea90364/aea_tables.json",
+   "pointer": "/constantes/descargas_atmosfericas/entorno_cd/aislada",
+   "value": 1.0,
+   "what": "Cd aislada"
+  }
+ ],
+ "owner_verdict": {
+  "date": "2026-11-10",
+  "action": "ok",
+  "decision": null,
+  "note": "Correct; no action."
+ }
+}

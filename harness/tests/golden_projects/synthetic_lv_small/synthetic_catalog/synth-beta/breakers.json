@@ -1,0 +1,8 @@
+{
+  "manufacturer": "synth-beta",
+  "category": "breakers",
+  "products": [
+    {"id": "synth-beta-mcb-b", "family": "Beta MCB-B", "type": "mcb", "status": "unverified", "source": "invented for the synthetic project, not a real product", "rated_current_a": [10, 16, 20, 25, 32, 40, 63], "poles": [1, 2, 3, 4], "breaking_capacity": [{"voltage_v": 400, "icu_ka": 15}]},
+    {"id": "synth-beta-mccb-b", "family": "Beta MCCB-B", "type": "mccb", "status": "unverified", "source": "invented for the synthetic project, not a real product", "rated_current_a": {"min": 32, "max": 250}, "poles": [3, 4], "breaking_capacity": [{"voltage_v": 400, "icu_ka": 36}]}
+  ]
+}

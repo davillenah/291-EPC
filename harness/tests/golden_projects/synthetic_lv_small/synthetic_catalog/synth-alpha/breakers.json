@@ -1,0 +1,8 @@
+{
+  "manufacturer": "synth-alpha",
+  "category": "breakers",
+  "products": [
+    {"id": "synth-alpha-mcb-a", "family": "Alpha MCB-A", "type": "mcb", "status": "unverified", "source": "invented for the synthetic project, not a real product", "rated_current_a": [6, 10, 16, 20, 25, 32, 40, 50, 63], "poles": [1, 2, 3, 4], "breaking_capacity": [{"voltage_v": 400, "icu_ka": 10}]},
+    {"id": "synth-alpha-mccb-a", "family": "Alpha MCCB-A", "type": "mccb", "status": "unverified", "source": "invented for the synthetic project, not a real product", "rated_current_a": {"min": 16, "max": 160}, "poles": [3, 4], "breaking_capacity": [{"voltage_v": 400, "icu_ka": 25}]}
+  ]
+}

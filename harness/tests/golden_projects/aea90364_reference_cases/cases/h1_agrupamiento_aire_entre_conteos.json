@@ -1,0 +1,97 @@
+{
+ "id": "h1_agrupamiento_aire_entre_conteos",
+ "title_es": "Agrupamiento en aire con 10 circuitos (entre 9 y 12 tabulados)",
+ "quantity": "f_agrup",
+ "inputs": {
+  "metodo": "B1",
+  "circuitos": 10,
+  "trifasicos": true,
+  "tabulados": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   12,
+   16,
+   20
+  ],
+  "factores": [
+   1.0,
+   0.8,
+   0.7,
+   0.65,
+   0.6,
+   0.57,
+   0.54,
+   0.52,
+   0.5,
+   0.45,
+   0.41,
+   0.38
+  ]
+ },
+ "formula": "La tabla (item 1) trae 9 -> 0.5 y 12 -> 0.45; no trae 10. Interpolación lineal = 0.5 + (0.45-0.5)*(10-9)/(12-9) = 0.48333; criterio conservador (siguiente conteo tabulado, 12) = 0.45; criterio 'último conteo cubierto' (9) = 0.5. La norma decide cuál; no hay valor esperado.",
+ "expected": null,
+ "expected_source": "needs_official_value",
+ "engine_call": {
+  "module": "aea_ampacity",
+  "function": "factores",
+  "adapter": "amp_grouping",
+  "mapping": "par(B1, AGRUP_CIRCUITOS=10); factores(par, True)['f_agrup']"
+ },
+ "severity_if_fails": "major",
+ "note_es": "El motor interpola linealmente. Si el texto oficial manda tomar el siguiente conteo (más conservador), el motor da Iz hasta 7 % mayor. Decisión del dueño / texto oficial.",
+ "repo_refs": [
+  {
+   "file": "harness/src/engines/calculation/aea90364/src/epc_aea90364/aea_tables.json",
+   "pointer": "/factores_correccion/771.16.IV/filas/0/numero_de_circuitos",
+   "value": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    12,
+    16,
+    20
+   ],
+   "what": "conteos tabulados item 1"
+  },
+  {
+   "file": "harness/src/engines/calculation/aea90364/src/epc_aea90364/aea_tables.json",
+   "pointer": "/factores_correccion/771.16.IV/filas/0/factores",
+   "value": [
+    1.0,
+    0.8,
+    0.7,
+    0.65,
+    0.6,
+    0.57,
+    0.54,
+    0.52,
+    0.5,
+    0.45,
+    0.41,
+    0.38
+   ],
+   "what": "factores item 1"
+  }
+ ],
+ "needs_official_value": true,
+ "null_kind": "owner_decision",
+ "owner_verdict": {
+  "date": "2026-11-10",
+  "action": "reject_and_ask",
+  "decision": "D18",
+  "note": "Grouping outside the tables: reject and ask for the datum; no interpolation."
+ }
+}

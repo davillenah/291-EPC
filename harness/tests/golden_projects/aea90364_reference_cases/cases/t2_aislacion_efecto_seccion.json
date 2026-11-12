@@ -1,0 +1,30 @@
+{
+ "id": "t2_aislacion_efecto_seccion",
+ "title_es": "Efecto del default de aislación en la sección elegida (informativo)",
+ "quantity": "seccion_mm2_sin_criterios",
+ "inputs": {
+  "circuito": "30 A trifásico, 40 m",
+  "con_criterios": {
+   "insulation": "XLPE"
+  }
+ },
+ "formula": "Se calcula el mismo circuito sin criterios y con criterios {insulation: XLPE} y se informa la sección y la Iz de cada uno. No hay valor esperado: depende de cuál sea el default correcto.",
+ "expected": null,
+ "expected_source": "needs_official_value",
+ "engine_call": {
+  "module": "aea_pipeline",
+  "function": "calculate",
+  "adapter": "ins_effect",
+  "mapping": "dos corridas de calculate, con y sin criterios"
+ },
+ "severity_if_fails": "minor",
+ "note_es": "Informativo.",
+ "needs_official_value": true,
+ "null_kind": "owner_decision",
+ "owner_verdict": {
+  "date": "2026-11-10",
+  "action": "correct",
+  "decision": "D6",
+  "note": "Apply D6 (insulation by circuit role); recompute the case."
+ }
+}

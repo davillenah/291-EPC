@@ -1,0 +1,41 @@
+{
+ "id": "q1_corriente_cabecera_tablero",
+ "title_es": "Corriente de cabecera del tablero: suma aritmética vs ponderada por demanda",
+ "quantity": "ib_cabecera_a",
+ "inputs": {
+  "circuitos_Ib_A": [
+   10,
+   20,
+   30
+  ],
+  "factor_demanda": 0.8,
+  "origen_factor": "aea_demand.coef_simultaneity_770(3 circuitos) = 0,8, solo ilustrativo"
+ },
+ "formula": "Suma aritmética = 10+20+30 = 60 A; ponderada = 0,8*60 = 48 A. Si la cabecera debe llevar la demanda o la suma de las corrientes de proyecto es una decisión de criterio (la plataforma fija los factores de demanda del sistema en 1,0 hasta que el proyecto fije otro).",
+ "expected": null,
+ "expected_source": "needs_official_value",
+ "engine_call": {
+  "module": "board_feeders",
+  "function": "head_current",
+  "adapter": "board_head",
+  "mapping": "pipeline.calculate sobre 3 circuitos; board_feeders.head_current(datos, detalle)"
+ },
+ "severity_if_fails": "major",
+ "note_es": "Hoy el cable de acometida se dimensiona con la suma aritmética (conservador, sobredimensiona). Decisión del dueño.",
+ "repo_refs": [
+  {
+   "file": "harness/src/engines/calculation/aea90364/src/epc_aea90364/aea_tables.json",
+   "pointer": "/constantes/factores_demanda_sistema/power",
+   "value": 1.0,
+   "what": "factor de demanda de potencia (1,0)"
+  }
+ ],
+ "needs_official_value": true,
+ "null_kind": "owner_decision",
+ "owner_verdict": {
+  "date": "2026-11-10",
+  "action": "correct",
+  "decision": "D14",
+  "note": "Simultaneity applies to board, feeders and incoming supplies."
+ }
+}

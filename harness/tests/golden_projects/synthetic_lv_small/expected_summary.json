@@ -1,0 +1,23 @@
+{
+  "note": "Names and kinds only. No engine result is stored here: numbers come from running the engines.",
+  "project_code": "SYNTH-001",
+  "revision": "R0",
+  "stages": 16,
+  "documents": [
+    "calculation_memo",
+    "project_summary",
+    "terminal_block_list",
+    "boq",
+    "datasheets",
+    "rfq",
+    "design_basis",
+    "descriptive_report"
+  ],
+  "drawings": {
+    "board": "TS-SYNTH",
+    "file_kinds": [".dxf"],
+    "sheets": ["SLD_TS-SYNTH", "SLD_TS-SYNTH_TABLA"]
+  },
+  "manifest_count": 10,
+  "review_status": "draft"
+}

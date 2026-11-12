@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "areas": [
+    {"id": "A1", "name": "Synthetic office floor"},
+    {"id": "A2", "name": "Synthetic plant room"}
+  ],
+  "loads": [
+    {"id": "L-01", "description": "Office lighting, north wing", "area": "A1", "kind": "lighting", "power": {"value": 1.2, "unit": "kW"}, "phases": 1, "length": {"value": 25, "unit": "m"}},
+    {"id": "L-02", "description": "Office lighting, south wing", "area": "A1", "kind": "lighting", "power": {"value": 0.8, "unit": "kW"}, "phases": 1, "length": {"value": 30, "unit": "m"}},
+    {"id": "T-01", "description": "Office receptacles, north wing", "area": "A1", "kind": "receptacles", "power": {"value": 2.2, "unit": "kW"}, "phases": 1, "length": {"value": 20, "unit": "m"}},
+    {"id": "T-02", "description": "Office receptacles, south wing", "area": "A1", "kind": "receptacles", "power": {"value": 1.6, "unit": "kW"}, "phases": 1, "length": {"value": 35, "unit": "m"}},
+    {"id": "T-03", "description": "Meeting room receptacles", "area": "A1", "kind": "receptacles", "power": {"value": 3.3, "unit": "kW"}, "phases": 1, "length": {"value": 28, "unit": "m"}},
+    {"id": "M-01", "description": "Water circulation pump", "area": "A2", "kind": "motor", "power": {"value": 5.5, "unit": "kW"}, "phases": 3, "length": {"value": 40, "unit": "m"}},
+    {"id": "E-01", "description": "Server room UPS", "area": "A1", "kind": "special", "power": {"value": 10, "unit": "kVA"}, "phases": 3, "length": {"value": 15, "unit": "m"}},
+    {"id": "E-02", "description": "Air handling unit", "area": "A2", "kind": "special", "power": {"value": 4, "unit": "kW"}, "phases": 3, "length": {"value": 30, "unit": "m"}}
+  ]
+}

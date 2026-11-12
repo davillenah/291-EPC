@@ -1,0 +1,7 @@
+{
+  "manufacturer": "synth-beta",
+  "category": "cables",
+  "products": [
+    {"id": "synth-beta-cable-xlpe", "family": "Beta Power XLPE", "type": "cable_power", "status": "unverified", "source": "invented for the synthetic project, not a real product", "voltage": "0.6/1 kV", "construction": "XLPE insulated"}
+  ]
+}

@@ -1,0 +1,46 @@
+{
+ "id": "r1_tomas_dormitorio_8m2",
+ "title_es": "Tomacorrientes de un dormitorio de 8 m2",
+ "quantity": "bocas_requeridas",
+ "inputs": {
+  "uso": "bedroom",
+  "largo_m": 2.5,
+  "ancho_m": 3.2,
+  "area_m2": 8.0
+ },
+ "formula": "Texto fuente del propio motor: «AEA 90364-7-771 (2006), Tabla 771.8.III (viviendas): tres bocas de 10 a 36 m² (dos si es menor de 10 m²)». 8 m2 < 10 m2 -> 2 bocas. El motor define el dormitorio como 'fixed' con min = 3.",
+ "expected": {
+  "value": 2.0,
+  "unit": "bocas",
+  "tolerance_pct": 0.01
+ },
+ "expected_source": "repo_data:harness/src/engines/calculation/receptacles/src/epc_receptacles/data/uses.json#/uses/bedroom/source",
+ "engine_call": {
+  "module": "epc_receptacles",
+  "function": "run",
+  "adapter": "recept",
+  "mapping": "documento con un local: use, length_m, width_m, receptacle='tug'; lee rooms[0].required"
+ },
+ "severity_if_fails": "minor",
+ "note_es": "El motor ignora la excepción de menos de 10 m2 que su propio texto fuente menciona. El valor esperado se toma de ese texto (repo_data), no de memoria.",
+ "repo_refs": [
+  {
+   "file": "harness/src/engines/calculation/receptacles/src/epc_receptacles/data/uses.json",
+   "pointer": "/uses/bedroom/source",
+   "value": "AEA 90364-7-771 (2006), Tabla 771.8.III (viviendas): tres bocas de 10 a 36 m² (dos si es menor de 10 m²)",
+   "what": "texto fuente dormitorio"
+  },
+  {
+   "file": "harness/src/engines/calculation/receptacles/src/epc_receptacles/data/uses.json",
+   "pointer": "/uses/bedroom/min",
+   "value": 3,
+   "what": "min del motor"
+  }
+ ],
+ "owner_verdict": {
+  "date": "2026-11-10",
+  "action": "correct",
+  "decision": null,
+  "note": "Bedroom under 10 m2: 2 receptacles."
+ }
+}

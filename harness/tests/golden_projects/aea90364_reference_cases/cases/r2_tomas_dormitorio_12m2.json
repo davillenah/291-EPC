@@ -1,0 +1,46 @@
+{
+ "id": "r2_tomas_dormitorio_12m2",
+ "title_es": "Tomacorrientes de un dormitorio de 12 m2",
+ "quantity": "bocas_requeridas",
+ "inputs": {
+  "uso": "bedroom",
+  "largo_m": 3.0,
+  "ancho_m": 4.0,
+  "area_m2": 12.0
+ },
+ "formula": "Texto fuente del propio motor: «AEA 90364-7-771 (2006), Tabla 771.8.III (viviendas): tres bocas de 10 a 36 m² (dos si es menor de 10 m²)». 12 m2 está entre 10 y 36 m2 -> 3 bocas.",
+ "expected": {
+  "value": 3.0,
+  "unit": "bocas",
+  "tolerance_pct": 0.01
+ },
+ "expected_source": "repo_data:harness/src/engines/calculation/receptacles/src/epc_receptacles/data/uses.json#/uses/bedroom/source",
+ "engine_call": {
+  "module": "epc_receptacles",
+  "function": "run",
+  "adapter": "recept",
+  "mapping": "documento con un local: use, length_m, width_m, receptacle='tug'; lee rooms[0].required"
+ },
+ "severity_if_fails": "minor",
+ "note_es": "Control: debe coincidir.",
+ "repo_refs": [
+  {
+   "file": "harness/src/engines/calculation/receptacles/src/epc_receptacles/data/uses.json",
+   "pointer": "/uses/bedroom/source",
+   "value": "AEA 90364-7-771 (2006), Tabla 771.8.III (viviendas): tres bocas de 10 a 36 m² (dos si es menor de 10 m²)",
+   "what": "texto fuente dormitorio"
+  },
+  {
+   "file": "harness/src/engines/calculation/receptacles/src/epc_receptacles/data/uses.json",
+   "pointer": "/uses/bedroom/min",
+   "value": 3,
+   "what": "min del motor"
+  }
+ ],
+ "owner_verdict": {
+  "date": "2026-11-10",
+  "action": "ok",
+  "decision": null,
+  "note": "Correct; no action."
+ }
+}

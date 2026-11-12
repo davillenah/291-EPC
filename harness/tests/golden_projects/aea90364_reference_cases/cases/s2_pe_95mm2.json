@@ -1,0 +1,27 @@
+{
+ "id": "s2_pe_95mm2",
+ "title_es": "Sección del PE para fase de 95 mm2: valor no comercial",
+ "quantity": "s_pe_mm2",
+ "inputs": {
+  "S_fase_mm2": 95
+ },
+ "formula": "S > 35 -> S/2 = 47,5 mm2, que no es sección comercial. Si el PE debe redondearse hacia arriba a la serie (50 mm2) es decisión del texto oficial (el neutro sí se redondea a la serie en el motor).",
+ "expected": null,
+ "expected_source": "needs_official_value",
+ "engine_call": {
+  "module": "aea_conductors",
+  "function": "pe_section",
+  "adapter": "pe",
+  "mapping": "seccion_mm2 = 95"
+ },
+ "severity_if_fails": "minor",
+ "note_es": "Ambas funciones devuelven 47,5.",
+ "needs_official_value": true,
+ "null_kind": "official_text",
+ "owner_verdict": {
+  "date": "2026-11-10",
+  "action": "adjust_criterion",
+  "decision": null,
+  "note": "Round up to the next commercial section (47.5 -> 50 mm2)."
+ }
+}

@@ -1,0 +1,46 @@
+{
+ "id": "p1_sobrecarga_mcb16_iz20",
+ "title_es": "Coordinación de sobrecarga: MCB 16 A con Iz = 20 A",
+ "quantity": "i2_sobre_1_45_iz",
+ "inputs": {
+  "Ib_A": 14,
+  "In_A": 16,
+  "Iz_A": 20,
+  "tipo": "mcb"
+ },
+ "formula": "I2 = k2*In = 1.45*16 = 23.2 A; límite = 1.45*Iz = 1.45*20 = 29.0 A; cociente I2/(1,45 Iz) = 0.800 (<= 1 cumple); In <= Iz (16 <= 20) cumple",
+ "expected": {
+  "value": 0.8,
+  "unit": "-",
+  "tolerance_pct": 0.01
+ },
+ "expected_source": "repo_data:harness/src/engines/calculation/aea90364/src/epc_aea90364/aea_tables.json#/constantes/proteccion_k2_convencional/mcb",
+ "engine_call": {
+  "module": "aea_conductors",
+  "function": "verify_overload",
+  "adapter": "overload",
+  "mapping": "i_b_a=14, i_n_a=16, i_z_a=20, i_2_a=aea_protection.i2_convencional(16,'mcb'); cociente = i_2/(policy.k_max_i2_iz()*i_z)"
+ },
+ "severity_if_fails": "safety",
+ "note_es": "Camino directo de verificación. El veredicto 'cumple' también se informa.",
+ "repo_refs": [
+  {
+   "file": "harness/src/engines/calculation/aea90364/src/epc_aea90364/aea_tables.json",
+   "pointer": "/constantes/proteccion_k2_convencional/mcb",
+   "value": 1.45,
+   "what": "k2 MCB"
+  },
+  {
+   "file": "harness/src/engines/calculation/aea90364/src/epc_aea90364/aea_tables.json",
+   "pointer": "/constantes/proteccion_k_max_i2_iz",
+   "value": 1.45,
+   "what": "1,45"
+  }
+ ],
+ "owner_verdict": {
+  "date": "2026-11-10",
+  "action": "ok",
+  "decision": null,
+  "note": "Correct; no action."
+ }
+}

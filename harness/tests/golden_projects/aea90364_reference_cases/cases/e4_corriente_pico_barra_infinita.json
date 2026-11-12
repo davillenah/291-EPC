@@ -1,0 +1,31 @@
+{
+ "id": "e4_corriente_pico_barra_infinita",
+ "title_es": "Corriente de pico en el caso c1 (R=0)",
+ "quantity": "ip_A",
+ "inputs": {
+  "Ik_A": 25259.0743,
+  "R_ohm": 0.0,
+  "X_ohm": 0.0096
+ },
+ "formula": "ip = kappa*sqrt(2)*Ik'' = 2.00*1.41421*25259.07 = 71443.45 A",
+ "expected": {
+  "value": 71443.4508,
+  "unit": "A",
+  "tolerance_pct": 0.01
+ },
+ "expected_source": "closed_form",
+ "engine_call": {
+  "module": "short_circuit",
+  "function": "corriente_pico",
+  "adapter": "sc_peak",
+  "mapping": "ik_a, r_ohm, x_ohm del caso c1 (calcular_ik)"
+ },
+ "severity_if_fails": "safety",
+ "note_es": "Poder de cierre: la corriente de pico es la que define el esfuerzo electrodinámico y el poder de cierre.",
+ "owner_verdict": {
+  "date": "2026-11-10",
+  "action": "ok",
+  "decision": null,
+  "note": "Correct; no action."
+ }
+}

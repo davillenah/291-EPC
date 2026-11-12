@@ -1,0 +1,358 @@
+{
+ "source": "migration-loop/input/PRD_v0.4.md §10.2, §10.3 + MIGRATION_PLAN.md §6",
+ "dirs": [
+  {
+   "path": "harness",
+   "purpose": "The generation platform (PRD §10.1).",
+   "status": "in development"
+  },
+  {
+   "path": "harness/.claude",
+   "purpose": "Part of the PRD structure; filled by the relocation and migration tasks.",
+   "status": "planned"
+  },
+  {
+   "path": "harness/.claude/agents",
+   "purpose": "generated from the roster",
+   "status": "planned"
+  },
+  {
+   "path": "harness/.claude/skills",
+   "purpose": "Part of the PRD structure; filled by the relocation and migration tasks.",
+   "status": "planned"
+  },
+  {
+   "path": "harness/.claude/hooks",
+   "purpose": "Part of the PRD structure; filled by the relocation and migration tasks.",
+   "status": "planned"
+  },
+  {
+   "path": "harness/docs",
+   "purpose": "Part of the PRD structure; filled by the relocation and migration tasks.",
+   "status": "planned"
+  },
+  {
+   "path": "harness/docs/prsad",
+   "purpose": "PRD, architecture, decisions (ADR)",
+   "status": "planned"
+  },
+  {
+   "path": "harness/docs/governance",
+   "purpose": "RACI, approvals, segregation of duties, change policy",
+   "status": "planned"
+  },
+  {
+   "path": "harness/docs/guides",
+   "purpose": "Part of the PRD structure; filled by the relocation and migration tasks.",
+   "status": "planned"
+  },
+  {
+   "path": "harness/docs/validation",
+   "purpose": "norm verification worksheet, spike reports",
+   "status": "planned"
+  },
+  {
+   "path": "harness/roadmap",
+   "purpose": "one file per phase, with exit criteria",
+   "status": "planned"
+  },
+  {
+   "path": "harness/schemas",
+   "purpose": "JSON schemas: profile, state, manifest, finding, inputs",
+   "status": "planned"
+  },
+  {
+   "path": "harness/catalogs",
+   "purpose": "cables, breakers, transformers, enclosures (manufacturer data)",
+   "status": "planned"
+  },
+  {
+   "path": "harness/config",
+   "purpose": "Part of the PRD structure; filled by the relocation and migration tasks.",
+   "status": "planned"
+  },
+  {
+   "path": "harness/config/normative",
+   "purpose": "Part of the PRD structure; filled by the relocation and migration tasks.",
+   "status": "planned"
+  },
+  {
+   "path": "harness/config/normative/AR",
+   "purpose": "norm tables and constants + norm register (one loader)",
+   "status": "planned"
+  },
+  {
+   "path": "harness/config/pmo",
+   "purpose": "templates, codes, document numbering",
+   "status": "planned"
+  },
+  {
+   "path": "harness/knowledge",
+   "purpose": "Part of the PRD structure; filled by the relocation and migration tasks.",
+   "status": "planned"
+  },
+  {
+   "path": "harness/knowledge/normative",
+   "purpose": "standards PDFs: local only, ignored, read-only",
+   "status": "planned"
+  },
+  {
+   "path": "harness/src",
+   "purpose": "Part of the PRD structure; filled by the relocation and migration tasks.",
+   "status": "planned"
+  },
+  {
+   "path": "harness/src/engines",
+   "purpose": "Part of the PRD structure; filled by the relocation and migration tasks.",
+   "status": "planned"
+  },
+  {
+   "path": "harness/src/engines/calculation",
+   "purpose": "load_balance, transformer_sizing, short_circuit, selectivity,",
+   "status": "planned"
+  },
+  {
+   "path": "harness/src/engines/validation",
+   "purpose": "rules, standards checks",
+   "status": "planned"
+  },
+  {
+   "path": "harness/src/engines/cad",
+   "purpose": "sld, mld, plan, drawing, dxf, symbols, titleblock, arch",
+   "status": "planned"
+  },
+  {
+   "path": "harness/src/engines/quality",
+   "purpose": "documents, report and specification builders",
+   "status": "planned"
+  },
+  {
+   "path": "harness/src/engines/procurement",
+   "purpose": "BOQ, datasheets, RFQ",
+   "status": "planned"
+  },
+  {
+   "path": "harness/src/engines/bim",
+   "purpose": "Part of the PRD structure; filled by the relocation and migration tasks.",
+   "status": "planned"
+  },
+  {
+   "path": "harness/src/engines/fabrication",
+   "purpose": "Part of the PRD structure; filled by the relocation and migration tasks.",
+   "status": "planned"
+  },
+  {
+   "path": "harness/src/engines/field",
+   "purpose": "Part of the PRD structure; filled by the relocation and migration tasks.",
+   "status": "planned"
+  },
+  {
+   "path": "harness/src/engines/commissioning",
+   "purpose": "Part of the PRD structure; filled by the relocation and migration tasks.",
+   "status": "planned"
+  },
+  {
+   "path": "harness/src/engines/cost",
+   "purpose": "Part of the PRD structure; filled by the relocation and migration tasks.",
+   "status": "planned"
+  },
+  {
+   "path": "harness/src/engines/contracts",
+   "purpose": "Part of the PRD structure; filled by the relocation and migration tasks.",
+   "status": "planned"
+  },
+  {
+   "path": "harness/src/engines/risk",
+   "purpose": "Part of the PRD structure; filled by the relocation and migration tasks.",
+   "status": "planned"
+  },
+  {
+   "path": "harness/src/engines/hse",
+   "purpose": "Part of the PRD structure; filled by the relocation and migration tasks.",
+   "status": "planned"
+  },
+  {
+   "path": "harness/src/engines/pmo",
+   "purpose": "Part of the PRD structure; filled by the relocation and migration tasks.",
+   "status": "planned"
+  },
+  {
+   "path": "harness/src/disciplines",
+   "purpose": "Part of the PRD structure; filled by the relocation and migration tasks.",
+   "status": "planned"
+  },
+  {
+   "path": "harness/src/disciplines/electrical_lv",
+   "purpose": "Part of the PRD structure; filled by the relocation and migration tasks.",
+   "status": "planned"
+  },
+  {
+   "path": "harness/src/disciplines/electrical_lv/intake",
+   "purpose": "Part of the PRD structure; filled by the relocation and migration tasks.",
+   "status": "planned"
+  },
+  {
+   "path": "harness/src/disciplines/electrical_lv/requirements",
+   "purpose": "Part of the PRD structure; filled by the relocation and migration tasks.",
+   "status": "planned"
+  },
+  {
+   "path": "harness/src/disciplines/electrical_lv/stages",
+   "purpose": "Part of the PRD structure; filled by the relocation and migration tasks.",
+   "status": "planned"
+  },
+  {
+   "path": "harness/src/disciplines/electrical_lv/rules",
+   "purpose": "Part of the PRD structure; filled by the relocation and migration tasks.",
+   "status": "planned"
+  },
+  {
+   "path": "harness/src/disciplines/electrical_mv",
+   "purpose": "Part of the PRD structure; filled by the relocation and migration tasks.",
+   "status": "planned"
+  },
+  {
+   "path": "harness/src/platform",
+   "purpose": "Part of the PRD structure; filled by the relocation and migration tasks.",
+   "status": "planned"
+  },
+  {
+   "path": "harness/src/platform/workflow",
+   "purpose": "Part of the PRD structure; filled by the relocation and migration tasks.",
+   "status": "planned"
+  },
+  {
+   "path": "harness/src/platform/permissions",
+   "purpose": "Part of the PRD structure; filled by the relocation and migration tasks.",
+   "status": "planned"
+  },
+  {
+   "path": "harness/src/platform/audit",
+   "purpose": "Part of the PRD structure; filled by the relocation and migration tasks.",
+   "status": "planned"
+  },
+  {
+   "path": "harness/src/platform/events",
+   "purpose": "Part of the PRD structure; filled by the relocation and migration tasks.",
+   "status": "planned"
+  },
+  {
+   "path": "harness/src/platform/mcp",
+   "purpose": "MCP server over the pipeline",
+   "status": "planned"
+  },
+  {
+   "path": "harness/src/platform/cli",
+   "purpose": "`epc` command",
+   "status": "planned"
+  },
+  {
+   "path": "harness/tests",
+   "purpose": "Part of the PRD structure; filled by the relocation and migration tasks.",
+   "status": "planned"
+  },
+  {
+   "path": "harness/tests/unit",
+   "purpose": "Part of the PRD structure; filled by the relocation and migration tasks.",
+   "status": "planned"
+  },
+  {
+   "path": "harness/tests/integration",
+   "purpose": "Part of the PRD structure; filled by the relocation and migration tasks.",
+   "status": "planned"
+  },
+  {
+   "path": "harness/tests/architecture",
+   "purpose": "import rules, tree, permissions",
+   "status": "planned"
+  },
+  {
+   "path": "harness/tests/golden_projects",
+   "purpose": "synthetic projects + 309kva_logistics_center",
+   "status": "planned"
+  },
+  {
+   "path": "harness/tests/qa_gates",
+   "purpose": "Part of the PRD structure; filled by the relocation and migration tasks.",
+   "status": "planned"
+  },
+  {
+   "path": "projects",
+   "purpose": "One folder per project; never versioned in the platform repository (PRD §10.1).",
+   "status": "in development"
+  },
+  {
+   "path": "projects/_template",
+   "purpose": "Empty project skeleton copied by `/init`; holds no client data.",
+   "status": "planned"
+  },
+  {
+   "path": "projects/_template/inputs",
+   "purpose": "immutable after intake; hashed",
+   "status": "planned"
+  },
+  {
+   "path": "projects/_template/inputs/plans",
+   "purpose": "Part of the PRD structure; filled by the relocation and migration tasks.",
+   "status": "planned"
+  },
+  {
+   "path": "projects/_template/inputs/loads",
+   "purpose": "Part of the PRD structure; filled by the relocation and migration tasks.",
+   "status": "planned"
+  },
+  {
+   "path": "projects/_template/inputs/requirements",
+   "purpose": "Part of the PRD structure; filled by the relocation and migration tasks.",
+   "status": "planned"
+  },
+  {
+   "path": "projects/_template/inputs/minutes",
+   "purpose": "Part of the PRD structure; filled by the relocation and migration tasks.",
+   "status": "planned"
+  },
+  {
+   "path": "projects/_template/ssot",
+   "purpose": "project data written only by the pipeline",
+   "status": "planned"
+  },
+  {
+   "path": "projects/_template/runs",
+   "purpose": "intermediate results, logs (ignored)",
+   "status": "planned"
+  },
+  {
+   "path": "projects/_template/deliverables",
+   "purpose": "issued files + one manifest per deliverable",
+   "status": "planned"
+  },
+  {
+   "path": "projects/_template/reviews",
+   "purpose": "engineer corrections and findings",
+   "status": "planned"
+  },
+  {
+   "path": "projects/_template/transmittals",
+   "purpose": "Part of the PRD structure; filled by the relocation and migration tasks.",
+   "status": "planned"
+  },
+  {
+   "path": "projects/_template/audit",
+   "purpose": "append-only event log",
+   "status": "planned"
+  },
+  {
+   "path": "harness/tools",
+   "purpose": "CI gate, generators and build tools (the PRD tree has no place for them).",
+   "status": "planned"
+  }
+ ],
+ "deferred_files": [
+  "harness/.claude/settings.json",
+  "harness/CLAUDE.md",
+  "harness/src/disciplines/electrical_lv/pipeline.py",
+  "projects/_template/epc-progress.txt",
+  "projects/_template/master_project_state.json",
+  "projects/_template/project_profile.json"
+ ]
+}

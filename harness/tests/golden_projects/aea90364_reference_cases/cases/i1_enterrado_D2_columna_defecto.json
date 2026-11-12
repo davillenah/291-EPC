@@ -1,0 +1,82 @@
+{
+ "id": "i1_enterrado_D2_columna_defecto",
+ "title_es": "Enterrado D2, Cu 1,5 mm2 PVC, 3 cargados, sin dato de instalación: columna por defecto",
+ "quantity": "iz_a",
+ "inputs": {
+  "metodo": "D2",
+  "aislacion": "PVC",
+  "material": "Cu",
+  "S_mm2": 1.5,
+  "cargados": 3
+ },
+ "formula": "Valores de la Tabla 771.16.VI para 1,5 mm2 Cu PVC: c1_1x (3 cargados)=30; c2_2x (2 cargados)=29; c3_2x (2 cargados)=25; c4_3x (3 cargados)=25; c5_3x (3 cargados)=20. Con 3 cargados hay tres columnas posibles (20, 25, 30 A); el motor elige c4_3x (25 A, comentario 'a confirmar'). Cuál corresponde depende de la figura de instalación que el motor no pide.",
+ "expected": null,
+ "expected_source": "needs_official_value",
+ "engine_call": {
+  "module": "aea_ampacity",
+  "function": "iz",
+  "adapter": "amp_iz",
+  "mapping": "par(D2); iz(par, 1.5, 3)"
+ },
+ "severity_if_fails": "major",
+ "note_es": "El valor por defecto (25 A) no es el más conservador (20 A). Hay que decidir si se exige el dato de instalación o se adopta la columna más desfavorable.",
+ "repo_refs": [
+  {
+   "file": "harness/src/engines/calculation/aea90364/src/epc_aea90364/aea_tables.json",
+   "pointer": "/tablas_capacidad/771.16.VI/bloques/0/filas/cu/1.5",
+   "value": [
+    30,
+    29,
+    25,
+    25,
+    20
+   ],
+   "what": "fila 1,5 mm2"
+  },
+  {
+   "file": "harness/src/engines/calculation/aea90364/src/epc_aea90364/aea_tables.json",
+   "pointer": "/tablas_capacidad/771.16.VI/bloques/0/columnas",
+   "value": [
+    {
+     "clave": "c1_1x",
+     "metodo": "D2",
+     "cargados": 3,
+     "descripcion": "1x (columna 1 de la tabla)"
+    },
+    {
+     "clave": "c2_2x",
+     "metodo": "D2",
+     "cargados": 2,
+     "descripcion": "2x (columna 2; ver figura de la tabla)"
+    },
+    {
+     "clave": "c3_2x",
+     "metodo": "D2",
+     "cargados": 2,
+     "descripcion": "2x (columna 3; ver figura de la tabla)"
+    },
+    {
+     "clave": "c4_3x",
+     "metodo": "D2",
+     "cargados": 3,
+     "descripcion": "3x (columna 4; ver figura de la tabla)"
+    },
+    {
+     "clave": "c5_3x",
+     "metodo": "D2",
+     "cargados": 3,
+     "descripcion": "3x (columna 5; ver figura de la tabla)"
+    }
+   ],
+   "what": "columnas"
+  }
+ ],
+ "needs_official_value": true,
+ "null_kind": "owner_decision",
+ "owner_verdict": {
+  "date": "2026-11-10",
+  "action": "reject_and_ask",
+  "decision": "D18",
+  "note": "No default column for buried D2: require the explicit installation method."
+ }
+}

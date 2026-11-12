@@ -1,0 +1,7 @@
+{
+  "manufacturer": "synth-alpha",
+  "category": "cables",
+  "products": [
+    {"id": "synth-alpha-cable-pvc", "family": "Alpha Power PVC", "type": "cable_power", "status": "unverified", "source": "invented for the synthetic project, not a real product", "voltage": "0.6/1 kV", "construction": "PVC insulated"}
+  ]
+}

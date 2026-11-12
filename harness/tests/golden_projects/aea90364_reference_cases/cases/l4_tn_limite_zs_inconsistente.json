@@ -1,0 +1,36 @@
+{
+ "id": "l4_tn_limite_zs_inconsistente",
+ "title_es": "Límite de Zs: verifica_tn (U0/Ia) frente a zs_maxima (c_min x U0/Ia)",
+ "quantity": "zs_limite_ohm",
+ "inputs": {
+  "U0_V": 230.0,
+  "Ia_A": 160.0
+ },
+ "formula": "verifica_tn compara Zs*Ia con U0 -> Zs <= 1.43750 ohm; zs_maxima da 0.95*U0/Ia = 1.36563 ohm. Difieren 5.26 %. Cuál es el límite correcto (con o sin c_min) lo decide el texto oficial.",
+ "expected": null,
+ "expected_source": "needs_official_value",
+ "engine_call": {
+  "module": "aea_protection",
+  "function": "verifica_tn",
+  "adapter": "tn_limits",
+  "mapping": "compara limite_v/ia_a de verifica_tn con aea_earthing.zs_maxima"
+ },
+ "severity_if_fails": "major",
+ "note_es": "Dos criterios distintos para la misma verificación dentro del motor.",
+ "repo_refs": [
+  {
+   "file": "harness/src/engines/calculation/aea90364/src/epc_aea90364/aea_tables.json",
+   "pointer": "/constantes/impedancias_estandar/c_tension_min",
+   "value": 0.95,
+   "what": "c min"
+  }
+ ],
+ "needs_official_value": true,
+ "null_kind": "official_text",
+ "owner_verdict": {
+  "date": "2026-11-10",
+  "action": "correct",
+  "decision": "D13",
+  "note": "Zs maximum with c_min = 0.95 in every module."
+ }
+}

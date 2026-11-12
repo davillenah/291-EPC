@@ -1,0 +1,30 @@
+{
+ "id": "e2_kappa_R_X_0_1",
+ "title_es": "Factor de pico kappa con R/X = 0,1",
+ "quantity": "kappa",
+ "inputs": {
+  "R_ohm": 0.00096,
+  "X_ohm": 0.0096
+ },
+ "formula": "kappa = 1.02 + 0.98*exp(-3*0.1) = 1.02 + 0.98*0.740818 = 1.746002",
+ "expected": {
+  "value": 1.746002,
+  "unit": "-",
+  "tolerance_pct": 0.01
+ },
+ "expected_source": "closed_form",
+ "engine_call": {
+  "module": "short_circuit",
+  "function": "factor_kappa",
+  "adapter": "sc_kappa",
+  "mapping": "r_ohm=R, x_ohm=X"
+ },
+ "severity_if_fails": "safety",
+ "note_es": "Idem e1.",
+ "owner_verdict": {
+  "date": "2026-11-10",
+  "action": "ok",
+  "decision": null,
+  "note": "Correct; no action."
+ }
+}
