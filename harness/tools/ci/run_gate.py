@@ -95,6 +95,36 @@ def run(name, cmd, cwd, must_not_contain=None, env=None):
     return ok
 
 
+def select_areas(changed):
+    """All engine areas, or (incremental gate, `--changed [BASE]`) only those a change since BASE can affect."""
+    if changed is None:
+        return list(AREAS)
+    areas = affected.affected(affected.changed_files(changed or affected.default_base()), list(AREAS))
+    print(f"incremental gate: {len(areas)} of {len(AREAS)} engine suites ({', '.join(areas) or 'none'})")
+    return areas
+
+
+def suite_jobs(py, areas):
+    """(name, command, cwd, options) of every test suite: the engine suites, the intake tests and the harness tests."""
+    jobs = []
+    for area in areas:
+        d = P.engine_dir(area)
+        if (d / "tests").is_dir():
+            jobs.append((f"engine-{area}", covered(py, str(d / "src")) + ["unittest", "discover", "-s", "tests"], d, {"env": cov_env(ENGINE_ENV)}))
+    intake = PLUGINS / "intake-analysis" / "scripts"
+    if intake.is_dir():
+        jobs.append(("intake", [py, "-m", "unittest", "test_intake"], intake, {}))
+    jobs.append(("harness-tests", [py, "-m", "pytest", "harness/tests", "-q", "-p", "no:cacheprovider"], REPO, {"env": HARNESS_ENV}))
+    jobs.sort(key=lambda j: j[0] != "harness-tests")                       # the longest first, so the workers stay busy
+    return jobs
+
+
+def run_jobs(jobs, workers):
+    with concurrent.futures.ThreadPoolExecutor(max_workers=max(1, workers)) as pool:
+        for future in [pool.submit(run, name, cmd, cwd, **kw) for name, cmd, cwd, kw in jobs]:
+            future.result()
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--changed", nargs="?", const="", metavar="BASE",
@@ -111,23 +141,8 @@ def main():
     run("single-source", [py, str(REPO / "harness" / "tools" / "ci" / "check_single_source.py")], REPO)
     run("dev-credentials", [py, str(REPO / "harness" / "tools" / "ci" / "check_dev_credentials.py")], REPO)
     run("complexity", [py, str(REPO / "harness" / "tools" / "ci" / "check_complexity.py")], REPO)
-    areas = list(AREAS)
-    if a.changed is not None:
-        areas = affected.affected(affected.changed_files(a.changed or affected.default_base()), list(AREAS))
-        print(f"incremental gate: {len(areas)} of {len(AREAS)} engine suites ({', '.join(areas) or 'none'})")
-    jobs = []
-    for area in areas:
-        d = P.engine_dir(area)
-        if (d / "tests").is_dir():
-            jobs.append((f"engine-{area}", covered(py, str(d / "src")) + ["unittest", "discover", "-s", "tests"], d, {"env": cov_env(ENGINE_ENV)}))
-    intake = PLUGINS / "intake-analysis" / "scripts"
-    if intake.is_dir():
-        jobs.append(("intake", [py, "-m", "unittest", "test_intake"], intake, {}))
-    jobs.append(("harness-tests", [py, "-m", "pytest", "harness/tests", "-q", "-p", "no:cacheprovider"], REPO, {"env": HARNESS_ENV}))
-    jobs.sort(key=lambda j: j[0] != "harness-tests")                       # the longest first, so the workers stay busy
-    with concurrent.futures.ThreadPoolExecutor(max_workers=max(1, a.jobs)) as pool:
-        for future in [pool.submit(run, name, cmd, cwd, **kw) for name, cmd, cwd, kw in jobs]:
-            future.result()
+    areas = select_areas(a.changed)
+    run_jobs(suite_jobs(py, areas), a.jobs)
     run("coverage", [py, str(REPO / "harness" / "tools" / "ci" / "check_coverage.py"), "--areas", ",".join(f"engine-{x}" for x in areas)], REPO)
 
     run("impact-map", [py, str(REPO / "harness" / "tools" / "build" / "impact_map.py"), "--check"], REPO)

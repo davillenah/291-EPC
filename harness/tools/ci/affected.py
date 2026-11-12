@@ -45,11 +45,15 @@ def unit_of(rel: str) -> str:
     return ""
 
 
+def _touches_shared(files: list) -> bool:
+    return any(f.startswith(SHARED) and not f.endswith(DOC_ONLY_SUFFIXES) for f in files)
+
+
 def affected(files: list, all_areas: list) -> list:
     """Engine areas to test for these changed files (a subset of `all_areas`)."""
-    if any(f.startswith(SHARED) and not f.endswith(DOC_ONLY_SUFFIXES) for f in files):
+    if _touches_shared(files):
         return list(all_areas)
-    start = {u for u in (unit_of(f) for f in files) if u}
+    start = {u for u in (unit_of(f) for f in files if not f.endswith(DOC_ONLY_SUFFIXES)) if u}
     edges, _third = IM.scan()
     users = IM.dependents(edges)
     out = set(start)

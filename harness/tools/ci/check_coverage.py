@@ -66,9 +66,13 @@ def main(argv=None) -> int:
         (P.DOCS / "refactor" / "coverage_baseline.json").write_text(json.dumps(now, indent=1) + "\n", encoding="utf-8")
         print("floor written:", floor)
         return 0
+    return 1 if below_floor(now, set(a.areas.split(",")) if a.areas else None) else 0
+
+
+def below_floor(now: dict, only=None) -> list:
+    """Print each area against its floor and return the ones below it (`only`: just these areas, for the incremental gate)."""
     floor = json.loads(FLOOR.read_text(encoding="utf-8")) if FLOOR.is_file() else {}
     bad = []
-    only = set(a.areas.split(",")) if a.areas else None
     for area, v in now.items():
         if only is not None and area not in only:
             continue
@@ -77,7 +81,7 @@ def main(argv=None) -> int:
         print(f"{mark} {area:18s} {v['percent']:6.2f} %  ({v['covered']}/{v['statements']} statements)  floor {want}")
         if v["percent"] < want:
             bad.append(area)
-    return 1 if bad else 0
+    return bad
 
 
 if __name__ == "__main__":
