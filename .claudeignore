@@ -1,0 +1,7 @@
+# Files Claude should not read as project source (client data and local-only material)
+projects/*
+!projects/README.md
+!projects/_template/
+harness/knowledge/normative/*
+!harness/knowledge/normative/README.md
+local/
