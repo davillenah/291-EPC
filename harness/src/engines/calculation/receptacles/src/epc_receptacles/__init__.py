@@ -4,3 +4,4 @@ from epc_receptacles.model import Options, ReceptaclesError, Result
 from epc_receptacles.pipeline import run
 
 __all__ = ["run", "Options", "Result", "ReceptaclesError", "__version__"]
+__version__ = "0.1.0"

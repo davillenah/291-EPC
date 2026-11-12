@@ -4,3 +4,4 @@ from epc_lighting.model import LightingError, Options, Result
 from epc_lighting.pipeline import run
 
 __all__ = ["run", "Options", "Result", "LightingError", "__version__"]
+__version__ = "0.1.0"

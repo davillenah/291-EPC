@@ -6,7 +6,7 @@ Thanks for helping. Please read `CLAUDE.md` and `harness/CLAUDE.md` first: they 
 
 1. Branch from `main`: `feat/<topic>`, `fix/<topic>`, `docs/<topic>` or `chore/<topic>`. Do not commit directly on `main` once the repository is public.
 2. Make a focused change with its tests.
-3. Run the gate before opening a pull request: `python harness/tools/ci/run_gate.py`. Never weaken a test or a check to make it pass (no skips, no lowered coverage floors).
+3. Run the gate before opening a pull request: `python harness/tools/ci/run_gate.py` (about 5 minutes). While you work, `python harness/tools/ci/run_gate.py --changed` tests only the engines your change can affect and the ones that depend on them. Never weaken a test or a check to make it pass (no skips, no lowered coverage floors).
 4. Open a pull request using the template. A person from `.github/CODEOWNERS` reviews changes to norms, schemas, permissions and hooks.
 
 ## Commit messages (Conventional Commits 1.0)

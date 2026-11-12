@@ -10,3 +10,4 @@ def library_dir(kind: str = "sld-lv-symbol") -> Path:
     if kind not in KINDS:
         raise ValueError(f"unknown symbol library {kind!r}; expected one of {KINDS}")
     return LIBRARY / kind
+__version__ = "0.1.0"

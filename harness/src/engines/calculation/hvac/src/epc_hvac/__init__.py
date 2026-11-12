@@ -4,3 +4,4 @@ from epc_hvac.model import HvacError, Options, Result
 from epc_hvac.pipeline import run
 
 __all__ = ["run", "Options", "Result", "HvacError", "__version__"]
+__version__ = "0.1.0"
