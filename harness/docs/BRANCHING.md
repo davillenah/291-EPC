@@ -1,0 +1,42 @@
+# Branching policy
+
+| Branch | Purpose | Who writes to it |
+|---|---|---|
+| `main` | **Stable.** Only code that passed the release checklist. Every release is tagged `vX.Y.Z`. | Merges from `dev` (or `hotfix/*`) only |
+| `dev` | **Integration.** Everything that is finished is joined and tested here before going to `main`. | Merges from `feature/*`, `fix/*` only |
+| `feature/<topic>` | One piece of work (a plugin, the web app, the rules engine...). Branched from `dev`. | The author |
+| `fix/<topic>` | Bug fix not yet in `main`. Branched from `dev`. | The author |
+| `hotfix/<topic>` | Urgent fix of `main`. Branched from `main`, merged to `main` **and** `dev`. | The author |
+
+```
+main      o───────────────────────────────o  v0.1.0
+           \                             /
+dev         o──●──────●─────●─────●─────●
+                \    /       \   /
+feature/a        o──o         \ /
+feature/b                      o
+```
+
+## Rules
+1. No direct commits on `main` or `dev` (the pre-commit hook refuses them). Work on a branch; merge with `--no-ff` so each feature stays visible in history.
+2. A feature branch is merged into `dev` only when its tests pass:
+   ```
+   python harness/tools/build/epc_build.py registry
+   python harness/tools/ci/check_skill_conflicts.py --env production
+   python -m unittest discover -s tests -t .      # from parked/web/backend/ (+ lint-imports)
+   ```
+   or, in one step: `python harness/tools/ci/run_gate.py` (the full battery).
+3. `dev` goes to `main` when the whole suite is green and the checklist is done: changelog updated, version bumped in the affected `plugin.json`, no draft rules promoted by mistake, no PDF/DWG/dev-knowledge content staged, and no development credential (the gate check `dev-credentials` enforces it: the MASTER account lives only in the developer's git-ignored `local/`, ADR-0015).
+4. Commit messages follow Conventional Commits: `feat(scope): ...`, `fix(scope): ...`, `docs: ...`, `chore: ...`.
+5. Never push `local/dev-knowledge/`, `local/legacy/`, client projects or copyrighted files. They are listed in `.gitignore`; the hook adds a second barrier.
+
+## Override (rare)
+`ALLOW_PROTECTED=1 git commit ...` is accepted by the hook for the initial baseline or an emergency `hotfix`.
+
+## Remote
+The repository has an `origin` remote. Nothing is pushed automatically. Pushing `main` or `dev` is an explicit decision of the owner.
+
+## Versions
+- The applications (`backend`, `parked/web/frontend/*`) and the repository release share one version (`vX.Y.Z`, tagged on `main`).
+- Each Claude plugin has its own `version` in `plugin.json` (bumped when the plugin or the engine it wraps changes; the registry hash checks it).
+- The packages under `engine/` have their own versions: `harness/src/engines/calculation/aea90364` continues the numbering of the legacy calculator, the others start at 0.1.0 and change only when their public contract changes.

@@ -1,0 +1,32 @@
+{
+ "backend": {
+  "statements": 6049,
+  "covered": 5752,
+  "percent": 95.09
+ },
+ "engine-calc": {
+  "statements": 2597,
+  "covered": 2163,
+  "percent": 83.29
+ },
+ "engine-rules": {
+  "statements": 206,
+  "covered": 159,
+  "percent": 77.18
+ },
+ "engine-standards": {
+  "statements": 351,
+  "covered": 126,
+  "percent": 35.9
+ },
+ "engine-drawing": {
+  "statements": 3142,
+  "covered": 1674,
+  "percent": 53.28
+ },
+ "engine-documents": {
+  "statements": 3052,
+  "covered": 2431,
+  "percent": 79.65
+ }
+}
