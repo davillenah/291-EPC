@@ -1,0 +1,22 @@
+name: ci
+
+on:
+  push:
+    branches: [main, "feat/**", "fix/**", "docs/**", "chore/**"]
+  pull_request:
+    branches: [main]
+
+jobs:
+  gate:
+    name: test battery
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install
+        run: pip install -r requirements-dev.txt
+      - name: Gate (the same battery as on a developer machine)
+        run: python harness/tools/ci/run_gate.py

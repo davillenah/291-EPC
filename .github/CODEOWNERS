@@ -1,0 +1,21 @@
+# Code owners of EPC-291 (MIG-34, PRD 14.4: hard rules in code).
+# The last matching pattern wins. Every protected class of the permission matrix
+# (harness/src/platform/epc_platform/permissions/rules.py) has an entry below.
+
+# Normative data: values, register and review state. Only a person approves norm values.
+/harness/config/normative/                  @davillenah
+/harness/src/engines/**/norm_register/      @davillenah
+**/data/review.json                         @davillenah
+
+# Schemas: agents may not edit them, a human reviews every change.
+/harness/schemas/                           @davillenah
+
+# Platform, permissions, hooks and the tests that enforce the architecture.
+/harness/src/platform/                      @davillenah
+/harness/.claude/                           @davillenah
+/harness/tools/                             @davillenah
+/harness/tests/architecture/                @davillenah
+
+# Project data (inputs, ssot, runs, deliverables, reviews, transmittals, audit).
+/projects/                                  @davillenah
+
