@@ -17,6 +17,7 @@ Writes in DIR/out: <NAME>_dimensionado.json (contract of aea_export), SLD_<NAME>
 <NAME>_criterios.json (criteria applied), the SVG/DXF sheets of the SLD generator and a summary (summary.json). The last stdout line is "OK <summary path>".
 """
 import argparse
+import concurrent.futures
 import datetime as dt
 import json
 import os
@@ -314,21 +315,35 @@ def design(data: dict, out_dir: Path, name: str, criteria: Optional[dict] = None
     _layout_env(data, out_dir, env)
     if day is not None:
         env["EPC_STAMP_DATE"] = day.isoformat()      # the sheet generators (separate processes) read it
-    log, error = [], None
-    if "sld" in diagrams:
-        run = subprocess.run([sys.executable, "-m", "epc_sld.sld_paginate", "default", str(xlsx), str(out), f"SLD_{name}", "default", "default", str(maxl)],
-                             env=env, capture_output=True, text=True)
-        log += [ln for ln in (run.stdout.splitlines() + run.stderr.splitlines()) if ln.startswith(("OK", "AVISO"))]
-        if run.returncode != 0:
-            error = (run.stderr or run.stdout).strip()[-600:]
-    if "mld" in diagrams and error is None:
-        run = subprocess.run([sys.executable, "-m", "epc_mld.mld_generator", "--input", str(out_dir / "input_design.json"), "--calc", str(calc_json),
-                              "--detail", str(detail_json), "--out", str(out), "--name", f"MLD_{name}"], env=env, capture_output=True, text=True)
-        log += [ln for ln in (run.stdout.splitlines() + run.stderr.splitlines()) if ln.startswith(("OK", "AVISO"))]
-        if run.returncode != 0:
-            error = (run.stderr or run.stdout).strip()[-600:]
+    log, error = _run_sheet_generators(diagrams, env, xlsx, out, name, maxl, out_dir, calc_json, detail_json)
     _package_index(out, name, error)
     return _finish(out, _summary(name, avisos, log, res, data, diagrams, memo, error))
+
+
+def _sheet_commands(diagrams, xlsx, out, name, maxl, out_dir, calc_json, detail_json):
+    """The sheet generators to run, in report order: the single-line diagram and the multi-line diagram (separate processes, independent files)."""
+    cmds = []
+    if "sld" in diagrams:
+        cmds.append([sys.executable, "-m", "epc_sld.sld_paginate", "default", str(xlsx), str(out), f"SLD_{name}", "default", "default", str(maxl)])
+    if "mld" in diagrams:
+        cmds.append([sys.executable, "-m", "epc_mld.mld_generator", "--input", str(out_dir / "input_design.json"), "--calc", str(calc_json),
+                     "--detail", str(detail_json), "--out", str(out), "--name", f"MLD_{name}"])
+    return cmds
+
+
+def _run_sheet_generators(diagrams, env, xlsx, out, name, maxl, out_dir, calc_json, detail_json):
+    """(log lines, first error or None). The generators run at the same time: they write different files and read the same inputs."""
+    cmds = _sheet_commands(diagrams, xlsx, out, name, maxl, out_dir, calc_json, detail_json)
+    if not cmds:
+        return [], None
+    with concurrent.futures.ThreadPoolExecutor(max_workers=len(cmds)) as pool:
+        runs = list(pool.map(lambda cmd: subprocess.run(cmd, env=env, capture_output=True, text=True), cmds))
+    log, error = [], None
+    for run in runs:
+        log += [ln for ln in (run.stdout.splitlines() + run.stderr.splitlines()) if ln.startswith(("OK", "AVISO"))]
+        if run.returncode != 0 and error is None:
+            error = (run.stderr or run.stdout).strip()[-600:]
+    return log, error
 
 
 def _load_input(a, ap):
