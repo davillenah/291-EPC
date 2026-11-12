@@ -1,0 +1,13 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "epc-mcp"
+version = "0.1.0"
+description = "EPC-291 MCP server `epc` (stdio): the platform's project tools for Claude Code, over `epc_platform.api`, with a write guard and a read-only profile"
+requires-python = ">=3.10"
+dependencies = []
+
+[tool.setuptools.packages.find]
+where = ["src"]
