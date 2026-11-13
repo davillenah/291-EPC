@@ -53,9 +53,9 @@ class WiredRunWithStore(unittest.TestCase):
         self.assertEqual([f["id"] for f in engine_findings], [f"F-{i:04d}" for i in range(1, len(engine_findings) + 1)])
 
     def test_the_drawing_stage_wrote_under_the_run_folder(self):
-        self.assertEqual(Path(self.ctx.work_dir), self.store.root / "runs" / "r1")
+        self.assertEqual(Path(self.ctx.work_dir), self.store.root / ".epc" / "runs" / "r1")
         directory = self.res.results[13].outputs["directory"]
-        self.assertTrue(any((self.store.root / "runs" / "r1" / directory).glob("*")))
+        self.assertTrue(any((self.store.root / ".epc" / "runs" / "r1" / directory).glob("*")))
 
     def test_progress_has_one_line_per_stage(self):
         lines = self.store.read_progress().splitlines()[2:]

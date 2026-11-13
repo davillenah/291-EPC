@@ -183,21 +183,23 @@ harness/
 
 ```
 projects/<code>/
-├── project_profile.json            # client, site, supply, normative profile, criteria, language
-├── master_project_state.json       # stage status, revisions, open findings (pipeline writes it)
-├── epc-progress.txt                # human-readable progress log
 ├── inputs/                         # immutable after intake; hashed
 │   ├── plans/
 │   ├── loads/
 │   ├── requirements/
 │   └── minutes/
-├── ssot/                           # project data written only by the pipeline
-├── runs/<pipeline_run_id>/         # intermediate results, logs (ignored)
 ├── deliverables/<rev>/             # issued files + one manifest per deliverable
-├── reviews/                        # engineer corrections and findings
-├── transmittals/
-└── audit/                          # append-only event log
+└── .epc/                           # everything the harness keeps for itself; hidden from the user
+    ├── project_profile.json        # client, site, supply, normative profile, criteria, language
+    ├── master_project_state.json   # stage status, revisions, open findings (pipeline writes it)
+    ├── epc-progress.txt            # human-readable progress log
+    ├── ssot/                       # project data written only by the pipeline
+    ├── runs/<pipeline_run_id>/     # intermediate results, logs (ignored)
+    ├── reviews/                    # engineer corrections and findings
+    └── audit/                      # append-only event log
 ```
+
+The dot hides `.epc/` on macOS and Linux; on Windows `ProjectStore.init_from_template` also sets the hidden attribute. The `transmittals/` folder of the earlier layout is gone: the transmittal list is part of stage 16's output and will live with the deliverables.
 
 ## 11. Inputs
 

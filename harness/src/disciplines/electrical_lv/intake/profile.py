@@ -1,6 +1,6 @@
 """Build the `project_profile` from the form answers.
 
-The structure and the normative defaults (PRD section 8) come from projects/_template/project_profile.json;
+The structure and the normative defaults (PRD section 8) come from projects/_template/.epc/project_profile.json;
 nothing is invented here. Critical data missing from the answers (D24) is an error, not a default.
 """
 import copy
@@ -9,7 +9,7 @@ from pathlib import Path
 
 from disciplines.electrical_lv.intake.form import check_answers
 
-TEMPLATE = Path(__file__).resolve().parents[5] / "projects" / "_template" / "project_profile.json"
+TEMPLATE = Path(__file__).resolve().parents[5] / "projects" / "_template" / ".epc" / "project_profile.json"
 STATUS = "draft"
 
 

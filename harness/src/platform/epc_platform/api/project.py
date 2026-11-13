@@ -99,7 +99,7 @@ def review(project_dir, actor, corrections, *, clock):
     if workflow.state == "draft_ready":
         flow.apply(workflow, "submit_for_review", who, "review")
     state = flow.apply(workflow, "record_corrections", who, "review", review={"corrections": items, "recorded_by": who})
-    return ok({"workflow_state": state, "review_file": f"reviews/record_corrections-{len(workflow.history())}.json", "corrections": len(items)})
+    return ok({"workflow_state": state, "review_file": f".epc/reviews/record_corrections-{len(workflow.history())}.json", "corrections": len(items)})
 
 
 @api_call

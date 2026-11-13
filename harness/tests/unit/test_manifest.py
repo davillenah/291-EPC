@@ -325,7 +325,7 @@ class PackageIssueStageTests(unittest.TestCase):
         for m in self.stored().values():
             if "-DRW-" in m["deliverable_id"]:
                 name = m["deliverable_id"].split("-DRW-")[1] + ".dxf"
-                file = self.store.root / "runs" / "r1" / "drawings" / "TEST-001" / "out" / name
+                file = self.store.root / ".epc" / "runs" / "r1" / "drawings" / "TEST-001" / "out" / name
                 self.assertEqual(m["output_sha256"], sha256_file(file))
 
     def test_document_manifests_carry_the_hash_stage_15_recorded(self):
@@ -358,7 +358,7 @@ class PackageIssueStageTests(unittest.TestCase):
             self.assertNotEqual(m["review_status"], "approved_for_construction")
 
     def test_a_changed_drawing_file_blocks_the_stage(self):
-        file = self.store.root / "runs" / "r1" / "drawings" / "TEST-001" / "out" / "SLD_TEST-001.dxf"
+        file = self.store.root / ".epc" / "runs" / "r1" / "drawings" / "TEST-001" / "out" / "SLD_TEST-001.dxf"
         original = file.read_bytes()
         self.addCleanup(file.write_bytes, original)
         file.write_bytes(original + b"0\n")

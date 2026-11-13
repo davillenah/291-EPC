@@ -19,7 +19,7 @@ from epc_platform.events import EventLog
 TIME_STAMPED = (".dxf",)
 TIME_STAMPED_NAMES = ("input_for_sld.xlsx",)
 # Files that carry the SHA-256 of a DXF and therefore differ only in that hash.
-EMBED_DXF_HASH = ("ssot/stage_14_drawings.json", "ssot/stage_16_package_issue.json", "deliverables/R0/SYNTH-001-DRW-SLD_TS-SYNTH.manifest.json",
+EMBED_DXF_HASH = (".epc/ssot/stage_14_drawings.json", ".epc/ssot/stage_16_package_issue.json", "deliverables/R0/SYNTH-001-DRW-SLD_TS-SYNTH.manifest.json",
                   "deliverables/R0/SYNTH-001-DRW-SLD_TS-SYNTH_TABLA.manifest.json")
 
 
@@ -59,10 +59,10 @@ class Reproducibility(unittest.TestCase):
                 self.assertEqual(self.fa[rel].read_bytes(), self.fb[rel].read_bytes())
 
     def test_the_named_artifacts_are_identical(self):
-        for rel in ("project_profile.json", "master_project_state.json", "epc-progress.txt", "audit/events.jsonl", "reviews/workflow.json",
-                    "ssot/inputs_manifest.json"):
+        for rel in (".epc/project_profile.json", ".epc/master_project_state.json", ".epc/epc-progress.txt", ".epc/audit/events.jsonl", ".epc/reviews/workflow.json",
+                    ".epc/ssot/inputs_manifest.json"):
             self.assertEqual(self.fa[rel].read_bytes(), self.fb[rel].read_bytes(), rel)
-        stages = [rel for rel in self.fa if rel.startswith("ssot/stage_")]
+        stages = [rel for rel in self.fa if rel.startswith(".epc/ssot/stage_")]
         self.assertEqual(len(stages), 16)
         self.assertEqual(len([rel for rel in self.fa if rel.endswith(".manifest.json")]), 10)
         self.assertEqual(self.a.ssot("stage_15_documents.json"), self.b.ssot("stage_15_documents.json"))
@@ -126,7 +126,7 @@ class Pinned(unittest.TestCase):
         dxf = [entry for entry in out["files"] if entry["path"].endswith(".dxf")]
         self.assertEqual(len(dxf), 2)
         for entry in dxf:
-            self.assertEqual(entry["sha256"], S.sha256_file(self.a.project / "runs" / S.RUN_ID / out["directory"] / entry["path"]))
+            self.assertEqual(entry["sha256"], S.sha256_file(self.a.project / ".epc" / "runs" / S.RUN_ID / out["directory"] / entry["path"]))
 
     def test_the_pinned_date_is_in_the_drawings(self):
         for rel in (r for r in self.fa if r.endswith(".dxf")):
@@ -147,7 +147,7 @@ class Pinned(unittest.TestCase):
         fo = files_of(other.project)
         differs = {rel for rel in self.fa if self.fa[rel].read_bytes() != fo[rel].read_bytes()}
         self.assertTrue(any(rel.endswith(".dxf") for rel in differs))
-        for rel in ("ssot/stage_08_feeder_sizing.json", "ssot/stage_09_voltage_drop.json", "ssot/stage_15_documents.json"):
+        for rel in (".epc/ssot/stage_08_feeder_sizing.json", ".epc/ssot/stage_09_voltage_drop.json", ".epc/ssot/stage_15_documents.json"):
             self.assertIn(rel, self.fa)
             self.assertNotIn(rel, differs)
 

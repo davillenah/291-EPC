@@ -73,12 +73,12 @@ class TransitionTests(Base):
 
     def test_the_state_file_is_small_deterministic_json_under_reviews(self):
         self.go(HAPPY[:1])
-        path = self.project / "reviews" / "workflow.json"
+        path = self.project / ".epc" / "reviews" / "workflow.json"
         data = json.loads(path.read_text(encoding="utf-8"))
         self.assertEqual(data["state"], "intake_done")
         self.assertEqual(data["history"][0]["role"], ORC)
-        self.assertFalse(list((self.project / "reviews").glob(".*.tmp")))
-        self.assertFalse((self.project / "master_project_state.json").exists())
+        self.assertFalse(list((self.project / ".epc" / "reviews").glob(".*.tmp")))
+        self.assertFalse((self.project / ".epc" / "master_project_state.json").exists())
 
 
 class RoleGuardTests(Base):

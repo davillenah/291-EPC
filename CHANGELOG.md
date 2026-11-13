@@ -4,6 +4,9 @@ All notable changes. Format: Keep a Changelog; versions follow `harness/docs/BRA
 
 ## [Unreleased]
 
+### Changed
+- Project folder: everything the harness keeps for itself (`project_profile.json`, `master_project_state.json`, `epc-progress.txt`, `ssot/`, `runs/`, `reviews/`, `audit/`) moves into the hidden folder `.epc/`; `inputs/` and `deliverables/` stay visible. The empty `transmittals/` folder is dropped. `init_from_template` sets the hidden attribute on Windows. Existing projects need to be moved by hand (`mkdir .epc` and move those entries into it).
+
 ### Added
 - Motor `epc_hvac` (carga térmica por el método básico de ASHRAE, caudal de aire y ventilación; E3-10), Zs del lazo de falla (E3-11), símbolos de generador y UPS en el unifilar (E3-12), protección del motor (E3-09) y pantalla de descargas atmosféricas (E3-14).
 - 12 agentes especialistas de la disciplina eléctrica (`claude/agents/electrical-*`, AGT-01).

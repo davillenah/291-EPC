@@ -157,7 +157,7 @@ def stage_of(run_dict, number):
 
 def dxf_bytes(proj):
     out14 = proj.ssot("stage_14_drawings.json")["outputs"]
-    base = proj.project / "runs" / proj.run_id / out14["directory"]
+    base = proj.project / ".epc" / "runs" / proj.run_id / out14["directory"]
     return {f"{out14['directory']}/{f['path']}": (base / f["path"]).read_bytes() for f in out14["files"] if f["path"].endswith(".dxf")}
 
 
@@ -224,7 +224,7 @@ def c1(run):
     code, env = proj.run_result
     statuses = [r["status"] for r in res["results"]]
     unchanged, loads_same, engine_same = inputs_state(proj)
-    profile_same = M.S.read_json(proj.project / "project_profile.json") == stage_of(res, 1)["outputs"]["profile"]
+    profile_same = M.S.read_json(proj.project / ".epc" / "project_profile.json") == stage_of(res, 1)["outputs"]["profile"]
     facts = {"stages": len(statuses), "stages_ok": statuses.count("ok"), "manifests": len(proj.manifests()), "dxf_files": len(dxf_bytes(proj))}
     broken = code != 0 or not env["ok"] or statuses.count("ok") != len(statuses) or not facts["manifests"] or not unchanged or not profile_same
     evidence = [f"La corrida por el CLI real (init y run) terminó con {facts['stages_ok']} de {facts['stages']} etapas en estado ok y produjo {facts['manifests']} manifiestos "
@@ -565,8 +565,8 @@ def permission_matrix(roles):
 
 def c8(run):
     roles = [a["name"] for a in M.S.read_json(REPO / "harness" / ".claude" / "roster.json")["agents"]]
-    files = ("project_profile.json", "master_project_state.json", "ssot/stage_01_intake.json", "ssot/stage_16_package_issue.json", "inputs/intake_answers.json",
-             "audit/events.jsonl", run.primary.manifests()[0].relative_to(run.primary.project).as_posix())
+    files = (".epc/project_profile.json", ".epc/master_project_state.json", ".epc/ssot/stage_01_intake.json", ".epc/ssot/stage_16_package_issue.json", "inputs/intake_answers.json",
+             ".epc/audit/events.jsonl", run.primary.manifests()[0].relative_to(run.primary.project).as_posix())
     denied, reads_allowed = permission_matrix(roles)
     writes, reads, opaque, exempt = hook_matrix(run.primary, roles, files)
     settings = (REPO / "harness" / ".claude" / "settings.json").read_text(encoding="utf-8")
@@ -595,7 +595,7 @@ def recorded_measurements(run):
     for path in list(files_of(run.primary.project).values()) + sorted((REPO / "harness" / "schemas").glob("*.json")) + [REPO / "harness" / ".claude" / "roster.json"]:
         if path.suffix == ".json":
             names |= {k for k in key_names(json.loads(path.read_text(encoding="utf-8"))) if COST_KEYS.search(k)}
-    stages = M.S.read_json(run.primary.project / "master_project_state.json")["stages"]
+    stages = M.S.read_json(run.primary.project / ".epc" / "master_project_state.json")["stages"]
     stamps = {e[k] for e in stages for k in ("started", "finished")}
     return sorted(names), len(stamps), sorted(stages[0])
 
@@ -604,7 +604,7 @@ def c9(run):
     names, stamps, entry_keys = recorded_measurements(run)
     prd = (REPO / "harness" / "docs" / "prsad" / "PRD.md").read_text(encoding="utf-8")
     targets_open = "cost and time targets" in prd
-    events = run.primary.project / "audit" / "events.jsonl"
+    events = run.primary.project / ".epc" / "audit" / "events.jsonl"
     record_keys = sorted(json.loads(events.read_text(encoding="utf-8").splitlines()[0]))
     facts = {"cost_or_time_keys_found": len(names), "distinct_stage_timestamps": stamps, "event_record_keys": len(record_keys)}
     evidence = [f"Se buscaron claves de costo, tokens o duración en los archivos del proyecto, los esquemas y el roster: {len(names)} encontradas.",
@@ -642,7 +642,7 @@ def stage_outputs(proj):
 
 
 def executed_stages(proj, run_id):
-    lines = (proj.project / "epc-progress.txt").read_text(encoding="utf-8").splitlines()
+    lines = (proj.project / ".epc" / "epc-progress.txt").read_text(encoding="utf-8").splitlines()
     return sorted(int(m.group(1)) for line in lines for m in [re.search(rf"run {run_id} \| stage (\d+) ", line)] if m)
 
 
@@ -651,7 +651,7 @@ def run_correction(run):
     before, signed_path, signature = stage_outputs(proj), *sign_manifest(proj)
     proj.work.joinpath("c.json").write_text(json.dumps([{"note": "synthetic correction: T-01 power"}]), encoding="utf-8")
     review_code, _ = M.S.envelope(proj.root, "review", M.S.CODE, "--corrections", str(proj.work / "c.json"), *M.S.ENGINEER)
-    frozen_before = M.S.read_json(proj.project / "ssot" / "inputs_manifest.json")
+    frozen_before = M.S.read_json(proj.project / ".epc" / "ssot" / "inputs_manifest.json")
     corrected = change_one_load(proj)
     code, env = M.S.envelope(proj.root, "run", M.S.CODE, "--loads", str(corrected), "--engine-inputs", str(proj.engine_inputs_file), "--run-id", "dry-run-2",
                              "--revision", "R1", "--detail", *M.S.ORCHESTRATOR)
@@ -664,7 +664,7 @@ def run_correction(run):
             "executed": executed_stages(proj, "dry-run-2"), "changed": sorted(n for n in before if before[n] != after[n]),
             "old": len(old), "old_superseded": sum(1 for m in old if m["superseded_by"]), "new": len(new), "new_supersedes": sum(1 for m in new if m["supersedes"]),
             "signature_moved": signed_old["signed"] is None and signed_old["superseded_signature"] == signature,
-            "inputs_manifest_unchanged": frozen_before == M.S.read_json(proj.project / "ssot" / "inputs_manifest.json")}
+            "inputs_manifest_unchanged": frozen_before == M.S.read_json(proj.project / ".epc" / "ssot" / "inputs_manifest.json")}
 
 
 def c10(run):

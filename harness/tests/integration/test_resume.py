@@ -78,12 +78,12 @@ class ResumeFromStage(unittest.TestCase):
         self.assertIn("7.5", text)
 
     def test_the_progress_file_says_which_stages_were_reused(self):
-        lines = (self.first.project / "epc-progress.txt").read_text(encoding="utf-8").splitlines()
+        lines = (self.first.project / ".epc" / "epc-progress.txt").read_text(encoding="utf-8").splitlines()
         reused = [ln for ln in lines if "run synth-run-2" in ln and "| reused |" in ln]
         self.assertEqual(len(reused), 14)
 
     def test_the_state_lists_all_sixteen_stages(self):
-        state = S.read_json(self.first.project / "master_project_state.json")
+        state = S.read_json(self.first.project / ".epc" / "master_project_state.json")
         self.assertEqual([e["number"] for e in state["stages"]], list(range(1, 17)))
 
 

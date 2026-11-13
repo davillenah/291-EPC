@@ -72,7 +72,7 @@ class Base(unittest.TestCase):
         cls.result = json.loads(json.dumps(cls.res.to_dict()))
         cls.project = engine_inputs_for_check(cls.ctx)
         out14 = stage(cls.result, 14)["outputs"]
-        work = Path(cls.ctx.work_dir) if cls.ctx.work_dir else Path(store.root) / "runs" / RUN_ID
+        work = Path(cls.ctx.work_dir) if cls.ctx.work_dir else Path(store.root) / ".epc" / "runs" / RUN_ID
         cls.files = {f"{out14['directory']}/{f['path']}": (work / out14["directory"] / f["path"]).read_bytes() for f in out14["files"] if f["path"].endswith(".dxf")}
 
     def check(self, mutation=None, files=True):

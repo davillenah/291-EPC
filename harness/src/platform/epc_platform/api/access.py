@@ -30,9 +30,9 @@ def project_path(projects_root, code, must_exist=True):
 
 
 def existing_project(project_dir):
-    """The resolved project folder (it must exist and look like a project: it has an `audit/` folder)."""
+    """The resolved project folder (it must exist and look like a project: it has an `.epc/audit/` folder)."""
     root = Path(project_dir).resolve()
-    if not (root / "audit").is_dir():
+    if not (root / ".epc" / "audit").is_dir():
         raise ApiError("project_not_found", f"{root.name} is not an initialised project folder")
     return root
 

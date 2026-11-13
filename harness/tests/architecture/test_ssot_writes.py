@@ -178,7 +178,7 @@ class PlatformWritesOnlyInTheEventLog(unittest.TestCase):
 
     def test_the_store_writes_the_workflow_only_below_reviews(self):
         src = (ROOT / "electrical_lv" / "store.py").read_text(encoding="utf-8")
-        self.assertIn('self._write_json(WORKFLOW, data, "reviews")', src)
+        self.assertIn('self._write_json(WORKFLOW, data, REVIEWS_DIR)', src)
 
 
 if __name__ == "__main__":

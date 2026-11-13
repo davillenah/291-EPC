@@ -29,7 +29,7 @@ class LogCase(unittest.TestCase):
         self._tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self._tmp.cleanup)
         self.project = Path(self._tmp.name) / "P1"
-        (self.project / "audit").mkdir(parents=True)
+        (self.project / ".epc" / "audit").mkdir(parents=True)
         self.log = EventLog.for_project(self.project, clock())
 
     def fill(self, n=4):
@@ -129,8 +129,8 @@ class ApiTests(LogCase):
 
     def test_it_refuses_a_location_outside_the_project_audit_folder(self):
         root = self.project
-        for bad in (root / "events.jsonl", root / "ssot" / "events.jsonl", root / "audit" / "other.jsonl", root / "audit" / "sub" / "events.jsonl",
-                    root.parent / "events.jsonl", root / "audit" / ".." / "ssot" / "events.jsonl"):
+        for bad in (root / "events.jsonl", root / ".epc" / "ssot" / "events.jsonl", root / ".epc" / "audit" / "other.jsonl", root / ".epc" / "audit" / "sub" / "events.jsonl",
+                    root.parent / "events.jsonl", root / ".epc" / "audit" / ".." / ".epc" / "ssot" / "events.jsonl"):
             with self.subTest(bad=str(bad)):
                 with self.assertRaises(EventLogError):
                     EventLog(bad, clock(), project_dir=root)
@@ -142,7 +142,7 @@ class ApiTests(LogCase):
         outside.mkdir()
         other = Path(self._tmp.name) / "P2"
         other.mkdir()
-        link = other / "audit"
+        link = other / ".epc" / "audit"
         try:
             if os.name == "nt":
                 subprocess.run(["cmd", "/c", "mklink", "/J", str(link), str(outside)], check=True, capture_output=True)

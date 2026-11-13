@@ -72,20 +72,20 @@ class RunCompletes(SyntheticRunCase):
 
 class ProjectFilesAreRecorded(SyntheticRunCase):
     def test_profile_and_state_validate_against_the_schemas(self):
-        profile, state = S.read_json(self.root / "project_profile.json"), S.read_json(self.root / "master_project_state.json")
+        profile, state = S.read_json(self.root / ".epc" / "project_profile.json"), S.read_json(self.root / ".epc" / "master_project_state.json")
         self.assertEqual(validate(profile, load_schema("project_profile.schema.json")), [])
         self.assertEqual(validate(state, load_schema("master_project_state.schema.json")), [])
         self.assertEqual((profile["project_code"], state["status"], state["pipeline_run_id"]), (S.CODE, "completed", S.RUN_ID))
 
     def test_one_ssot_file_per_stage_equals_the_stage_result(self):
         for stage in STAGES:
-            path = self.root / "ssot" / f"stage_{stage.number:02d}_{stage.spec.slug}.json"
+            path = self.root / ".epc" / "ssot" / f"stage_{stage.number:02d}_{stage.spec.slug}.json"
             self.assertTrue(path.is_file(), path.name)
             self.assertEqual(S.read_json(path), json.loads(json.dumps(self.result["results"][stage.number - 1])), path.name)
-        self.assertTrue((self.root / "ssot" / "inputs_manifest.json").is_file())
+        self.assertTrue((self.root / ".epc" / "ssot" / "inputs_manifest.json").is_file())
 
     def test_progress_log_has_one_line_per_stage(self):
-        lines = (self.root / "epc-progress.txt").read_text(encoding="utf-8").splitlines()
+        lines = (self.root / ".epc" / "epc-progress.txt").read_text(encoding="utf-8").splitlines()
         stage_lines = [line for line in lines if f"run {S.RUN_ID} | stage" in line]
         self.assertEqual(len(stage_lines), 16)
         self.assertTrue(all(" | ok | " in line for line in stage_lines))
@@ -99,7 +99,7 @@ class ProjectFilesAreRecorded(SyntheticRunCase):
         self.assertEqual({r["result"] for r in records} - {"allowed", "ok"}, set())
 
     def test_the_inputs_are_frozen_and_hashed(self):
-        manifest = S.read_json(self.root / "ssot" / "inputs_manifest.json")
+        manifest = S.read_json(self.root / ".epc" / "ssot" / "inputs_manifest.json")
         paths = sorted(f["path"] for f in manifest["files"])
         self.assertEqual(paths, ["engine_inputs.json", "intake_answers.json", "loads/loads.json"])
         for entry in manifest["files"]:
@@ -169,7 +169,7 @@ class Deliverables(SyntheticRunCase):
                 drawings += 1
                 rel = Path(self.sources[ident])
                 self.assertEqual(rel.suffix, ".dxf")
-                self.assertEqual(S.sha256_file(self.root / "runs" / S.RUN_ID / rel), sha, ident)
+                self.assertEqual(S.sha256_file(self.root / ".epc" / "runs" / S.RUN_ID / rel), sha, ident)
             else:
                 self.assertEqual(self.documents[ident.split("-DOC-", 1)[1]]["sha256"], sha, ident)
         self.assertEqual(drawings, 2)
@@ -188,7 +188,7 @@ class Deliverables(SyntheticRunCase):
         for sheet in S.read_json(S.GOLDEN / "expected_summary.json")["drawings"]["sheets"]:
             self.assertIn(f"{sheet}.dxf", names)
         for item in stage14["files"]:
-            path = self.root / "runs" / S.RUN_ID / stage14["directory"] / item["path"]
+            path = self.root / ".epc" / "runs" / S.RUN_ID / stage14["directory"] / item["path"]
             self.assertEqual(S.sha256_file(path), item["sha256"], item["path"])
 
     def test_the_unreviewed_norm_records_are_reported_not_hidden(self):

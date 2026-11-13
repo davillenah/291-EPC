@@ -106,10 +106,10 @@ class SyntheticRun:
         return self
 
     def ssot(self, name):
-        return read_json(self.project / "ssot" / name)
+        return read_json(self.project / ".epc" / "ssot" / name)
 
     def stage_files(self):
-        return sorted((self.project / "ssot").glob("stage_*.json"))
+        return sorted((self.project / ".epc" / "ssot").glob("stage_*.json"))
 
     def manifests(self):
         return sorted((self.project / "deliverables").glob("*/*.manifest.json"))

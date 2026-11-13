@@ -15,7 +15,7 @@ from disciplines.electrical_lv.pipeline import STAGES, PipelineContext, run
 from disciplines.electrical_lv.recorder import progress_line
 from disciplines.electrical_lv.store import PipelineToken, ProjectStore, StoreError
 
-TEMPLATE_DIR = TEMPLATE.parent
+TEMPLATE_DIR = TEMPLATE.parent.parent
 CLOCK = lambda: "2026-01-01T00:00:00Z"  # noqa: E731
 ANSWERS = {
     "project_code": "TEST-001",
@@ -123,7 +123,7 @@ class InitTests(TempCase):
         for name in S.SUBDIRS:
             self.assertTrue((store.root / name).is_dir(), name)
         files = sorted(tree_bytes(store.root))
-        self.assertEqual(files, ["epc-progress.txt", "master_project_state.json", "project_profile.json"])
+        self.assertEqual(files, [".epc/epc-progress.txt", ".epc/master_project_state.json", ".epc/project_profile.json"])
         self.assertEqual(store.read_profile()["status"], "template")
         self.assertFalse(store.is_frozen())
 
@@ -164,7 +164,7 @@ class WriteRuleTests(TempCase):
                     write(bad)
         self.assertEqual(store.read_profile()["status"], "template")
         self.assertFalse(store.is_frozen())
-        self.assertFalse((store.root / "ssot" / "a.json").exists())
+        self.assertFalse((store.root / ".epc" / "ssot" / "a.json").exists())
 
     def test_a_token_of_another_project_or_a_closed_session_is_refused(self):
         a, b = self.new_store("a"), self.new_store("b")
@@ -175,7 +175,7 @@ class WriteRuleTests(TempCase):
         with self.assertRaises(PermissionError):
             a.write_ssot(token, "late.json", {})
         self.assertEqual(a.read_ssot("ok.json"), {"x": 1})
-        self.assertFalse((b.root / "ssot" / "ok.json").exists())
+        self.assertFalse((b.root / ".epc" / "ssot" / "ok.json").exists())
 
     def test_session_run_id_must_be_a_safe_name(self):
         store = self.new_store()
@@ -216,7 +216,7 @@ class WriteRuleTests(TempCase):
     def test_a_symlink_that_leaves_the_project_is_refused(self):
         store = self.new_store()
         target = self.tmp()
-        link = store.root / "ssot" / "link"
+        link = store.root / ".epc" / "ssot" / "link"
         try:
             link.symlink_to(target, target_is_directory=True)
         except OSError:  # Windows without the symlink privilege: a junction is the same thing for path resolution
@@ -325,7 +325,7 @@ class PipelineWithStoreTests(TempCase):
         self.assertEqual([r.status for r in res.results], ["ok", "ok", "ok", "blocked"])
         self.assertEqual(store.read_profile(), build_profile(ANSWERS))
         self.assertTrue(store.is_frozen())
-        names = sorted(p.name for p in (store.root / "ssot").iterdir())
+        names = sorted(p.name for p in (store.root / ".epc" / "ssot").iterdir())
         self.assertEqual(names, ["inputs_manifest.json", "stage_01_intake.json", "stage_02_requirements.json",
                                  "stage_03_input_verification.json", "stage_04_load_schedule.json"])
         for r in res.results:
@@ -358,7 +358,7 @@ class PipelineWithStoreTests(TempCase):
         self.run_to(store, 3)
         self.assertEqual(store.read_state()["status"], "paused")
         self.assertEqual(store.read_state()["open_findings"], [])
-        self.assertTrue((store.root / "runs" / "r1").is_dir())
+        self.assertTrue((store.root / ".epc" / "runs" / "r1").is_dir())
 
     def test_a_rerun_keeps_revisions_and_signatures(self):
         store = self.new_store()
@@ -408,7 +408,7 @@ class PipelineWithStoreTests(TempCase):
             self.run_to(store, 4)
             trees.append(tree_bytes(store.root))
         self.assertEqual(trees[0], trees[1])
-        self.assertIn("ssot/stage_01_intake.json", trees[0])
+        self.assertIn(".epc/ssot/stage_01_intake.json", trees[0])
         self.assertTrue(all(b"\r" not in data for data in trees[0].values()))
         self.assertTrue(all(data.endswith(b"\n") for path, data in trees[0].items() if not path.startswith("inputs/")))
 

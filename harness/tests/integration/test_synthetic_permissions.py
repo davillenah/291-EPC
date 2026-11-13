@@ -31,8 +31,8 @@ AGENT_ROLES = [a["name"] for a in ROSTER["agents"]]
 PROTECTED = ("ssot", "deliverables", "inputs", "audit", "config_normative", "schemas")
 WRITE_ACTIONS = ("write", "create", "delete")
 MANIFEST = "deliverables/R0/SYNTH-001-DRW-SLD_TS-SYNTH.manifest.json"
-PROTECTED_FILES = ("project_profile.json", "master_project_state.json", "ssot/stage_01_intake.json", "ssot/stage_16_package_issue.json", MANIFEST,
-                   "inputs/intake_answers.json", "audit/events.jsonl")
+PROTECTED_FILES = (".epc/project_profile.json", ".epc/master_project_state.json", ".epc/ssot/stage_01_intake.json", ".epc/ssot/stage_16_package_issue.json", MANIFEST,
+                   "inputs/intake_answers.json", ".epc/audit/events.jsonl")
 
 
 class Base(unittest.TestCase):
@@ -116,7 +116,7 @@ class HookBlocksWrites(Base):
                         self.assertEqual(code, 2, message)
 
     def test_blocks_name_the_rule_and_reads_pass(self):
-        code, message = self.call(self.edit("Write", "ssot/stage_01_intake.json"), "orchestrator")
+        code, message = self.call(self.edit("Write", ".epc/ssot/stage_01_intake.json"), "orchestrator")
         self.assertEqual(code, 2)
         self.assertIn("D-07", message)
         code, message = self.call(self.edit("Write", "inputs/intake_answers.json"), "orchestrator")
@@ -140,7 +140,7 @@ class HookBlocksWrites(Base):
         self.assertEqual(log.verify(), [])
 
     def test_no_file_was_changed_by_the_blocked_calls(self):
-        self.assertEqual(S.read_json(self.root / "ssot" / "stage_01_intake.json"), self.proj.ssot("stage_01_intake.json"))
+        self.assertEqual(S.read_json(self.root / ".epc" / "ssot" / "stage_01_intake.json"), self.proj.ssot("stage_01_intake.json"))
         self.assertTrue(all((self.root / rel).is_file() for rel in PROTECTED_FILES))
 
 
@@ -198,7 +198,7 @@ class TamperIsDetected(unittest.TestCase):
 
     def files(self, changed=None):
         stage14 = self.proj.ssot("stage_14_drawings.json")["outputs"]
-        files = {f"{stage14['directory']}/{f['path']}": (self.root / "runs" / S.RUN_ID / stage14["directory"] / f["path"]).read_bytes() for f in stage14["files"]}
+        files = {f"{stage14['directory']}/{f['path']}": (self.root / ".epc" / "runs" / S.RUN_ID / stage14["directory"] / f["path"]).read_bytes() for f in stage14["files"]}
         files.update(changed or {})
         return files
 

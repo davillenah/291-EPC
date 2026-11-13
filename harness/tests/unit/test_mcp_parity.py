@@ -221,7 +221,7 @@ class ParityTests(Base):
         store = ProjectStore(root)
         self.assertTrue(store.is_frozen())
         self.assertEqual(len(store.read_progress().splitlines()), 2 + 5)
-        self.assertEqual(sorted(p.name for p in (root / "ssot").glob("stage_*.json"))[:2], ["stage_01_intake.json", "stage_02_requirements.json"])
+        self.assertEqual(sorted(p.name for p in (root / ".epc" / "ssot").glob("stage_*.json"))[:2], ["stage_01_intake.json", "stage_02_requirements.json"])
         self.assertEqual(EventLog.for_project(root, CLOCK).verify(), [])
 
 
@@ -234,7 +234,7 @@ class PermissionTests(Base):
         denied = [e for e in self.events() if e["result"] == "denied"]
         self.assertEqual(len(denied), 1)
         self.assertEqual((denied[0]["actor"], denied[0]["action"]), ({"role": "electrical_lv", "id": "agent-1"}, "run:start"))
-        self.assertFalse(list((self.root / "PARITY-1" / "ssot").glob("*.json")))
+        self.assertFalse(list((self.root / "PARITY-1" / ".epc" / "ssot").glob("*.json")))
         self.assertEqual(EventLog.for_project(self.root / "PARITY-1", CLOCK).verify(), [])
 
     def test_agents_cannot_reach_ssot_or_deliverables(self):
@@ -278,14 +278,14 @@ class ProjectFlowTests(Base):
     def test_review_records_the_corrections_through_the_workflow_and_never_edits_ssot(self):
         self.init()
         self.call("epc_pipeline_run", project="PARITY-1", loads=W.loads_doc(), engine_inputs=W.inputs_doc(), run_id="r-1")
-        ssot = {p.name: p.read_bytes() for p in (self.root / "PARITY-1" / "ssot").glob("*.json")}
+        ssot = {p.name: p.read_bytes() for p in (self.root / "PARITY-1" / ".epc" / "ssot").glob("*.json")}
         engineer = server(self.root, {"role": "engineer_of_record", "id": "e1"})
         answer = engineer("epc_project_review", project="PARITY-1", corrections=[{"target": "stage_08", "note": "check the cable"}])
         self.assertTrue(answer["ok"], answer)
         self.assertEqual(answer["data"]["workflow_state"], "corrected")
         review = json.loads((self.root / "PARITY-1" / answer["data"]["review_file"]).read_text(encoding="utf-8"))
         self.assertEqual(review["corrections"], [{"target": "stage_08", "note": "check the cable"}])
-        self.assertEqual({p.name: p.read_bytes() for p in (self.root / "PARITY-1" / "ssot").glob("*.json")}, ssot)
+        self.assertEqual({p.name: p.read_bytes() for p in (self.root / "PARITY-1" / ".epc" / "ssot").glob("*.json")}, ssot)
         self.assertEqual(engineer("epc_project_review", project="PARITY-1", corrections=[])["error"]["code"], "invalid_arguments")
 
     def test_issue_is_refused_until_the_project_is_approved_and_by_d21_afterwards(self):
