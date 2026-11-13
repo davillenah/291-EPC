@@ -11,6 +11,11 @@ Actualizado: 2026-11-08.
 - **En espera:** lo que no es eléctrico está en «En espera / más adelante» y no se trabaja hasta que el dueño lo pida.
 - **(Dueño)** marca lo que el programa no puede hacer (aprobar normas, conseguir archivos reales, decidir): se recuerda al dueño, no se ejecuta.
 
+## Siguiente (repo nuevo, 2026-11-13)
+
+- [ ] **RUN-01 · Etapa de partida automática.** `epc run --from-stage N` hoy deja la elección de N a quien corrige (tabla en `harness/docs/architecture/GUIA_MOTORES.md`). Cada etapa debería declarar qué entradas lee; con eso `epc run --resume` calcularía la primera etapa afectada comparando las entradas de la corrida anterior con las nuevas. Aceptación: cambiar solo `boq` reejecuta desde la 15, solo la fecha de planos desde la 14, y un cambio en la lista de cargas se rechaza; el resultado es igual al de una corrida completa.
+- [ ] **(Dueño) NORM-01 · Revisar los valores de norma** con `harness/docs/validation/norm_verification_worksheet.xlsx` y luego pedir la regeneración de los golden (87 casos de `aea90364` y `drawing`), único motivo por el que la CI queda roja.
+
 ## Harness (HRN)
 
 > **2026-11-11:** the HRN queue below is replaced by `migration-loop/BACKLOG.md` (plan §8, `docs/harness/MIGRATION_PLAN.md`). No HRN item is deleted; they stay as history.
