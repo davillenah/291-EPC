@@ -30,7 +30,7 @@ ROSTER = S.read_json(S.REPO / "harness" / ".claude" / "roster.json")
 AGENT_ROLES = [a["name"] for a in ROSTER["agents"]]
 PROTECTED = ("ssot", "deliverables", "inputs", "audit", "config_normative", "schemas")
 WRITE_ACTIONS = ("write", "create", "delete")
-MANIFEST = "deliverables/R0/SYNTH-001-DRW-SLD_TS-SYNTH.manifest.json"
+MANIFEST = ".epc/manifests/TR-001.manifest.json"
 PROTECTED_FILES = (".epc/project_profile.json", ".epc/master_project_state.json", ".epc/ssot/stage_01_intake.json", ".epc/ssot/stage_16_package_issue.json", MANIFEST,
                    "inputs/intake_answers.json", ".epc/audit/events.jsonl")
 
@@ -234,14 +234,15 @@ class TamperIsDetected(unittest.TestCase):
         data[0] ^= 1
         found = self.check(self.run_dict(), self.files({key: bytes(data)}))
         self.assertTrue(found and all("CC-D06" in f["clause"] for f in found), found)
-        self.assertTrue(any(f["field"].endswith("output_sha256") for f in found))
+        self.assertTrue(any(f["field"].endswith("/sha256") for f in found))
         self.assertTrue(any("SHA-256 of the file bytes" in f["evidence"][0] for f in found))
 
     def test_a_changed_manifest_hash_is_reported_as_cc_d06(self):
         run = self.run_dict()
         package = copy.deepcopy(run["results"][15])
         item = package["outputs"]["manifests"][0]["manifest"]
-        item["output_sha256"] = "0" * 63 + ("1" if item["output_sha256"][-1] != "1" else "2")
+        entry = item["files"][0]
+        entry["sha256"] = "0" * 63 + ("1" if entry["sha256"][-1] != "1" else "2")
         run["results"][15] = package
         found = self.check(run, self.files())
         self.assertTrue(found and all("CC-D06" in f["clause"] for f in found), found)
@@ -250,7 +251,7 @@ class TamperIsDetected(unittest.TestCase):
         path = self.root / MANIFEST
         manifest = json.loads(path.read_text(encoding="utf-8"))
         manifest["review_status"] = "approved_for_construction"
-        manifest["output_sha256"] = "f" * 64
+        manifest["files"][0]["sha256"] = "f" * 64
         files = self.files({MANIFEST: json.dumps(manifest).encode("utf-8")})
         found = self.check(self.run_dict(), files)
         self.assertTrue(any("CC-D06" in f["clause"] for f in found), found)

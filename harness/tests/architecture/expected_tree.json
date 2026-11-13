@@ -328,7 +328,12 @@
   },
   {
    "path": "projects/_template/deliverables",
-   "purpose": "issued files + one manifest per deliverable",
+   "purpose": "issued files, one folder TR-NNN per transmittal",
+   "status": "planned"
+  },
+  {
+   "path": "projects/_template/.epc/manifests",
+   "purpose": "one manifest per transmittal (hashes of every issued file)",
    "status": "planned"
   },
   {

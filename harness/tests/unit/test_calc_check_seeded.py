@@ -133,7 +133,7 @@ CASES = {
     "device changed in stage 11": (set_row(11, "T-01", "device", "MCB (99 A)"), "CC-D01", "T-01/device"),
     "breaking capacity lowered": (set_row(10, "T-01", "icu_ka", 6), "CC-B05", "T-01/breaking_ok"),
     "differential removed": (set_row(12, "T-01", "differential", None), "CC-B11", "T-01/differential"),
-    "manifest hash corrupted": (lambda rd: manifest(rd, 0).__setitem__("output_sha256", "e" * 64), "CC-D06", "output_sha256"),
+    "manifest hash corrupted": (lambda rd: manifest(rd, 0)["files"][0].__setitem__("sha256", "e" * 64), "CC-D06", "sha256"),
     "manifest revision invalid": (lambda rd: manifest(rd, 0).__setitem__("revision", "R 0"), "CC-F10", "revision"),
     "manifest key missing": (lambda rd: manifest(rd, 0).pop("findings"), "CC-F10", "findings"),
     "drawing summary changed": (lambda rd: stage(rd, 14)["outputs"]["summary"].__setitem__("circuits", 99), "CC-D05", "circuits"),

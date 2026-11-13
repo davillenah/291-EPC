@@ -39,9 +39,9 @@ def without_dxf_hashes(run):
     out = W.without_dxf_stamp(run)
     if len(out["results"]) == 16:
         outputs = out["results"][15]["outputs"]
-        for item in [m["manifest"] for m in outputs["manifests"]] + outputs["transmittal"]["deliverables"]:
-            if item["title"].endswith(".dxf"):
-                item["output_sha256"] = None
+        for item in [f for m in outputs["manifests"] for f in m["manifest"]["files"]] + outputs["transmittal"]["files"]:
+            if (item["path"] or "").endswith(".dxf"):
+                item["sha256"] = None
     return out
 
 

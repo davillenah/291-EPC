@@ -130,14 +130,14 @@ class D21Tests(Base):
         self.go(HAPPY + [("approve", ENG)])
         store = ProjectStore(self.project)
         with store.pipeline_session("seed2") as token:
-            store.write_manifest(token, TM.build(deliverable_id="TEST-001-DOC-MC", norm_reader=TM.ONE_PENDING))
+            store.write_manifest(token, TM.build(transmittal="TR-002", revision="R1", norm_reader=TM.ONE_PENDING))
         with self.assertRaises(WorkflowBlocked):
             self.wf.transition("issue", ENG, "e1")
         self.assertEqual(self.wf.state, "approved")
 
     def test_a_superseded_manifest_does_not_count(self):
         old = TM.build(norm_reader=TM.ONE_PENDING)
-        new = TM.build(revision="R1", norm_reader=TM.ALL_VERIFIED)
+        new = TM.build(revision="R1", transmittal="TR-002", norm_reader=TM.ALL_VERIFIED)
         old2, new2 = TM.M.supersede(old, new)
         store = ProjectStore(self.project)
         with store.pipeline_session("seed") as token:

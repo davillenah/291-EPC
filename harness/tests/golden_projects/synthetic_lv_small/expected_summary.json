@@ -18,6 +18,7 @@
     "file_kinds": [".dxf"],
     "sheets": ["SLD_TS-SYNTH", "SLD_TS-SYNTH_TABLA"]
   },
-  "manifest_count": 10,
+  "transmittal": "TR-001",
+  "file_count": 10,
   "review_status": "draft"
 }

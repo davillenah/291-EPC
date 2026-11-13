@@ -188,9 +188,10 @@ projects/<code>/
 │   ├── loads/
 │   ├── requirements/
 │   └── minutes/
-├── deliverables/<rev>/             # issued files + one manifest per deliverable
+├── deliverables/TR-NNN/            # one folder per transmittal: the files issued in it
 └── .epc/                           # everything the harness keeps for itself; hidden from the user
     ├── project_profile.json        # client, site, supply, normative profile, criteria, language
+    ├── manifests/TR-NNN.manifest.json  # ONE manifest per transmittal, covering every file of it (§13)
     ├── master_project_state.json   # stage status, revisions, open findings (pipeline writes it)
     ├── epc-progress.txt            # human-readable progress log
     ├── ssot/                       # project data written only by the pipeline
@@ -232,18 +233,18 @@ The dot hides `.epc/` on macOS and Linux; on Windows `ProjectStore.init_from_tem
 
 A stage without an engine returns an explicit "not available in Phase 1" result, never a placeholder value.
 
-## 13. Deliverable manifest
+## 13. Transmittal manifest
 
-One JSON per deliverable, next to it:
+One JSON per transmittal (one issue of the project), in `.epc/manifests/TR-NNN.manifest.json`; it covers every file of `deliverables/TR-NNN/`:
 
 | Field | Content |
 | --- | --- |
-| `deliverable_id`, `title`, `revision` | identification (PMO numbering) |
+| `transmittal`, `title`, `revision` | identification (`TR-001`, `TR-002`, ...; one number per issue) |
 | `pipeline_run_id` | run that produced it |
 | `inputs` | path and SHA-256 of every input used |
 | `engines` | name and version of every engine called |
 | `normative_profile` | parts and revisions; list of norm records used with their `review_status` |
-| `output_sha256` | hash of the file |
+| `files` | name, title, path inside the transmittal folder (null for a document with no rendered file) and SHA-256 of every file issued |
 | `findings` | open findings (finding schema) |
 | `review_status` | `draft`, `for_review`, `approved_for_construction` (blocked while any norm record is unreviewed, D21) |
 | `signed` | signer, date, or null |

@@ -5,6 +5,7 @@ All notable changes. Format: Keep a Changelog; versions follow `harness/docs/BRA
 ## [Unreleased]
 
 ### Changed
+- Deliverables are grouped by transmittal: one folder `deliverables/TR-NNN/` per issue and ONE manifest per transmittal in `.epc/manifests/TR-NNN.manifest.json` (it lists every issued file with its SHA-256; schema `deliverable_manifest.schema.json` replaces `deliverable_id`/`output_sha256` with `transmittal`/`files`). Stage 16 copies the drawing files into the transmittal folder; a rerun of an unsigned draft revision replaces it, a new revision gets the next number and supersedes the previous one.
 - Project folder: everything the harness keeps for itself (`project_profile.json`, `master_project_state.json`, `epc-progress.txt`, `ssot/`, `runs/`, `reviews/`, `audit/`) moves into the hidden folder `.epc/`; `inputs/` and `deliverables/` stay visible. The empty `transmittals/` folder is dropped. `init_from_template` sets the hidden attribute on Windows. Existing projects need to be moved by hand (`mkdir .epc` and move those entries into it).
 
 ### Added

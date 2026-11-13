@@ -10,6 +10,7 @@ Decision = namedtuple("Decision", "allowed reason rule_id")
 REPO_CLASSES = (("harness/config/normative", R.CONFIG_NORMATIVE), ("harness/schemas", R.SCHEMAS), ("harness/src", R.HARNESS_CODE),
                 ("harness/tools", R.HARNESS_CODE), ("harness/.claude", R.HARNESS_CODE), ("harness/tests", R.HARNESS_CODE))
 INTERNAL = ".epc"
+MANIFESTS = "manifests"
 ROOT_FILES = ("project_profile.json", "master_project_state.json", "epc-progress.txt")      # files directly inside `.epc/`
 INTERNAL_CLASSES = (R.SSOT, R.RUNS, R.REVIEWS, R.AUDIT)                                        # folders inside `.epc/`
 OPEN_CLASSES = (R.INPUTS, R.DELIVERABLES, R.TRANSMITTALS)                                      # folders directly in the project
@@ -75,6 +76,8 @@ def _project_class(rel):
     if rel.parts[0] == INTERNAL and len(rel.parts) > 1:
         if rel.parts[1] in INTERNAL_CLASSES:
             return rel.parts[1]
+        if rel.parts[1] == MANIFESTS:
+            return R.DELIVERABLES            # the manifests are the record of the deliverables: same rules (pipeline writes, engineer signs)
         if len(rel.parts) == 2 and rel.parts[1] in ROOT_FILES:
             return R.SSOT
     raise PathError(f"{rel.as_posix()} is not a known project path")
@@ -91,7 +94,7 @@ def _repo_class(repo_root, target):
 def classify_path(project_dir, path, repo_root=None):
     """The path class of `path`: a relative POSIX string or an absolute path. Symlinks and junctions are resolved first.
 
-    Inside the project: inputs, deliverables, transmittals and, inside `.epc/`: ssot (also the three project files), runs, reviews, audit. Inside `repo_root`
+    Inside the project: inputs, deliverables, transmittals and, inside `.epc/`: ssot (also the three project files), runs, reviews, audit, and manifests (classified as deliverables). Inside `repo_root`
     (optional): config_normative, schemas, harness_code. Anything else, or any path that escapes after resolution, raises `PathError`.
     """
     root, target = _resolve(project_dir, path)

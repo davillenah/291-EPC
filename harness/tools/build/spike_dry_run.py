@@ -362,7 +362,7 @@ def classify_difference(S, rel, one, two):
 
 
 def deliverable_hashes(proj):
-    return {p.name: M.S.read_json(p)["output_sha256"] for p in proj.manifests()}
+    return {f"{p.name}:{f['name']}": f["sha256"] for p in proj.manifests() for f in M.S.read_json(p)["files"]}
 
 
 PINNED_DATE = "2026-03-04"
@@ -473,16 +473,17 @@ def norm_state(run):
 def approval_attempts(run, manifest):
     """(blocked by build_manifest for unverified records, accepted when the same records are all verified, schema errors of an approved copy)."""
     records, res = manifest["normative_profile"]["norm_records"], run.run_dict
-    args = dict(deliverable_id="X-DOC-x", title="x", revision="R0", run_id="dry", inputs_manifest=run.primary.ssot("inputs_manifest.json"),
-                engine_calls=all_calls(res), normative_profile=manifest["normative_profile"], findings=[], output_sha256="0" * 64)
+    args = dict(transmittal="TR-001", title="x", revision="R0", run_id="dry", inputs_manifest=run.primary.ssot("inputs_manifest.json"),
+                engine_calls=all_calls(res), normative_profile=manifest["normative_profile"], findings=[],
+                files=[{"name": "x", "title": "x", "path": None, "sha256": "0" * 64}])
     try:
-        M.manifest.build_manifest(None, review_status=M.manifest.APPROVED, norm_reader=lambda _p: records, **args)
+        M.manifest.build_manifest(review_status=M.manifest.APPROVED, norm_reader=lambda _p: records, **args)
         blocked = False
     except M.manifest.ApprovalBlocked:
         blocked = True
     verified = [dict(r, review_status=M.manifest.VERIFIED) for r in records]
     try:
-        M.manifest.build_manifest(None, review_status=M.manifest.APPROVED, norm_reader=lambda _p: verified, **args)
+        M.manifest.build_manifest(review_status=M.manifest.APPROVED, norm_reader=lambda _p: verified, **args)
         accepted = True
     except M.manifest.ManifestError:
         accepted = False
@@ -620,8 +621,8 @@ def c9(run):
 
 # ------------------------------------------------------------------ C10
 def sign_manifest(proj):
-    """A synthetic signature on one R0 manifest in the temporary copy (signing is a human act, so the file is written by hand here)."""
-    path = next(p for p in proj.manifests() if "calculation_memo" in p.name)
+    """A synthetic signature on the R0 manifest in the temporary copy (signing is a human act, so the file is written by hand here)."""
+    path = proj.manifests()[0]
     data = M.S.read_json(path)
     data["signed"] = {"signer": "Synthetic Engineer", "date": "2026-01-01"}
     path.write_text(json.dumps(data, indent=2, sort_keys=True) + "\n", encoding="utf-8", newline="\n")
@@ -656,8 +657,9 @@ def run_correction(run):
     code, env = M.S.envelope(proj.root, "run", M.S.CODE, "--loads", str(corrected), "--engine-inputs", str(proj.engine_inputs_file), "--run-id", "dry-run-2",
                              "--revision", "R1", "--detail", *M.S.ORCHESTRATOR)
     after = stage_outputs(proj)
-    old = [M.S.read_json(p) for p in proj.manifests() if "/R0/" in p.as_posix()]
-    new = [M.S.read_json(p) for p in proj.manifests() if "/R1/" in p.as_posix()]
+    every = [M.S.read_json(p) for p in proj.manifests()]
+    old = [m for m in every if m["revision"] == "R0"]
+    new = [m for m in every if m["revision"] == "R1"]
     signed_old = M.S.read_json(signed_path)
     return {"review_code": review_code, "run_code": code, "run_ok": env["ok"] and env["data"]["run"]["summary"]["ok"],
             "unfrozen_loads_accepted": env["ok"] and env["data"]["run"]["summary"]["stopped_at"] is None,

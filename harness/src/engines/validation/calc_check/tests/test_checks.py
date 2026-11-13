@@ -104,7 +104,7 @@ CASES = [
     ("memo document changed, hash stale", lambda run: S.stage_of(run, 15)["outputs"]["documents"][1]["document"].update(title="Other"), "CC-D03", "project_summary"),
     ("memo summary changed", lambda run: S.stage_of(run, 15)["outputs"]["memo_summary"].update(cumplen=99), "CC-D04", "cumplen"),
     ("drawing summary changed", lambda run: S.stage_of(run, 14)["outputs"]["summary"].update(circuits=9), "CC-D05", "circuits"),
-    ("manifest hash differs", lambda run: S.stage_of(run, 16)["outputs"]["manifests"][1]["manifest"].update(output_sha256="c" * 64), "CC-D06", "output_sha256"),
+    ("manifest hash differs", lambda run: S.stage_of(run, 16)["outputs"]["manifests"][0]["manifest"]["files"][1].update(sha256="c" * 64), "CC-D06", "sha256"),
     ("memo has no table", lambda run: S.stage_of(run, 15)["outputs"]["documents"][0]["document"].update(blocks=[]), "CC-D07", "tables"),
 ]
 
@@ -184,7 +184,7 @@ class SeededErrorTests(unittest.TestCase):
         self.assertIn("CC-D06", rules_of(found))
 
     def test_a_manifest_given_as_a_file_is_validated(self):
-        bad = json.dumps({"deliverable_id": "x"}).encode()
+        bad = json.dumps({"transmittal": "x"}).encode()
         found = C.check_run(S.RUN[0], project={**S.RUN[1], "manifest_schema": SCHEMA}, files={"a.manifest.json": bad, "b.manifest.json": b"{not json"}, run_id="r")
         self.assertIn("CC-F10", rules_of(found))
 

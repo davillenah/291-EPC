@@ -14,7 +14,7 @@ from disciplines.electrical_lv.pipeline import STAGES
 from epc_platform.events import EventLog
 
 DOCUMENTS = ("calculation_memo", "project_summary", "terminal_block_list", "boq", "datasheets", "rfq", "design_basis", "descriptive_report")
-MANIFEST_KEYS = ("deliverable_id", "title", "revision", "pipeline_run_id", "inputs", "engines", "normative_profile", "output_sha256", "findings",
+MANIFEST_KEYS = ("transmittal", "title", "revision", "pipeline_run_id", "inputs", "engines", "normative_profile", "files", "findings",
                  "review_status", "signed", "superseded_signature", "supersedes", "superseded_by")
 # The clean run is expected to report these findings and no others (rule id or clause -> severity). Every one is a `note`: the engine assumptions of
 # stage 6 (the transformer rating convention) and CC-R00 (the minimum short-circuit current is checked only through its invariants).
@@ -113,20 +113,22 @@ class Deliverables(SyntheticRunCase):
         cls.manifests = {p.name: S.read_json(p) for p in cls.proj.manifests()}
         cls.package = cls.proj.ssot("stage_16_package_issue.json")
         cls.documents = {d["name"]: d for d in cls.proj.ssot("stage_15_documents.json")["outputs"]["documents"]}
-        cls.sources = {row["deliverable_id"]: row["source"] for row in cls.package["outputs"]["transmittal"]["deliverables"]}
+        cls.sources = {row["name"]: row["source"] for row in cls.package["outputs"]["transmittal"]["files"]}
 
     def test_the_expected_summary_matches_what_was_produced(self):
         expected = S.read_json(S.GOLDEN / "expected_summary.json")
-        ids = sorted(m["deliverable_id"] for m in self.manifests.values())
-        self.assertEqual(len(ids), expected["manifest_count"])
+        self.assertEqual(sorted(self.manifests), [expected["transmittal"] + ".manifest.json"])
+        (manifest,) = self.manifests.values()
+        names = sorted(f["name"] for f in manifest["files"])
+        self.assertEqual(len(names), expected["file_count"])
         for name in expected["documents"]:
-            self.assertIn(f"{S.CODE}-DOC-{name}", ids)
+            self.assertIn(name, names)
         for sheet in expected["drawings"]["sheets"]:
-            self.assertIn(f"{S.CODE}-DRW-{sheet}", ids)
+            self.assertIn(sheet, names)
         self.assertEqual(sorted(self.documents), sorted(DOCUMENTS))
         for name in self.documents:
             self.assertIn(name, expected["documents"])
-        self.assertEqual(sorted(p.parent.name for p in self.proj.manifests()), [expected["revision"]] * expected["manifest_count"])
+        self.assertEqual(manifest["transmittal"], expected["transmittal"])
         self.assertEqual(self.package["outputs"]["revision"], expected["revision"])
 
     def test_every_manifest_validates_and_is_complete(self):
@@ -135,11 +137,11 @@ class Deliverables(SyntheticRunCase):
             with self.subTest(manifest=name):
                 self.assertEqual(validate(manifest, schema), [])
                 self.assertEqual(sorted(manifest), sorted(MANIFEST_KEYS))
-                self.assertTrue(manifest["deliverable_id"] and manifest["title"])
+                self.assertTrue(manifest["transmittal"] and manifest["title"])
                 self.assertEqual((manifest["revision"], manifest["pipeline_run_id"]), ("R0", S.RUN_ID))
                 self.assertEqual(manifest["review_status"], "draft")
                 self.assertEqual([manifest[k] for k in ("signed", "superseded_signature", "supersedes", "superseded_by")], [None] * 4)
-                self.assertEqual(name, manifest["deliverable_id"] + ".manifest.json")
+                self.assertEqual(name, manifest["transmittal"] + ".manifest.json")
 
     def test_manifest_inputs_engines_norms_and_findings_are_filled(self):
         frozen = {f["path"]: f["sha256"] for f in self.proj.ssot("inputs_manifest.json")["files"]}
@@ -161,26 +163,26 @@ class Deliverables(SyntheticRunCase):
             self.assertNotEqual(manifest["review_status"], "approved_for_construction")
             self.assertEqual(manifest["review_status"], "draft")
 
-    def test_every_output_hash_equals_its_manifest(self):
+    def test_every_file_hash_equals_its_manifest_entry(self):
+        (manifest,) = self.manifests.values()
         drawings = 0
-        for manifest in self.manifests.values():
-            ident, sha = manifest["deliverable_id"], manifest["output_sha256"]
-            if "-DRW-" in ident:
+        for entry in manifest["files"]:
+            if entry["path"]:
                 drawings += 1
-                rel = Path(self.sources[ident])
+                rel = Path(self.sources[entry["name"]])
                 self.assertEqual(rel.suffix, ".dxf")
-                self.assertEqual(S.sha256_file(self.root / ".epc" / "runs" / S.RUN_ID / rel), sha, ident)
+                self.assertEqual(S.sha256_file(self.root / ".epc" / "runs" / S.RUN_ID / rel), entry["sha256"], entry["name"])
+                self.assertEqual(S.sha256_file(self.root / "deliverables" / manifest["transmittal"] / entry["path"]), entry["sha256"], entry["name"])
             else:
-                self.assertEqual(self.documents[ident.split("-DOC-", 1)[1]]["sha256"], sha, ident)
+                self.assertEqual(self.documents[entry["name"]]["sha256"], entry["sha256"], entry["name"])
         self.assertEqual(drawings, 2)
 
-    def test_the_transmittal_lists_every_manifest_with_its_hash(self):
-        rows = {r["deliverable_id"]: r for r in self.package["outputs"]["transmittal"]["deliverables"]}
-        self.assertEqual(sorted(rows), sorted(m["deliverable_id"] for m in self.manifests.values()))
-        for manifest in self.manifests.values():
-            row = rows[manifest["deliverable_id"]]
-            self.assertEqual((row["output_sha256"], row["review_status"], row["revision"]), (manifest["output_sha256"], "draft", "R0"))
-            self.assertTrue((self.root / row["manifest"]).is_file())
+    def test_the_transmittal_lists_every_file_with_its_hash(self):
+        (manifest,) = self.manifests.values()
+        transmittal = self.package["outputs"]["transmittal"]
+        self.assertEqual({r["name"]: r["sha256"] for r in transmittal["files"]}, {f["name"]: f["sha256"] for f in manifest["files"]})
+        self.assertEqual((transmittal["id"], transmittal["review_status"], transmittal["revision"]), (manifest["transmittal"], "draft", "R0"))
+        self.assertTrue((self.root / transmittal["manifest"]).is_file())
 
     def test_drawing_files_exist_and_are_listed_by_stage_14(self):
         stage14 = self.proj.ssot("stage_14_drawings.json")["outputs"]

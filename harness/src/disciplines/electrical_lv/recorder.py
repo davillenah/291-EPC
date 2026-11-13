@@ -2,7 +2,7 @@
 
 For every stage: one line in `epc-progress.txt`, one file `ssot/stage_<NN>_<slug>.json` (the full StageResult) and an update of
 `master_project_state.json`. Stage 1 also writes `project_profile.json` and freezes `inputs/`; from stage 2 on, a changed,
-added or removed input blocks the stage with a finding (rule IM-01). Everything goes through the store with the run's token. After stage 16 the manifests it built are written under `deliverables/<revision>/`.
+added or removed input blocks the stage with a finding (rule IM-01). Everything goes through the store with the run's token. After stage 16 its drawing files are copied to `deliverables/TR-NNN/` and the manifest it built is written under `.epc/manifests/`.
 
 Progress line format (`epc-progress.txt`, plain text, one line per stage, appended):
 
@@ -14,6 +14,7 @@ one line (`-` when empty).
 No timestamp is created here: the clock is the one given to `pipeline.run()`.
 """
 import copy
+from pathlib import Path
 
 from disciplines.electrical_lv.stages.base import make_finding
 
@@ -87,7 +88,7 @@ class RunRecorder:
         if stage.number == INTAKE and res.status == "ok":
             self._intake(context)
         if stage.number == PACKAGE and res.status == "ok":
-            self._publish(res)
+            self._publish(context, res)
         self.findings += res.findings
         self.entries.append({"number": stage.number, "slug": stage.spec.slug, "status": res.status, "started": started,
                              "finished": finished, "finding_count": len(res.findings)})
@@ -100,8 +101,10 @@ class RunRecorder:
         if not self.store.is_frozen():
             self.store.freeze_inputs(self.token)
 
-    def _publish(self, res):
-        """Stage 16: write the deliverable manifests it built, then mark the superseded ones (all through the store, with this run's token)."""
+    def _publish(self, context, res):
+        """Stage 16: copy the drawing files into `deliverables/TR-NNN/`, write the transmittal manifest, then mark the superseded one (all through the store)."""
+        for item in res.outputs["copies"]:
+            self.store.copy_deliverable(self.token, Path(context.work_dir) / item["source"], item["to"])
         for item in res.outputs["manifests"]:
             self.store.write_manifest(self.token, item["manifest"])
         for item in res.outputs["superseded"]:
