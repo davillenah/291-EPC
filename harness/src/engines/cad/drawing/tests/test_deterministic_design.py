@@ -90,7 +90,7 @@ class TestDesign(unittest.TestCase):
             design(Path(t, "two"), "2026-03-05")
             one, two = files_of(Path(t, "one")), files_of(Path(t, "two"))
             self.assertNotEqual(one["out/SLD_T1.dxf"], two["out/SLD_T1.dxf"])
-            self.assertEqual(one["out/T1_dimensionado.json"], two["out/T1_dimensionado.json"])        # the numbers do not depend on the date
+            self.assertEqual(one["out/T1_sizing.json"], two["out/T1_sizing.json"])        # the numbers do not depend on the date
 
     def test_without_a_date_nothing_is_pinned(self):
         with tempfile.TemporaryDirectory() as t:

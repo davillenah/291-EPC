@@ -364,31 +364,31 @@
     "lines": 193,
     "sha256": "f593f7d6aab755ac2ce556cc77ef44399d542b5092233421933b74d2250ea9ec"
    },
-   "T1_MC.md": {
+   "T1_calculation_memorandum.md": {
     "lines": 141,
     "sha256": "5c24fa92721f310307b8fa3fc1891c24d0352885109f304c3f3cf582487698b7"
    },
-   "T1_SP.md": {
+   "T1_project_summary.md": {
     "lines": 22,
     "sha256": "bbfbdec0b10737063e3838c98bae796e327b621be04b749aac96faf518e907f3"
    },
-   "T1_acometidas.json": {
+   "T1_supplies.json": {
     "lines": 1,
     "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
    },
-   "T1_cifras.json": {
+   "T1_figures.json": {
     "lines": 75,
     "sha256": "b3f69f113d03b8e09df56afc2c1c17800214cd61299d54b93bc81a6a5e25a474"
    },
-   "T1_criterios.json": {
+   "T1_criteria.json": {
     "lines": 13,
     "sha256": "e3fb0ff80513ae3b472ef1890d090756edf1f6d8b30639776378307a512955ad"
    },
-   "T1_dimensionado.json": {
+   "T1_sizing.json": {
     "lines": 194,
     "sha256": "8f6ba4a8520c626329a050469b469a666f02870558fad637b71bb1b39007e66a"
    },
-   "T1_dimensionado_detalle.json": {
+   "T1_sizing_detail.json": {
     "lines": 1262,
     "sha256": "cfefd6b0cd7702b4dc10125be649ed17cae48e3ffd43d831b9964d265dfd6c9d"
    },
@@ -396,7 +396,7 @@
     "lines": 184,
     "sha256": "4c402b4fb0791879f5eb3ca174d7fcf14996197804073696bdf09c87a605c8f3"
    },
-   "T1_memoria.json": {
+   "T1_calculation_memo.json": {
     "lines": 2252,
     "sha256": "86a5fe14748c8094a08d29a965e609be41119fd4ee9568ae580e5f624b64bafc"
    },
@@ -622,31 +622,31 @@
     "lines": 193,
     "sha256": "f593f7d6aab755ac2ce556cc77ef44399d542b5092233421933b74d2250ea9ec"
    },
-   "T1_MC.md": {
+   "T1_calculation_memorandum.md": {
     "lines": 141,
     "sha256": "18d11425285a990388748a79ba4fd4436c11da7c1c162635646dcad7dbddd2d2"
    },
-   "T1_SP.md": {
+   "T1_project_summary.md": {
     "lines": 22,
     "sha256": "06c940dd1aecdefba970139f6bc05182ff512703cda82354bb239cd410e9686c"
    },
-   "T1_acometidas.json": {
+   "T1_supplies.json": {
     "lines": 1,
     "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
    },
-   "T1_cifras.json": {
+   "T1_figures.json": {
     "lines": 75,
     "sha256": "07ff3700061eccc0d3e1193902873518ee481e848befec9453c1ae07d1be9679"
    },
-   "T1_criterios.json": {
+   "T1_criteria.json": {
     "lines": 16,
     "sha256": "bb4c4208273f245bfce322a50a9523222a753a7ce2689ad3caa883bc7141dcd5"
    },
-   "T1_dimensionado.json": {
+   "T1_sizing.json": {
     "lines": 194,
     "sha256": "8f6ba4a8520c626329a050469b469a666f02870558fad637b71bb1b39007e66a"
    },
-   "T1_dimensionado_detalle.json": {
+   "T1_sizing_detail.json": {
     "lines": 1262,
     "sha256": "59acc9d9ff3253248836f9004ea9e77eb10319d3cf820bb20c24f1e856174beb"
    },
@@ -654,7 +654,7 @@
     "lines": 106,
     "sha256": "d63b810b965059651300204d82795ccb1c6578d97de25c6973ba8addc5a6fdbd"
    },
-   "T1_memoria.json": {
+   "T1_calculation_memo.json": {
     "lines": 2252,
     "sha256": "d798986afcaf35049915e3e47a98a6c0492c9e5e6e4e1d3b7e260a81342c8b17"
    },
@@ -823,31 +823,31 @@
     "lines": 33,
     "sha256": "134db65222deea5b6a1ec575a0971b1b1fa3194cfbe8c4f3dc22ecb773575cc4"
    },
-   "T1_MC.md": {
+   "T1_calculation_memorandum.md": {
     "lines": 84,
     "sha256": "fc5727fa523c1591086b68b3ae904c9dfe7603a8412ad3aa8c7df89878fa66f8"
    },
-   "T1_SP.md": {
+   "T1_project_summary.md": {
     "lines": 21,
     "sha256": "581216612dfa2f3c834a338e2f8c2fb8dff2206422265cb51e7011e04317e6d3"
    },
-   "T1_acometidas.json": {
+   "T1_supplies.json": {
     "lines": 1,
     "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
    },
-   "T1_cifras.json": {
+   "T1_figures.json": {
     "lines": 73,
     "sha256": "200a966abc693c6164187a908b53f4f05a6b3b242fe3d874a3ef46a223b2aef9"
    },
-   "T1_criterios.json": {
+   "T1_criteria.json": {
     "lines": 13,
     "sha256": "e3fb0ff80513ae3b472ef1890d090756edf1f6d8b30639776378307a512955ad"
    },
-   "T1_dimensionado.json": {
+   "T1_sizing.json": {
     "lines": 34,
     "sha256": "07e6eecd13f4168fd59c91e7fdcab4c97294f2fdba4edfe635cf0830441018e7"
    },
-   "T1_dimensionado_detalle.json": {
+   "T1_sizing_detail.json": {
     "lines": 212,
     "sha256": "64b32e07045c7b2039497008f9c56f44cc14cc77fe1dfd9eca43c827dbcbbc51"
    },
@@ -855,7 +855,7 @@
     "lines": 80,
     "sha256": "9b2873868326817439b880a1a9ac882a4bafb199c955a1eab63625d1315d852d"
    },
-   "T1_memoria.json": {
+   "T1_calculation_memo.json": {
     "lines": 436,
     "sha256": "28bfa7b1e2baf3c1b4541e6079d82845ef1aec49a9a1c8f5ce49b66f74e71ced"
    },

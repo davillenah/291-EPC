@@ -203,9 +203,9 @@ class BackendParityTests(unittest.TestCase):
 
     def assert_files_equal_chain(self, out):
         read = lambda name: json.loads((out / f"TEST-001_{name}.json").read_text(encoding="utf-8"))  # noqa: E731
-        self.assertEqual(read("dimensionado"), self.chain["calc"]["datos"])
-        self.assertEqual(read("dimensionado_detalle"), json.loads(json.dumps(self.chain["calc"]["detalle"])))
-        self.assertEqual(read("memoria"), json.loads(json.dumps(self.chain["memo"])))
+        self.assertEqual(read("sizing"), self.chain["calc"]["datos"])
+        self.assertEqual(read("sizing_detail"), json.loads(json.dumps(self.chain["calc"]["detalle"])))
+        self.assertEqual(read("calculation_memo"), json.loads(json.dumps(self.chain["memo"])))
 
     def test_board_design_files_equal_the_pipeline_chain(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -216,7 +216,7 @@ class BackendParityTests(unittest.TestCase):
     def test_stage_rows_equal_the_backend_detail_file(self):
         with tempfile.TemporaryDirectory() as tmp:
             BD.design(direct_form(), Path(tmp), "TEST-001", None, None, diagrams=("none",))
-            detail = json.loads((Path(tmp) / "out" / "TEST-001_dimensionado_detalle.json").read_text(encoding="utf-8"))
+            detail = json.loads((Path(tmp) / "out" / "TEST-001_sizing_detail.json").read_text(encoding="utf-8"))
         stage = logical(self.res)
         for tag, det in detail.items():
             self.assertEqual(by_circuit(stage[8])[tag]["pe_mm2"], det["pe_mm2"])

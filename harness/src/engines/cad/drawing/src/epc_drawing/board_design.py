@@ -13,8 +13,8 @@ board.json (the same data the web form saves):
    "titleblock": {company, company_cuit, client, client_cuit, drawn_by, checked_by, approved_by, description, location, scale, revision, status}}
 criteria.json: {criterion id: value}, e.g. {"vd_sectional_pct": 1, "vd_lighting_sockets_pct": 3, "vd_motors_pct": 5, "insulation": "XLPE", ...}
 
-Writes in DIR/out: <NAME>_dimensionado.json (contract of aea_export), SLD_<NAME>*/MLD_<NAME>* sheets, <NAME>_dimensionado_detalle.json (type, limit and drops per circuit),
-<NAME>_criterios.json (criteria applied), the SVG/DXF sheets of the SLD generator and a summary (summary.json). The last stdout line is "OK <summary path>".
+Writes in DIR/out: <NAME>_sizing.json (contract of aea_export), SLD_<NAME>*/MLD_<NAME>* sheets, <NAME>_sizing_detail.json (type, limit and drops per circuit),
+<NAME>_criteria.json (criteria applied), the SVG/DXF sheets of the SLD generator and a summary (summary.json). The last stdout line is "OK <summary path>".
 """
 import argparse
 import concurrent.futures
@@ -287,29 +287,29 @@ def design(data: dict, out_dir: Path, name: str, criteria: Optional[dict] = None
     request_json = out_dir / "titleblock-request.json"                  # what the diagrams ask the title block service for: the project's data and logos
     request_json.write_text(json.dumps(titleblock.project_request(data.get("titleblock", {}), logos, day), ensure_ascii=False, indent=1) + "\n", encoding="utf-8", newline="\n")
 
-    calc_json = out / f"{name}_dimensionado.json"
-    detail_json = out / f"{name}_dimensionado_detalle.json"
-    crit_json = out / f"{name}_criterios.json"
+    calc_json = out / f"{name}_sizing.json"
+    detail_json = out / f"{name}_sizing_detail.json"
+    crit_json = out / f"{name}_criteria.json"
     from epc_aea90364 import aea_export as EX
     avisos = list(res["avisos"]) + list(EX.export_calculation(res["datos"], str(calc_json)))
     detail_json.write_text(json.dumps(res["detalle"], ensure_ascii=False, indent=1) + "\n", encoding="utf-8", newline="\n")
     crit_json.write_text(json.dumps({"criterios": criteria or {}, "limites_pct": res["limites"], "conductor": res["conductor"], "rcd_ma": res["rcd_ma"]},
                                     ensure_ascii=False, indent=1) + "\n", encoding="utf-8", newline="\n")
-    (out / f"{name}_acometidas.json").write_text(json.dumps(res["acometidas"], ensure_ascii=False, indent=1) + "\n", encoding="utf-8", newline="\n")      # always written: a run without them replaces an earlier one
+    (out / f"{name}_supplies.json").write_text(json.dumps(res["acometidas"], ensure_ascii=False, indent=1) + "\n", encoding="utf-8", newline="\n")      # always written: a run without them replaces an earlier one
 
     if "calc" in diagrams:                                    # the calculation alone (sections, protections, drops): no memo, no figures, no diagrams
         return _finish(out, _summary(name, avisos, [], res, data, diagrams, None, None))
     from epc_aea90364 import board_memo as BM                 # memoria de cálculo y síntesis del tablero: mismos números que el unifilar (fuente única)
     memo = BM.build(data["board"], data["circuits"], res["datos"], res["detalle"], res["limites"], res["conductor"], res["rcd_ma"],
                     upstream=data.get("upstream"), validated=bool(data.get("validated", True)), feeders=res["acometidas"])
-    (out / f"{name}_memoria.json").write_text(json.dumps(memo, ensure_ascii=False, indent=1) + "\n", encoding="utf-8", newline="\n")
-    (out / f"{name}_MC.md").write_text(BM.memoria_md(memo), encoding="utf-8", newline="\n")
-    (out / f"{name}_SP.md").write_text(BM.sintesis_md(memo), encoding="utf-8", newline="\n")
+    (out / f"{name}_calculation_memo.json").write_text(json.dumps(memo, ensure_ascii=False, indent=1) + "\n", encoding="utf-8", newline="\n")
+    (out / f"{name}_calculation_memorandum.md").write_text(BM.memoria_md(memo), encoding="utf-8", newline="\n")
+    (out / f"{name}_project_summary.md").write_text(BM.sintesis_md(memo), encoding="utf-8", newline="\n")
 
     from epc_aea90364 import board_figures as BF               # what the drawings show beyond each circuit: bar, feeder, checks and notes (the drawings only draw)
     figures = BF.build(data["board"], res["datos"], res["detalle"], res["limites"], res["rcd_ma"], memo["acometida"])
     figures["note"] += " " + calc_note(res)
-    figures_json = out / f"{name}_cifras.json"
+    figures_json = out / f"{name}_figures.json"
     figures_json.write_text(json.dumps(figures, ensure_ascii=False, indent=1) + "\n", encoding="utf-8", newline="\n")
     env = dict(os.environ, EPC_TITLEBLOCK_JSON=str(request_json), SLD_CALC_JSON=str(calc_json), SLD_CALC_DETAIL=str(detail_json), SLD_FIGURES_JSON=str(figures_json))
     _layout_env(data, out_dir, env)

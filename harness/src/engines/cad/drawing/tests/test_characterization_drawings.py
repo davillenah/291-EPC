@@ -28,8 +28,8 @@ class TestDrawingCharacterization(unittest.TestCase):
         big = GOLDEN["big_paginated_sld_mld"]["files"]
         self.assertTrue(any(f.startswith("SLD_T1_H") and f.endswith(".svg") for f in big), "the big board is paginated in sheets")
         self.assertTrue(any(f.startswith("MLD_T1") for f in big))
-        self.assertIn("T1_MC.md", big)
-        self.assertNotIn("T1_MC.pdf", big)                                                     # the PDF of the memo is made when a transmittal is issued, not by the calculation
+        self.assertIn("T1_calculation_memorandum.md", big)
+        self.assertNotIn("T1_calculation_memorandum.pdf", big)                                                     # the PDF of the memo is made when a transmittal is issued, not by the calculation
 
 
 if __name__ == "__main__":
