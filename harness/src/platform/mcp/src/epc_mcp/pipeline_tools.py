@@ -66,7 +66,7 @@ def epc_project_init(ctx: Context, args: dict):
 
 def epc_pipeline_run(ctx: Context, args: dict):
     return _api().run_pipeline(_dir(ctx, args), loads=args.get("loads"), engine_inputs=args.get("engine_inputs"), stop_after=args.get("stop_after"),
-                            run_id=args.get("run_id"), revision=args.get("revision", "R0"), detail=bool(args.get("detail", False)),
+                            from_stage=args.get("from_stage"), run_id=args.get("run_id"), revision=args.get("revision", "R0"), detail=bool(args.get("detail", False)),
                             clock=ctx.now, actor=ctx.who())
 
 
@@ -98,7 +98,7 @@ def register(reg: Registry) -> None:
     reg.register(Tool("epc_project_init", "Create a project from the guided-form answers (earthing scheme and short-circuit level are required).",
                       epc_project_init, dict(PROJECT, answers=OBJECT), ["project", "answers"], full))
     reg.register(Tool("epc_pipeline_run", "Run the pipeline in a project; the result holds the engines' numbers. `detail: true` returns every stage output.",
-                      epc_pipeline_run, dict(PROJECT, loads=OBJECT, engine_inputs=OBJECT, stop_after={"type": "integer"}, run_id=TEXT, revision=TEXT,
+                      epc_pipeline_run, dict(PROJECT, loads=OBJECT, engine_inputs=OBJECT, stop_after={"type": "integer"}, from_stage={"type": "integer"}, run_id=TEXT, revision=TEXT,
                                              detail={"type": "boolean"}), ["project"], full))
     reg.register(Tool("epc_project_review", "Record the reviewer's corrections (a workflow transition and a file under reviews/). Never edits ssot.",
                       epc_project_review, dict(PROJECT, corrections={"type": "array", "items": OBJECT}), ["project", "corrections"], full))

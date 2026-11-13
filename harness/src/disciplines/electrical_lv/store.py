@@ -361,6 +361,15 @@ class ProjectStore:
     def read_progress(self):
         return self.resolve(PROGRESS).read_text(encoding="utf-8")
 
+    def run_dir_of_stage(self, number):
+        """`runs/<id>/` of the last run that finished stage `number` ok (where its files were written), or None."""
+        for line in reversed(self.read_progress().splitlines()):
+            parts = [p.strip() for p in line.split("|")]
+            if len(parts) >= 4 and parts[1].startswith("run ") and parts[2].startswith(f"stage {number} ") and parts[3] == "ok":
+                path = self.resolve(check_run_id(parts[1][4:]), "runs")
+                return str(path) if path.is_dir() else None
+        return None
+
     def verify_inputs_unchanged(self, run_id="run-0"):
         """Blocking findings (rule IM-01), one per input file that changed, disappeared or appeared since the freeze."""
         if not self.is_frozen():

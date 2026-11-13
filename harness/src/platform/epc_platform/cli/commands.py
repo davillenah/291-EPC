@@ -74,7 +74,7 @@ def _init(session, args):
 
 def _run(session, args):
     loads, inputs = load_json(args.loads, "loads"), _optional_json(args.engine_inputs, "engine inputs")
-    return api.run_pipeline(_project(session, args), loads=loads, engine_inputs=inputs, stop_after=args.stop_after, run_id=args.run_id,
+    return api.run_pipeline(_project(session, args), loads=loads, engine_inputs=inputs, stop_after=args.stop_after, run_id=args.run_id, from_stage=args.from_stage,
                             revision=args.revision, detail=args.detail, clock=session.clock, actor=session.actor)
 
 
@@ -123,6 +123,7 @@ COMMANDS = {c.key: c for c in (
         (("--loads",), {"required": True, "metavar": "FILE.json", "help": "the load list (JSON file)"}),
         (("--engine-inputs",), {"metavar": "FILE.json", "help": "extra calculation inputs (JSON file)"}),
         (("--stop-after",), {"type": int, "metavar": "N", "help": "stop after stage N"}),
+        (("--from-stage",), {"type": int, "metavar": "N", "help": "re-run only stages N.. and reuse the recorded earlier stages when still valid"}),
         (("--run-id",), {"metavar": "ID", "help": "run id (default: generated)"}),
         (("--revision",), {"default": "R0", "metavar": "R", "help": "document revision (default R0)"}),
         (("--detail",), {"action": "store_true", "help": "return every stage output, not only the summary"}))),

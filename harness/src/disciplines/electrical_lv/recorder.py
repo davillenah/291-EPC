@@ -53,6 +53,17 @@ class RunRecorder:
             context.work_dir = self.store.make_run_dir(self.token, self.run_id)
         self._save("running")
 
+    def adopt(self, reused, stages):
+        """Count the stages reused from an earlier run as part of this one: their entries, findings and one progress line each ("reused")."""
+        prior = {e["number"]: e for e in self.store.read_state().get("stages", [])}
+        for res, stage in zip(reused, stages):
+            self.findings += copy.deepcopy(res.findings)
+            self.entries.append(prior.get(stage.number) or {"number": stage.number, "slug": stage.spec.slug, "status": res.status, "started": None,
+                                                               "finished": None, "finding_count": len(res.findings)})
+            line = progress_line(self.now(), self.run_id, stage, res).replace(f"| {res.status} |", "| reused |", 1)
+            self.store.append_progress(self.token, line)
+        self._save("running")
+
     def check_inputs(self, stage):
         """A blocked result for stages 2+ when the inputs differ from the frozen manifest (or were never frozen), else None."""
         if stage.number <= INTAKE:

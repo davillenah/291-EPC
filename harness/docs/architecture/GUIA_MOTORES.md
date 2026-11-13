@@ -466,3 +466,22 @@ if __name__ == "__main__":
 ## 18. Qué decirme al volver de ese chat
 
 Para integrarlo al programa necesito (y, si es una norma, también las partes de la norma ingeridas y a qué jurisdicción se agrega): el **nombre del área**, **qué recibe** (JSON o archivos y de qué tipo), **qué entrega** (claves del JSON y archivos), **de qué depende**, si va **en proceso o como subproceso**, qué **disciplina/subdisciplina** sirve (para registrar capas, símbolos y tipos), y si tendrá **pantalla** en el editor de planos o en la consola.
+
+## Re-run from a stage
+
+`epc run <project> --from-stage N` (API `run_pipeline(from_stage=N)`, MCP `epc_pipeline_run` argument `from_stage`) re-runs only stages N to 16. The recorded results of stages 1 to N-1 are reused, so a correction that touches only late inputs does not repeat the calculation or the drawings (the drawings are 78 % of a run).
+
+Choose N as the first stage that reads something that changed. The pipeline is linear, so every stage after N runs again too.
+
+| What changed | First stage to re-run |
+|---|---|
+| Intake answers, load list, files in `inputs/` | none: run from the start (reuse is refused) |
+| Criteria, assumptions, requirements | 2 |
+| Board, circuits, feeders, upstream or title block in `engine_inputs`, `criteria` | 4 |
+| `engine_inputs.drawings` (the drawing date) | 14 |
+| `engine_inputs.boq`, `datasheets`, `rfq` | 15 |
+| Revision label, signatures | 16 |
+
+Reuse is refused, before anything is written (error `cannot_resume`), when: a stage before N has no record or did not finish `ok`; stages 1 and 2, replayed in memory (they only copy and merge), give another result than the recorded one (intake answers, load list or `inputs/` changed); or an engine reports another version than the one that produced a recorded stage. The workflow is the same as for any rerun: the project must be in a state that allows it (a correction after review).
+
+A resumed project holds exactly what a full run with the same inputs holds (`harness/tests/integration/test_resume.py` compares stages 1 to 15 of both).

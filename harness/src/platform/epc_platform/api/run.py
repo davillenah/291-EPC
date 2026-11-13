@@ -38,13 +38,25 @@ def _authorise(trail, actor, root):
     raise ApiError("permission_denied", reason, {"role": actor["role"], "transition": "start_run"})
 
 
-def _execute(trail, actor, context, stop_after, clock):
+def _start_detail(stop_after, revision, from_stage):
+    return {"stop_after": stop_after, "revision": revision, **({"from_stage": from_stage} if from_stage else {})}
+
+
+def _fail(trail, actor, name, exc, from_stage):
+    """Log the failed run and raise it as an API error: `cannot_resume` when the stages before `from_stage` cannot be reused, else `run_failed`."""
+    resume = isinstance(exc, pipeline.ResumeError)
+    message = str(exc) if resume else f"{type(exc).__name__}: {exc}"
+    trail.record(actor, "run:finish", name, "failed", {"error": message})
+    details = {"pipeline_run_id": trail.run_id, **({"from_stage": from_stage} if resume else {})}
+    raise ApiError("cannot_resume" if resume else "run_failed", message, details) from exc
+
+
+def _execute(trail, actor, context, stop_after, clock, from_stage=None):
     name = context.store.root.name
     try:
-        result = pipeline.run(context, stop_after=stop_after, run_id=trail.run_id, clock=clock)
+        result = pipeline.run(context, stop_after=stop_after, run_id=trail.run_id, clock=clock, from_stage=from_stage)
     except Exception as exc:  # the run is reported, not raised
-        trail.record(actor, "run:finish", name, "failed", {"error": f"{type(exc).__name__}: {exc}"})
-        raise ApiError("run_failed", f"{type(exc).__name__}: {exc}", {"pipeline_run_id": trail.run_id}) from exc
+        _fail(trail, actor, name, exc, from_stage)
     trail.record(actor, "run:finish", name, "ok" if result.summary["ok"] else "failed", result.summary)
     return result
 
@@ -67,8 +79,11 @@ def _prepare(root, who, loads, engine_inputs):
 
 
 @api_call
-def run_pipeline(project_dir, *, loads=None, engine_inputs=None, stop_after=None, run_id=None, clock, actor, revision="R0", detail=True, rng=None):
-    """Run the pipeline in the project. `loads` and `engine_inputs` are the load list and the extra calculation inputs (see the stage docs)."""
+def run_pipeline(project_dir, *, loads=None, engine_inputs=None, stop_after=None, run_id=None, clock, actor, revision="R0", detail=True, rng=None, from_stage=None):
+    """Run the pipeline in the project. `loads` and `engine_inputs` are the load list and the extra calculation inputs (see the stage docs).
+
+    `from_stage` N re-runs only stages N.. and reuses the recorded results of the earlier ones when they are still valid (a correction that
+    only touches late inputs, such as the bill of quantities or the drawing date, does not repeat the calculation)."""
     root, who = existing_project(project_dir), actor_of(actor)
     log = open_log(root, clock)
     trail = _trail(log, clock, run_id, rng)
@@ -76,9 +91,9 @@ def run_pipeline(project_dir, *, loads=None, engine_inputs=None, stop_after=None
     store, answers = _prepare(root, who, loads, engine_inputs)
     workflow = Workflow(root, log, store)
     flow.enter_running(workflow, who, trail.run_id)
-    trail.record(who, "run:start", root.name, "allowed", {"stop_after": stop_after, "revision": revision})
+    trail.record(who, "run:start", root.name, "allowed", _start_detail(stop_after, revision, from_stage))
     context = PipelineContext(answers=answers, loads=loads, engine_inputs=engine_inputs, store=store, revision=revision)
-    result = _execute(trail, who, context, stop_after, clock)
+    result = _execute(trail, who, context, stop_after, clock, from_stage)
     if result.summary["ok"] and result.summary["stages_run"] == len(STAGES):
         flow.apply(workflow, "finish_run", who, trail.run_id)
     run = result.to_dict()
