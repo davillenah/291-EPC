@@ -1,4 +1,4 @@
-"""Stage 14 (drawings) and stage 15 (documents): they call the engines that draw and write; the discipline draws and writes nothing.
+"""Stage 10 (drawings) and stage 11 (documents): they call the engines that draw and write; the discipline draws and writes nothing.
 
 Drawings are written by `epc_drawing.board_design.design` only under `context.work_dir`. The documents are the structured
 documents `epc_aea90364.board_memo` produces from the same calculation (single source), plus the terminal-block list of `epc_terminal_blocks` (MIG-39b, no file) and, only when the engineer gives `engine_inputs["boq"]["allowance_pct"]`, the draft bill of quantities of `epc_boq` (MIG-39c, no file) and, only when `engine_inputs["datasheets"]["catalog_dir"]` names a catalog folder, the draft datasheets of `epc_datasheets` (MIG-39d, no file) and, only when the BOQ was produced and `engine_inputs["rfq"]` carries the commercial terms, the draft request for quotation of `epc_rfq` (MIG-39e, no file, no prices) and, whenever the context has the profile and the design basis of stage 2, the draft design-basis document of `epc_design_basis` (MIG-39f, no file; the limits are read by the engine from the calculation engines) and, right after it (it consumes it), the draft descriptive report of `epc_descriptive_report` (MIG-39g, no file); the ones whose engine does not exist
@@ -51,7 +51,7 @@ def drawing_date(context):
 
 
 class DrawingsStage(Stage):
-    """Stage 14: the single-line diagram of the board, drawn by the drawing engine into `<work_dir>/drawings/<board name>/out`."""
+    """Stage 10: the single-line diagram of the board, drawn by the drawing engine into `<work_dir>/drawings/<board name>/out`."""
 
     wired = True
     wiring_task = "MIG-30c"
@@ -82,7 +82,7 @@ TERMINAL_ENGINE = "quality/terminal_blocks"
 
 
 def terminal_circuits(ch):
-    """The terminal-list input of each circuit, selected from the engine result of stages 8 and 12 (no arithmetic)."""
+    """The terminal-list input of each circuit, selected from the engine result of stages 6 and 8 (no arithmetic)."""
     rows = []
     for tag, data in ch["calc"]["datos"].items():
         detail = ch["calc"]["detalle"][tag]
@@ -98,7 +98,7 @@ NO_ALLOWANCE = "no_allowance_pct"
 
 
 def boq_circuits(ch):
-    """The bill-of-quantities input of each circuit, selected from the engine result of stages 8 and 12 (no arithmetic). The first element of the device chain is the protective device."""
+    """The bill-of-quantities input of each circuit, selected from the engine result of stages 6 and 8 (no arithmetic). The first element of the device chain is the protective device."""
     rows = []
     for tag, data in ch["calc"]["datos"].items():
         detail = ch["calc"]["detalle"][tag]
@@ -160,7 +160,7 @@ def report_circuits(ch):
 
 
 def unreviewed_norm_records(context, calls):
-    """Number of norm records not verified among those of the engines called so far in this run (the count the manifests of stage 16 list; read only)."""
+    """Number of norm records not verified among those of the engines called so far in this run (the count the manifest of stage 12 lists; read only)."""
     previous = [c for number in sorted(context.results) for c in context.results[number].engine_calls]
     records = read_norm_records(sorted({c["function"].split(".")[0] for c in previous + calls}))
     return sum(1 for r in records if r["review_status"] != VERIFIED)
@@ -172,7 +172,7 @@ def document_entry(name, document):
 
 
 class DocumentsStage(Stage):
-    """Stage 15: calculation memo and project summary from the engine, the terminal-block list (MIG-39b); the other documents are reported as planned."""
+    """Stage 11: calculation memo and project summary from the engine, the terminal-block list (MIG-39b); the other documents are reported as planned."""
 
     wired = True
     wiring_task = "MIG-30c"

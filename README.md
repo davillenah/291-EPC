@@ -18,13 +18,13 @@ Agents never write a number. Every value comes from an engine (through the `epc`
 | Skills and plugins | `harness/.claude/skills/`, `harness/.claude/plugins/` | Repeatable workflows; never hold norm values. |
 | Hooks and permissions | `harness/.claude/hooks/`, `harness/src/platform/epc_platform/permissions/` | Agents cannot write `ssot/`, `deliverables/`, `inputs/` or norm data. |
 | Engines | `harness/src/engines/` | Calculation, CAD, validation, quality and procurement engines (Python, standard library first). |
-| Disciplines | `harness/src/disciplines/` | One folder per discipline; `electrical_lv` has a 16-stage pipeline, the others are planned. |
+| Disciplines | `harness/src/disciplines/` | One folder per discipline; `electrical_lv` has a 12-stage pipeline, the others are planned. |
 | Platform and MCP | `harness/src/platform/` | Single source of truth store, hash-chained event log, manifests, MCP server and CLI. |
 | Projects | `projects/<code>/` | Client data. Never versioned here; only `projects/_template` is. |
 
 ## Status
 
-- Electrical low voltage (AEA 90364, Argentina): in development, 16-stage pipeline.
+- Electrical low voltage (AEA 90364, Argentina): in development, 12-stage pipeline.
 - Civil/structural, mechanical, HVAC, piping, fire protection, instrumentation and control, telecommunications: folders, contract and lead agents created; no engines yet.
 - Norm values are `pending review` until a person approves them. No deliverable is "approved for construction" while it uses an unreviewed value.
 

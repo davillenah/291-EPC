@@ -152,11 +152,12 @@ def files_of(project):
 
 
 def stage_of(run_dict, number):
-    return next(r for r in run_dict["results"] if r["stage"] == number)
+    """The result of a stage by its NUMBER IN THE 16-SLICE VOCABULARY of the reference quantities and of `epc_calc_check` (the 12 physical stages hold those slices)."""
+    return next(r for r in M.calc_stage.logical_results(run_dict["results"]) if r["stage"] == number)
 
 
 def dxf_bytes(proj):
-    out14 = proj.ssot("stage_14_drawings.json")["outputs"]
+    out14 = proj.ssot("stage_10_drawings.json")["outputs"]
     base = proj.project / ".epc" / "runs" / proj.run_id / out14["directory"]
     return {f"{out14['directory']}/{f['path']}": (base / f["path"]).read_bytes() for f in out14["files"] if f["path"].endswith(".dxf")}
 
@@ -191,7 +192,7 @@ class DryRun:
 
     @property
     def check_project(self):
-        """The engine inputs `calc_check` recomputes from, taken from an in-process run of stages 1-13 of the same inputs."""
+        """The engine inputs `calc_check` recomputes from, taken from an in-process run of stages 1-9 of the same inputs."""
         if "check_project" not in self.cache:
             aux = M.S.SyntheticRun()
             self.stack.callback(aux.cleanup)
@@ -199,7 +200,7 @@ class DryRun:
             store = M.store.ProjectStore(aux.project)
             ctx = M.stages.PipelineContext(answers=store.read_answers(), loads=M.S.read_json(M.S.GOLDEN / "loads.json"), engine_inputs=aux.engine_inputs,
                                            store=store, revision="R0")
-            M.pipeline.run(ctx, stop_after=13, run_id=M.S.RUN_ID, clock=M.S.clock)
+            M.pipeline.run(ctx, stop_after=9, run_id=M.S.RUN_ID, clock=M.S.clock)
             self.cache["check_project"] = M.calc_stage.engine_inputs_for_check(ctx)
         return self.cache["check_project"]
 
@@ -280,7 +281,7 @@ def c2(run):
 
 
 def boq_plumbing(res):
-    """For each quantity list of the template: does stage 15 produce the document with line items? -> (documents present, total documents asked)."""
+    """For each quantity list of the template: does stage 11 produce the document with line items? -> (documents present, total documents asked)."""
     docs = {d["name"]: d["document"] for d in stage_of(res, 15)["outputs"]["documents"]}
     return {"boq": "boq" in docs and bool(docs["boq"]), "terminal_block_list": "terminal_block_list" in docs and bool(docs["terminal_block_list"])}
 
@@ -292,7 +293,7 @@ def c4(run):
     asked = len(V.BOQ_QUANTITIES)
     facts = {"boq_quantities_listed": asked, "documents_present": sum(present.values()), "documents_asked": len(present), "owner_cells_filled": filled}
     evidence = [f"La plantilla lista {asked} cantidades de lista o BOQ por comparar; la corrida sintética produce {facts['documents_present']} de {facts['documents_asked']} "
-                "documentos de cantidades (BOQ y lista de bornes) en la etapa 15.",
+                "documentos de cantidades (BOQ y lista de bornes) en la etapa 11.",
                 "La referencia y la tolerancia de cantidades las pone el dueño (celdas vacías en la plantilla); la comparación es la tarea MIG-44."]
     gaps = [f"No se produjo el documento {name}." for name, ok in present.items() if not ok]
     return result(4, "needs_owner_values" if not gaps else "fail", evidence, gaps, facts)
@@ -310,7 +311,7 @@ def stage_coverage(res):
 
 
 def document_state(res):
-    """Documents with number tokens whose engine left no call in stage 15: [(name, tokens)]; plus the total of tokens."""
+    """Documents with number tokens whose engine left no call in stage 11: [(name, tokens)]; plus the total of tokens."""
     stage15 = stage_of(res, 15)
     functions = [c["function"] for c in stage15["engine_calls"]]
     docs = stage15["outputs"]["documents"]
@@ -338,7 +339,7 @@ def c3(run):
     facts = {"stages": len(rows), "numeric_leaves": total, "leaves_with_engine_call": covered, "coverage_pct": pct, "stages_with_numbers_and_no_call": len(uncovered),
              "document_number_tokens": tokens, "documents": documents, "engine_packages": packages, "packages_without_norm_record": len(orphan_packages), **{f"stage_{s}_numeric_leaves": n for s, n, _ in uncovered}}
     evidence = [f"De {total} valores numéricos de las salidas de las {len(rows)} etapas, {covered} ({pct} %) pertenecen a una etapa con al menos una llamada a motor registrada.",
-                f"Los {documents} documentos de la etapa 15 traen {tokens} números escritos en su texto; cada documento tiene registrada la llamada de su motor "
+                f"Los {documents} documentos de la etapa 11 traen {tokens} números escritos en su texto; cada documento tiene registrada la llamada de su motor "
                 f"({len(unmatched_docs)} documentos sin llamada).",
                 f"De {packages} paquetes de motor llamados, {packages - len(orphan_packages)} tienen registros de norma en los manifiestos; los otros {len(orphan_packages)} no tienen registros propios "
                 "(motores de dibujo, listas y verificación)."]
@@ -443,7 +444,7 @@ def changed_input_outcome(run):
 
 
 def c6(run):
-    base, files = run.run_dict, dxf_bytes(run.primary)
+    base, files = dict(run.run_dict, results=M.calc_stage.logical_results(run.run_dict["results"])), dxf_bytes(run.primary)      # the 16 slices `epc_calc_check` reads
     clean = [f for f in M.calc_check.check_run(copy.deepcopy(base), project=copy.deepcopy(run.check_project), files=files, run_id="dry-run") if f["severity"] != "note"]
     outcomes = {name: seeded_outcome(base, run.check_project, files, spec) for name, spec in M.seeded.CASES.items()}
     outcomes["a byte of a drawing file changed"] = dxf_flip_outcome(base, run.check_project, files)
@@ -509,7 +510,7 @@ def c7(run):
     _, pending = M.S.envelope(run.primary.root, "norms-pending", *M.S.ORCHESTRATOR)
     facts = {"records_listed": listed["listed"], "records_not_verified": listed["not_verified"], "schema_errors_when_forced": schema_errors,
              "pending_points_in_register": pending["data"]["pending_points"]}
-    evidence = [f"La etapa 16 lista {facts['records_listed']} registros de norma en los manifiestos y {facts['records_not_verified']} no están verificados; el registro de norma "
+    evidence = [f"La etapa 12 lista {facts['records_listed']} registros de norma en los manifiestos y {facts['records_not_verified']} no están verificados; el registro de norma "
                 f"de los motores tiene {facts['pending_points_in_register']} puntos pendientes (epc norms-pending).",
                 "Pedir approved_for_construction con esos registros levanta ApprovalBlocked" + (" (bloqueo verificado)." if blocked else " (NO se bloqueó)."),
                 "Con los mismos registros marcados verificados el pedido se acepta, o sea que el bloqueo depende de los registros y no es general." if accepted else
@@ -566,7 +567,7 @@ def permission_matrix(roles):
 
 def c8(run):
     roles = [a["name"] for a in M.S.read_json(REPO / "harness" / ".claude" / "roster.json")["agents"]]
-    files = (".epc/project_profile.json", ".epc/master_project_state.json", ".epc/ssot/stage_01_intake.json", ".epc/ssot/stage_16_package_issue.json", "inputs/intake_answers.json",
+    files = (".epc/project_profile.json", ".epc/master_project_state.json", ".epc/ssot/stage_01_intake.json", ".epc/ssot/stage_12_package_issue.json", "inputs/intake_answers.json",
              ".epc/audit/events.jsonl", run.primary.manifests()[0].relative_to(run.primary.project).as_posix())
     denied, reads_allowed = permission_matrix(roles)
     writes, reads, opaque, exempt = hook_matrix(run.primary, roles, files)
@@ -639,7 +640,7 @@ def change_one_load(proj):
 
 
 def stage_outputs(proj):
-    return {n: M.S.read_json(p)["outputs"] for n, p in zip(range(1, 17), proj.stage_files())}
+    return {n: M.S.read_json(p)["outputs"] for n, p in zip(range(1, 13), proj.stage_files())}
 
 
 def executed_stages(proj, run_id):

@@ -321,13 +321,12 @@ class FileFormatTests(TempCase):
 class PipelineWithStoreTests(TempCase):
     def test_a_run_writes_the_profile_state_progress_and_stage_files(self):
         store = self.new_store()
-        res = self.run_to(store, 4)
-        self.assertEqual([r.status for r in res.results], ["ok", "ok", "ok", "blocked"])
+        res = self.run_to(store, 3)
+        self.assertEqual([r.status for r in res.results], ["ok", "ok", "blocked"])
         self.assertEqual(store.read_profile(), build_profile(ANSWERS))
         self.assertTrue(store.is_frozen())
         names = sorted(p.name for p in (store.root / ".epc" / "ssot").iterdir())
-        self.assertEqual(names, ["inputs_manifest.json", "stage_01_intake.json", "stage_02_requirements.json",
-                                 "stage_03_input_verification.json", "stage_04_load_schedule.json"])
+        self.assertEqual(names, ["inputs_manifest.json", "stage_01_intake.json", "stage_02_requirements_inputs.json", "stage_03_loads_demand.json"])
         for r in res.results:
             spec = STAGES[r.stage - 1].spec
             on_disk = store.read_ssot(f"stage_{r.stage:02d}_{spec.slug}.json")
@@ -335,46 +334,45 @@ class PipelineWithStoreTests(TempCase):
         progress = store.read_progress().splitlines()
         self.assertEqual(progress[2:], [
             "2026-01-01T00:00:00Z | run r1 | stage 1 intake | ok | -",
-            "2026-01-01T00:00:00Z | run r1 | stage 2 requirements | ok | -",
-            "2026-01-01T00:00:00Z | run r1 | stage 3 input_verification | ok | -",
-            f"2026-01-01T00:00:00Z | run r1 | stage 4 load_schedule | blocked | {res.results[3].message.replace('|', '/')}"])
+            "2026-01-01T00:00:00Z | run r1 | stage 2 requirements_inputs | ok | -",
+            f"2026-01-01T00:00:00Z | run r1 | stage 3 loads_demand | blocked | {res.results[2].message.replace('|', '/')}"])
         self.assertEqual(store.read_ssot("stage_01_intake.json")["outputs"]["inputs_manifest"], store.read_ssot(S.MANIFEST_NAME))
 
     def test_the_state_follows_the_run(self):
         store = self.new_store()
-        res = self.run_to(store, 4)
+        res = self.run_to(store, 3)
         state = store.read_state()
         self.assertEqual(validate(state, load_schema(STATE_SCHEMA)), [])
         self.assertEqual((state["status"], state["pipeline_run_id"]), ("blocked", "r1"))
         self.assertEqual([(s["number"], s["slug"], s["status"], s["finding_count"]) for s in state["stages"]],
-                         [(1, "intake", "ok", 0), (2, "requirements", "ok", 0), (3, "input_verification", "ok", 0),
-                          (4, "load_schedule", "blocked", len(res.results[3].findings))])
+                         [(1, "intake", "ok", 0), (2, "requirements_inputs", "ok", 0),
+                          (3, "loads_demand", "blocked", len(res.results[2].findings))])
         self.assertEqual({(s["started"], s["finished"]) for s in state["stages"]}, {("2026-01-01T00:00:00Z", "2026-01-01T00:00:00Z")})
-        self.assertEqual(state["open_findings"], res.results[3].findings)
+        self.assertEqual(state["open_findings"], res.results[2].findings)
         self.assertTrue(state["open_findings"])
 
     def test_a_partial_run_is_paused_and_a_full_walk_is_completed(self):
         store = self.new_store()
-        self.run_to(store, 3)
+        self.run_to(store, 2)
         self.assertEqual(store.read_state()["status"], "paused")
         self.assertEqual(store.read_state()["open_findings"], [])
         self.assertTrue((store.root / ".epc" / "runs" / "r1").is_dir())
 
     def test_a_rerun_keeps_revisions_and_signatures(self):
         store = self.new_store()
-        self.run_to(store, 3)
+        self.run_to(store, 2)
         with store.pipeline_session("manual") as token:
             state = dict(store.read_state(), signatures=[{"by": "engineer"}], revisions=[{"rev": "A"}])
             store.write_state(token, state)
-        self.run_to(store, 3, run_id="r2")
+        self.run_to(store, 2, run_id="r2")
         state = store.read_state()
         self.assertEqual((state["pipeline_run_id"], state["signatures"], state["revisions"]), ("r2", [{"by": "engineer"}], [{"rev": "A"}]))
 
     def test_a_changed_input_blocks_stage_2(self):
         store = self.new_store()
-        self.run_to(store, 3)
+        self.run_to(store, 2)
         (store.inputs_dir / "plans" / "a1.dxf").write_text("edited after intake", encoding="utf-8")
-        res = self.run_to(store, 3, run_id="r2")
+        res = self.run_to(store, 2, run_id="r2")
         self.assertEqual([r.status for r in res.results], ["ok", "blocked"])
         self.assertEqual(res.summary["stopped_at"], 2)
         finding = res.results[1].findings[0]
@@ -383,7 +381,7 @@ class PipelineWithStoreTests(TempCase):
         state = store.read_state()
         self.assertEqual((state["status"], state["stages"][-1]["status"]), ("blocked", "blocked"))
         self.assertEqual(state["open_findings"], res.results[1].findings)
-        self.assertIn("stage 2 requirements | blocked | 1 input file(s) changed since intake", store.read_progress())
+        self.assertIn("stage 2 requirements_inputs | blocked | 1 input file(s) changed since intake", store.read_progress())
 
     def test_stages_after_intake_do_not_run_on_inputs_that_were_never_frozen(self):
         store = self.new_store()
@@ -405,7 +403,7 @@ class PipelineWithStoreTests(TempCase):
         trees = []
         for name in ("one", "two"):
             store = self.new_store(name)
-            self.run_to(store, 4)
+            self.run_to(store, 3)
             trees.append(tree_bytes(store.root))
         self.assertEqual(trees[0], trees[1])
         self.assertIn(".epc/ssot/stage_01_intake.json", trees[0])
@@ -414,17 +412,17 @@ class PipelineWithStoreTests(TempCase):
 
     def test_no_temp_files_remain_after_a_run(self):
         store = self.new_store()
-        self.run_to(store, 4)
+        self.run_to(store, 3)
         self.assertEqual([p.name for p in store.root.rglob("*.tmp")], [])
 
     def test_the_results_equal_a_run_without_a_store(self):
         store = self.new_store()
-        with_store = self.run_to(store, 4)
+        with_store = self.run_to(store, 3)
         plain_inputs = self.tmp() / "inputs" / "plans"
         plain_inputs.mkdir(parents=True)
         (plain_inputs / "a1.dxf").write_text("plan", encoding="utf-8")
         ctx = PipelineContext(answers=ANSWERS, inputs_dir=str(plain_inputs.parent), load_list_path=self.loads_path())
-        without = run(ctx, stop_after=4, run_id="r1", clock=CLOCK)
+        without = run(ctx, stop_after=3, run_id="r1", clock=CLOCK)
         self.assertEqual([r.to_dict() for r in with_store.results], [r.to_dict() for r in without.results])
         self.assertEqual(with_store.summary, without.summary)
 

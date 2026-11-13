@@ -1,4 +1,4 @@
-"""MIG-32: the transmittal manifest (PRD section 13), the D21 approval block, supersession and stage 16 (package issue).
+"""MIG-32: the transmittal manifest (PRD section 13), the D21 approval block, supersession and stage 12 (package issue).
 
 Needs the engine packages on PYTHONPATH (the gate's `harness-tests` environment has them). Synthetic data in temp folders only; nothing is
 written inside the repository's projects/ tree. The signature used in the supersede tests is synthetic test data, not a real signer.
@@ -315,15 +315,15 @@ class PackageIssueStageTests(unittest.TestCase):
         cls.addClassCleanup(cls.holder.cleanup)
         cls.store = new_store(cls.holder.name)
         cls.ctx, cls.res = wired_run(cls.store)
-        cls.stage = cls.res.results[15]
+        cls.stage = cls.res.results[11]
 
     def stored(self):
         return dict(self.store.read_manifests())
 
-    def test_stage_16_ran_and_the_other_pending_stages_are_unchanged(self):
+    def test_stage_12_ran_and_the_other_pending_stages_are_unchanged(self):
         self.assertEqual(self.stage.status, "ok", self.stage.message)
-        self.assertEqual(self.res.summary["not_available"], [6])
-        self.assertTrue(STAGES[15].wired)
+        self.assertEqual(self.res.summary["not_available"], [4])
+        self.assertTrue(STAGES[11].wired)
 
     def test_one_valid_draft_manifest_covers_every_drawing_file_and_document(self):
         stored = self.stored()
@@ -337,7 +337,7 @@ class PackageIssueStageTests(unittest.TestCase):
     def test_the_stage_output_equals_what_was_written(self):
         outs = {i["path"]: i["manifest"] for i in self.stage.outputs["manifests"]}
         self.assertEqual(outs, self.stored())
-        self.assertEqual(self.store.read_ssot("stage_16_package_issue.json")["outputs"]["transmittal"], self.stage.outputs["transmittal"])
+        self.assertEqual(self.store.read_ssot("stage_12_package_issue.json")["outputs"]["transmittal"], self.stage.outputs["transmittal"])
 
     def test_drawing_files_are_copied_to_the_transmittal_folder_and_hashed(self):
         (m,) = self.stored().values()
@@ -350,8 +350,8 @@ class PackageIssueStageTests(unittest.TestCase):
             self.assertEqual(f["sha256"], sha256_file(copy_file))
         self.assertEqual(sorted(p.name for p in (self.store.root / "deliverables" / "TR-001").iterdir()), sorted(f["path"] for f in drawings))
 
-    def test_document_entries_carry_the_hash_stage_15_recorded_and_no_path(self):
-        recorded = {d["name"]: d["sha256"] for d in self.res.results[14].outputs["documents"]}
+    def test_document_entries_carry_the_hash_stage_11_recorded_and_no_path(self):
+        recorded = {d["name"]: d["sha256"] for d in self.res.results[10].outputs["documents"]}
         (m,) = self.stored().values()
         docs = [f for f in m["files"] if not f["path"]]
         self.assertEqual(len(docs), 5)
@@ -386,19 +386,19 @@ class PackageIssueStageTests(unittest.TestCase):
         original = file.read_bytes()
         self.addCleanup(file.write_bytes, original)
         file.write_bytes(original + b"0\n")
-        res = STAGES[15].run(self.ctx)
+        res = STAGES[11].run(self.ctx)
         self.assertEqual((res.status, res.outputs), ("blocked", {}))
-        self.assertIn("changed after stage 14", res.message)
+        self.assertIn("changed after stage 10", res.message)
 
     def test_without_a_store_or_without_deliverables_it_is_not_available(self):
         ctx = W.context()
-        run(ctx, stop_after=15, run_id="x")
-        res = STAGES[15].run(ctx)
+        run(ctx, stop_after=11, run_id="x")
+        res = STAGES[11].run(ctx)
         self.assertEqual((res.status, res.outputs, res.reason), ("not_available", {}, "no_store"))
         self.assertIn("no project store", res.message)
         empty = PipelineContext(store=self.store, profile=self.ctx.profile)
         empty.results = {}
-        res = STAGES[15].run(empty)
+        res = STAGES[11].run(empty)
         self.assertEqual((res.status, res.outputs, res.reason), ("not_available", {}, "no_deliverables"))
 
     def test_a_bad_revision_label_blocks(self):
@@ -407,7 +407,7 @@ class PackageIssueStageTests(unittest.TestCase):
         ctx.pipeline_run_id = "r1"
         ctx.work_dir = self.ctx.work_dir
         ctx.revision = "../R1"
-        res = STAGES[15].run(ctx)
+        res = STAGES[11].run(ctx)
         self.assertEqual(res.status, "blocked")
 
 
@@ -437,7 +437,7 @@ class NamedDeliverablesTests(unittest.TestCase):
     def test_drawings_get_their_code_folder_and_pages_and_documents_get_a_code(self):
         with tempfile.TemporaryDirectory() as folder:
             store, res = named_run(folder)
-            self.assertEqual(res.results[15].status, "ok", res.results[15].message)
+            self.assertEqual(res.results[11].status, "ok", res.results[11].message)
             (manifest,) = [m for _, m in store.read_manifests()]
             by_name = {f["name"]: f for f in manifest["files"]}
             stem = f"{CODE}-E-LV-SLD-001_main_distribution_board"
@@ -451,36 +451,36 @@ class NamedDeliverablesTests(unittest.TestCase):
             for f in manifest["files"]:
                 if f["path"]:
                     self.assertEqual(sha256_file(store.root / "deliverables" / "TR-001" / f["path"]), f["sha256"])
-            self.assertTrue(res.results[15].outputs["naming"]["named"])
-            self.assertEqual([f["clause"] for f in res.results[15].findings if "CC-D06" in f["clause"] or "CC-F06" in f["clause"]], [])   # the hashes agree with the recorded ones
+            self.assertTrue(res.results[11].outputs["naming"]["named"])
+            self.assertEqual([f["clause"] for f in res.results[11].findings if "CC-D06" in f["clause"] or "CC-F06" in f["clause"]], [])   # the hashes agree with the recorded ones
 
     def test_a_deliverable_without_a_name_blocks_and_nothing_is_written(self):
         with tempfile.TemporaryDirectory() as folder:
             names = {k: v for k, v in NAMES.items() if k != "design_basis"}
             store, res = named_run(folder, names)
-            self.assertEqual(res.results[15].status, "blocked")
-            self.assertIn("design_basis: no entry", res.results[15].message)
+            self.assertEqual(res.results[11].status, "blocked")
+            self.assertIn("design_basis: no entry", res.results[11].message)
             self.assertEqual(store.read_manifests(), [])
 
     def test_a_project_code_that_is_not_aaaa_prov_cli_code_blocks(self):
         with tempfile.TemporaryDirectory() as folder:
             _store, res = named_run(folder, code="TEST-001")
-            self.assertEqual(res.results[15].status, "blocked")
-            self.assertIn("AAAA-PROVIDER-CLIENT-CODE", res.results[15].message)
+            self.assertEqual(res.results[11].status, "blocked")
+            self.assertIn("AAAA-PROVIDER-CLIENT-CODE", res.results[11].message)
 
     def test_two_deliverables_with_the_same_page_block(self):
         with tempfile.TemporaryDirectory() as folder:
             names = copy.deepcopy(NAMES)
             names[f"SLD_{CODE}_TABLA"]["page"] = 1
             _store, res = named_run(folder, names)
-            self.assertEqual(res.results[15].status, "blocked")
-            self.assertIn("share the path", res.results[15].message)
+            self.assertEqual(res.results[11].status, "blocked")
+            self.assertIn("share the path", res.results[11].message)
 
     def test_without_names_the_engine_names_are_kept(self):
         with tempfile.TemporaryDirectory() as folder:
             store = new_store(folder)
             ctx, res = wired_run(store)
-            self.assertFalse(res.results[15].outputs["naming"]["named"])
+            self.assertFalse(res.results[11].outputs["naming"]["named"])
             (manifest,) = [m for _, m in store.read_manifests()]
             self.assertTrue(all(f["code"] is None for f in manifest["files"]))
 
@@ -516,7 +516,7 @@ class NamingTests(unittest.TestCase):
 
 
 class BillOfQuantitiesManifestTests(unittest.TestCase):
-    """MIG-39c: the bill of quantities (no file) gets a draft manifest like the other documents of stage 15, only when stage 15 produced it."""
+    """MIG-39c: the bill of quantities (no file) gets a draft manifest like the other documents of stage 11, only when stage 11 produced it."""
 
     def test_a_draft_manifest_for_the_bill_when_it_was_produced(self):
         with tempfile.TemporaryDirectory() as folder:
@@ -525,7 +525,7 @@ class BillOfQuantitiesManifestTests(unittest.TestCase):
             ctx.revision = "R0"
             ctx.engine_inputs["boq"] = {"allowance_pct": 5}
             res = run(ctx, run_id="r1", clock=CLOCK)
-            self.assertEqual(res.results[15].status, "ok", res.results[15].message)
+            self.assertEqual(res.results[11].status, "ok", res.results[11].message)
             names = file_names(store)
             self.assertIn("boq", names)
             self.assertEqual(len(names), 8)
@@ -534,7 +534,7 @@ class BillOfQuantitiesManifestTests(unittest.TestCase):
 
 
 class DatasheetsManifestTests(unittest.TestCase):
-    """MIG-39d: the datasheets (no file) get a draft manifest like the other documents of stage 15, only when stage 15 produced them."""
+    """MIG-39d: the datasheets (no file) get a draft manifest like the other documents of stage 11, only when stage 11 produced them."""
 
     def test_a_draft_manifest_for_the_datasheets_when_they_were_produced(self):
         with tempfile.TemporaryDirectory() as folder, tempfile.TemporaryDirectory() as catalog:
@@ -544,7 +544,7 @@ class DatasheetsManifestTests(unittest.TestCase):
             ctx.revision = "R0"
             ctx.engine_inputs["datasheets"] = {"catalog_dir": catalog}
             res = run(ctx, run_id="r1", clock=CLOCK)
-            self.assertEqual(res.results[15].status, "ok", res.results[15].message)
+            self.assertEqual(res.results[11].status, "ok", res.results[11].message)
             names = file_names(store)
             self.assertIn("datasheets", names)
             self.assertEqual(len(names), 8)
@@ -553,7 +553,7 @@ class DatasheetsManifestTests(unittest.TestCase):
 
 
 class RfqManifestTests(unittest.TestCase):
-    """MIG-39e: the RFQ (no file) gets a draft manifest like the other documents of stage 15, only when stage 15 produced it."""
+    """MIG-39e: the RFQ (no file) gets a draft manifest like the other documents of stage 11, only when stage 11 produced it."""
 
     def test_a_draft_manifest_for_the_rfq_when_it_was_produced(self):
         with tempfile.TemporaryDirectory() as folder:
@@ -563,7 +563,7 @@ class RfqManifestTests(unittest.TestCase):
             ctx.engine_inputs["boq"] = {"allowance_pct": 5}
             ctx.engine_inputs["rfq"] = W.RFQ_TERMS
             res = run(ctx, run_id="r1", clock=CLOCK)
-            self.assertEqual(res.results[15].status, "ok", res.results[15].message)
+            self.assertEqual(res.results[11].status, "ok", res.results[11].message)
             names = file_names(store)
             self.assertIn("rfq", names)
             self.assertEqual(len(names), 9)
@@ -581,7 +581,7 @@ class RfqManifestTests(unittest.TestCase):
 
 
 class DesignBasisManifestTests(unittest.TestCase):
-    """MIG-39f: the design basis (no file) gets a draft manifest like the other documents of stage 15."""
+    """MIG-39f: the design basis (no file) gets a draft manifest like the other documents of stage 11."""
 
     def test_a_draft_manifest_for_the_design_basis(self):
         with tempfile.TemporaryDirectory() as folder:
@@ -589,7 +589,7 @@ class DesignBasisManifestTests(unittest.TestCase):
             ctx = W.context(profile=build_profile(ANSWERS), store=store)
             ctx.revision = "R0"
             res = run(ctx, run_id="r1", clock=CLOCK)
-            self.assertEqual(res.results[15].status, "ok", res.results[15].message)
+            self.assertEqual(res.results[11].status, "ok", res.results[11].message)
             self.assertEqual(file_names(store).count("design_basis"), 1)
             (manifest,) = [m for _, m in store.read_manifests()]
             self.assertEqual((M.check(manifest), manifest["review_status"], manifest["signed"]), ([], "draft", None))
@@ -624,13 +624,13 @@ class RegenerationTests(unittest.TestCase):
             wired_run(store, "R0", "r1")
             self.sign(store, self.REL)
             _, res = wired_run(store, "R1", "r2")
-            self.assertEqual(res.results[15].status, "ok", res.results[15].message)
+            self.assertEqual(res.results[11].status, "ok", res.results[11].message)
             after = dict(store.read_manifests())
             self.assertEqual(sorted(after), [self.REL, ".epc/manifests/TR-002.manifest.json"])
             old, new = after[self.REL], after[".epc/manifests/TR-002.manifest.json"]
             self.assertEqual((old["superseded_by"], old["signed"], old["superseded_signature"]), ("TR-002/R1", None, SIGNATURE))
             self.assertEqual((new["supersedes"], new["signed"], new["revision"]), ("TR-001/R0", None, "R1"))
-            self.assertEqual(len(res.results[15].outputs["superseded"]), 1)
+            self.assertEqual(len(res.results[11].outputs["superseded"]), 1)
             self.assertTrue((store.root / "deliverables" / "TR-001").is_dir() and (store.root / "deliverables" / "TR-002").is_dir())
             for m in after.values():
                 self.assertEqual(M.check(m), [])
@@ -640,7 +640,7 @@ class RegenerationTests(unittest.TestCase):
             store = new_store(tmp)
             wired_run(store, "R0", "r1")
             _, res = wired_run(store, "R0", "r2")
-            self.assertEqual(res.results[15].status, "ok", res.results[15].message)
+            self.assertEqual(res.results[11].status, "ok", res.results[11].message)
             ((rel, m),) = store.read_manifests()
             self.assertEqual((rel, m["transmittal"], m["pipeline_run_id"], m["supersedes"]), (self.REL, "TR-001", "r2", None))
 
@@ -650,8 +650,8 @@ class RegenerationTests(unittest.TestCase):
             wired_run(store, "R0", "r1")
             self.sign(store, self.REL)
             _, res = wired_run(store, "R0", "r2")
-            self.assertEqual(res.results[15].status, "blocked")
-            self.assertIn("is signed", res.results[15].message)
+            self.assertEqual(res.results[11].status, "blocked")
+            self.assertIn("is signed", res.results[11].message)
             self.assertEqual(store.read_json(self.REL)["signed"], SIGNATURE)
 
 

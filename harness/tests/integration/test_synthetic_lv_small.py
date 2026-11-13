@@ -43,11 +43,11 @@ class RunCompletes(SyntheticRunCase):
             schema = {"intake_answers.json": "intake_answers.schema.json", "loads.json": "load_list.schema.json"}[name]
             self.assertEqual(validate(S.read_json(S.GOLDEN / name), load_schema(schema)), [], name)
 
-    def test_all_16_stages_ran_and_are_ok(self):
-        self.assertEqual(len(STAGES), 16)
-        self.assertEqual([r["stage"] for r in self.result["results"]], list(range(1, 17)))
-        self.assertEqual([r["status"] for r in self.result["results"]], ["ok"] * 16)
-        self.assertEqual(self.result["summary"]["by_status"], {"ok": 16})
+    def test_all_12_stages_ran_and_are_ok(self):
+        self.assertEqual(len(STAGES), 12)
+        self.assertEqual([r["stage"] for r in self.result["results"]], list(range(1, 13)))
+        self.assertEqual([r["status"] for r in self.result["results"]], ["ok"] * 12)
+        self.assertEqual(self.result["summary"]["by_status"], {"ok": 12})
         self.assertEqual((self.result["summary"]["ok"], self.result["summary"]["not_available"], self.result["summary"]["stopped_at"]), (True, [], None))
         self.assertEqual(self.env["data"]["workflow_state"], "draft_ready")
 
@@ -55,7 +55,7 @@ class RunCompletes(SyntheticRunCase):
         code, env = S.envelope(self.proj.root, "status", S.CODE, *S.ORCHESTRATOR)
         self.assertEqual((code, env["ok"]), (0, True))
         data = env["data"]
-        self.assertEqual((data["workflow"]["state"], data["state"]["status"], len(data["state"]["stages"])), ("draft_ready", "completed", 16))
+        self.assertEqual((data["workflow"]["state"], data["state"]["status"], len(data["state"]["stages"])), ("draft_ready", "completed", 12))
         self.assertTrue(data["audit"]["chain_intact"])
 
     def test_findings_are_exactly_the_expected_notes(self):
@@ -64,9 +64,9 @@ class RunCompletes(SyntheticRunCase):
             key = (f["clause"], f["severity"])
             found[key] = found.get(key, 0) + 1
         self.assertEqual(found, EXPECTED_FINDINGS)
-        calc_check = [r for r in self.result["results"] if r["stage"] == 13][0]
+        calc_check = [r for r in self.result["results"] if r["stage"] == 9][0]
         self.assertEqual(sum(calc_check["outputs"]["by_severity"][s] for s in ("blocking", "major", "minor")), 0)
-        package = [r for r in self.result["results"] if r["stage"] == 16][0]
+        package = [r for r in self.result["results"] if r["stage"] == 12][0]
         self.assertEqual(package["outputs"]["calc_check"]["findings_count"], 0)
 
 
@@ -87,7 +87,7 @@ class ProjectFilesAreRecorded(SyntheticRunCase):
     def test_progress_log_has_one_line_per_stage(self):
         lines = (self.root / ".epc" / "epc-progress.txt").read_text(encoding="utf-8").splitlines()
         stage_lines = [line for line in lines if f"run {S.RUN_ID} | stage" in line]
-        self.assertEqual(len(stage_lines), 16)
+        self.assertEqual(len(stage_lines), 12)
         self.assertTrue(all(" | ok | " in line for line in stage_lines))
 
     def test_the_event_log_chain_verifies(self):
@@ -111,8 +111,8 @@ class Deliverables(SyntheticRunCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.manifests = {p.name: S.read_json(p) for p in cls.proj.manifests()}
-        cls.package = cls.proj.ssot("stage_16_package_issue.json")
-        cls.documents = {d["name"]: d for d in cls.proj.ssot("stage_15_documents.json")["outputs"]["documents"]}
+        cls.package = cls.proj.ssot("stage_12_package_issue.json")
+        cls.documents = {d["name"]: d for d in cls.proj.ssot("stage_11_documents.json")["outputs"]["documents"]}
         cls.sources = {row["name"]: row["source"] for row in cls.package["outputs"]["transmittal"]["files"]}
 
     def test_the_expected_summary_matches_what_was_produced(self):
@@ -184,13 +184,13 @@ class Deliverables(SyntheticRunCase):
         self.assertEqual((transmittal["id"], transmittal["review_status"], transmittal["revision"]), (manifest["transmittal"], "draft", "R0"))
         self.assertTrue((self.root / transmittal["manifest"]).is_file())
 
-    def test_drawing_files_exist_and_are_listed_by_stage_14(self):
-        stage14 = self.proj.ssot("stage_14_drawings.json")["outputs"]
-        names = {f["path"] for f in stage14["files"]}
+    def test_drawing_files_exist_and_are_listed_by_stage_10(self):
+        stage10 = self.proj.ssot("stage_10_drawings.json")["outputs"]
+        names = {f["path"] for f in stage10["files"]}
         for sheet in S.read_json(S.GOLDEN / "expected_summary.json")["drawings"]["sheets"]:
             self.assertIn(f"{sheet}.dxf", names)
-        for item in stage14["files"]:
-            path = self.root / ".epc" / "runs" / S.RUN_ID / stage14["directory"] / item["path"]
+        for item in stage10["files"]:
+            path = self.root / ".epc" / "runs" / S.RUN_ID / stage10["directory"] / item["path"]
             self.assertEqual(S.sha256_file(path), item["sha256"], item["path"])
 
     def test_the_unreviewed_norm_records_are_reported_not_hidden(self):

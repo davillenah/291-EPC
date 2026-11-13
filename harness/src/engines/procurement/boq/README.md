@@ -2,7 +2,7 @@
 
 Status: **in development**
 
-Procurement engine (MIG-39c, PRD section 12 stage 15, "Documents and lists"): builds the draft bill of quantities (computo) of a calculated board. QUANTITIES ONLY: no prices and no costs (the cost engine is planned for a later phase). Pure functions, standard library only, no I/O at import and no file output. It has tests but stays `in development`: no document renderer consumes the bill yet. Its outputs are drafts (D21).
+Procurement engine (MIG-39c, PRD section 12 stage 11, "Documents and lists"): builds the draft bill of quantities (computo) of a calculated board. QUANTITIES ONLY: no prices and no costs (the cost engine is planned for a later phase). Pure functions, standard library only, no I/O at import and no file output. It has tests but stays `in development`: no document renderer consumes the bill yet. Its outputs are drafts (D21).
 
 ## Public API
 - `build_boq(board_name, circuits, *, allowance_pct, terminal_totals=None, round_up_m=False)`: dict `{board, allowance_pct, round_up_m, items, totals, assumptions, norm_records, issues}`.

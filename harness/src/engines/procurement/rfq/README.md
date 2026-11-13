@@ -2,7 +2,7 @@
 
 Status: **in development**
 
-Procurement engine (MIG-39e, PRD section 12 stage 15, "Documents and lists"): builds the draft request for quotation (pedido de cotizacion) of a board from its bill of quantities, optionally its datasheets, and the explicit commercial terms of the caller. It builds the request DOCUMENT only: it never contacts a supplier, never scrapes a web site, never sets a price or any other commercial value. Pure functions, standard library only, no I/O at import and no file output. Its outputs are drafts (D21).
+Procurement engine (MIG-39e, PRD section 12 stage 11, "Documents and lists"): builds the draft request for quotation (pedido de cotizacion) of a board from its bill of quantities, optionally its datasheets, and the explicit commercial terms of the caller. It builds the request DOCUMENT only: it never contacts a supplier, never scrapes a web site, never sets a price or any other commercial value. Pure functions, standard library only, no I/O at import and no file output. Its outputs are drafts (D21).
 
 ## Public API
 - `build_rfq(board_name, boq, *, suppliers, currency, response_deadline, delivery_site, validity_days, payment_terms=None, notes=None, datasheets=None, requestable_categories=None)`: dict `{rfq_id, board, issued_for, terms, requestable_categories, lines, totals, comparison_template, assumptions, norm_records, issues}`.

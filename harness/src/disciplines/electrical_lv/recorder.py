@@ -2,7 +2,7 @@
 
 For every stage: one line in `epc-progress.txt`, one file `ssot/stage_<NN>_<slug>.json` (the full StageResult) and an update of
 `master_project_state.json`. Stage 1 also writes `project_profile.json` and freezes `inputs/`; from stage 2 on, a changed,
-added or removed input blocks the stage with a finding (rule IM-01). Everything goes through the store with the run's token. After stage 16 its drawing files are copied to `deliverables/TR-NNN/` and the manifest it built is written under `.epc/manifests/`.
+added or removed input blocks the stage with a finding (rule IM-01). Everything goes through the store with the run's token. After stage 12 its drawing files are copied to `deliverables/TR-NNN/` and the manifest it built is written under `.epc/manifests/`.
 
 Progress line format (`epc-progress.txt`, plain text, one line per stage, appended):
 
@@ -20,7 +20,7 @@ from disciplines.electrical_lv.stages.base import make_finding
 
 SCHEMA_VERSION = "0.1"
 INTAKE = 1
-PACKAGE = 16
+PACKAGE = 12
 
 
 def progress_line(timestamp, run_id, stage, res):
@@ -102,7 +102,7 @@ class RunRecorder:
             self.store.freeze_inputs(self.token)
 
     def _publish(self, context, res):
-        """Stage 16: copy the drawing files into `deliverables/TR-NNN/`, write the transmittal manifest, then mark the superseded one (all through the store)."""
+        """Stage 12: copy the drawing files into `deliverables/TR-NNN/`, write the transmittal manifest, then mark the superseded one (all through the store)."""
         for item in res.outputs["copies"]:
             self.store.copy_deliverable(self.token, Path(context.work_dir) / item["source"], item["to"])
         for item in res.outputs["manifests"]:

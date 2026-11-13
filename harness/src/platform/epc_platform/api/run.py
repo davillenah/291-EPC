@@ -1,4 +1,4 @@
-"""`run_pipeline`: the 16 stages over a project folder, recorded by the pipeline itself (the only writer of `ssot/`, `runs/`, `deliverables/`).
+"""`run_pipeline`: the 12 stages over a project folder, recorded by the pipeline itself (the only writer of `ssot/`, `runs/`, `deliverables/`).
 
 The role must be allowed to `start_run` (RACI: the orchestrator). The workflow is walked to `running` first and to `draft_ready` after a
 complete, healthy run. Every number in the result is a stage result produced by an engine call inside the pipeline.

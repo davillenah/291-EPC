@@ -2,7 +2,7 @@
 
 Status: **in development**
 
-Quality engine (MIG-39f, PRD section 12 stage 2 "Requirements and design basis" and stage 15 "Documents"): builds the DESIGN-BASIS DOCUMENT of a project as structured data and renders it as Spanish plain text. Pure functions, standard library only, no I/O at import, no file output. It copies the profile, criteria, assumptions and requirements, and READS the limits that the calculation engines will apply from those engines' public accessors (imported lazily inside functions, only for reading; the dependency is acyclic: quality reads calculation). Its outputs are drafts (D21).
+Quality engine (MIG-39f, PRD section 12 stage 2 "Requirements and design basis" and stage 11 "Documents"): builds the DESIGN-BASIS DOCUMENT of a project as structured data and renders it as Spanish plain text. Pure functions, standard library only, no I/O at import, no file output. It copies the profile, criteria, assumptions and requirements, and READS the limits that the calculation engines will apply from those engines' public accessors (imported lazily inside functions, only for reading; the dependency is acyclic: quality reads calculation). Its outputs are drafts (D21).
 
 ## Public API
 - `build_design_basis_document(profile, *, criteria=None, assumptions=None, requirements=None, norm_status=None, insulation_rules=None)`: dict `{sections, issues, assumptions, open_items, norm_records, status}` with `status` always `draft`. `sections` is a list of `{id, title, items}`, each item `{key, label, value, unit, source, review_status}` (requirement items also carry `status`).

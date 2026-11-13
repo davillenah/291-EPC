@@ -141,7 +141,7 @@ COMMANDS = {c.key: c for c in (
             ((("package",), {"nargs": "?", "help": "engine package; all engines when omitted"}), PROJECT_OPT)),
     Command("norms-pending", "norm points still to be reviewed (units and totals)", "norms_pending", _norms_pending,
             ((("--detail",), {"action": "store_true", "help": "list the units with pending points"}), PROJECT_OPT)),
-    Command("stages", "the 16 pipeline stages", "stage_table", _stages, (PROJECT_OPT,)),
+    Command("stages", "the 12 pipeline stages", "stage_table", _stages, (PROJECT_OPT,)),
 )}
 
 

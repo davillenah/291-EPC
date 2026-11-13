@@ -18,7 +18,7 @@ the clock: timestamps are injected by the caller.
 
 Transmittal manifests (`.epc/manifests/<TR-NNN>.manifest.json`, MIG-32) and the files of `deliverables/<TR-NNN>/` are written by `write_manifest` /
 `update_manifest` / `copy_deliverable` with the same token; an update can only mark a manifest as superseded. Only this module may write files under `harness/src/disciplines` (the drawing engine writes
-stage 14's files itself, under the work_dir).
+stage 10's files itself, under the work_dir).
 """
 import contextlib
 import hashlib

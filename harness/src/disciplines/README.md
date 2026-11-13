@@ -6,7 +6,7 @@ One folder per engineering discipline. Each discipline is a plugin of the platfo
 
 | Discipline | Status | Lead agent |
 |---|---|---|
-| `electrical_lv` | in development (16-stage pipeline) | `electrical_lv` |
+| `electrical_lv` | in development (12-stage pipeline) | `electrical_lv` |
 | `electrical_mv` | planned | (none yet) |
 | `civil_structural` | planned | `civil_structural_lead` |
 | `mechanical` | planned | `mechanical_lead` |

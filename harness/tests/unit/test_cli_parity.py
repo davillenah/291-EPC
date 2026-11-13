@@ -79,7 +79,7 @@ def masked(envelope):
 
 class RunParity(Base):
     def test_run_equals_mcp_and_api(self):
-        via_cli, via_mcp, direct = self.run_all(15)
+        via_cli, via_mcp, direct = self.run_all(11)
         self.assertTrue(via_cli["ok"], via_cli)
         self.assertEqual(masked(via_cli), masked(via_mcp))
         self.assertEqual(masked(via_cli), masked(direct))
@@ -127,10 +127,10 @@ class QueryParity(Base):
         self.assertEqual(via_cli, self.mcp("epc_engine_info", name="aea90364"))
         self.assertEqual(via_cli["data"]["package"], "epc_aea90364")
 
-    def test_stages_are_the_16_rows_of_the_prd(self):
+    def test_stages_are_the_12_rows_of_the_prd(self):
         _, via_cli = epc(self.cli_root, "stages")
         rows = D.prd_rows()
-        self.assertEqual((via_cli["data"]["count"], len(rows)), (16, 16))
+        self.assertEqual((via_cli["data"]["count"], len(rows)), (12, 12))
         for row, (number, title, engines, status) in zip(via_cli["data"]["stages"], rows):
             self.assertEqual((row["number"], row["title"], row["engines"], row["status"]), (int(number), title, engines, status))
         self.assertEqual(via_cli, self.mcp("epc_stage_table"))

@@ -2,7 +2,7 @@
 
 Status: **in development**
 
-Quality engine (MIG-39b, PRD section 12 stage 15, "Documents and lists"): builds the terminal-block list (planilla de bornes) of a calculated board. Pure functions, standard library only, no I/O at import and no file output. It has tests but stays `in development`: the terminal size table is generic and pending review, and no document renderer consumes the list yet. Its outputs are drafts (D21).
+Quality engine (MIG-39b, PRD section 12 stage 11, "Documents and lists"): builds the terminal-block list (planilla de bornes) of a calculated board. Pure functions, standard library only, no I/O at import and no file output. It has tests but stays `in development`: the terminal size table is generic and pending review, and no document renderer consumes the list yet. Its outputs are drafts (D21).
 
 ## Public API
 - `build_terminal_list(board_name, circuits, *, start_strip="X1")`: dict `{board, strips: [{strip, rows}], totals, assumptions, norm_records, issues}`. One strip; every row is one circuit: `{circuit, description, device, phases, in_a, conductors, terminals, issues}`; every terminal: `{id ("X1:1", "X1:2", ...), role, section_mm2, terminal_size_mm2, terminal_rated_a, issues}`. `totals` = `{terminals, by_section, by_terminal_size}`.

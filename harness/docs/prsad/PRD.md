@@ -75,7 +75,7 @@ R = responsible, A = accountable, C = consulted, I = informed. Detail per organi
 
 | Phase | Scope | Exit criterion |
 | --- | --- | --- |
-| 1 | LV electrical (`electrical_lv`), 16-stage pipeline, draft package, manifests, spike on the 309 kVA golden project | Spike §21 passed |
+| 1 | LV electrical (`electrical_lv`), 12-stage pipeline, draft package, manifests, spike on the 309 kVA golden project | Spike §21 passed |
 | 2 | MV, lighting and receptacle layouts in plans, MLD, review and sign-off flow for IFA/IFC | To be defined |
 | 3 | Other disciplines (HVAC, BIM, fabrication, procurement execution, field, commissioning) | To be defined |
 
@@ -98,7 +98,7 @@ Every value used by an engine is a norm-register record: value, unit, clause, re
 ```
 engineer ──> intake ──> project_profile.json + inputs/ (immutable)
                               │
-                     electrical_lv pipeline (16 stages, §12)
+                     electrical_lv pipeline (12 stages, §12)
                               │ calls
               engines (calculation · validation · cad · quality)
                               │ reads
@@ -210,26 +210,22 @@ The dot hides `.epc/` on macOS and Linux; on Windows `ProjectStore.init_from_tem
 - Supply data (utility, transformer or LV supply, earthing system TT/TN).
 - Intake is a guided form (`/init`), not JSON; the engineer confirms a summary before the pipeline runs.
 
-## 12. `electrical_lv` pipeline — 16 stages
+## 12. `electrical_lv` pipeline — 12 stages
 
 | # | Stage | Engine(s) | Phase 1 status |
 | --- | --- | --- | --- |
 | 1 | Intake: profile, inputs, hashes | platform | in development |
-| 2 | Requirements and design basis (criteria, profile, assumptions) | quality (design basis) | planned |
-| 3 | Input verification (plans vs loads vs requirements) | cad/plan, validation | in development |
-| 4 | Load schedule and phase balance | calculation/load_balance | implemented (inside aea90364) |
-| 5 | Demand and simultaneity (771.9) | calculation/load_balance | implemented |
-| 6 | Supply and transformer sizing | calculation/transformer_sizing | planned |
-| 7 | Board structure and circuit assignment | calculation, validation | implemented |
-| 8 | Feeder and circuit sizing (Ib ≤ In ≤ Iz, I2 ≤ 1.45 Iz, installation method) | calculation/feeder_sizing | implemented |
-| 9 | Voltage drop, accumulated (D17) | calculation/voltage_drop | implemented |
-| 10 | Short-circuit currents (max/min) | calculation/short_circuit | implemented |
-| 11 | Protection and selectivity; thermal withstand k²S² | calculation/selectivity | implemented |
-| 12 | Earthing and fault protection (TT: Ra; TN: Zs = c_min·U0/Ia; disconnection times) | calculation/grounding | implemented |
-| 13 | Deterministic verification (`calc_check`): recalculation, format, cross-document consistency | validation | in development |
-| 14 | Drawings: SLD, board layouts | cad | implemented (SLD) |
-| 15 | Documents and lists: calculation report, specification, cable list, terminal-block list, BOQ, datasheets, RFQ, descriptive report | quality, procurement | in part |
-| 16 | Package issue: manifests, review status, transmittal | platform | planned |
+| 2 | Requirements and design basis (criteria, profile, assumptions) and input verification (plans vs loads vs requirements) | quality (design basis), cad/plan, validation | in development |
+| 3 | Load schedule, phase balance, demand and simultaneity (771.9) | calculation/load_balance | implemented |
+| 4 | Supply and transformer sizing | calculation/transformer_sizing | planned |
+| 5 | Board structure and circuit assignment | calculation, validation | implemented |
+| 6 | Cable and protection sizing: feeder and circuit section (Ib ≤ In ≤ Iz, I2 ≤ 1.45 Iz, installation method), accumulated voltage drop (D17), short-circuit currents (max/min), protection device | calculation/feeder_sizing, voltage_drop, short_circuit | implemented |
+| 7 | Protection selectivity and coordination study | calculation/selectivity | implemented |
+| 8 | Earthing and fault protection (TT: Ra; TN: Zs = c_min·U0/Ia; disconnection times) | calculation/grounding | implemented |
+| 9 | Deterministic verification (`calc_check`): recalculation, format, cross-document consistency | validation | in development |
+| 10 | Drawings: SLD, board layouts | cad | implemented (SLD) |
+| 11 | Documents and lists: calculation report, specification, cable list, terminal-block list, BOQ, datasheets, RFQ, descriptive report | quality, procurement | in part |
+| 12 | Package issue: manifests, review status, transmittal | platform | planned |
 
 A stage without an engine returns an explicit "not available in Phase 1" result, never a placeholder value.
 

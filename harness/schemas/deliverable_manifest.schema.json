@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "Transmittal manifest (PRD section 13)",
-  "description": "One JSON per transmittal (one issue of the project), written under projects/<client>/<project>/.epc/manifests/<transmittal>.manifest.json by the pipeline (stage 16) through the project store. It covers every file of deliverables/<transmittal>/ with its SHA-256 (a document without a rendered file has path null). `signed` is a human act and stays null until a person signs; regenerating a deliverable moves a previous signature to `superseded_signature` and fills `superseded_by`. D21: a manifest can be `approved_for_construction` only when every norm record it lists is `verified`.",
+  "description": "One JSON per transmittal (one issue of the project), written under projects/<client>/<project>/.epc/manifests/<transmittal>.manifest.json by the pipeline (stage 12) through the project store. It covers every file of deliverables/<transmittal>/ with its SHA-256 (a document without a rendered file has path null). `signed` is a human act and stays null until a person signs; regenerating a deliverable moves a previous signature to `superseded_signature` and fills `superseded_by`. D21: a manifest can be `approved_for_construction` only when every norm record it lists is `verified`.",
   "type": "object",
   "required": ["transmittal", "title", "revision", "pipeline_run_id", "inputs", "engines", "normative_profile", "files", "findings",
                "review_status", "signed", "superseded_signature", "supersedes", "superseded_by"],

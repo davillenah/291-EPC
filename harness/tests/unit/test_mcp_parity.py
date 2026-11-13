@@ -37,8 +37,8 @@ REGISTRY = build_registry()
 def without_dxf_hashes(run):
     """The run as a dict without the DXF stamps: the drawing engine writes the current time into the files, so their size and hash differ."""
     out = W.without_dxf_stamp(run)
-    if len(out["results"]) == 16:
-        outputs = out["results"][15]["outputs"]
+    if len(out["results"]) == 12:
+        outputs = out["results"][11]["outputs"]
         for item in [f for m in outputs["manifests"] for f in m["manifest"]["files"]] + outputs["transmittal"]["files"]:
             if (item["path"] or "").endswith(".dxf"):
                 item["sha256"] = None
@@ -142,10 +142,10 @@ class EngineQueryTests(Base):
         self.assertEqual(sum(r["pending"] for r in detail), data["pending_points"])
         self.assertTrue(all(r["pending"] for r in detail))
 
-    def test_the_stage_table_has_16_rows_matching_the_prd(self):
+    def test_the_stage_table_has_12_rows_matching_the_prd(self):
         data = self.call("epc_stage_table")["data"]
         rows = D.prd_rows()
-        self.assertEqual((data["count"], len(data["stages"]), len(rows)), (16, 16, 16))
+        self.assertEqual((data["count"], len(data["stages"]), len(rows)), (12, 12, 12))
         for row, (number, title, engines, status) in zip(data["stages"], rows):
             with self.subTest(stage=number):
                 self.assertEqual((row["number"], row["title"], row["engines"], row["status"]), (int(number), title, engines, status))
@@ -174,27 +174,27 @@ class ParityTests(Base):
                          run_id="r-parity", detail=True)
 
     def test_the_tool_result_equals_the_direct_pipeline_run(self):
-        answer = self.run_tool(15)
+        answer = self.run_tool(11)
         self.assertTrue(answer["ok"], answer)
-        expected, _ = self.direct(15)
+        expected, _ = self.direct(11)
         self.assertEqual(without_dxf_hashes(answer["data"]["run"]), expected)
         self.assertEqual(answer["data"]["pipeline_run_id"], "r-parity")
         self.assertEqual(answer["data"]["workflow_state"], "running")
 
-    def test_the_full_16_stage_run_equals_the_direct_run_and_ends_in_draft_ready(self):
+    def test_the_full_12_stage_run_equals_the_direct_run_and_ends_in_draft_ready(self):
         answer = self.run_tool(None)
         self.assertTrue(answer["ok"], answer)
         expected, _ = self.direct(None)
         self.assertEqual(without_dxf_hashes(answer["data"]["run"]), expected)
         self.assertEqual(answer["data"]["workflow_state"], "draft_ready")
-        self.assertEqual(answer["data"]["run"]["summary"]["stages_run"], 16)
+        self.assertEqual(answer["data"]["run"]["summary"]["stages_run"], 12)
 
     def test_the_numbers_in_the_result_come_from_the_engines(self):
-        answer = self.run_tool(12)
+        answer = self.run_tool(6)
         datos, _detail, _warnings = W.direct_call()
-        rows = {r["circuit"]: r for r in answer["data"]["run"]["results"][7]["outputs"]["circuits"]}
+        rows = {r["circuit"]: r for r in answer["data"]["run"]["results"][5]["outputs"]["feeder_sizing"]["circuits"]}
         self.assertEqual({t: r["in_a"] for t, r in rows.items()}, {t: d["In"] for t, d in datos.items()})
-        self.assertIn("epc_aea90364.aea_pipeline.calculate", [c["function"] for c in answer["data"]["run"]["results"][7]["engine_calls"]])
+        self.assertIn("epc_aea90364.aea_pipeline.calculate", [c["function"] for c in answer["data"]["run"]["results"][5]["engine_calls"]])
 
     def test_the_brief_result_has_no_stage_outputs(self):
         self.init()
@@ -204,7 +204,7 @@ class ParityTests(Base):
         self.assertTrue(all("outputs" not in r for r in rows))
 
     def test_the_status_tool_equals_the_api_status(self):
-        self.run_tool(15)
+        self.run_tool(11)
         via_tool = self.call("epc_project_status", project="PARITY-1")
         direct = api.status(self.root / "PARITY-1", clock=CLOCK, actor=ORC)
         self.assertTrue(via_tool["ok"] and direct["ok"])
@@ -221,7 +221,7 @@ class ParityTests(Base):
         store = ProjectStore(root)
         self.assertTrue(store.is_frozen())
         self.assertEqual(len(store.read_progress().splitlines()), 2 + 5)
-        self.assertEqual(sorted(p.name for p in (root / ".epc" / "ssot").glob("stage_*.json"))[:2], ["stage_01_intake.json", "stage_02_requirements.json"])
+        self.assertEqual(sorted(p.name for p in (root / ".epc" / "ssot").glob("stage_*.json"))[:2], ["stage_01_intake.json", "stage_02_requirements_inputs.json"])
         self.assertEqual(EventLog.for_project(root, CLOCK).verify(), [])
 
 
@@ -280,11 +280,11 @@ class ProjectFlowTests(Base):
         self.call("epc_pipeline_run", project="PARITY-1", loads=W.loads_doc(), engine_inputs=W.inputs_doc(), run_id="r-1")
         ssot = {p.name: p.read_bytes() for p in (self.root / "PARITY-1" / ".epc" / "ssot").glob("*.json")}
         engineer = server(self.root, {"role": "engineer_of_record", "id": "e1"})
-        answer = engineer("epc_project_review", project="PARITY-1", corrections=[{"target": "stage_08", "note": "check the cable"}])
+        answer = engineer("epc_project_review", project="PARITY-1", corrections=[{"target": "stage_06", "note": "check the cable"}])
         self.assertTrue(answer["ok"], answer)
         self.assertEqual(answer["data"]["workflow_state"], "corrected")
         review = json.loads((self.root / "PARITY-1" / answer["data"]["review_file"]).read_text(encoding="utf-8"))
-        self.assertEqual(review["corrections"], [{"target": "stage_08", "note": "check the cable"}])
+        self.assertEqual(review["corrections"], [{"target": "stage_06", "note": "check the cable"}])
         self.assertEqual({p.name: p.read_bytes() for p in (self.root / "PARITY-1" / ".epc" / "ssot").glob("*.json")}, ssot)
         self.assertEqual(engineer("epc_project_review", project="PARITY-1", corrections=[])["error"]["code"], "invalid_arguments")
 

@@ -2,7 +2,7 @@
 
 Status: **in development**
 
-Procurement engine (MIG-39d, PRD section 12 stage 15, "Documents and lists"): draft equipment datasheet records. For each equipment requirement derived from the calculation (protective devices, cables) it lists the manufacturer-catalog products that satisfy the requirement BY COMPARISON, with the catalog fields copied verbatim. It never picks a winner, never calculates an electrical value and never invents product data. Pure functions, standard library only, no I/O at import and no file output. Its outputs are drafts (D21).
+Procurement engine (MIG-39d, PRD section 12 stage 11, "Documents and lists"): draft equipment datasheet records. For each equipment requirement derived from the calculation (protective devices, cables) it lists the manufacturer-catalog products that satisfy the requirement BY COMPARISON, with the catalog fields copied verbatim. It never picks a winner, never calculates an electrical value and never invents product data. Pure functions, standard library only, no I/O at import and no file output. Its outputs are drafts (D21).
 
 ## Public API
 - `build_datasheets(board_name, requirements, catalog)`: dict `{board, datasheets, totals, assumptions, norm_records, issues}`. Each datasheet: `{item_id, kind, requirement, candidates, issues, review_status, review_reason}` with `review_status: "pending review"` and `review_reason: "catalog values are unverified manufacturer data"`. `totals = {items, items_without_candidate}`. Records are sorted by `item_id`; candidates by manufacturer, family, id.

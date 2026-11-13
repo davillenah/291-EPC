@@ -1,7 +1,7 @@
 """MIG-35a, PRD section 21 criterion 6 (seed): every error seeded in a copy of the real pipeline result is caught by calc_check.
 
-The synthetic project of `test_pipeline_wiring` is run through the whole pipeline with a project store (so stage 16 builds manifests), the result is
-round-tripped through JSON, and ONE field at a time is changed. A clean run has no finding above `note`. Also checks how stages 13 and 16 use the engine.
+The synthetic project of `test_pipeline_wiring` is run through the whole pipeline with a project store (so stage 12 builds manifests), the result is
+round-tripped through JSON, and ONE field at a time is changed. A clean run has no finding above `note`. Also checks how stages 9 and 12 use the engine.
 
 Needs the engine packages on PYTHONPATH (the gate's `harness-tests` environment has them, `calc_check` included).
 """
@@ -18,7 +18,7 @@ from test_ssot_wired_pipeline import ANSWERS
 
 from disciplines.electrical_lv.intake.profile import build_profile
 from disciplines.electrical_lv.pipeline import STAGES, run
-from disciplines.electrical_lv.stages.calc_check_stage import engine_inputs_for_check
+from disciplines.electrical_lv.stages.calc_check_stage import engine_inputs_for_check, logical_results
 
 RUN_ID = "seed-run"
 
@@ -70,6 +70,7 @@ class Base(unittest.TestCase):
         cls.ctx = W.context(profile=build_profile(ANSWERS), store=store)
         cls.res = run(cls.ctx, run_id=RUN_ID, clock=CLOCK)
         cls.result = json.loads(json.dumps(cls.res.to_dict()))
+        cls.result["results"] = logical_results(cls.result["results"])        # the 12 physical stages as the 16 slices the checks address
         cls.project = engine_inputs_for_check(cls.ctx)
         out14 = stage(cls.result, 14)["outputs"]
         work = Path(cls.ctx.work_dir) if cls.ctx.work_dir else Path(store.root) / ".epc" / "runs" / RUN_ID
@@ -87,19 +88,19 @@ class CleanRunTests(Base):
         found = self.check()
         self.assertEqual([f for f in found if f["severity"] != "note"], [], [(f["clause"], f["field"]) for f in found])
 
-    def test_stage_13_ran_and_reported_without_blocking(self):
-        s13 = self.res.results[12]
-        self.assertEqual(s13.status, "ok")
-        self.assertEqual(s13.outputs["findings_count"], len(s13.findings))
-        self.assertEqual(sum(s13.outputs["by_severity"].values()), len(s13.findings))
-        self.assertTrue(all(f["verifier"] in ("calc-check", "format-check") for f in s13.findings))
+    def test_stage_9_ran_and_reported_without_blocking(self):
+        s9 = self.res.results[8]
+        self.assertEqual(s9.status, "ok")
+        self.assertEqual(s9.outputs["findings_count"], len(s9.findings))
+        self.assertEqual(sum(s9.outputs["by_severity"].values()), len(s9.findings))
+        self.assertTrue(all(f["verifier"] in ("calc-check", "format-check") for f in s9.findings))
         self.assertEqual([r.status for r in self.res.results][-4:], ["ok"] * 4)
-        self.assertEqual(s13.engine_calls[0]["function"], "epc_calc_check.check_run")
+        self.assertEqual(s9.engine_calls[0]["function"], "epc_calc_check.check_run")
 
-    def test_stage_16_checked_documents_and_manifests_and_manifests_carry_the_findings(self):
-        s16 = self.res.results[15]
-        self.assertEqual(s16.status, "ok")
-        self.assertIn("calc_check", s16.outputs)
+    def test_stage_12_checked_documents_and_manifests_and_manifests_carry_the_findings(self):
+        s12 = self.res.results[11]
+        self.assertEqual(s12.status, "ok")
+        self.assertIn("calc_check", s12.outputs)
         carried = {f["id"] for f in manifest(self.result)["findings"]}
         in_run = {f["id"] for r in self.result["results"] if r["stage"] <= 15 for f in r["findings"]}
         self.assertTrue(in_run <= carried)
@@ -108,8 +109,8 @@ class CleanRunTests(Base):
         self.assertEqual(set(self.project["circuits"]), {r["circuit"] for r in stage(self.result, 8)["outputs"]["circuits"]})
         self.assertEqual(self.project["voltage_v"], stage(self.result, 7)["outputs"]["board"]["voltage_v"])
 
-    def test_wired_stage_table_has_stage_13(self):
-        self.assertTrue(STAGES[12].wired)
+    def test_wired_stage_table_has_the_check_stage(self):
+        self.assertTrue(STAGES[8].wired)
 
 
 # mutation, rule that must be reported, text the field or value must contain
@@ -158,17 +159,17 @@ class SeededErrorTests(Base):
         self.assertIn("CC-D06", rules_of(found))
 
     def test_the_seeded_errors_are_found_in_the_stage_findings_of_a_rerun(self):
-        # stage 13 itself is deterministic: re-running the checks of its groups on the clean result reports exactly what the stage reported
+        # stage 9 itself is deterministic: re-running the checks of its groups on the clean result reports exactly what the stage reported
         again = C.check_run(copy.deepcopy(self.result), project=self.project, run_id=RUN_ID, groups=("recalc", "invariants", "format"))
         shown = [(f["clause"], f["field"], f["severity"]) for f in again]
-        reported = [(f["clause"], f["field"], f["severity"]) for f in self.res.results[12].findings]
+        reported = [(f["clause"], f["field"], f["severity"]) for f in self.res.results[8].findings]
         self.assertEqual(shown, reported)
 
     def test_findings_of_two_stages_numbered_per_stage_are_not_a_duplicated_id(self):
         # MIG-3Y: during a run every stage numbers its own findings from F-0001; the pipeline renumbers them across the run only at the end
         def two_stages(rd):
             for number in (8, 9):
-                f = dict(self.res.results[12].findings[0]) if self.res.results[12].findings else {
+                f = dict(self.res.results[8].findings[0]) if self.res.results[8].findings else {
                     "id": "F-0001", "run_id": RUN_ID, "verifier": "calc-check", "severity": "major", "document": "d", "field": "x", "value": None,
                     "expected": None, "clause": "engine result x", "action": "Review.", "evidence": ["e"], "status": "open"}
                 f["id"] = "F-0001"

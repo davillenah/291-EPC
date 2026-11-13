@@ -87,7 +87,7 @@ class UsageTests(Base):
         before = self.run_epc("--json", "stages")
         after = self.run_epc("stages", "--json")
         self.assertEqual(before, after)
-        self.assertEqual(json.loads(before[1])["data"]["count"], 16)
+        self.assertEqual(json.loads(before[1])["data"]["count"], 12)
 
 
 class FileTests(Base):
@@ -130,7 +130,7 @@ class RenderTests(Base):
     def test_the_human_tables_show_the_rows(self):
         stages = self.run_epc("stages")[1]
         self.assertIn("feeder_sizing", stages)
-        self.assertTrue(stages.rstrip().endswith("16 stages"))
+        self.assertTrue(stages.rstrip().endswith("12 stages"))
         self.assertIn("30 engines", self.run_epc("engines", "list")[1])
         status = self.run_epc("status", CODE) if self.init() else None
         self.assertIn("workflow", status[1])
@@ -188,13 +188,13 @@ class ChainTests(Base):
         self.assertEqual(self.init()[0], 0)
         self.assertEqual(self.init()[1]["error"]["code"], "project_exists")
         code, env = self.envelope("run", CODE, "--loads", str(self.files / "loads.json"), "--engine-inputs", str(self.files / "inputs.json"), "--run-id", "r-1")
-        self.assertEqual((code, env["data"]["workflow_state"], env["data"]["run"]["summary"]["stages_run"]), (0, "draft_ready", 16))
+        self.assertEqual((code, env["data"]["workflow_state"], env["data"]["run"]["summary"]["stages_run"]), (0, "draft_ready", 12))
         self.assertEqual(self.envelope("status", CODE)[1]["data"]["workflow"]["state"], "draft_ready")
         # in review with real manifests: the norm records are not verified, so D21 refuses the approval
         Workflow(self.root / CODE, EventLog.for_project(self.root / CODE, CLOCK)).transition("submit_for_review", "engineer_of_record", "e1")
         code, env = self.envelope("approve", CODE, *ENG)
         self.assertEqual((code, env["error"]["code"]), (1, "blocked_d21"))
-        corrections = self.write("corrections.json", [{"target": "stage_08", "note": "check the cable"}])
+        corrections = self.write("corrections.json", [{"target": "stage_06", "note": "check the cable"}])
         code, env = self.envelope("review", CODE, "--corrections", corrections, *ENG)
         self.assertEqual((code, env["data"]["workflow_state"]), (0, "corrected"))
         self.assertTrue((self.root / CODE / env["data"]["review_file"]).is_file())

@@ -8,64 +8,146 @@
     "stage_ok": "the earlier stage finished with status ok"
   },
   "stages": {
-    "1": [{"kind": "context_any", "fields": ["profile", "answers"], "text": "the form answers or a project profile"}],
+    "1": [
+      {
+        "kind": "context_any",
+        "fields": [
+          "profile",
+          "answers"
+        ],
+        "text": "the form answers or a project profile"
+      }
+    ],
     "2": [
-      {"kind": "context", "field": "profile", "text": "the project profile"},
-      {"kind": "stage_ok", "stage": 1, "text": "stage 1 (intake) ok"}
+      {
+        "kind": "context",
+        "field": "profile",
+        "text": "the project profile"
+      },
+      {
+        "kind": "context",
+        "field": "loads",
+        "text": "the load list"
+      },
+      {
+        "kind": "context",
+        "field": "inputs_manifest",
+        "text": "the manifest of the inputs"
+      },
+      {
+        "kind": "stage_ok",
+        "stage": 1,
+        "text": "stage 1 (intake) ok"
+      }
     ],
     "3": [
-      {"kind": "context", "field": "loads", "text": "the load list"},
-      {"kind": "context", "field": "inputs_manifest", "text": "the manifest of the inputs"},
-      {"kind": "context", "field": "design_basis", "text": "the design basis"},
-      {"kind": "stage_ok", "stage": 2, "text": "stage 2 (design basis) ok"}
+      {
+        "kind": "nonempty_list",
+        "field": "loads",
+        "key": "loads",
+        "text": "a non-empty load list"
+      },
+      {
+        "kind": "stage_ok",
+        "stage": 2,
+        "text": "the verified inputs of stage 2"
+      }
     ],
     "4": [
-      {"kind": "nonempty_list", "field": "loads", "key": "loads", "text": "a non-empty load list"},
-      {"kind": "stage_ok", "stage": 3, "text": "the verified inputs of stage 3"}
+      {
+        "kind": "nonempty_list",
+        "field": "loads",
+        "key": "loads",
+        "text": "a non-empty load list"
+      },
+      {
+        "kind": "stage_ok",
+        "stage": 2,
+        "text": "the verified inputs of stage 2"
+      }
     ],
     "5": [
-      {"kind": "nonempty_list", "field": "loads", "key": "loads", "text": "a non-empty load list"},
-      {"kind": "stage_ok", "stage": 3, "text": "the verified inputs of stage 3"}
+      {
+        "kind": "nonempty_list",
+        "field": "loads",
+        "key": "loads",
+        "text": "a non-empty load list"
+      },
+      {
+        "kind": "stage_ok",
+        "stage": 2,
+        "text": "the verified inputs of stage 2"
+      }
     ],
     "6": [
-      {"kind": "nonempty_list", "field": "loads", "key": "loads", "text": "a non-empty load list"},
-      {"kind": "stage_ok", "stage": 3, "text": "the verified inputs of stage 3"}
+      {
+        "kind": "nonempty_list",
+        "field": "loads",
+        "key": "loads",
+        "text": "a non-empty load list"
+      },
+      {
+        "kind": "context",
+        "field": "design_basis",
+        "text": "the design basis"
+      },
+      {
+        "kind": "stage_ok",
+        "stage": 2,
+        "text": "the verified inputs of stage 2"
+      }
     ],
     "7": [
-      {"kind": "nonempty_list", "field": "loads", "key": "loads", "text": "a non-empty load list"},
-      {"kind": "stage_ok", "stage": 3, "text": "the verified inputs of stage 3"}
+      {
+        "kind": "context",
+        "field": "design_basis",
+        "text": "the design basis"
+      },
+      {
+        "kind": "stage_ok",
+        "stage": 6,
+        "text": "the protection of stage 6"
+      }
     ],
     "8": [
-      {"kind": "nonempty_list", "field": "loads", "key": "loads", "text": "a non-empty load list"},
-      {"kind": "context", "field": "design_basis", "text": "the design basis"},
-      {"kind": "stage_ok", "stage": 3, "text": "the verified inputs of stage 3"}
+      {
+        "kind": "context",
+        "field": "design_basis",
+        "text": "the design basis"
+      },
+      {
+        "kind": "stage_ok",
+        "stage": 2,
+        "text": "the verified inputs of stage 2"
+      }
     ],
-    "9": [
-      {"kind": "nonempty_list", "field": "loads", "key": "loads", "text": "a non-empty load list"},
-      {"kind": "context", "field": "design_basis", "text": "the design basis"},
-      {"kind": "stage_ok", "stage": 3, "text": "the verified inputs of stage 3"}
-    ],
+    "9": [],
     "10": [
-      {"kind": "context", "field": "design_basis", "text": "the design basis (supply and short-circuit level)"},
-      {"kind": "stage_ok", "stage": 3, "text": "the verified inputs of stage 3"}
+      {
+        "kind": "nonempty_list",
+        "field": "loads",
+        "key": "loads",
+        "text": "a non-empty load list"
+      },
+      {
+        "kind": "stage_ok",
+        "stage": 2,
+        "text": "the verified inputs of stage 2"
+      }
     ],
     "11": [
-      {"kind": "context", "field": "design_basis", "text": "the design basis"},
-      {"kind": "stage_ok", "stage": 3, "text": "the verified inputs of stage 3"}
+      {
+        "kind": "nonempty_list",
+        "field": "loads",
+        "key": "loads",
+        "text": "a non-empty load list"
+      },
+      {
+        "kind": "stage_ok",
+        "stage": 2,
+        "text": "the verified inputs of stage 2"
+      }
     ],
-    "12": [
-      {"kind": "context", "field": "design_basis", "text": "the design basis (earthing scheme)"},
-      {"kind": "stage_ok", "stage": 3, "text": "the verified inputs of stage 3"}
-    ],
-    "13": [],
-    "14": [
-      {"kind": "nonempty_list", "field": "loads", "key": "loads", "text": "a non-empty load list"},
-      {"kind": "stage_ok", "stage": 3, "text": "the verified inputs of stage 3"}
-    ],
-    "15": [
-      {"kind": "nonempty_list", "field": "loads", "key": "loads", "text": "a non-empty load list"},
-      {"kind": "stage_ok", "stage": 3, "text": "the verified inputs of stage 3"}
-    ],
-    "16": []
+    "12": []
   }
 }

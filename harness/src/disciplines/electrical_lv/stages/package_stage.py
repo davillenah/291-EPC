@@ -1,4 +1,4 @@
-"""Stage 16 (package issue): one transmittal `TR-NNN` with ONE manifest that covers every deliverable the earlier stages of this run produced (MIG-32).
+"""Stage 12 (package issue): one transmittal `TR-NNN` with ONE manifest that covers every deliverable the earlier stages of this run produced (MIG-32).
 
 The stage is pure: it builds the manifest (`manifest.py`) and the list of files to copy and returns them in `outputs`; the run recorder (which holds the
 store's write token) copies the drawing files into `deliverables/TR-NNN/` and writes `.epc/manifests/TR-NNN.manifest.json` through `ProjectStore`.
@@ -7,8 +7,8 @@ Transmittal numbers: a run of a revision that has no transmittal yet gets the ne
 run of a revision whose transmittal is still an unsigned draft replaces that draft (same number); a signed or superseded revision blocks (use a new revision).
 
 What counts as a deliverable today:
-  - drawings: the `.dxf` files of stage 14 (`.svg` is not a deliverable; the `.json` and `.md` files of the engine's output folder are internal);
-  - documents: the structured documents of stage 15, whose hash is the one stage 15 recorded (no rendered file exists yet: their `path` is null).
+  - drawings: the `.dxf` files of stage 10 (`.svg` is not a deliverable; the `.json` and `.md` files of the engine's output folder are internal);
+  - documents: the structured documents of stage 11, whose hash is the one stage 11 recorded (no rendered file exists yet: their `path` is null).
 
 Before the manifests are built the stage runs the cross-document checks of `epc_calc_check` (groups `documents`: memo against stages, hashes, drawing summary,
 file bytes) and the findings join the ones the manifest carries; after it is built it checks the manifest itself (schema, labels, hashes against the
@@ -16,7 +16,7 @@ recorded ones and the file bytes). Those second findings are reported by the sta
 manifest they describe. The stage never fails because of a finding.
 
 Everything is `draft`: the stage never approves, never signs and never changes a norm review state. With no project store, or with no
-deliverable, it returns `not_available` with the reason. `inputs`, `engines`, `findings` and the norm records are those of the whole run up to stage 15.
+deliverable, it returns `not_available` with the reason. `inputs`, `engines`, `findings` and the norm records are those of the whole run up to stage 11.
 """
 import copy
 import re
@@ -28,13 +28,13 @@ from disciplines.electrical_lv.norm_records import VERIFIED, read_norm_records
 from disciplines.electrical_lv.stages.base import Stage, StageInputError
 from disciplines.electrical_lv.stages.calc_check_stage import by_severity, engine_inputs_for_check, run_dict
 
-DRAWINGS, DOCUMENTS, LAST_PRODUCER = 14, 15, 15
+DRAWINGS, DOCUMENTS, LAST_PRODUCER = 10, 11, 11
 DRAWING_SUFFIXES = (".dxf",)
 TRANSMITTAL = re.compile(r"TR-([0-9]{3,4})")
 
 
 def run_findings(context):
-    """Open findings of stages 1..15 with run-wide ids F-0001, F-0002, ... (the same numbering the run summary and the recorder use)."""
+    """Open findings of stages 1..11 with run-wide ids F-0001, F-0002, ... (the same numbering the run summary and the recorder use)."""
     out, n = [], 0
     for number in sorted(k for k in context.results if k <= LAST_PRODUCER):
         for finding in context.results[number].findings:
@@ -47,7 +47,7 @@ def run_findings(context):
 
 
 def finding_count(context):
-    """Number of findings in stages 1..15 (the next finding of the run gets this number + 1)."""
+    """Number of findings in stages 1..11 (the next finding of the run gets this number + 1)."""
     return sum(len(context.results[k].findings) for k in context.results if k <= LAST_PRODUCER)
 
 
@@ -115,14 +115,14 @@ def apply_names(items, names, project_code):
 
 
 def _file_hash(item):
-    """The SHA-256 of a deliverable; a drawing file must still match the hash stage 14 recorded."""
+    """The SHA-256 of a deliverable; a drawing file must still match the hash stage 10 recorded."""
     if item["file"] is None:
         return item["recorded"]
     if not item["file"].is_file():
-        raise StageInputError([f"{item['source']}: the drawing file recorded by stage 14 is missing"])
+        raise StageInputError([f"{item['source']}: the drawing file recorded by stage 10 is missing"])
     sha = sha256_file(item["file"])
     if sha != item["recorded"]:
-        raise StageInputError([f"{item['source']}: the file changed after stage 14 (hash differs from the recorded one)"])
+        raise StageInputError([f"{item['source']}: the file changed after stage 10 (hash differs from the recorded one)"])
     return sha
 
 
@@ -148,7 +148,7 @@ def plan_transmittal(store, revision):
 
 
 class PackageIssueStage(Stage):
-    """Stage 16: the manifest (`draft`) and the transmittal folder of the deliverables of this run."""
+    """Stage 12: the manifest (`draft`) and the transmittal folder of the deliverables of this run."""
 
     wired = True
     wiring_task = "MIG-32"
@@ -177,7 +177,7 @@ class PackageIssueStage(Stage):
             return self._unavailable("no_store", "no project store: the manifest is written under .epc/manifests/ of a project folder")
         items = deliverables(context)
         if not items:
-            return self._unavailable("no_deliverables", "no deliverable to issue: stages 14 and 15 produced no drawing file or document in this run")
+            return self._unavailable("no_deliverables", "no deliverable to issue: stages 10 and 11 produced no drawing file or document in this run")
         records = read_norm_records(sorted({c["function"].split(".")[0] for c in run_engine_calls(context)}))
         import epc_calc_check
         files, project, start = deliverable_bytes(items), engine_inputs_for_check(context), finding_count(context) + 1

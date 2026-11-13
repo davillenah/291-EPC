@@ -72,7 +72,7 @@ def _read_gate(actor, project_dir, clock, path_class, target):
 
 @api_call
 def stage_table(*, actor=None, project_dir=None, clock=None):
-    """The 16 stages of the PRD in order: number, slug, title, engines, PRD status and whether the stage runs real work today."""
+    """The 12 stages of the PRD in order: number, slug, title, engines, PRD status and whether the stage runs real work today."""
     _read_gate(actor, project_dir, clock, "schemas", "stage_table")
     rows = [{"number": s.number, "slug": s.spec.slug, "title": s.spec.title, "engines": s.spec.engines_text, "status": s.spec.status_text,
              "phase1_status": s.spec.phase1_status, "wired": s.wired, "wiring_task": s.wiring_task} for s in STAGES]

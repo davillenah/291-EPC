@@ -2,7 +2,7 @@
   "note": "Names and kinds only. No engine result is stored here: numbers come from running the engines.",
   "project_code": "SYNTH-001",
   "revision": "R0",
-  "stages": 16,
+  "stages": 12,
   "documents": [
     "calculation_memo",
     "project_summary",

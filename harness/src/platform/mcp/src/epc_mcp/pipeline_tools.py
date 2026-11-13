@@ -85,7 +85,7 @@ def epc_project_issue(ctx: Context, args: dict):
 
 def register(reg: Registry) -> None:
     full, both = ("full",), ("full", "readonly")
-    reg.register(Tool("epc_stage_table", "The 16 stages of the pipeline (PRD 12): title, engines, status and whether each runs real work.",
+    reg.register(Tool("epc_stage_table", "The 12 stages of the pipeline (PRD 12): title, engines, status and whether each runs real work.",
                       epc_stage_table, OPTIONAL_PROJECT, [], both))
     reg.register(Tool("epc_engine_list", "The engine packages (name, group, area, version).", epc_engine_list, OPTIONAL_PROJECT, [], both))
     reg.register(Tool("epc_engine_info", "Version and public modules of one engine (package name or area).", epc_engine_info,

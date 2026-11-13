@@ -31,7 +31,7 @@ AGENT_ROLES = [a["name"] for a in ROSTER["agents"]]
 PROTECTED = ("ssot", "deliverables", "inputs", "audit", "config_normative", "schemas")
 WRITE_ACTIONS = ("write", "create", "delete")
 MANIFEST = ".epc/manifests/TR-001.manifest.json"
-PROTECTED_FILES = (".epc/project_profile.json", ".epc/master_project_state.json", ".epc/ssot/stage_01_intake.json", ".epc/ssot/stage_16_package_issue.json", MANIFEST,
+PROTECTED_FILES = (".epc/project_profile.json", ".epc/master_project_state.json", ".epc/ssot/stage_01_intake.json", ".epc/ssot/stage_12_package_issue.json", MANIFEST,
                    "inputs/intake_answers.json", ".epc/audit/events.jsonl")
 
 
@@ -194,11 +194,12 @@ class TamperIsDetected(unittest.TestCase):
         self.root = self.proj.project
 
     def run_dict(self):
-        return {"pipeline_run_id": S.RUN_ID, "results": [self.proj.ssot(p.name) for p in self.proj.stage_files()]}
+        from disciplines.electrical_lv.stages.calc_check_stage import logical_results   # the engine reads the 16 logical slices of the 12 recorded stages
+        return {"pipeline_run_id": S.RUN_ID, "results": logical_results([self.proj.ssot(p.name) for p in self.proj.stage_files()])}
 
     def files(self, changed=None):
-        stage14 = self.proj.ssot("stage_14_drawings.json")["outputs"]
-        files = {f"{stage14['directory']}/{f['path']}": (self.root / ".epc" / "runs" / S.RUN_ID / stage14["directory"] / f["path"]).read_bytes() for f in stage14["files"]}
+        stage10 = self.proj.ssot("stage_10_drawings.json")["outputs"]
+        files = {f"{stage10['directory']}/{f['path']}": (self.root / ".epc" / "runs" / S.RUN_ID / stage10["directory"] / f["path"]).read_bytes() for f in stage10["files"]}
         files.update(changed or {})
         return files
 
@@ -228,8 +229,8 @@ class TamperIsDetected(unittest.TestCase):
         self.assertEqual(ProjectStore(self.root).read_state()["status"], "blocked")
 
     def test_a_changed_output_byte_is_reported_as_cc_d06(self):
-        stage14 = self.proj.ssot("stage_14_drawings.json")["outputs"]
-        key = f"{stage14['directory']}/SLD_TS-SYNTH.dxf"
+        stage10 = self.proj.ssot("stage_10_drawings.json")["outputs"]
+        key = f"{stage10['directory']}/SLD_TS-SYNTH.dxf"
         data = bytearray(self.files()[key])
         data[0] ^= 1
         found = self.check(self.run_dict(), self.files({key: bytes(data)}))
