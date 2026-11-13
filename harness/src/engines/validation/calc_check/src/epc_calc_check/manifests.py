@@ -68,8 +68,8 @@ def _labels(view, path, manifest):
 def _recorded(view, entry):
     """The hash stage 14 or 15 recorded for the file `entry` of a manifest, or None."""
     if entry.get("path"):
-        files = {f.get("path"): f.get("sha256") for f in view.outputs(14).get("files") or [] if isinstance(f, dict)}
-        return files.get(entry["path"])
+        files = {Path(str(f.get("path"))).stem: f.get("sha256") for f in view.outputs(14).get("files") or [] if isinstance(f, dict) and str(f.get("path")).endswith(".dxf")}
+        return files.get(entry.get("name"))
     for d in view.outputs(15).get("documents") or []:
         if isinstance(d, dict) and d.get("name") == entry.get("name"):
             return d.get("sha256")

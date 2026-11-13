@@ -39,6 +39,7 @@ DEFAULT_ROLE = "orchestrator"
 EXEMPT_CLASSES = ("runs", "harness_code")
 KNOWLEDGE_NORMATIVE = HARNESS / "knowledge" / "normative"
 PROJECTS = REPO / "projects"
+PROJECT_FOLDERS = ("inputs", "deliverables", "transmittals", ".epc")
 
 EDIT_TOOLS = ("Edit", "Write", "MultiEdit", "NotebookEdit")
 SHELL_TOOLS = ("Bash", "PowerShell")
@@ -137,8 +138,9 @@ def classify(path):
 def _project_class(permissions, rel, path):
     if len(rel.parts) <= 1:
         return None
+    nested = rel.parts[1] not in PROJECT_FOLDERS and len(rel.parts) > 2          # projects/<CLIENT>/<project>/... instead of projects/<project>/...
     try:
-        return permissions.classify_path(PROJECTS / rel.parts[0], path, REPO)
+        return permissions.classify_path(PROJECTS.joinpath(*rel.parts[:2 if nested else 1]), path, REPO)
     except permissions.PathError as exc:
         raise Block("H-03", f"{path.as_posix()} is not a known project path: {exc}", path) from exc
 

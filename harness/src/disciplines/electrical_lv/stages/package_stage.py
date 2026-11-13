@@ -22,6 +22,7 @@ import copy
 import re
 from pathlib import Path
 
+from disciplines.electrical_lv import naming
 from disciplines.electrical_lv.manifest import DRAFT, ManifestError, build_manifest, sha256_file, supersede
 from disciplines.electrical_lv.norm_records import VERIFIED, read_norm_records
 from disciplines.electrical_lv.stages.base import Stage, StageInputError
@@ -73,7 +74,7 @@ def _drawings(context):
         if not f["path"].endswith(DRAWING_SUFFIXES):
             continue
         file = Path(context.work_dir or "") / res.outputs["directory"] / f["path"]
-        out.append({"name": Path(f["path"]).stem, "title": f"Drawing {f['path']}", "path": f["path"], "file": file, "recorded": f["sha256"],
+        out.append({"name": Path(f["path"]).stem, "title": f"Drawing {f['path']}", "path": f["path"], "code": None, "file": file, "recorded": f["sha256"],
                     "source": f"{res.outputs['directory']}/{f['path']}"})
     return out
 
@@ -81,12 +82,36 @@ def _drawings(context):
 def _documents(context):
     res = _ok(context, DOCUMENTS)
     docs = res.outputs.get("documents", []) if res is not None else []
-    return [{"name": d["name"], "title": d["name"].replace("_", " ").capitalize(), "path": None, "file": None, "recorded": d["sha256"], "source": None}
+    return [{"name": d["name"], "title": d["name"].replace("_", " ").capitalize(), "path": None, "code": None, "file": None, "recorded": d["sha256"], "source": None}
             for d in docs]
 
 
 def deliverables(context):
     return _drawings(context) + _documents(context)
+
+
+def apply_names(items, names, project_code):
+    """Give every deliverable its document code and, for a drawing file, its path inside the transmittal, from `engine_inputs.deliverable_names`.
+
+    `names` is {engine name: naming entry} (see `naming.py`). A deliverable without an entry, an invalid entry, a project code that is not
+    AAAA-PROVIDER-CLIENT-CODE or two files with one path stop the stage: no name is invented.
+    """
+    code_ok = bool(naming.PROJECT_CODE.fullmatch(project_code or ""))
+    errors = [] if code_ok else [f"the project code {project_code!r} must be AAAA-PROVIDER-CLIENT-CODE to name deliverables"]
+    names = names if isinstance(names, dict) else {}
+    for item in items:
+        entry = names.get(item["name"])
+        bad = ["no entry in engine_inputs.deliverable_names"] if entry is None else naming.problems(entry)
+        errors += [f"{item['name']}: {b}" for b in bad]
+        if bad or not code_ok:
+            continue
+        item["code"] = naming.document_code(project_code, entry)
+        if item["file"] is not None:
+            item["path"] = naming.file_path(project_code, entry, Path(item["path"]).suffix)
+    paths = [i["path"] for i in items if i["path"]]
+    errors += [f"two files share the path {p}" for p in sorted({p for p in paths if paths.count(p) > 1})]
+    if errors:
+        raise StageInputError(errors)
 
 
 def _file_hash(item):
@@ -158,9 +183,12 @@ class PackageIssueStage(Stage):
         files, project, start = deliverable_bytes(items), engine_inputs_for_check(context), finding_count(context) + 1
         before = epc_calc_check.check_run(run_dict(context, LAST_PRODUCER), project=project, files=files, run_id=context.pipeline_run_id, start_id=start,
                                           groups=("documents",))
+        names = (context.engine_inputs or {}).get("deliverable_names")
+        if names is not None:
+            apply_names(items, names, (context.profile or {}).get("project_code"))
         transmittal, previous, same = plan_transmittal(store, context.revision)
-        rows = [{"name": i["name"], "title": i["title"], "path": i["path"], "sha256": _file_hash(i), "source": i["source"]} for i in items]
-        manifest = self._manifest(context, transmittal, [{k: r[k] for k in ("name", "title", "path", "sha256")} for r in rows], records, before)
+        rows = [{"name": i["name"], "title": i["title"], "code": i["code"], "path": i["path"], "sha256": _file_hash(i), "source": i["source"]} for i in items]
+        manifest = self._manifest(context, transmittal, [{k: r[k] for k in ("name", "title", "code", "path", "sha256")} for r in rows], records, before)
         replaced = []
         if previous:
             old, manifest = supersede(previous, manifest)
@@ -176,7 +204,11 @@ class PackageIssueStage(Stage):
                                    "pipeline_run_id": context.pipeline_run_id, "review_status": DRAFT, "manifest": path, "files": rows}}
         after = self._check_manifests(context, outputs, files, project, start + len(before))
         outputs["calc_check"] = {"findings_count": len(before) + len(after), "by_severity": by_severity(before + after)}
+        longest = max((len(f"{store.root}/deliverables/{transmittal}/{r['path']}") for r in rows if r["path"]), default=0)
+        outputs["naming"] = {"named": names is not None, "longest_path": longest}
         msg = f"transmittal {transmittal} (revision {context.revision}): {len(rows)} file(s), draft; {not_verified} of {len(records)} norm records not verified"
+        if longest > naming.PATH_WARNING:
+            msg += f"; WARNING: a file path has {longest} characters (Windows stops at about 260): shorten the project folder or the descriptions"
         return self.result("ok", outputs=outputs, findings=before + after, message=msg)
 
     @staticmethod

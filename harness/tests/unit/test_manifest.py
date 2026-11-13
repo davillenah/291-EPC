@@ -14,6 +14,7 @@ import test_pipeline_wiring as W
 from test_ssot_wired_pipeline import ANSWERS
 
 from disciplines.electrical_lv import manifest as M
+from disciplines.electrical_lv import naming as N
 from disciplines.electrical_lv import norm_records as NR
 from disciplines.electrical_lv.manifest import sha256_file
 from disciplines.electrical_lv.intake.profile import build_profile
@@ -408,6 +409,110 @@ class PackageIssueStageTests(unittest.TestCase):
         ctx.revision = "../R1"
         res = STAGES[15].run(ctx)
         self.assertEqual(res.status, "blocked")
+
+
+CODE = "2026-ES-HNDA-3085"
+NAMES = {f"SLD_{CODE}": {"type": "SLD", "number": 1, "description": "main_distribution_board"},
+         f"SLD_{CODE}_TABLA": {"type": "SLD", "number": 1, "description": "main_distribution_board", "page": 2},
+         "calculation_memo": {"type": "CAL", "number": 1, "description": "feeder_sizing_calculation"},
+         "project_summary": {"type": "RPT", "number": 1, "description": "project_summary"},
+         "terminal_block_list": {"type": "LST", "number": 1, "description": "terminal_block_list"},
+         "descriptive_report": {"type": "RPT", "number": 2, "description": "descriptive_report"},
+         "design_basis": {"type": "RPT", "number": 3, "description": "design_basis"}}
+
+
+def named_run(folder, names=NAMES, code=CODE):
+    store = new_store(folder)
+    profile = build_profile(ANSWERS)
+    profile["project_code"] = code
+    ctx = W.context(profile=profile, store=store)
+    ctx.revision = "R0"
+    ctx.engine_inputs["deliverable_names"] = copy.deepcopy(names)
+    return store, run(ctx, run_id="r1", clock=CLOCK)
+
+
+class NamedDeliverablesTests(unittest.TestCase):
+    """The files of a transmittal are named `<code>_<description>`; plans go in a folder with one file per page."""
+
+    def test_drawings_get_their_code_folder_and_pages_and_documents_get_a_code(self):
+        with tempfile.TemporaryDirectory() as folder:
+            store, res = named_run(folder)
+            self.assertEqual(res.results[15].status, "ok", res.results[15].message)
+            (manifest,) = [m for _, m in store.read_manifests()]
+            by_name = {f["name"]: f for f in manifest["files"]}
+            stem = f"{CODE}-E-LV-SLD-001_main_distribution_board"
+            self.assertEqual(by_name[f"SLD_{CODE}"]["path"], f"{stem}/{stem}_P01.dxf")
+            self.assertEqual(by_name[f"SLD_{CODE}_TABLA"]["path"], f"{stem}/{stem}_P02.dxf")
+            self.assertEqual(by_name["calculation_memo"]["code"], f"{CODE}-E-LV-CAL-001")
+            self.assertIsNone(by_name["calculation_memo"]["path"])
+            self.assertEqual(M.check(manifest), [])
+            folder_files = sorted(p.relative_to(store.root / "deliverables" / "TR-001").as_posix() for p in (store.root / "deliverables" / "TR-001").rglob("*") if p.is_file())
+            self.assertEqual(folder_files, [f"{stem}/{stem}_P01.dxf", f"{stem}/{stem}_P02.dxf"])
+            for f in manifest["files"]:
+                if f["path"]:
+                    self.assertEqual(sha256_file(store.root / "deliverables" / "TR-001" / f["path"]), f["sha256"])
+            self.assertTrue(res.results[15].outputs["naming"]["named"])
+            self.assertEqual([f["clause"] for f in res.results[15].findings if "CC-D06" in f["clause"] or "CC-F06" in f["clause"]], [])   # the hashes agree with the recorded ones
+
+    def test_a_deliverable_without_a_name_blocks_and_nothing_is_written(self):
+        with tempfile.TemporaryDirectory() as folder:
+            names = {k: v for k, v in NAMES.items() if k != "design_basis"}
+            store, res = named_run(folder, names)
+            self.assertEqual(res.results[15].status, "blocked")
+            self.assertIn("design_basis: no entry", res.results[15].message)
+            self.assertEqual(store.read_manifests(), [])
+
+    def test_a_project_code_that_is_not_aaaa_prov_cli_code_blocks(self):
+        with tempfile.TemporaryDirectory() as folder:
+            _store, res = named_run(folder, code="TEST-001")
+            self.assertEqual(res.results[15].status, "blocked")
+            self.assertIn("AAAA-PROVIDER-CLIENT-CODE", res.results[15].message)
+
+    def test_two_deliverables_with_the_same_page_block(self):
+        with tempfile.TemporaryDirectory() as folder:
+            names = copy.deepcopy(NAMES)
+            names[f"SLD_{CODE}_TABLA"]["page"] = 1
+            _store, res = named_run(folder, names)
+            self.assertEqual(res.results[15].status, "blocked")
+            self.assertIn("share the path", res.results[15].message)
+
+    def test_without_names_the_engine_names_are_kept(self):
+        with tempfile.TemporaryDirectory() as folder:
+            store = new_store(folder)
+            ctx, res = wired_run(store)
+            self.assertFalse(res.results[15].outputs["naming"]["named"])
+            (manifest,) = [m for _, m in store.read_manifests()]
+            self.assertTrue(all(f["code"] is None for f in manifest["files"]))
+
+
+class NamingTests(unittest.TestCase):
+    def entry(self, **changes):
+        return dict({"type": "SLD", "number": 2, "description": "lighting_distribution"}, **changes)
+
+    def test_code_stem_and_paths(self):
+        self.assertEqual(N.document_code(CODE, self.entry()), f"{CODE}-E-LV-SLD-002")
+        self.assertEqual(N.document_code(CODE, self.entry(level="LS01", sub="MV")), f"{CODE}-E-MV-SLD-002-LS01")
+        self.assertEqual(N.file_path(CODE, self.entry(page=3), ".dxf"), f"{CODE}-E-LV-SLD-002_lighting_distribution/{CODE}-E-LV-SLD-002_lighting_distribution_P03.dxf")
+        self.assertEqual(N.file_path(CODE, self.entry(type="CAL"), ".xlsx"), f"{CODE}-E-LV-CAL-002_lighting_distribution.xlsx")
+
+    def test_invalid_entries_are_reported(self):
+        for change in ({"type": "XXX"}, {"number": 0}, {"number": "1"}, {"description": "Iluminación"}, {"description": "a" * 41}, {"description": "two  words"},
+                       {"level": "L1"}, {"level": "S01"}, {"page": 0}, {"sub": "HV"}, {"extra": 1}):
+            with self.subTest(change=change):
+                self.assertTrue(N.problems(self.entry(**change)))
+        self.assertEqual(N.problems(self.entry(level="L00", page=2)), [])
+
+    def test_every_document_type_of_the_catalog_is_known(self):
+        catalog = json.loads((REPO / "harness" / "schemas" / "document-catalog.json").read_text(encoding="utf-8"))
+        types = {d["type"] for d in catalog["disciplines"]["electrical"]["documents"]}
+        self.assertLessEqual(types, set(N.TYPES))
+        self.assertLessEqual(set(N.PAGED_TYPES), set(N.TYPES))
+
+    def test_the_manifest_schema_pattern_accepts_a_generated_code(self):
+        file = {"name": "x", "title": "x", "code": N.document_code(CODE, self.entry(level="L01")), "path": None, "sha256": "a" * 64}
+        self.assertEqual(validate(build(files=[file]), load_schema(SCHEMA)), [])
+        with self.assertRaises(M.ManifestError):
+            build(files=[dict(file, code="bad")])
 
 
 class BillOfQuantitiesManifestTests(unittest.TestCase):

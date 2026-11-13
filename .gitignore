@@ -49,6 +49,7 @@ Thumbs.db
 !/projects/_template/
 # Intermediate results of pipeline runs (the template keeps its README)
 /projects/*/.epc/runs/*
+/projects/*/*/.epc/runs/*
 !/projects/_template/.epc/runs/README.md
 # Standards' PDFs and other normative sources: local only, read-only
 /harness/knowledge/normative/*

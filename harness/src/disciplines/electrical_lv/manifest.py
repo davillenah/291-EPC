@@ -90,11 +90,11 @@ def check(manifest):
 
 
 def files_of(files):
-    """The `files` list of a manifest: [{name, title, path, sha256}] sorted by name; duplicate names are an error."""
+    """The `files` list of a manifest: [{name, title, code, path, sha256}] sorted by name; duplicate names are an error."""
     names = [f["name"] for f in files]
     if len(set(names)) != len(names):
         raise ManifestError("two files of one transmittal share a name")
-    return [{"name": f["name"], "title": f["title"], "path": f["path"], "sha256": f["sha256"]} for f in sorted(files, key=lambda f: f["name"])]
+    return [{"name": f["name"], "title": f["title"], "code": f.get("code"), "path": f["path"], "sha256": f["sha256"]} for f in sorted(files, key=lambda f: f["name"])]
 
 
 def build_manifest(*, transmittal, title, revision, run_id, inputs_manifest, engine_calls, normative_profile, findings, files,

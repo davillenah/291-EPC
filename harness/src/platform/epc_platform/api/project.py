@@ -10,7 +10,7 @@ from disciplines.electrical_lv.intake.form import IntakeError
 from disciplines.electrical_lv.intake.profile import build_profile
 from disciplines.electrical_lv.store import ProjectStore, StoreError
 from epc_platform.api import flow
-from epc_platform.api.access import actor_of, check_code, existing_project, gate, open_log, pre_gate, project_path
+from epc_platform.api.access import actor_of, check_code, existing_project, gate, new_project_path, open_log, pre_gate, project_path
 from epc_platform.api.envelope import ApiError, api_call, ok
 from epc_platform.workflow import Workflow
 
@@ -33,13 +33,19 @@ def _complete_answers(answers, code):
 
 
 @api_call
-def init_project(projects_root, project_code, answers, *, clock, actor):
-    """Create `<projects_root>/<project_code>/` from the template with the guided-form answers (D24: earthing scheme and short-circuit level required)."""
+def init_project(projects_root, project_code, answers, *, clock, actor, client=None, description=None):
+    """Create a project from the template with the guided-form answers (D24: earthing scheme and short-circuit level required).
+
+    With `client` and `description` the folder is `<projects_root>/<CLIENT>/<project_code>_<DESCRIPTION>` and the code must be `AAAA-PROVIDER-CLIENT-CODE`;
+    without them it is `<projects_root>/<project_code>` (the code is only checked as a safe folder name).
+    """
     who = actor_of(actor)
     code = check_code(project_code)
     pre_gate(who, "create", "inputs")           # no project folder yet: a denial leaves nothing behind (and no log)
     full = _complete_answers(answers, code)
-    root = project_path(projects_root, code, must_exist=False)
+    if (client is None) != (description is None):
+        raise ApiError("invalid_project", "give both the client and the description, or neither")
+    root = project_path(projects_root, code, must_exist=False) if client is None else new_project_path(projects_root, code, client, description)
     try:
         ProjectStore(root).init_with_answers(full)
     except StoreError as exc:

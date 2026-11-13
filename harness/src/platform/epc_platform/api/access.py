@@ -7,6 +7,9 @@ from epc_platform.events import EventLog
 from epc_platform.permissions import PermissionDenied, check, enforce
 
 CODE = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]{0,63}")
+PROJECT_CODE = re.compile(r"[0-9]{4}-[A-Z]{2,4}-[A-Z]{2,4}-[A-Z0-9]{3,6}")       # AAAA-PROVIDER-CLIENT-CODE, e.g. 2026-ES-HNDA-3085
+NAME = re.compile(r"[A-Z0-9]+(_[A-Z0-9]+)*")                                      # client folder and project description: upper case ASCII words joined by _
+TEMPLATE_FOLDER = "_template"
 API_RUN = "api"
 
 
@@ -18,15 +21,49 @@ def check_code(code):
     return text
 
 
+def _matches(folder, code):
+    return folder.name == code or folder.name.startswith(code + "_")
+
+
 def project_path(projects_root, code, must_exist=True):
-    """`<projects_root>/<code>` as a resolved path; refuses anything that leaves the projects root."""
-    root = Path(projects_root).resolve()
-    target = (root / check_code(code)).resolve()
-    if target.parent != root:
+    """The project folder of `code`: `<projects_root>/<code>` (flat) or `<projects_root>/<CLIENT>/<code>_<DESCRIPTION>` (the code is the part before the first `_`).
+
+    A project that exists is searched in both places; two folders with the same code are refused. Refuses anything that leaves the projects root.
+    """
+    root, code = Path(projects_root).resolve(), check_code(code)
+    flat = (root / code).resolve()
+    if flat.parent != root:
         raise ApiError("invalid_project", "the project is outside the projects root")
-    if must_exist and not target.is_dir():
+    if not must_exist or flat.is_dir():
+        return flat
+    found = sorted(_find(root, code)) if root.is_dir() else []
+    if len(found) > 1:
+        raise ApiError("ambiguous_project", f"{len(found)} folders match the project code {code}: {', '.join(p.parent.name + '/' + p.name for p in found)}")
+    if not found:
         raise ApiError("project_not_found", f"unknown project {code}")
-    return target
+    return found[0].resolve()
+
+
+def new_project_path(projects_root, code, client, description):
+    """`<projects_root>/<CLIENT>/<code>_<DESCRIPTION>` for a project that does not exist yet.
+
+    `code` is `AAAA-PROVIDER-CLIENT-CODE` (4-digit year, 2-4 letter provider and client abbreviations, 3-6 letter or digit code); `client` is the full client name and
+    `description` the project description (in the client's language), both upper case ASCII words joined by `_`.
+    """
+    code = check_code(code)
+    if not PROJECT_CODE.fullmatch(code):
+        raise ApiError("invalid_project", "a project code is AAAA-PROVIDER-CLIENT-CODE, for example 2026-ES-HNDA-3085")
+    for what, text in (("client", client), ("description", description)):
+        if not (isinstance(text, str) and NAME.fullmatch(text) and len(text) <= 64):
+            raise ApiError("invalid_project", f"the {what} is upper case ASCII words joined by _ (at most 64 characters), for example HONDA or ILUMINACION_PERIMETRAL_CARPOOL")
+    root = Path(projects_root).resolve()
+    if root.is_dir() and (project_path(root, code, must_exist=False).is_dir() or _find(root, code)):
+        raise ApiError("project_exists", f"a project with the code {code} already exists")
+    return (root / client / f"{code}_{description}").resolve()
+
+
+def _find(root, code):
+    return [p for client in sorted(root.iterdir()) if client.is_dir() and client.name != TEMPLATE_FOLDER for p in client.iterdir() if p.is_dir() and _matches(p, code)]
 
 
 def existing_project(project_dir):
