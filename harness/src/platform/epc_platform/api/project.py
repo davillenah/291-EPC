@@ -43,9 +43,7 @@ def init_project(projects_root, project_code, answers, *, clock, actor, client=N
     code = check_code(project_code)
     pre_gate(who, "create", "inputs")           # no project folder yet: a denial leaves nothing behind (and no log)
     full = _complete_answers(answers, code)
-    if (client is None) != (description is None):
-        raise ApiError("invalid_project", "give both the client and the description, or neither")
-    root = project_path(projects_root, code, must_exist=False) if client is None else new_project_path(projects_root, code, client, description)
+    root = _new_root(projects_root, code, client, description)
     try:
         ProjectStore(root).init_with_answers(full)
     except StoreError as exc:
@@ -54,6 +52,15 @@ def init_project(projects_root, project_code, answers, *, clock, actor, client=N
     gate(log, who, "create", "inputs", f"projects/{code}", run_id="init")
     log.append({"pipeline_run_id": "init", "actor": who, "action": "init", "target": f"projects/{code}", "result": "ok", "detail": {}})
     return ok({"project": code, "path": str(root), "workflow_state": Workflow(root, log).state})
+
+
+def _new_root(projects_root, code, client, description):
+    """The folder of a project that does not exist yet: flat without client and description, in the client folder with both."""
+    if (client is None) != (description is None):
+        raise ApiError("invalid_project", "give both the client and the description, or neither")
+    if client is None:
+        return project_path(projects_root, code, must_exist=False)
+    return new_project_path(projects_root, code, client, description)
 
 
 def _read_state(store):

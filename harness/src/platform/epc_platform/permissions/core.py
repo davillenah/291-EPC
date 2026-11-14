@@ -68,19 +68,28 @@ def _inside(path, base):
         return None
 
 
+def _internal_class(parts):
+    """The class of a path inside `.epc/` (`parts` are the parts after `.epc`), or None."""
+    if not parts:
+        return None
+    if parts[0] in INTERNAL_CLASSES:
+        return parts[0]
+    if parts[0] == MANIFESTS:
+        return R.DELIVERABLES            # the manifests are the record of the deliverables: same rules (pipeline writes, engineer signs)
+    if len(parts) == 1 and parts[0] in ROOT_FILES:
+        return R.SSOT
+    return None
+
+
 def _project_class(rel):
     if not rel.parts:
         raise PathError("the project folder itself is not a classified path")
     if rel.parts[0] in OPEN_CLASSES:
         return rel.parts[0]
-    if rel.parts[0] == INTERNAL and len(rel.parts) > 1:
-        if rel.parts[1] in INTERNAL_CLASSES:
-            return rel.parts[1]
-        if rel.parts[1] == MANIFESTS:
-            return R.DELIVERABLES            # the manifests are the record of the deliverables: same rules (pipeline writes, engineer signs)
-        if len(rel.parts) == 2 and rel.parts[1] in ROOT_FILES:
-            return R.SSOT
-    raise PathError(f"{rel.as_posix()} is not a known project path")
+    cls = _internal_class(rel.parts[1:]) if rel.parts[0] == INTERNAL else None
+    if cls is None:
+        raise PathError(f"{rel.as_posix()} is not a known project path")
+    return cls
 
 
 def _repo_class(repo_root, target):

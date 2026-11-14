@@ -45,16 +45,32 @@ def _section(context):
     return section
 
 
+def _room_ids(ids):
+    return isinstance(ids, list) and bool(ids) and all(isinstance(r, str) for r in ids)
+
+
+def _loads_shape_error(loads, tol):
+    """The error of a malformed `loads` / `tolerance_pct` pair, or None."""
+    if not (isinstance(loads, dict) and loads and all(map(_room_ids, loads.values()))):
+        return "`loads` must be an object {load id: [room ids]}"
+    if isinstance(tol, bool) or not isinstance(tol, (int, float)) or tol < 0:
+        return "`tolerance_pct` is required with `loads` (a number >= 0; it has no default)"
+    return None
+
+
 def _check_loads(section, context):
     """Errors of the `loads` / `tolerance_pct` pair (empty when they are fine or absent)."""
     loads, tol = section.get("loads"), section.get("tolerance_pct")
     if loads is None and tol is None:
         return []
-    if not (isinstance(loads, dict) and loads and all(isinstance(v, list) and v and all(isinstance(r, str) for r in v) for v in loads.values())):
-        return ["`loads` must be an object {load id: [room ids]}"]
-    if isinstance(tol, bool) or not isinstance(tol, (int, float)) or tol < 0:
-        return ["`tolerance_pct` is required with `loads` (a number >= 0; it has no default)"]
-    known = {load["id"]: load for load in (context.loads or {}).get("loads") or []}
+    shape = _loads_shape_error(loads, tol)
+    if shape:
+        return [shape]
+    return _load_list_errors(loads, {load["id"]: load for load in (context.loads or {}).get("loads") or []})
+
+
+def _load_list_errors(loads, known):
+    """The mapped loads that are not in the load list or whose power unit cannot be compared."""
     errors = [f"`loads`: {i} is not in the load list" for i in loads if i not in known]
     errors += [f"`loads`: {i} has power in {known[i]['power']['unit']}; only W and kW can be compared" for i in loads if i in known and known[i]["power"]["unit"] not in POWER_TO_W]
     return errors
@@ -86,6 +102,15 @@ def _run(section):
         raise StageInputError([str(exc)]) from exc
 
 
+def _findings(result, checks, section, run_id, slug):
+    """A major finding per room or area under its target and per load outside the tolerance, then one note per engine warning."""
+    failing = [i for i in result["rooms"] + result["areas"] if i["verification"]["complies"] is False]
+    findings = [engine_finding(n, run_id, slug, item["id"], "mean_illuminance_complies", False, True) for n, item in enumerate(failing, start=1)]
+    findings += [engine_finding(len(findings) + n, run_id, slug, c["load"], "load_power_vs_calculated", c["difference_pct"], f"within {section['tolerance_pct']} %")
+                 for n, c in enumerate([c for c in checks or [] if not c["within_tolerance"]], start=1)]
+    return findings + [warning_finding(len(findings) + n, run_id, slug, w) for n, w in enumerate(result["warnings"], start=1)]
+
+
 class LightingStage(Stage):
     wired = True
     wiring_task = "MIG-40"
@@ -100,12 +125,7 @@ class LightingStage(Stage):
             raise StageInputError(errors)
         result = _run(section)
         checks = load_check(section, result, context.loads["loads"]) if section.get("loads") else None
-        run_id, slug = context.pipeline_run_id, self.spec.slug
-        findings = [engine_finding(n, run_id, slug, item["id"], "mean_illuminance_complies", False, True)
-                    for n, item in enumerate([i for i in result["rooms"] + result["areas"] if i["verification"]["complies"] is False], start=1)]
-        findings += [engine_finding(len(findings) + n, run_id, slug, c["load"], "load_power_vs_calculated", c["difference_pct"], f"within {section['tolerance_pct']} %")
-                     for n, c in enumerate([c for c in checks or [] if not c["within_tolerance"]], start=1)]
-        findings += [warning_finding(len(findings) + n, run_id, slug, w) for n, w in enumerate(result["warnings"], start=1)]
+        findings = _findings(result, checks, section, context.pipeline_run_id, self.spec.slug)
         counts = result["counts"]
         outputs = dict(result, load_check=checks) if checks is not None else result
         return self.result("ok", outputs=outputs, findings=findings, engine_calls=[EC.record_for(ENGINE, FUNCTION)],

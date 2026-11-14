@@ -65,15 +65,18 @@ def _labels(view, path, manifest):
     return out
 
 
+def _drawing_hash(view, entry):
+    files = {Path(str(f.get("path"))).stem: f.get("sha256") for f in view.outputs(14).get("files") or [] if isinstance(f, dict) and str(f.get("path")).endswith(".dxf")}
+    return files.get(entry.get("name"))
+
+
+def _document_hash(view, entry):
+    return next((d.get("sha256") for d in view.outputs(15).get("documents") or [] if isinstance(d, dict) and d.get("name") == entry.get("name")), None)
+
+
 def _recorded(view, entry):
     """The hash stage 14 or 15 recorded for the file `entry` of a manifest, or None."""
-    if entry.get("path"):
-        files = {Path(str(f.get("path"))).stem: f.get("sha256") for f in view.outputs(14).get("files") or [] if isinstance(f, dict) and str(f.get("path")).endswith(".dxf")}
-        return files.get(entry.get("name"))
-    for d in view.outputs(15).get("documents") or []:
-        if isinstance(d, dict) and d.get("name") == entry.get("name"):
-            return d.get("sha256")
-    return None
+    return _drawing_hash(view, entry) if entry.get("path") else _document_hash(view, entry)
 
 
 def _sources(view):
@@ -82,20 +85,24 @@ def _sources(view):
     return {r.get("name"): r.get("source") for r in rows if isinstance(r, dict)}
 
 
+def _entry_issues(view, entry, where, sources):
+    sha, out = entry.get("sha256"), []
+    recorded, source = _recorded(view, entry), sources.get(entry.get("name"))
+    if recorded is not None and sha != recorded:
+        out.append(issue("CC-D06", "package_issue", where, sha, recorded, "The manifest must carry the hash recorded when the deliverable was produced.", "stage 14/15 recorded hash"))
+    if source in view.files and V.sha256_of(view.files[source]) != sha:
+        out.append(issue("CC-D06", "package_issue", where, sha, V.sha256_of(view.files[source]), "The file differs from the hash in its manifest.", "SHA-256 of the file bytes"))
+    if sha is not None and not is_sha256(sha):
+        out.append(issue("CC-F06", "package_issue", where, sha, "64 lowercase hexadecimal characters", "Recompute the hash.", "manifest"))
+    return out
+
+
 def _hash_issues(view, path, manifest, sources):
     out = []
     entries = manifest.get("files")
     for n, entry in enumerate(entries if isinstance(entries, list) else []):
-        if not isinstance(entry, dict):
-            continue
-        sha, where = entry.get("sha256"), f"{path}/files/{n}/sha256"
-        recorded, source = _recorded(view, entry), sources.get(entry.get("name"))
-        if recorded is not None and sha != recorded:
-            out.append(issue("CC-D06", "package_issue", where, sha, recorded, "The manifest must carry the hash recorded when the deliverable was produced.", "stage 14/15 recorded hash"))
-        if source in view.files and V.sha256_of(view.files[source]) != sha:
-            out.append(issue("CC-D06", "package_issue", where, sha, V.sha256_of(view.files[source]), "The file differs from the hash in its manifest.", "SHA-256 of the file bytes"))
-        if sha is not None and not is_sha256(sha):
-            out.append(issue("CC-F06", "package_issue", where, sha, "64 lowercase hexadecimal characters", "Recompute the hash.", "manifest"))
+        if isinstance(entry, dict):
+            out += _entry_issues(view, entry, f"{path}/files/{n}/sha256", sources)
     return out
 
 

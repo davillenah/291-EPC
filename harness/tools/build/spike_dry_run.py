@@ -22,6 +22,7 @@ Needs the engine packages: the script puts `harness/src` and every engine `src` 
 `harness/tests/integration/synthetic_lv.py` the way the tests do (a full run takes about half a minute).
 """
 import argparse
+from collections import ChainMap
 import contextlib
 import copy
 import importlib
@@ -362,8 +363,12 @@ def classify_difference(S, rel, one, two):
     return "embedded" if same else "unexplained"
 
 
+def manifest_hashes(path):
+    return {f"{path.name}:{f['name']}": f["sha256"] for f in M.S.read_json(path)["files"]}
+
+
 def deliverable_hashes(proj):
-    return {f"{p.name}:{f['name']}": f["sha256"] for p in proj.manifests() for f in M.S.read_json(p)["files"]}
+    return dict(ChainMap(*map(manifest_hashes, proj.manifests())))
 
 
 PINNED_DATE = "2026-03-04"
@@ -648,6 +653,12 @@ def executed_stages(proj, run_id):
     return sorted(int(m.group(1)) for line in lines for m in [re.search(rf"run {run_id} \| stage (\d+) ", line)] if m)
 
 
+def manifests_of_revisions(proj, *revisions):
+    """The manifests of the project, one list for each of the revisions asked."""
+    every = [M.S.read_json(p) for p in proj.manifests()]
+    return tuple([m for m in every if m["revision"] == r] for r in revisions)
+
+
 def run_correction(run):
     proj = run.started("correction")
     before, signed_path, signature = stage_outputs(proj), *sign_manifest(proj)
@@ -658,9 +669,7 @@ def run_correction(run):
     code, env = M.S.envelope(proj.root, "run", M.S.CODE, "--loads", str(corrected), "--engine-inputs", str(proj.engine_inputs_file), "--run-id", "dry-run-2",
                              "--revision", "R1", "--detail", *M.S.ORCHESTRATOR)
     after = stage_outputs(proj)
-    every = [M.S.read_json(p) for p in proj.manifests()]
-    old = [m for m in every if m["revision"] == "R0"]
-    new = [m for m in every if m["revision"] == "R1"]
+    old, new = manifests_of_revisions(proj, "R0", "R1")
     signed_old = M.S.read_json(signed_path)
     return {"review_code": review_code, "run_code": code, "run_ok": env["ok"] and env["data"]["run"]["summary"]["ok"],
             "unfrozen_loads_accepted": env["ok"] and env["data"]["run"]["summary"]["stopped_at"] is None,

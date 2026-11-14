@@ -17,7 +17,7 @@
         "short_circuit",
         "voltage_drop"
       ],
-      "hash": "40f9bc0d1825289a"
+      "hash": "c4eb137d1285b556"
     },
     "board-design": {
       "version": "0.2.1",
@@ -49,7 +49,7 @@
         "titleblock",
         "voltage_drop"
       ],
-      "hash": "729a8408a1fcdfba"
+      "hash": "624d3b0bd5fdad06"
     },
     "doc-quality": {
       "version": "0.1.0",
@@ -60,7 +60,7 @@
       "engine": [
         "documents"
       ],
-      "hash": "07113a5b8fe1fa79"
+      "hash": "4056ed77a2620d7f"
     },
     "dxf-output": {
       "version": "0.1.0",
@@ -71,7 +71,7 @@
       "engine": [
         "dxf"
       ],
-      "hash": "a93e03917393624d"
+      "hash": "4056ed77a2620d7f"
     },
     "equipment-catalog": {
       "version": "0.1.0",
@@ -80,7 +80,7 @@
       "requires": {},
       "skills": [],
       "engine": [],
-      "hash": "5bdc1c926c810f0e"
+      "hash": "8e2d0c61b0acc423"
     },
     "iec-symbols": {
       "version": "0.4.19",
@@ -91,7 +91,7 @@
       "engine": [
         "symbols"
       ],
-      "hash": "5123317d8bac67e0"
+      "hash": "4056ed77a2620d7f"
     },
     "intake-analysis": {
       "version": "0.1.0",
@@ -102,7 +102,7 @@
         "structure-customer-input"
       ],
       "engine": [],
-      "hash": "40d509910df7f5f4"
+      "hash": "8e2d0c61b0acc423"
     },
     "iram-titleblock": {
       "version": "0.5.4",
@@ -116,7 +116,7 @@
         "dxf",
         "titleblock"
       ],
-      "hash": "a8958092c6dde5e8"
+      "hash": "d9617a772556568d"
     },
     "mld": {
       "version": "0.2.2",
@@ -143,7 +143,7 @@
         "titleblock",
         "voltage_drop"
       ],
-      "hash": "670edf89f0b338ed"
+      "hash": "fcc71236aa149cc4"
     },
     "plan-drawing": {
       "version": "0.1.0",
@@ -157,7 +157,7 @@
         "dxf",
         "plan"
       ],
-      "hash": "c6e235f12f85483b"
+      "hash": "d9617a772556568d"
     },
     "pm2-docs": {
       "version": "0.1.0",
@@ -172,7 +172,7 @@
       "engine": [
         "documents"
       ],
-      "hash": "72daa543041929ec"
+      "hash": "4056ed77a2620d7f"
     },
     "procurement": {
       "version": "0.1.0",
@@ -185,7 +185,7 @@
         "request-quotation"
       ],
       "engine": [],
-      "hash": "9aff2afd8ff59f37"
+      "hash": "8e2d0c61b0acc423"
     },
     "sld": {
       "version": "0.1.4",
@@ -212,7 +212,7 @@
         "titleblock",
         "voltage_drop"
       ],
-      "hash": "deb6c39d7795b111"
+      "hash": "fcc71236aa149cc4"
     },
     "spec-writer": {
       "version": "0.1.0",
@@ -227,7 +227,7 @@
       "engine": [
         "documents"
       ],
-      "hash": "49fae3751a1f8488"
+      "hash": "4056ed77a2620d7f"
     },
     "standard-ingest": {
       "version": "0.1.0",
@@ -241,7 +241,7 @@
         "rules",
         "standards"
       ],
-      "hash": "4718f973a56d0737"
+      "hash": "d9617a772556568d"
     }
   },
   "skills": {

@@ -70,7 +70,7 @@ BLOCKED = [
     ("redirect", bash(f"echo x > {P}/.epc/ssot/a.json"), "D-07"),
     ("append", bash(f"echo x >> {P}/deliverables/R0/a.txt"), "D-07"),
     ("redirect no space", bash(f"echo x>{P}/inputs/a.txt"), "D-04"),
-    ("redirect backslash", bash("echo x > projects\\p1\\ssot\\a.json"), "D-07"),
+    ("redirect backslash", bash("echo x > projects\\p1\\.epc\\ssot\\a.json"), "D-07"),
     ("tee", bash(f"echo x | tee {P}/.epc/ssot/a.json"), "D-07"),
     ("Set-Content", bash(f"Set-Content -Path {P}/.epc/ssot/a.json -Value x", "PowerShell"), "D-07"),
     ("Out-File", bash(f"'x' | Out-File {P}/deliverables/a.txt", "PowerShell"), "D-07"),
