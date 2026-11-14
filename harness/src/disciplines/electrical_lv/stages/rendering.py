@@ -72,13 +72,19 @@ def _cable_list_report(document, project):
             "blocks": [{"type": "h", "text": document["board"]}, _table(list(CABLE_COLUMNS) + ["runs"], rows)]}
 
 
+def _has_sections(document):
+    """Whether a document is a list of sections whose parts are blocks or items (the structure `_section` lays out)."""
+    sections = document.get("sections")
+    return isinstance(sections, list) and all(isinstance(x, dict) and ("blocks" in x or "items" in x) for x in sections)
+
+
 def to_report(name, document, project):
     """The report structure of a document, or None when its structure is its own (not rendered)."""
     if name == "cable_list":
         return _cable_list_report(document, project)
     if "blocks" in document and "title" in document:
         return dict(document)
-    if not isinstance(document.get("sections"), list) or not all(isinstance(s, dict) and ("blocks" in s or "items" in s) for s in document["sections"]):
+    if not _has_sections(document):
         return None
     title = document.get("title") or name.replace("_", " ").capitalize()
     return {"title": title, "subtitle": project, "footer": f"{title} - {project}", "page_label": PAGE_LABEL, "blocks": [b for s in document["sections"] for b in _section(s)]}
@@ -88,21 +94,9 @@ def _tables(report):
     return [b for b in report["blocks"] if b["type"] == "table"]
 
 
-def _write_xlsx(path, reports):
-    """One workbook with a sheet per table of the reports that have tables; the sheet is named `<document>-<n>`."""
-    from openpyxl import Workbook
-    book = Workbook()
-    book.remove(book.active)
-    for name, report in reports:
-        for n, t in enumerate(_tables(report), start=1):
-            sheet = book.create_sheet(f"{name[:25]}-{n}")
-            sheet.append([c for c, _ in t["columns"]])
-            for row in t["rows"]:
-                sheet.append(row)
-    if not book.sheetnames:
-        return False
-    book.save(path)
-    return True
+def _sheets(reports):
+    """[(sheet name, columns, rows)] of every table of the reports, the sheet named `<document>-<n>`."""
+    return [(f"{name}-{n}", [c for c, _ in t["columns"]], t["rows"]) for name, report in reports for n, t in enumerate(_tables(report), start=1)]
 
 
 def _entry(path, root):
@@ -110,22 +104,31 @@ def _entry(path, root):
     return {"name": Path(path).stem + "_" + Path(path).suffix.lstrip("."), "path": Path(path).relative_to(root).as_posix(), "bytes": len(data), "sha256": hashlib.sha256(data).hexdigest()}
 
 
+def _render_one(name, report, out_dir, formats):
+    """The files of one document in the formats asked (the report renderers of the drawing engine)."""
+    from epc_drawing.export import report_docx, report_pdf
+    done = []
+    if "pdf" in formats:
+        done.append(_entry(report_pdf.render(report, out_dir / f"{name}.pdf"), out_dir.parent))
+    if "docx" in formats:
+        done.append(_entry(report_docx.render(report, out_dir / f"{name}.docx"), out_dir.parent))
+    return done
+
+
+def _reports(docs, project):
+    """([(name, report)] of the documents that have a report structure, [names of the ones that do not])."""
+    every = [(name, to_report(name, document, project)) for name, document in docs.items()]
+    return [(n, r) for n, r in every if r is not None], [n for n, r in every if r is None]
+
+
 def render_all(docs, project, out_dir, formats):
     """Writes the files of the documents under `out_dir`; returns ({"files": [...], "not_rendered": [...]}, engine calls)."""
-    from epc_drawing.export import report_docx, report_pdf
+    from epc_drawing.export import tables_xlsx
     out_dir = Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
-    reports, files, skipped = [], [], []
-    for name, document in docs.items():
-        report = to_report(name, document, project)
-        if report is None:
-            skipped.append(name)
-            continue
-        reports.append((name, report))
-        if "pdf" in formats:
-            files.append(_entry(report_pdf.render(report, out_dir / f"{name}.pdf"), out_dir.parent))
-        if "docx" in formats:
-            files.append(_entry(report_docx.render(report, out_dir / f"{name}.docx"), out_dir.parent))
-    if "xlsx" in formats and _write_xlsx(out_dir / f"{project or 'documents'}_tables.xlsx", reports):
-        files.append(_entry(out_dir / f"{project or 'documents'}_tables.xlsx", out_dir.parent))
+    reports, skipped = _reports(docs, project)
+    files = [f for name, report in reports for f in _render_one(name, report, out_dir, formats)]
+    book = out_dir / f"{project or 'documents'}_tables.xlsx"
+    if "xlsx" in formats and tables_xlsx.write_tables(book, _sheets(reports)):
+        files.append(_entry(book, out_dir.parent))
     return {"files": files, "not_rendered": skipped}, [EC.record_for(ENGINE, FUNCTIONS[f]) for f in ("pdf", "docx") if f in formats]
