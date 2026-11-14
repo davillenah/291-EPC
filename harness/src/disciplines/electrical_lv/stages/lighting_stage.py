@@ -10,15 +10,17 @@ the transformer inputs of stage 4: the data of a room (size, height, activity, l
   valid section           `ok`: the engine result as it is, one engine call, a `major` finding for every room or area whose mean illuminance
                           does not reach its target, and one `note` finding per engine warning (draft, D21)
 
-The result does NOT change the load list: the power of the lighting circuits is still the one of `loads.csv`. The engine's installed power is reported
-beside it so the engineer can compare both.
+The result does NOT change the load list: the power of the lighting circuits is still the one of `loads.csv`. To compare both, the section may also carry
+`loads` ({load id: [room ids]}) and `tolerance_pct` (required with `loads`, never defaulted): the installed power of those rooms is compared with the power of
+the load (units W or kW only) and `outputs["load_check"]` lists each pair; a pair that differs by more than the tolerance is a `major` finding.
 """
 from disciplines.electrical_lv.stages import engine_calls as EC
 from disciplines.electrical_lv.stages.base import Stage, StageInputError, engine_finding
 
 ENGINE = "calculation/lighting"
 FUNCTION = "epc_lighting.run"
-KEYS = ("document", "options")
+KEYS = ("document", "options", "loads", "tolerance_pct")
+POWER_TO_W = {"W": 1.0, "kW": 1000.0}
 NOT_PROVIDED = "lighting inputs not provided"
 
 
@@ -43,6 +45,38 @@ def _section(context):
     return section
 
 
+def _check_loads(section, context):
+    """Errors of the `loads` / `tolerance_pct` pair (empty when they are fine or absent)."""
+    loads, tol = section.get("loads"), section.get("tolerance_pct")
+    if loads is None and tol is None:
+        return []
+    if not (isinstance(loads, dict) and loads and all(isinstance(v, list) and v and all(isinstance(r, str) for r in v) for v in loads.values())):
+        return ["`loads` must be an object {load id: [room ids]}"]
+    if isinstance(tol, bool) or not isinstance(tol, (int, float)) or tol < 0:
+        return ["`tolerance_pct` is required with `loads` (a number >= 0; it has no default)"]
+    known = {load["id"]: load for load in (context.loads or {}).get("loads") or []}
+    errors = [f"`loads`: {i} is not in the load list" for i in loads if i not in known]
+    errors += [f"`loads`: {i} has power in {known[i]['power']['unit']}; only W and kW can be compared" for i in loads if i in known and known[i]["power"]["unit"] not in POWER_TO_W]
+    return errors
+
+
+def load_check(section, result, loads):
+    """[{load, load_w, calculated_w, difference_pct, within_tolerance}]: the power of each mapped load against the installed power of its rooms."""
+    installed = {r["id"]: r["energy"]["installed_power_w"] for r in result["rooms"]}
+    missing = sorted({r for ids in section["loads"].values() for r in ids} - set(installed))
+    if missing:
+        raise StageInputError([f"`loads`: room(s) {', '.join(missing)} are not in the lighting document"])
+    by_id = {load["id"]: load for load in loads}
+    rows = []
+    for lid, ids in section["loads"].items():
+        power = by_id[lid]["power"]
+        load_w, calc_w = power["value"] * POWER_TO_W[power["unit"]], sum(installed[r] for r in ids)
+        diff = 100.0 * (calc_w - load_w) / load_w if load_w else None
+        rows.append({"load": lid, "rooms": list(ids), "load_w": load_w, "calculated_w": calc_w, "difference_pct": diff,
+                     "within_tolerance": diff is not None and abs(diff) <= section["tolerance_pct"]})
+    return rows
+
+
 def _run(section):
     import epc_lighting
     try:
@@ -61,11 +95,18 @@ class LightingStage(Stage):
         section = _section(context)
         if section is None:
             return self.result("not_available", message=NOT_PROVIDED, reason="no_lighting_inputs")
+        errors = _check_loads(section, context)
+        if errors:
+            raise StageInputError(errors)
         result = _run(section)
+        checks = load_check(section, result, context.loads["loads"]) if section.get("loads") else None
         run_id, slug = context.pipeline_run_id, self.spec.slug
         findings = [engine_finding(n, run_id, slug, item["id"], "mean_illuminance_complies", False, True)
                     for n, item in enumerate([i for i in result["rooms"] + result["areas"] if i["verification"]["complies"] is False], start=1)]
+        findings += [engine_finding(len(findings) + n, run_id, slug, c["load"], "load_power_vs_calculated", c["difference_pct"], f"within {section['tolerance_pct']} %")
+                     for n, c in enumerate([c for c in checks or [] if not c["within_tolerance"]], start=1)]
         findings += [warning_finding(len(findings) + n, run_id, slug, w) for n, w in enumerate(result["warnings"], start=1)]
         counts = result["counts"]
-        return self.result("ok", outputs=result, findings=findings, engine_calls=[EC.record_for(ENGINE, FUNCTION)],
+        outputs = dict(result, load_check=checks) if checks is not None else result
+        return self.result("ok", outputs=outputs, findings=findings, engine_calls=[EC.record_for(ENGINE, FUNCTION)],
                            message=f"{counts['rooms']} room(s), {counts['areas']} area(s), {counts['luminaires']} luminaire(s) (draft)")

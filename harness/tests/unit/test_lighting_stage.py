@@ -77,5 +77,45 @@ class LightingSliceTests(unittest.TestCase):
         self.assertTrue(all(f["document"] != "lighting" for r in logical for f in r["findings"]))
 
 
+POWERED = copy.deepcopy(SMALL)
+POWERED["luminaires"][0]["power_w"] = 64
+
+
+class LoadCheckTests(unittest.TestCase):
+    def run_slice(self, section, power=None):
+        inputs = W.inputs_doc()
+        inputs["lighting"] = section
+        ctx = W.context(engine_inputs=inputs)
+        run(ctx, stop_after=2, run_id="r3")
+        if power is not None:
+            ctx.loads["loads"][0]["power"] = power
+        return STAGES[2].run(ctx)
+
+    def test_a_load_that_matches_the_rooms_is_within_tolerance(self):
+        res = self.run_slice({"document": POWERED, "loads": {"L-01": ["R1"]}, "tolerance_pct": 5}, {"value": 128, "unit": "W"})
+        check = res.outputs["lighting"]["load_check"]
+        self.assertEqual((res.status, len(check), check[0]["within_tolerance"], check[0]["calculated_w"], check[0]["load_w"]), ("ok", 1, True, 128.0, 128.0))
+        self.assertFalse([f for f in res.findings if f["field"].endswith("load_power_vs_calculated")])
+
+    def test_a_load_that_differs_gives_a_major_finding(self):
+        res = self.run_slice({"document": POWERED, "loads": {"L-01": ["R1"]}, "tolerance_pct": 5})      # 4.2 kW in the load list against 128 W calculated
+        found = [f for f in res.findings if f["field"] == "L-01/load_power_vs_calculated"]
+        self.assertEqual((res.status, len(found), found[0]["severity"]), ("ok", 1, "major"))
+        self.assertFalse(res.outputs["lighting"]["load_check"][0]["within_tolerance"])
+        self.assertEqual(len({f["id"] for f in res.findings}), len(res.findings))
+
+    def test_wrong_pairs_block(self):
+        for extra, text in (({"loads": {"L-01": ["R1"]}}, "tolerance_pct"), ({"loads": {"L-01": ["R1"]}, "tolerance_pct": -1}, "tolerance_pct"),
+                            ({"loads": {"X-99": ["R1"]}, "tolerance_pct": 5}, "not in the load list"), ({"loads": {"L-01": ["R9"]}, "tolerance_pct": 5}, "R9"),
+                            ({"loads": {"E-01": ["R1"]}, "tolerance_pct": 5}, "only W and kW"), ({"loads": ["L-01"], "tolerance_pct": 5}, "{load id")):
+            with self.subTest(extra=extra):
+                res = self.run_slice({"document": POWERED, **extra})
+                self.assertEqual(res.status, "blocked")
+                self.assertIn(text, res.message)
+
+    def test_without_loads_there_is_no_check(self):
+        self.assertNotIn("load_check", self.run_slice({"document": POWERED}).outputs["lighting"])
+
+
 if __name__ == "__main__":
     unittest.main()
