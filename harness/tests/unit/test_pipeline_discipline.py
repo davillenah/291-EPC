@@ -1,4 +1,4 @@
-"""electrical_lv pipeline: the 16-stage table against the PRD, ordering, not_available rules, stages 1-3 (synthetic data)."""
+"""electrical_lv pipeline: the 12-stage table against the PRD, ordering, not_available rules, stages 1-3 (synthetic data)."""
 import json
 import re
 import tempfile
@@ -58,8 +58,8 @@ class Inputs:
 class TableTests(unittest.TestCase):
     def test_table_matches_the_prd(self):
         rows = prd_rows()
-        self.assertEqual(len(rows), 16)
-        self.assertEqual(len(STAGE_TABLE), 16)
+        self.assertEqual(len(rows), 12)
+        self.assertEqual(len(STAGE_TABLE), 12)
         for spec, (number, title, engines, status) in zip(STAGE_TABLE, rows):
             with self.subTest(stage=spec.number):
                 self.assertEqual(spec.number, int(number))
@@ -72,20 +72,20 @@ class TableTests(unittest.TestCase):
                     self.assertIn(group, engines)
 
     def test_order_is_fixed_and_slugs_are_unique(self):
-        self.assertEqual([s.number for s in STAGES], list(range(1, 17)))
+        self.assertEqual([s.number for s in STAGES], list(range(1, 13)))
         slugs = [s.spec.slug for s in STAGES]
-        self.assertEqual(len(set(slugs)), 16)
+        self.assertEqual(len(set(slugs)), 12)
         self.assertTrue(all(re.fullmatch(r"[a-z_]+", s) for s in slugs))
 
     def test_wiring_flags(self):
         wired = [s.number for s in STAGES if s.wired]
         self.assertEqual(wired, list(WIRED_STAGES))
-        self.assertEqual(wired, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16])
+        self.assertEqual(wired, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])
         to_wire = [s.number for s in STAGES if s.wiring_task == "MIG-30c"]
-        self.assertEqual(to_wire, [4, 5, 7, 8, 9, 10, 11, 12, 14, 15])
-        self.assertEqual(STAGES[12].wiring_task, "MIG-35a")
-        self.assertEqual(STAGES[15].wiring_task, "MIG-32")
-        self.assertEqual(STAGES[5].wiring_task, "MIG-39a")
+        self.assertEqual(to_wire, [5, 7, 8, 10, 11])         # 3 and 6 are grouped stages: their slices carry the wiring
+        self.assertEqual(STAGES[8].wiring_task, "MIG-35a")
+        self.assertEqual(STAGES[11].wiring_task, "MIG-32")
+        self.assertEqual(STAGES[3].wiring_task, "MIG-39a")
 
 
 class NotAvailableTests(unittest.TestCase):
@@ -95,7 +95,7 @@ class NotAvailableTests(unittest.TestCase):
         ctx = PipelineContext(pipeline_run_id="r")
         unwired = [s for s in STAGES if not s.wired]
         self.assertEqual([s.number for s in unwired], [])
-        # stage 6 is wired (MIG-39a): its not_available result without the `transformer` inputs is tested in test_supply_stage.py
+        # stage 4 is wired (MIG-39a): its not_available result without the `transformer` inputs is tested in test_supply_stage.py
         for stage in unwired:
             with self.subTest(stage=stage.number):
                 out = stage.run(ctx)
@@ -104,9 +104,9 @@ class NotAvailableTests(unittest.TestCase):
                 self.assertEqual(out.engine_calls, [])
                 self.assertEqual(out.findings, [])
         messages = {s.number: s.run(ctx).message for s in unwired}
-        self.assertEqual(EngineStage(STAGE_TABLE[3]).run(ctx).message, "engine wiring: MIG-30c")
-        self.assertNotIn(13, messages)
-        self.assertNotIn(16, messages)
+        self.assertEqual(EngineStage(STAGE_TABLE[4]).run(ctx).message, "engine wiring: MIG-30c")
+        self.assertNotIn(9, messages)
+        self.assertNotIn(12, messages)
 
     def test_planned_stages_never_return_outputs(self):
         for stage in STAGES:
@@ -115,30 +115,30 @@ class NotAvailableTests(unittest.TestCase):
 
     def test_a_not_available_result_cannot_carry_outputs(self):
         with self.assertRaises(ValueError):
-            StageResult(6, "not_available", outputs={"x": 1})
+            StageResult(4, "not_available", outputs={"x": 1})
         with self.assertRaises(ValueError):
-            StageResult(6, "weird")
+            StageResult(4, "weird")
 
 
 class EarlyStageTests(unittest.TestCase):
-    def test_stages_1_to_3_run_on_synthetic_inputs(self):
+    def test_stages_1_to_2_run_on_synthetic_inputs(self):
         ctx = Inputs(self).context()
-        res = run(ctx, stop_after=3, run_id="r1")
-        self.assertEqual([r.status for r in res.results], ["ok", "ok", "ok"])
+        res = run(ctx, stop_after=2, run_id="r1")
+        self.assertEqual([r.status for r in res.results], ["ok", "ok"])
         self.assertEqual(res.results[0].outputs["profile"]["project_code"], "TEST-001")
         self.assertEqual(ctx.inputs_manifest["files"][0]["path"], "plans/a1.dxf")
-        self.assertEqual(res.results[1].outputs["design_basis"]["supply"]["earthing_system"], "TN")
-        self.assertTrue(res.results[2].outputs["verified"])
+        self.assertEqual(res.results[1].outputs["requirements"]["design_basis"]["supply"]["earthing_system"], "TN")
+        self.assertTrue(res.results[1].outputs["input_verification"]["verified"])
         self.assertTrue(res.summary["ok"])
         self.assertEqual(res.summary["stopped_at"], None)
 
-    def test_a_run_stops_at_stage_4_when_the_calculation_data_is_missing(self):
+    def test_a_run_stops_at_stage_3_when_the_calculation_data_is_missing(self):
         # these answers have no supply voltage and the loads have no run length: the engines are not called
         res = run(Inputs(self).context(), run_id="r1")
-        self.assertEqual([r.status for r in res.results], ["ok", "ok", "ok", "blocked"])
-        self.assertEqual(res.summary["stopped_at"], 4)
-        self.assertEqual(res.results[3].outputs, {})
-        self.assertIn("supply.voltage", res.results[3].message)
+        self.assertEqual([r.status for r in res.results], ["ok", "ok", "blocked"])
+        self.assertEqual(res.summary["stopped_at"], 3)
+        self.assertEqual(res.results[2].outputs, {})
+        self.assertIn("supply.voltage", res.results[2].message)
         self.assertFalse(res.summary["ok"])
 
     def test_missing_earthing_blocks_stage_1(self):
@@ -149,13 +149,13 @@ class EarlyStageTests(unittest.TestCase):
         self.assertIn("D24", res.results[0].message)
         self.assertEqual(res.summary["stopped_at"], 1)
 
-    def test_verification_findings_block_stage_3_and_stop_the_run(self):
+    def test_verification_findings_block_stage_2_and_stop_the_run(self):
         bad = json.loads(json.dumps(LOADS))
         bad["loads"][0]["area"] = "ZZ"
         res = run(Inputs(self, bad).context(), run_id="r1")
-        self.assertEqual([r.status for r in res.results], ["ok", "ok", "blocked"])
-        self.assertTrue(res.results[2].findings[0]["clause"].endswith("IV-02"))
-        self.assertEqual(res.summary["stopped_at"], 3)
+        self.assertEqual([r.status for r in res.results], ["ok", "blocked"])
+        self.assertTrue(res.results[1].findings[0]["clause"].endswith("IV-02"))
+        self.assertEqual(res.summary["stopped_at"], 2)
 
     def test_stop_after_ends_the_run_after_that_stage(self):
         res = run(Inputs(self).context(), stop_after=2, run_id="r")
@@ -177,21 +177,21 @@ class RunBehaviourTests(unittest.TestCase):
             return self.result("ok", outputs={"n": self.number})
 
     def test_run_stops_at_the_first_failed_stage(self):
-        stages = [self.Fine(STAGE_TABLE[12]), self.Boom(STAGE_TABLE[15]), self.Fine(STAGE_TABLE[12])]
+        stages = [self.Fine(STAGE_TABLE[8]), self.Boom(STAGE_TABLE[11]), self.Fine(STAGE_TABLE[8])]
         res = run(PipelineContext(), stages=stages, run_id="r")
         self.assertEqual([r.status for r in res.results], ["ok", "failed"])
-        self.assertEqual(res.summary["stopped_at"], 16)
+        self.assertEqual(res.summary["stopped_at"], 12)
         self.assertFalse(res.summary["ok"])
         self.assertIn("RuntimeError: boom", res.results[1].message)
 
     def test_run_can_go_on_when_told_to(self):
-        stages = [self.Boom(STAGE_TABLE[12]), self.Fine(STAGE_TABLE[15])]
+        stages = [self.Boom(STAGE_TABLE[8]), self.Fine(STAGE_TABLE[11])]
         res = run(PipelineContext(), stages=stages, run_id="r", stop_on=())
         self.assertEqual([r.status for r in res.results], ["failed", "ok"])
 
     def test_stop_after_must_be_a_stage_number(self):
         with self.assertRaises(ValueError):
-            run(PipelineContext(), stop_after=17)
+            run(PipelineContext(), stop_after=13)
 
     def test_same_inputs_and_run_id_give_the_same_result(self):
         inputs = Inputs(self)
@@ -217,13 +217,13 @@ class RunBehaviourTests(unittest.TestCase):
 
 
 class RulesTests(unittest.TestCase):
-    def test_every_stage_has_an_entry_and_stage_4_needs_loads_and_stage_3(self):
+    def test_every_stage_has_an_entry_and_stage_3_needs_loads_and_stage_2(self):
         table = load_preconditions()
-        self.assertEqual(sorted(table), list(range(1, 17)))
-        findings = check_preconditions(4, PipelineContext(loads={"loads": []}), "r", table)
-        self.assertEqual([f["clause"].split()[-1] for f in findings], ["PC-04-1", "PC-04-2"])
-        ctx = PipelineContext(loads=LOADS, results={3: StageResult(3, "ok")})
-        self.assertEqual(check_preconditions(4, ctx), [])
+        self.assertEqual(sorted(table), list(range(1, 13)))
+        findings = check_preconditions(3, PipelineContext(loads={"loads": []}), "r", table)
+        self.assertEqual([f["clause"].split()[-1] for f in findings], ["PC-03-1", "PC-03-2"])
+        ctx = PipelineContext(loads=LOADS, results={2: StageResult(2, "ok")})
+        self.assertEqual(check_preconditions(3, ctx), [])
 
     def test_unmet_precondition_blocks_a_wired_stage(self):
         res = STAGES[1].run(PipelineContext())

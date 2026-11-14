@@ -1,12 +1,14 @@
-"""Stages 4, 5 and 7-12: slices of the calculation chain (MIG-30c).
+"""The calculation stages: slices of the calculation chain (MIG-30c).
 
 `engine_calls.chain` runs the engines once; each stage here selects keys of that raw result (pure selection, no rounding, no
-unit change, no arithmetic) and copies them into `outputs`. A verdict flag that the engine returned as False becomes a finding.
+unit change, no arithmetic) and copies them into `outputs`. A verdict flag that the engine returned as False becomes a finding. A grouped stage (`grouped.py`) runs several slices
+and keeps one section of outputs per slice.
 """
 import copy
 
 from disciplines.electrical_lv.stages import engine_calls as EC
 from disciplines.electrical_lv.stages.base import Stage, engine_finding
+from disciplines.electrical_lv.stages.grouped import GroupedStage
 from disciplines.electrical_lv.stages.mappings import ENGINE_CHAIN, KIND_SYSTEM, PENDING_ITEMS
 
 CALC = "epc_aea90364.aea_pipeline.calculate"
@@ -51,6 +53,7 @@ class ChainStage(Stage):
     fields = {}
     flags = ()
     row_key = "circuits"
+    pending_key = None              # the key of PENDING_ITEMS (the number of the slice in the former 16-stage table)
 
     def extra(self, ch, rows):
         return {}
@@ -59,8 +62,8 @@ class ChainStage(Stage):
         ch = EC.chain(context)
         rows = circuit_rows(ch, self.fields)
         outputs = {self.row_key: rows, **self.extra(ch, rows)}
-        if PENDING_ITEMS.get(self.number):
-            outputs["pending"] = copy.deepcopy(PENDING_ITEMS[self.number])
+        if PENDING_ITEMS.get(self.pending_key):
+            outputs["pending"] = copy.deepcopy(PENDING_ITEMS[self.pending_key])
         return self.result("ok", outputs=outputs, findings=self.findings(context, rows), engine_calls=EC.calls(ch, *self.calls))
 
     def findings(self, context, rows):
@@ -69,6 +72,7 @@ class ChainStage(Stage):
 
 
 class LoadScheduleStage(ChainStage):
+    pending_key = 4
     fields = {"ib_a": ("detalle", ("ib_a",)), "p_kw": ("detalle", ("p_kw",)), "phases": ("detalle", ("fases",)), "fp": ("detalle", ("fp",)),
               "parent": ("detalle", ("padre",))}
 
@@ -140,27 +144,48 @@ class ShortCircuitStage(ChainStage):
 
 
 class ProtectionStage(ChainStage):
+    """The protection device chosen for each circuit (slice 11 of the cable sizing stage)."""
+
     calls = WITH_MEMO
+    pending_key = 11
     flags = ("protection_ok",)
     fields = {"device": ("datos", ("disp",)), "device_kind": ("memo", ("proteccion", "kind")), "curve": ("memo", ("proteccion", "curva")),
               "in_a": ("memo", ("proteccion", "In")), "overload_ok": ("memo", ("proteccion", "sobrecarga_ok")),
               "coordination_ok": ("memo", ("proteccion", "coordinacion_ok")), "protection_ok": ("memo", ("proteccion", "cumple"))}
 
-    def extra(self, ch, rows):
-        return {"selectivity": copy.deepcopy(ch["memo"]["selectividad"]), "selectivity_summary": copy.deepcopy(ch["memo"]["resumen"]["selectividad"])}
 
-    def findings(self, context, rows):
-        found = super().findings(context, rows)
-        weak = [p for p in EC.chain(context)["memo"]["selectividad"] if p["resultado"] == "revisar"]
-        n = len(found)
-        return found + [engine_finding(n + i, context.pipeline_run_id, self.spec.slug, p["aguas_abajo"], "selectivity", p["resultado"], "total or parcial")
-                        for i, p in enumerate(weak, start=1)]
+class SelectivityStage(ChainStage):
+    """Stage 7: the selectivity and coordination study between each protection and the one upstream (from the protections fixed by stage 6)."""
+
+    calls = WITH_MEMO
+
+    def execute(self, context):
+        ch = EC.chain(context)
+        pairs = ch["memo"]["selectividad"]
+        outputs = {"selectivity": copy.deepcopy(pairs), "selectivity_summary": copy.deepcopy(ch["memo"]["resumen"]["selectividad"])}
+        weak = [p for p in pairs if p["resultado"] == "revisar"]
+        findings = [engine_finding(i, context.pipeline_run_id, self.spec.slug, p["aguas_abajo"], "selectivity", p["resultado"], "total or parcial")
+                    for i, p in enumerate(weak, start=1)]
+        return self.result("ok", outputs=outputs, findings=findings, engine_calls=EC.calls(ch, *self.calls))
 
 
 class EarthingStage(ChainStage):
     calls = WITH_MEMO
+    pending_key = 12
     flags = ("differential_ok",)
     fields = {"differential": ("memo", ("diferencial",)), "differential_ok": ("memo", ("diferencial", "cumple"))}
 
     def extra(self, ch, rows):
         return {"earthing_system": ch["form"]["board"]["system"], "rcd_ma": ch["memo"]["criteria"]["rcd_ma"]}
+
+
+class LoadsDemandStage(GroupedStage):
+    """Stage 3: load schedule and phase balance, then demand and simultaneity."""
+
+    slice_classes = {4: LoadScheduleStage, 5: DemandStage}
+
+
+class CableSizingStage(GroupedStage):
+    """Stage 6: the cable and its protection, sized together: section, voltage drop, short-circuit currents and the protection device."""
+
+    slice_classes = {8: FeederSizingStage, 9: VoltageDropStage, 10: ShortCircuitStage, 11: ProtectionStage}

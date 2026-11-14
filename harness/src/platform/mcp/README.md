@@ -21,7 +21,7 @@ Pipeline tools (MIG-33b). They call `epc_platform.api` only, the same functions 
 
 | Tool | Profile | What it does |
 | --- | --- | --- |
-| `epc_stage_table` | full, readonly | The 16 stages of the pipeline: title, engines, status, wired or not. |
+| `epc_stage_table` | full, readonly | The 12 stages of the pipeline: title, engines, status, wired or not. |
 | `epc_engine_list` | full, readonly | The engine packages with group, area and version. |
 | `epc_engine_info` | full, readonly | Version and public modules of one engine. |
 | `epc_norm_records` | full, readonly | Norm records and review status of one engine (or all). Read only. |

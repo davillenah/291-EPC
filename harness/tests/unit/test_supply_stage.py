@@ -1,4 +1,4 @@
-"""MIG-39a: stage 6 (supply and transformer sizing) calls epc_transformer_sizing when the `transformer` inputs are given."""
+"""MIG-39a: stage 4 (supply and transformer sizing) calls epc_transformer_sizing when the `transformer` inputs are given."""
 import json
 import sys
 import unittest
@@ -13,23 +13,23 @@ GOOD = {"demand_kva": 400, "reserve_pct": 25, "secondary_v": 400}
 
 
 def ctx_with(section=None):
-    """A context that has run stages 1-5 (the preconditions of stage 6), with the given `transformer` section."""
+    """A context that has run stages 1-3 (the preconditions of stage 4), with the given `transformer` section."""
     inputs = W.inputs_doc()
     if section is not None:
         inputs["transformer"] = section
     ctx = W.context(engine_inputs=inputs)
-    run(ctx, stop_after=5, run_id="r6")
+    run(ctx, stop_after=3, run_id="r6")
     return ctx
 
 
 class SupplyStageTests(unittest.TestCase):
     def test_without_the_section_it_is_not_available(self):
-        res = STAGES[5].run(ctx_with())
+        res = STAGES[3].run(ctx_with())
         self.assertEqual((res.status, res.reason, res.outputs, res.engine_calls, res.findings), ("not_available", "no_transformer_inputs", {}, [], []))
         self.assertEqual(res.message, "not available in Phase 1: transformer inputs not provided")
 
     def test_with_the_section_it_runs_the_engine(self):
-        res = STAGES[5].run(ctx_with(GOOD))
+        res = STAGES[3].run(ctx_with(GOOD))
         direct = TS.size_transformer(400, 400, 25)
         self.assertEqual(res.status, "ok")
         self.assertEqual({k: res.outputs[k] for k in direct}, direct)
@@ -43,7 +43,7 @@ class SupplyStageTests(unittest.TestCase):
         cases = {"reserve_pct": ("reserve_pct is required", None), "demand_kva": ("demand_kva must be", 0), "secondary_v": ("un_v must be", -1)}
         for key, (text, bad) in cases.items():
             with self.subTest(key=key):
-                res = STAGES[5].run(ctx_with({**GOOD, key: bad}))
+                res = STAGES[3].run(ctx_with({**GOOD, key: bad}))
                 self.assertEqual((res.status, res.outputs, res.engine_calls), ("blocked", {}, []))
                 self.assertIn(text, res.message)
                 self.assertEqual(res.findings[0]["severity"], "blocking")
@@ -55,7 +55,7 @@ class SupplyStageTests(unittest.TestCase):
                               ({**GOOD, "colour": "red"}, "unknown input"),
                               ("400 kVA", "must be an object")):
             with self.subTest(section=section):
-                res = STAGES[5].run(ctx_with(section))
+                res = STAGES[3].run(ctx_with(section))
                 self.assertEqual(res.status, "blocked")
                 self.assertIn(text, res.message)
 
@@ -63,12 +63,12 @@ class SupplyStageTests(unittest.TestCase):
         inputs = W.inputs_doc()
         inputs["transformer"] = dict(GOOD)
         done = run(W.context(engine_inputs=inputs), run_id="r")
-        stage6 = done.results[5]
-        self.assertEqual((stage6.number if hasattr(stage6, "number") else stage6.stage, stage6.status), (6, "ok"))
-        self.assertEqual(stage6.outputs["rating_kva"], 500)
-        self.assertNotIn(6, done.summary["not_available"])
-        self.assertEqual([r.status for r in done.results if r.stage == 13], ["ok"])
-        self.assertFalse([f for f in done.results[12].findings if "stage 6" in str(f.get("document", "")) or f.get("document") == "supply_transformer"])
+        stage4 = done.results[3]
+        self.assertEqual((stage4.stage, stage4.status), (4, "ok"))
+        self.assertEqual(stage4.outputs["rating_kva"], 500)
+        self.assertNotIn(4, done.summary["not_available"])
+        self.assertEqual([r.status for r in done.results if r.stage == 9], ["ok"])
+        self.assertFalse([f for f in done.results[8].findings if "stage 4" in str(f.get("document", "")) or f.get("document") == "supply_transformer"])
 
 
 if __name__ == "__main__":

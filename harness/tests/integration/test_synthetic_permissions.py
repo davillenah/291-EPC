@@ -30,9 +30,9 @@ ROSTER = S.read_json(S.REPO / "harness" / ".claude" / "roster.json")
 AGENT_ROLES = [a["name"] for a in ROSTER["agents"]]
 PROTECTED = ("ssot", "deliverables", "inputs", "audit", "config_normative", "schemas")
 WRITE_ACTIONS = ("write", "create", "delete")
-MANIFEST = "deliverables/R0/SYNTH-001-DRW-SLD_TS-SYNTH.manifest.json"
-PROTECTED_FILES = ("project_profile.json", "master_project_state.json", "ssot/stage_01_intake.json", "ssot/stage_16_package_issue.json", MANIFEST,
-                   "inputs/intake_answers.json", "audit/events.jsonl")
+MANIFEST = ".epc/manifests/TR-001.manifest.json"
+PROTECTED_FILES = (".epc/project_profile.json", ".epc/master_project_state.json", ".epc/ssot/stage_01_intake.json", ".epc/ssot/stage_12_package_issue.json", MANIFEST,
+                   "inputs/intake_answers.json", ".epc/audit/events.jsonl")
 
 
 class Base(unittest.TestCase):
@@ -116,7 +116,7 @@ class HookBlocksWrites(Base):
                         self.assertEqual(code, 2, message)
 
     def test_blocks_name_the_rule_and_reads_pass(self):
-        code, message = self.call(self.edit("Write", "ssot/stage_01_intake.json"), "orchestrator")
+        code, message = self.call(self.edit("Write", ".epc/ssot/stage_01_intake.json"), "orchestrator")
         self.assertEqual(code, 2)
         self.assertIn("D-07", message)
         code, message = self.call(self.edit("Write", "inputs/intake_answers.json"), "orchestrator")
@@ -140,7 +140,7 @@ class HookBlocksWrites(Base):
         self.assertEqual(log.verify(), [])
 
     def test_no_file_was_changed_by_the_blocked_calls(self):
-        self.assertEqual(S.read_json(self.root / "ssot" / "stage_01_intake.json"), self.proj.ssot("stage_01_intake.json"))
+        self.assertEqual(S.read_json(self.root / ".epc" / "ssot" / "stage_01_intake.json"), self.proj.ssot("stage_01_intake.json"))
         self.assertTrue(all((self.root / rel).is_file() for rel in PROTECTED_FILES))
 
 
@@ -194,11 +194,12 @@ class TamperIsDetected(unittest.TestCase):
         self.root = self.proj.project
 
     def run_dict(self):
-        return {"pipeline_run_id": S.RUN_ID, "results": [self.proj.ssot(p.name) for p in self.proj.stage_files()]}
+        from disciplines.electrical_lv.stages.calc_check_stage import logical_results   # the engine reads the 16 logical slices of the 12 recorded stages
+        return {"pipeline_run_id": S.RUN_ID, "results": logical_results([self.proj.ssot(p.name) for p in self.proj.stage_files()])}
 
     def files(self, changed=None):
-        stage14 = self.proj.ssot("stage_14_drawings.json")["outputs"]
-        files = {f"{stage14['directory']}/{f['path']}": (self.root / "runs" / S.RUN_ID / stage14["directory"] / f["path"]).read_bytes() for f in stage14["files"]}
+        stage10 = self.proj.ssot("stage_10_drawings.json")["outputs"]
+        files = {f"{stage10['directory']}/{f['path']}": (self.root / ".epc" / "runs" / S.RUN_ID / stage10["directory"] / f["path"]).read_bytes() for f in stage10["files"]}
         files.update(changed or {})
         return files
 
@@ -228,20 +229,21 @@ class TamperIsDetected(unittest.TestCase):
         self.assertEqual(ProjectStore(self.root).read_state()["status"], "blocked")
 
     def test_a_changed_output_byte_is_reported_as_cc_d06(self):
-        stage14 = self.proj.ssot("stage_14_drawings.json")["outputs"]
-        key = f"{stage14['directory']}/SLD_TS-SYNTH.dxf"
+        stage10 = self.proj.ssot("stage_10_drawings.json")["outputs"]
+        key = f"{stage10['directory']}/SLD_TS-SYNTH.dxf"
         data = bytearray(self.files()[key])
         data[0] ^= 1
         found = self.check(self.run_dict(), self.files({key: bytes(data)}))
         self.assertTrue(found and all("CC-D06" in f["clause"] for f in found), found)
-        self.assertTrue(any(f["field"].endswith("output_sha256") for f in found))
+        self.assertTrue(any(f["field"].endswith("/sha256") for f in found))
         self.assertTrue(any("SHA-256 of the file bytes" in f["evidence"][0] for f in found))
 
     def test_a_changed_manifest_hash_is_reported_as_cc_d06(self):
         run = self.run_dict()
         package = copy.deepcopy(run["results"][15])
         item = package["outputs"]["manifests"][0]["manifest"]
-        item["output_sha256"] = "0" * 63 + ("1" if item["output_sha256"][-1] != "1" else "2")
+        entry = item["files"][0]
+        entry["sha256"] = "0" * 63 + ("1" if entry["sha256"][-1] != "1" else "2")
         run["results"][15] = package
         found = self.check(run, self.files())
         self.assertTrue(found and all("CC-D06" in f["clause"] for f in found), found)
@@ -250,7 +252,7 @@ class TamperIsDetected(unittest.TestCase):
         path = self.root / MANIFEST
         manifest = json.loads(path.read_text(encoding="utf-8"))
         manifest["review_status"] = "approved_for_construction"
-        manifest["output_sha256"] = "f" * 64
+        manifest["files"][0]["sha256"] = "f" * 64
         files = self.files({MANIFEST: json.dumps(manifest).encode("utf-8")})
         found = self.check(self.run_dict(), files)
         self.assertTrue(any("CC-D06" in f["clause"] for f in found), found)

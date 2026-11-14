@@ -1,4 +1,4 @@
-"""The electrical_lv pipeline: the 16 stages of PRD section 12 run in fixed order over an in-memory context.
+"""The electrical_lv pipeline: the 12 stages of PRD section 12 run in fixed order over an in-memory context.
 
 The discipline calculates and draws nothing (PRD principle 3). Same inputs and same injected run id give the same
 result; timestamps come only from an injected `clock` (a callable returning an ISO string).
@@ -15,7 +15,7 @@ from disciplines.electrical_lv.recorder import RunRecorder
 from disciplines.electrical_lv.stages import STAGE_TABLE, STAGES, PipelineContext, StageResult
 
 STOP_STATUSES = ("failed", "blocked")
-DRAWINGS = 14          # the stage that writes files (drawings/) under the run folder
+DRAWINGS = 10          # the stage that writes files (drawings/) under the run folder
 
 
 class ResumeError(ValueError):
@@ -110,7 +110,7 @@ def _restore(context, stages, reused):
     _replay(context, stages, reused)
     for res in reused:
         context.results[res.stage] = res
-    if context.work_dir is None and len(reused) >= DRAWINGS:                    # the drawings of the reused stage 14 live in the run folder that made them
+    if context.work_dir is None and len(reused) >= DRAWINGS:                    # the drawings of the reused stage 10 live in the run folder that made them
         context.work_dir = context.store.run_dir_of_stage(DRAWINGS)
 
 

@@ -10,7 +10,7 @@ class D18BlockedTests(unittest.TestCase):
     def ready(self):
         ctx = W.context()
         ctx.design_basis = {"supply": {}}
-        ctx.results = {3: StageResult(3, "ok")}
+        ctx.results = {2: StageResult(2, "ok")}
         return ctx
 
     def assert_blocked(self, ctx, text, stages=W.CHAIN_STAGES):
@@ -26,12 +26,12 @@ class D18BlockedTests(unittest.TestCase):
         ctx = self.ready()
         ctx.engine_inputs["circuits"]["L-01"]["grouped"] = 10          # Table 771.16.IV has 9 and 12, not 10
         self.assert_blocked(ctx, "Tabla 771.16.IV")
-        self.assert_blocked(ctx, "AGRUP_CIRCUITOS", stages=(4,))
+        self.assert_blocked(ctx, "AGRUP_CIRCUITOS", stages=(3,))
 
     def test_a_tabulated_grouping_does_not_block(self):
         ctx = self.ready()
         ctx.engine_inputs["circuits"]["L-01"]["grouped"] = 12
-        self.assertEqual(STAGES[3].run(ctx).status, "ok")
+        self.assertEqual(STAGES[2].run(ctx).status, "ok")
 
     def test_buried_d2_without_column_blocks_and_asks_for_it(self):
         ctx = self.ready()
@@ -41,15 +41,15 @@ class D18BlockedTests(unittest.TestCase):
     def test_buried_d2_with_its_column_calculates(self):
         ctx = self.ready()
         ctx.engine_inputs["circuits"]["L-01"].update({"method": "D2", "d2_column": "c2_2x"})
-        self.assertEqual(STAGES[3].run(ctx).status, "ok")
+        self.assertEqual(STAGES[2].run(ctx).status, "ok")
 
     def test_grouped_d2_blocks_without_separation_and_passes_with_it(self):
         ctx = self.ready()
         ctx.engine_inputs["circuits"]["L-01"].update({"method": "D2", "d2_column": "c2_2x", "grouped": 2})
-        self.assert_blocked(ctx, "SEPARACION_CABLES", stages=(4,))
+        self.assert_blocked(ctx, "SEPARACION_CABLES", stages=(3,))
         ctx = self.ready()
         ctx.engine_inputs["circuits"]["L-01"].update({"method": "D2", "d2_column": "c2_2x", "grouped": 2, "spacing": "0,25 m"})
-        self.assertEqual(STAGES[3].run(ctx).status, "ok")
+        self.assertEqual(STAGES[2].run(ctx).status, "ok")
 
 
 if __name__ == "__main__":

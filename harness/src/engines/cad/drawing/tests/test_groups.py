@@ -28,7 +28,7 @@ class TestGroupsInDesign(unittest.TestCase):
             finally:
                 os.environ.pop(S.ENV_VAR, None)
             out = Path(t) / "work" / "out"
-            return summary, (out / "SLD_T1_TABLA.svg").read_text(encoding="utf-8"), (out / "MLD_T1.svg").read_text(encoding="utf-8"), json.loads((out / "T1_dimensionado.json").read_text(encoding="utf-8"))
+            return summary, (out / "SLD_T1_TABLA.svg").read_text(encoding="utf-8"), (out / "MLD_T1.svg").read_text(encoding="utf-8"), json.loads((out / "T1_sizing.json").read_text(encoding="utf-8"))
 
     def test_with_the_rules_off_there_are_no_groups_and_with_them_on_the_lighting_hangs_from_one(self):
         summary, table, _, calc = self.run_design()

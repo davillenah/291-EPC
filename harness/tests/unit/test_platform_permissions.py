@@ -9,6 +9,7 @@ from pathlib import Path
 from epc_platform.events import EventLog
 from epc_platform.permissions import PathError, PermissionDenied, check, classify_path, enforce, may_trigger
 from epc_platform.permissions import rules as R
+from epc_platform.permissions.core import INTERNAL_CLASSES
 
 
 def clock():
@@ -132,9 +133,10 @@ class ClassifyTests(unittest.TestCase):
 
     def test_project_folders_and_root_files(self):
         for cls in R.PROJECT_CLASSES:
-            self.assertEqual(classify_path(self.project, f"{cls}/a/b.json"), cls)
-            self.assertEqual(classify_path(self.project, self.project / cls / "z"), cls)
-        for name in ("project_profile.json", "master_project_state.json", "epc-progress.txt"):
+            base = f".epc/{cls}" if cls in INTERNAL_CLASSES else cls
+            self.assertEqual(classify_path(self.project, f"{base}/a/b.json"), cls)
+            self.assertEqual(classify_path(self.project, self.project / base / "z"), cls)
+        for name in (".epc/project_profile.json", ".epc/master_project_state.json", ".epc/epc-progress.txt"):
             self.assertEqual(classify_path(self.project, name), R.SSOT)
 
     def test_repo_paths_need_a_repo_root(self):
@@ -155,8 +157,8 @@ class ClassifyTests(unittest.TestCase):
 
     def test_absolute_path_with_dotdot_that_escapes_is_refused(self):
         with self.assertRaises(PathError):
-            classify_path(self.project, str(self.project / "ssot" / ".." / ".." / "x"))
-        self.assertEqual(classify_path(self.project, str(self.project / "ssot" / ".." / "inputs" / "x")), R.INPUTS)
+            classify_path(self.project, str(self.project / ".epc" / "ssot" / ".." / ".." / "x"))
+        self.assertEqual(classify_path(self.project, str(self.project / ".epc" / "ssot" / ".." / ".." / "inputs" / "x")), R.INPUTS)
 
     def test_a_link_inside_the_project_that_leaves_it_is_refused(self):
         outside = self.base / "outside"
@@ -176,9 +178,9 @@ class ClassifyTests(unittest.TestCase):
         link = self.project / "inputs" / "to_ssot"
         try:
             if os.name == "nt":
-                subprocess.run(["cmd", "/c", "mklink", "/J", str(link), str(self.project / "ssot")], check=True, capture_output=True)
+                subprocess.run(["cmd", "/c", "mklink", "/J", str(link), str(self.project / ".epc" / "ssot")], check=True, capture_output=True)
             else:
-                os.symlink(self.project / "ssot", link)
+                os.symlink(self.project / ".epc" / "ssot", link)
         except (OSError, subprocess.CalledProcessError):
             self.skipTest("the OS does not allow creating a link here")
         self.assertEqual(classify_path(self.project, "inputs/to_ssot/a.json"), R.SSOT)

@@ -17,7 +17,7 @@ Multi-line diagram (MLD) of a board from the same data and calculation as the si
 - `.dxf`: internal+deliverable
 
 ## Run
-`python -m epc_drawing.mld.mld_generator --input board.json --calc <TABLERO>_dimensionado.json --out <folder> --name MLD_<TABLERO>`, or, with the calculation done from the project's design criteria, through the `board-design` plugin (`--diagrams sld,mld`).
+`python -m epc_drawing.mld.mld_generator --input board.json --calc <TABLERO>_sizing.json --out <folder> --name MLD_<TABLERO>`, or, with the calculation done from the project's design criteria, through the `board-design` plugin (`--diagrams sld,mld`).
 
 ## Engine
 This plugin is packaging only. The code lives in `harness/src/engines/calculation/aea90364`, `harness/src/engines/cad/drawing` and is copied into the built plugin under `lib/` (set `PYTHONPATH="${CLAUDE_PLUGIN_ROOT}/lib"`).

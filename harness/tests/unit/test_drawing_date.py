@@ -1,4 +1,4 @@
-"""MIG-3Z: stage 14 reads the optional `engine_inputs["drawings"]["date"]` (ISO date), validates it and passes it to the drawing engine; absent means not pinned."""
+"""MIG-3Z: stage 10 reads the optional `engine_inputs["drawings"]["date"]` (ISO date), validates it and passes it to the drawing engine; absent means not pinned."""
 import types
 import unittest
 from unittest import mock

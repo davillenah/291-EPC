@@ -77,15 +77,15 @@ def stage(number, outputs=None, status="ok", findings=None):
     return {"stage": number, "status": status, "outputs": outputs or {}, "findings": findings or [], "engine_calls": [], "message": "", "reason": ""}
 
 
-def manifest(deliverable_id, output_sha, run_id="run1", revision="R0"):
-    return {"deliverable_id": deliverable_id, "title": "Title", "revision": revision, "pipeline_run_id": run_id, "inputs": [{"path": "inputs/a.csv", "sha256": "a" * 64}],
+def manifest(files, run_id="run1", revision="R0", transmittal="TR-001"):
+    return {"transmittal": transmittal, "title": "Title", "revision": revision, "pipeline_run_id": run_id, "inputs": [{"path": "inputs/a.csv", "sha256": "a" * 64}],
             "engines": [{"name": "calculation/aea90364", "version": "1.6.0"}],
             "normative_profile": {"revisions": {}, "norm_records": [{"id": "x", "review_status": "pending review"}]},
-            "output_sha256": output_sha, "findings": [], "review_status": "draft", "signed": None, "superseded_signature": None, "supersedes": None, "superseded_by": None}
+            "files": files, "findings": [], "review_status": "draft", "signed": None, "superseded_signature": None, "supersedes": None, "superseded_by": None}
 
 
 def clean_run():
-    """(run_result, project, files): a run with stages 1-5 and 7-12 from the engine, 14 and 15 (documents from the engine), 16 (two manifests)."""
+    """(run_result, project, files): a run with stages 1-5 and 7-12 from the engine, 14 and 15 (documents from the engine), 16 (one transmittal manifest)."""
     data, res, memo = engine_chain()
     dxf = b"0\nSECTION\n0\nEOF\n"
     docs = {"calculation_memo": board_memo.memoria_doc(memo), "project_summary": board_memo.sintesis_doc(memo)}
@@ -108,11 +108,12 @@ def clean_run():
         stage(14, {"directory": "drawings/T1/out", "files": [{"path": "SLD_T1.dxf", "bytes": len(dxf), "sha256": sha(dxf)}], "summary": summary}),
         stage(15, {"documents": documents, "memo_summary": copy.deepcopy(memo["resumen"]), "pending_documents": []}),
     ]
-    mans = [manifest("T1-DRW-SLD_T1", sha(dxf)), manifest("T1-DOC-calculation_memo", documents[0]["sha256"])]
-    rows16 = [{"deliverable_id": mans[0]["deliverable_id"], "source": "drawings/T1/out/SLD_T1.dxf", "manifest": "deliverables/R0/a.manifest.json"},
-              {"deliverable_id": mans[1]["deliverable_id"], "source": None, "manifest": "deliverables/R0/b.manifest.json"}]
-    results.append(stage(16, {"revision": "R0", "manifests": [{"path": rows16[0]["manifest"], "manifest": mans[0]}, {"path": rows16[1]["manifest"], "manifest": mans[1]}],
-                              "transmittal": {"deliverables": rows16}}))
+    entries = [{"name": "SLD_T1", "title": "Drawing SLD_T1.dxf", "path": "SLD_T1.dxf", "sha256": sha(dxf)},
+               {"name": "calculation_memo", "title": "Calculation memo", "path": None, "sha256": documents[0]["sha256"]}]
+    man = manifest(entries)
+    path = ".epc/manifests/TR-001.manifest.json"
+    rows16 = [dict(entries[0], source="drawings/T1/out/SLD_T1.dxf"), dict(entries[1], source=None)]
+    results.append(stage(16, {"revision": "R0", "manifests": [{"path": path, "manifest": man}], "transmittal": {"id": "TR-001", "manifest": path, "files": rows16}}))
     run = {"pipeline_run_id": "run1", "results": results}
     project = {"circuits": {t: {"TEMP_AMBIENTE_C": res["detalle"][t]["instalacion"]["t_amb"], "TEMP_SUELO_C": res["detalle"][t]["instalacion"]["t_suelo"],
                                 "RESIST_TERMICA_KMW": res["detalle"][t]["instalacion"]["rho"]} for t in res["datos"]}}

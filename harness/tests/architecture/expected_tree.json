@@ -287,6 +287,11 @@
    "status": "planned"
   },
   {
+   "path": "projects/_template/.epc",
+   "purpose": "Everything the harness keeps for itself; hidden from the user (a leading dot on macOS and Linux, the hidden attribute on Windows).",
+   "status": "planned"
+  },
+  {
    "path": "projects/_template/inputs",
    "purpose": "immutable after intake; hashed",
    "status": "planned"
@@ -312,32 +317,32 @@
    "status": "planned"
   },
   {
-   "path": "projects/_template/ssot",
+   "path": "projects/_template/.epc/ssot",
    "purpose": "project data written only by the pipeline",
    "status": "planned"
   },
   {
-   "path": "projects/_template/runs",
+   "path": "projects/_template/.epc/runs",
    "purpose": "intermediate results, logs (ignored)",
    "status": "planned"
   },
   {
    "path": "projects/_template/deliverables",
-   "purpose": "issued files + one manifest per deliverable",
+   "purpose": "issued files, one folder TR-NNN per transmittal",
    "status": "planned"
   },
   {
-   "path": "projects/_template/reviews",
+   "path": "projects/_template/.epc/manifests",
+   "purpose": "one manifest per transmittal (hashes of every issued file)",
+   "status": "planned"
+  },
+  {
+   "path": "projects/_template/.epc/reviews",
    "purpose": "engineer corrections and findings",
    "status": "planned"
   },
   {
-   "path": "projects/_template/transmittals",
-   "purpose": "Part of the PRD structure; filled by the relocation and migration tasks.",
-   "status": "planned"
-  },
-  {
-   "path": "projects/_template/audit",
+   "path": "projects/_template/.epc/audit",
    "purpose": "append-only event log",
    "status": "planned"
   },
@@ -351,8 +356,8 @@
   "harness/.claude/settings.json",
   "harness/CLAUDE.md",
   "harness/src/disciplines/electrical_lv/pipeline.py",
-  "projects/_template/epc-progress.txt",
-  "projects/_template/master_project_state.json",
-  "projects/_template/project_profile.json"
+  "projects/_template/.epc/epc-progress.txt",
+  "projects/_template/.epc/master_project_state.json",
+  "projects/_template/.epc/project_profile.json"
  ]
 }

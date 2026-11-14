@@ -36,7 +36,7 @@ class TreeMatchesPrd(unittest.TestCase):
 
     def test_the_template_has_the_prd_files_and_they_carry_no_client_data(self):
         import json
-        base = REPO / "projects" / "_template"
+        base = REPO / "projects" / "_template" / ".epc"
         for name in ("project_profile.json", "master_project_state.json"):
             data = json.loads((base / name).read_text(encoding="utf-8"))
             self.assertEqual(data["status"], "template", name)

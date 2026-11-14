@@ -80,7 +80,7 @@ class ReviewTests(Base):
         result = api.review(self.root / "API-1", ENG, [{"note": "n"}], clock=CLOCK)
         self.assertTrue(result["ok"], result)
         self.assertEqual(ProjectStore(self.root / "API-1").list_reviews(), ["record_corrections-5.json"])
-        self.assertEqual(result["data"]["review_file"], "reviews/record_corrections-5.json")
+        self.assertEqual(result["data"]["review_file"], ".epc/reviews/record_corrections-5.json")
         history = [h["transition"] for h in Workflow(self.root / "API-1", self.log()).history()]
         self.assertEqual(history[-2:], ["submit_for_review", "record_corrections"])
 

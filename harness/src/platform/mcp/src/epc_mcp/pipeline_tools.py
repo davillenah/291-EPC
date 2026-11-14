@@ -61,7 +61,8 @@ def epc_project_status(ctx: Context, args: dict):
 
 
 def epc_project_init(ctx: Context, args: dict):
-    return _api().init_project(ctx.projects_root, args.get("project"), args["answers"], clock=ctx.now, actor=ctx.who())
+    return _api().init_project(ctx.projects_root, args.get("project"), args["answers"], clock=ctx.now, actor=ctx.who(),
+                                 client=args.get("client"), description=args.get("description"))
 
 
 def epc_pipeline_run(ctx: Context, args: dict):
@@ -84,7 +85,7 @@ def epc_project_issue(ctx: Context, args: dict):
 
 def register(reg: Registry) -> None:
     full, both = ("full",), ("full", "readonly")
-    reg.register(Tool("epc_stage_table", "The 16 stages of the pipeline (PRD 12): title, engines, status and whether each runs real work.",
+    reg.register(Tool("epc_stage_table", "The 12 stages of the pipeline (PRD 12): title, engines, status and whether each runs real work.",
                       epc_stage_table, OPTIONAL_PROJECT, [], both))
     reg.register(Tool("epc_engine_list", "The engine packages (name, group, area, version).", epc_engine_list, OPTIONAL_PROJECT, [], both))
     reg.register(Tool("epc_engine_info", "Version and public modules of one engine (package name or area).", epc_engine_info,
@@ -96,7 +97,7 @@ def register(reg: Registry) -> None:
     reg.register(Tool("epc_project_status", "Workflow state, master_project_state, review files and the last audit events of a project.",
                       epc_project_status, PROJECT, ["project"], both))
     reg.register(Tool("epc_project_init", "Create a project from the guided-form answers (earthing scheme and short-circuit level are required).",
-                      epc_project_init, dict(PROJECT, answers=OBJECT), ["project", "answers"], full))
+                      epc_project_init, dict(PROJECT, answers=OBJECT, client={"type": "string"}, description={"type": "string"}), ["project", "answers"], full))
     reg.register(Tool("epc_pipeline_run", "Run the pipeline in a project; the result holds the engines' numbers. `detail: true` returns every stage output.",
                       epc_pipeline_run, dict(PROJECT, loads=OBJECT, engine_inputs=OBJECT, stop_after={"type": "integer"}, from_stage={"type": "integer"}, run_id=TEXT, revision=TEXT,
                                              detail={"type": "boolean"}), ["project"], full))

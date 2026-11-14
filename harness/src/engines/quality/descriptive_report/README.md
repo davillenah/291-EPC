@@ -2,7 +2,7 @@
 
 Status: **in development**
 
-Quality engine (MIG-39g, PRD section 12 stage 15 "Documents", item "descriptive report"): builds the DESCRIPTIVE REPORT (memoria descriptiva) of a board as structured data and renders it as Spanish plain text. It describes the installation in prose (what it is, how it is organised, which protections and earthing it has, which norms apply, what is pending); the calculation report (memoria de calculo, `epc_aea90364.board_memo`) holds the numbers, so nothing is duplicated. Pure functions, standard library only, no I/O, no file output, no calculation. Its outputs are drafts (D21).
+Quality engine (MIG-39g, PRD section 12 stage 11 "Documents", item "descriptive report"): builds the DESCRIPTIVE REPORT (memoria descriptiva) of a board as structured data and renders it as Spanish plain text. It describes the installation in prose (what it is, how it is organised, which protections and earthing it has, which norms apply, what is pending); the calculation report (memoria de calculo, `epc_aea90364.board_memo`) holds the numbers, so nothing is duplicated. Pure functions, standard library only, no I/O, no file output, no calculation. Its outputs are drafts (D21).
 
 ## Public API
 - `build_descriptive_report(design_basis, circuits, *, terminals=None, boq=None, pending_documents=None, unreviewed_norm_records=None)`: dict `{sections, issues, assumptions, norm_records, status}`; `status` is always `draft`, `norm_records` is always `[]`. `sections` is a list of `{id, title, items}`, each item `{key, label, value, unit, source, review_status}` (cable-specification items also carry `spec`).

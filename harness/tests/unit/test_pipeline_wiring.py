@@ -7,6 +7,7 @@ Needs the engine packages on PYTHONPATH (the gate's `harness-tests` environment 
 the circuit rows are the engine's own characterization rows (`aea90364/tests/characterization.py`).
 """
 import contextlib
+import dataclasses
 import hashlib
 import importlib.util
 import json
@@ -24,15 +25,21 @@ from disciplines.electrical_lv import pipeline
 from disciplines.electrical_lv.pipeline import STAGES, PipelineContext, run
 from disciplines.electrical_lv.stages import engine_calls as EC
 from disciplines.electrical_lv.stages.base import StageResult
+from disciplines.electrical_lv.stages.calc_check_stage import logical_results
 from disciplines.electrical_lv.stages.table import WIRED_STAGES
 
 ROOT = Path(__file__).resolve().parents[3]
 CHARACTERIZATION = ROOT / "harness" / "src" / "engines" / "calculation" / "aea90364" / "tests" / "characterization.py"
-CALC_STAGES = (4, 5, 7, 8, 9, 10, 11, 12)
-CHAIN_STAGES = (4, 5, 7, 8, 9, 10, 11, 12, 14, 15)
+CALC_STAGES = (4, 5, 7, 8, 9, 10, 11, 12)           # the calculation SLICES (the 16-slice numbering of `epc_calc_check`; see `logical`)
+CHAIN_STAGES = (3, 5, 6, 8, 10, 11)                  # the physical stages that read the calculation chain
 NOT_WIRED = ()
-NO_INPUT = (6,)            # stage 6 is wired (MIG-39a) but returns not_available without the `transformer` inputs
-NO_STORE = (6, 16)         # stage 16 is wired (MIG-32) but returns not_available when the context has no ProjectStore
+NO_INPUT = (4,)            # stage 4 is wired (MIG-39a) but returns not_available without the `transformer` inputs
+NO_STORE = (4, 12)         # stage 12 is wired (MIG-32) but returns not_available when the context has no ProjectStore
+
+
+def logical(res):
+    """{slice number: StageResult} of a run: the 12 physical stages as the 16 slices the calculation tests (and `epc_calc_check`) address."""
+    return {e["stage"]: StageResult(**e) for e in logical_results([dataclasses.asdict(r) for r in res.results])}
 
 
 def characterization():
@@ -111,21 +118,21 @@ def by_circuit(result):
     return {row["circuit"]: row for row in result.outputs["circuits"]}
 
 
-def run_to_12():
+def run_to_earthing():
     ctx = context()
-    res = run(ctx, stop_after=12, run_id="r1", clock=lambda: "2026-01-01T00:00:00Z")
+    res = run(ctx, stop_after=8, run_id="r1", clock=lambda: "2026-01-01T00:00:00Z")
     return ctx, res
 
 
 class ZeroDifferenceTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.ctx, cls.res = run_to_12()
+        cls.ctx, cls.res = run_to_earthing()
         cls.datos, cls.detail, cls.warnings = direct_call()
-        cls.stage = {r.stage: r for r in cls.res.results}
+        cls.stage = logical(cls.res)
 
-    def test_stages_1_to_12_ran(self):
-        self.assertEqual([r.status for r in self.res.results], ["ok"] * 5 + ["not_available"] + ["ok"] * 6)
+    def test_stages_1_to_8_ran(self):
+        self.assertEqual([r.status for r in self.res.results], ["ok"] * 3 + ["not_available"] + ["ok"] * 4)
         self.assertEqual(self.stage[6].outputs, {})
 
     def test_the_raw_engine_result_equals_a_direct_call(self):
@@ -161,7 +168,7 @@ class ZeroDifferenceTests(unittest.TestCase):
 
     def test_the_chain_ran_once(self):
         with mock.patch.object(P, "calculate", wraps=P.calculate) as spy:
-            run(context(), stop_after=12, run_id="r2")
+            run(context(), stop_after=8, run_id="r2")
         self.assertEqual(spy.call_count, 1)
 
     def test_engine_calls_name_the_function_and_version(self):
@@ -191,14 +198,14 @@ class BackendParityTests(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.ctx, cls.res = run_to_12()
+        cls.ctx, cls.res = run_to_earthing()
         cls.chain = cls.ctx.engine_cache["chain"]
 
     def assert_files_equal_chain(self, out):
         read = lambda name: json.loads((out / f"TEST-001_{name}.json").read_text(encoding="utf-8"))  # noqa: E731
-        self.assertEqual(read("dimensionado"), self.chain["calc"]["datos"])
-        self.assertEqual(read("dimensionado_detalle"), json.loads(json.dumps(self.chain["calc"]["detalle"])))
-        self.assertEqual(read("memoria"), json.loads(json.dumps(self.chain["memo"])))
+        self.assertEqual(read("sizing"), self.chain["calc"]["datos"])
+        self.assertEqual(read("sizing_detail"), json.loads(json.dumps(self.chain["calc"]["detalle"])))
+        self.assertEqual(read("calculation_memo"), json.loads(json.dumps(self.chain["memo"])))
 
     def test_board_design_files_equal_the_pipeline_chain(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -209,8 +216,8 @@ class BackendParityTests(unittest.TestCase):
     def test_stage_rows_equal_the_backend_detail_file(self):
         with tempfile.TemporaryDirectory() as tmp:
             BD.design(direct_form(), Path(tmp), "TEST-001", None, None, diagrams=("none",))
-            detail = json.loads((Path(tmp) / "out" / "TEST-001_dimensionado_detalle.json").read_text(encoding="utf-8"))
-        stage = {r.stage: r for r in self.res.results}
+            detail = json.loads((Path(tmp) / "out" / "TEST-001_sizing_detail.json").read_text(encoding="utf-8"))
+        stage = logical(self.res)
         for tag, det in detail.items():
             self.assertEqual(by_circuit(stage[8])[tag]["pe_mm2"], det["pe_mm2"])
             self.assertEqual(by_circuit(stage[8])[tag]["route"], det["ruta"])
@@ -222,7 +229,7 @@ class MissingDataTests(unittest.TestCase):
     def ready(self, **changes):
         ctx = context(**changes)
         ctx.design_basis = {"supply": {}}
-        ctx.results = {3: StageResult(3, "ok")}
+        ctx.results = {2: StageResult(2, "ok")}
         return ctx
 
     def assert_blocked_without_values(self, ctx, expected_text, stages=CHAIN_STAGES):
@@ -264,10 +271,10 @@ class MissingDataTests(unittest.TestCase):
     def test_a_refusal_of_the_engine_blocks(self):
         ctx = self.ready()
         ctx.engine_inputs["extra_circuits"][0]["tag"] = "L-01"      # duplicate tag: the engine raises ValueError
-        self.assert_blocked_without_values(ctx, "TAG duplicados", stages=(4, 8, 12))
+        self.assert_blocked_without_values(ctx, "TAG duplicados", stages=(3, 6, 8))
 
     def test_missing_loads_block_through_the_preconditions(self):
-        res = STAGES[3].run(PipelineContext())
+        res = STAGES[2].run(PipelineContext())
         self.assertEqual((res.status, res.reason, res.outputs), ("blocked", "precondition", {}))
 
     def test_d24_data_missing_blocks_at_stage_1_before_any_engine_call(self):
@@ -282,7 +289,7 @@ class MissingDataTests(unittest.TestCase):
 class NotWiredTests(unittest.TestCase):
     def test_the_table_and_the_stage_flags_agree(self):
         self.assertEqual(WIRED_STAGES, tuple(s.number for s in STAGES if s.wired))
-        self.assertEqual(sorted(set(WIRED_STAGES) | set(NOT_WIRED)), list(range(1, 17)))
+        self.assertEqual(sorted(set(WIRED_STAGES) | set(NOT_WIRED)), list(range(1, 13)))
 
     def test_stages_without_inputs_still_return_not_available_with_nothing(self):
         ctx = context()
@@ -315,17 +322,17 @@ class DeterminismTests(unittest.TestCase):
 
     def test_only_the_dxf_files_differ_between_runs_because_the_engine_stamps_the_time(self):
         with tempfile.TemporaryDirectory() as a, tempfile.TemporaryDirectory() as b:
-            first = {f["path"]: f for f in run(context(a), stop_after=14, run_id="x").results[13].outputs["files"]}
-            second = {f["path"]: f for f in run(context(b), stop_after=14, run_id="x").results[13].outputs["files"]}
+            first = {f["path"]: f for f in run(context(a), stop_after=10, run_id="x").results[9].outputs["files"]}
+            second = {f["path"]: f for f in run(context(b), stop_after=10, run_id="x").results[9].outputs["files"]}
         self.assertEqual(sorted(first), sorted(second))
         self.assertEqual([p for p in first if first[p] != second[p]], [p for p in first if p.endswith(".dxf") and first[p] != second[p]])
 
     def test_a_second_run_in_the_same_context_recomputes_the_chain(self):
         ctx = context()
-        first = run(ctx, stop_after=12, run_id="x").to_dict()
+        first = run(ctx, stop_after=8, run_id="x").to_dict()
         ctx.engine_inputs["circuits"]["L-01"]["fp"] = 0.8
-        second = run(ctx, stop_after=12, run_id="x").to_dict()
-        self.assertNotEqual(first["results"][3], second["results"][3])
+        second = run(ctx, stop_after=8, run_id="x").to_dict()
+        self.assertNotEqual(first["results"][2], second["results"][2])
 
 
 class OutputStagesTests(unittest.TestCase):
@@ -336,8 +343,8 @@ class OutputStagesTests(unittest.TestCase):
             old = os.getcwd()
             os.chdir(cwd)
             stack.callback(os.chdir, old)
-            res = run(context(str(work)), stop_after=14, run_id="r")
-            drawing = res.results[13]
+            res = run(context(str(work)), stop_after=10, run_id="r")
+            drawing = res.results[9]
             self.assertEqual(drawing.status, "ok", drawing.message)
             self.assertEqual(os.listdir(base), ["work"])
             self.assertEqual(os.listdir(cwd), [])
@@ -350,22 +357,22 @@ class OutputStagesTests(unittest.TestCase):
 
     def test_drawings_without_a_work_dir_are_blocked(self):
         ctx = context()
-        run(ctx, stop_after=12, run_id="r")
-        res = STAGES[13].run(ctx)
+        run(ctx, stop_after=8, run_id="r")
+        res = STAGES[9].run(ctx)
         self.assertEqual((res.status, res.outputs, res.engine_calls), ("blocked", {}, []))
         self.assertIn("work_dir", res.message)
 
     def test_a_board_name_that_is_not_a_file_name_is_blocked(self):
         ctx = context("unused")
         ctx.engine_inputs["board"]["name"] = "../x"
-        ctx.results = {3: StageResult(3, "ok")}
-        res = STAGES[13].run(ctx)
+        ctx.results = {2: StageResult(2, "ok")}
+        res = STAGES[9].run(ctx)
         self.assertEqual(res.status, "blocked")
         self.assertIn("board name", res.message)
 
     def test_documents_are_the_engine_memo_and_the_rest_is_pending(self):
         ctx = context()
-        res = run(ctx, stop_after=15, run_id="r", stages=[s for s in STAGES if s.number != 14])
+        res = run(ctx, stop_after=11, run_id="r", stages=[s for s in STAGES if s.number != 10])
         docs = res.results[-1]
         self.assertEqual(docs.status, "ok")
         memo = ctx.engine_cache["chain"]["memo"]
@@ -401,13 +408,13 @@ def synthetic_catalog(root):
 
 
 class DatasheetsStageTests(unittest.TestCase):
-    """MIG-39d: stage 15 builds the datasheets only when `engine_inputs["datasheets"]["catalog_dir"]` is given (explicit; the stage never searches the repository)."""
+    """MIG-39d: stage 11 builds the datasheets only when `engine_inputs["datasheets"]["catalog_dir"]` is given (explicit; the stage never searches the repository)."""
 
     def documents(self, given):
         ctx = context()
         if given is not None:
             ctx.engine_inputs["datasheets"] = given
-        res = run(ctx, stop_after=15, run_id="r", stages=[s for s in STAGES if s.number != 14])
+        res = run(ctx, stop_after=11, run_id="r", stages=[s for s in STAGES if s.number != 10])
         return ctx, res.results[-1]
 
     def test_produced_from_a_synthetic_catalog(self):
@@ -466,13 +473,13 @@ class DatasheetsStageTests(unittest.TestCase):
 
 
 class BillOfQuantitiesStageTests(unittest.TestCase):
-    """MIG-39c: stage 15 builds the bill of quantities only when the engineer gives `engine_inputs["boq"]["allowance_pct"]`."""
+    """MIG-39c: stage 11 builds the bill of quantities only when the engineer gives `engine_inputs["boq"]["allowance_pct"]`."""
 
     def documents(self, boq):
         ctx = context()
         if boq is not None:
             ctx.engine_inputs["boq"] = boq
-        res = run(ctx, stop_after=15, run_id="r", stages=[s for s in STAGES if s.number != 14])
+        res = run(ctx, stop_after=11, run_id="r", stages=[s for s in STAGES if s.number != 10])
         return ctx, res.results[-1]
 
     def test_produced_with_an_explicit_allowance(self):
@@ -518,14 +525,14 @@ RFQ_TERMS = {"suppliers": [{"name": "Alfa", "contact": "alfa@example.test"}, {"n
 
 
 class RfqStageTests(unittest.TestCase):
-    """MIG-39e: stage 15 builds the RFQ only when the BOQ was produced in the same run AND the commercial terms are given."""
+    """MIG-39e: stage 11 builds the RFQ only when the BOQ was produced in the same run AND the commercial terms are given."""
 
     def documents(self, rfq=None, boq=None, catalog=None):
         ctx = context()
         for key, given in (("rfq", rfq), ("boq", boq), ("datasheets", catalog)):
             if given is not None:
                 ctx.engine_inputs[key] = given
-        res = run(ctx, stop_after=15, run_id="r", stages=[s for s in STAGES if s.number != 14])
+        res = run(ctx, stop_after=11, run_id="r", stages=[s for s in STAGES if s.number != 10])
         return ctx, res.results[-1]
 
     def reasons(self, docs):
@@ -583,13 +590,13 @@ class RfqStageTests(unittest.TestCase):
 
 
 class DesignBasisStageTests(unittest.TestCase):
-    """MIG-39f: stage 15 adds the draft design-basis document whenever the context has the profile and the design basis of stage 2; no extra input is needed."""
+    """MIG-39f: stage 11 adds the draft design-basis document whenever the context has the profile and the design basis of stage 2; no extra input is needed."""
 
     def documents(self, **changes):
         ctx = context()
         for key, value in changes.items():
             setattr(ctx, key, value)
-        res = run(ctx, stop_after=15, run_id="r", stages=[s for s in STAGES if s.number != 14])
+        res = run(ctx, stop_after=11, run_id="r", stages=[s for s in STAGES if s.number != 10])
         return ctx, res.results[-1]
 
     def test_produced_without_any_extra_input(self):
@@ -606,9 +613,9 @@ class DesignBasisStageTests(unittest.TestCase):
 
     def test_pending_with_a_reason_when_stage_2_gave_nothing(self):
         ctx = context()
-        run(ctx, stop_after=15, run_id="r", stages=[s for s in STAGES if s.number != 14])
+        run(ctx, stop_after=11, run_id="r", stages=[s for s in STAGES if s.number != 10])
         ctx.design_basis = None
-        docs = STAGES[14].run(ctx)
+        docs = STAGES[10].run(ctx)
         self.assertEqual(docs.status, "ok", docs.message)
         self.assertNotIn("design_basis", [d["name"] for d in docs.outputs["documents"]])
         self.assertIn({"name": "design basis", "status": "planned", "reason": "no_design_basis"}, docs.outputs["pending_documents"])
@@ -616,21 +623,21 @@ class DesignBasisStageTests(unittest.TestCase):
 
     def test_an_invalid_profile_blocks_with_the_engine_message(self):
         ctx = context()
-        run(ctx, stop_after=15, run_id="r", stages=[s for s in STAGES if s.number != 14])
+        run(ctx, stop_after=11, run_id="r", stages=[s for s in STAGES if s.number != 10])
         ctx.profile = dict(ctx.profile, supply=dict(ctx.profile["supply"], earthing_system=None))
-        docs = STAGES[14].run(ctx)
+        docs = STAGES[10].run(ctx)
         self.assertEqual(docs.status, "blocked")
         self.assertIn("design basis: D24 data missing in the profile: supply.earthing_system", docs.message)
 
 
 class DescriptiveReportStageTests(unittest.TestCase):
-    """MIG-39g: stage 15 adds the draft descriptive report right after the design basis, whenever the design basis is produced; no extra input is needed."""
+    """MIG-39g: stage 11 adds the draft descriptive report right after the design basis, whenever the design basis is produced; no extra input is needed."""
 
     def documents(self, **changes):
         ctx = context()
         for key, value in changes.items():
             setattr(ctx, key, value)
-        res = run(ctx, stop_after=15, run_id="r", stages=[s for s in STAGES if s.number != 14])
+        res = run(ctx, stop_after=11, run_id="r", stages=[s for s in STAGES if s.number != 10])
         return ctx, res.results[-1]
 
     def test_produced_last_after_the_design_basis(self):
@@ -666,7 +673,7 @@ class DescriptiveReportStageTests(unittest.TestCase):
     def test_boq_totals_are_passed_when_produced(self):
         ctx = context()
         ctx.engine_inputs["boq"] = {"allowance_pct": 10}
-        res = run(ctx, stop_after=15, run_id="r", stages=[s for s in STAGES if s.number != 14])
+        res = run(ctx, stop_after=11, run_id="r", stages=[s for s in STAGES if s.number != 10])
         docs = res.results[-1]
         boq = next(d for d in docs.outputs["documents"] if d["name"] == "boq")["document"]
         items = {i["key"]: i for s in docs.outputs["documents"][-1]["document"]["sections"] for i in s["items"]}
@@ -675,9 +682,9 @@ class DescriptiveReportStageTests(unittest.TestCase):
 
     def test_pending_with_a_reason_without_the_design_basis(self):
         ctx = context()
-        run(ctx, stop_after=15, run_id="r", stages=[s for s in STAGES if s.number != 14])
+        run(ctx, stop_after=11, run_id="r", stages=[s for s in STAGES if s.number != 10])
         ctx.design_basis = None
-        docs = STAGES[14].run(ctx)
+        docs = STAGES[10].run(ctx)
         self.assertEqual(docs.status, "ok", docs.message)
         self.assertNotIn("descriptive_report", [d["name"] for d in docs.outputs["documents"]])
         self.assertIn({"name": "descriptive report", "status": "planned", "reason": "no_design_basis"}, docs.outputs["pending_documents"])
@@ -685,9 +692,9 @@ class DescriptiveReportStageTests(unittest.TestCase):
 
     def test_an_engine_error_blocks_with_its_message(self):
         ctx = context()
-        run(ctx, stop_after=15, run_id="r", stages=[s for s in STAGES if s.number != 14])
+        run(ctx, stop_after=11, run_id="r", stages=[s for s in STAGES if s.number != 10])
         with mock.patch("epc_descriptive_report.build_descriptive_report", side_effect=ValueError("boom")):
-            docs = STAGES[14].run(ctx)
+            docs = STAGES[10].run(ctx)
         self.assertEqual(docs.status, "blocked")
         self.assertIn("descriptive report: boom", docs.message)
 

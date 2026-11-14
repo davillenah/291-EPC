@@ -110,4 +110,4 @@ class Workflow:
 
     def _log(self, name, role, actor_id, run_id, result, detail):
         self.log.append({"pipeline_run_id": run_id, "actor": {"role": role, "id": actor_id}, "action": f"transition:{name}",
-                         "target": "reviews/workflow.json", "result": result, "detail": detail})
+                         "target": ".epc/reviews/workflow.json", "result": result, "detail": detail})

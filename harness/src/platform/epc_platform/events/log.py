@@ -1,4 +1,4 @@
-"""The append-only event log of a project (`projects/<code>/audit/events.jsonl`, PRD 10.3 and 17).
+"""The append-only event log of a project (`<project>/.epc/audit/events.jsonl`, PRD 10.3 and 17).
 
 One JSON object per line (sorted keys, compact separators, ASCII escapes, LF). Fields:
 
@@ -26,7 +26,7 @@ from pathlib import Path
 GENESIS = "0" * 64
 RESULTS = ("allowed", "denied", "ok", "failed")
 FIELDS = ("seq", "ts", "pipeline_run_id", "actor", "action", "target", "result", "detail", "prev_hash", "hash")
-LOG_REL = ("audit", "events.jsonl")
+LOG_REL = (".epc/audit", "events.jsonl")
 
 
 class EventLogError(ValueError):
@@ -90,7 +90,7 @@ class EventLog:
     def _check_location(self, root):
         audit = (root / LOG_REL[0]).resolve()
         if not _inside(audit, root) or self.path.parent != audit or self.path.name != LOG_REL[1]:
-            raise EventLogError(f"the event log must be {root.name}/audit/events.jsonl, not {self.path}")
+            raise EventLogError(f"the event log must be {root.name}/.epc/audit/events.jsonl, not {self.path}")
 
     # -- reading -------------------------------------------------------------------------------------------------------------
     def _lines(self):

@@ -69,7 +69,7 @@ def _scope(session, args):
 
 def _init(session, args):
     answers = load_json(args.answers, "answers")
-    return api.init_project(session.projects_root, args.project_code, answers, clock=session.clock, actor=session.actor)
+    return api.init_project(session.projects_root, args.project_code, answers, clock=session.clock, actor=session.actor, client=args.client, description=args.description)
 
 
 def _run(session, args):
@@ -117,7 +117,9 @@ def _stages(session, args):
 
 COMMANDS = {c.key: c for c in (
     Command("init", "create a project from the guided-form answers", "init_project", _init,
-            (PROJECT, (("--answers",), {"required": True, "metavar": "FILE.json", "help": "the intake answers (JSON file)"}))),
+            (PROJECT, (("--answers",), {"required": True, "metavar": "FILE.json", "help": "the intake answers (JSON file)"}),
+             (("--client",), {"metavar": "NAME", "help": "full client name, upper case words joined by _ (creates projects/<NAME>/<code>_<DESCRIPTION>; the code is then AAAA-PROV-CLI-CODE)"}),
+             (("--description",), {"metavar": "TEXT", "help": "project description in the client's language, upper case words joined by _ (with --client)"}))),
     Command("run", "run the pipeline in a project", "run_pipeline", _run, (
         PROJECT,
         (("--loads",), {"required": True, "metavar": "FILE.json", "help": "the load list (JSON file)"}),
@@ -139,7 +141,7 @@ COMMANDS = {c.key: c for c in (
             ((("package",), {"nargs": "?", "help": "engine package; all engines when omitted"}), PROJECT_OPT)),
     Command("norms-pending", "norm points still to be reviewed (units and totals)", "norms_pending", _norms_pending,
             ((("--detail",), {"action": "store_true", "help": "list the units with pending points"}), PROJECT_OPT)),
-    Command("stages", "the 16 pipeline stages", "stage_table", _stages, (PROJECT_OPT,)),
+    Command("stages", "the 12 pipeline stages", "stage_table", _stages, (PROJECT_OPT,)),
 )}
 
 

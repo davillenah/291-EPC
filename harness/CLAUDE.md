@@ -30,7 +30,7 @@ No agent writes a number by hand. Every value comes from an engine (through the 
 
 - Project data: `projects/<code>/` (never in this repository). Inputs are immutable after intake and hashed (`inputs/`).
 - Single source of truth: `ssot/`, written only by the pipeline. Agents cannot write `ssot/`, `deliverables/` or `inputs/` directly.
-- Deliverables: `deliverables/<rev>/`, each with one manifest (PRD §13). A deliverable is never "approved for construction" while it uses an unreviewed norm value (D21).
+- Deliverables: `deliverables/TR-NNN/` (one folder per transmittal) with one manifest per transmittal in `.epc/manifests/` (PRD §13). A deliverable is never "approved for construction" while it uses an unreviewed norm value (D21).
 - Norm data and register: `config/normative/AR/`; standards PDFs only in `knowledge/normative/` (local, ignored, read-only).
 - Product agents (`orchestrator`, `electrical_lv`, `calc_check`, `documentation`, `procurement`): their model, effort, tools and skills come from one roster file, `harness/.claude/roster.json`. Agent files are generated from it and its bodies (`python harness/tools/build/regen_agents.py`) and never edited by hand.
 - Architecture decisions: `docs/architecture/decisions/` and `docs/prsad/`.

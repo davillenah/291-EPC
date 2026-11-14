@@ -24,7 +24,7 @@ POWER_UNITS_WITH_FP = ("W", "kW")
 OVERRIDE_KEYS = ("parent_tag", "topology", "phase_assigned", "fp", "efficiency", "kind", "notes", "cable_type", "method",
                  "insulation", "material", "grouped", "d2_column", "spacing", "route", "moments", "symbols", "length_m", "destination")
 
-# Documents of PRD stage 15 whose engine does not exist yet: reported by name, never with a value.
+# Documents of PRD stage 11 whose engine does not exist yet: reported by name, never with a value.
 PENDING_DOCUMENTS = ("specification", "cable list", "BOQ", "datasheets", "RFQ", "descriptive report")
 
 # What the stages report as pending because no engine function produces it.

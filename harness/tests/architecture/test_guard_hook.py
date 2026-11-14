@@ -43,45 +43,49 @@ def call(event, role=None, environ=None):
 
 # (name, event, expected rule id)
 BLOCKED = [
-    ("write ssot", edit("Write", f"{P}/ssot/stage_04.json"), "D-07"),
-    ("edit ssot", edit("Edit", f"{P}/ssot/stage_04.json"), "D-07"),
-    ("multiedit ssot", edit("MultiEdit", f"{P}/ssot/stage_04.json"), "D-07"),
-    ("notebook ssot", {"tool_name": "NotebookEdit", "tool_input": {"notebook_path": f"{P}/ssot/n.ipynb"}, "cwd": CWD}, "D-07"),
+    ("write ssot", edit("Write", f"{P}/.epc/ssot/stage_04.json"), "D-07"),
+    ("edit ssot", edit("Edit", f"{P}/.epc/ssot/stage_04.json"), "D-07"),
+    ("multiedit ssot", edit("MultiEdit", f"{P}/.epc/ssot/stage_04.json"), "D-07"),
+    ("notebook ssot", {"tool_name": "NotebookEdit", "tool_input": {"notebook_path": f"{P}/.epc/ssot/n.ipynb"}, "cwd": CWD}, "D-07"),
     ("write deliverable", edit("Write", f"{P}/deliverables/R0/sld.dxf"), "D-07"),
     ("write input", edit("Write", f"{P}/inputs/brief.pdf"), "D-04"),
     ("edit input", edit("Edit", f"{P}/inputs/brief.pdf"), "D-04"),
-    ("write audit", edit("Write", f"{P}/audit/events.jsonl"), "D-09"),
-    ("edit audit", edit("Edit", f"{P}/audit/events.jsonl"), "D-09"),
-    ("write profile", edit("Write", f"{P}/project_profile.json"), "D-07"),
-    ("write state", edit("Edit", f"{P}/master_project_state.json"), "D-07"),
+    ("write audit", edit("Write", f"{P}/.epc/audit/events.jsonl"), "D-09"),
+    ("edit audit", edit("Edit", f"{P}/.epc/audit/events.jsonl"), "D-09"),
+    ("write profile", edit("Write", f"{P}/.epc/project_profile.json"), "D-07"),
+    ("write state", edit("Edit", f"{P}/.epc/master_project_state.json"), "D-07"),
+    ("write ssot of a project in a client folder", edit("Write", "projects/HONDA/2026-ES-HNDA-3085_X/.epc/ssot/a.json"), "D-07"),
+    ("write a manifest", edit("Write", f"{P}/.epc/manifests/TR-001.manifest.json"), "D-07"),
+    ("write a manifest of a project in a client folder", edit("Write", "projects/HONDA/2026-ES-HNDA-3085_X/.epc/manifests/TR-001.manifest.json"), "D-07"),
+    ("unknown path of a project in a client folder", edit("Write", "projects/HONDA/2026-ES-HNDA-3085_X/zzz/a.txt"), "H-03"),
     ("write normative config", edit("Write", "harness/config/normative/AR/values.json"), "D-07"),
     ("edit normative config", edit("Edit", "harness/config/normative/AR/values.json"), "D-07"),
     ("write schema", edit("Write", "harness/schemas/project_profile.schema.json"), "D-10"),
     ("edit schema", edit("Edit", "harness/schemas/project_profile.schema.json"), "D-10"),
     ("write knowledge normative", edit("Write", "harness/knowledge/normative/AEA90364/x.md"), "H-01"),
-    ("absolute path", edit("Write", str(REPO / "projects" / "p1" / "ssot" / "a.json")), "D-07"),
-    ("traversal", edit("Write", f"{P}/runs/r1/../../ssot/a.json"), "D-07"),
+    ("absolute path", edit("Write", str(REPO / "projects" / "p1" / ".epc" / "ssot" / "a.json")), "D-07"),
+    ("traversal", edit("Write", f"{P}/.epc/runs/r1/../../ssot/a.json"), "D-07"),
     ("unknown project path", edit("Write", f"{P}/zzz/a.txt"), "H-03"),
     ("missing path", {"tool_name": "Write", "tool_input": {}, "cwd": CWD}, "H-00"),
-    ("redirect", bash(f"echo x > {P}/ssot/a.json"), "D-07"),
+    ("redirect", bash(f"echo x > {P}/.epc/ssot/a.json"), "D-07"),
     ("append", bash(f"echo x >> {P}/deliverables/R0/a.txt"), "D-07"),
     ("redirect no space", bash(f"echo x>{P}/inputs/a.txt"), "D-04"),
     ("redirect backslash", bash("echo x > projects\\p1\\ssot\\a.json"), "D-07"),
-    ("tee", bash(f"echo x | tee {P}/ssot/a.json"), "D-07"),
-    ("Set-Content", bash(f"Set-Content -Path {P}/ssot/a.json -Value x", "PowerShell"), "D-07"),
+    ("tee", bash(f"echo x | tee {P}/.epc/ssot/a.json"), "D-07"),
+    ("Set-Content", bash(f"Set-Content -Path {P}/.epc/ssot/a.json -Value x", "PowerShell"), "D-07"),
     ("Out-File", bash(f"'x' | Out-File {P}/deliverables/a.txt", "PowerShell"), "D-07"),
-    ("cp into ssot", bash(f"cp /tmp/a.json {P}/ssot/a.json"), "D-07"),
-    ("mv out of ssot", bash(f"mv {P}/ssot/a.json /tmp/a.json"), "D-07"),
-    ("sed -i", bash(f"sed -i s/a/b/ {P}/ssot/a.json"), "D-07"),
+    ("cp into ssot", bash(f"cp /tmp/a.json {P}/.epc/ssot/a.json"), "D-07"),
+    ("mv out of ssot", bash(f"mv {P}/.epc/ssot/a.json /tmp/a.json"), "D-07"),
+    ("sed -i", bash(f"sed -i s/a/b/ {P}/.epc/ssot/a.json"), "D-07"),
     ("sed -i combined flags", bash(f"sed -ni p {P}/deliverables/a.txt"), "D-07"),
-    ("python open w", bash(f"python -c \"open('{P}/ssot/a.json','w').write('x')\""), "D-07"),
-    ("python write_text", bash(f"python -c \"from pathlib import Path; Path('{P}/audit/events.jsonl').write_text('')\""), "D-09"),
-    ("dd", bash(f"dd if=/dev/zero of={P}/ssot/a.bin"), "D-07"),
+    ("python open w", bash(f"python -c \"open('{P}/.epc/ssot/a.json','w').write('x')\""), "D-07"),
+    ("python write_text", bash(f"python -c \"from pathlib import Path; Path('{P}/.epc/audit/events.jsonl').write_text('')\""), "D-09"),
+    ("dd", bash(f"dd if=/dev/zero of={P}/.epc/ssot/a.bin"), "D-07"),
     ("write schema by shell", bash("echo {} > harness/schemas/x.schema.json"), "D-10"),
     ("write normative by shell", bash("cp x.json harness/config/normative/AR/x.json"), "D-07"),
-    ("cd then relative redirect", bash(f"cd {P}/ssot && echo x > a.json"), "D-07"),
+    ("cd then relative redirect", bash(f"cd {P}/.epc/ssot && echo x > a.json"), "D-07"),
     ("unresolvable path", bash("echo x > $TARGET"), "H-03"),
-    ("bash -c wrapper", bash(f"bash -c 'echo x > {P}/ssot/a.json'"), "D-07"),
+    ("bash -c wrapper", bash(f"bash -c 'echo x > {P}/.epc/ssot/a.json'"), "D-07"),
     ("encoded powershell", bash("powershell -EncodedCommand AAAA", "PowerShell"), "H-03"),
     ("git commit", bash("git commit -m x"), "H-02"),
     ("git push", bash("git push origin main"), "H-02"),
@@ -111,13 +115,13 @@ BLOCKED = [
 
 # (name, event, role)
 ALLOWED = [
-    ("read ssot", edit("Read", f"{P}/ssot/a.json"), None),
+    ("read ssot", edit("Read", f"{P}/.epc/ssot/a.json"), None),
     ("glob", {"tool_name": "Glob", "tool_input": {"pattern": "**/*.py"}}, None),
     ("grep", {"tool_name": "Grep", "tool_input": {"pattern": "x"}}, None),
     ("read normative pdf", edit("Read", "harness/knowledge/normative/AEA90364/x.pdf"), None),
-    ("write run folder", edit("Write", f"{P}/runs/run-1/log.txt"), None),
-    ("write review as calc_check", edit("Write", f"{P}/reviews/findings.json"), "calc_check"),
-    ("write review as reviewing engineer", edit("Write", f"{P}/reviews/findings.json"), "reviewing_engineer"),
+    ("write run folder", edit("Write", f"{P}/.epc/runs/run-1/log.txt"), None),
+    ("write review as calc_check", edit("Write", f"{P}/.epc/reviews/findings.json"), "calc_check"),
+    ("write review as reviewing engineer", edit("Write", f"{P}/.epc/reviews/findings.json"), "reviewing_engineer"),
     ("create transmittal as orchestrator", edit("Write", f"{P}/transmittals/new_transmittal_x.md"), "orchestrator"),
     ("write a test", edit("Write", "harness/tests/unit/test_new.py"), None),
     ("edit a doc", edit("Edit", "harness/docs/BACKLOG.md"), None),
@@ -130,15 +134,15 @@ ALLOWED = [
     ("git log", bash("git log --oneline -5"), None),
     ("git ls-files", bash("git ls-files harness"), None),
     ("git check-ignore", bash("git check-ignore -v x"), None),
-    ("cat ssot", bash(f"cat {P}/ssot/a.json"), None),
+    ("cat ssot", bash(f"cat {P}/.epc/ssot/a.json"), None),
     ("grep ssot", bash(f"grep -rn x {P}/ssot > /dev/null"), None),
     ("stderr redirect", bash("ls missing 2>&1"), None),
     ("redirect to nul", bash("ls > nul"), None),
-    ("copy from ssot into runs", bash(f"cp {P}/ssot/a.json {P}/runs/r1/a.json"), None),
+    ("copy from ssot into runs", bash(f"cp {P}/.epc/ssot/a.json {P}/.epc/runs/r1/a.json"), None),
     ("redirect into docs", bash("echo x > harness/docs/x.md"), None),
-    ("redirect into runs", bash(f"echo x > {P}/runs/r1/x.txt"), None),
+    ("redirect into runs", bash(f"echo x > {P}/.epc/runs/r1/x.txt"), None),
     ("pytest", bash("python -m pytest harness/tests -q"), None),
-    ("python reading", bash(f"python -c \"print(open('{P}/ssot/a.json').read())\""), None),
+    ("python reading", bash(f"python -c \"print(open('{P}/.epc/ssot/a.json').read())\""), None),
     ("build tool", bash(".venv/Scripts/python harness/tools/build/epc_build.py registry"), None),
     ("epc mcp tool", {"tool_name": "mcp__epc__epc_project_status", "tool_input": {}}, None),
     ("unknown read-only tool", {"tool_name": "Inspector", "tool_input": {}}, None),
@@ -166,7 +170,7 @@ class InProcess(unittest.TestCase):
 
     def test_every_agent_role_is_blocked_from_every_protected_class(self):
         from epc_platform.permissions import rules as R
-        paths = {"ssot": f"{P}/ssot/a", "deliverables": f"{P}/deliverables/a", "inputs": f"{P}/inputs/a", "audit": f"{P}/audit/a",
+        paths = {"ssot": f"{P}/.epc/ssot/a", "deliverables": f"{P}/deliverables/a", "inputs": f"{P}/inputs/a", "audit": f"{P}/.epc/audit/a",
                  "schemas": "harness/schemas/a", "config_normative": "harness/config/normative/a"}
         for role in R.AGENTS:
             for cls, path in paths.items():
@@ -209,9 +213,9 @@ class Audit(unittest.TestCase):
             project = Path(tmp) / "p9"
             project.mkdir()
             env = {"EPC_PROJECT_DIR": str(project), "EPC_HOOK_NOW": "2026-01-01T00:00:00Z", "EPC_RUN_ID": "run-x"}
-            self.assertEqual(call(edit("Write", f"{P}/ssot/a.json"), environ=env)[0], 2)
+            self.assertEqual(call(edit("Write", f"{P}/.epc/ssot/a.json"), environ=env)[0], 2)
             self.assertEqual(call(bash("git push"), environ=env)[0], 2)
-            self.assertEqual(call(edit("Read", f"{P}/ssot/a.json"), environ=env)[0], 0)
+            self.assertEqual(call(edit("Read", f"{P}/.epc/ssot/a.json"), environ=env)[0], 0)
             log = EventLog.for_project(project, lambda: "-")
             records = log.read()
             self.assertEqual([r["result"] for r in records], ["denied", "denied"])
@@ -226,14 +230,14 @@ class Audit(unittest.TestCase):
     def test_the_timestamp_defaults_to_a_dash(self):
         from epc_platform.events import EventLog
         with tempfile.TemporaryDirectory() as tmp:
-            call(edit("Write", f"{P}/ssot/a.json"), environ={"EPC_PROJECT_DIR": tmp})
+            call(edit("Write", f"{P}/.epc/ssot/a.json"), environ={"EPC_PROJECT_DIR": tmp})
             self.assertEqual(EventLog.for_project(tmp, lambda: "x").read()[0]["ts"], "-")
 
     def test_a_broken_audit_target_never_breaks_the_hook(self):
         with tempfile.TemporaryDirectory() as tmp:
             blocker = Path(tmp) / "afile"
             blocker.write_text("x", encoding="utf-8")
-            code, message = call(edit("Write", f"{P}/ssot/a.json"), environ={"EPC_PROJECT_DIR": str(blocker)})
+            code, message = call(edit("Write", f"{P}/.epc/ssot/a.json"), environ={"EPC_PROJECT_DIR": str(blocker)})
             self.assertEqual(code, 2)
             self.assertIn("[D-07]", message)
 

@@ -73,12 +73,12 @@ class TransitionTests(Base):
 
     def test_the_state_file_is_small_deterministic_json_under_reviews(self):
         self.go(HAPPY[:1])
-        path = self.project / "reviews" / "workflow.json"
+        path = self.project / ".epc" / "reviews" / "workflow.json"
         data = json.loads(path.read_text(encoding="utf-8"))
         self.assertEqual(data["state"], "intake_done")
         self.assertEqual(data["history"][0]["role"], ORC)
-        self.assertFalse(list((self.project / "reviews").glob(".*.tmp")))
-        self.assertFalse((self.project / "master_project_state.json").exists())
+        self.assertFalse(list((self.project / ".epc" / "reviews").glob(".*.tmp")))
+        self.assertFalse((self.project / ".epc" / "master_project_state.json").exists())
 
 
 class RoleGuardTests(Base):
@@ -130,14 +130,14 @@ class D21Tests(Base):
         self.go(HAPPY + [("approve", ENG)])
         store = ProjectStore(self.project)
         with store.pipeline_session("seed2") as token:
-            store.write_manifest(token, TM.build(deliverable_id="TEST-001-DOC-MC", norm_reader=TM.ONE_PENDING))
+            store.write_manifest(token, TM.build(transmittal="TR-002", revision="R1", norm_reader=TM.ONE_PENDING))
         with self.assertRaises(WorkflowBlocked):
             self.wf.transition("issue", ENG, "e1")
         self.assertEqual(self.wf.state, "approved")
 
     def test_a_superseded_manifest_does_not_count(self):
         old = TM.build(norm_reader=TM.ONE_PENDING)
-        new = TM.build(revision="R1", norm_reader=TM.ALL_VERIFIED)
+        new = TM.build(revision="R1", transmittal="TR-002", norm_reader=TM.ALL_VERIFIED)
         old2, new2 = TM.M.supersede(old, new)
         store = ProjectStore(self.project)
         with store.pipeline_session("seed") as token:

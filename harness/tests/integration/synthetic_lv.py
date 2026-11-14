@@ -106,13 +106,13 @@ class SyntheticRun:
         return self
 
     def ssot(self, name):
-        return read_json(self.project / "ssot" / name)
+        return read_json(self.project / ".epc" / "ssot" / name)
 
     def stage_files(self):
-        return sorted((self.project / "ssot").glob("stage_*.json"))
+        return sorted((self.project / ".epc" / "ssot").glob("stage_*.json"))
 
     def manifests(self):
-        return sorted((self.project / "deliverables").glob("*/*.manifest.json"))
+        return sorted((self.project / ".epc" / "manifests").glob("*.manifest.json"))
 
 
 def normalise_dxf_hashes(value):
@@ -127,7 +127,7 @@ def normalise_dxf_hashes(value):
     out = {k: normalise_dxf_hashes(v) for k, v in value.items()}
     names = [out.get(k) for k in ("path", "title", "source")]
     if any(isinstance(n, str) and n.endswith(".dxf") for n in names):
-        for key in ("sha256", "output_sha256", "bytes"):
+        for key in ("sha256", "bytes"):
             if key in out:
                 out[key] = None
     return out

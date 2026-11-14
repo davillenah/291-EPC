@@ -10,7 +10,7 @@ ENTRY = {"init": ("complete_intake", "start_run"), "intake_done": ("start_run",)
 def _not_a_trigger(workflow, name, actor, run_id):
     """The RACI check first, whatever the state: a role that may not trigger the transition is refused and the denial is logged."""
     reason = f"{actor['role']} may not trigger {name} (RACI)"
-    workflow.log.append({"pipeline_run_id": run_id, "actor": dict(actor), "action": f"transition:{name}", "target": "reviews/workflow.json",
+    workflow.log.append({"pipeline_run_id": run_id, "actor": dict(actor), "action": f"transition:{name}", "target": ".epc/reviews/workflow.json",
                          "result": "denied", "detail": {"reason": reason}})
     raise ApiError("permission_denied", reason, {"role": actor["role"], "transition": name})
 

@@ -152,12 +152,13 @@ def files_of(project):
 
 
 def stage_of(run_dict, number):
-    return next(r for r in run_dict["results"] if r["stage"] == number)
+    """The result of a stage by its NUMBER IN THE 16-SLICE VOCABULARY of the reference quantities and of `epc_calc_check` (the 12 physical stages hold those slices)."""
+    return next(r for r in M.calc_stage.logical_results(run_dict["results"]) if r["stage"] == number)
 
 
 def dxf_bytes(proj):
-    out14 = proj.ssot("stage_14_drawings.json")["outputs"]
-    base = proj.project / "runs" / proj.run_id / out14["directory"]
+    out14 = proj.ssot("stage_10_drawings.json")["outputs"]
+    base = proj.project / ".epc" / "runs" / proj.run_id / out14["directory"]
     return {f"{out14['directory']}/{f['path']}": (base / f["path"]).read_bytes() for f in out14["files"] if f["path"].endswith(".dxf")}
 
 
@@ -191,7 +192,7 @@ class DryRun:
 
     @property
     def check_project(self):
-        """The engine inputs `calc_check` recomputes from, taken from an in-process run of stages 1-13 of the same inputs."""
+        """The engine inputs `calc_check` recomputes from, taken from an in-process run of stages 1-9 of the same inputs."""
         if "check_project" not in self.cache:
             aux = M.S.SyntheticRun()
             self.stack.callback(aux.cleanup)
@@ -199,7 +200,7 @@ class DryRun:
             store = M.store.ProjectStore(aux.project)
             ctx = M.stages.PipelineContext(answers=store.read_answers(), loads=M.S.read_json(M.S.GOLDEN / "loads.json"), engine_inputs=aux.engine_inputs,
                                            store=store, revision="R0")
-            M.pipeline.run(ctx, stop_after=13, run_id=M.S.RUN_ID, clock=M.S.clock)
+            M.pipeline.run(ctx, stop_after=9, run_id=M.S.RUN_ID, clock=M.S.clock)
             self.cache["check_project"] = M.calc_stage.engine_inputs_for_check(ctx)
         return self.cache["check_project"]
 
@@ -224,7 +225,7 @@ def c1(run):
     code, env = proj.run_result
     statuses = [r["status"] for r in res["results"]]
     unchanged, loads_same, engine_same = inputs_state(proj)
-    profile_same = M.S.read_json(proj.project / "project_profile.json") == stage_of(res, 1)["outputs"]["profile"]
+    profile_same = M.S.read_json(proj.project / ".epc" / "project_profile.json") == stage_of(res, 1)["outputs"]["profile"]
     facts = {"stages": len(statuses), "stages_ok": statuses.count("ok"), "manifests": len(proj.manifests()), "dxf_files": len(dxf_bytes(proj))}
     broken = code != 0 or not env["ok"] or statuses.count("ok") != len(statuses) or not facts["manifests"] or not unchanged or not profile_same
     evidence = [f"La corrida por el CLI real (init y run) terminó con {facts['stages_ok']} de {facts['stages']} etapas en estado ok y produjo {facts['manifests']} manifiestos "
@@ -280,7 +281,7 @@ def c2(run):
 
 
 def boq_plumbing(res):
-    """For each quantity list of the template: does stage 15 produce the document with line items? -> (documents present, total documents asked)."""
+    """For each quantity list of the template: does stage 11 produce the document with line items? -> (documents present, total documents asked)."""
     docs = {d["name"]: d["document"] for d in stage_of(res, 15)["outputs"]["documents"]}
     return {"boq": "boq" in docs and bool(docs["boq"]), "terminal_block_list": "terminal_block_list" in docs and bool(docs["terminal_block_list"])}
 
@@ -292,7 +293,7 @@ def c4(run):
     asked = len(V.BOQ_QUANTITIES)
     facts = {"boq_quantities_listed": asked, "documents_present": sum(present.values()), "documents_asked": len(present), "owner_cells_filled": filled}
     evidence = [f"La plantilla lista {asked} cantidades de lista o BOQ por comparar; la corrida sintética produce {facts['documents_present']} de {facts['documents_asked']} "
-                "documentos de cantidades (BOQ y lista de bornes) en la etapa 15.",
+                "documentos de cantidades (BOQ y lista de bornes) en la etapa 11.",
                 "La referencia y la tolerancia de cantidades las pone el dueño (celdas vacías en la plantilla); la comparación es la tarea MIG-44."]
     gaps = [f"No se produjo el documento {name}." for name, ok in present.items() if not ok]
     return result(4, "needs_owner_values" if not gaps else "fail", evidence, gaps, facts)
@@ -310,7 +311,7 @@ def stage_coverage(res):
 
 
 def document_state(res):
-    """Documents with number tokens whose engine left no call in stage 15: [(name, tokens)]; plus the total of tokens."""
+    """Documents with number tokens whose engine left no call in stage 11: [(name, tokens)]; plus the total of tokens."""
     stage15 = stage_of(res, 15)
     functions = [c["function"] for c in stage15["engine_calls"]]
     docs = stage15["outputs"]["documents"]
@@ -338,7 +339,7 @@ def c3(run):
     facts = {"stages": len(rows), "numeric_leaves": total, "leaves_with_engine_call": covered, "coverage_pct": pct, "stages_with_numbers_and_no_call": len(uncovered),
              "document_number_tokens": tokens, "documents": documents, "engine_packages": packages, "packages_without_norm_record": len(orphan_packages), **{f"stage_{s}_numeric_leaves": n for s, n, _ in uncovered}}
     evidence = [f"De {total} valores numéricos de las salidas de las {len(rows)} etapas, {covered} ({pct} %) pertenecen a una etapa con al menos una llamada a motor registrada.",
-                f"Los {documents} documentos de la etapa 15 traen {tokens} números escritos en su texto; cada documento tiene registrada la llamada de su motor "
+                f"Los {documents} documentos de la etapa 11 traen {tokens} números escritos en su texto; cada documento tiene registrada la llamada de su motor "
                 f"({len(unmatched_docs)} documentos sin llamada).",
                 f"De {packages} paquetes de motor llamados, {packages - len(orphan_packages)} tienen registros de norma en los manifiestos; los otros {len(orphan_packages)} no tienen registros propios "
                 "(motores de dibujo, listas y verificación)."]
@@ -362,7 +363,7 @@ def classify_difference(S, rel, one, two):
 
 
 def deliverable_hashes(proj):
-    return {p.name: M.S.read_json(p)["output_sha256"] for p in proj.manifests()}
+    return {f"{p.name}:{f['name']}": f["sha256"] for p in proj.manifests() for f in M.S.read_json(p)["files"]}
 
 
 PINNED_DATE = "2026-03-04"
@@ -443,7 +444,7 @@ def changed_input_outcome(run):
 
 
 def c6(run):
-    base, files = run.run_dict, dxf_bytes(run.primary)
+    base, files = dict(run.run_dict, results=M.calc_stage.logical_results(run.run_dict["results"])), dxf_bytes(run.primary)      # the 16 slices `epc_calc_check` reads
     clean = [f for f in M.calc_check.check_run(copy.deepcopy(base), project=copy.deepcopy(run.check_project), files=files, run_id="dry-run") if f["severity"] != "note"]
     outcomes = {name: seeded_outcome(base, run.check_project, files, spec) for name, spec in M.seeded.CASES.items()}
     outcomes["a byte of a drawing file changed"] = dxf_flip_outcome(base, run.check_project, files)
@@ -473,16 +474,17 @@ def norm_state(run):
 def approval_attempts(run, manifest):
     """(blocked by build_manifest for unverified records, accepted when the same records are all verified, schema errors of an approved copy)."""
     records, res = manifest["normative_profile"]["norm_records"], run.run_dict
-    args = dict(deliverable_id="X-DOC-x", title="x", revision="R0", run_id="dry", inputs_manifest=run.primary.ssot("inputs_manifest.json"),
-                engine_calls=all_calls(res), normative_profile=manifest["normative_profile"], findings=[], output_sha256="0" * 64)
+    args = dict(transmittal="TR-001", title="x", revision="R0", run_id="dry", inputs_manifest=run.primary.ssot("inputs_manifest.json"),
+                engine_calls=all_calls(res), normative_profile=manifest["normative_profile"], findings=[],
+                files=[{"name": "x", "title": "x", "path": None, "sha256": "0" * 64}])
     try:
-        M.manifest.build_manifest(None, review_status=M.manifest.APPROVED, norm_reader=lambda _p: records, **args)
+        M.manifest.build_manifest(review_status=M.manifest.APPROVED, norm_reader=lambda _p: records, **args)
         blocked = False
     except M.manifest.ApprovalBlocked:
         blocked = True
     verified = [dict(r, review_status=M.manifest.VERIFIED) for r in records]
     try:
-        M.manifest.build_manifest(None, review_status=M.manifest.APPROVED, norm_reader=lambda _p: verified, **args)
+        M.manifest.build_manifest(review_status=M.manifest.APPROVED, norm_reader=lambda _p: verified, **args)
         accepted = True
     except M.manifest.ManifestError:
         accepted = False
@@ -508,7 +510,7 @@ def c7(run):
     _, pending = M.S.envelope(run.primary.root, "norms-pending", *M.S.ORCHESTRATOR)
     facts = {"records_listed": listed["listed"], "records_not_verified": listed["not_verified"], "schema_errors_when_forced": schema_errors,
              "pending_points_in_register": pending["data"]["pending_points"]}
-    evidence = [f"La etapa 16 lista {facts['records_listed']} registros de norma en los manifiestos y {facts['records_not_verified']} no están verificados; el registro de norma "
+    evidence = [f"La etapa 12 lista {facts['records_listed']} registros de norma en los manifiestos y {facts['records_not_verified']} no están verificados; el registro de norma "
                 f"de los motores tiene {facts['pending_points_in_register']} puntos pendientes (epc norms-pending).",
                 "Pedir approved_for_construction con esos registros levanta ApprovalBlocked" + (" (bloqueo verificado)." if blocked else " (NO se bloqueó)."),
                 "Con los mismos registros marcados verificados el pedido se acepta, o sea que el bloqueo depende de los registros y no es general." if accepted else
@@ -565,8 +567,8 @@ def permission_matrix(roles):
 
 def c8(run):
     roles = [a["name"] for a in M.S.read_json(REPO / "harness" / ".claude" / "roster.json")["agents"]]
-    files = ("project_profile.json", "master_project_state.json", "ssot/stage_01_intake.json", "ssot/stage_16_package_issue.json", "inputs/intake_answers.json",
-             "audit/events.jsonl", run.primary.manifests()[0].relative_to(run.primary.project).as_posix())
+    files = (".epc/project_profile.json", ".epc/master_project_state.json", ".epc/ssot/stage_01_intake.json", ".epc/ssot/stage_12_package_issue.json", "inputs/intake_answers.json",
+             ".epc/audit/events.jsonl", run.primary.manifests()[0].relative_to(run.primary.project).as_posix())
     denied, reads_allowed = permission_matrix(roles)
     writes, reads, opaque, exempt = hook_matrix(run.primary, roles, files)
     settings = (REPO / "harness" / ".claude" / "settings.json").read_text(encoding="utf-8")
@@ -595,7 +597,7 @@ def recorded_measurements(run):
     for path in list(files_of(run.primary.project).values()) + sorted((REPO / "harness" / "schemas").glob("*.json")) + [REPO / "harness" / ".claude" / "roster.json"]:
         if path.suffix == ".json":
             names |= {k for k in key_names(json.loads(path.read_text(encoding="utf-8"))) if COST_KEYS.search(k)}
-    stages = M.S.read_json(run.primary.project / "master_project_state.json")["stages"]
+    stages = M.S.read_json(run.primary.project / ".epc" / "master_project_state.json")["stages"]
     stamps = {e[k] for e in stages for k in ("started", "finished")}
     return sorted(names), len(stamps), sorted(stages[0])
 
@@ -604,7 +606,7 @@ def c9(run):
     names, stamps, entry_keys = recorded_measurements(run)
     prd = (REPO / "harness" / "docs" / "prsad" / "PRD.md").read_text(encoding="utf-8")
     targets_open = "cost and time targets" in prd
-    events = run.primary.project / "audit" / "events.jsonl"
+    events = run.primary.project / ".epc" / "audit" / "events.jsonl"
     record_keys = sorted(json.loads(events.read_text(encoding="utf-8").splitlines()[0]))
     facts = {"cost_or_time_keys_found": len(names), "distinct_stage_timestamps": stamps, "event_record_keys": len(record_keys)}
     evidence = [f"Se buscaron claves de costo, tokens o duración en los archivos del proyecto, los esquemas y el roster: {len(names)} encontradas.",
@@ -620,8 +622,8 @@ def c9(run):
 
 # ------------------------------------------------------------------ C10
 def sign_manifest(proj):
-    """A synthetic signature on one R0 manifest in the temporary copy (signing is a human act, so the file is written by hand here)."""
-    path = next(p for p in proj.manifests() if "calculation_memo" in p.name)
+    """A synthetic signature on the R0 manifest in the temporary copy (signing is a human act, so the file is written by hand here)."""
+    path = proj.manifests()[0]
     data = M.S.read_json(path)
     data["signed"] = {"signer": "Synthetic Engineer", "date": "2026-01-01"}
     path.write_text(json.dumps(data, indent=2, sort_keys=True) + "\n", encoding="utf-8", newline="\n")
@@ -638,11 +640,11 @@ def change_one_load(proj):
 
 
 def stage_outputs(proj):
-    return {n: M.S.read_json(p)["outputs"] for n, p in zip(range(1, 17), proj.stage_files())}
+    return {n: M.S.read_json(p)["outputs"] for n, p in zip(range(1, 13), proj.stage_files())}
 
 
 def executed_stages(proj, run_id):
-    lines = (proj.project / "epc-progress.txt").read_text(encoding="utf-8").splitlines()
+    lines = (proj.project / ".epc" / "epc-progress.txt").read_text(encoding="utf-8").splitlines()
     return sorted(int(m.group(1)) for line in lines for m in [re.search(rf"run {run_id} \| stage (\d+) ", line)] if m)
 
 
@@ -651,20 +653,21 @@ def run_correction(run):
     before, signed_path, signature = stage_outputs(proj), *sign_manifest(proj)
     proj.work.joinpath("c.json").write_text(json.dumps([{"note": "synthetic correction: T-01 power"}]), encoding="utf-8")
     review_code, _ = M.S.envelope(proj.root, "review", M.S.CODE, "--corrections", str(proj.work / "c.json"), *M.S.ENGINEER)
-    frozen_before = M.S.read_json(proj.project / "ssot" / "inputs_manifest.json")
+    frozen_before = M.S.read_json(proj.project / ".epc" / "ssot" / "inputs_manifest.json")
     corrected = change_one_load(proj)
     code, env = M.S.envelope(proj.root, "run", M.S.CODE, "--loads", str(corrected), "--engine-inputs", str(proj.engine_inputs_file), "--run-id", "dry-run-2",
                              "--revision", "R1", "--detail", *M.S.ORCHESTRATOR)
     after = stage_outputs(proj)
-    old = [M.S.read_json(p) for p in proj.manifests() if "/R0/" in p.as_posix()]
-    new = [M.S.read_json(p) for p in proj.manifests() if "/R1/" in p.as_posix()]
+    every = [M.S.read_json(p) for p in proj.manifests()]
+    old = [m for m in every if m["revision"] == "R0"]
+    new = [m for m in every if m["revision"] == "R1"]
     signed_old = M.S.read_json(signed_path)
     return {"review_code": review_code, "run_code": code, "run_ok": env["ok"] and env["data"]["run"]["summary"]["ok"],
             "unfrozen_loads_accepted": env["ok"] and env["data"]["run"]["summary"]["stopped_at"] is None,
             "executed": executed_stages(proj, "dry-run-2"), "changed": sorted(n for n in before if before[n] != after[n]),
             "old": len(old), "old_superseded": sum(1 for m in old if m["superseded_by"]), "new": len(new), "new_supersedes": sum(1 for m in new if m["supersedes"]),
             "signature_moved": signed_old["signed"] is None and signed_old["superseded_signature"] == signature,
-            "inputs_manifest_unchanged": frozen_before == M.S.read_json(proj.project / "ssot" / "inputs_manifest.json")}
+            "inputs_manifest_unchanged": frozen_before == M.S.read_json(proj.project / ".epc" / "ssot" / "inputs_manifest.json")}
 
 
 def c10(run):

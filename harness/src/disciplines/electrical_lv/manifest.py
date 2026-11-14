@@ -1,4 +1,4 @@
-"""The manifest of one deliverable (PRD section 13, schema `deliverable_manifest.schema.json`). Pure: it builds and checks dicts and writes nothing.
+"""The manifest of one transmittal (PRD section 13, schema `deliverable_manifest.schema.json`). Pure: it builds and checks dicts and writes nothing.
 
 Writing is done by `ProjectStore.write_manifest` / `update_manifest` (store.py), which need the pipeline token; the run recorder calls them.
 
@@ -6,7 +6,7 @@ Where each field comes from:
   inputs            the frozen inputs manifest (`ssot/inputs_manifest.json`): every input file with its SHA-256 (not only the ones a deliverable used)
   engines           name and version of every engine in the recorded `engine_calls` (a version the engine does not expose is an error)
   normative_profile revisions from the project profile; norm records from `norm_records.read_norm_records` for the packages of those calls
-  output_sha256     SHA-256 of the deliverable file (or the hash the producing stage recorded when the deliverable has no file yet)
+  files             every file of the transmittal: name, title, path inside `deliverables/<transmittal>/` (null while a document has no rendered file) and SHA-256
   review_status     `draft` unless the caller asks otherwise; `approved_for_construction` raises `ApprovalBlocked` while a listed norm record is not
                     `verified` (D21). The schema repeats the rule, so a written manifest cannot break it either.
   signed            always None here: a signature is a human act. `supersede` moves a previous signature to `superseded_signature`.
@@ -43,12 +43,12 @@ def sha256_file(path):
 
 
 def reference(manifest):
-    """`<deliverable_id>/<revision>`: how `supersedes` and `superseded_by` name a manifest."""
-    return f"{manifest['deliverable_id']}/{manifest['revision']}"
+    """`<transmittal>/<revision>`: how `supersedes` and `superseded_by` name a manifest."""
+    return f"{manifest['transmittal']}/{manifest['revision']}"
 
 
 def manifest_name(manifest):
-    return manifest["deliverable_id"] + SUFFIX
+    return manifest["transmittal"] + SUFFIX
 
 
 def engines_of(engine_calls):
@@ -89,26 +89,28 @@ def check(manifest):
     return validate(manifest, load_schema(SCHEMA))
 
 
-def _output_hash(deliverable_file, output_sha256):
-    if (deliverable_file is None) == (output_sha256 is None):
-        raise ManifestError("give exactly one of deliverable_file and output_sha256")
-    return sha256_file(deliverable_file) if deliverable_file is not None else output_sha256
+def files_of(files):
+    """The `files` list of a manifest: [{name, title, code, path, sha256}] sorted by name; duplicate names are an error."""
+    names = [f["name"] for f in files]
+    if len(set(names)) != len(names):
+        raise ManifestError("two files of one transmittal share a name")
+    return [{"name": f["name"], "title": f["title"], "code": f.get("code"), "path": f["path"], "sha256": f["sha256"]} for f in sorted(files, key=lambda f: f["name"])]
 
 
-def build_manifest(deliverable_file=None, *, deliverable_id, title, revision, run_id, inputs_manifest, engine_calls, normative_profile,
-                   findings, review_status=DRAFT, output_sha256=None, norm_reader=read_norm_records):
-    """The manifest dict of one deliverable; raises `ManifestError` (or `ApprovalBlocked`) instead of returning a wrong one.
+def build_manifest(*, transmittal, title, revision, run_id, inputs_manifest, engine_calls, normative_profile, findings, files,
+                   review_status=DRAFT, norm_reader=read_norm_records):
+    """The manifest dict of one transmittal; raises `ManifestError` (or `ApprovalBlocked`) instead of returning a wrong one.
 
-    `normative_profile` is the profile's `normative_profile` (its `revisions` are copied). `norm_reader(packages)` returns the norm records
-    with their review state; tests inject a stub, the default reads the engines' registers.
+    `files` is [{name, title, path, sha256}] (see `files_of`). `normative_profile` is the profile's `normative_profile` (its `revisions` are copied).
+    `norm_reader(packages)` returns the norm records with their review state; tests inject a stub, the default reads the engines' registers.
     """
     records = norm_reader(packages_of(engine_calls))
     check_approval(review_status, records)
     manifest = {
-        "deliverable_id": deliverable_id, "title": title, "revision": revision, "pipeline_run_id": run_id,
+        "transmittal": transmittal, "title": title, "revision": revision, "pipeline_run_id": run_id,
         "inputs": inputs_of(inputs_manifest), "engines": engines_of(engine_calls),
         "normative_profile": {"revisions": copy.deepcopy((normative_profile or {}).get("revisions") or {}), "norm_records": copy.deepcopy(records)},
-        "output_sha256": _output_hash(deliverable_file, output_sha256), "findings": copy.deepcopy(findings), "review_status": review_status,
+        "files": files_of(files), "findings": copy.deepcopy(findings), "review_status": review_status,
         "signed": None, "superseded_signature": None, "supersedes": None, "superseded_by": None}
     errors = check(manifest)
     if errors:
@@ -119,10 +121,10 @@ def build_manifest(deliverable_file=None, *, deliverable_id, title, revision, ru
 def supersede(previous, new):
     """(previous', new'): the earlier manifest marked as replaced by the new one. Inputs are not modified.
 
-    The earlier signature (if any) moves to `superseded_signature` and `signed` becomes null; `new.supersedes` names the earlier one.
+    The earlier transmittal's signature (if any) moves to `superseded_signature` and `signed` becomes null; `new.supersedes` names the earlier one.
     """
-    if previous["deliverable_id"] != new["deliverable_id"]:
-        raise ManifestError("only a regeneration of the same deliverable_id supersedes a manifest")
+    if previous["transmittal"] == new["transmittal"]:
+        raise ManifestError("a transmittal is superseded by a later transmittal, not by itself")
     if previous["revision"] == new["revision"]:
         raise ManifestError(f"{reference(previous)}: the new manifest needs a different revision")
     if previous["superseded_by"] is not None:

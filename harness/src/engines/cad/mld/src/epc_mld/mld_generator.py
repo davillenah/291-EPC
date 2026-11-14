@@ -392,8 +392,8 @@ def main(argv=None) -> int:
     import argparse
     ap = argparse.ArgumentParser(description="Multi-line diagram (MLD) of a board from the form data and its calculation")
     ap.add_argument("--input", required=True, help="board.json (board, circuits, titleblock)")
-    ap.add_argument("--calc", required=True, help="<base>_dimensionado.json (contract of aea_export)")
-    ap.add_argument("--detail", help="<base>_dimensionado_detalle.json")
+    ap.add_argument("--calc", required=True, help="<base>_sizing.json (contract of aea_export)")
+    ap.add_argument("--detail", help="<base>_sizing_detail.json")
     ap.add_argument("--out", required=True)
     ap.add_argument("--name", required=True)
     a = ap.parse_args(argv)

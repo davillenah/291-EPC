@@ -1,4 +1,4 @@
-"""MIG-32: the deliverable manifest (PRD section 13), the D21 approval block, supersession and stage 16 (package issue).
+"""MIG-32: the transmittal manifest (PRD section 13), the D21 approval block, supersession and stage 12 (package issue).
 
 Needs the engine packages on PYTHONPATH (the gate's `harness-tests` environment has them). Synthetic data in temp folders only; nothing is
 written inside the repository's projects/ tree. The signature used in the supersede tests is synthetic test data, not a real signer.
@@ -14,8 +14,9 @@ import test_pipeline_wiring as W
 from test_ssot_wired_pipeline import ANSWERS
 
 from disciplines.electrical_lv import manifest as M
+from disciplines.electrical_lv import naming as N
 from disciplines.electrical_lv import norm_records as NR
-from disciplines.electrical_lv.intake.hashing import sha256_file
+from disciplines.electrical_lv.manifest import sha256_file
 from disciplines.electrical_lv.intake.profile import build_profile
 from disciplines.electrical_lv.intake.schema_check import load_schema, validate
 from disciplines.electrical_lv.pipeline import STAGES, PipelineContext, run
@@ -34,49 +35,43 @@ ALL_VERIFIED = lambda packages: [{"id": "x.1", "review_status": "verified"}, {"i
 ONE_PENDING = lambda packages: [{"id": "x.1", "review_status": "verified"}, {"id": "x.2", "review_status": "pending review"}]  # noqa: E731
 
 
-def build(path=None, **changes):
-    args = dict(deliverable_id="TEST-001-DRW-SLD", title="Drawing SLD", revision="R0", run_id="r1", inputs_manifest=INPUTS, engine_calls=CALLS,
-                normative_profile=PROFILE, findings=[], norm_reader=ALL_VERIFIED)
-    if path is None and "output_sha256" not in changes:
-        changes["output_sha256"] = "c" * 64
+FILES = [{"name": "SLD", "title": "Drawing SLD", "path": "SLD.dxf", "sha256": "c" * 64}]
+
+
+def build(**changes):
+    args = dict(transmittal="TR-001", title="Transmittal TR-001", revision="R0", run_id="r1", inputs_manifest=INPUTS, engine_calls=CALLS,
+                normative_profile=PROFILE, findings=[], files=FILES, norm_reader=ALL_VERIFIED)
     args.update(changes)
-    return M.build_manifest(path, **args)
+    return M.build_manifest(**args)
 
 
 class BuildTests(unittest.TestCase):
     def test_a_built_manifest_is_valid_and_has_the_prd_fields(self):
         m = build()
         self.assertEqual(validate(m, load_schema(SCHEMA)), [])
-        for key in ("deliverable_id", "title", "revision", "pipeline_run_id", "inputs", "engines", "normative_profile", "output_sha256", "findings",
+        for key in ("transmittal", "title", "revision", "pipeline_run_id", "inputs", "engines", "normative_profile", "files", "findings",
                     "review_status", "signed", "supersedes", "superseded_by"):
             self.assertIn(key, m)
 
-    def test_the_output_hash_is_the_hash_of_the_file_and_follows_it(self):
-        with tempfile.TemporaryDirectory() as tmp:
-            f = Path(tmp) / "x.dxf"
-            f.write_bytes(b"one")
-            first = build(f)["output_sha256"]
-            f.write_bytes(b"two")
-            second = build(f)["output_sha256"]
-        self.assertNotEqual(first, second)
-        self.assertEqual(len(first), 64)
+    def test_the_files_are_sorted_by_name_and_a_document_without_a_file_has_a_null_path(self):
+        doc = {"name": "memo", "title": "Memo", "path": None, "sha256": "d" * 64}
+        m = build(files=[doc] + FILES)
+        self.assertEqual([f["name"] for f in m["files"]], ["SLD", "memo"])
+        self.assertIsNone(m["files"][1]["path"])
+        self.assertEqual(validate(m, load_schema(SCHEMA)), [])
 
     def test_a_file_hash_equals_sha256_of_its_bytes(self):
         import hashlib
         with tempfile.TemporaryDirectory() as tmp:
             f = Path(tmp) / "x.dxf"
             f.write_bytes(b"abc")
-            self.assertEqual(build(f)["output_sha256"], hashlib.sha256(b"abc").hexdigest())
-            self.assertEqual(build(f)["output_sha256"], sha256_file(f))
+            self.assertEqual(sha256_file(f), hashlib.sha256(b"abc").hexdigest())
 
-    def test_exactly_one_source_of_the_hash(self):
+    def test_a_transmittal_needs_files_and_unique_names(self):
         with self.assertRaises(M.ManifestError):
-            build(output_sha256=None)
-        with tempfile.TemporaryDirectory() as tmp:
-            f = Path(tmp) / "x"
-            f.write_bytes(b"1")
-            with self.assertRaises(M.ManifestError):
-                build(f, output_sha256="d" * 64)
+            build(files=[])
+        with self.assertRaises(M.ManifestError):
+            build(files=FILES + FILES)
 
     def test_inputs_come_from_the_frozen_manifest_sorted(self):
         self.assertEqual(build()["inputs"], [{"path": "a.txt", "sha256": "a" * 64}, {"path": "b.txt", "sha256": "b" * 64}])
@@ -131,7 +126,7 @@ class ApprovalTests(unittest.TestCase):
         self.assertTrue(validate(m, load_schema(SCHEMA)))
 
     def test_the_schema_refuses_unknown_fields_and_statuses(self):
-        for change in ({"extra": 1}, {"review_status": "signed_off"}, {"output_sha256": "xyz"}):
+        for change in ({"extra": 1}, {"review_status": "signed_off"}, {"files": []}):
             m = build()
             m.update(change)
             with self.subTest(change=change):
@@ -176,10 +171,10 @@ class SupersedeTests(unittest.TestCase):
     def test_the_previous_manifest_is_marked_and_its_signature_moved(self):
         old = build()
         old["signed"] = dict(SIGNATURE)
-        new = build(revision="R1")
+        new = build(revision="R1", transmittal="TR-002")
         old2, new2 = M.supersede(old, new)
-        self.assertEqual((old2["superseded_by"], old2["signed"], old2["superseded_signature"]), ("TEST-001-DRW-SLD/R1", None, SIGNATURE))
-        self.assertEqual((new2["supersedes"], new2["signed"]), ("TEST-001-DRW-SLD/R0", None))
+        self.assertEqual((old2["superseded_by"], old2["signed"], old2["superseded_signature"]), ("TR-002/R1", None, SIGNATURE))
+        self.assertEqual((new2["supersedes"], new2["signed"]), ("TR-001/R0", None))
         self.assertIsNone(old["superseded_by"])      # inputs untouched
         self.assertEqual(M.check(old2) + M.check(new2), [])
 
@@ -187,10 +182,12 @@ class SupersedeTests(unittest.TestCase):
         with self.assertRaises(M.ManifestError):
             M.supersede(build(), build())
         with self.assertRaises(M.ManifestError):
-            M.supersede(build(), build(revision="R1", deliverable_id="OTHER"))
-        old2, _ = M.supersede(build(), build(revision="R1"))
+            M.supersede(build(), build(revision="R1"))                     # a transmittal is not superseded by itself
         with self.assertRaises(M.ManifestError):
-            M.supersede(old2, build(revision="R2"))
+            M.supersede(build(), build(transmittal="TR-002"))              # same revision
+        old2, _ = M.supersede(build(), build(revision="R1", transmittal="TR-002"))
+        with self.assertRaises(M.ManifestError):
+            M.supersede(old2, build(revision="R2", transmittal="TR-003"))
 
 
 class StoreManifestTests(unittest.TestCase):
@@ -208,20 +205,20 @@ class StoreManifestTests(unittest.TestCase):
         with self.assertRaises(PermissionError):
             self.store.write_manifest(token, build())      # the session is over
 
-    def test_a_manifest_is_written_atomically_in_deliverables_revision(self):
+    def test_a_manifest_is_written_atomically_in_the_manifests_folder(self):
         with self.store.pipeline_session("t1") as token:
             rel = self.store.write_manifest(token, build())
-        self.assertEqual(rel, "deliverables/R0/TEST-001-DRW-SLD.manifest.json")
+        self.assertEqual(rel, ".epc/manifests/TR-001.manifest.json")
         path = self.store.root / rel
         self.assertEqual(path.read_bytes(), dumps(build()).encode("utf-8"))
         self.assertEqual([p.name for p in path.parent.iterdir()], [path.name])
-        self.assertEqual(self.store.read_manifests("TEST-001-DRW-SLD"), [(rel, build())])
+        self.assertEqual(self.store.read_manifests("TR-001"), [(rel, build())])
 
     def test_an_invalid_or_escaping_manifest_is_refused(self):
         bad_rev = build()
         bad_rev["revision"] = "../x"
         bad_id = build()
-        bad_id["deliverable_id"] = "a/b"
+        bad_id["transmittal"] = "a/b"
         with self.store.pipeline_session("t1") as token:
             for m in (bad_rev, bad_id, {"title": "x"}):
                 with self.assertRaises(StoreError):
@@ -240,18 +237,18 @@ class StoreManifestTests(unittest.TestCase):
     def test_update_only_marks_a_manifest_as_superseded(self):
         old = build()
         old["signed"] = dict(SIGNATURE)
-        marked, _ = M.supersede(old, build(revision="R1"))
+        marked, _ = M.supersede(old, build(revision="R1", transmittal="TR-002"))
         with self.store.pipeline_session("t1") as token:
             self.store.write_manifest(token, old)
             self.store.update_manifest(token, marked)
             stored = self.store.read_manifests()[0][1]
-            self.assertEqual((stored["signed"], stored["superseded_signature"], stored["superseded_by"]), (None, SIGNATURE, "TEST-001-DRW-SLD/R1"))
+            self.assertEqual((stored["signed"], stored["superseded_signature"], stored["superseded_by"]), (None, SIGNATURE, "TR-002/R1"))
             tampered = copy.deepcopy(marked)
-            tampered["output_sha256"] = "e" * 64
+            tampered["files"][0]["sha256"] = "e" * 64
             dropped = copy.deepcopy(marked)
             dropped["superseded_signature"] = None
             reset = copy.deepcopy(marked)
-            reset["superseded_by"] = "TEST-001-DRW-SLD/R9"
+            reset["superseded_by"] = "TR-002/R9"
             for bad in (tampered, dropped, reset):
                 with self.assertRaises(StoreError):
                     self.store.update_manifest(token, bad)
@@ -264,7 +261,24 @@ class StoreManifestTests(unittest.TestCase):
             with self.assertRaises(StoreError):
                 self.store.update_manifest(token, forged)
             with self.assertRaises(StoreError):
-                self.store.update_manifest(token, build(revision="R7"))     # does not exist
+                self.store.update_manifest(token, build(transmittal="TR-009"))     # does not exist
+
+    def test_a_deliverable_file_is_copied_into_its_transmittal_folder_and_a_signed_one_refuses(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            src = Path(tmp) / "a.dxf"
+            src.write_bytes(b"abc")
+            with self.store.pipeline_session("t1") as token:
+                sha = self.store.copy_deliverable(token, src, "deliverables/TR-001/a.dxf")
+                self.assertEqual((self.store.root / "deliverables/TR-001/a.dxf").read_bytes(), b"abc")
+                self.assertEqual(sha, sha256_file(src))
+                for bad in ("a.dxf", "deliverables/R0/a.dxf", "deliverables/TR-001"):
+                    with self.assertRaises(StoreError):
+                        self.store.copy_deliverable(token, src, bad)
+                signed = build()
+                signed["signed"] = dict(SIGNATURE)
+                self.store.write_manifest(token, signed)
+                with self.assertRaises(StoreError):
+                    self.store.copy_deliverable(token, src, "deliverables/TR-001/a.dxf")
 
 
 def wired_run(store, revision="R0", run_id="r1", **changes):
@@ -282,11 +296,16 @@ def new_store(folder, name="proj"):
 
 
 def without_dxf_hash(manifest):
-    """The drawing engine stamps the current time into DXF files, so their hash (and the manifest's output_sha256) changes between runs."""
+    """The drawing engine stamps the current time into DXF files, so their hash (in the manifest's `files`) changes between runs."""
     out = copy.deepcopy(manifest)
-    if out["deliverable_id"].startswith("TEST-001-DRW-"):
-        out["output_sha256"] = None
+    for f in out["files"]:
+        if (f["path"] or "").endswith(".dxf"):
+            f["sha256"] = None
     return out
+
+
+def file_names(store):
+    return sorted(f["name"] for _, m in store.read_manifests() for f in m["files"])
 
 
 class PackageIssueStageTests(unittest.TestCase):
@@ -296,43 +315,48 @@ class PackageIssueStageTests(unittest.TestCase):
         cls.addClassCleanup(cls.holder.cleanup)
         cls.store = new_store(cls.holder.name)
         cls.ctx, cls.res = wired_run(cls.store)
-        cls.stage = cls.res.results[15]
+        cls.stage = cls.res.results[11]
 
     def stored(self):
         return dict(self.store.read_manifests())
 
-    def test_stage_16_ran_and_the_other_pending_stages_are_unchanged(self):
+    def test_stage_12_ran_and_the_other_pending_stages_are_unchanged(self):
         self.assertEqual(self.stage.status, "ok", self.stage.message)
-        self.assertEqual(self.res.summary["not_available"], [6])
-        self.assertTrue(STAGES[15].wired)
+        self.assertEqual(self.res.summary["not_available"], [4])
+        self.assertTrue(STAGES[11].wired)
 
-    def test_one_valid_draft_manifest_per_drawing_file_and_document(self):
+    def test_one_valid_draft_manifest_covers_every_drawing_file_and_document(self):
         stored = self.stored()
-        ids = sorted(m["deliverable_id"] for m in stored.values())
-        self.assertEqual(ids, ["TEST-001-DOC-calculation_memo", "TEST-001-DOC-descriptive_report", "TEST-001-DOC-design_basis", "TEST-001-DOC-project_summary", "TEST-001-DOC-terminal_block_list", "TEST-001-DRW-SLD_TEST-001", "TEST-001-DRW-SLD_TEST-001_TABLA"])
-        for rel, m in stored.items():
-            with self.subTest(rel=rel):
-                self.assertTrue(rel.startswith("deliverables/R0/"))
-                self.assertEqual(M.check(m), [])
-                self.assertEqual((m["review_status"], m["signed"], m["superseded_by"], m["pipeline_run_id"]), ("draft", None, None, "r1"))
+        self.assertEqual(list(stored), [".epc/manifests/TR-001.manifest.json"])
+        m = stored[".epc/manifests/TR-001.manifest.json"]
+        self.assertEqual(m["transmittal"], "TR-001")
+        self.assertEqual(sorted(f["name"] for f in m["files"]), sorted(["calculation_memo", "descriptive_report", "design_basis", "project_summary", "terminal_block_list", "SLD_TEST-001", "SLD_TEST-001_TABLA"]))
+        self.assertEqual(M.check(m), [])
+        self.assertEqual((m["review_status"], m["signed"], m["superseded_by"], m["pipeline_run_id"]), ("draft", None, None, "r1"))
 
     def test_the_stage_output_equals_what_was_written(self):
         outs = {i["path"]: i["manifest"] for i in self.stage.outputs["manifests"]}
         self.assertEqual(outs, self.stored())
-        self.assertEqual(self.store.read_ssot("stage_16_package_issue.json")["outputs"]["transmittal"], self.stage.outputs["transmittal"])
+        self.assertEqual(self.store.read_ssot("stage_12_package_issue.json")["outputs"]["transmittal"], self.stage.outputs["transmittal"])
 
-    def test_drawing_manifests_hash_the_file_on_disk(self):
-        for m in self.stored().values():
-            if "-DRW-" in m["deliverable_id"]:
-                name = m["deliverable_id"].split("-DRW-")[1] + ".dxf"
-                file = self.store.root / "runs" / "r1" / "drawings" / "TEST-001" / "out" / name
-                self.assertEqual(m["output_sha256"], sha256_file(file))
+    def test_drawing_files_are_copied_to_the_transmittal_folder_and_hashed(self):
+        (m,) = self.stored().values()
+        drawings = [f for f in m["files"] if f["path"]]
+        self.assertEqual(len(drawings), 2)
+        for f in drawings:
+            run_file = self.store.root / ".epc" / "runs" / "r1" / "drawings" / "TEST-001" / "out" / f["path"]
+            copy_file = self.store.root / "deliverables" / "TR-001" / f["path"]
+            self.assertEqual(f["sha256"], sha256_file(run_file))
+            self.assertEqual(f["sha256"], sha256_file(copy_file))
+        self.assertEqual(sorted(p.name for p in (self.store.root / "deliverables" / "TR-001").iterdir()), sorted(f["path"] for f in drawings))
 
-    def test_document_manifests_carry_the_hash_stage_15_recorded(self):
-        recorded = {d["name"]: d["sha256"] for d in self.res.results[14].outputs["documents"]}
-        for m in self.stored().values():
-            if "-DOC-" in m["deliverable_id"]:
-                self.assertEqual(m["output_sha256"], recorded[m["deliverable_id"].split("-DOC-")[1]])
+    def test_document_entries_carry_the_hash_stage_11_recorded_and_no_path(self):
+        recorded = {d["name"]: d["sha256"] for d in self.res.results[10].outputs["documents"]}
+        (m,) = self.stored().values()
+        docs = [f for f in m["files"] if not f["path"]]
+        self.assertEqual(len(docs), 5)
+        for f in docs:
+            self.assertEqual(f["sha256"], recorded[f["name"]])
 
     def test_inputs_engines_and_profile_come_from_the_run(self):
         frozen = self.store.read_ssot("inputs_manifest.json")
@@ -348,9 +372,9 @@ class PackageIssueStageTests(unittest.TestCase):
         info = self.stage.outputs["norm_records"]
         self.assertGreater(info["not_verified"], 0)
         t = self.stage.outputs["transmittal"]
-        self.assertEqual((t["review_status"], t["revision"], len(t["deliverables"])), ("draft", "R0", 7))
+        self.assertEqual((t["id"], t["review_status"], t["revision"], len(t["files"])), ("TR-001", "draft", "R0", 7))
         self.assertNotIn("signed", json.dumps(t))
-        self.assertEqual(sorted(d["manifest"] for d in t["deliverables"]), sorted(self.stored()))
+        self.assertEqual([t["manifest"]], sorted(self.stored()))
 
     def test_it_never_approves(self):
         for m in self.stored().values():
@@ -358,23 +382,23 @@ class PackageIssueStageTests(unittest.TestCase):
             self.assertNotEqual(m["review_status"], "approved_for_construction")
 
     def test_a_changed_drawing_file_blocks_the_stage(self):
-        file = self.store.root / "runs" / "r1" / "drawings" / "TEST-001" / "out" / "SLD_TEST-001.dxf"
+        file = self.store.root / ".epc" / "runs" / "r1" / "drawings" / "TEST-001" / "out" / "SLD_TEST-001.dxf"
         original = file.read_bytes()
         self.addCleanup(file.write_bytes, original)
         file.write_bytes(original + b"0\n")
-        res = STAGES[15].run(self.ctx)
+        res = STAGES[11].run(self.ctx)
         self.assertEqual((res.status, res.outputs), ("blocked", {}))
-        self.assertIn("changed after stage 14", res.message)
+        self.assertIn("changed after stage 10", res.message)
 
     def test_without_a_store_or_without_deliverables_it_is_not_available(self):
         ctx = W.context()
-        run(ctx, stop_after=15, run_id="x")
-        res = STAGES[15].run(ctx)
+        run(ctx, stop_after=11, run_id="x")
+        res = STAGES[11].run(ctx)
         self.assertEqual((res.status, res.outputs, res.reason), ("not_available", {}, "no_store"))
         self.assertIn("no project store", res.message)
         empty = PipelineContext(store=self.store, profile=self.ctx.profile)
         empty.results = {}
-        res = STAGES[15].run(empty)
+        res = STAGES[11].run(empty)
         self.assertEqual((res.status, res.outputs, res.reason), ("not_available", {}, "no_deliverables"))
 
     def test_a_bad_revision_label_blocks(self):
@@ -383,12 +407,116 @@ class PackageIssueStageTests(unittest.TestCase):
         ctx.pipeline_run_id = "r1"
         ctx.work_dir = self.ctx.work_dir
         ctx.revision = "../R1"
-        res = STAGES[15].run(ctx)
+        res = STAGES[11].run(ctx)
         self.assertEqual(res.status, "blocked")
 
 
+CODE = "2026-ES-HNDA-3085"
+NAMES = {f"SLD_{CODE}": {"type": "SLD", "number": 1, "description": "main_distribution_board"},
+         f"SLD_{CODE}_TABLA": {"type": "SLD", "number": 1, "description": "main_distribution_board", "page": 2},
+         "calculation_memo": {"type": "CAL", "number": 1, "description": "feeder_sizing_calculation"},
+         "project_summary": {"type": "RPT", "number": 1, "description": "project_summary"},
+         "terminal_block_list": {"type": "LST", "number": 1, "description": "terminal_block_list"},
+         "descriptive_report": {"type": "RPT", "number": 2, "description": "descriptive_report"},
+         "design_basis": {"type": "RPT", "number": 3, "description": "design_basis"}}
+
+
+def named_run(folder, names=NAMES, code=CODE):
+    store = new_store(folder)
+    profile = build_profile(ANSWERS)
+    profile["project_code"] = code
+    ctx = W.context(profile=profile, store=store)
+    ctx.revision = "R0"
+    ctx.engine_inputs["deliverable_names"] = copy.deepcopy(names)
+    return store, run(ctx, run_id="r1", clock=CLOCK)
+
+
+class NamedDeliverablesTests(unittest.TestCase):
+    """The files of a transmittal are named `<code>_<description>`; plans go in a folder with one file per page."""
+
+    def test_drawings_get_their_code_folder_and_pages_and_documents_get_a_code(self):
+        with tempfile.TemporaryDirectory() as folder:
+            store, res = named_run(folder)
+            self.assertEqual(res.results[11].status, "ok", res.results[11].message)
+            (manifest,) = [m for _, m in store.read_manifests()]
+            by_name = {f["name"]: f for f in manifest["files"]}
+            stem = f"{CODE}-E-LV-SLD-001_main_distribution_board"
+            self.assertEqual(by_name[f"SLD_{CODE}"]["path"], f"{stem}/{stem}_P01.dxf")
+            self.assertEqual(by_name[f"SLD_{CODE}_TABLA"]["path"], f"{stem}/{stem}_P02.dxf")
+            self.assertEqual(by_name["calculation_memo"]["code"], f"{CODE}-E-LV-CAL-001")
+            self.assertIsNone(by_name["calculation_memo"]["path"])
+            self.assertEqual(M.check(manifest), [])
+            folder_files = sorted(p.relative_to(store.root / "deliverables" / "TR-001").as_posix() for p in (store.root / "deliverables" / "TR-001").rglob("*") if p.is_file())
+            self.assertEqual(folder_files, [f"{stem}/{stem}_P01.dxf", f"{stem}/{stem}_P02.dxf"])
+            for f in manifest["files"]:
+                if f["path"]:
+                    self.assertEqual(sha256_file(store.root / "deliverables" / "TR-001" / f["path"]), f["sha256"])
+            self.assertTrue(res.results[11].outputs["naming"]["named"])
+            self.assertEqual([f["clause"] for f in res.results[11].findings if "CC-D06" in f["clause"] or "CC-F06" in f["clause"]], [])   # the hashes agree with the recorded ones
+
+    def test_a_deliverable_without_a_name_blocks_and_nothing_is_written(self):
+        with tempfile.TemporaryDirectory() as folder:
+            names = {k: v for k, v in NAMES.items() if k != "design_basis"}
+            store, res = named_run(folder, names)
+            self.assertEqual(res.results[11].status, "blocked")
+            self.assertIn("design_basis: no entry", res.results[11].message)
+            self.assertEqual(store.read_manifests(), [])
+
+    def test_a_project_code_that_is_not_aaaa_prov_cli_code_blocks(self):
+        with tempfile.TemporaryDirectory() as folder:
+            _store, res = named_run(folder, code="TEST-001")
+            self.assertEqual(res.results[11].status, "blocked")
+            self.assertIn("AAAA-PROVIDER-CLIENT-CODE", res.results[11].message)
+
+    def test_two_deliverables_with_the_same_page_block(self):
+        with tempfile.TemporaryDirectory() as folder:
+            names = copy.deepcopy(NAMES)
+            names[f"SLD_{CODE}_TABLA"]["page"] = 1
+            _store, res = named_run(folder, names)
+            self.assertEqual(res.results[11].status, "blocked")
+            self.assertIn("share the path", res.results[11].message)
+
+    def test_without_names_the_engine_names_are_kept(self):
+        with tempfile.TemporaryDirectory() as folder:
+            store = new_store(folder)
+            ctx, res = wired_run(store)
+            self.assertFalse(res.results[11].outputs["naming"]["named"])
+            (manifest,) = [m for _, m in store.read_manifests()]
+            self.assertTrue(all(f["code"] is None for f in manifest["files"]))
+
+
+class NamingTests(unittest.TestCase):
+    def entry(self, **changes):
+        return dict({"type": "SLD", "number": 2, "description": "lighting_distribution"}, **changes)
+
+    def test_code_stem_and_paths(self):
+        self.assertEqual(N.document_code(CODE, self.entry()), f"{CODE}-E-LV-SLD-002")
+        self.assertEqual(N.document_code(CODE, self.entry(level="LS01", sub="MV")), f"{CODE}-E-MV-SLD-002-LS01")
+        self.assertEqual(N.file_path(CODE, self.entry(page=3), ".dxf"), f"{CODE}-E-LV-SLD-002_lighting_distribution/{CODE}-E-LV-SLD-002_lighting_distribution_P03.dxf")
+        self.assertEqual(N.file_path(CODE, self.entry(type="CAL"), ".xlsx"), f"{CODE}-E-LV-CAL-002_lighting_distribution.xlsx")
+
+    def test_invalid_entries_are_reported(self):
+        for change in ({"type": "XXX"}, {"number": 0}, {"number": "1"}, {"description": "Iluminación"}, {"description": "a" * 41}, {"description": "two  words"},
+                       {"level": "L1"}, {"level": "S01"}, {"page": 0}, {"sub": "HV"}, {"extra": 1}):
+            with self.subTest(change=change):
+                self.assertTrue(N.problems(self.entry(**change)))
+        self.assertEqual(N.problems(self.entry(level="L00", page=2)), [])
+
+    def test_every_document_type_of_the_catalog_is_known(self):
+        catalog = json.loads((REPO / "harness" / "schemas" / "document-catalog.json").read_text(encoding="utf-8"))
+        types = {d["type"] for d in catalog["disciplines"]["electrical"]["documents"]}
+        self.assertLessEqual(types, set(N.TYPES))
+        self.assertLessEqual(set(N.PAGED_TYPES), set(N.TYPES))
+
+    def test_the_manifest_schema_pattern_accepts_a_generated_code(self):
+        file = {"name": "x", "title": "x", "code": N.document_code(CODE, self.entry(level="L01")), "path": None, "sha256": "a" * 64}
+        self.assertEqual(validate(build(files=[file]), load_schema(SCHEMA)), [])
+        with self.assertRaises(M.ManifestError):
+            build(files=[dict(file, code="bad")])
+
+
 class BillOfQuantitiesManifestTests(unittest.TestCase):
-    """MIG-39c: the bill of quantities (no file) gets a draft manifest like the other documents of stage 15, only when stage 15 produced it."""
+    """MIG-39c: the bill of quantities (no file) gets a draft manifest like the other documents of stage 11, only when stage 11 produced it."""
 
     def test_a_draft_manifest_for_the_bill_when_it_was_produced(self):
         with tempfile.TemporaryDirectory() as folder:
@@ -397,16 +525,16 @@ class BillOfQuantitiesManifestTests(unittest.TestCase):
             ctx.revision = "R0"
             ctx.engine_inputs["boq"] = {"allowance_pct": 5}
             res = run(ctx, run_id="r1", clock=CLOCK)
-            self.assertEqual(res.results[15].status, "ok", res.results[15].message)
-            ids = sorted(m["deliverable_id"] for _, m in store.read_manifests())
-            self.assertIn("TEST-001-DOC-boq", ids)
-            self.assertEqual(len(ids), 8)
-            manifest = [m for _, m in store.read_manifests() if m["deliverable_id"].endswith("DOC-boq")][0]
+            self.assertEqual(res.results[11].status, "ok", res.results[11].message)
+            names = file_names(store)
+            self.assertIn("boq", names)
+            self.assertEqual(len(names), 8)
+            (manifest,) = [m for _, m in store.read_manifests()]
             self.assertEqual((M.check(manifest), manifest["review_status"], manifest["signed"]), ([], "draft", None))
 
 
 class DatasheetsManifestTests(unittest.TestCase):
-    """MIG-39d: the datasheets (no file) get a draft manifest like the other documents of stage 15, only when stage 15 produced them."""
+    """MIG-39d: the datasheets (no file) get a draft manifest like the other documents of stage 11, only when stage 11 produced them."""
 
     def test_a_draft_manifest_for_the_datasheets_when_they_were_produced(self):
         with tempfile.TemporaryDirectory() as folder, tempfile.TemporaryDirectory() as catalog:
@@ -416,16 +544,16 @@ class DatasheetsManifestTests(unittest.TestCase):
             ctx.revision = "R0"
             ctx.engine_inputs["datasheets"] = {"catalog_dir": catalog}
             res = run(ctx, run_id="r1", clock=CLOCK)
-            self.assertEqual(res.results[15].status, "ok", res.results[15].message)
-            ids = sorted(m["deliverable_id"] for _, m in store.read_manifests())
-            self.assertIn("TEST-001-DOC-datasheets", ids)
-            self.assertEqual(len(ids), 8)
-            manifest = [m for _, m in store.read_manifests() if m["deliverable_id"].endswith("DOC-datasheets")][0]
+            self.assertEqual(res.results[11].status, "ok", res.results[11].message)
+            names = file_names(store)
+            self.assertIn("datasheets", names)
+            self.assertEqual(len(names), 8)
+            (manifest,) = [m for _, m in store.read_manifests()]
             self.assertEqual((M.check(manifest), manifest["review_status"], manifest["signed"]), ([], "draft", None))
 
 
 class RfqManifestTests(unittest.TestCase):
-    """MIG-39e: the RFQ (no file) gets a draft manifest like the other documents of stage 15, only when stage 15 produced it."""
+    """MIG-39e: the RFQ (no file) gets a draft manifest like the other documents of stage 11, only when stage 11 produced it."""
 
     def test_a_draft_manifest_for_the_rfq_when_it_was_produced(self):
         with tempfile.TemporaryDirectory() as folder:
@@ -435,11 +563,11 @@ class RfqManifestTests(unittest.TestCase):
             ctx.engine_inputs["boq"] = {"allowance_pct": 5}
             ctx.engine_inputs["rfq"] = W.RFQ_TERMS
             res = run(ctx, run_id="r1", clock=CLOCK)
-            self.assertEqual(res.results[15].status, "ok", res.results[15].message)
-            ids = sorted(m["deliverable_id"] for _, m in store.read_manifests())
-            self.assertIn("TEST-001-DOC-rfq", ids)
-            self.assertEqual(len(ids), 9)
-            manifest = [m for _, m in store.read_manifests() if m["deliverable_id"].endswith("DOC-rfq")][0]
+            self.assertEqual(res.results[11].status, "ok", res.results[11].message)
+            names = file_names(store)
+            self.assertIn("rfq", names)
+            self.assertEqual(len(names), 9)
+            (manifest,) = [m for _, m in store.read_manifests()]
             self.assertEqual((M.check(manifest), manifest["review_status"], manifest["signed"]), ([], "draft", None))
 
     def test_no_manifest_when_the_rfq_stays_pending(self):
@@ -449,11 +577,11 @@ class RfqManifestTests(unittest.TestCase):
             ctx.revision = "R0"
             ctx.engine_inputs["rfq"] = W.RFQ_TERMS
             run(ctx, run_id="r1", clock=CLOCK)
-            self.assertFalse([m for _, m in store.read_manifests() if m["deliverable_id"].endswith("DOC-rfq")])
+            self.assertNotIn("rfq", file_names(store))
 
 
 class DesignBasisManifestTests(unittest.TestCase):
-    """MIG-39f: the design basis (no file) gets a draft manifest like the other documents of stage 15."""
+    """MIG-39f: the design basis (no file) gets a draft manifest like the other documents of stage 11."""
 
     def test_a_draft_manifest_for_the_design_basis(self):
         with tempfile.TemporaryDirectory() as folder:
@@ -461,14 +589,14 @@ class DesignBasisManifestTests(unittest.TestCase):
             ctx = W.context(profile=build_profile(ANSWERS), store=store)
             ctx.revision = "R0"
             res = run(ctx, run_id="r1", clock=CLOCK)
-            self.assertEqual(res.results[15].status, "ok", res.results[15].message)
-            manifests = [m for _, m in store.read_manifests() if m["deliverable_id"].endswith("DOC-design_basis")]
-            self.assertEqual(len(manifests), 1)
-            self.assertEqual((M.check(manifests[0]), manifests[0]["review_status"], manifests[0]["signed"]), ([], "draft", None))
+            self.assertEqual(res.results[11].status, "ok", res.results[11].message)
+            self.assertEqual(file_names(store).count("design_basis"), 1)
+            (manifest,) = [m for _, m in store.read_manifests()]
+            self.assertEqual((M.check(manifest), manifest["review_status"], manifest["signed"]), ([], "draft", None))
 
 
 class ReproducibilityTests(unittest.TestCase):
-    def test_two_runs_give_the_same_manifests_except_dxf_hashes(self):
+    def test_two_runs_give_the_same_manifest_except_dxf_hashes(self):
         with tempfile.TemporaryDirectory() as a, tempfile.TemporaryDirectory() as b:
             sa, sb = new_store(a), new_store(b)
             wired_run(sa)
@@ -477,47 +605,54 @@ class ReproducibilityTests(unittest.TestCase):
             self.assertEqual(sorted(ma), sorted(mb))
             for rel in ma:
                 self.assertEqual(dumps(without_dxf_hash(ma[rel])), dumps(without_dxf_hash(mb[rel])), rel)
-                if "-DOC-" in rel:       # documents carry no engine-written time stamp: byte identical
-                    self.assertEqual((sa.root / rel).read_bytes(), (sb.root / rel).read_bytes())
             # the .dxf files are the only difference: the engine writes the current time into them
-            differing = [rel for rel in ma if ma[rel] != mb[rel]]
-            self.assertTrue(all("-DRW-" in rel for rel in differing))
+            self.assertNotEqual(ma, mb)
 
 
 class RegenerationTests(unittest.TestCase):
+    REL = ".epc/manifests/TR-001.manifest.json"
+
     def sign(self, store, rel):
         signed = store.read_json(rel)
         signed["signed"] = dict(SIGNATURE)                       # synthetic signature of a test
         with store.pipeline_session("t") as token:
             store.write_manifest(token, signed)
 
-    def test_a_new_revision_supersedes_the_previous_manifests_and_moves_signatures(self):
+    def test_a_new_revision_gets_the_next_transmittal_and_supersedes_the_previous_one(self):
         with tempfile.TemporaryDirectory() as tmp:
             store = new_store(tmp)
             wired_run(store, "R0", "r1")
-            target = "deliverables/R0/TEST-001-DOC-calculation_memo.manifest.json"
-            self.sign(store, target)
+            self.sign(store, self.REL)
             _, res = wired_run(store, "R1", "r2")
-            self.assertEqual(res.results[15].status, "ok", res.results[15].message)
+            self.assertEqual(res.results[11].status, "ok", res.results[11].message)
             after = dict(store.read_manifests())
-            self.assertEqual(len(after), 14)
-            old, new = after[target], after[target.replace("/R0/", "/R1/")]
-            self.assertEqual((old["superseded_by"], old["signed"], old["superseded_signature"]), ("TEST-001-DOC-calculation_memo/R1", None, SIGNATURE))
-            self.assertEqual((new["supersedes"], new["signed"], new["revision"]), ("TEST-001-DOC-calculation_memo/R0", None, "R1"))
-            self.assertEqual(len(res.results[15].outputs["superseded"]), 7)
+            self.assertEqual(sorted(after), [self.REL, ".epc/manifests/TR-002.manifest.json"])
+            old, new = after[self.REL], after[".epc/manifests/TR-002.manifest.json"]
+            self.assertEqual((old["superseded_by"], old["signed"], old["superseded_signature"]), ("TR-002/R1", None, SIGNATURE))
+            self.assertEqual((new["supersedes"], new["signed"], new["revision"]), ("TR-001/R0", None, "R1"))
+            self.assertEqual(len(res.results[11].outputs["superseded"]), 1)
+            self.assertTrue((store.root / "deliverables" / "TR-001").is_dir() and (store.root / "deliverables" / "TR-002").is_dir())
             for m in after.values():
                 self.assertEqual(M.check(m), [])
+
+    def test_a_rerun_of_an_unsigned_draft_revision_replaces_it_with_the_same_number(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            store = new_store(tmp)
+            wired_run(store, "R0", "r1")
+            _, res = wired_run(store, "R0", "r2")
+            self.assertEqual(res.results[11].status, "ok", res.results[11].message)
+            ((rel, m),) = store.read_manifests()
+            self.assertEqual((rel, m["transmittal"], m["pipeline_run_id"], m["supersedes"]), (self.REL, "TR-001", "r2", None))
 
     def test_regenerating_a_signed_revision_in_place_is_blocked(self):
         with tempfile.TemporaryDirectory() as tmp:
             store = new_store(tmp)
             wired_run(store, "R0", "r1")
-            target = "deliverables/R0/TEST-001-DOC-project_summary.manifest.json"
-            self.sign(store, target)
+            self.sign(store, self.REL)
             _, res = wired_run(store, "R0", "r2")
-            self.assertEqual(res.results[15].status, "blocked")
-            self.assertIn("is signed", res.results[15].message)
-            self.assertEqual(store.read_json(target)["signed"], SIGNATURE)
+            self.assertEqual(res.results[11].status, "blocked")
+            self.assertIn("is signed", res.results[11].message)
+            self.assertEqual(store.read_json(self.REL)["signed"], SIGNATURE)
 
 
 if __name__ == "__main__":

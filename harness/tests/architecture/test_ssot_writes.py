@@ -1,7 +1,7 @@
 """MIG-31 / MIG-32: nothing under harness/src/disciplines writes files except the project store (AST scan).
 
-Allowed: `electrical_lv/store.py` only (the project folder, deliverable manifests included). The drawing engine writes stage 14's files itself, so
-`stages/output_stages.py` has no write call of its own; `manifest.py`, `norm_records.py` and `stages/package_stage.py` (stage 16) are pure.
+Allowed: `electrical_lv/store.py` only (the project folder, deliverable manifests included). The drawing engine writes stage 10's files itself, so
+`stages/output_stages.py` has no write call of its own; `manifest.py`, `norm_records.py` and `stages/package_stage.py` (stage 12) are pure.
 Also: only `pipeline.py` opens a store write session (`pipeline_session`), only `store.py` builds a `PipelineToken`, and only the run recorder
 (with the pipeline's token) calls `write_manifest` / `update_manifest`.
 
@@ -178,7 +178,7 @@ class PlatformWritesOnlyInTheEventLog(unittest.TestCase):
 
     def test_the_store_writes_the_workflow_only_below_reviews(self):
         src = (ROOT / "electrical_lv" / "store.py").read_text(encoding="utf-8")
-        self.assertIn('self._write_json(WORKFLOW, data, "reviews")', src)
+        self.assertIn('self._write_json(WORKFLOW, data, REVIEWS_DIR)', src)
 
 
 if __name__ == "__main__":

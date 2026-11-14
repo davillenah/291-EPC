@@ -1,7 +1,8 @@
 """The project folder and its single-source-of-truth (SSOT) files (PRD sections 10.3 and 14.4).
 
-Layout of `projects/<code>/`: `project_profile.json`, `master_project_state.json`, `epc-progress.txt`, `inputs/` (immutable after
-intake, hashed), `ssot/` (project data), `runs/<pipeline_run_id>/`, `deliverables/<rev>/`, `reviews/`, `transmittals/`, `audit/`.
+Layout of a project folder: `inputs/` (immutable after intake, hashed) and `deliverables/<TR-NNN>/` (one folder per transmittal) are what a person sees; everything the harness keeps
+for itself lives in the hidden folder `.epc/`: `project_profile.json`, `master_project_state.json`, `epc-progress.txt`, `ssot/` (project data),
+`runs/<pipeline_run_id>/`, `manifests/` (one manifest per transmittal), `reviews/` and `audit/`. `init_from_template` marks `.epc/` hidden on Windows (a leading dot already hides it on macOS and Linux).
 
 SSOT write rule. Every method that writes the profile, the state, the progress log, `ssot/` or a run folder takes a
 `PipelineToken` as its first argument. A token can only be created by `ProjectStore.pipeline_session()`, which only
@@ -15,11 +16,12 @@ are resolved); `inputs/` cannot be written once `ssot/inputs_manifest.json` exis
 atomically (temp file + replace) and deterministically (sorted keys, indent 2, UTF-8, LF, trailing newline). Nothing here reads
 the clock: timestamps are injected by the caller.
 
-Deliverable manifests (`deliverables/<rev>/<id>.manifest.json`, MIG-32) are written by `write_manifest` / `update_manifest` with the same token; an
-update can only mark a manifest as superseded. Only this module may write files under `harness/src/disciplines` (the drawing engine writes
-stage 14's files itself, under the work_dir).
+Transmittal manifests (`.epc/manifests/<TR-NNN>.manifest.json`, MIG-32) and the files of `deliverables/<TR-NNN>/` are written by `write_manifest` /
+`update_manifest` / `copy_deliverable` with the same token; an update can only mark a manifest as superseded. Only this module may write files under `harness/src/disciplines` (the drawing engine writes
+stage 10's files itself, under the work_dir).
 """
 import contextlib
+import hashlib
 import json
 import os
 import re
@@ -31,9 +33,11 @@ from disciplines.electrical_lv.intake.profile import TEMPLATE
 from disciplines.electrical_lv.intake.schema_check import load_schema, validate
 from disciplines.electrical_lv.stages.base import make_finding
 
-PROFILE = "project_profile.json"
-STATE = "master_project_state.json"
-PROGRESS = "epc-progress.txt"
+INTERNAL = ".epc"            # everything the harness keeps for itself (the user never needs to open it); hidden on Windows by `hide_internal`
+SSOT_DIR, RUNS_DIR, REVIEWS_DIR, AUDIT_DIR, MANIFESTS_DIR = (f"{INTERNAL}/{n}" for n in ("ssot", "runs", "reviews", "audit", "manifests"))
+PROFILE = f"{INTERNAL}/project_profile.json"
+STATE = f"{INTERNAL}/master_project_state.json"
+PROGRESS = f"{INTERNAL}/epc-progress.txt"
 MANIFEST_SCHEMA = "deliverable_manifest.schema.json"
 MANIFEST_SUFFIX = ".manifest.json"
 SUPERSEDE_FIELDS = ("superseded_by", "signed", "superseded_signature")
@@ -42,8 +46,8 @@ WORKFLOW = "workflow.json"
 ANSWERS = "intake_answers.json"
 WORKFLOW_STATES = ("init", "intake_done", "running", "draft_ready", "in_review", "corrected", "approved", "issued")
 WORKFLOW_ENTRY = ("from", "to", "transition", "role", "actor_id", "pipeline_run_id")
-SUBDIRS = ("inputs", "ssot", "runs", "deliverables", "reviews", "transmittals", "audit")
-TEMPLATE_DIR = TEMPLATE.parent
+SUBDIRS = ("inputs", "deliverables", SSOT_DIR, RUNS_DIR, MANIFESTS_DIR, REVIEWS_DIR, AUDIT_DIR)
+TEMPLATE_DIR = TEMPLATE.parent.parent
 RUN_ID = re.compile(r"[A-Za-z0-9][A-Za-z0-9_.-]{0,63}")
 _DRIVE = re.compile(r"^[A-Za-z]:")
 _MINT = object()
@@ -159,9 +163,22 @@ class ProjectStore:
         return target
 
     def is_frozen(self):
-        return (self.root / "ssot" / MANIFEST_NAME).is_file()
+        return (self.root / SSOT_DIR / MANIFEST_NAME).is_file()
 
     # -- creation (the /init flow; the pipeline is not involved) -----------------------------------------------------------
+    @staticmethod
+    def hide_internal(path):
+        """Mark a folder hidden on Windows (the dot in `.epc` does not hide it there). Nothing to do elsewhere. Best effort: never raises."""
+        if os.name != "nt":
+            return
+        try:
+            import ctypes
+            attrs = ctypes.windll.kernel32.GetFileAttributesW(str(path))
+            if attrs != -1:
+                ctypes.windll.kernel32.SetFileAttributesW(str(path), attrs | 0x2)
+        except Exception:  # noqa: BLE001 - hiding the folder is cosmetic
+            pass
+
     def init_from_template(self, template_dir=None):
         """Copy the template structure into this (new or empty) folder. READMEs of the template are not copied."""
         template = Path(template_dir or TEMPLATE_DIR).resolve()
@@ -171,9 +188,10 @@ class ProjectStore:
             raise StoreError(f"{self.root} is not empty: a project can only be created in a new or empty folder")
         self.root.mkdir(parents=True, exist_ok=True)
         for name in SUBDIRS:
-            (self.root / name).mkdir(exist_ok=True)
+            (self.root / name).mkdir(parents=True, exist_ok=True)
         for src in sorted(template.rglob("*")):
             self._copy_template_entry(template, src)
+        self.hide_internal(self.root / INTERNAL)
 
     def _copy_template_entry(self, template, src):
         dst = self.root / src.relative_to(template)
@@ -244,7 +262,7 @@ class ProjectStore:
             raise StoreError(f"ssot file {name!r} must be a .json file")
         if name == MANIFEST_NAME:
             raise StoreError(f"{MANIFEST_NAME} is written only by freeze_inputs")
-        self._write_json(name, data, "ssot")
+        self._write_json(name, data, SSOT_DIR)
 
     def write_workflow(self, token, data):
         """Write `reviews/workflow.json` (the lifecycle state of the project, MIG-33a). The record is validated by hand first."""
@@ -252,41 +270,59 @@ class ProjectStore:
         problems = workflow_problems(data)
         if problems:
             raise StoreError(problems)
-        self._write_json(WORKFLOW, data, "reviews")
+        self._write_json(WORKFLOW, data, REVIEWS_DIR)
 
     def write_review(self, token, name, data):
         """Write `reviews/<name>` (a `.json` name other than the workflow record): corrections recorded through the workflow (MIG-33b)."""
         self._require(token)
         if not isinstance(name, str) or not name.endswith(".json") or name == WORKFLOW:
             raise StoreError(f"review file {name!r} must be a .json file other than {WORKFLOW}")
-        self._write_json(name, data, "reviews")
+        self._write_json(name, data, REVIEWS_DIR)
 
     def make_run_dir(self, token, run_id):
         """Create `runs/<run_id>/` and return its path (the folder the drawing stage writes into)."""
         self._require(token)
-        path = self.resolve(check_run_id(run_id), "runs")
+        path = self.resolve(check_run_id(run_id), RUNS_DIR)
         path.mkdir(parents=True, exist_ok=True)
         return str(path)
 
     def manifest_rel(self, manifest):
-        """`deliverables/<revision>/<deliverable_id>.manifest.json` of a manifest (checked against the schema first)."""
+        """`.epc/manifests/<transmittal>.manifest.json` of a manifest (checked against the schema first)."""
         errors = validate(manifest, load_schema(MANIFEST_SCHEMA))
         if errors:
             raise StoreError([f"manifest: {e}" for e in errors])
-        return f"deliverables/{manifest['revision']}/{manifest['deliverable_id']}{MANIFEST_SUFFIX}"
+        return f"{MANIFESTS_DIR}/{manifest['transmittal']}{MANIFEST_SUFFIX}"
+
+    def _signed(self, transmittal):
+        path = self.root / MANIFESTS_DIR / f"{transmittal}{MANIFEST_SUFFIX}"
+        return path.is_file() and json.loads(path.read_text(encoding="utf-8")).get("signed") is not None
 
     def write_manifest(self, token, manifest):
-        """Write a new deliverable manifest under `deliverables/<revision>/`; returns its relative path.
+        """Write a new transmittal manifest under `.epc/manifests/`; returns its relative path.
 
         Refuses an invalid manifest and refuses to overwrite a manifest that carries a signature (a signature is only ever moved by `update_manifest`).
         """
         self._require(token)
         rel = self.manifest_rel(manifest)
-        target = self.resolve(rel)
-        if target.is_file() and json.loads(target.read_text(encoding="utf-8")).get("signed") is not None:
+        if self._signed(manifest["transmittal"]):
             raise StoreError(f"{rel} is signed and cannot be overwritten")
         self._write_json(rel, manifest)
         return rel
+
+    def copy_deliverable(self, token, source, rel):
+        """Copy the file `source` to `deliverables/<TR-NNN>/<path>` (`rel` starts with `deliverables/TR-NNN/`); refused when that transmittal is signed.
+
+        Returns the SHA-256 of the copied bytes.
+        """
+        self._require(token)
+        parts = clean_parts(rel)
+        if len(parts) < 3 or parts[0] != "deliverables" or not re.fullmatch(r"TR-[0-9]{3,4}", parts[1]):
+            raise StoreError(f"{rel!r} must be deliverables/TR-NNN/<file>")
+        if self._signed(parts[1]):
+            raise StoreError(f"{parts[1]} is signed: its files cannot be overwritten")
+        data = Path(source).read_bytes()
+        atomic_write(self.resolve(rel), data)
+        return hashlib.sha256(data).hexdigest()
 
     def update_manifest(self, token, manifest):
         """Mark an existing manifest as superseded: only `superseded_by`, `signed` and `superseded_signature` may differ from the stored one.
@@ -314,7 +350,7 @@ class ProjectStore:
         if self.is_frozen():
             raise StoreError("inputs are already frozen")
         manifest = build_manifest(self.inputs_dir)
-        self._write_json(MANIFEST_NAME, manifest, "ssot")
+        self._write_json(MANIFEST_NAME, manifest, SSOT_DIR)
         return manifest
 
     # -- reads ---------------------------------------------------------------------------------------------------------------
@@ -331,21 +367,21 @@ class ProjectStore:
         return self.read_json(STATE)
 
     def read_ssot(self, name):
-        return self.read_json(name, "ssot")
+        return self.read_json(name, SSOT_DIR)
 
-    def read_manifests(self, deliverable_id=None):
-        """[(relative path, manifest)] of every manifest under `deliverables/`, sorted by path; optionally only one deliverable_id."""
-        base = self.root / "deliverables"
+    def read_manifests(self, transmittal=None):
+        """[(relative path, manifest)] of every manifest under `.epc/manifests/`, sorted by path; optionally only one transmittal."""
+        base = self.root / MANIFESTS_DIR
         out = []
-        for path in sorted(base.glob("*/*" + MANIFEST_SUFFIX)) if base.is_dir() else []:
+        for path in sorted(base.glob("*" + MANIFEST_SUFFIX)) if base.is_dir() else []:
             data = json.loads(path.read_text(encoding="utf-8"))
-            if deliverable_id is None or data.get("deliverable_id") == deliverable_id:
+            if transmittal is None or data.get("transmittal") == transmittal:
                 out.append((path.relative_to(self.root).as_posix(), data))
         return out
 
     def read_workflow(self):
         """The workflow record, or None when the project has none yet."""
-        path = self.resolve(WORKFLOW, "reviews")
+        path = self.resolve(WORKFLOW, REVIEWS_DIR)
         return json.loads(path.read_text(encoding="utf-8")) if path.is_file() else None
 
     def read_answers(self):
@@ -355,7 +391,7 @@ class ProjectStore:
 
     def list_reviews(self):
         """Names of the files below `reviews/` other than the workflow record, sorted."""
-        base = self.root / "reviews"
+        base = self.root / REVIEWS_DIR
         return sorted(p.name for p in base.glob("*.json") if p.name != WORKFLOW) if base.is_dir() else []
 
     def read_progress(self):
@@ -366,7 +402,7 @@ class ProjectStore:
         for line in reversed(self.read_progress().splitlines()):
             parts = [p.strip() for p in line.split("|")]
             if len(parts) >= 4 and parts[1].startswith("run ") and parts[2].startswith(f"stage {number} ") and parts[3] == "ok":
-                path = self.resolve(check_run_id(parts[1][4:]), "runs")
+                path = self.resolve(check_run_id(parts[1][4:]), RUNS_DIR)
                 return str(path) if path.is_dir() else None
         return None
 
