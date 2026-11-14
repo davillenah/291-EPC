@@ -388,6 +388,44 @@ class SpecificationTests(unittest.TestCase):
         self.assertIn({"name": "specification", "status": "planned"}, docs.outputs["pending_documents"])
 
 
+class StudiesTests(unittest.TestCase):
+    """The studies of stage 11 are selections of the memo, the load schedule and the routing: no figure of their own."""
+
+    def docs(self):
+        helper = CableListTests()
+        ctx, _, _ = helper.documents(True)
+        res = ctx.results[11]
+        return ctx, {d["name"]: d["document"] for d in res.outputs["documents"]}
+
+    def test_the_short_circuit_study_has_one_row_per_protection_with_the_engine_values(self):
+        ctx, docs = self.docs()
+        memo = ctx.engine_cache["chain"]["memo"]
+        detail = [s for s in docs["short_circuit_study"]["sections"] if s["title"] == "Detail"][0]["blocks"][0]["rows"]
+        self.assertEqual([r[0] for r in detail], [c["tag"] for c in memo["circuits"]])
+        self.assertEqual([r[4] for r in detail], [c["proteccion"]["icu_ka"] for c in memo["circuits"]])
+
+    def test_the_selectivity_study_counts_what_the_memo_counts(self):
+        ctx, docs = self.docs()
+        counts = ctx.engine_cache["chain"]["memo"]["resumen"]["selectividad"]
+        summary = docs["selectivity_study"]["sections"][0]["blocks"][0]["rows"][0]
+        self.assertEqual(summary, [counts["total"], counts["parcial"], counts["revisar"]])
+
+    def test_the_load_schedule_is_the_one_of_stage_3(self):
+        ctx, docs = self.docs()
+        rows = docs["load_schedule"]["sections"][0]["blocks"][0]["rows"]
+        self.assertEqual([r[0] for r in rows], [c["circuit"] for c in ctx.results[3].outputs["load_schedule"]["circuits"]])
+
+    def test_the_raceway_memo_has_a_section_per_routed_floor(self):
+        _, docs = self.docs()
+        self.assertEqual([s["title"] for s in docs["raceway_memo"]["sections"]], ["Floor PB"])
+        self.assertTrue(docs["raceway_memo"]["sections"][0]["blocks"][3]["rows"])
+
+    def test_without_routing_there_are_no_studies(self):
+        _, docs, _ = CableListTests().documents(False)
+        names = {d["name"] for d in docs.outputs["documents"]}
+        self.assertFalse(names & {"short_circuit_study", "selectivity_study", "load_schedule", "raceway_memo"})
+
+
 class FloorPlanTests(unittest.TestCase):
     """Stage 10: a plan and a lighting plan per routed floor, as DXF, through `epc_plan.dxfout`."""
 

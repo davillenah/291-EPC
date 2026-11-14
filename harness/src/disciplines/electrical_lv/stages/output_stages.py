@@ -14,7 +14,7 @@ from pathlib import Path
 from disciplines.electrical_lv.norm_records import VERIFIED, read_norm_records
 from disciplines.electrical_lv.stages import engine_calls as EC
 from disciplines.electrical_lv.stages.base import Stage, StageInputError
-from disciplines.electrical_lv.stages import specification
+from disciplines.electrical_lv.stages import specification, studies
 from disciplines.electrical_lv.stages.cable_list import cable_list_document
 from disciplines.electrical_lv.stages.plan_drawings import FUNCTION as PLAN_FUNCTION, ENGINE as PLAN_ENGINE, write_floor_plans
 from disciplines.electrical_lv.stages.mappings import ENGINE_CHAIN, PENDING_DOCUMENTS
@@ -312,6 +312,7 @@ class DocumentsStage(Stage):
             return pending
         docs["cable_list"] = cable_list_document(ch, (context.loads or {}).get("loads") or [], routing)
         docs["specification"] = specification.build(context, docs)
+        docs.update(studies.build(context, ch["memo"], routing))
         return [p for p in pending if p["name"] not in (CABLE_LIST_PENDING_NAME, SPECIFICATION_PENDING_NAME)]
 
     def execute(self, context):
