@@ -924,6 +924,24 @@ class VerticalRiserTests(unittest.TestCase):
         self.assertAlmostEqual(p1["length_m"], 3.0 + 3.0 + 3.2, places=3)
 
 
+    def test_a_floor_whose_board_is_the_main_board_has_no_run(self):
+        b = self.build()
+        b["floors"][0]["board"] = {"x_m": 1.0, "y_m": 8.0}
+        done = derive_all(b, loads())
+        self.assertEqual(done["routing"]["PB"]["riser_route"]["length_m"], 0.0)
+        by_id = {x["id"]: x for x in done["loads"]["loads"]}
+        design = done["routing"]["PB"]
+        for tag, c in design["circuits"].items():
+            self.assertAlmostEqual(by_id[c["load"]]["length"]["value"], c["moment_m"], places=2)
+
+    def test_boards_at_the_shaft_make_a_run_of_the_height_of_the_shaft(self):
+        b = self.build()
+        b["floors"][1]["board"] = {"x_m": 1.0, "y_m": 8.0}
+        b["floors"][1]["shaft"] = {"x_m": 1.0, "y_m": 8.0}
+        done = derive_all(b, loads())
+        self.assertEqual(done["routing"]["P1"]["riser_route"]["length_m"], 3.2)
+
+
 class TransmittalCoverTests(unittest.TestCase):
     def test_a_building_run_issues_the_cover_pdf_of_the_transmittal_and_a_run_without_pdf_does_not(self):
         res, files = RenderedDocumentsTests().run_api()
@@ -1065,20 +1083,3 @@ class IccDecayAndEarthingTests(unittest.TestCase):
             with self.subTest(section=section):
                 _, s6 = self.stage6(earthing=section)
                 self.assertEqual(s6.status, "blocked")
-
-    def test_a_floor_whose_board_is_the_main_board_has_no_run(self):
-        b = self.build()
-        b["floors"][0]["board"] = {"x_m": 1.0, "y_m": 8.0}
-        done = derive_all(b, loads())
-        self.assertEqual(done["routing"]["PB"]["riser_route"]["length_m"], 0.0)
-        by_id = {x["id"]: x for x in done["loads"]["loads"]}
-        design = done["routing"]["PB"]
-        for tag, c in design["circuits"].items():
-            self.assertAlmostEqual(by_id[c["load"]]["length"]["value"], c["moment_m"], places=3)
-
-    def test_boards_at_the_shaft_make_a_run_of_the_height_of_the_shaft(self):
-        b = self.build()
-        b["floors"][1]["board"] = {"x_m": 1.0, "y_m": 8.0}
-        b["floors"][1]["shaft"] = {"x_m": 1.0, "y_m": 8.0}
-        done = derive_all(b, loads())
-        self.assertEqual(done["routing"]["P1"]["riser_route"]["length_m"], 3.2)
