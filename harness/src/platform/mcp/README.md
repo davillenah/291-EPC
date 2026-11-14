@@ -28,7 +28,7 @@ Pipeline tools (MIG-33b). They call `epc_platform.api` only, the same functions 
 | `epc_norms_pending` | full, readonly | Norm points still to be reviewed: units, units with pending points, pending total (`detail: true` lists the units). Platform-wide, read only. |
 | `epc_project_status` | full, readonly | Workflow state, `master_project_state`, review files and last audit events. |
 | `epc_project_init` | full | Create a project from the guided-form answers (D24 data required). |
-| `epc_pipeline_run` | full | Run the pipeline (`stop_after`, `run_id`, `detail`). |
+| `epc_pipeline_run` | full | Run the pipeline (`stop_after`, `run_id`, `detail`, `from_stage` or `resume`, `mode`: `production` by default or `edit`, ADR-0035). |
 | `epc_project_review` | full | Record corrections (workflow transition plus a file under `reviews/`); never edits `ssot/`. |
 | `epc_project_approve` | full | Workflow `approve` (engineer of record; D21 guard, `sign` permission). |
 | `epc_project_issue` | full | Workflow `issue`; refused by D21 while a norm value is not verified. |

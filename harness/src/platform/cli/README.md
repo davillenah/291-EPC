@@ -17,7 +17,7 @@ python -m epc_platform.cli <command> [options]
 | Command | Api function | MCP tool |
 | --- | --- | --- |
 | `epc init <project> --answers FILE.json` | `init_project` | `epc_project_init` |
-| `epc run <project> --loads FILE.json [--engine-inputs FILE.json] [--stop-after N] [--run-id ID] [--revision R0] [--detail]` | `run_pipeline` | `epc_pipeline_run` |
+| `epc run <project> --loads FILE.json [--engine-inputs FILE.json] [--stop-after N] [--from-stage N | --resume] [--mode production|edit] [--run-id ID] [--revision R0] [--detail]` | `run_pipeline` | `epc_pipeline_run` |
 | `epc status <project>` | `status` | `epc_project_status` |
 | `epc review <project> --corrections FILE.json` | `review` | `epc_project_review` |
 | `epc approve <project>` | `approve` | `epc_project_approve` |
@@ -45,5 +45,7 @@ python -m epc_platform.cli approve DEMO-1 --actor-role engineer_of_record --acto
 ```
 
 `approve` and `issue` are refused (`blocked_d21`) while a norm record listed in the manifests is not verified. The CLI never changes a review state.
+
+Modes (ADR-0035): `epc run --mode production` is the default and the behaviour above. With `--mode edit` the norm records that are not verified do not stop `approve` and `issue` while every manifest in force was made in edit mode; the answer carries `mode: edit` and a notice, and the package, its reports and its transmittal say they are not for production. A production run does not take over a revision made in edit mode.
 
 Tests: `harness/tests/unit/test_cli.py`, `test_cli_parity.py` (CLI = MCP = direct api) and `harness/tests/architecture/test_platform_clock.py`.
