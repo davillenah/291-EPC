@@ -126,7 +126,8 @@ def _resume_stage(store, answers, loads, engine_inputs, mode="production"):
 
 
 def _check_mode(mode):
-    """The mode of a run: `production` or `edit` (anything else is an invalid argument)."""
+    """The mode of a run: the one asked for, else the default mode (`run_mode.py`); it must be `production` or `edit` (anything else is an invalid argument)."""
+    mode = default_mode() if mode is None else mode
     if mode not in MODES:
         raise ApiError("invalid_arguments", f"mode must be one of {', '.join(MODES)}, got {mode!r}")
     return mode
@@ -163,7 +164,7 @@ def run_pipeline(project_dir, *, loads=None, engine_inputs=None, stop_after=None
     _authorise(trail, who, root)
     store, answers = _prepare(root, who, loads, engine_inputs)
     loads, engine_inputs = _with_building(loads, engine_inputs, store.inputs_dir)
-    mode = _check_mode(default_mode() if mode is None else mode)
+    mode = _check_mode(mode)
     from_stage = _start_stage(store, (answers, loads, engine_inputs), from_stage, resume, mode)
     workflow = Workflow(root, log, store)
     flow.enter_running(workflow, who, trail.run_id)
