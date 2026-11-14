@@ -32,7 +32,7 @@ PENDING_ITEMS = {
     4: [{"item": "phase balance", "reason": "no engine function assigns circuits to phases (the parked backend does it in its own module)"}],
     5: [{"item": "demand total of the board", "reason": "no engine function applies the demand factors to the board load"}],
     11: [{"item": "thermal withstand k2S2", "reason": "the engine check needs the let-through energy of the breaker (manufacturer data), which the intake does not collect"}],
-    12: [{"item": "earth electrode and soil study", "reason": "needs soil data that the intake does not collect yet"}],
+    12: [{"item": "earth electrode and soil study", "reason": "needs soil data that the intake does not collect yet (give `engine_inputs.earthing` to run slice 30)"}],
 }
 
 ENGINE_CHAIN = "calculation/aea90364"

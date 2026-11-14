@@ -9,7 +9,7 @@ import copy
 from disciplines.electrical_lv.stages import engine_calls as EC
 from disciplines.electrical_lv.stages.base import Stage, engine_finding
 from disciplines.electrical_lv.stages.grouped import GroupedStage
-from disciplines.electrical_lv.stages.extra_stages import BackupStage, HvacStage, LightningStage, MotorsStage, CoordinationStage, PanelThermalStage, PhaseBalanceStage, RacewaySizingStage, ReactiveStage, SpecialLocationsStage
+from disciplines.electrical_lv.stages.extra_stages import BackupStage, HvacStage, LightningStage, MotorsStage, CoordinationStage, PanelThermalStage, PhaseBalanceStage, RacewaySizingStage, ReactiveStage, SpecialLocationsStage, ElectrodeStage, IccDecayStage
 from disciplines.electrical_lv.stages.lighting_stage import LightingStage
 from disciplines.electrical_lv.stages.routing_stage import RoutingStage
 from disciplines.electrical_lv.stages.mappings import ENGINE_CHAIN, KIND_SYSTEM, PENDING_ITEMS
@@ -192,4 +192,4 @@ class CableSizingStage(GroupedStage):
     """Stage 6: the cable and its protection, sized together: section, voltage drop, short-circuit currents and the protection device."""
 
     slice_classes = {8: FeederSizingStage, 9: VoltageDropStage, 10: ShortCircuitStage, 11: ProtectionStage, 19: MotorsStage, 20: ReactiveStage, 21: PanelThermalStage, 22: BackupStage,
-                     23: LightningStage, 26: RacewaySizingStage, 27: CoordinationStage, 28: SpecialLocationsStage}
+                     23: LightningStage, 26: RacewaySizingStage, 27: CoordinationStage, 28: SpecialLocationsStage, 29: IccDecayStage, 30: ElectrodeStage}

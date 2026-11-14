@@ -16,6 +16,10 @@ lists them, so the runs of the golden projects keep their results.
   coordination     epc_plan.footprint and epc_plan.clash: the clashes of the routed floors with the drawings of other disciplines given in `engine_inputs["coordination"]`
   special_locations  epc_aea90364.aea_special_locations for the rooms the building declares as bathrooms (701: induction of a conductor, radius of zone 2) or electric-vehicle charging (722:
                    multiple load, demand factor), with the data the engineer gives for each (`engine_inputs["special_locations"]["locations"]`)
+  icc_decay        epc_short_circuit.aea_icc_decay: the peak factor and the peak current of the short circuit at the bars (`peak`: R and X of the loop) and the decay of the short-circuit current of
+                   a generator (`generator`: its reactances and time constants), for `engine_inputs["icc_decay"]`
+  earthing         epc_grounding.aea_earthing: the resistance of the earth electrodes given in `engine_inputs["earthing"]` (soil resistivity and the geometry of each rod, conductor, plate or mesh), their
+                   parallel, and, in a TT scheme with a residual current device, whether it complies with the maximum Ra; the engine formulas are called as they are (D15, D26)
   phase_balance    epc_load_balance.phase_balance: the phase of each single-phase circuit (`phase_assigned` of `engine_inputs["circuits"]` is kept) and the unbalance between R, S and T
 
 The values the engines use from their norm records are pending review (D21): every slice says so with a note finding.
@@ -332,3 +336,97 @@ class SpecialLocationsStage(ExtraStage):
             if not complies:
                 findings.append(engine_finding(len(findings) + 1, context.pipeline_run_id, self.spec.slug, loc["room"], "special_location_complies", False, True))
         return {"locations": rows}, findings
+
+
+class IccDecayStage(ExtraStage):
+    key, engine = "icc_decay", "calculation/short_circuit"
+    functions = ("epc_short_circuit.aea_icc_decay.kappa_exacto", "epc_short_circuit.aea_icc_decay.current_peak_to", "epc_short_circuit.aea_icc_decay.corrientes_generador",
+                 "epc_short_circuit.aea_icc_decay.constantes_tiempo", "epc_short_circuit.aea_icc_decay.mu_generador")
+    GENERATOR = ("e2", "e1", "e", "x_d2", "x_d1", "x_d", "t2_0", "t1_0", "t_min")
+
+    def applies(self, context):
+        return self.section(context) is not None
+
+    @staticmethod
+    def _peak(ID, context, loop):
+        icc_a = EC.chain(context)["form"]["board"]["icc_ka"] * 1000.0
+        kappa = ID.kappa_exacto(loop["r_ohm"], loop["x_ohm"])
+        return {"icc_a": icc_a, "kappa": kappa, "peak_a": ID.current_peak_to(kappa, icc_a)}
+
+    def _generator(self, ID, gen):
+        missing = [k for k in self.GENERATOR if k not in gen]
+        if missing:
+            raise StageInputError([f"`icc_decay.generator`: missing {', '.join(missing)} (no default)"])
+        x_n = gen.get("x_n", 0.0)
+        ik2, ik1, ik = ID.corrientes_generador(gen["e2"], gen["e1"], gen["e"], gen["x_d2"], gen["x_d1"], gen["x_d"], x_n)
+        t2_n, t1_n = ID.constantes_tiempo(gen["t2_0"], gen["t1_0"], gen["x_d2"], gen["x_d1"], gen["x_d"], x_n)
+        return {"ik2_a": ik2, "ik1_a": ik1, "ik_a": ik, "t2_n_s": t2_n, "t1_n_s": t1_n, "mu": ID.mu_generador(gen["t_min"], t2_n, gen["x_d2"], gen["x_d1"], x_n)}
+
+    def run(self, context):
+        from epc_short_circuit import aea_icc_decay as ID
+        given, out = self.section(context), {}
+        unknown = sorted(set(given) - {"peak", "generator"})
+        if unknown:
+            raise StageInputError([f"`icc_decay`: unknown input(s) {', '.join(unknown)}"])
+        try:
+            if given.get("peak"):
+                loop = given["peak"]
+                if not {"r_ohm", "x_ohm"} <= set(loop):
+                    raise StageInputError(["`icc_decay.peak`: needs r_ohm and x_ohm of the short-circuit loop (no default)"])
+                out["peak"] = self._peak(ID, context, loop)
+            if given.get("generator"):
+                out["generator"] = self._generator(ID, given["generator"])
+        except (ValueError, ZeroDivisionError) as exc:
+            raise StageInputError([f"`icc_decay`: {exc}"]) from exc
+        return out, []
+
+
+class ElectrodeStage(ExtraStage):
+    key, engine = "earthing", "calculation/grounding"
+    functions = ("epc_grounding.aea_earthing.resistance_rod", "epc_grounding.aea_earthing.resistance_conductor_horizontal", "epc_grounding.aea_earthing.resistencia_placa_circular",
+                 "epc_grounding.aea_earthing.resistencia_malla", "epc_grounding.aea_earthing.resistance_parallel", "epc_grounding.aea_earthing.ra_maxima",
+                 "epc_grounding.aea_earthing.verifica_ra")
+    NEEDS = {"rod": ("length_m", "diameter_m"), "horizontal": ("length_m", "diameter_m", "depth_m"), "plate": ("diameter_m", "depth_m"), "mesh": ("area_m2", "conductor_length_m")}
+
+    def applies(self, context):
+        return self.section(context) is not None
+
+    def _one(self, EA, rho, electrode):
+        kind = electrode.get("type")
+        if kind not in self.NEEDS:
+            raise StageInputError([f"`earthing`: electrode type {kind!r} is not one of {', '.join(self.NEEDS)}"])
+        missing = [k for k in self.NEEDS[kind] if k not in electrode]
+        if missing:
+            raise StageInputError([f"`earthing`: a {kind} electrode is missing {', '.join(missing)} (no default)"])
+        if kind == "rod":
+            return EA.resistance_rod(rho, electrode["length_m"], electrode["diameter_m"], bool(electrode.get("simplified")))
+        if kind == "horizontal":
+            return EA.resistance_conductor_horizontal(rho, electrode["length_m"], electrode["diameter_m"], electrode["depth_m"], bool(electrode.get("simplified")))
+        if kind == "plate":
+            return EA.resistencia_placa_circular(rho, electrode["diameter_m"], electrode["depth_m"])
+        return EA.resistencia_malla(rho, electrode["area_m2"], electrode["conductor_length_m"], *([electrode["depth_m"]] if "depth_m" in electrode else []))
+
+    @staticmethod
+    def _check_ra(EA, context, total):
+        """{ra_max, complies} for a TT scheme with a residual current device (the sensitivity of the board criteria); {} otherwise."""
+        ch = EC.chain(context)
+        i_dn = (ch["memo"]["criteria"] or {}).get("rcd_ma")
+        if ch["form"]["board"]["system"] != "TT" or not i_dn:
+            return {}
+        limit = EA.ra_maxima(i_dn / 1000.0)
+        return {"i_dn_a": i_dn / 1000.0, "ra_max": limit, "complies": EA.verifica_ra(total, i_dn / 1000.0)}
+
+    def run(self, context):
+        from epc_grounding import aea_earthing as EA
+        given = self.section(context)
+        rho, electrodes = given.get("soil_resistivity_ohm_m"), given.get("electrodes")
+        if rho is None or not electrodes:
+            raise StageInputError(["`earthing`: needs soil_resistivity_ohm_m and at least one electrode (no default)"])
+        try:
+            each = [{"type": e.get("type"), "resistance_ohm": self._one(EA, rho, e)} for e in electrodes]
+            total = EA.resistance_parallel([e["resistance_ohm"] for e in each])
+            check = self._check_ra(EA, context, total)
+        except ValueError as exc:
+            raise StageInputError([f"`earthing`: {exc}"]) from exc
+        findings = [] if check.get("complies", True) else [engine_finding(1, context.pipeline_run_id, self.spec.slug, "earth electrode", "ra_complies", False, True)]
+        return {"electrodes": each, "parallel_ohm": total, **({"ra": check} if check else {})}, findings

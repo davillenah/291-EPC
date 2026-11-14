@@ -999,3 +999,69 @@ class SpecialLocationsTests(unittest.TestCase):
             api.init_project(root, "API-1", A.ANSWERS, clock=A.CLOCK, actor=A.ORC)
             out = api.run_pipeline(root / "API-1", loads=loads(), engine_inputs=dict(W.inputs_doc(), building=self.build(), special_locations={"locations": []}), stop_after=3, clock=A.CLOCK, actor=A.ORC)
         self.assertEqual(out["error"]["code"], "invalid_arguments")
+
+
+class IccDecayAndEarthingTests(unittest.TestCase):
+    def stage6(self, **inputs):
+        ctx = W.context(engine_inputs=dict(W.inputs_doc(), **inputs))
+        res = run(ctx, stop_after=6, run_id="r6")
+        return ctx, res.results[-1]
+
+    def test_the_peak_current_is_the_engines_from_the_loop_and_the_board_icc(self):
+        from epc_short_circuit import aea_icc_decay as ID
+        ctx, s6 = self.stage6(icc_decay={"peak": {"r_ohm": 0.01, "x_ohm": 0.05}})
+        self.assertEqual(s6.status, "ok", s6.message)
+        icc = ctx.engine_cache["chain"]["form"]["board"]["icc_ka"] * 1000.0
+        kappa = ID.kappa_exacto(0.01, 0.05)
+        self.assertEqual(s6.outputs["icc_decay"]["peak"], {"icc_a": icc, "kappa": kappa, "peak_a": ID.current_peak_to(kappa, icc)})
+
+    def test_the_generator_decay_needs_every_datum_and_gives_the_engines_values(self):
+        from epc_short_circuit import aea_icc_decay as ID
+        gen = {"e2": 230.0, "e1": 235.0, "e": 240.0, "x_d2": 0.10, "x_d1": 0.20, "x_d": 1.5, "t2_0": 0.03, "t1_0": 1.0, "t_min": 0.1}          # synthetic test values
+        _, s6 = self.stage6(icc_decay={"generator": gen})
+        self.assertEqual(s6.status, "ok", s6.message)
+        out = s6.outputs["icc_decay"]["generator"]
+        self.assertEqual((out["ik2_a"], out["ik_a"]), (ID.corrientes_generador(230.0, 235.0, 240.0, 0.10, 0.20, 1.5)[0], ID.corrientes_generador(230.0, 235.0, 240.0, 0.10, 0.20, 1.5)[2]))
+        for key in gen:
+            with self.subTest(missing=key):
+                _, bad = self.stage6(icc_decay={"generator": {k: v for k, v in gen.items() if k != key}})
+                self.assertEqual(bad.status, "blocked")
+                self.assertIn(key, bad.message)
+
+    def test_unknown_or_incomplete_sections_block_and_without_the_section_nothing_runs(self):
+        _, s6 = self.stage6(icc_decay={"peak": {"r_ohm": 0.01}})
+        self.assertEqual(s6.status, "blocked")
+        _, s6 = self.stage6(icc_decay={"other": 1})
+        self.assertEqual(s6.status, "blocked")
+        _, s6 = self.stage6()
+        self.assertNotIn("icc_decay", s6.outputs)
+        self.assertNotIn("earthing", s6.outputs)
+
+    def test_the_electrodes_are_the_engines_and_their_parallel(self):
+        from epc_grounding import aea_earthing as EA
+        rho = 100.0                                                                                           # synthetic soil
+        _, s6 = self.stage6(earthing={"soil_resistivity_ohm_m": rho, "electrodes": [{"type": "rod", "length_m": 2.0, "diameter_m": 0.016}, {"type": "horizontal", "length_m": 10.0, "diameter_m": 0.01, "depth_m": 0.6},
+                                                                                     {"type": "plate", "diameter_m": 0.5, "depth_m": 0.8}, {"type": "mesh", "area_m2": 100.0, "conductor_length_m": 80.0}]})
+        self.assertEqual(s6.status, "ok", s6.message)
+        out = s6.outputs["earthing"]
+        direct = [EA.resistance_rod(rho, 2.0, 0.016, False), EA.resistance_conductor_horizontal(rho, 10.0, 0.01, 0.6, False), EA.resistencia_placa_circular(rho, 0.5, 0.8), EA.resistencia_malla(rho, 100.0, 80.0)]
+        self.assertEqual([e["resistance_ohm"] for e in out["electrodes"]], direct)
+        self.assertEqual(out["parallel_ohm"], EA.resistance_parallel(direct))
+
+    def test_a_tt_board_with_a_residual_current_device_is_checked_against_the_maximum_ra(self):
+        from epc_grounding import aea_earthing as EA
+        ctx = W.context(engine_inputs=dict(W.inputs_doc(), earthing={"soil_resistivity_ohm_m": 100.0, "electrodes": [{"type": "rod", "length_m": 2.0, "diameter_m": 0.016}]}))
+        ctx.profile["supply"]["earthing_system"] = "TT"
+        res = run(ctx, stop_after=6, run_id="r6")
+        out = res.results[-1].outputs["earthing"]
+        self.assertEqual(ctx.engine_cache["chain"]["form"]["board"]["system"], "TT")
+        self.assertEqual(out["ra"]["ra_max"], EA.ra_maxima(out["ra"]["i_dn_a"]))
+        self.assertEqual(out["ra"]["complies"], EA.verifica_ra(out["parallel_ohm"], out["ra"]["i_dn_a"]))
+        self.assertEqual(bool([f for f in res.results[-1].findings if f["severity"] == "major"]), not out["ra"]["complies"])
+
+    def test_a_missing_datum_or_a_wrong_electrode_blocks(self):
+        for section in ({"electrodes": [{"type": "rod", "length_m": 2, "diameter_m": 0.01}]}, {"soil_resistivity_ohm_m": 100.0, "electrodes": []}, {"soil_resistivity_ohm_m": 100.0, "electrodes": [{"type": "rod", "length_m": 2}]},
+                        {"soil_resistivity_ohm_m": 100.0, "electrodes": [{"type": "cone"}]}):
+            with self.subTest(section=section):
+                _, s6 = self.stage6(earthing=section)
+                self.assertEqual(s6.status, "blocked")
