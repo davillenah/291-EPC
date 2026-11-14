@@ -137,8 +137,18 @@ class Level:
     key: str = ""                         # GROUND_FLOOR, FIRST_FLOOR, SECOND_FLOOR..., BASEMENT, ROOF; empty when the plan has no floor
 
 
-def _room_dict(r: "Room") -> Dict[str, Any]:
-    return {"id": r.id, "area": round(r.area, 1), "area_m2": None if r.area_m2 is None else round(r.area_m2, 2), "at": _r3(r.at), "name": r.name, "key": r.key, "code": r.code, "written_m2": r.written_m2}
+def _size_m(r: "Room", units_per_metre: Optional[float]) -> Optional[List[float]]:
+    """[extent along x, extent along y] in metres of the box that holds the rectangles of the room; None when the units or the rectangles are not known."""
+    if not units_per_metre or not r.rects:
+        return None
+    x0, y0 = min(q[0] for q in r.rects), min(q[1] for q in r.rects)
+    x1, y1 = max(q[2] for q in r.rects), max(q[3] for q in r.rects)
+    return [round((x1 - x0) / units_per_metre, 3), round((y1 - y0) / units_per_metre, 3)]
+
+
+def _room_dict(r: "Room", units_per_metre: Optional[float] = None) -> Dict[str, Any]:
+    return {"id": r.id, "area": round(r.area, 1), "area_m2": None if r.area_m2 is None else round(r.area_m2, 2), "at": _r3(r.at), "name": r.name, "key": r.key, "code": r.code, "written_m2": r.written_m2,
+            "size_m": _size_m(r, units_per_metre)}
 
 
 @dataclass
@@ -164,7 +174,7 @@ class Architecture:
     def as_dict(self) -> Dict[str, Any]:
         return {"schema_version": "1.0", "source": self.source, "size": [round(self.size[0], 3), round(self.size[1], 3)], "units_per_metre": self.units_per_metre, "drawing_scale": self.drawing_scale, "scale_hint": self.scale_hint,
                 "wall_thickness": None if self.wall_thickness is None else round(self.wall_thickness, 3), "walls": [_wall_dict(w) for w in self.walls],
-                "openings": [_opening_dict(o) for o in self.openings], "rooms": [_room_dict(r) for r in self.rooms], "counts": self.counts(), "warnings": self.warnings, "annotation_counts": {k: m.count() for k, m in self.annotations.items()},
+                "openings": [_opening_dict(o) for o in self.openings], "rooms": [_room_dict(r, self.units_per_metre) for r in self.rooms], "counts": self.counts(), "warnings": self.warnings, "annotation_counts": {k: m.count() for k, m in self.annotations.items()},
                 "level": None if self.level is None else {"name": self.level.name, "index": self.level.index, "source": self.level.source, "key": self.level.key},
                 "reference": None if self.reference is None else _r3(self.reference)}
 

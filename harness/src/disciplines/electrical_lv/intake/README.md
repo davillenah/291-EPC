@@ -8,6 +8,7 @@ Stage 1 of the pipeline (PRD section 12): reads the engineer's input and prepare
 - `profile.py`: builds the `project_profile` from the answers on top of `projects/_template/project_profile.json` (normative defaults of PRD section 8).
 - `hashing.py`: SHA-256 of input files, deterministic manifest of an `inputs/` folder, immutability check `verify_inputs`.
 - `loads.py`: reads a JSON load list into `load_list.schema.json` and rejects unknown fields.
+- `building.py`: the recognised floors (`epc_arch` rooms with `area_m2` and `size_m`) become the lighting rooms and the `L-<floor>` loads of the load list, before stage 1 freezes it; the power of each load is the installed power returned by `epc_lighting`. Input: `engine_inputs.building`; nothing is defaulted (a room without data is an error unless excluded).
 - `schema_check.py`: small standard-library validator for the draft-07 subset the schemas use.
 
 Tests: `harness/tests/unit/test_intake_discipline.py`. Still missing: plan files (DXF). The profile is written to the project folder by the pipeline through `../store.py` (MIG-31).

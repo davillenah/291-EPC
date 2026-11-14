@@ -4,6 +4,7 @@ The role must be allowed to `start_run` (RACI: the orchestrator). The workflow i
 complete, healthy run. Every number in the result is a stage result produced by an engine call inside the pipeline.
 """
 from disciplines.electrical_lv import pipeline
+from disciplines.electrical_lv.intake.building import BuildingError, derive
 from disciplines.electrical_lv.stages import STAGES, PipelineContext
 from disciplines.electrical_lv.store import ProjectStore, StoreError, check_run_id
 from epc_platform.api import flow
@@ -78,6 +79,21 @@ def _prepare(root, who, loads, engine_inputs):
     return store, answers
 
 
+def _with_building(loads, engine_inputs):
+    """(loads, engine_inputs) after the building section, if any, has been turned into lighting loads and the lighting section of stage 3."""
+    if not engine_inputs or "building" not in engine_inputs:
+        return loads, engine_inputs
+    if not isinstance(loads, dict):
+        raise ApiError("invalid_arguments", "the building section adds lighting loads to a load list: give the load list")
+    if "lighting" in engine_inputs:
+        raise ApiError("invalid_arguments", "engine_inputs has both `building` and `lighting`: the lighting section is derived from the building")
+    try:
+        loads, section = derive(engine_inputs["building"], loads)
+    except BuildingError as exc:
+        raise ApiError("invalid_arguments", f"building: {exc}", {"errors": exc.errors}) from exc
+    return loads, dict(engine_inputs, lighting=section)
+
+
 @api_call
 def run_pipeline(project_dir, *, loads=None, engine_inputs=None, stop_after=None, run_id=None, clock, actor, revision="R0", detail=True, rng=None, from_stage=None):
     """Run the pipeline in the project. `loads` and `engine_inputs` are the load list and the extra calculation inputs (see the stage docs).
@@ -89,6 +105,7 @@ def run_pipeline(project_dir, *, loads=None, engine_inputs=None, stop_after=None
     trail = _trail(log, clock, run_id, rng)
     _authorise(trail, who, root)
     store, answers = _prepare(root, who, loads, engine_inputs)
+    loads, engine_inputs = _with_building(loads, engine_inputs)
     workflow = Workflow(root, log, store)
     flow.enter_running(workflow, who, trail.run_id)
     trail.record(who, "run:start", root.name, "allowed", _start_detail(stop_after, revision, from_stage))

@@ -92,6 +92,11 @@ class TestDxf(unittest.TestCase):
         self.assertAlmostEqual(a.rooms[0].area_m2, inner, delta=0.08 * inner)
         self.assertNotIn("ARQ-AMBIENTES", recognize(helpers.room_dxf(), "flat.dxf").svg)                 # the rooms are not painted: their areas go in a table
 
+    def test_a_room_gives_the_size_of_its_box_in_metres(self):
+        d = recognize(helpers.room_dxf(), "flat.dxf").architecture.as_dict()["rooms"][0]
+        self.assertIsNotNone(d["size_m"])
+        self.assertAlmostEqual(d["size_m"][0] * d["size_m"][1], d["area_m2"], delta=0.08 * d["area_m2"])      # a rectangular room: the box is the room
+
     def test_a_flat_turned_to_any_angle_is_the_same_flat(self):
         for angle in (30.0, 90.0, 137.0):
             r = recognize(helpers.room_dxf(rotate=angle), "flat.dxf")

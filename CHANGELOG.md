@@ -13,6 +13,7 @@ All notable changes. Format: Keep a Changelog; versions follow `harness/docs/BRA
 - Project folder: everything the harness keeps for itself (`project_profile.json`, `master_project_state.json`, `epc-progress.txt`, `ssot/`, `runs/`, `reviews/`, `audit/`) moves into the hidden folder `.epc/`; `inputs/` and `deliverables/` stay visible. The empty `transmittals/` folder is dropped. `init_from_template` sets the hidden attribute on Windows. Existing projects need to be moved by hand (`mkdir .epc` and move those entries into it).
 
 ### Added
+- `engine_inputs.building`: the recognised floors of the architecture become the lighting rooms and the `L-<floor>` lighting loads of the load list (power from `epc_lighting`), and the `lighting` section of stage 3, with no manual glue. `epc_arch` rooms now carry `size_m` (the box of the room in metres).
 - Motor `epc_hvac` (carga térmica por el método básico de ASHRAE, caudal de aire y ventilación; E3-10), Zs del lazo de falla (E3-11), símbolos de generador y UPS en el unifilar (E3-12), protección del motor (E3-09) y pantalla de descargas atmosféricas (E3-14).
 - 12 agentes especialistas de la disciplina eléctrica (`claude/agents/electrical-*`, AGT-01).
 - Catálogo de fabricantes sembrado por carpetas (`shared/catalog/manufacturers/`, E4-05) y tipo de toma de tierra (jabalina, conductor horizontal, placa) en el estudio de puesta a tierra (E3-11).
