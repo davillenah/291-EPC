@@ -155,13 +155,20 @@ def _refuse_closed(manifest, revision):
         raise StageInputError([f"{manifest['transmittal']} (revision {revision}) is already superseded by {manifest['superseded_by']}: use a new revision"])
 
 
-def plan_transmittal(store, revision):
+def _refuse_edit_to_production(manifest, revision, mode):
+    """A production run does not take over a revision that was made in edit mode (ADR-0035): that package is not for production, a new revision is."""
+    if manifest.get("mode") == "edit" and mode != "edit":
+        raise StageInputError([f"revision {revision} ({manifest['transmittal']}) was made in edit mode: it is not for production, use a new revision"])
+
+
+def plan_transmittal(store, revision, mode="production"):
     """(transmittal id, previous, same): the id this run writes, the open manifest of another revision it supersedes (or None) and the unsigned draft of the
     same revision it replaces (or None). A signed or already superseded transmittal of this revision blocks."""
     existing = [m for _, m in store.read_manifests()]
     same = sorted((m for m in existing if m["revision"] == revision), key=_number)
     for m in same:
         _refuse_closed(m, revision)
+        _refuse_edit_to_production(m, revision, mode)
     if same:
         return same[-1]["transmittal"], None, same[-1]
     open_ones = sorted((m for m in existing if m["superseded_by"] is None), key=_number)
@@ -184,7 +191,7 @@ class PackageIssueStage(Stage):
             return build_manifest(transmittal=transmittal, title=f"{project} {transmittal} revision {context.revision}".strip(), revision=context.revision,
                                   run_id=context.pipeline_run_id, inputs_manifest=self._inputs(context), engine_calls=run_engine_calls(context),
                                   normative_profile=(context.profile or {}).get("normative_profile"), files=files,
-                                  findings=run_findings(context) + list(extra), review_status=DRAFT, norm_reader=lambda _p: records)
+                                  findings=run_findings(context) + list(extra), review_status=DRAFT, norm_reader=lambda _p: records, mode=getattr(context, "mode", "production"))
         except ManifestError as exc:
             raise StageInputError(exc.errors) from exc
 
@@ -231,6 +238,8 @@ class PackageIssueStage(Stage):
     def _message(context, transmittal, rows, records, longest):
         not_verified = sum(1 for r in records if r["review_status"] != VERIFIED)
         msg = f"transmittal {transmittal} (revision {context.revision}): {len(rows)} file(s), draft; {not_verified} of {len(records)} norm records not verified"
+        if getattr(context, "mode", "production") == "edit":
+            msg += "; EDIT MODE (not for production)"
         if longest > naming.PATH_WARNING:
             msg += f"; WARNING: a file path has {longest} characters (Windows stops at about 260): shorten the project folder or the descriptions"
         return msg
@@ -246,7 +255,7 @@ class PackageIssueStage(Stage):
         before = epc_calc_check.check_run(run_dict(context, LAST_PRODUCER), project=project, files=files, run_id=context.pipeline_run_id, start_id=start,
                                           groups=("documents",))
         names = self._name_items(context, items)
-        plan = plan_transmittal(store, context.revision)
+        plan = plan_transmittal(store, context.revision, getattr(context, "mode", "production"))
         transmittal = plan[0]
         rows = [{"name": i["name"], "title": i["title"], "code": i["code"], "path": i["path"], "sha256": _file_hash(i), "source": i["source"]} for i in items]
         manifest, replaced = self._manifest_of(context, plan, rows, records, before)
@@ -258,7 +267,24 @@ class PackageIssueStage(Stage):
         outputs["calc_check"] = {"findings_count": len(before) + len(after), "by_severity": by_severity(before + after)}
         longest = max((len(f"{store.root}/deliverables/{transmittal}/{r['path']}") for r in rows if r["path"]), default=0)
         outputs["naming"] = {"named": names is not None, "longest_path": longest}
-        return self.result("ok", outputs=outputs, findings=before + after, engine_calls=calls, message=self._message(context, transmittal, rows, records, longest))
+        notes = self._edit_note(context, len(before) + len(after) + start, records)
+        return self.result("ok", outputs=self._with_mode(outputs, context), findings=before + after + notes, engine_calls=calls,
+                           message=self._message(context, transmittal, rows, records, longest))
+
+    @staticmethod
+    def _with_mode(outputs, context):
+        """The outputs of the stage; those of an edit-mode package say so (a production one has no `mode`, as it never had)."""
+        return dict(outputs, mode="edit") if getattr(context, "mode", "production") == "edit" else outputs
+
+    @staticmethod
+    def _edit_note(context, number, records):
+        """In edit mode, one note that says what the mode let through: the norm records that are not verified (information, never an error)."""
+        if getattr(context, "mode", "production") != "edit":
+            return []
+        bad = sum(1 for r in records if r["review_status"] != VERIFIED)
+        return [{"id": f"F-{number:04d}", "run_id": context.pipeline_run_id, "verifier": "final-auditor", "severity": "note", "document": "manifest", "field": "mode",
+                 "value": f"edit mode: {bad} of {len(records)} norm records are not verified", "expected": "production mode with every record verified before construction",
+                 "clause": "ADR-0035", "action": "This package is for checking the system, not for production: rerun in production mode once the records are verified.", "evidence": ["manifest mode edit"], "status": "open"}]
 
     @staticmethod
     def _cover(context, transmittal, rows, records, copies):
@@ -266,7 +292,7 @@ class PackageIssueStage(Stage):
         in the manifest. Returns the engine calls."""
         if "pdf" not in rendering.formats_of(context) or not context.work_dir:
             return []
-        data = rendering.transmittal_data(transmittal, (context.profile or {}).get("project_code"), context.revision, context.pipeline_run_id, rows, records)
+        data = rendering.transmittal_data(transmittal, (context.profile or {}).get("project_code"), context.revision, context.pipeline_run_id, rows, records, getattr(context, "mode", "production"))
         source, call = rendering.render_transmittal(data, context.work_dir, transmittal)
         copies.append({"source": source, "to": f"deliverables/{transmittal}/{transmittal}_transmittal.pdf"})
         return [call]

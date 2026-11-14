@@ -17,6 +17,7 @@ BUILDING_FORMATS = ("pdf", "docx", "xlsx")
 ENGINE = "cad/drawing"
 FUNCTIONS = {"pdf": "epc_drawing.export.report_pdf.render", "docx": "epc_drawing.export.report_docx.render"}
 PAGE_LABEL = "Page {n} of {total}"
+EDIT_MARK = "EDIT MODE: norm values not verified, not for production"
 
 
 def formats_of(context):
@@ -78,6 +79,13 @@ def _has_sections(document):
     return isinstance(sections, list) and all(isinstance(x, dict) and ("blocks" in x or "items" in x) for x in sections)
 
 
+def marked(report, mode):
+    """The report with the mark of the edit mode in its footer (a production report is returned as it is)."""
+    if report is None or mode != "edit":
+        return report
+    return dict(report, footer=(f"{report['footer']} - " if report.get("footer") else "") + EDIT_MARK)
+
+
 def to_report(name, document, project):
     """The report structure of a document, or None when its structure is its own (not rendered)."""
     if name == "cable_list":
@@ -115,14 +123,19 @@ def _render_one(name, report, out_dir, formats):
     return done
 
 
-def transmittal_data(transmittal, project, revision, run_id, rows, records):
-    """The data the transmittal renderer of the drawing engine takes: header, a row per issued file (code, name, file, short hash) and the review status with the count of unverified norm records."""
+def _review_text(records, mode):
+    """The review line of the transmittal cover: the draft status with the unverified records, and in edit mode that the package is not for production."""
     not_verified = sum(1 for r in records if r["review_status"] != "verified")
+    text = f"Draft: not approved for construction (D21). {not_verified} of {len(records)} norm records listed in this transmittal are not verified."
+    return text + (f" {EDIT_MARK}." if mode == "edit" else "")
+
+
+def transmittal_data(transmittal, project, revision, run_id, rows, records, mode="production"):
+    """The data the transmittal renderer of the drawing engine takes: header, a row per issued file (code, name, file, short hash) and the review status with the count of unverified norm records."""
     table = [[str(n), r.get("code") or "", r["name"], r.get("path") or "(structured document)", r["sha256"][:12]] for n, r in enumerate(rows, start=1)]
-    return {"title": "TRANSMITTAL", "subtitle": transmittal, "header": [["Project", project or ""], ["Revision", revision], ["Run", run_id or ""], ["Status", "draft"]],
-            "columns": [["No", 0.06], ["Code", 0.2], ["Name", 0.28], ["File", 0.34], ["SHA-256", 0.12]], "rows": table,
-            "sections": [["Review", f"Draft: not approved for construction (D21). {not_verified} of {len(records)} norm records listed in this transmittal are not verified."]],
-            "footer": f"{project or ''} {transmittal}", "page_label": PAGE_LABEL}
+    header = [["Project", project or ""], ["Revision", revision], ["Run", run_id or ""], ["Status", "draft"]] + ([["Mode", EDIT_MARK]] if mode == "edit" else [])
+    return {"title": "TRANSMITTAL", "subtitle": transmittal, "header": header, "columns": [["No", 0.06], ["Code", 0.2], ["Name", 0.28], ["File", 0.34], ["SHA-256", 0.12]], "rows": table,
+            "sections": [["Review", _review_text(records, mode)]], "footer": f"{project or ''} {transmittal}" + (f" - {EDIT_MARK}" if mode == "edit" else ""), "page_label": PAGE_LABEL}
 
 
 def render_transmittal(data, work_dir, transmittal):
@@ -134,18 +147,18 @@ def render_transmittal(data, work_dir, transmittal):
     return out.relative_to(work_dir).as_posix(), EC.record_for(ENGINE, "epc_drawing.export.transmittal_pdf.render")
 
 
-def _reports(docs, project):
+def _reports(docs, project, mode="production"):
     """([(name, report)] of the documents that have a report structure, [names of the ones that do not])."""
-    every = [(name, to_report(name, document, project)) for name, document in docs.items()]
+    every = [(name, marked(to_report(name, document, project), mode)) for name, document in docs.items()]
     return [(n, r) for n, r in every if r is not None], [n for n, r in every if r is None]
 
 
-def render_all(docs, project, out_dir, formats):
+def render_all(docs, project, out_dir, formats, mode="production"):
     """Writes the files of the documents under `out_dir`; returns ({"files": [...], "not_rendered": [...]}, engine calls)."""
     from epc_drawing.export import tables_xlsx
     out_dir = Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
-    reports, skipped = _reports(docs, project)
+    reports, skipped = _reports(docs, project, mode)
     files = [f for name, report in reports for f in _render_one(name, report, out_dir, formats)]
     book = out_dir / f"{project or 'documents'}_tables.xlsx"
     if "xlsx" in formats and tables_xlsx.write_tables(book, _sheets(reports)):

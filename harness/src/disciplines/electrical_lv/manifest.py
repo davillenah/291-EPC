@@ -9,6 +9,7 @@ Where each field comes from:
   files             every file of the transmittal: name, title, path inside `deliverables/<transmittal>/` (null while a document has no rendered file) and SHA-256
   review_status     `draft` unless the caller asks otherwise; `approved_for_construction` raises `ApprovalBlocked` while a listed norm record is not
                     `verified` (D21). The schema repeats the rule, so a written manifest cannot break it either.
+  mode              `edit` only when the package was made in edit mode (ADR-0035); a production manifest has no `mode`, as it never had
   signed            always None here: a signature is a human act. `supersede` moves a previous signature to `superseded_signature`.
 
 No clock is read: equal inputs give equal manifests.
@@ -84,6 +85,11 @@ def check_approval(review_status, records):
         raise ApprovalBlocked(f"cannot approve for construction: {len(bad)} norm record(s) not verified ({shown})")
 
 
+def mode_field(mode):
+    """{"mode": "edit"} for a package made in edit mode (ADR-0035: norm records not verified did not stop it, and it is not for production); nothing for production."""
+    return {"mode": "edit"} if mode == "edit" else {}
+
+
 def check(manifest):
     """Schema errors of a manifest (empty list = valid)."""
     return validate(manifest, load_schema(SCHEMA))
@@ -98,7 +104,7 @@ def files_of(files):
 
 
 def build_manifest(*, transmittal, title, revision, run_id, inputs_manifest, engine_calls, normative_profile, findings, files,
-                   review_status=DRAFT, norm_reader=read_norm_records):
+                   review_status=DRAFT, norm_reader=read_norm_records, mode="production"):
     """The manifest dict of one transmittal; raises `ManifestError` (or `ApprovalBlocked`) instead of returning a wrong one.
 
     `files` is [{name, title, path, sha256}] (see `files_of`). `normative_profile` is the profile's `normative_profile` (its `revisions` are copied).
@@ -112,6 +118,7 @@ def build_manifest(*, transmittal, title, revision, run_id, inputs_manifest, eng
         "normative_profile": {"revisions": copy.deepcopy((normative_profile or {}).get("revisions") or {}), "norm_records": copy.deepcopy(records)},
         "files": files_of(files), "findings": copy.deepcopy(findings), "review_status": review_status,
         "signed": None, "superseded_signature": None, "supersedes": None, "superseded_by": None}
+    manifest.update(mode_field(mode))
     errors = check(manifest)
     if errors:
         raise ManifestError(errors)

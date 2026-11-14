@@ -43,6 +43,8 @@ MANIFEST_SUFFIX = ".manifest.json"
 SUPERSEDE_FIELDS = ("superseded_by", "signed", "superseded_signature")
 MANIFEST_NAME = "inputs_manifest.json"
 WORKFLOW = "workflow.json"
+MODE = "mode.json"
+MODES = ("production", "edit")
 ANSWERS = "intake_answers.json"
 WORKFLOW_STATES = ("init", "intake_done", "running", "draft_ready", "in_review", "corrected", "approved", "issued")
 WORKFLOW_ENTRY = ("from", "to", "transition", "role", "actor_id", "pipeline_run_id")
@@ -272,11 +274,18 @@ class ProjectStore:
             raise StoreError(problems)
         self._write_json(WORKFLOW, data, REVIEWS_DIR)
 
+    def write_mode(self, token, mode):
+        """Write `reviews/mode.json`: the mode of the project (`production`, the strict default, or `edit`: norm records that are not verified do not stop the workflow, see ADR-0035)."""
+        self._require(token)
+        if mode not in MODES:
+            raise StoreError(f"mode {mode!r} is not one of {', '.join(MODES)}")
+        self._write_json(MODE, {"mode": mode}, REVIEWS_DIR)
+
     def write_review(self, token, name, data):
         """Write `reviews/<name>` (a `.json` name other than the workflow record): corrections recorded through the workflow (MIG-33b)."""
         self._require(token)
-        if not isinstance(name, str) or not name.endswith(".json") or name == WORKFLOW:
-            raise StoreError(f"review file {name!r} must be a .json file other than {WORKFLOW}")
+        if not isinstance(name, str) or not name.endswith(".json") or name in (WORKFLOW, MODE):
+            raise StoreError(f"review file {name!r} must be a .json file other than {WORKFLOW} and {MODE}")
         self._write_json(name, data, REVIEWS_DIR)
 
     def make_run_dir(self, token, run_id):
@@ -394,6 +403,11 @@ class ProjectStore:
         path = self.resolve(WORKFLOW, REVIEWS_DIR)
         return json.loads(path.read_text(encoding="utf-8")) if path.is_file() else None
 
+    def read_mode(self):
+        """The mode of the project: `production` when none was ever recorded (the default)."""
+        path = self.resolve(MODE, REVIEWS_DIR)
+        return json.loads(path.read_text(encoding="utf-8"))["mode"] if path.is_file() else "production"
+
     def read_answers(self):
         """The form answers kept by `init_with_answers`, or None when the project has none."""
         path = self.resolve(ANSWERS, "inputs")
@@ -402,7 +416,7 @@ class ProjectStore:
     def list_reviews(self):
         """Names of the files below `reviews/` other than the workflow record, sorted."""
         base = self.root / REVIEWS_DIR
-        return sorted(p.name for p in base.glob("*.json") if p.name != WORKFLOW) if base.is_dir() else []
+        return sorted(p.name for p in base.glob("*.json") if p.name not in (WORKFLOW, MODE)) if base.is_dir() else []
 
     def read_progress(self):
         return self.resolve(PROGRESS).read_text(encoding="utf-8")

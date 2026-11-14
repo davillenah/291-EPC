@@ -13,6 +13,7 @@ import json
 FILE = "run_inputs.json"
 LAST_STAGE = 12
 DEFAULT_STAGE = 3
+MODE_STAGE = 11
 STAGE_OF_SECTION = {"transformer": 4, "drawings": 10, "documents": 11, "boq": 11, "datasheets": 11, "rfq": 11, "deliverable_names": 12}
 
 
@@ -24,9 +25,10 @@ def _sha(value):
     return hashlib.sha256(json.dumps(value, sort_keys=True, ensure_ascii=False, default=str).encode("utf-8")).hexdigest()
 
 
-def signatures(answers, loads, engine_inputs):
-    """{"answers": sha, "loads": sha, "engine_inputs": {section: sha}} of the inputs of a run."""
-    return {"answers": _sha(answers), "loads": _sha(loads), "engine_inputs": {k: _sha(v) for k, v in sorted((engine_inputs or {}).items())}}
+def signatures(answers, loads, engine_inputs, mode="production"):
+    """{"answers": sha, "loads": sha, "engine_inputs": {section: sha}} of the inputs of a run, and its `mode` when it is not the default (so a production run writes what it always wrote)."""
+    out = {"answers": _sha(answers), "loads": _sha(loads), "engine_inputs": {k: _sha(v) for k, v in sorted((engine_inputs or {}).items())}}
+    return dict(out, mode=mode) if mode != "production" else out
 
 
 def first_stage(previous, current):
@@ -36,4 +38,7 @@ def first_stage(previous, current):
             raise NothingToResume(f"the {'intake answers' if key == 'answers' else 'load list'} changed: run the pipeline from the start")
     before, now = previous.get("engine_inputs") or {}, current["engine_inputs"]
     changed = sorted(k for k in set(before) | set(now) if before.get(k) != now.get(k))
-    return min([STAGE_OF_SECTION.get(k, DEFAULT_STAGE) for k in changed] or [LAST_STAGE])
+    stages = [STAGE_OF_SECTION.get(k, DEFAULT_STAGE) for k in changed]
+    if previous.get("mode", "production") != current.get("mode", "production"):
+        stages.append(MODE_STAGE)                  # the mode is read by the documents (marks) and the package (manifest)
+    return min(stages or [LAST_STAGE])

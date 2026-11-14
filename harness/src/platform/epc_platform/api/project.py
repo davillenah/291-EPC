@@ -75,6 +75,18 @@ def _events(log):
     return {"count": len(records), "chain_intact": not log.verify(), "last": [{k: r[k] for k in EVENT_KEYS} for r in records[-LAST_EVENTS:]]}
 
 
+def _edit_notice(workflow):
+    """For a project in edit mode whose manifests are all edit-mode ones (the D21 guard was not applied): what the answer must say, so nobody takes it for a production approval."""
+    if workflow.store.read_mode() != "edit":
+        return {}
+    return {"mode": "edit", "notice": "edit mode: norm records that are not verified did not stop this step; the package is not for production and nothing was signed"}
+
+
+def _mode_of(store):
+    """{"mode": "edit"} when the project is in edit mode (ADR-0035), else nothing: the answers of a production project are what they always were."""
+    return {"mode": "edit"} if store.read_mode() == "edit" else {}
+
+
 @api_call
 def status(project_dir, *, clock, actor):
     """`master_project_state.json`, the workflow state, the review files and the last events of the audit log (this call's own event included)."""
@@ -85,7 +97,7 @@ def status(project_dir, *, clock, actor):
     workflow = Workflow(root, log, store)
     return ok({"project": root.name,
                "workflow": {"state": workflow.state, "allowed_transitions": workflow.allowed_transitions(), "transitions_done": len(workflow.history())},
-               "state": _read_state(store), "reviews": store.list_reviews(), "audit": _events(log)})
+               "state": _read_state(store), "reviews": store.list_reviews(), "audit": _events(log), **_mode_of(store)})
 
 
 def _valid_corrections(corrections):
@@ -121,7 +133,7 @@ def issue(project_dir, actor, *, clock):
     root, who = existing_project(project_dir), actor_of(actor)
     workflow = Workflow(root, open_log(root, clock))
     state = flow.apply(workflow, "issue", who, "issue")
-    return ok({"workflow_state": state})
+    return ok({"workflow_state": state, **_edit_notice(workflow)})
 
 
 @api_call
@@ -139,4 +151,4 @@ def approve(project_dir, actor, *, clock):
     root, who = existing_project(project_dir), actor_of(actor)
     workflow = Workflow(root, open_log(root, clock))
     state = flow.apply(workflow, "approve", who, "approve")
-    return ok({"workflow_state": state})
+    return ok({"workflow_state": state, **_edit_notice(workflow)})

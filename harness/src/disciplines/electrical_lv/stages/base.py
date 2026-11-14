@@ -38,6 +38,7 @@ class PipelineContext:
     design_basis: dict = None
     engine_inputs: dict = None      # extra data for the calculation chain that the load list cannot carry (see stages/engine_calls.py)
     work_dir: str = None            # folder where the drawing stage may write; None = the stage is blocked (with a store: runs/<run id>/)
+    mode: str = "production"        # `production` (strict, the default) or `edit` (norm records not verified do not stop the workflow; ADR-0035)
     revision: str = "R0"            # revision label of the deliverables issued by stage 12 (one transmittal `TR-NNN` per revision)
     store: object = None            # optional ProjectStore (store.py): when given, run() records the run in the project folder (MIG-31)
     results: dict = field(default_factory=dict)

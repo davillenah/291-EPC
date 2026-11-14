@@ -365,6 +365,6 @@ class DocumentsStage(Stage):
             raise StageInputError([str(exc)]) from exc
         if not formats or not context.work_dir:
             return {}
-        done, used = rendering.render_all(docs, (context.profile or {}).get("project_code") or "", Path(context.work_dir) / "documents", formats)
+        done, used = rendering.render_all(docs, (context.profile or {}).get("project_code") or "", Path(context.work_dir) / "documents", formats, getattr(context, "mode", "production"))
         calls.extend(used)
         return {"rendered": done}

@@ -74,7 +74,7 @@ def _init(session, args):
 
 def _run(session, args):
     loads, inputs = load_json(args.loads, "loads"), _optional_json(args.engine_inputs, "engine inputs")
-    return api.run_pipeline(_project(session, args), loads=loads, engine_inputs=inputs, stop_after=args.stop_after, run_id=args.run_id, from_stage=args.from_stage, resume=args.resume,
+    return api.run_pipeline(_project(session, args), loads=loads, engine_inputs=inputs, stop_after=args.stop_after, run_id=args.run_id, from_stage=args.from_stage, resume=args.resume, mode=args.mode,
                             revision=args.revision, detail=args.detail, clock=session.clock, actor=session.actor)
 
 
@@ -130,6 +130,7 @@ COMMANDS = {c.key: c for c in (
         (("--engine-inputs",), {"metavar": "FILE.json", "help": "extra calculation inputs (JSON file)"}),
         (("--stop-after",), {"type": int, "metavar": "N", "help": "stop after stage N"}),
         (("--from-stage",), {"type": int, "metavar": "N", "help": "re-run only stages N.. and reuse the recorded earlier stages when still valid"}),
+        (("--mode",), {"choices": ["production", "edit"], "default": "production", "help": "production (default, strict) or edit: norm records that are not verified do not stop approve and issue; the package is marked as not for production"}),
         (("--resume",), {"action": "store_true", "help": "start at the first stage that reads an input that changed since the last run (reuses the earlier ones)"}),
         (("--run-id",), {"metavar": "ID", "help": "run id (default: generated)"}),
         (("--revision",), {"default": "R0", "metavar": "R", "help": "document revision (default R0)"}),

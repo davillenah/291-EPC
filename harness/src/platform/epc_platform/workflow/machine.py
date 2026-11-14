@@ -77,7 +77,7 @@ class Workflow:
         old = self.state
         entry = {"from": old, "to": new_state, "transition": name, "role": role, "actor_id": actor_id, "pipeline_run_id": run_id}
         self._save(new_state, self.history() + [entry], run_id, review)
-        self._log(name, role, actor_id, run_id, "ok", {"from": old, "to": new_state})
+        self._log(name, role, actor_id, run_id, "ok", self._detail(old, new_state))
         return new_state
 
     # -- internals -----------------------------------------------------------------------------------------------------------
@@ -92,9 +92,29 @@ class Workflow:
         if name in PERMISSION_OF:
             action, path_class = PERMISSION_OF[name]
             enforce(role, action, path_class, log=self.log, actor_id=actor_id, run_id=run_id, target=name)
-        if name in GUARDED:
-            self._d21()
+        self.exempt = self._guard(name)
         return dst
+
+    def _guard(self, name):
+        """True when the D21 guard was not applied because of the edit mode, False when it passed or the transition has none; raises `WorkflowBlocked` when it blocks."""
+        if name not in GUARDED:
+            return False
+        if self._edit_mode():
+            return True
+        self._d21()
+        return False
+
+    def _detail(self, old, new):
+        """The detail of the `ok` event of a transition: from and to, and for an edit-mode step that the D21 guard was not applied."""
+        return dict({"from": old, "to": new}, **({"mode": "edit", "d21": "not applied (edit mode)"} if getattr(self, "exempt", False) else {}))
+
+    def _edit_mode(self):
+        """True when the project is in edit mode and every manifest in force was made in edit mode (ADR-0035): the unverified norm records do not stop approve and issue. A project with no manifest, or with
+        one made in production, keeps the D21 guard as it is."""
+        if self.store.read_mode() != "edit":
+            return False
+        latest = [m for _, m in self.store.read_manifests() if m.get("superseded_by") is None]
+        return bool(latest) and all(m.get("mode") == "edit" for m in latest)
 
     def _d21(self):
         bad = unverified_records(self.store)

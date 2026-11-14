@@ -38,3 +38,4 @@ Format: `ADR-NNNN-title.md` with Status, Context, Decision, Consequences. A deci
 | [0032](ADR-0032-single-2d-3d-model.md) | One model of the building, versioned as text; the 3D view is drawn from it and IFC is an output | Proposed |
 | [0033](ADR-0033-hvac-engine.md) | HVAC engine: the thermal side of the air-conditioning | Accepted |
 | [0034](ADR-0034-claude-code-harness.md) | Claude Code harness: the platform driven from Claude Code (commands, MCP tools, roster, no git writes by the loop) | Accepted |
+| [0035](ADR-0035-run-modes-production-and-edit.md) | Run modes: production (strict, the default) and edit (norm records not verified do not stop approve and issue; the package is marked not for production) | Accepted |

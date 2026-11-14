@@ -9,7 +9,7 @@ from disciplines.electrical_lv import pipeline
 from disciplines.electrical_lv import resume as RS
 from disciplines.electrical_lv.intake.building import BuildingError, derive_all
 from disciplines.electrical_lv.stages import STAGES, PipelineContext
-from disciplines.electrical_lv.store import RUNS_DIR, ProjectStore, StoreError, check_run_id
+from disciplines.electrical_lv.store import MODES, RUNS_DIR, ProjectStore, StoreError, check_run_id
 from epc_platform.api import flow
 from epc_platform.api.access import actor_of, existing_project, open_log
 from epc_platform.api.envelope import ApiError, api_call, ok
@@ -112,47 +112,63 @@ def _with_building(loads, engine_inputs, inputs_dir=None):
     return loads, dict(engine_inputs, lighting=done["lighting"], circuits=circuits, **({"routing": done["routing"]} if done["routing"] else {}), **_special(engine_inputs, done))
 
 
-def _resume_stage(store, answers, loads, engine_inputs):
+def _resume_stage(store, answers, loads, engine_inputs, mode="production"):
     """The first stage that reads something that changed since the last recorded run (RUN-01), or an ApiError `cannot_resume` that says why it cannot be resumed."""
     last = (store.read_state() or {}).get("pipeline_run_id")
     path = store.resolve(check_run_id(last), RUNS_DIR) / RS.FILE if last else None
     if path is None or not path.is_file():
         raise ApiError("cannot_resume", "no recorded run with its input signatures: run the pipeline from the start")
     try:
-        return RS.first_stage(json.loads(path.read_text(encoding="utf-8")), RS.signatures(answers, loads, engine_inputs))
+        return RS.first_stage(json.loads(path.read_text(encoding="utf-8")), RS.signatures(answers, loads, engine_inputs, mode))
     except RS.NothingToResume as exc:
         raise ApiError("cannot_resume", str(exc)) from exc
 
 
-def _start_stage(store, inputs, from_stage, resume):
+def _check_mode(mode):
+    """The mode of a run: `production` or `edit` (anything else is an invalid argument)."""
+    if mode not in MODES:
+        raise ApiError("invalid_arguments", f"mode must be one of {', '.join(MODES)}, got {mode!r}")
+    return mode
+
+
+def _mode_answer(mode):
+    """{"mode": "edit"} in the answer of a run in edit mode; nothing for production (its answer is what it always was)."""
+    return {"mode": mode} if mode != "production" else {}
+
+
+def _start_stage(store, inputs, from_stage, resume, mode="production"):
     """The stage a run starts from: the given `from_stage`, or with `resume` the first one that reads a changed input; `from_stage` and `resume` together are refused."""
     if not resume:
         return from_stage
     if from_stage is not None:
         raise ApiError("invalid_arguments", "give `from_stage` or `resume`, not both")
-    return _resume_stage(store, *inputs)
+    return _resume_stage(store, *inputs, mode)
 
 
 @api_call
-def run_pipeline(project_dir, *, loads=None, engine_inputs=None, stop_after=None, run_id=None, clock, actor, revision="R0", detail=True, rng=None, from_stage=None, resume=False):
+def run_pipeline(project_dir, *, loads=None, engine_inputs=None, stop_after=None, run_id=None, clock, actor, revision="R0", detail=True, rng=None, from_stage=None, resume=False, mode="production"):
     """Run the pipeline in the project. `loads` and `engine_inputs` are the load list and the extra calculation inputs (see the stage docs).
 
     `from_stage` N re-runs only stages N.. and reuses the recorded results of the earlier ones when they are still valid (a correction that
     only touches late inputs, such as the bill of quantities or the drawing date, does not repeat the calculation). With `resume` the first stage to re-run is found by comparing the inputs with
-    the ones of the last recorded run (see `resume.py`); it cannot be combined with `from_stage`."""
+    the ones of the last recorded run (see `resume.py`); it cannot be combined with `from_stage`.
+
+    `mode` is `production` (the default: the strict behaviour, a norm record that is not verified keeps the package a draft and blocks approve and issue, D21) or `edit` (ADR-0035: records that are not
+    verified do not stop the workflow, and the package, its documents and its transmittal say they were made in edit mode and are not for production)."""
     root, who = existing_project(project_dir), actor_of(actor)
     log = open_log(root, clock)
     trail = _trail(log, clock, run_id, rng)
     _authorise(trail, who, root)
     store, answers = _prepare(root, who, loads, engine_inputs)
     loads, engine_inputs = _with_building(loads, engine_inputs, store.inputs_dir)
-    from_stage = _start_stage(store, (answers, loads, engine_inputs), from_stage, resume)
+    mode = _check_mode(mode)
+    from_stage = _start_stage(store, (answers, loads, engine_inputs), from_stage, resume, mode)
     workflow = Workflow(root, log, store)
     flow.enter_running(workflow, who, trail.run_id)
     trail.record(who, "run:start", root.name, "allowed", _start_detail(stop_after, revision, from_stage))
-    context = PipelineContext(answers=answers, loads=loads, engine_inputs=engine_inputs, store=store, revision=revision)
+    context = PipelineContext(answers=answers, loads=loads, engine_inputs=engine_inputs, store=store, revision=revision, mode=mode)
     result = _execute(trail, who, context, stop_after, clock, from_stage)
     if result.summary["ok"] and result.summary["stages_run"] == len(STAGES):
         flow.apply(workflow, "finish_run", who, trail.run_id)
     run = result.to_dict()
-    return ok({"pipeline_run_id": trail.run_id, "workflow_state": workflow.state, "run": run if detail else _brief(run), "audit": trail.summary()})
+    return ok({"pipeline_run_id": trail.run_id, "workflow_state": workflow.state, "run": run if detail else _brief(run), "audit": trail.summary(), **_mode_answer(mode)})
