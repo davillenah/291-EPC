@@ -6,7 +6,7 @@ carries the luminaires, rooms and exterior areas with every datum the engine ask
 the transformer inputs of stage 4: the data of a room (size, height, activity, luminaire) cannot come from the load list, which only holds watts.
 
   no `lighting` section   the slice is not available and the stage goes on without it (`optional`, see `grouped.py`)
-  invalid section         `blocked` with the engine's message (or the unknown key)
+  invalid section         `blocked` with the engine's message (or the unknown key); the grouped stage adds the `lighting:` prefix
   valid section           `ok`: the engine result as it is, one engine call, a `major` finding for every room or area whose mean illuminance
                           does not reach its target, and one `note` finding per engine warning (draft, D21)
 
@@ -34,12 +34,12 @@ def _section(context):
     if section is None:
         return None
     if not isinstance(section, dict) or not isinstance(section.get("document"), (dict, str, bytes)):
-        raise StageInputError(["lighting: must be an object with `document` (the epc_lighting input) and optional `options`"])
+        raise StageInputError(["must be an object with `document` (the epc_lighting input) and optional `options`"])
     unknown = sorted(set(section) - set(KEYS))
     if unknown:
-        raise StageInputError([f"lighting: unknown input(s) {', '.join(unknown)}"])
+        raise StageInputError([f"unknown input(s) {', '.join(unknown)}"])
     if not isinstance(section.get("options", {}), dict):
-        raise StageInputError(["lighting: `options` must be an object"])
+        raise StageInputError(["`options` must be an object"])
     return section
 
 
@@ -49,7 +49,7 @@ def _run(section):
         options = epc_lighting.Options(**(section.get("options") or {}))
         return epc_lighting.run(section["document"], options).as_dict()
     except (epc_lighting.LightingError, TypeError) as exc:  # TypeError: an option the engine does not have
-        raise StageInputError([f"lighting: {exc}"]) from exc
+        raise StageInputError([str(exc)]) from exc
 
 
 class LightingStage(Stage):
