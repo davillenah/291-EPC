@@ -13,7 +13,7 @@ Actualizado: 2026-11-08.
 
 ## Siguiente (repo nuevo, 2026-11-13)
 
-- [ ] **RUN-01 · Etapa de partida automática.** `epc run --from-stage N` hoy deja la elección de N a quien corrige (tabla en `harness/docs/architecture/GUIA_MOTORES.md`). Cada etapa debería declarar qué entradas lee; con eso `epc run --resume` calcularía la primera etapa afectada comparando las entradas de la corrida anterior con las nuevas. Aceptación: cambiar solo `boq` reejecuta desde la 15, solo la fecha de planos desde la 14, y un cambio en la lista de cargas se rechaza; el resultado es igual al de una corrida completa.
+- [x] **RUN-01 · Etapa de partida automática** (2026-11-14). `epc run --resume` compara las firmas de las entradas de la última corrida (`runs/<id>/run_inputs.json`) con las nuevas y arranca en la primera etapa que lee algo que cambió (`harness/src/disciplines/electrical_lv/resume.py`); una sección nueva de `engine_inputs` arranca en la etapa 3; cambiar respuestas o lista de cargas se rechaza. La tabla de `GUIA_MOTORES.md` sigue siendo la referencia manual.
 - [ ] **(Dueño) NORM-01 · Revisar los valores de norma** con `harness/docs/validation/norm_verification_worksheet.xlsx` y luego pedir la regeneración de los golden (87 casos de `aea90364` y `drawing`), único motivo por el que la CI queda roja.
 
 - [x] **PRB-01 · Lista de cargas inválida por `--loads`** (2026-11-13). La etapa 1 valida con el esquema la lista recibida en memoria; antes una carga con `kind` inválido rompía la etapa 4 con `KeyError`.

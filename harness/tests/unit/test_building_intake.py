@@ -10,6 +10,7 @@ import epc_lighting as EL  # noqa: E402
 import test_pipeline_wiring as W  # noqa: E402
 from disciplines.electrical_lv.intake.building import BuildingError, derive, derive_all  # noqa: E402
 from disciplines.electrical_lv.pipeline import STAGES, run  # noqa: E402
+from disciplines.electrical_lv.store import ProjectStore  # noqa: E402
 
 LUM = {"id": "LED1", "lamps": 1, "lamp_flux_lm": 3600, "power_w": 36}
 DATA = {"activity": "task.reading", "luminaire": "LED1", "height_m": 2.8, "coefficient_of_utilisation": 0.6}
@@ -737,3 +738,55 @@ class PlanSheetTests(unittest.TestCase):
         self.assertTrue(all(v["format"] == "A3" for v in res.outputs["plan_sheets"].values()))
         res, _ = MultilineTests().files(drawings={"sheet_format": "B7"})
         self.assertEqual(res.status, "blocked")
+
+
+class ResumeTests(unittest.TestCase):
+    """RUN-01: `resume` finds the first stage that reads a changed input and reuses the stages before it."""
+
+    def test_the_first_stage_of_each_kind_of_change(self):
+        from disciplines.electrical_lv import resume as RS
+        base = RS.signatures({"a": 1}, {"l": 1}, {"transformer": {"x": 1}, "boq": {"y": 1}, "other": 1})
+        same = RS.signatures({"a": 1}, {"l": 1}, {"transformer": {"x": 1}, "boq": {"y": 1}, "other": 1})
+        self.assertEqual(RS.first_stage(base, same), 12)
+        for change, stage in (({"transformer": {"x": 2}, "boq": {"y": 1}, "other": 1}, 4), ({"transformer": {"x": 1}, "boq": {"y": 2}, "other": 1}, 11),
+                              ({"transformer": {"x": 1}, "boq": {"y": 1}, "other": 2}, 3), ({"transformer": {"x": 1}, "boq": {"y": 1}, "other": 1, "drawings": {"date": "d"}}, 10),
+                              ({"transformer": {"x": 2}, "boq": {"y": 2}, "other": 1}, 4)):
+            with self.subTest(change=change):
+                self.assertEqual(RS.first_stage(base, RS.signatures({"a": 1}, {"l": 1}, change)), stage)
+        for answers, loads in (({"a": 2}, {"l": 1}), ({"a": 1}, {"l": 2})):
+            with self.assertRaises(RS.NothingToResume):
+                RS.first_stage(base, RS.signatures(answers, loads, {}))
+
+    def test_a_resumed_run_reuses_the_earlier_stages_and_a_changed_load_list_is_refused(self):
+        import tempfile
+        import test_platform_api as A
+        from epc_platform import api
+        b = with_plugs(board={"x_m": 4.0, "y_m": 5.0})
+        trafo = {"demand_kva": 40, "reserve_pct": 20, "secondary_v": 400}
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            api.init_project(root, "API-1", A.ANSWERS, clock=A.CLOCK, actor=A.ORC)
+            store = ProjectStore(root / "API-1")
+
+            def corrected():
+                with store.pipeline_session("seed") as token:
+                    store.write_workflow(token, {"state": "corrected", "history": []})
+
+            first = api.run_pipeline(root / "API-1", loads=loads(), engine_inputs=dict(W.inputs_doc(), building=b, transformer=trafo), clock=A.CLOCK, actor=A.ORC, run_id="r1")
+            self.assertTrue(first["ok"], first)
+            corrected()
+            same = api.run_pipeline(root / "API-1", loads=loads(), engine_inputs=dict(W.inputs_doc(), building=b, transformer=trafo), clock=A.CLOCK, actor=A.ORC, run_id="r2", resume=True)
+            self.assertTrue(same["ok"], same)
+            self.assertEqual(same["data"]["run"]["summary"]["reused"], list(range(1, 12)))
+            corrected()
+            changed = api.run_pipeline(root / "API-1", loads=loads(), engine_inputs=dict(W.inputs_doc(), building=b, transformer=dict(trafo, reserve_pct=30)), clock=A.CLOCK, actor=A.ORC,
+                                       run_id="r3", resume=True)
+            self.assertTrue(changed["ok"], changed)
+            self.assertEqual(changed["data"]["run"]["summary"]["reused"], [1, 2, 3])
+            corrected()
+            more = loads()
+            more["loads"].append(dict(more["loads"][0], id="X-99"))
+            refused = api.run_pipeline(root / "API-1", loads=more, engine_inputs=dict(W.inputs_doc(), building=b, transformer=trafo), clock=A.CLOCK, actor=A.ORC, run_id="r4", resume=True)
+            self.assertEqual((refused["ok"], refused["error"]["code"]), (False, "cannot_resume"))
+            both = api.run_pipeline(root / "API-1", loads=loads(), engine_inputs=dict(W.inputs_doc(), building=b), clock=A.CLOCK, actor=A.ORC, resume=True, from_stage=3)
+            self.assertEqual(both["error"]["code"], "invalid_arguments")

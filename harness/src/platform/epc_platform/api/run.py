@@ -3,10 +3,13 @@
 The role must be allowed to `start_run` (RACI: the orchestrator). The workflow is walked to `running` first and to `draft_ready` after a
 complete, healthy run. Every number in the result is a stage result produced by an engine call inside the pipeline.
 """
+import json
+
 from disciplines.electrical_lv import pipeline
+from disciplines.electrical_lv import resume as RS
 from disciplines.electrical_lv.intake.building import BuildingError, derive_all
 from disciplines.electrical_lv.stages import STAGES, PipelineContext
-from disciplines.electrical_lv.store import ProjectStore, StoreError, check_run_id
+from disciplines.electrical_lv.store import RUNS_DIR, ProjectStore, StoreError, check_run_id
 from epc_platform.api import flow
 from epc_platform.api.access import actor_of, existing_project, open_log
 from epc_platform.api.envelope import ApiError, api_call, ok
@@ -100,18 +103,41 @@ def _with_building(loads, engine_inputs):
     return loads, dict(engine_inputs, lighting=done["lighting"], circuits=circuits, **({"routing": done["routing"]} if done["routing"] else {}))
 
 
+def _resume_stage(store, answers, loads, engine_inputs):
+    """The first stage that reads something that changed since the last recorded run (RUN-01), or an ApiError `cannot_resume` that says why it cannot be resumed."""
+    last = (store.read_state() or {}).get("pipeline_run_id")
+    path = store.resolve(check_run_id(last), RUNS_DIR) / RS.FILE if last else None
+    if path is None or not path.is_file():
+        raise ApiError("cannot_resume", "no recorded run with its input signatures: run the pipeline from the start")
+    try:
+        return RS.first_stage(json.loads(path.read_text(encoding="utf-8")), RS.signatures(answers, loads, engine_inputs))
+    except RS.NothingToResume as exc:
+        raise ApiError("cannot_resume", str(exc)) from exc
+
+
+def _start_stage(store, inputs, from_stage, resume):
+    """The stage a run starts from: the given `from_stage`, or with `resume` the first one that reads a changed input; `from_stage` and `resume` together are refused."""
+    if not resume:
+        return from_stage
+    if from_stage is not None:
+        raise ApiError("invalid_arguments", "give `from_stage` or `resume`, not both")
+    return _resume_stage(store, *inputs)
+
+
 @api_call
-def run_pipeline(project_dir, *, loads=None, engine_inputs=None, stop_after=None, run_id=None, clock, actor, revision="R0", detail=True, rng=None, from_stage=None):
+def run_pipeline(project_dir, *, loads=None, engine_inputs=None, stop_after=None, run_id=None, clock, actor, revision="R0", detail=True, rng=None, from_stage=None, resume=False):
     """Run the pipeline in the project. `loads` and `engine_inputs` are the load list and the extra calculation inputs (see the stage docs).
 
     `from_stage` N re-runs only stages N.. and reuses the recorded results of the earlier ones when they are still valid (a correction that
-    only touches late inputs, such as the bill of quantities or the drawing date, does not repeat the calculation)."""
+    only touches late inputs, such as the bill of quantities or the drawing date, does not repeat the calculation). With `resume` the first stage to re-run is found by comparing the inputs with
+    the ones of the last recorded run (see `resume.py`); it cannot be combined with `from_stage`."""
     root, who = existing_project(project_dir), actor_of(actor)
     log = open_log(root, clock)
     trail = _trail(log, clock, run_id, rng)
     _authorise(trail, who, root)
     store, answers = _prepare(root, who, loads, engine_inputs)
     loads, engine_inputs = _with_building(loads, engine_inputs)
+    from_stage = _start_stage(store, (answers, loads, engine_inputs), from_stage, resume)
     workflow = Workflow(root, log, store)
     flow.enter_running(workflow, who, trail.run_id)
     trail.record(who, "run:start", root.name, "allowed", _start_detail(stop_after, revision, from_stage))
