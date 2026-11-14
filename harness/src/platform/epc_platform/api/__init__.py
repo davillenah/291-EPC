@@ -13,8 +13,8 @@ Conventions
 from epc_platform.api.access import project_path
 from epc_platform.api.engines import engine_info, list_engines, norm_records, norms_pending, stage_table
 from epc_platform.api.envelope import ApiError, fail, ok
-from epc_platform.api.project import approve, init_project, issue, review, status
+from epc_platform.api.project import approve, init_project, issue, review, status, submit
 from epc_platform.api.run import run_pipeline
 
-__all__ = ["ApiError", "approve", "engine_info", "fail", "init_project", "issue", "list_engines", "norm_records", "norms_pending", "ok", "project_path", "review",
+__all__ = ["ApiError", "approve", "engine_info", "fail", "init_project", "issue", "list_engines", "norm_records", "norms_pending", "ok", "project_path", "review", "submit",
            "run_pipeline", "stage_table", "status"]

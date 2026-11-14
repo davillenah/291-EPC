@@ -75,6 +75,10 @@ def epc_project_review(ctx: Context, args: dict):
     return _api().review(_dir(ctx, args), ctx.who(), args["corrections"], clock=ctx.now)
 
 
+def epc_project_submit(ctx: Context, args: dict):
+    return _api().submit(_dir(ctx, args), ctx.who(), clock=ctx.now)
+
+
 def epc_project_approve(ctx: Context, args: dict):
     return _api().approve(_dir(ctx, args), ctx.who(), clock=ctx.now)
 
@@ -103,6 +107,8 @@ def register(reg: Registry) -> None:
                                              detail={"type": "boolean"}), ["project"], full))
     reg.register(Tool("epc_project_review", "Record the reviewer's corrections (a workflow transition and a file under reviews/). Never edits ssot.",
                       epc_project_review, dict(PROJECT, corrections={"type": "array", "items": OBJECT}), ["project", "corrections"], full))
+    reg.register(Tool("epc_project_submit", "Put a finished run in review (workflow transition `submit_for_review`: draft_ready -> in_review); it approves and signs nothing.",
+                      epc_project_submit, PROJECT, ["project"], full))
     reg.register(Tool("epc_project_approve", "Approve the reviewed deliverables (workflow transition `approve`: engineer of record only; refused while a norm value is not verified, D21).",
                       epc_project_approve, PROJECT, ["project"], full))
     reg.register(Tool("epc_project_issue", "Issue the approved deliverables (workflow transition `issue`; refused while a norm value is not verified, D21).",

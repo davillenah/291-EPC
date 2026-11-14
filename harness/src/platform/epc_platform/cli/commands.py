@@ -87,6 +87,10 @@ def _review(session, args):
     return api.review(_project(session, args), session.actor, corrections, clock=session.clock)
 
 
+def _submit(session, args):
+    return api.submit(_project(session, args), session.actor, clock=session.clock)
+
+
 def _approve(session, args):
     return api.approve(_project(session, args), session.actor, clock=session.clock)
 
@@ -132,6 +136,7 @@ COMMANDS = {c.key: c for c in (
     Command("status", "workflow state, project state, reviews and the last audit events", "status", _status, (PROJECT,)),
     Command("review", "record the reviewer's corrections", "review", _review,
             (PROJECT, (("--corrections",), {"required": True, "metavar": "FILE.json", "help": "a JSON list of corrections"}))),
+    Command("submit", "put a finished run in review (draft_ready -> in_review); then the engineer of record approves", "submit", _submit, (PROJECT,)),
     Command("approve", "approve the reviewed deliverables (engineer of record; D21 guard)", "approve", _approve, (PROJECT,)),
     Command("issue", "issue the approved deliverables (D21 guard)", "issue", _issue, (PROJECT,)),
     Command("engines list", "list the engine packages", "list_engines", _engines_list, (PROJECT_OPT,)),

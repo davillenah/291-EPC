@@ -21,11 +21,11 @@ CLOCK = M.CLOCK
 ORC = M.ORC
 CODE = "PARITY-1"
 # CLI subcommand -> api function it calls
-CLI_TO_API = {"init": "init_project", "run": "run_pipeline", "status": "status", "review": "review", "approve": "approve", "issue": "issue",
+CLI_TO_API = {"init": "init_project", "run": "run_pipeline", "status": "status", "review": "review", "submit": "submit", "approve": "approve", "issue": "issue",
               "engines list": "list_engines", "engines info": "engine_info", "norms": "norm_records", "norms-pending": "norms_pending",
               "stages": "stage_table"}
 # MCP tool -> api function it calls (every tool of the server; the older tools that read the parked web backend were archived in MIG-38b)
-MCP_TO_API = {"epc_project_init": "init_project", "epc_pipeline_run": "run_pipeline", "epc_project_status": "status", "epc_project_review": "review",
+MCP_TO_API = {"epc_project_init": "init_project", "epc_pipeline_run": "run_pipeline", "epc_project_status": "status", "epc_project_review": "review", "epc_project_submit": "submit",
               "epc_project_approve": "approve", "epc_project_issue": "issue", "epc_engine_list": "list_engines", "epc_engine_info": "engine_info",
               "epc_norm_records": "norm_records", "epc_norms_pending": "norms_pending", "epc_stage_table": "stage_table"}
 MCP_ONLY = set()          # every MCP tool calls an api function since MIG-38b (the older web-backend tools were archived)
@@ -181,7 +181,7 @@ class ParityTable(unittest.TestCase):
         self.assertEqual(public, set(MCP_TO_API.values()))
 
     def test_the_write_commands_are_write_tools_in_the_full_profile_only(self):
-        writes = {"init_project", "run_pipeline", "review", "approve", "issue"}
+        writes = {"init_project", "run_pipeline", "review", "submit", "approve", "issue"}
         readonly = set(M.REGISTRY.names("readonly"))
         for tool, name in MCP_TO_API.items():
             self.assertEqual(tool in readonly, name not in writes, tool)

@@ -125,6 +125,15 @@ def issue(project_dir, actor, *, clock):
 
 
 @api_call
+def submit(project_dir, actor, *, clock):
+    """The workflow transition `submit_for_review` (draft_ready -> in_review): what puts a finished run in front of the engineer of record, who then approves it (PRB-03). Nothing is approved or signed here."""
+    root, who = existing_project(project_dir), actor_of(actor)
+    workflow = Workflow(root, open_log(root, clock))
+    state = flow.apply(workflow, "submit_for_review", who, "submit")
+    return ok({"workflow_state": state})
+
+
+@api_call
 def approve(project_dir, actor, *, clock):
     """The workflow transition `approve` (in_review -> approved): engineer of record only, `sign` permission, and the D21 guard."""
     root, who = existing_project(project_dir), actor_of(actor)

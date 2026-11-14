@@ -83,7 +83,7 @@ def _transition(data):
     return f"workflow {data['workflow_state']}"
 
 
-RENDERERS = {"init": _init, "run": _run, "status": _status, "review": _review, "approve": _transition, "issue": _transition,
+RENDERERS = {"init": _init, "run": _run, "status": _status, "review": _review, "submit": _transition, "approve": _transition, "issue": _transition,
              "engines list": _engines_list, "engines info": _engines_info, "norms": _norms, "norms-pending": _norms_pending, "stages": _stages}
 
 

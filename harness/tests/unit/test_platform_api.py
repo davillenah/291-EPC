@@ -120,3 +120,30 @@ class QueryTests(Base):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class SubmitTests(Base):
+    """PRB-03: `submit` puts a finished run in review, so `approve` can be reached (the D21 guard still decides)."""
+
+    def at(self, state):
+        self.init()
+        store = ProjectStore(self.root / "API-1")
+        with store.pipeline_session("test") as token:
+            store.write_workflow(token, {"state": state, "history": []})
+        return store
+
+    def test_a_finished_run_goes_to_review_and_then_approve_is_reachable(self):
+        store = self.at("draft_ready")
+        res = api.submit(self.root / "API-1", ENG, clock=CLOCK)
+        self.assertEqual((res["ok"], res["data"]["workflow_state"]), (True, "in_review"))
+        self.assertEqual(store.read_workflow()["state"], "in_review")
+        refused = api.approve(self.root / "API-1", ENG, clock=CLOCK)
+        self.assertEqual((refused["ok"], refused["error"]["code"]), (False, "blocked_d21"))          # reachable; the unreviewed norm values still block it
+        self.assertEqual(store.read_workflow()["state"], "in_review")
+
+    def test_only_a_draft_ready_project_can_be_submitted_and_a_stranger_cannot(self):
+        self.at("running")
+        self.assertFalse(api.submit(self.root / "API-1", ENG, clock=CLOCK)["ok"])
+        self.at("draft_ready")
+        denied = api.submit(self.root / "API-1", {"role": "stranger", "id": "x"}, clock=CLOCK)
+        self.assertEqual((denied["ok"], denied["error"]["code"]), (False, "permission_denied"))

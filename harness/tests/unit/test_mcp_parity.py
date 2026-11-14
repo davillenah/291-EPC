@@ -28,8 +28,8 @@ from epc_platform.permissions import check
 CLOCK = lambda: "2026-01-01T00:00:00Z"  # noqa: E731
 ORC = {"role": "orchestrator", "id": "o1"}
 NEW_TOOLS = ["epc_engine_info", "epc_engine_list", "epc_norm_records", "epc_norms_pending", "epc_pipeline_run", "epc_project_approve", "epc_project_init", "epc_project_issue",
-             "epc_project_review", "epc_project_status", "epc_stage_table"]
-WRITE_TOOLS = ["epc_pipeline_run", "epc_project_approve", "epc_project_init", "epc_project_issue", "epc_project_review"]
+             "epc_project_review", "epc_project_status", "epc_project_submit", "epc_stage_table"]
+WRITE_TOOLS = ["epc_pipeline_run", "epc_project_approve", "epc_project_init", "epc_project_issue", "epc_project_review", "epc_project_submit"]
 ANSWERS = dict(S.ANSWERS, project_code="PARITY-1")
 REGISTRY = build_registry()
 
