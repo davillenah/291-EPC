@@ -364,3 +364,28 @@ class FloorPlanTests(unittest.TestCase):
             ctx = W.context(work_dir=tmp)
             res = run(ctx, stop_after=10, run_id="r10")
             self.assertFalse([f for f in res.results[9].outputs["files"] if "_plan_" in f["path"]])
+
+
+class WholeBuildingTests(unittest.TestCase):
+    """The 12 stages from the building section alone: derived loads, routing, plans, cable list and the transmittal."""
+
+    def test_the_whole_pipeline_runs_from_the_building_and_issues_the_plans(self):
+        import tempfile
+        import test_platform_api as A
+        from epc_platform import api
+        b = with_plugs(board={"x_m": 4.0, "y_m": 5.0})
+        b["tolerance_pct"] = 1
+        b["floors"][0]["architecture"]["units_per_metre"] = 100.0
+        b["floors"][0]["architecture"]["walls"] = [{"id": "w1", "a": [0, 0], "b": [700, 0], "thickness": 20.0}]
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            api.init_project(root, "API-1", A.ANSWERS, clock=A.CLOCK, actor=A.ORC)
+            res = api.run_pipeline(root / "API-1", loads=loads(), engine_inputs=dict(W.inputs_doc(), building=b, transformer={"demand_kva": 40, "reserve_pct": 20, "secondary_v": 400}), clock=A.CLOCK, actor=A.ORC)
+            self.assertTrue(res["ok"], res)
+            run_ = res["data"]["run"]
+            self.assertEqual(run_["summary"]["by_status"], {"ok": 12})
+            self.assertEqual(res["data"]["workflow_state"], "draft_ready")
+            names = sorted(p.name for p in (root / "API-1" / "deliverables" / "TR-001").glob("*.dxf"))
+            self.assertTrue([n for n in names if "_plan_PB" in n] and [n for n in names if "_lighting_PB" in n])
+            docs = [d["name"] for d in run_["results"][10]["outputs"]["documents"]]
+            self.assertIn("cable_list", docs)
