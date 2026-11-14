@@ -55,44 +55,59 @@ def _shape(floor, room):
     return round(sides[0], 3), round(sides[1], 3)
 
 
-def _check_floor(floor, index):
-    here = f"floors/{index}"
-    errors = []
-    if not isinstance(floor, dict):
-        return [f"{here}: must be an object"]
-    unknown = sorted(set(floor) - {"id", "name", "phases", "length", "architecture", "rooms", "by_name", "exclude", "receptacles_load", "circuits", "board"})
-    errors += [f"{here}: unknown key(s) {', '.join(unknown)}"] if unknown else []
-    for key in ("id", "name"):
-        if not isinstance(floor.get(key), str) or not floor.get(key):
-            errors.append(f"{here}/{key}: required text")
+FLOOR_KEYS = {"id", "name", "phases", "length", "architecture", "rooms", "by_name", "exclude", "receptacles_load", "circuits", "board"}
+
+
+def _is_length(value):
+    """A length as the load list writes it: {value > 0, unit m}."""
+    return isinstance(value, dict) and _is_num(value.get("value")) and value["value"] > 0 and value.get("unit") == "m"
+
+
+def _is_board(value):
+    return isinstance(value, dict) and set(value) == {"x_m", "y_m"} and all(_is_num(v) for v in value.values())
+
+
+def _check_floor_basics(floor, here):
+    """Errors of the identity, the phases, the run from the main board and the architecture of a floor."""
+    errors = [f"{here}/{key}: required text" for key in ("id", "name") if not isinstance(floor.get(key), str) or not floor.get(key)]
     if floor.get("phases") not in (1, 3) or isinstance(floor.get("phases"), bool):
         errors.append(f"{here}/phases: required, 1 or 3 (no default)")
-    length = floor.get("length")
-    if not (isinstance(length, dict) and _is_num(length.get("value")) and length["value"] > 0 and length.get("unit") == "m"):
+    if not _is_length(floor.get("length")):
         errors.append(f"{here}/length: required, {{value > 0, unit m}} (the run from the board; no default)")
     if not isinstance(floor.get("architecture"), dict) or not isinstance(floor["architecture"].get("rooms"), list):
         errors.append(f"{here}/architecture: required, the epc_arch result with its `rooms`")
-    errors += _check_receptacles_load(floor, here)
-    board = floor.get("board")
-    if board is not None and not (isinstance(board, dict) and set(board) == {"x_m", "y_m"} and all(_is_num(v) for v in board.values())):
+    return errors
+
+
+def _check_floor_options(floor, here):
+    """Errors of the board, the circuit options and the room data of a floor."""
+    errors = _check_receptacles_load(floor, here)
+    if floor.get("board") is not None and not _is_board(floor["board"]):
         errors.append(f"{here}/board: {{x_m, y_m}}, the place of the floor board on the plan in metres")
     if not isinstance(floor.get("circuits", {}), dict) or not set(floor.get("circuits", {})) <= {"lighting", "receptacles"}:
         errors.append(f"{here}/circuits: an object with `lighting` and/or `receptacles`")
-    for key in ("rooms", "by_name"):
-        if not isinstance(floor.get(key, {}), dict):
-            errors.append(f"{here}/{key}: must be an object")
-    if not isinstance(floor.get("exclude", []), list):
-        errors.append(f"{here}/exclude: must be a list of room ids")
-    return errors
+    return errors + _check_room_keys(floor, here)
+
+
+def _check_room_keys(floor, here):
+    """Errors of the keys that describe the rooms: `rooms` and `by_name` are objects, `exclude` a list of room ids."""
+    errors = [f"{here}/{key}: must be an object" for key in ("rooms", "by_name") if not isinstance(floor.get(key, {}), dict)]
+    return errors + ([] if isinstance(floor.get("exclude", []), list) else [f"{here}/exclude: must be a list of room ids"])
+
+
+def _check_floor(floor, index):
+    here = f"floors/{index}"
+    if not isinstance(floor, dict):
+        return [f"{here}: must be an object"]
+    unknown = sorted(set(floor) - FLOOR_KEYS)
+    return ([f"{here}: unknown key(s) {', '.join(unknown)}"] if unknown else []) + _check_floor_basics(floor, here) + _check_floor_options(floor, here)
 
 
 def _check_receptacles_load(floor, here):
     spec = floor.get("receptacles_load")
     if spec is None:
         return []
-    length = spec.get("length") if isinstance(spec, dict) else None
-    if not (isinstance(spec, dict) and spec.get("phases") in (1, 3) and not isinstance(spec.get("phases"), bool)
-            and isinstance(length, dict) and _is_num(length.get("value")) and length["value"] > 0 and length.get("unit") == "m"):
+    if not (isinstance(spec, dict) and spec.get("phases") in (1, 3) and not isinstance(spec.get("phases"), bool) and _is_length(spec.get("length"))):
         return [f"{here}/receptacles_load: {{phases 1|3, length {{value > 0, unit m}}}} (no default)"]
     return []
 
@@ -215,25 +230,27 @@ def _floors(building):
     return lit, rooms, outlets
 
 
+def _lighting_section(building, lit, lengths, document):
+    """The `lighting` section of stage 3: the document, the options and, with a tolerance, the loads by floor to compare (the circuits of a routed floor come from the same rooms, so only floors without a board)."""
+    section = {"document": document}
+    if building.get("options"):
+        section["options"] = copy.deepcopy(building["options"])
+    floor_loads = {f"L-{i}": ids for i, ids in lit.items() if i in lengths}
+    if building.get("tolerance_pct") is not None and floor_loads:
+        section["loads"], section["tolerance_pct"] = floor_loads, building["tolerance_pct"]
+    return section
+
+
 def _lighting_loads(building, lit, out, lengths, result, document):
     """Adds the `L-<floor>` loads (power: installed power of the engine) to `out`; returns the `lighting` section of stage 3."""
     installed = {r["id"]: r["energy"]["installed_power_w"] for r in result["rooms"]}
-    for floor in building["floors"]:
-        if floor["id"] not in lengths:
-            continue                                   # a floor with a board has one load per branch circuit (see `_circuit_loads`)
+    for floor in [f for f in building["floors"] if f["id"] in lengths]:           # a floor with a board has one load per branch circuit (see `_circuit_loads`)
         watts = sum(installed[i] for i in lit[floor["id"]])
         if not watts or watts <= 0:
             raise BuildingError([f"floor {floor['id']}: the lighting calculation gives no installed power"])
         out["loads"].append({"id": f"L-{floor['id']}", "description": f"Lighting {floor['name']}", "area": floor["id"], "kind": "lighting",
                              "power": {"value": watts, "unit": "W"}, "phases": floor["phases"], "length": lengths[floor["id"]]("lighting")})
-    section = {"document": document}
-    if building.get("options"):
-        section["options"] = copy.deepcopy(building["options"])
-    if building.get("tolerance_pct") is not None:
-        floor_loads = {f"L-{i}": ids for i, ids in lit.items() if i in lengths}
-        if floor_loads:                                # the circuits of a routed floor come from the same rooms: only the loads by floor are compared
-            section["loads"], section["tolerance_pct"] = floor_loads, building["tolerance_pct"]
-    return section
+    return _lighting_section(building, lit, lengths, document)
 
 
 def _receptacle_loads(building, outlets, out, lengths, result):

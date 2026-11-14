@@ -14,6 +14,7 @@ from pathlib import Path
 from disciplines.electrical_lv.norm_records import VERIFIED, read_norm_records
 from disciplines.electrical_lv.stages import engine_calls as EC
 from disciplines.electrical_lv.stages.base import Stage, StageInputError
+from disciplines.electrical_lv.stages import specification
 from disciplines.electrical_lv.stages.cable_list import cable_list_document
 from disciplines.electrical_lv.stages.plan_drawings import FUNCTION as PLAN_FUNCTION, ENGINE as PLAN_ENGINE, write_floor_plans
 from disciplines.electrical_lv.stages.mappings import ENGINE_CHAIN, PENDING_DOCUMENTS
@@ -105,6 +106,7 @@ def terminal_circuits(ch):
 
 
 CABLE_LIST_PENDING_NAME = "cable list"
+SPECIFICATION_PENDING_NAME = "specification"
 
 BOQ_BUILD = "epc_boq.build_boq"
 BOQ_ENGINE = "procurement/boq"
@@ -304,12 +306,13 @@ class DocumentsStage(Stage):
         return res.outputs.get("routing") if res is not None and res.status == "ok" else None
 
     def cable_list(self, context, ch, docs, pending):
-        """The cable list, only when stage 3 routed the floors (a run without routing keeps `cable list` pending: the list is made of the circuits and of the runs that carry them)."""
+        """The cable list and the draft specification, only when stage 3 routed the floors (a run without routing keeps both pending: they are made of the circuits and of the runs that carry them)."""
         routing = self.routing(context)
         if routing is None:
             return pending
         docs["cable_list"] = cable_list_document(ch, (context.loads or {}).get("loads") or [], routing)
-        return [p for p in pending if p["name"] != CABLE_LIST_PENDING_NAME]
+        docs["specification"] = specification.build(context, docs)
+        return [p for p in pending if p["name"] not in (CABLE_LIST_PENDING_NAME, SPECIFICATION_PENDING_NAME)]
 
     def execute(self, context):
         import epc_terminal_blocks

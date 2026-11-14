@@ -77,11 +77,9 @@ class RoutingStage(Stage):
     wiring_task = "MIG-41"
     optional = True      # without its inputs the grouped stage skips it instead of ending as not_available
 
-    def execute(self, context):
-        section = _section(context)
-        if section is None:
-            return self.result("not_available", message=NOT_PROVIDED, reason="no_routing_inputs")
-        loads = {x["id"]: x for x in (context.loads or {}).get("loads") or []}
+    @staticmethod
+    def _floors(section, loads):
+        """({floor: its section of the output}, [checks], [warnings]) handing each design to the plan engine."""
         floors, checks, warnings = {}, [], []
         for floor, design in section.items():
             done = _process(floor, design)
@@ -89,11 +87,20 @@ class RoutingStage(Stage):
             warnings += [f"{floor}: {w}" for w in done["warnings"] + design.get("warnings", [])]
             floors[floor] = {"circuits": done["circuits"], "schedule": done["schedule"], "proposed": [dict(copy.deepcopy(c), load=design["circuits"][c["tag"]]["load"]) for c in design["wiring"]["circuits"]],
                              "assignments": copy.deepcopy(design["wiring"]["assignments"])}
+        return floors, checks, warnings
+
+    def _findings(self, context, checks, warnings):
         run_id, slug = context.pipeline_run_id, self.spec.slug
         findings = [engine_finding(n, run_id, slug, item, flag, value, expected) for n, (item, flag, value, expected) in enumerate(checks, start=1)]
-        findings += [{"id": f"F-{len(findings) + n:04d}", "run_id": run_id, "verifier": "calc-check", "severity": "note", "document": slug, "field": "warning", "value": w,
-                      "expected": "reviewed by the engineer of record", "clause": "engine warning", "action": "Review the warning or correct the input.",
-                      "evidence": [f"engine {FUNCTION}"], "status": "open"} for n, w in enumerate(warnings, start=1)]
+        return findings + [{"id": f"F-{len(findings) + n:04d}", "run_id": run_id, "verifier": "calc-check", "severity": "note", "document": slug, "field": "warning", "value": w,
+                            "expected": "reviewed by the engineer of record", "clause": "engine warning", "action": "Review the warning or correct the input.",
+                            "evidence": [f"engine {FUNCTION}"], "status": "open"} for n, w in enumerate(warnings, start=1)]
+
+    def execute(self, context):
+        section = _section(context)
+        if section is None:
+            return self.result("not_available", message=NOT_PROVIDED, reason="no_routing_inputs")
+        floors, checks, warnings = self._floors(section, {x["id"]: x for x in (context.loads or {}).get("loads") or []})
         circuits = sum(len(f["circuits"]) for f in floors.values())
-        return self.result("ok", outputs={"floors": floors}, findings=findings, engine_calls=[EC.record_for(ENGINE, FUNCTION)],
+        return self.result("ok", outputs={"floors": floors}, findings=self._findings(context, checks, warnings), engine_calls=[EC.record_for(ENGINE, FUNCTION)],
                            message=f"{len(floors)} floor(s), {circuits} circuit(s) routed (draft)")

@@ -348,6 +348,46 @@ class CableListTests(unittest.TestCase):
         self.assertEqual(sorted(c["tag"] for c in flagged), sorted(r["circuit"] for r in doc["rows"] if r["circuit"].startswith(("L-IUG", "T-TUG"))))
 
 
+class SpecificationTests(unittest.TestCase):
+    """The draft specification (provisional structure, PLG-01): built from the results of the run, with every missing datum as a gap."""
+
+    def documents(self, routed=True):
+        helper = CableListTests()
+        ctx, docs, _ = helper.documents(routed)
+        return ctx, docs, {d["name"]: d["document"] for d in docs.outputs["documents"]}
+
+    def test_it_has_the_provisional_sections_and_leaves_the_pending_list(self):
+        _, docs, by_name = self.documents()
+        spec = by_name["specification"]
+        self.assertEqual([s["id"] for s in spec["sections"]], [str(i) for i in range(1, 12)])
+        self.assertEqual((spec["status"], spec["document"]), ("draft", "specification"))
+        self.assertIn("provisional", spec["structure"])
+        self.assertNotIn("specification", [p["name"] for p in docs.outputs["pending_documents"]])
+
+    def test_every_figure_is_read_from_the_run(self):
+        ctx, _, by_name = self.documents()
+        spec = by_name["specification"]
+        tech = [s for s in spec["sections"] if s["id"] == "6"][0]
+        tables = [b for b in tech["blocks"] if b["type"] == "table"]
+        rows = by_name["cable_list"]["rows"]
+        self.assertEqual([r[0] for r in tables[0]["rows"]], [r["circuit"] for r in rows])
+        self.assertEqual([r[3] for r in tables[1]["rows"]], [r["s_mm2"] for r in rows])
+        limits = ctx.results[6].outputs["voltage_drop"]["limits_pct"]
+        accept = [s for s in spec["sections"] if s["id"] == "8"][0]
+        self.assertEqual([b for b in accept["blocks"] if b["type"] == "table"][0]["rows"], [list(x) for x in sorted(limits.items())])
+
+    def test_what_the_project_does_not_have_is_a_gap_with_who_must_give_it(self):
+        _, _, by_name = self.documents()
+        gaps = by_name["specification"]["gaps"]
+        self.assertTrue(gaps and all(g["text"].startswith("[DEFINIR]") and g["who"] for g in gaps))
+        self.assertEqual(sorted({g["section"] for g in gaps}), ["10", "11", "3", "5", "6", "7"])
+
+    def test_without_routing_it_stays_pending(self):
+        _, docs, by_name = self.documents(False)
+        self.assertNotIn("specification", by_name)
+        self.assertIn({"name": "specification", "status": "planned"}, docs.outputs["pending_documents"])
+
+
 class FloorPlanTests(unittest.TestCase):
     """Stage 10: a plan and a lighting plan per routed floor, as DXF, through `epc_plan.dxfout`."""
 
