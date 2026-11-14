@@ -494,3 +494,81 @@ class WholeBuildingTests(unittest.TestCase):
             self.assertTrue([n for n in names if "_plan_PB" in n] and [n for n in names if "_lighting_PB" in n])
             docs = [d["name"] for d in run_["results"][10]["outputs"]["documents"]]
             self.assertIn("cable_list", docs)
+
+
+class ExtraSlicesTests(unittest.TestCase):
+    """Slices that call engine functions the pipeline did not call: they run on building runs or with their own section, and invent nothing."""
+
+    def stage6(self, **inputs):
+        b = with_plugs(board={"x_m": 4.0, "y_m": 5.0})
+        done = derive_all(b, loads())
+        ins = dict(W.inputs_doc(), lighting=done["lighting"], routing=done["routing"], **inputs)
+        ins["circuits"] = dict(ins["circuits"], **done["circuits"])
+        ctx = W.context(engine_inputs=ins, loads=done["loads"])
+        res = run(ctx, stop_after=6, run_id="r6")
+        return ctx, res.results[2], (res.results[5] if len(res.results) > 5 else None)
+
+    def test_a_building_run_has_motors_reactive_and_panel_thermal(self):
+        _, _, s6 = self.stage6()
+        self.assertEqual(s6.status, "ok", s6.message)
+        for section in ("motors", "reactive", "panel_thermal"):
+            self.assertIn(section, s6.outputs)
+        self.assertEqual([m["circuit"] for m in s6.outputs["motors"]["motors"]], ["M-01"])
+        self.assertIn({"engine": "calculation/aea90364", "function": "epc_aea90364.aea_motor.caida_arranque", "version": __import__("epc_aea90364").__version__}, s6.engine_calls)
+        self.assertTrue([f for f in s6.findings if f["field"] == "assumption"])
+
+    def test_the_motor_figures_are_the_engines(self):
+        from epc_aea90364 import aea_motor
+        ctx, _, s6 = self.stage6()
+        row = s6.outputs["motors"]["motors"][0]
+        detail = ctx.engine_cache["chain"]["calc"]["detalle"]["M-01"]
+        direct = aea_motor.proteccion_motor(detail["ib_a"], row["topology"])
+        self.assertEqual(row["protection"], direct)
+
+    def test_reactive_says_where_the_target_comes_from(self):
+        _, _, s6 = self.stage6()
+        self.assertIn("engine default", s6.outputs["reactive"]["target_origin"])
+        _, _, s6 = self.stage6(reactive={"target_fp": 0.95})
+        self.assertEqual((s6.outputs["reactive"]["target_fp"], s6.outputs["reactive"]["target_origin"]), (0.95, "engine_inputs"))
+
+    def test_panel_thermal_is_verified_only_against_a_given_admissible_power(self):
+        _, _, s6 = self.stage6()
+        self.assertNotIn("complies", s6.outputs["panel_thermal"])
+        _, _, s6 = self.stage6(panel_thermal={"p_admissible_w": 1.0})
+        self.assertFalse(s6.outputs["panel_thermal"]["complies"])
+        self.assertTrue([f for f in s6.findings if f["severity"] == "major"])
+
+    def test_backup_lightning_and_hvac_need_their_sections(self):
+        _, s3, s6 = self.stage6()
+        self.assertNotIn("backup", s6.outputs)
+        self.assertNotIn("lightning", s6.outputs)
+        self.assertNotIn("hvac", s3.outputs)
+
+    def test_backup_runs_for_the_named_loads_and_blocks_on_an_unknown_one(self):
+        _, _, s6 = self.stage6(backup={"genset": {"loads": ["M-01"]}, "ups": {"loads": ["E-01"], "autonomy_min": 15}})
+        self.assertEqual(s6.status, "ok", s6.message)
+        self.assertEqual(set(s6.outputs["backup"]), {"genset", "transfer_switch_a", "ups"})
+        _, _, s6 = self.stage6(backup={"genset": {"loads": ["X-99"]}})
+        self.assertEqual(s6.status, "blocked")
+        self.assertIn("X-99", s6.message)
+
+    def test_lightning_has_no_default(self):
+        _, _, s6 = self.stage6(lightning={"length_m": 20})
+        self.assertEqual(s6.status, "blocked")
+        self.assertIn("missing", s6.message)
+
+    def test_without_a_building_the_golden_style_run_is_unchanged(self):
+        ctx = W.context()
+        res = run(ctx, stop_after=6, run_id="r6")
+        for section in ("motors", "reactive", "panel_thermal", "backup", "lightning"):
+            self.assertNotIn(section, res.results[5].outputs)
+
+    def test_hvac_runs_in_stage_3_for_its_document_and_blocks_on_a_bad_one(self):
+        import epc_hvac
+        doc = {"design": {"t_out_c": 35, "t_in_c": 24, "w_out_kg_kg": 0.018, "w_in_kg_kg": 0.0093, "supply_delta_t_k": 10},       # synthetic test conditions
+               "spaces": [{"id": "S1", "name": "Office", "area_m2": 50, "height_m": 3, "use": "office", "occupants": 10, "lighting_w_m2": 10, "equipment_w_m2": 15}]}
+        _, s3, _ = self.stage6(hvac=doc)
+        self.assertEqual(s3.status, "ok", s3.message)
+        self.assertEqual(s3.outputs["hvac"]["hvac"], epc_hvac.run(copy.deepcopy(doc)).as_dict())
+        _, s3, _ = self.stage6(hvac={"design": {}, "spaces": []})
+        self.assertEqual(s3.status, "blocked")

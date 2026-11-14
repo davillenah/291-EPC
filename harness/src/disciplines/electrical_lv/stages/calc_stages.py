@@ -9,6 +9,7 @@ import copy
 from disciplines.electrical_lv.stages import engine_calls as EC
 from disciplines.electrical_lv.stages.base import Stage, engine_finding
 from disciplines.electrical_lv.stages.grouped import GroupedStage
+from disciplines.electrical_lv.stages.extra_stages import BackupStage, HvacStage, LightningStage, MotorsStage, PanelThermalStage, ReactiveStage
 from disciplines.electrical_lv.stages.lighting_stage import LightingStage
 from disciplines.electrical_lv.stages.routing_stage import RoutingStage
 from disciplines.electrical_lv.stages.mappings import ENGINE_CHAIN, KIND_SYSTEM, PENDING_ITEMS
@@ -184,10 +185,11 @@ class EarthingStage(ChainStage):
 class LoadsDemandStage(GroupedStage):
     """Stage 3: load schedule and phase balance, then demand and simultaneity, then (only with `engine_inputs["lighting"]`) the lighting of the rooms, then (only with `engine_inputs["routing"]`) the runs and circuits of the floors."""
 
-    slice_classes = {4: LoadScheduleStage, 5: DemandStage, 17: LightingStage, 18: RoutingStage}
+    slice_classes = {4: LoadScheduleStage, 5: DemandStage, 17: LightingStage, 18: RoutingStage, 24: HvacStage}
 
 
 class CableSizingStage(GroupedStage):
     """Stage 6: the cable and its protection, sized together: section, voltage drop, short-circuit currents and the protection device."""
 
-    slice_classes = {8: FeederSizingStage, 9: VoltageDropStage, 10: ShortCircuitStage, 11: ProtectionStage}
+    slice_classes = {8: FeederSizingStage, 9: VoltageDropStage, 10: ShortCircuitStage, 11: ProtectionStage, 19: MotorsStage, 20: ReactiveStage, 21: PanelThermalStage, 22: BackupStage,
+                     23: LightningStage}
