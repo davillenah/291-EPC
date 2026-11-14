@@ -12,7 +12,7 @@ Missing data is never defaulted: it raises `StageInputError` (the stage is `bloc
   extra_circuits   [circuit form rows]  circuits that are not loads (feeders, groups); every row has a `tag`
   criteria         {design criterion id: value}  (the engine's own table values apply when absent)
   feeders, upstream, titleblock, criteria_validated   passed to the engine as they are
-  lighting         {"document": input of epc_lighting (luminaires, rooms, areas), "options": epc_lighting.Options fields}  stage 3 runs the lighting slice only when it is given (`lighting_stage.py`)
+  lighting         {"document": input of epc_lighting (luminaires, rooms, areas), "options": epc_lighting.Options fields, "loads": {load id: [room ids]} with "tolerance_pct": compare each load with the installed power of its rooms}  stage 3 runs the lighting slice only when it is given (`lighting_stage.py`)
   boq              {"allowance_pct": percent of wastage on cable lengths, 0 allowed}  stage 11 builds the bill of quantities only when it is given (never defaulted)
   datasheets       {"catalog_dir": folder of the manufacturer catalog, "voltage_v": optional voltage for the breaking-capacity comparison}  stage 11 builds the datasheets only when catalog_dir is given
   rfq              {"suppliers": [{"name", "contact"?}], "currency", "response_deadline": ISO date, "delivery_site", "validity_days", "payment_terms"?, "notes"?, "requestable_categories"?}  stage 11 builds the RFQ only when the BOQ was produced and the terms are given (never defaulted)

@@ -2,7 +2,7 @@
 nothing is just an opening. A door whose arc is drawn without a gap in the wall, and the blocks the drawing names as doors or windows, are found too."""
 import math
 from dataclasses import dataclass
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Sequence, Tuple
 
 from epc_arch.geometry import angle_gap, arc_point, arc_span, axis_of, dist_point_line, dist_point_segment, seg_angle, seg_length, segment_distance
 from epc_arch.model import Arc, Block, Line, Opening, Primitives, Wall
@@ -77,16 +77,22 @@ def _is_an_opening(a: Pt, b: Pt, widths: Tuple[float, float], theta: float, wall
     return widths[0] <= math.hypot(b[0] - a[0], b[1] - a[1]) <= widths[1] and not _is_a_passage(a, b, theta, walls, T, ctx)
 
 
-def find_gaps(walls: List[Wall], T: float, ctx: Context) -> List[Gap]:
-    """Where a line of wall stops and starts again a door's width further on."""
+def find_gaps(walls: List[Wall], T: float, ctx: Context, lines: Sequence[Line] = ()) -> List[Gap]:
+    """Where a line of wall stops and starts again a door's width further on. With the `lines` of the drawing, the end of a corridor that is closed by a window is found too: the stretch
+    between two parallel walls looks like a passage, but the panes drawn across it and the outside beyond make it a window (`at_end`: a window there, never an empty opening)."""
     lo, hi = opening_range(T, ctx)
     out: List[Gap] = []
     for g in _collinear_groups(walls, T, ctx.params["walls"]["angle_tolerance_deg"]):
         theta, ax, off, _, _ = _wall_axis(g[0])
         spans = sorted(((_wall_axis(w)[3], _wall_axis(w)[4], w.id) for w in g))
         for (_, e0, wid), (s1, _, _) in zip(spans, spans[1:]):
-            if _is_an_opening(ax.at(e0, off), ax.at(s1, off), (lo, hi), theta, walls, T, ctx):
+            a, b = ax.at(e0, off), ax.at(s1, off)
+            if _is_an_opening(a, b, (lo, hi), theta, walls, T, ctx):
                 out.append(Gap(ax.at((e0 + s1) / 2, off), s1 - e0, theta, off, e0, s1, wid))
+            elif lines and lo <= s1 - e0 <= hi and _is_a_passage(a, b, theta, walls, T, ctx):
+                cand = Gap(ax.at((e0 + s1) / 2, off), s1 - e0, theta, off, e0, s1, wid, at_end=True)
+                if _window_evidence(cand, lines, T, ctx) >= ctx.params["windows"]["min_lines"] and on_the_outside(cand, walls, T):
+                    out.append(cand)
     return out + end_gaps(walls, T, ctx)
 
 
@@ -335,7 +341,7 @@ def _faces_outside(walls: List[Wall], gaps: List[Gap], T: float):
 
 
 def recognize_openings(prims: Primitives, walls: List[Wall], T: float, ctx: Context) -> List[Opening]:
-    gaps = find_gaps(walls, T, ctx)
+    gaps = find_gaps(walls, T, ctx, prims.lines)
     index = LineIndex(prims.lines, T)
     doors = [_door_from_arc(a, walls, index, T, ctx) for a in door_arcs(prims, T, ctx)]
     used: set = set()
