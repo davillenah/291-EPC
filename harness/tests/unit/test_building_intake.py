@@ -319,3 +319,48 @@ class CableListTests(unittest.TestCase):
         plugs = {r["circuit"]: r for r in doc["rows"]}["T-PB"]
         self.assertTrue(all(c.startswith("TUG") for c in plugs["raceway"]["circuits"]))
         json.dumps(docs.to_dict())
+
+
+class FloorPlanTests(unittest.TestCase):
+    """Stage 10: a plan and a lighting plan per routed floor, as DXF, through `epc_plan.dxfout`."""
+
+    def drawings(self):
+        import tempfile
+        import ezdxf
+        b = with_plugs(board={"x_m": 4.0, "y_m": 5.0})
+        arch = b["floors"][0]["architecture"]
+        arch["units_per_metre"] = 100.0
+        arch["walls"] = [{"id": "w1", "a": [0, 0], "b": [700, 0], "thickness": 20.0}, {"id": "w2", "a": [700, 0], "b": [700, 1000], "thickness": 20.0}]
+        done = derive_all(b, loads())
+        inputs = dict(W.inputs_doc(), lighting=done["lighting"], routing=done["routing"])
+        with tempfile.TemporaryDirectory() as tmp:
+            ctx = W.context(engine_inputs=inputs, loads=done["loads"], work_dir=tmp)
+            res = run(ctx, stop_after=10, run_id="r10")
+            out = Path(tmp) / res.results[9].outputs["directory"]
+            files = sorted(f["path"] for f in res.results[9].outputs["files"])
+            docs = {p.name: ezdxf.readfile(str(p)) for p in out.glob("*.dxf")}
+        return res.results[9], files, docs
+
+    def test_each_routed_floor_has_a_plan_and_a_lighting_plan(self):
+        res, files, docs = self.drawings()
+        self.assertEqual(res.status, "ok", res.message)
+        plans = [f for f in files if "_plan_" in f or "_lighting_" in f]
+        self.assertEqual([p.split("_", 1)[1] for p in plans], ["lighting_PB.dxf", "plan_PB.dxf"])
+        self.assertIn({"engine": "cad/plan", "function": "epc_plan.dxfout.write_dxf", "version": __import__("epc_plan").__version__}, res.engine_calls)
+
+    def test_the_lighting_plan_has_only_luminaires_and_the_plan_has_the_outlets_and_the_walls(self):
+        _, _, docs = self.drawings()
+        plan = next(d for n, d in docs.items() if "_plan_PB" in n)
+        light = next(d for n, d in docs.items() if "_lighting_PB" in n)
+        blocks = lambda d: {e.dxf.name for e in d.modelspace().query("INSERT")}   # noqa: E731
+        self.assertIn("SYM_TOMACORRIENTE", blocks(plan))
+        self.assertNotIn("SYM_TOMACORRIENTE", blocks(light))
+        self.assertIn("SYM_LUMINARIA", blocks(light))
+        self.assertTrue([e for e in plan.modelspace().query("LWPOLYLINE") if e.dxf.layer.endswith("ARQ-MUROS")])
+
+    def test_without_routing_no_floor_plan_is_written(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as tmp:
+            ctx = W.context(work_dir=tmp)
+            res = run(ctx, stop_after=10, run_id="r10")
+            self.assertFalse([f for f in res.results[9].outputs["files"] if "_plan_" in f["path"]])

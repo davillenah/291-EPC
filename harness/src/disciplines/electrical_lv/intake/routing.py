@@ -52,6 +52,16 @@ def _room_polygons(boxes):
     return [{"id": rid, "name": rid, "points": [[b[0], b[1]], [b[2], b[1]], [b[2], b[3]], [b[0], b[3]]]} for rid, b in boxes.items()]
 
 
+def backdrop_of(architecture):
+    """The walls and room names of a recognised floor in metres, for the DXF under the services (the plan units divided by the units per metre the architecture reports)."""
+    k = architecture.get("units_per_metre")
+    if not k:
+        return None
+    walls = [{"a": [w["a"][0] / k, w["a"][1] / k], "b": [w["b"][0] / k, w["b"][1] / k], "thickness_m": w["thickness"] / k} for w in architecture.get("walls", [])]
+    rooms = [{"name": r["name"], "at": [(r["box_m"][0] + r["box_m"][2]) / 2, (r["box_m"][1] + r["box_m"][3]) / 2]} for r in architecture.get("rooms", []) if r.get("name") and r.get("box_m")]
+    return {"walls": walls, "rooms": rooms}
+
+
 def design_floor(floor, rooms, boxes, lighting, outlets, catalogue):
     """{document, runs, wiring, branch_m, warnings} of one floor. `rooms`: the lit rooms of the document (the lighting and receptacle results are keyed by their ids); `boxes`: room id -> box in metres."""
     import epc_plan.design as design
@@ -72,4 +82,4 @@ def design_floor(floor, rooms, boxes, lighting, outlets, catalogue):
     for c in wiring["circuits"]:
         part = FAMILIES[c["family"]]
         branch[part] = max(branch.get(part, 0.0), wiring["routes"][c["tag"]]["max_distance_m"])
-    return {"document": document, "runs": runs, "wiring": wiring, "branch_m": branch, "riser_m": floor["length"]["value"], "loads": {"lighting": f"L-{floor['id']}", "receptacles": f"T-{floor['id']}"}, "warnings": [f"floor {floor['id']}: {w}" for w in runs["warnings"] + wiring["warnings"]]}
+    return {"document": document, "runs": runs, "wiring": wiring, "branch_m": branch, "riser_m": floor["length"]["value"], "backdrop": backdrop_of(floor["architecture"]), "loads": {"lighting": f"L-{floor['id']}", "receptacles": f"T-{floor['id']}"}, "warnings": [f"floor {floor['id']}: {w}" for w in runs["warnings"] + wiring["warnings"]]}

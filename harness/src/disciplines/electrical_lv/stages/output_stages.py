@@ -15,6 +15,7 @@ from disciplines.electrical_lv.norm_records import VERIFIED, read_norm_records
 from disciplines.electrical_lv.stages import engine_calls as EC
 from disciplines.electrical_lv.stages.base import Stage, StageInputError
 from disciplines.electrical_lv.stages.cable_list import cable_list_document
+from disciplines.electrical_lv.stages.plan_drawings import FUNCTION as PLAN_FUNCTION, ENGINE as PLAN_ENGINE, write_floor_plans
 from disciplines.electrical_lv.stages.mappings import ENGINE_CHAIN, PENDING_DOCUMENTS
 
 DESIGN = "epc_drawing.board_design.design"
@@ -74,8 +75,13 @@ class DrawingsStage(Stage):
         calls = [EC.record_for("cad/drawing", DESIGN)]
         if not summary["ok"]:
             return self.result("failed", message=f"drawing engine: {summary['error']}", reason="engine", engine_calls=calls)
+        routing = EC.inputs_of(context).get("routing")
+        notes = []
+        if routing:
+            notes = write_floor_plans(routing, target / "out", name)
+            calls.append(EC.record_for(PLAN_ENGINE, PLAN_FUNCTION))
         outputs = {"directory": f"drawings/{name}/out", "files": list_files(target / "out"), "summary": {k: copy.deepcopy(summary[k]) for k in SUMMARY_KEYS}}
-        return self.result("ok", outputs=outputs, engine_calls=calls)
+        return self.result("ok", outputs=dict(outputs, **({"plan_warnings": notes} if notes else {})), engine_calls=calls)
 
 
 TERMINAL_LIST = "epc_terminal_blocks.build_terminal_list"
