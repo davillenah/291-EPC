@@ -77,22 +77,28 @@ def _is_an_opening(a: Pt, b: Pt, widths: Tuple[float, float], theta: float, wall
     return widths[0] <= math.hypot(b[0] - a[0], b[1] - a[1]) <= widths[1] and not _is_a_passage(a, b, theta, walls, T, ctx)
 
 
+def _gap_between(span, nxt, axis, walls, T, ctx, lines):
+    """The gap between a stretch of wall `span` and the next one `nxt` on the same axis: an opening, a window at the end of a corridor (only with `lines`) or None."""
+    (theta, ax, off), (_, e0, wid), (s1, _, _) = axis, span, nxt
+    lo, hi = opening_range(T, ctx)
+    a, b = ax.at(e0, off), ax.at(s1, off)
+    if _is_an_opening(a, b, (lo, hi), theta, walls, T, ctx):
+        return Gap(ax.at((e0 + s1) / 2, off), s1 - e0, theta, off, e0, s1, wid)
+    if not (lines and lo <= s1 - e0 <= hi and _is_a_passage(a, b, theta, walls, T, ctx)):
+        return None
+    cand = Gap(ax.at((e0 + s1) / 2, off), s1 - e0, theta, off, e0, s1, wid, at_end=True)
+    return cand if _window_evidence(cand, lines, T, ctx) >= ctx.params["windows"]["min_lines"] and on_the_outside(cand, walls, T) else None
+
+
 def find_gaps(walls: List[Wall], T: float, ctx: Context, lines: Sequence[Line] = ()) -> List[Gap]:
     """Where a line of wall stops and starts again a door's width further on. With the `lines` of the drawing, the end of a corridor that is closed by a window is found too: the stretch
     between two parallel walls looks like a passage, but the panes drawn across it and the outside beyond make it a window (`at_end`: a window there, never an empty opening)."""
-    lo, hi = opening_range(T, ctx)
     out: List[Gap] = []
     for g in _collinear_groups(walls, T, ctx.params["walls"]["angle_tolerance_deg"]):
         theta, ax, off, _, _ = _wall_axis(g[0])
         spans = sorted(((_wall_axis(w)[3], _wall_axis(w)[4], w.id) for w in g))
-        for (_, e0, wid), (s1, _, _) in zip(spans, spans[1:]):
-            a, b = ax.at(e0, off), ax.at(s1, off)
-            if _is_an_opening(a, b, (lo, hi), theta, walls, T, ctx):
-                out.append(Gap(ax.at((e0 + s1) / 2, off), s1 - e0, theta, off, e0, s1, wid))
-            elif lines and lo <= s1 - e0 <= hi and _is_a_passage(a, b, theta, walls, T, ctx):
-                cand = Gap(ax.at((e0 + s1) / 2, off), s1 - e0, theta, off, e0, s1, wid, at_end=True)
-                if _window_evidence(cand, lines, T, ctx) >= ctx.params["windows"]["min_lines"] and on_the_outside(cand, walls, T):
-                    out.append(cand)
+        found = (_gap_between(span, nxt, (theta, ax, off), walls, T, ctx, lines) for span, nxt in zip(spans, spans[1:]))
+        out.extend(filter(None, found))
     return out + end_gaps(walls, T, ctx)
 
 

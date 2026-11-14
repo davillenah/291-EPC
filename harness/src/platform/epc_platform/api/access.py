@@ -36,7 +36,11 @@ def project_path(projects_root, code, must_exist=True):
         raise ApiError("invalid_project", "the project is outside the projects root")
     if not must_exist or flat.is_dir():
         return flat
-    found = sorted(_find(root, code)) if root.is_dir() else []
+    return _only_match(sorted(_find(root, code)), code)
+
+
+def _only_match(found, code):
+    """The one folder found for `code`, resolved; refuses none or several."""
     if len(found) > 1:
         raise ApiError("ambiguous_project", f"{len(found)} folders match the project code {code}: {', '.join(p.parent.name + '/' + p.name for p in found)}")
     if not found:
@@ -63,6 +67,8 @@ def new_project_path(projects_root, code, client, description):
 
 
 def _find(root, code):
+    if not root.is_dir():
+        return []
     return [p for client in sorted(root.iterdir()) if client.is_dir() and client.name != TEMPLATE_FOLDER for p in client.iterdir() if p.is_dir() and _matches(p, code)]
 
 

@@ -27,27 +27,29 @@ LEVEL = re.compile(r"L(S?)[0-9]{2}")
 KEYS = ("type", "number", "description", "level", "page", "sub")
 
 
+def _whole(value, low, high):
+    return isinstance(value, int) and not isinstance(value, bool) and low <= value <= high
+
+
+def _checks(entry):
+    """(is valid, message) of each field of a naming entry, in the order they are reported."""
+    text, level = entry.get("description"), entry.get("level")
+    return [
+        (entry.get("type") in TYPES, f"type {entry.get('type')!r} must be one of {', '.join(TYPES)}"),
+        (_whole(entry.get("number"), 1, 999), "number must be a whole number from 1 to 999"),
+        (isinstance(text, str) and bool(DESCRIPTION.fullmatch(text)) and len(text) <= MAX_DESCRIPTION,
+         f"description must be lower case English words joined by _ (at most {MAX_DESCRIPTION} characters)"),
+        (level is None or (isinstance(level, str) and bool(LEVEL.fullmatch(level))), "level must look like L00, L01 (above ground) or LS01 (below ground)"),
+        (_whole(entry.get("page", 1), 1, 99), "page must be a whole number from 1 to 99"),
+        (entry.get("sub", SUBDISCIPLINES[0]) in SUBDISCIPLINES, f"sub must be one of {', '.join(SUBDISCIPLINES)}"),
+    ]
+
+
 def problems(entry):
     """Reasons a naming entry is not valid (empty list = valid)."""
     if not isinstance(entry, dict):
         return ["the naming entry must be an object"]
-    out = [f"unknown key {k!r}" for k in sorted(set(entry) - set(KEYS))]
-    if entry.get("type") not in TYPES:
-        out.append(f"type {entry.get('type')!r} must be one of {', '.join(TYPES)}")
-    number = entry.get("number")
-    if not (isinstance(number, int) and not isinstance(number, bool) and 1 <= number <= 999):
-        out.append("number must be a whole number from 1 to 999")
-    text = entry.get("description")
-    if not (isinstance(text, str) and DESCRIPTION.fullmatch(text) and len(text) <= MAX_DESCRIPTION):
-        out.append(f"description must be lower case English words joined by _ (at most {MAX_DESCRIPTION} characters)")
-    if entry.get("level") is not None and not (isinstance(entry["level"], str) and LEVEL.fullmatch(entry["level"])):
-        out.append("level must look like L00, L01 (above ground) or LS01 (below ground)")
-    page = entry.get("page", 1)
-    if not (isinstance(page, int) and not isinstance(page, bool) and 1 <= page <= 99):
-        out.append("page must be a whole number from 1 to 99")
-    if entry.get("sub", SUBDISCIPLINES[0]) not in SUBDISCIPLINES:
-        out.append(f"sub must be one of {', '.join(SUBDISCIPLINES)}")
-    return out
+    return [f"unknown key {k!r}" for k in sorted(set(entry) - set(KEYS))] + [message for good, message in _checks(entry) if not good]
 
 
 def document_code(project_code, entry):

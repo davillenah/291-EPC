@@ -90,6 +90,22 @@ def deliverables(context):
     return _drawings(context) + _documents(context)
 
 
+def _name_one(item, names, project_code, code_ok):
+    """Name one deliverable from its entry in `names`; the errors of its entry (empty when named, or when the project code is not usable)."""
+    entry = names.get(item["name"])
+    bad = ["no entry in engine_inputs.deliverable_names"] if entry is None else naming.problems(entry)
+    if not bad and code_ok:
+        item["code"] = naming.document_code(project_code, entry)
+        if item["file"] is not None:
+            item["path"] = naming.file_path(project_code, entry, Path(item["path"]).suffix)
+    return [f"{item['name']}: {b}" for b in bad]
+
+
+def _shared_paths(items):
+    paths = [i["path"] for i in items if i["path"]]
+    return [f"two files share the path {p}" for p in sorted({p for p in paths if paths.count(p) > 1})]
+
+
 def apply_names(items, names, project_code):
     """Give every deliverable its document code and, for a drawing file, its path inside the transmittal, from `engine_inputs.deliverable_names`.
 
@@ -100,16 +116,8 @@ def apply_names(items, names, project_code):
     errors = [] if code_ok else [f"the project code {project_code!r} must be AAAA-PROVIDER-CLIENT-CODE to name deliverables"]
     names = names if isinstance(names, dict) else {}
     for item in items:
-        entry = names.get(item["name"])
-        bad = ["no entry in engine_inputs.deliverable_names"] if entry is None else naming.problems(entry)
-        errors += [f"{item['name']}: {b}" for b in bad]
-        if bad or not code_ok:
-            continue
-        item["code"] = naming.document_code(project_code, entry)
-        if item["file"] is not None:
-            item["path"] = naming.file_path(project_code, entry, Path(item["path"]).suffix)
-    paths = [i["path"] for i in items if i["path"]]
-    errors += [f"two files share the path {p}" for p in sorted({p for p in paths if paths.count(p) > 1})]
+        errors += _name_one(item, names, project_code, code_ok)
+    errors += _shared_paths(items)
     if errors:
         raise StageInputError(errors)
 
@@ -130,16 +138,21 @@ def _number(manifest):
     return int(TRANSMITTAL.fullmatch(manifest["transmittal"]).group(1))
 
 
+def _refuse_closed(manifest, revision):
+    """A signed or already superseded transmittal of `revision` cannot be regenerated."""
+    if manifest["signed"] is not None:
+        raise StageInputError([f"{manifest['transmittal']} (revision {revision}) is signed: use a new revision to regenerate it"])
+    if manifest["superseded_by"] is not None:
+        raise StageInputError([f"{manifest['transmittal']} (revision {revision}) is already superseded by {manifest['superseded_by']}: use a new revision"])
+
+
 def plan_transmittal(store, revision):
     """(transmittal id, previous, same): the id this run writes, the open manifest of another revision it supersedes (or None) and the unsigned draft of the
     same revision it replaces (or None). A signed or already superseded transmittal of this revision blocks."""
     existing = [m for _, m in store.read_manifests()]
     same = sorted((m for m in existing if m["revision"] == revision), key=_number)
     for m in same:
-        if m["signed"] is not None:
-            raise StageInputError([f"{m['transmittal']} (revision {revision}) is signed: use a new revision to regenerate it"])
-        if m["superseded_by"] is not None:
-            raise StageInputError([f"{m['transmittal']} (revision {revision}) is already superseded by {m['superseded_by']}: use a new revision"])
+        _refuse_closed(m, revision)
     if same:
         return same[-1]["transmittal"], None, same[-1]
     open_ones = sorted((m for m in existing if m["superseded_by"] is None), key=_number)
@@ -171,45 +184,71 @@ class PackageIssueStage(Stage):
         store = context.store
         return store.read_ssot("inputs_manifest.json") if store.is_frozen() else context.inputs_manifest
 
-    def execute(self, context):
-        store = context.store
+    def _nothing_to_issue(self, store):
         if store is None:
             return self._unavailable("no_store", "no project store: the manifest is written under .epc/manifests/ of a project folder")
-        items = deliverables(context)
+        return self._unavailable("no_deliverables", "no deliverable to issue: stages 10 and 11 produced no drawing file or document in this run")
+
+    @staticmethod
+    def _name_items(context, items):
+        """Names the deliverables when the engine inputs give `deliverable_names`; returns them (None when absent)."""
+        names = (context.engine_inputs or {}).get("deliverable_names")
+        if names is not None:
+            apply_names(items, names, (context.profile or {}).get("project_code"))
+        return names
+
+    def _manifest_of(self, context, plan, rows, records, before):
+        """(manifest, superseded entries) of the transmittal: it supersedes the open one of another revision or takes over the draft of this revision."""
+        transmittal, previous, same = plan
+        manifest = self._manifest(context, transmittal, [{k: r[k] for k in ("name", "title", "code", "path", "sha256")} for r in rows], records, before)
+        replaced = []
+        if previous:
+            old, manifest = supersede(previous, manifest)
+            replaced.append({"path": context.store.manifest_rel(old), "manifest": old})
+        elif same:
+            manifest["supersedes"] = same["supersedes"]
+        return manifest, replaced
+
+    @staticmethod
+    def _outputs(context, where, produced, rows, records):
+        """The result of the stage: the manifest, what it supersedes, the files to copy, the norm records count and the transmittal list."""
+        (transmittal, path), (manifest, replaced, copies) = where, produced
+        return {"revision": context.revision, "manifests": [{"path": path, "manifest": manifest}], "superseded": replaced, "copies": copies,
+                "norm_records": {"listed": len(records), "not_verified": sum(1 for r in records if r["review_status"] != VERIFIED)},
+                "transmittal": {"id": transmittal, "project_code": (context.profile or {}).get("project_code"), "revision": context.revision,
+                                "pipeline_run_id": context.pipeline_run_id, "review_status": DRAFT, "manifest": path, "files": rows}}
+
+    @staticmethod
+    def _message(context, transmittal, rows, records, longest):
+        not_verified = sum(1 for r in records if r["review_status"] != VERIFIED)
+        msg = f"transmittal {transmittal} (revision {context.revision}): {len(rows)} file(s), draft; {not_verified} of {len(records)} norm records not verified"
+        if longest > naming.PATH_WARNING:
+            msg += f"; WARNING: a file path has {longest} characters (Windows stops at about 260): shorten the project folder or the descriptions"
+        return msg
+
+    def execute(self, context):
+        store = context.store
+        items = deliverables(context) if store is not None else []
         if not items:
-            return self._unavailable("no_deliverables", "no deliverable to issue: stages 10 and 11 produced no drawing file or document in this run")
+            return self._nothing_to_issue(store)
         records = read_norm_records(sorted({c["function"].split(".")[0] for c in run_engine_calls(context)}))
         import epc_calc_check
         files, project, start = deliverable_bytes(items), engine_inputs_for_check(context), finding_count(context) + 1
         before = epc_calc_check.check_run(run_dict(context, LAST_PRODUCER), project=project, files=files, run_id=context.pipeline_run_id, start_id=start,
                                           groups=("documents",))
-        names = (context.engine_inputs or {}).get("deliverable_names")
-        if names is not None:
-            apply_names(items, names, (context.profile or {}).get("project_code"))
-        transmittal, previous, same = plan_transmittal(store, context.revision)
+        names = self._name_items(context, items)
+        plan = plan_transmittal(store, context.revision)
+        transmittal = plan[0]
         rows = [{"name": i["name"], "title": i["title"], "code": i["code"], "path": i["path"], "sha256": _file_hash(i), "source": i["source"]} for i in items]
-        manifest = self._manifest(context, transmittal, [{k: r[k] for k in ("name", "title", "code", "path", "sha256")} for r in rows], records, before)
-        replaced = []
-        if previous:
-            old, manifest = supersede(previous, manifest)
-            replaced.append({"path": store.manifest_rel(old), "manifest": old})
-        elif same:
-            manifest["supersedes"] = same["supersedes"]
+        manifest, replaced = self._manifest_of(context, plan, rows, records, before)
         path = store.manifest_rel(manifest)
         copies = [{"source": i["source"], "to": f"deliverables/{transmittal}/{i['path']}"} for i in items if i["file"] is not None]
-        not_verified = sum(1 for r in records if r["review_status"] != VERIFIED)
-        outputs = {"revision": context.revision, "manifests": [{"path": path, "manifest": manifest}], "superseded": replaced, "copies": copies,
-                   "norm_records": {"listed": len(records), "not_verified": not_verified},
-                   "transmittal": {"id": transmittal, "project_code": (context.profile or {}).get("project_code"), "revision": context.revision,
-                                   "pipeline_run_id": context.pipeline_run_id, "review_status": DRAFT, "manifest": path, "files": rows}}
+        outputs = self._outputs(context, (transmittal, path), (manifest, replaced, copies), rows, records)
         after = self._check_manifests(context, outputs, files, project, start + len(before))
         outputs["calc_check"] = {"findings_count": len(before) + len(after), "by_severity": by_severity(before + after)}
         longest = max((len(f"{store.root}/deliverables/{transmittal}/{r['path']}") for r in rows if r["path"]), default=0)
         outputs["naming"] = {"named": names is not None, "longest_path": longest}
-        msg = f"transmittal {transmittal} (revision {context.revision}): {len(rows)} file(s), draft; {not_verified} of {len(records)} norm records not verified"
-        if longest > naming.PATH_WARNING:
-            msg += f"; WARNING: a file path has {longest} characters (Windows stops at about 260): shorten the project folder or the descriptions"
-        return self.result("ok", outputs=outputs, findings=before + after, message=msg)
+        return self.result("ok", outputs=outputs, findings=before + after, message=self._message(context, transmittal, rows, records, longest))
 
     @staticmethod
     def _check_manifests(context, outputs, files, project, start):

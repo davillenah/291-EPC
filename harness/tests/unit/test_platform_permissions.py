@@ -126,7 +126,7 @@ class ClassifyTests(unittest.TestCase):
         self.base = Path(self._tmp.name)
         self.project = self.base / "P"
         for name in R.PROJECT_CLASSES:
-            (self.project / name).mkdir(parents=True)
+            (self.project / (f".epc/{name}" if name in INTERNAL_CLASSES else name)).mkdir(parents=True)
         self.repo = self.base / "repo"
         for rel in ("harness/config/normative/AR", "harness/schemas", "harness/src/x"):
             (self.repo / rel).mkdir(parents=True)

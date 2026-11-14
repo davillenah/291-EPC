@@ -26,32 +26,42 @@ def _slice(res, number, outputs, findings):
     return entry
 
 
+def _slices_of_result(res, numbers):
+    """{slice number: result} of one physical stage result: one slice as it is, or a grouped stage split into its slices."""
+    if len(numbers) == 1:
+        return {numbers[0]: _slice(res, numbers[0], res["outputs"], res["findings"])}
+    slugs = {slug for slug, group in SLICES.values() if group == res["stage"]}       # includes the slices calc_check does not see
+    return {n: _grouped_slice(res, n, n == numbers[0], slugs) for n in numbers}
+
+
+def _grouped_slice(res, n, first, slugs):
+    """Slice `n` of a grouped stage: its own output and the findings that name it (the first slice also takes those that name no slice)."""
+    slug = SLICES[n][0]
+    outputs = res["outputs"].get(slug) if res["status"] == "ok" else None
+    mine = [f for f in res["findings"] if f.get("document") == slug or (first and f.get("document") not in slugs)]
+    return _slice(res, n, outputs or {}, mine)
+
+
+def _join_selectivity(first, res):
+    """Slice 11 (`first`) with the findings and the outputs of the selectivity stage `res` joined to it."""
+    joined = dict(first, findings=first["findings"] + res["findings"])
+    if res["status"] == "ok" and first["status"] == "ok":
+        joined["outputs"] = dict(first["outputs"], **res["outputs"])
+    elif res["status"] != "ok":
+        joined["status"] = res["status"]
+    return joined
+
+
 def logical_results(results):
     """[dict] of the 16 slice results of a run, from the (physical) stage results as dicts: a grouped stage becomes one result per slice, the outputs of
     the selectivity stage join slice 11. A stage that did not finish ok gives each of its slices its status and no outputs."""
     out = {}
     for res in results:
-        numbers = SLICES_OF.get(res["stage"])
-        if numbers is None:
-            continue
-        grouped = len(numbers) > 1
-        slugs = {slug for slug, group in SLICES.values() if group == res["stage"]} if grouped else set()   # includes the slices calc_check does not see
-        for n in numbers:
-            if not grouped:
-                out[n] = _slice(res, n, res["outputs"], res["findings"])
-                continue
-            slug = SLICES[n][0]
-            outputs = res["outputs"].get(slug) if res["status"] == "ok" else None
-            mine = [f for f in res["findings"] if f.get("document") == slug or (n == numbers[0] and f.get("document") not in slugs)]
-            out[n] = _slice(res, n, outputs or {}, mine)
+        if res["stage"] in SLICES_OF:
+            out.update(_slices_of_result(res, SLICES_OF[res["stage"]]))
     for res in results:
         if res["stage"] == SELECTIVITY and 11 in out:
-            joined = dict(out[11], findings=out[11]["findings"] + res["findings"])
-            if res["status"] == "ok" and out[11]["status"] == "ok":
-                joined["outputs"] = dict(out[11]["outputs"], **res["outputs"])
-            elif res["status"] != "ok":
-                joined["status"] = res["status"]
-            out[11] = joined
+            out[11] = _join_selectivity(out[11], res)
     return [out[n] for n in sorted(out)]
 
 

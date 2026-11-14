@@ -135,12 +135,17 @@ def classify(path):
         return None
 
 
+def _project_dir(rel):
+    """The project folder holding `rel`: projects/<project> or, in a client folder, projects/<CLIENT>/<project>."""
+    nested = rel.parts[1] not in PROJECT_FOLDERS and len(rel.parts) > 2
+    return PROJECTS.joinpath(*rel.parts[:2 if nested else 1])
+
+
 def _project_class(permissions, rel, path):
     if len(rel.parts) <= 1:
         return None
-    nested = rel.parts[1] not in PROJECT_FOLDERS and len(rel.parts) > 2          # projects/<CLIENT>/<project>/... instead of projects/<project>/...
     try:
-        return permissions.classify_path(PROJECTS.joinpath(*rel.parts[:2 if nested else 1]), path, REPO)
+        return permissions.classify_path(_project_dir(rel), path, REPO)
     except permissions.PathError as exc:
         raise Block("H-03", f"{path.as_posix()} is not a known project path: {exc}", path) from exc
 

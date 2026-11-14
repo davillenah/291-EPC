@@ -103,12 +103,12 @@ class RunRecorder:
 
     def _publish(self, context, res):
         """Stage 12: copy the drawing files into `deliverables/TR-NNN/`, write the transmittal manifest, then mark the superseded one (all through the store)."""
-        for item in res.outputs["copies"]:
-            self.store.copy_deliverable(self.token, Path(context.work_dir) / item["source"], item["to"])
-        for item in res.outputs["manifests"]:
-            self.store.write_manifest(self.token, item["manifest"])
-        for item in res.outputs["superseded"]:
-            self.store.update_manifest(self.token, item["manifest"])
+        steps = (("copies", lambda i: self.store.copy_deliverable(self.token, Path(context.work_dir) / i["source"], i["to"])),
+                 ("manifests", lambda i: self.store.write_manifest(self.token, i["manifest"])),
+                 ("superseded", lambda i: self.store.update_manifest(self.token, i["manifest"])))
+        for key, act in steps:
+            for item in res.outputs[key]:
+                act(item)
 
     def finish(self, last_stage_number):
         statuses = [e["status"] for e in self.entries]
