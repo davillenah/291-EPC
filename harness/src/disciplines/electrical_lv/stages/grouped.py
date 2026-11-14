@@ -2,7 +2,7 @@
 
 The outputs of a grouped stage hold one section per slice, named by the slice slug; each section is exactly what the slice returned, so the
 consumers that read a slice (`epc_calc_check`, the documents) keep their vocabulary. The slices run in order and the first one that does not finish
-`ok` ends the stage with its status, its findings and its message (the message names the slice). The findings, the engine calls and the messages of the
+`ok` ends the stage with its status, its findings and its message (the message names the slice). A slice marked `optional` that is `not_available` (its inputs were not given) is skipped: it leaves no section and does not end the stage. The findings, the engine calls and the messages of the
 slices that did run are kept.
 """
 from disciplines.electrical_lv.stages.base import Stage, StageResult
@@ -22,6 +22,8 @@ class GroupedStage(Stage):
         sections, findings, calls, notes = {}, [], [], []
         for number, part in self.slices():
             res = part._guarded(context)
+            if res.status == "not_available" and getattr(part, "optional", False):
+                continue                  # an optional slice without its inputs is left out: no section, no status
             findings += res.findings
             calls += res.engine_calls
             slug = SLICES[number][0]
