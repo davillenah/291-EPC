@@ -14,6 +14,8 @@ from pathlib import Path
 from disciplines.electrical_lv.norm_records import VERIFIED, read_norm_records
 from disciplines.electrical_lv.stages import engine_calls as EC
 from disciplines.electrical_lv.stages.base import Stage, StageInputError
+from disciplines.electrical_lv.stages.cable_list import cable_list_document
+from disciplines.electrical_lv.stages.plan_drawings import FUNCTION as PLAN_FUNCTION, ENGINE as PLAN_ENGINE, write_floor_plans
 from disciplines.electrical_lv.stages.mappings import ENGINE_CHAIN, PENDING_DOCUMENTS
 
 DESIGN = "epc_drawing.board_design.design"
@@ -73,8 +75,13 @@ class DrawingsStage(Stage):
         calls = [EC.record_for("cad/drawing", DESIGN)]
         if not summary["ok"]:
             return self.result("failed", message=f"drawing engine: {summary['error']}", reason="engine", engine_calls=calls)
+        routing = EC.inputs_of(context).get("routing")
+        notes = []
+        if routing:
+            notes = write_floor_plans(routing, target / "out", name)
+            calls.append(EC.record_for(PLAN_ENGINE, PLAN_FUNCTION))
         outputs = {"directory": f"drawings/{name}/out", "files": list_files(target / "out"), "summary": {k: copy.deepcopy(summary[k]) for k in SUMMARY_KEYS}}
-        return self.result("ok", outputs=outputs, engine_calls=calls)
+        return self.result("ok", outputs=dict(outputs, **({"plan_warnings": notes} if notes else {})), engine_calls=calls)
 
 
 TERMINAL_LIST = "epc_terminal_blocks.build_terminal_list"
@@ -90,6 +97,8 @@ def terminal_circuits(ch):
                      "description": detail.get("descripcion") or "", "device": data.get("disp") or "", "in_a": data.get("In")})
     return rows
 
+
+CABLE_LIST_PENDING_NAME = "cable list"
 
 BOQ_BUILD = "epc_boq.build_boq"
 BOQ_ENGINE = "procurement/boq"
@@ -282,6 +291,20 @@ class DocumentsStage(Stage):
             return {}
         return {"lighting_study": {"document": "lighting_study", "status": "draft", "engine": copy.deepcopy(result["engine"]), "result": copy.deepcopy(result)}}
 
+    @staticmethod
+    def routing(context):
+        """The routing section of stage 3 when it ran the slice, else None."""
+        res = context.results.get(3)
+        return res.outputs.get("routing") if res is not None and res.status == "ok" else None
+
+    def cable_list(self, context, ch, docs, pending):
+        """The cable list, only when stage 3 routed the floors (a run without routing keeps `cable list` pending: the list is made of the circuits and of the runs that carry them)."""
+        routing = self.routing(context)
+        if routing is None:
+            return pending
+        docs["cable_list"] = cable_list_document(ch, (context.loads or {}).get("loads") or [], routing)
+        return [p for p in pending if p["name"] != CABLE_LIST_PENDING_NAME]
+
     def execute(self, context):
         import epc_terminal_blocks
         from epc_aea90364 import board_memo
@@ -296,6 +319,7 @@ class DocumentsStage(Stage):
         docs.update(self.lighting_study(context))
         pending = [{"name": n, "status": "planned"} for n in PENDING_DOCUMENTS]
         pending = self.optional_documents(context, ch, terminals, docs, calls, pending)
+        pending = self.cable_list(context, ch, docs, pending)
         pending = self.design_basis_document(context, docs, calls, pending)
         pending = self.descriptive_report_document(context, ch, terminals, docs, calls, pending)
         outputs = {"documents": [document_entry(n, d) for n, d in docs.items()], "memo_summary": copy.deepcopy(memo["resumen"]), "pending_documents": pending}

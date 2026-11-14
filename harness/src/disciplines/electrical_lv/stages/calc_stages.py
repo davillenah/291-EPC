@@ -10,6 +10,7 @@ from disciplines.electrical_lv.stages import engine_calls as EC
 from disciplines.electrical_lv.stages.base import Stage, engine_finding
 from disciplines.electrical_lv.stages.grouped import GroupedStage
 from disciplines.electrical_lv.stages.lighting_stage import LightingStage
+from disciplines.electrical_lv.stages.routing_stage import RoutingStage
 from disciplines.electrical_lv.stages.mappings import ENGINE_CHAIN, KIND_SYSTEM, PENDING_ITEMS
 
 CALC = "epc_aea90364.aea_pipeline.calculate"
@@ -181,9 +182,9 @@ class EarthingStage(ChainStage):
 
 
 class LoadsDemandStage(GroupedStage):
-    """Stage 3: load schedule and phase balance, then demand and simultaneity, then (only with `engine_inputs["lighting"]`) the lighting of the rooms."""
+    """Stage 3: load schedule and phase balance, then demand and simultaneity, then (only with `engine_inputs["lighting"]`) the lighting of the rooms, then (only with `engine_inputs["routing"]`) the runs and circuits of the floors."""
 
-    slice_classes = {4: LoadScheduleStage, 5: DemandStage, 17: LightingStage}
+    slice_classes = {4: LoadScheduleStage, 5: DemandStage, 17: LightingStage, 18: RoutingStage}
 
 
 class CableSizingStage(GroupedStage):

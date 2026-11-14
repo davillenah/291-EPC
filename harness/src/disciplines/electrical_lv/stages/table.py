@@ -42,7 +42,7 @@ STAGE_TABLE = (
 # 16-stage table, which is the vocabulary of `epc_calc_check` and of the PENDING_ITEMS: slice number -> (slug, number of the stage that groups it).
 SLICES = {2: ("requirements", 2), 3: ("input_verification", 2), 4: ("load_schedule", 3), 5: ("demand", 3),
           8: ("feeder_sizing", 6), 9: ("voltage_drop", 6), 10: ("short_circuit", 6), 11: ("protection", 6),
-          17: ("lighting", 3)}   # 17 is not a slice of the 16-stage vocabulary: it is optional and `epc_calc_check` does not see it
+          17: ("lighting", 3), 18: ("routing", 3)}   # 17 is not a slice of the 16-stage vocabulary: it is optional and `epc_calc_check` does not see it
 
 
 def slice_spec(number):

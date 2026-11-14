@@ -4,7 +4,7 @@ Real units: metres or millimetres, as the discipline says. One layer per kind of
 """
 import math
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 import ezdxf
 from epc_dxf import deliverable
@@ -93,8 +93,36 @@ def _add_stretches(msp, result, line_kinds, cfg, scale: float, height: float, la
     return 2 * len(result["stretches"])
 
 
-def write_dxf(result: Dict[str, Any], path: Path, version: str = "", params: Dict[str, Any] = core.PARAMS, layers_file=None) -> List[str]:
-    """Write the DXF of a result to `path`; returns the warnings (audit findings, read-back differences)."""
+def _wall_corners(a, b, thickness: float):
+    """The four corners of a wall (its axis a-b and its thickness, all in metres)."""
+    dx, dy = b[0] - a[0], b[1] - a[1]
+    length = math.hypot(dx, dy)
+    if length == 0:
+        return None
+    nx, ny = -dy / length * thickness / 2, dx / length * thickness / 2
+    return [(a[0] + nx, a[1] + ny), (b[0] + nx, b[1] + ny), (b[0] - nx, b[1] - ny), (a[0] - nx, a[1] - ny)]
+
+
+def _add_backdrop(doc, msp, backdrop: Dict[str, Any], cfg, scale: float, height: float, layer) -> int:
+    """The building under the services, from the architecture the caller gives in metres: `walls` ({a, b, thickness_m}) as closed outlines and `rooms` ({name, at}) as text, in the frame of the plan on the screen (y down, like the nodes of the drawing: the DXF turns y up). Returns how many entities were added."""
+    count = 0
+    wall_layer, room_layer = layer(cfg["wall_layer"]), layer(cfg["room_layer"])
+    for name in (wall_layer, room_layer):
+        if name not in doc.layers:
+            doc.layers.add(name)
+    for w in backdrop.get("walls", []):
+        corners = _wall_corners(w["a"], w["b"], w["thickness_m"])
+        if corners:
+            msp.add_lwpolyline([(x * scale, -y * scale) for x, y in corners], close=True, dxfattribs={"layer": wall_layer})
+            count += 1
+    for r in backdrop.get("rooms", []):
+        msp.add_text(r["name"], height=height, dxfattribs={"layer": room_layer}).set_placement((r["at"][0] * scale, -r["at"][1] * scale), align=ezdxf.enums.TextEntityAlignment.MIDDLE_CENTER)
+        count += 1
+    return count
+
+
+def write_dxf(result: Dict[str, Any], path: Path, version: str = "", params: Dict[str, Any] = core.PARAMS, layers_file=None, backdrop: Optional[Dict[str, Any]] = None) -> List[str]:
+    """Write the DXF of a result to `path`; returns the warnings (audit findings, read-back differences). `backdrop`: the walls and room names of the building under the services (see `_add_backdrop`)."""
     cfg = params["dxf"]
     version = version or cfg["default_version"]
     if version not in cfg["versions"]:
@@ -110,6 +138,8 @@ def write_dxf(result: Dict[str, Any], path: Path, version: str = "", params: Dic
         doc.layers.add(layer(base))
     height = cfg["text_height_m"] * scale
     expected = _add_nodes(doc, msp, result, node_kinds, cfg, scale, height, layer) + _add_stretches(msp, result, line_kinds, cfg, scale, height, layer)
+    if backdrop:
+        expected += _add_backdrop(doc, msp, backdrop, cfg, scale, height, layer)
 
     path.parent.mkdir(parents=True, exist_ok=True)
     warnings = [f"DXF audit: {e.message}" for e in doc.audit().errors]
