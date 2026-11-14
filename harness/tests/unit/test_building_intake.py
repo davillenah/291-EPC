@@ -283,3 +283,39 @@ class RoutingStageTests(unittest.TestCase):
         res = STAGES[2].run(ctx)
         self.assertEqual(res.status, "blocked")
         self.assertTrue(res.message.startswith("routing: "))
+
+
+class CableListTests(unittest.TestCase):
+    """Stage 11: the cable list is selected from the engine result of stage 6 and joined with the containers of stage 3."""
+
+    def documents(self, routed):
+        b = with_plugs(**({"board": {"x_m": 4.0, "y_m": 5.0}} if routed else {}))
+        done = derive_all(b, loads())
+        inputs = dict(W.inputs_doc(), lighting=done["lighting"], **({"routing": done["routing"]} if routed else {}))
+        ctx = W.context(engine_inputs=inputs, loads=done["loads"])
+        res = run(ctx, stop_after=11, run_id="r", stages=[s for s in STAGES if s.number != 10])
+        docs = res.results[-1]
+        return ctx, docs, {d["name"]: d["document"] for d in docs.outputs["documents"]}.get("cable_list")
+
+    def test_without_routing_the_list_stays_pending(self):
+        _, docs, doc = self.documents(False)
+        self.assertIsNone(doc)
+        self.assertIn({"name": "cable list", "status": "planned"}, docs.outputs["pending_documents"])
+
+    def test_one_row_per_sized_circuit_with_the_engine_values(self):
+        ctx, docs, doc = self.documents(True)
+        calc = ctx.engine_cache["chain"]["calc"]
+        self.assertEqual([r["circuit"] for r in doc["rows"]], list(calc["datos"]))
+        for row in doc["rows"]:
+            self.assertEqual((row["s_mm2"], row["in_a"], row["du_pct"]), (calc["datos"][row["circuit"]]["S"], calc["datos"][row["circuit"]]["In"], calc["datos"][row["circuit"]]["dU"]))
+        self.assertNotIn("cable list", [p["name"] for p in docs.outputs["pending_documents"]])
+
+    def test_a_routed_load_names_the_trays_and_conduits_that_carry_its_circuits(self):
+        _, docs, doc = self.documents(True)
+        row = {r["circuit"]: r for r in doc["rows"]}["L-PB"]
+        self.assertTrue(row["raceway"]["circuits"] and all(c.startswith("IUG") for c in row["raceway"]["circuits"]))
+        self.assertTrue(row["raceway"]["containers"])
+        self.assertEqual(row["area"], "PB")
+        plugs = {r["circuit"]: r for r in doc["rows"]}["T-PB"]
+        self.assertTrue(all(c.startswith("TUG") for c in plugs["raceway"]["circuits"]))
+        json.dumps(docs.to_dict())
