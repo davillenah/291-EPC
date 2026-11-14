@@ -273,6 +273,15 @@ class DocumentsStage(Stage):
         calls.append(EC.record_for(DESCRIPTIVE_ENGINE, DESCRIPTIVE_BUILD))
         return [p for p in pending if p["name"] != DESCRIPTIVE_PENDING_NAME]
 
+    @staticmethod
+    def lighting_study(context):
+        """The lighting study of stage 3 as a document (the engine result as it is, draft); None when stage 3 did not run the lighting slice."""
+        res = context.results.get(3)
+        result = (res.outputs.get("lighting") if res is not None and res.status == "ok" else None)
+        if result is None:
+            return None
+        return {"document": "lighting_study", "status": "draft", "engine": copy.deepcopy(result["engine"]), "result": copy.deepcopy(result)}
+
     def execute(self, context):
         import epc_terminal_blocks
         from epc_aea90364 import board_memo
@@ -284,6 +293,9 @@ class DocumentsStage(Stage):
             raise StageInputError([f"terminal-block list: {exc}"]) from exc
         docs = {"calculation_memo": board_memo.memoria_doc(memo), "project_summary": board_memo.sintesis_doc(memo), "terminal_block_list": terminals}
         calls = [EC.record_for(ENGINE_CHAIN, fn) for fn in self.calls] + [EC.record_for(TERMINAL_ENGINE, TERMINAL_LIST)]
+        study = self.lighting_study(context)
+        if study is not None:
+            docs["lighting_study"] = study
         pending = [{"name": n, "status": "planned"} for n in PENDING_DOCUMENTS]
         pending = self.optional_documents(context, ch, terminals, docs, calls, pending)
         pending = self.design_basis_document(context, docs, calls, pending)

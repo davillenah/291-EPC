@@ -117,5 +117,28 @@ class LoadCheckTests(unittest.TestCase):
         self.assertNotIn("load_check", self.run_slice({"document": POWERED}).outputs["lighting"])
 
 
+class LightingStudyDocument(unittest.TestCase):
+    def documents(self, section):
+        inputs = W.inputs_doc()
+        if section is not None:
+            inputs["lighting"] = section
+        ctx = W.context(engine_inputs=inputs)
+        res = run(ctx, stop_after=11, run_id="r", stages=[s for s in STAGES if s.number != 10])
+        return ctx, res.results[-1]
+
+    def test_stage_11_adds_the_lighting_study_when_stage_3_ran_the_lighting(self):
+        ctx, docs = self.documents({"document": SMALL})
+        names = [d["name"] for d in docs.outputs["documents"]]
+        self.assertEqual((docs.status, names[2:4]), ("ok", ["terminal_block_list", "lighting_study"]))
+        study = docs.outputs["documents"][3]
+        self.assertEqual(study["document"]["result"], ctx.results[3].outputs["lighting"])
+        self.assertEqual((study["document"]["status"], study["document"]["engine"]["name"]), ("draft", "epc_lighting"))
+        self.assertEqual(len(study["sha256"]), 64)
+
+    def test_without_lighting_the_documents_are_what_they_were(self):
+        _, docs = self.documents(None)
+        self.assertNotIn("lighting_study", [d["name"] for d in docs.outputs["documents"]])
+
+
 if __name__ == "__main__":
     unittest.main()
