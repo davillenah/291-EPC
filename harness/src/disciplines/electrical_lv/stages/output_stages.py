@@ -14,9 +14,9 @@ from pathlib import Path
 from disciplines.electrical_lv.norm_records import VERIFIED, read_norm_records
 from disciplines.electrical_lv.stages import engine_calls as EC
 from disciplines.electrical_lv.stages.base import Stage, StageInputError
-from disciplines.electrical_lv.stages import specification, studies
+from disciplines.electrical_lv.stages import rendering, specification, studies
 from disciplines.electrical_lv.stages.cable_list import cable_list_document
-from disciplines.electrical_lv.stages.plan_drawings import FUNCTION as PLAN_FUNCTION, ENGINE as PLAN_ENGINE, write_floor_plans
+from disciplines.electrical_lv.stages.plan_drawings import FUNCTION as PLAN_FUNCTION, ENGINE as PLAN_ENGINE, place_on_sheets, sheet_options, write_floor_plans
 from disciplines.electrical_lv.stages.mappings import ENGINE_CHAIN, PENDING_DOCUMENTS
 
 DESIGN = "epc_drawing.board_design.design"
@@ -60,6 +60,16 @@ class DrawingsStage(Stage):
     wiring_task = "MIG-30c"
     diagrams = ("sld",)
 
+    def _diagrams(self, context):
+        """The diagrams to draw: the single-line diagram, plus the multi-line one on a building run or when `engine_inputs["drawings"]["diagrams"]` lists `mld`."""
+        given = (EC.inputs_of(context).get("drawings") or {}).get("diagrams")
+        if given is not None:
+            bad = [d for d in given if d not in ("sld", "mld")] if isinstance(given, list) else [given]
+            if bad:
+                raise StageInputError([f"engine_inputs.drawings.diagrams: {bad!r} is not a list of sld, mld"])
+            return tuple(given)
+        return self.diagrams + (("mld",) if EC.inputs_of(context).get("routing") else ())
+
     def _target(self, context, name):
         if not context.work_dir:
             raise StageInputError(["work_dir: no work_dir was given, so the drawings have nowhere to be written"])
@@ -72,7 +82,7 @@ class DrawingsStage(Stage):
         ch = EC.chain(context)
         name = ch["form"]["board"]["name"]
         target = self._target(context, name)
-        summary = board_design.design(copy.deepcopy(ch["form"]), target, name, ch["criteria"], None, diagrams=self.diagrams, drawing_date=drawing_date(context))
+        summary = board_design.design(copy.deepcopy(ch["form"]), target, name, ch["criteria"], None, diagrams=self._diagrams(context), drawing_date=drawing_date(context))
         calls = [EC.record_for("cad/drawing", DESIGN)]
         if not summary["ok"]:
             return self.result("failed", message=f"drawing engine: {summary['error']}", reason="engine", engine_calls=calls)
@@ -82,13 +92,23 @@ class DrawingsStage(Stage):
 
     @staticmethod
     def _floor_plans(context, target, name, calls):
-        """Writes the plans of the routed floors when the engine inputs have a `routing` section (and records the call); {"plan_warnings": [...]} when the engine had any."""
+        """Writes the plans of the routed floors when the engine inputs have a `routing` section (and records the calls) and puts each one on the IRAM sheet of the project (`<plan>_sheet.dxf`, format
+        and scale from `engine_inputs["drawings"]`); {"plan_warnings": [...]} when the engines had any."""
         routing = EC.inputs_of(context).get("routing")
         if not routing:
             return {}
+        try:
+            fmt, scale = sheet_options(EC.inputs_of(context).get("drawings"))
+        except ValueError as exc:
+            raise StageInputError([str(exc)]) from exc
         calls.append(EC.record_for(PLAN_ENGINE, PLAN_FUNCTION))
-        notes = write_floor_plans(routing, target / "out", name)
-        return {"plan_warnings": notes} if notes else {}
+        notes, written = write_floor_plans(routing, target / "out", name)
+        try:
+            sheets = place_on_sheets(written, target / "titleblock-request.json", fmt, scale)
+        except (RuntimeError, ValueError, OSError) as exc:
+            raise StageInputError([f"plan sheets: {exc}"]) from exc
+        calls.append(EC.record_for("cad/drawing", "epc_drawing.export.plan_sheet.compose"))
+        return dict({"plan_sheets": {n: {"format": r["format"], "scale": r["scale"]} for n, r in sheets.items()}}, **({"plan_warnings": notes} if notes else {}))
 
 
 TERMINAL_LIST = "epc_terminal_blocks.build_terminal_list"
@@ -333,4 +353,18 @@ class DocumentsStage(Stage):
         pending = self.design_basis_document(context, docs, calls, pending)
         pending = self.descriptive_report_document(context, ch, terminals, docs, calls, pending)
         outputs = {"documents": [document_entry(n, d) for n, d in docs.items()], "memo_summary": copy.deepcopy(memo["resumen"]), "pending_documents": pending}
+        outputs.update(self.rendered(context, docs, calls))
         return self.result("ok", outputs=outputs, engine_calls=calls)
+
+    @staticmethod
+    def rendered(context, docs, calls):
+        """{"rendered": {files, not_rendered}} when the formats of the run ask for files (see `rendering.py`) and the run has a work folder; the files go under `<work_dir>/documents/`."""
+        try:
+            formats = rendering.formats_of(context)
+        except ValueError as exc:
+            raise StageInputError([str(exc)]) from exc
+        if not formats or not context.work_dir:
+            return {}
+        done, used = rendering.render_all(docs, (context.profile or {}).get("project_code") or "", Path(context.work_dir) / "documents", formats)
+        calls.extend(used)
+        return {"rendered": done}

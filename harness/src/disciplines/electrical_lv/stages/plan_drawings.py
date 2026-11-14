@@ -37,9 +37,34 @@ def lighting_document(design):
 def write_floor_plans(routing, out_dir, board):
     """Writes `<board>_plan_<floor>.dxf` and `<board>_lighting_<floor>.dxf` for every floor of the routing section; returns the warnings of the engine."""
     import epc_plan.dxfout as dxfout
-    warnings = []
+    warnings, written = [], {}
     for floor, design in sorted(routing.items()):
         backdrop = copy.deepcopy(design.get("backdrop"))
         for stem, doc in (("plan", routed_document(design)), ("lighting", lighting_document(design))):
-            warnings += [f"{floor}: {w}" for w in dxfout.write_dxf(_process(doc), out_dir / f"{board}_{stem}_{floor}.dxf", backdrop=backdrop)]
-    return warnings
+            path = out_dir / f"{board}_{stem}_{floor}.dxf"
+            warnings += [f"{floor}: {w}" for w in dxfout.write_dxf(_process(doc), path, backdrop=backdrop)]
+            written[f"{board}_{stem}_{floor}"] = path
+    return warnings, written
+
+
+SHEET_FORMATS = ("A0", "A1", "A2", "A3", "A4")
+
+
+def sheet_options(given):
+    """The format and the scale of the plan sheets from `engine_inputs["drawings"]` (`sheet_format`, `paper_scale`): None for both when not given (the engine takes A1 and the largest scale that fits)."""
+    given = given or {}
+    fmt, scale = given.get("sheet_format"), given.get("paper_scale")
+    if fmt is not None and fmt not in SHEET_FORMATS:
+        raise ValueError(f"engine_inputs.drawings.sheet_format: {fmt!r} is not one of {', '.join(SHEET_FORMATS)}")
+    if scale is not None and (isinstance(scale, bool) or not isinstance(scale, int) or scale <= 0):
+        raise ValueError(f"engine_inputs.drawings.paper_scale: {scale!r} is not a whole number (the N of 1:N)")
+    return fmt or "A1", scale
+
+
+def place_on_sheets(plans, request_path, fmt, scale):
+    """Puts each plan DXF of `plans` ({name: path}) on the IRAM sheet of the project (`epc_drawing.export.plan_sheet.compose`, with the title block request of stage 10) as `<plan>_sheet.dxf`; returns {name: result}."""
+    import json
+    from pathlib import Path
+    from epc_drawing.export import plan_sheet
+    request = json.loads(Path(request_path).read_text(encoding="utf-8"))
+    return {name: plan_sheet.compose(path, request, path.with_name(path.stem + "_sheet.dxf"), fmt, scale, name) for name, path in sorted(plans.items())}

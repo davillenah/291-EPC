@@ -86,8 +86,16 @@ def _documents(context):
             for d in docs]
 
 
+def _rendered(context):
+    """The files of the documents that stage 11 rendered (PDF, Word, workbook): named `<document>_<format>`, copied from `<work_dir>/documents/`."""
+    res = _ok(context, DOCUMENTS)
+    files = ((res.outputs.get("rendered") or {}).get("files") or []) if res is not None else []
+    return [{"name": f["name"], "title": f"Document file {f['path']}", "path": Path(f["path"]).name, "code": None, "file": Path(context.work_dir or "") / f["path"], "recorded": f["sha256"],
+             "source": f["path"]} for f in files]
+
+
 def deliverables(context):
-    return _drawings(context) + _documents(context)
+    return _drawings(context) + _rendered(context) + _documents(context)
 
 
 def _name_one(item, names, project_code, code_ok):

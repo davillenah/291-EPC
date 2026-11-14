@@ -442,21 +442,21 @@ class FloorPlanTests(unittest.TestCase):
             ctx = W.context(engine_inputs=inputs, loads=done["loads"], work_dir=tmp)
             res = run(ctx, stop_after=10, run_id="r10")
             out = Path(tmp) / res.results[9].outputs["directory"]
-            files = sorted(f["path"] for f in res.results[9].outputs["files"])
+            files = sorted(f["path"] for f in res.results[9].outputs.get("files", []))
             docs = {p.name: ezdxf.readfile(str(p)) for p in out.glob("*.dxf")}
         return res.results[9], files, docs
 
     def test_each_routed_floor_has_a_plan_and_a_lighting_plan(self):
         res, files, docs = self.drawings()
         self.assertEqual(res.status, "ok", res.message)
-        plans = [f for f in files if "_plan_" in f or "_lighting_" in f]
+        plans = [f for f in files if ("_plan_" in f or "_lighting_" in f) and not f.endswith("_sheet.dxf")]
         self.assertEqual([p.split("_", 1)[1] for p in plans], ["lighting_PB.dxf", "plan_PB.dxf"])
         self.assertIn({"engine": "cad/plan", "function": "epc_plan.dxfout.write_dxf", "version": __import__("epc_plan").__version__}, res.engine_calls)
 
     def test_the_lighting_plan_has_only_luminaires_and_the_plan_has_the_outlets_and_the_walls(self):
         _, _, docs = self.drawings()
-        plan = next(d for n, d in docs.items() if "_plan_PB" in n)
-        light = next(d for n, d in docs.items() if "_lighting_PB" in n)
+        plan = next(d for n, d in docs.items() if n.endswith("_plan_PB.dxf"))
+        light = next(d for n, d in docs.items() if n.endswith("_lighting_PB.dxf"))
         blocks = lambda d: {e.dxf.name for e in d.modelspace().query("INSERT")}   # noqa: E731
         self.assertIn("SYM_TOMACORRIENTE", blocks(plan))
         self.assertNotIn("SYM_TOMACORRIENTE", blocks(light))
@@ -662,3 +662,78 @@ class EmergencyAndExteriorTests(unittest.TestCase):
         with self.assertRaises(BuildingError) as ctx:
             derive_all(b, loads())
         self.assertIn("exterior", ctx.exception.errors[0])
+
+
+class RenderedDocumentsTests(unittest.TestCase):
+    def run_api(self, **extra):
+        import tempfile
+        import test_platform_api as A
+        from epc_platform import api
+        b = with_plugs(board={"x_m": 4.0, "y_m": 5.0})
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            api.init_project(root, "API-1", A.ANSWERS, clock=A.CLOCK, actor=A.ORC)
+            ins = dict(W.inputs_doc(), building=b, transformer={"demand_kva": 40, "reserve_pct": 20, "secondary_v": 400}, **extra)
+            res = api.run_pipeline(root / "API-1", loads=loads(), engine_inputs=ins, clock=A.CLOCK, actor=A.ORC)
+            files = sorted(p.name for p in (root / "API-1" / "deliverables" / "TR-001").glob("*"))
+        return res, files
+
+    def test_a_building_run_issues_pdf_word_and_workbook_files_of_the_documents(self):
+        res, files = self.run_api()
+        self.assertTrue(res["ok"], res)
+        self.assertEqual(res["data"]["run"]["summary"]["by_status"], {"ok": 12})
+        for name in ("calculation_memo.pdf", "calculation_memo.docx", "cable_list.pdf", "specification.docx", "short_circuit_study.pdf"):
+            self.assertIn(name, files)
+        self.assertTrue([f for f in files if f.endswith("_tables.xlsx")])
+        rendered = res["data"]["run"]["results"][10]["outputs"]["rendered"]
+        self.assertIn("terminal_block_list", rendered["not_rendered"])
+
+    def test_the_formats_can_be_chosen_and_a_wrong_one_blocks(self):
+        res, files = self.run_api(documents={"formats": ["pdf"]})
+        self.assertTrue(res["ok"], res)
+        self.assertFalse([f for f in files if f.endswith((".docx", ".xlsx"))])
+        res, _ = self.run_api(documents={"formats": ["odt"]})
+        self.assertEqual(res["data"]["run"]["results"][10]["status"], "blocked")
+
+
+class MultilineTests(unittest.TestCase):
+    def files(self, **extra):
+        import tempfile
+        b = with_plugs(board={"x_m": 4.0, "y_m": 5.0})
+        done = derive_all(b, loads())
+        ins = dict(W.inputs_doc(), lighting=done["lighting"], routing=done["routing"], **extra)
+        ins["circuits"] = dict(ins["circuits"], **done["circuits"])
+        with tempfile.TemporaryDirectory() as tmp:
+            ctx = W.context(engine_inputs=ins, loads=done["loads"], work_dir=tmp)
+            res = run(ctx, stop_after=10, run_id="r10")
+            return res.results[9], sorted(f["path"] for f in res.results[9].outputs.get("files", []))
+
+    def test_a_building_run_draws_the_multiline_diagram_too(self):
+        res, files = self.files()
+        self.assertEqual(res.status, "ok", res.message)
+        self.assertEqual(res.outputs["summary"]["diagrams"], ["sld", "mld"])
+        self.assertTrue([f for f in files if f.startswith("MLD_")], files)
+
+    def test_the_diagrams_can_be_chosen_and_a_wrong_one_blocks(self):
+        res, files = self.files(drawings={"diagrams": ["sld"]})
+        self.assertFalse([f for f in files if f.startswith("MLD_")])
+        res, _ = self.files(drawings={"diagrams": ["xyz"]})
+        self.assertEqual(res.status, "blocked")
+
+
+class PlanSheetTests(unittest.TestCase):
+    def test_each_plan_goes_on_the_iram_sheet_with_the_project_title_block(self):
+        res, files = MultilineTests().files()
+        self.assertEqual(res.status, "ok", res.message)
+        sheets = [f for f in files if f.endswith("_sheet.dxf")]
+        self.assertEqual(len(sheets), 2, files)
+        self.assertEqual(sorted(res.outputs["plan_sheets"]), sorted(s[:-len("_sheet.dxf")] for s in sheets))
+        self.assertTrue(all(v["format"] == "A1" and v["scale"] > 0 for v in res.outputs["plan_sheets"].values()))
+        self.assertIn("epc_drawing.export.plan_sheet.compose", [c["function"] for c in res.engine_calls])
+
+    def test_the_format_and_scale_come_from_the_drawings_input_and_a_wrong_one_blocks(self):
+        res, _ = MultilineTests().files(drawings={"sheet_format": "A3", "paper_scale": 200})
+        self.assertEqual(res.status, "ok", res.message)
+        self.assertTrue(all(v["format"] == "A3" for v in res.outputs["plan_sheets"].values()))
+        res, _ = MultilineTests().files(drawings={"sheet_format": "B7"})
+        self.assertEqual(res.status, "blocked")
