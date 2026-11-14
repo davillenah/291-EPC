@@ -75,13 +75,19 @@ class DrawingsStage(Stage):
         calls = [EC.record_for("cad/drawing", DESIGN)]
         if not summary["ok"]:
             return self.result("failed", message=f"drawing engine: {summary['error']}", reason="engine", engine_calls=calls)
-        routing = EC.inputs_of(context).get("routing")
-        notes = []
-        if routing:
-            notes = write_floor_plans(routing, target / "out", name)
-            calls.append(EC.record_for(PLAN_ENGINE, PLAN_FUNCTION))
+        extra = self._floor_plans(context, target, name, calls)
         outputs = {"directory": f"drawings/{name}/out", "files": list_files(target / "out"), "summary": {k: copy.deepcopy(summary[k]) for k in SUMMARY_KEYS}}
-        return self.result("ok", outputs=dict(outputs, **({"plan_warnings": notes} if notes else {})), engine_calls=calls)
+        return self.result("ok", outputs=dict(outputs, **extra), engine_calls=calls)
+
+    @staticmethod
+    def _floor_plans(context, target, name, calls):
+        """Writes the plans of the routed floors when the engine inputs have a `routing` section (and records the call); {"plan_warnings": [...]} when the engine had any."""
+        routing = EC.inputs_of(context).get("routing")
+        if not routing:
+            return {}
+        calls.append(EC.record_for(PLAN_ENGINE, PLAN_FUNCTION))
+        notes = write_floor_plans(routing, target / "out", name)
+        return {"plan_warnings": notes} if notes else {}
 
 
 TERMINAL_LIST = "epc_terminal_blocks.build_terminal_list"

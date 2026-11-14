@@ -121,12 +121,18 @@ def _add_backdrop(doc, msp, backdrop: Dict[str, Any], cfg, scale: float, height:
     return count
 
 
-def write_dxf(result: Dict[str, Any], path: Path, version: str = "", params: Dict[str, Any] = core.PARAMS, layers_file=None, backdrop: Optional[Dict[str, Any]] = None) -> List[str]:
-    """Write the DXF of a result to `path`; returns the warnings (audit findings, read-back differences). `backdrop`: the walls and room names of the building under the services (see `_add_backdrop`)."""
-    cfg = params["dxf"]
+def _dxf_version(cfg, version):
+    """The DXF version asked for (the default when empty); refuses one the configuration does not list."""
     version = version or cfg["default_version"]
     if version not in cfg["versions"]:
         raise core.PlanError(f"DXF version {version!r} is not available: choose one of {', '.join(cfg['versions'])}")
+    return version
+
+
+def write_dxf(result: Dict[str, Any], path: Path, version: str = "", params: Dict[str, Any] = core.PARAMS, layers_file=None, backdrop: Optional[Dict[str, Any]] = None) -> List[str]:
+    """Write the DXF of a result to `path`; returns the warnings (audit findings, read-back differences). `backdrop`: the walls and room names of the building under the services (see `_add_backdrop`)."""
+    cfg = params["dxf"]
+    version = _dxf_version(cfg, version)
     profile = core.load_profile(result["discipline"])
     line_kinds, node_kinds = core._kinds(profile)
     code, scale = _UNITS[profile.get("unidades_salida", cfg["default_units"])]

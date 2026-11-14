@@ -128,27 +128,29 @@ def _floor_rooms(floor, with_outlets):
     unknown = sorted(excluded - {r["id"] for r in found}) + sorted(set(floor.get("rooms") or {}) - {r["id"] for r in found})
     errors += [f"floor {floor['id']}: room id {i} is not in the recognised architecture" for i in unknown]
     for room in found:
-        if room["id"] in excluded:
-            continue
-        data, outlets, errs = _split(floor, room, with_outlets)
-        if errs:
+        if room["id"] not in excluded:
+            lit, plug, errs = _one_room(floor, room, with_outlets)
             errors += errs
-            continue
-        try:
-            width, length = _shape(floor, room)
-        except BuildingError as exc:
-            errors += exc.errors
-            continue
-        base = {"id": f"{floor['id']}-{room['id']}", "name": f"{floor['name']} {room.get('name') or room['id']}", "width_m": width, "length_m": length}
-        rooms.append({**base, **copy.deepcopy(data)})
-        if outlets:
-            outlet_rooms.append({**base, **copy.deepcopy(outlets)})
+            rooms += [lit] if lit else []
+            outlet_rooms += [plug] if plug else []
     return rooms, outlet_rooms, errors
 
 
-def _check(building, loads):
-    if not isinstance(building, dict):
-        return ["building must be an object"]
+def _one_room(floor, room, with_outlets):
+    """(lighting room, receptacle room or None, errors) of one recognised room; the rooms are None when it has errors."""
+    data, outlets, errs = _split(floor, room, with_outlets)
+    if errs:
+        return None, None, errs
+    try:
+        width, length = _shape(floor, room)
+    except BuildingError as exc:
+        return None, None, exc.errors
+    base = {"id": f"{floor['id']}-{room['id']}", "name": f"{floor['name']} {room.get('name') or room['id']}", "width_m": width, "length_m": length}
+    return {**base, **copy.deepcopy(data)}, ({**base, **copy.deepcopy(outlets)} if outlets else None), []
+
+
+def _shape_errors(building):
+    """Errors of the keys of the building outside the floors: unknown keys, luminaires, receptacle catalogue."""
     errors = []
     unknown = sorted(set(building) - {"luminaires", "options", "tolerance_pct", "floors", "receptacles"})
     errors += [f"building: unknown key(s) {', '.join(unknown)}"] if unknown else []
@@ -156,19 +158,34 @@ def _check(building, loads):
         errors.append("building/luminaires: required, the epc_lighting luminaires")
     if building.get("receptacles") is not None and not (isinstance(building["receptacles"], list) and building["receptacles"]):
         errors.append("building/receptacles: the epc_receptacles catalogue (a non-empty list)")
-    if not isinstance(building.get("floors"), list) or not building["floors"]:
-        errors.append("building/floors: required, at least one floor")
-        return errors
+    return errors
+
+
+def _floors_errors(building, loads):
+    """Errors of the tolerance and of the floors: each floor, repeated ids, derived loads that already exist in the load list."""
+    errors = []
     tol = building.get("tolerance_pct")
     if tol is not None and (not _is_num(tol) or tol < 0):
         errors.append("building/tolerance_pct: a number >= 0 (no default)")
     for i, floor in enumerate(building["floors"]):
         errors += _check_floor(floor, i)
-    ids = [f.get("id") for f in building["floors"] if isinstance(f, dict)]
-    errors += [f"building/floors: id {d} is repeated" for d in sorted({i for i in ids if ids.count(i) > 1})]
+    return errors + _id_errors([f.get("id") for f in building["floors"] if isinstance(f, dict)], loads)
+
+
+def _id_errors(ids, loads):
+    """Repeated floor ids and derived loads (`L-<floor>`, `T-<floor>`) that already exist in the load list."""
     have = {load["id"] for load in loads["loads"]}
-    errors += [f"load {p}-{i} already exists in the load list: it is derived from the floor {i}" for i in ids for p in "LT" if f"{p}-{i}" in have]
-    return errors
+    errors = [f"building/floors: id {d} is repeated" for d in sorted({i for i in ids if ids.count(i) > 1})]
+    return errors + [f"load {p}-{i} already exists in the load list: it is derived from the floor {i}" for i in ids for p in "LT" if f"{p}-{i}" in have]
+
+
+def _check(building, loads):
+    if not isinstance(building, dict):
+        return ["building must be an object"]
+    errors = _shape_errors(building)
+    if not isinstance(building.get("floors"), list) or not building["floors"]:
+        return errors + ["building/floors: required, at least one floor"]
+    return errors + _floors_errors(building, loads)
 
 
 def _run(engine, document, options=None):
@@ -230,6 +247,25 @@ def _receptacle_loads(building, outlets, out, lengths, result):
                              "power": {"value": sum(va[r["id"]] for r in plugs), "unit": "VA"}, "phases": spec["phases"], "length": lengths[floor["id"]]("receptacles", spec["length"])})
 
 
+def _route_floor(floor, building, mine, lighting, plug_result):
+    """The design of one floor with a `board` (see routing.py) for its lit rooms `mine`."""
+    arch = {r["id"]: r for r in floor["architecture"]["rooms"]}
+    boxes = {r["id"]: arch[r["id"].split("-", 1)[1]].get("box_m") for r in mine}
+    if not all(boxes.values()):
+        raise BuildingError([f"floor {floor['id']}: a room has no position in metres (`box_m`): the plan units are not known"])
+    plugs = {"rooms": [x for x in (plug_result or {"rooms": []})["rooms"] if x["id"] in boxes]} if plug_result else None
+    return design_floor(floor, mine, boxes, {"rooms": [x for x in lighting["rooms"] if x["id"] in boxes]}, plugs, building.get("receptacles"))
+
+
+def _routed_length(design):
+    riser = design["riser_m"]
+    return lambda part, own=None: {"value": round(riser + design["branch_m"][part], 3), "unit": "m"}
+
+
+def _own_length(floor):
+    return lambda part, own=None: copy.deepcopy(own or floor["length"])
+
+
 def _routing(building, lit_rooms, rooms, lighting, outlets, plug_result):
     """{floor id: design of the floor} for the floors that have a `board` (see routing.py), and the function that gives the length of each derived load."""
     by_id = {r["id"]: r for r in rooms}
@@ -237,18 +273,10 @@ def _routing(building, lit_rooms, rooms, lighting, outlets, plug_result):
     for floor in building["floors"]:
         fid = floor["id"]
         if not floor.get("board"):
-            lengths[fid] = lambda part, own=None, floor=floor: copy.deepcopy(own or floor["length"])
+            lengths[fid] = _own_length(floor)
             continue
-        arch = {r["id"]: r for r in floor["architecture"]["rooms"]}
-        mine = [by_id[i] for i in lit_rooms[fid]]
-        boxes = {r["id"]: arch[r["id"].split("-", 1)[1]].get("box_m") for r in mine}
-        if not all(boxes.values()):
-            raise BuildingError([f"floor {fid}: a room has no position in metres (`box_m`): the plan units are not known"])
-        plugs = {"rooms": [x for x in (plug_result or {"rooms": []})["rooms"] if x["id"] in boxes]} if plug_result else None
-        design = design_floor(floor, mine, boxes, {"rooms": [x for x in lighting["rooms"] if x["id"] in boxes]}, plugs, building.get("receptacles"))
-        designs[fid] = design
-        riser = floor["length"]["value"]
-        lengths[fid] = lambda part, own=None, riser=riser, design=design: {"value": round(riser + design["branch_m"][part], 3), "unit": "m"}
+        designs[fid] = _route_floor(floor, building, [by_id[i] for i in lit_rooms[fid]], lighting, plug_result)
+        lengths[fid] = _routed_length(designs[fid])
     return designs, lengths
 
 

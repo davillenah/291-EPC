@@ -62,6 +62,32 @@ def backdrop_of(architecture):
     return {"walls": walls, "rooms": rooms}
 
 
+def _propose(design, document, floor, boxes):
+    """(runs, wiring) the plan engine proposes for the floor document; adds the runs to the document as lines."""
+    try:
+        runs = design.propose_runs(document)
+        document["lines"] = [{"id": f"RUN-{i:03d}", "kind": r["kind"], "points": r["points"]} for i, r in enumerate(runs["lines"], 1)]
+        return runs, design.propose_wiring(document, _room_polygons(boxes))
+    except ValueError as exc:
+        raise RoutingError([f"floor {floor['id']}: {exc}"]) from exc
+
+
+def _refuse_unrouted(floor, wiring):
+    """A circuit whose runs do not reach its loads, or a load outside every room, stops the floor."""
+    lost = [f"floor {floor['id']}: circuit {t}: the runs do not reach {', '.join(r['unreached'][:6]) or 'all its loads'}" for t, r in wiring["routes"].items() if not r["found"]]
+    if lost or wiring["unassigned"]:
+        raise RoutingError(lost + [f"floor {floor['id']}: {w}" for w in wiring["warnings"] if "outside every room" in w])
+
+
+def _branch_lengths(wiring):
+    """{part of the installation: longest branch distance in metres} over the circuits of each family."""
+    branch = {}
+    for c in wiring["circuits"]:
+        part = FAMILIES[c["family"]]
+        branch[part] = max(branch.get(part, 0.0), wiring["routes"][c["tag"]]["max_distance_m"])
+    return branch
+
+
 def design_floor(floor, rooms, boxes, lighting, outlets, catalogue):
     """{document, runs, wiring, branch_m, warnings} of one floor. `rooms`: the lit rooms of the document (the lighting and receptacle results are keyed by their ids); `boxes`: room id -> box in metres."""
     import epc_plan.design as design
@@ -69,17 +95,7 @@ def design_floor(floor, rooms, boxes, lighting, outlets, catalogue):
     kinds = {r["id"]: r["kind"] for r in catalogue or []}
     document = {"schema_version": "1.0", "plan": {"id": floor["id"], "scale": copy.deepcopy(SCALE)}, "discipline": "electrica_BT",
                 "nodes": [{"id": BOARD_ID, "kind": "TB", "x": board["x_m"], "y": board["y_m"]}] + _nodes(rooms, boxes, lighting, outlets, kinds)}
-    try:
-        runs = design.propose_runs(document)
-        document["lines"] = [{"id": f"RUN-{i:03d}", "kind": r["kind"], "points": r["points"]} for i, r in enumerate(runs["lines"], 1)]
-        wiring = design.propose_wiring(document, _room_polygons(boxes))
-    except ValueError as exc:
-        raise RoutingError([f"floor {floor['id']}: {exc}"]) from exc
-    lost = [f"floor {floor['id']}: circuit {t}: the runs do not reach {', '.join(r['unreached'][:6]) or 'all its loads'}" for t, r in wiring["routes"].items() if not r["found"]]
-    if lost or wiring["unassigned"]:
-        raise RoutingError(lost + [f"floor {floor['id']}: {w}" for w in wiring["warnings"] if "outside every room" in w])
-    branch = {}
-    for c in wiring["circuits"]:
-        part = FAMILIES[c["family"]]
-        branch[part] = max(branch.get(part, 0.0), wiring["routes"][c["tag"]]["max_distance_m"])
+    runs, wiring = _propose(design, document, floor, boxes)
+    _refuse_unrouted(floor, wiring)
+    branch = _branch_lengths(wiring)
     return {"document": document, "runs": runs, "wiring": wiring, "branch_m": branch, "riser_m": floor["length"]["value"], "backdrop": backdrop_of(floor["architecture"]), "loads": {"lighting": f"L-{floor['id']}", "receptacles": f"T-{floor['id']}"}, "warnings": [f"floor {floor['id']}: {w}" for w in runs["warnings"] + wiring["warnings"]]}

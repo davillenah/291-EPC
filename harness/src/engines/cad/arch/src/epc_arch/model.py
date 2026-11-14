@@ -145,10 +145,14 @@ def _box_m(r: "Room", units_per_metre: Optional[float]) -> Optional[List[float]]
     return [round(min(q[0] for q in r.rects) / k, 3), round(min(q[1] for q in r.rects) / k, 3), round(max(q[2] for q in r.rects) / k, 3), round(max(q[3] for q in r.rects) / k, 3)]
 
 
+def _rounded(value, digits):
+    return None if value is None else round(value, digits)
+
+
 def _room_dict(r: "Room", units_per_metre: Optional[float] = None) -> Dict[str, Any]:
     box = _box_m(r, units_per_metre)
-    return {"id": r.id, "area": round(r.area, 1), "area_m2": None if r.area_m2 is None else round(r.area_m2, 2), "at": _r3(r.at), "name": r.name, "key": r.key, "code": r.code, "written_m2": r.written_m2,
-            "size_m": None if box is None else [round(box[2] - box[0], 3), round(box[3] - box[1], 3)], "box_m": box}
+    return {"id": r.id, "area": round(r.area, 1), "area_m2": _rounded(r.area_m2, 2), "at": _r3(r.at), "name": r.name, "key": r.key, "code": r.code, "written_m2": r.written_m2,
+            "size_m": box and [round(box[2] - box[0], 3), round(box[3] - box[1], 3)], "box_m": box}
 
 
 @dataclass
