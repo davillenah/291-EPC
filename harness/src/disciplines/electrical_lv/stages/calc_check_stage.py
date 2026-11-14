@@ -35,7 +35,7 @@ def logical_results(results):
         if numbers is None:
             continue
         grouped = len(numbers) > 1
-        slugs = {SLICES[n][0] for n in numbers} if grouped else set()
+        slugs = {slug for slug, group in SLICES.values() if group == res["stage"]} if grouped else set()   # includes the slices calc_check does not see
         for n in numbers:
             if not grouped:
                 out[n] = _slice(res, n, res["outputs"], res["findings"])
