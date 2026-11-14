@@ -130,7 +130,7 @@ COMMANDS = {c.key: c for c in (
         (("--engine-inputs",), {"metavar": "FILE.json", "help": "extra calculation inputs (JSON file)"}),
         (("--stop-after",), {"type": int, "metavar": "N", "help": "stop after stage N"}),
         (("--from-stage",), {"type": int, "metavar": "N", "help": "re-run only stages N.. and reuse the recorded earlier stages when still valid"}),
-        (("--mode",), {"choices": ["production", "edit"], "default": "production", "help": "production (default, strict) or edit: norm records that are not verified do not stop approve and issue; the package is marked as not for production"}),
+        (("--mode",), {"choices": ["production", "edit"], "default": None, "help": "production (strict) or edit: norm records that are not verified do not stop approve and issue and the package is marked as not for production; without it, the default mode (EPC_RUN_MODE, else harness/config/default_run_mode)"}),
         (("--resume",), {"action": "store_true", "help": "start at the first stage that reads an input that changed since the last run (reuses the earlier ones)"}),
         (("--run-id",), {"metavar": "ID", "help": "run id (default: generated)"}),
         (("--revision",), {"default": "R0", "metavar": "R", "help": "document revision (default R0)"}),

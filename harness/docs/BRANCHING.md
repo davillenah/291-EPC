@@ -27,6 +27,7 @@ feature/b                      o
    ```
    or, in one step: `python harness/tools/ci/run_gate.py` (the full battery).
 3. `dev` goes to `main` when the whole suite is green and the checklist is done: changelog updated, version bumped in the affected `plugin.json`, no draft rules promoted by mistake, no PDF/DWG/dev-knowledge content staged, and no development credential (the gate check `dev-credentials` enforces it: the MASTER account lives only in the developer's git-ignored `local/`, ADR-0015).
+   **Default run mode (ADR-0035).** `harness/config/default_run_mode` says `edit` on `dev` and `production` on `main`. The promotion from `dev` to `main` is explicit: on a release branch cut from `dev`, run `python harness/tools/build/set_default_run_mode.py production`, commit it (`chore(release): default run mode production`), check with `EPC_RELEASE=1 python harness/tools/ci/check_default_run_mode.py` and the full gate, and merge that branch to `main`; never merge `dev` into `main` directly, and do not merge `main` back into `dev` without setting `edit` again (`set_default_run_mode.py edit`). The gate check `default-run-mode` fails on `main`, on a release (`EPC_RELEASE=1`) and in the CI of a pull request to `main` while the file says `edit`.
 4. Commit messages follow Conventional Commits: `feat(scope): ...`, `fix(scope): ...`, `docs: ...`, `chore: ...`.
 5. Never push `local/dev-knowledge/`, `local/legacy/`, client projects or copyrighted files. They are listed in `.gitignore`; the hook adds a second barrier.
 

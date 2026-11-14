@@ -67,7 +67,7 @@ def epc_project_init(ctx: Context, args: dict):
 
 def epc_pipeline_run(ctx: Context, args: dict):
     return _api().run_pipeline(_dir(ctx, args), loads=args.get("loads"), engine_inputs=args.get("engine_inputs"), stop_after=args.get("stop_after"),
-                            from_stage=args.get("from_stage"), resume=bool(args.get("resume", False)), mode=args.get("mode", "production"), run_id=args.get("run_id"), revision=args.get("revision", "R0"), detail=bool(args.get("detail", False)),
+                            from_stage=args.get("from_stage"), resume=bool(args.get("resume", False)), mode=args.get("mode"), run_id=args.get("run_id"), revision=args.get("revision", "R0"), detail=bool(args.get("detail", False)),
                             clock=ctx.now, actor=ctx.who())
 
 

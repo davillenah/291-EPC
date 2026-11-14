@@ -46,6 +46,6 @@ python -m epc_platform.cli approve DEMO-1 --actor-role engineer_of_record --acto
 
 `approve` and `issue` are refused (`blocked_d21`) while a norm record listed in the manifests is not verified. The CLI never changes a review state.
 
-Modes (ADR-0035): `epc run --mode production` is the default and the behaviour above. With `--mode edit` the norm records that are not verified do not stop `approve` and `issue` while every manifest in force was made in edit mode; the answer carries `mode: edit` and a notice, and the package, its reports and its transmittal say they are not for production. A production run does not take over a revision made in edit mode.
+Modes (ADR-0035): without `--mode` the default mode is `EPC_RUN_MODE`, else the one in `harness/config/default_run_mode` (`edit` on `dev`, `production` on `main`); an explicit `--mode` always wins. `production` is the behaviour above. With `--mode edit` the norm records that are not verified do not stop `approve` and `issue` while every manifest in force was made in edit mode; the answer carries `mode: edit` and a notice, and the package, its reports and its transmittal say they are not for production. A production run does not take over a revision made in edit mode.
 
 Tests: `harness/tests/unit/test_cli.py`, `test_cli_parity.py` (CLI = MCP = direct api) and `harness/tests/architecture/test_platform_clock.py`.

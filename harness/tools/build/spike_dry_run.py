@@ -21,6 +21,9 @@ read, invented or written here; criteria 2 and 4 are compared in MIG-44 once the
 Needs the engine packages: the script puts `harness/src` and every engine `src` on `sys.path` itself and imports the integration helper
 `harness/tests/integration/synthetic_lv.py` the way the tests do (a full run takes about half a minute).
 """
+import os
+
+os.environ.setdefault("EPC_RUN_MODE", "production")      # the dry run measures the strict behaviour (ADR-0035), whatever the default mode of the branch is
 import argparse
 from collections import ChainMap
 import contextlib

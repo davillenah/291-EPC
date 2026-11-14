@@ -7,6 +7,7 @@ import json
 
 from disciplines.electrical_lv import pipeline
 from disciplines.electrical_lv import resume as RS
+from disciplines.electrical_lv.run_mode import default_mode
 from disciplines.electrical_lv.intake.building import BuildingError, derive_all
 from disciplines.electrical_lv.stages import STAGES, PipelineContext
 from disciplines.electrical_lv.store import MODES, RUNS_DIR, ProjectStore, StoreError, check_run_id
@@ -146,22 +147,23 @@ def _start_stage(store, inputs, from_stage, resume, mode="production"):
 
 
 @api_call
-def run_pipeline(project_dir, *, loads=None, engine_inputs=None, stop_after=None, run_id=None, clock, actor, revision="R0", detail=True, rng=None, from_stage=None, resume=False, mode="production"):
+def run_pipeline(project_dir, *, loads=None, engine_inputs=None, stop_after=None, run_id=None, clock, actor, revision="R0", detail=True, rng=None, from_stage=None, resume=False, mode=None):
     """Run the pipeline in the project. `loads` and `engine_inputs` are the load list and the extra calculation inputs (see the stage docs).
 
     `from_stage` N re-runs only stages N.. and reuses the recorded results of the earlier ones when they are still valid (a correction that
     only touches late inputs, such as the bill of quantities or the drawing date, does not repeat the calculation). With `resume` the first stage to re-run is found by comparing the inputs with
     the ones of the last recorded run (see `resume.py`); it cannot be combined with `from_stage`.
 
-    `mode` is `production` (the default: the strict behaviour, a norm record that is not verified keeps the package a draft and blocks approve and issue, D21) or `edit` (ADR-0035: records that are not
-    verified do not stop the workflow, and the package, its documents and its transmittal say they were made in edit mode and are not for production)."""
+    `mode` is `production` (the strict behaviour, a norm record that is not verified keeps the package a draft and blocks approve and issue, D21) or `edit` (ADR-0035: records that are not
+    verified do not stop the workflow, and the package, its documents and its transmittal say they were made in edit mode and are not for production). Without one it is the default mode
+    (`run_mode.py`: `EPC_RUN_MODE`, else `harness/config/default_run_mode`: `edit` on dev, `production` on main)."""
     root, who = existing_project(project_dir), actor_of(actor)
     log = open_log(root, clock)
     trail = _trail(log, clock, run_id, rng)
     _authorise(trail, who, root)
     store, answers = _prepare(root, who, loads, engine_inputs)
     loads, engine_inputs = _with_building(loads, engine_inputs, store.inputs_dir)
-    mode = _check_mode(mode)
+    mode = _check_mode(default_mode() if mode is None else mode)
     from_stage = _start_stage(store, (answers, loads, engine_inputs), from_stage, resume, mode)
     workflow = Workflow(root, log, store)
     flow.enter_running(workflow, who, trail.run_id)

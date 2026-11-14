@@ -7,6 +7,7 @@ Checks
   registry          plugin registry (plugins, skills, agents, engine areas)
   skill-conflicts   duplicate / orphan skills (production rules)
   single-source     no two versioned files hold the same content (one source of truth per datum)
+  default-run-mode  the default mode of a run is `production` on main and on a release, `production` or `edit` elsewhere (ADR-0035)
   dev-credentials   no development credential (the MASTER account) is versioned: it can never reach main
   coverage          each area keeps at least its measured coverage (harness/tools/ci/coverage_floor.json); the suites run under `coverage`
   complexity        no function becomes more complex than its baseline; a new function stays at or below 10 (harness/tools/ci/complexity_baseline.json)
@@ -141,6 +142,7 @@ def main():
     run("single-source", [py, str(REPO / "harness" / "tools" / "ci" / "check_single_source.py")], REPO)
     run("dev-credentials", [py, str(REPO / "harness" / "tools" / "ci" / "check_dev_credentials.py")], REPO)
     run("complexity", [py, str(REPO / "harness" / "tools" / "ci" / "check_complexity.py")], REPO)
+    run("default-run-mode", [py, str(REPO / "harness" / "tools" / "ci" / "check_default_run_mode.py")], REPO)
     areas = select_areas(a.changed)
     run_jobs(suite_jobs(py, areas), a.jobs)
     run("coverage", [py, str(REPO / "harness" / "tools" / "ci" / "check_coverage.py"), "--areas", ",".join(f"engine-{x}" for x in areas)], REPO)
