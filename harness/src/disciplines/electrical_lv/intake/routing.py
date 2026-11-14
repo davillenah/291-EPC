@@ -6,6 +6,10 @@ Every branch circuit the engine proposes (IUG-xx, TUG-xx) becomes a load of its 
 the plan engine gives for the voltage drop by electrical moments (`moment_length_m`: the length equivalent to the sum of current x distance of its loads), and the circuit is sized
 with the moments flag of the calculation engine. A circuit the runs do not reach is an error: its length would be wrong.
 
+The run from the main board to the board of a floor (the riser) is an input (`length` of the floor) or, when the building gives its `main_board`, it is routed too: `route_riser` lays the horizontal runs
+on the main floor and on the floor of the board, joined by a plenum (a vertical shaft) as high as the difference of the levels of both floors, and the plan engine measures it (the height of the plenum is added to the
+route). Levels (`elevation_m`) and the place of each shaft are inputs.
+
 The plan is drawn in metres (scale 1 unit = 1 m) in the frame of the architecture, which the floors share.
 """
 import copy
@@ -108,3 +112,43 @@ def design_floor(floor, rooms, boxes, lighting, outlets, catalogue, taken=()):
     runs, wiring = _propose(design, document, floor, boxes, taken)
     _refuse_unrouted(floor, wiring)
     return {"document": document, "runs": runs, "wiring": wiring, "circuits": _circuits(wiring), "riser_m": _risers(floor), "backdrop": backdrop_of(floor["architecture"]), "warnings": [f"floor {floor['id']}: {w}" for w in runs["warnings"] + wiring["warnings"]]}
+
+
+def _corner(points):
+    """The points of an orthogonal run (horizontal first) without repeated points."""
+    out = [points[0]]
+    for p in points[1:]:
+        if p != out[-1]:
+            out.append(p)
+    return out
+
+
+def _riser_document(main, floor, height):
+    """The plan document of the riser: the main board, the board of the floor and, when they are not on the same floor, the shaft (a plenum of the height of the levels) between them. A board that
+    stands at the shaft is the shaft: two nodes at one point would be one node of the graph and the plenum would be lost."""
+    board, here = floor["board"], main["floor"] == floor["id"]
+    start, end = (main["x_m"], main["y_m"]), (board["x_m"], board["y_m"])
+    shaft = None if here else (floor["shaft"]["x_m"], floor["shaft"]["y_m"])
+    ids = {"from": "TB-MAIN" if shaft != start else "PL-SHAFT", "to": BOARD_ID if shaft != end else "PL-SHAFT"}
+    nodes = ([] if ids["from"] == "PL-SHAFT" else [{"id": "TB-MAIN", "kind": "TB", "x": start[0], "y": start[1]}]) + ([] if ids["to"] == "PL-SHAFT" else [{"id": BOARD_ID, "kind": "TB", "x": end[0], "y": end[1]}])
+    if shaft is None:
+        runs = [[start, (end[0], start[1]), end]]
+    else:
+        nodes.append({"id": "PL-SHAFT", "kind": "PL", "x": shaft[0], "y": shaft[1], "attrs": {"altura_m": height}})
+        runs = [[start, (shaft[0], start[1]), shaft], [shaft, (shaft[0], end[1]), end]]
+    lines = [{"id": f"RISER-{i}", "kind": "BN", "points": [list(p) for p in _corner(r)]} for i, r in enumerate(runs, 1) if len(_corner(r)) > 1]
+    return {"schema_version": "1.0", "plan": {"id": f"riser-{floor['id']}", "scale": copy.deepcopy(SCALE)}, "discipline": "electrica_BT", "nodes": nodes, "lines": lines,
+            "circuits": [{"tag": "RISER", "from": ids["from"], "to": ids["to"], "via": [], "ternas": 1}]}
+
+
+def route_riser(main, floor, height):
+    """{"length_m", "height_m", "document"}: the run from the main board to the board of `floor`, measured by the plan engine (the height of the shaft included)."""
+    import epc_plan.core as core
+    document = _riser_document(main, floor, height)
+    try:
+        route = core.process(document)["circuits"]["RISER"]
+    except (core.PlanError, KeyError) as exc:
+        raise RoutingError([f"floor {floor['id']}: the riser cannot be routed: {exc}"]) from exc
+    if not route["found"]:
+        raise RoutingError([f"floor {floor['id']}: the riser does not reach the board of the floor (check the shaft and the board positions)"])
+    return {"length_m": route["length_m"], "height_m": height, "document": document}

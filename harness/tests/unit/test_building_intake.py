@@ -850,3 +850,75 @@ class PlanFromInputsTests(unittest.TestCase):
             res = api.run_pipeline(root / "API-1", loads=loads(), engine_inputs=dict(W.inputs_doc(), building=self.building()), stop_after=3, clock=A.CLOCK, actor=A.ORC)
         self.assertTrue(res["ok"], res)
         self.assertIn("L-PB", [x["id"] for x in res["data"]["run"]["results"][0]["outputs"]["loads"]["loads"]])
+
+
+class VerticalRiserTests(unittest.TestCase):
+    """The run from the main board to the board of each floor, routed by the plan engine with the height of the shaft."""
+
+    def build(self):
+        b = with_plugs(board={"x_m": 4.0, "y_m": 5.0})
+        for key in ("length",):
+            del b["floors"][0][key]
+        del b["floors"][0]["receptacles_load"]["length"]
+        b["floors"][0]["elevation_m"] = 0.0
+        second = copy.deepcopy(b["floors"][0])
+        second.update({"id": "P1", "name": "Floor 1", "elevation_m": 3.2, "shaft": {"x_m": 1.0, "y_m": 8.0}})
+        b["floors"].append(second)
+        b["main_board"] = {"floor": "PB", "x_m": 1.0, "y_m": 8.0}
+        return b
+
+    def test_the_riser_is_the_horizontal_runs_plus_the_height_of_the_shaft(self):
+        done = derive_all(self.build(), loads())
+        pb, p1 = done["routing"]["PB"], done["routing"]["P1"]
+        self.assertEqual(pb["riser_route"]["height_m"], 0.0)
+        self.assertAlmostEqual(pb["riser_route"]["length_m"], abs(4.0 - 1.0) + abs(5.0 - 8.0), places=3)          # main (1, 8) to the board (4, 5)
+        self.assertEqual(p1["riser_route"]["height_m"], 3.2)
+        self.assertAlmostEqual(p1["riser_route"]["length_m"], 3.2 + abs(4.0 - 1.0) + abs(5.0 - 8.0), places=3)    # the shaft at (1, 8): up 3.2 m, then to the board
+        self.assertEqual(p1["riser_m"], {"lighting": p1["riser_route"]["length_m"], "receptacles": p1["riser_route"]["length_m"]})
+
+    def test_the_loads_of_the_upper_floor_use_the_routed_riser(self):
+        done = derive_all(self.build(), loads())
+        design = done["routing"]["P1"]
+        by_id = {x["id"]: x for x in done["loads"]["loads"]}
+        for tag, c in design["circuits"].items():
+            self.assertAlmostEqual(by_id[c["load"]]["length"]["value"], design["riser_route"]["length_m"] + c["moment_m"], places=2)
+
+    def test_a_typed_length_a_missing_level_or_shaft_and_a_wrong_main_floor_are_errors(self):
+        b = self.build()
+        b["floors"][1]["length"] = {"value": 5, "unit": "m"}
+        with self.assertRaises(BuildingError) as ctx:
+            derive_all(b, loads())
+        self.assertIn("routed from the main board", ctx.exception.errors[0])
+        for key in ("elevation_m", "shaft"):
+            b = self.build()
+            del b["floors"][1][key]
+            with self.subTest(key=key), self.assertRaises(BuildingError) as ctx:
+                derive_all(b, loads())
+            self.assertIn(key, ctx.exception.errors[0])
+        b = self.build()
+        b["main_board"]["floor"] = "XX"
+        with self.assertRaises(BuildingError):
+            derive_all(b, loads())
+
+    def test_the_stage_checks_the_loads_against_the_riser_of_the_design(self):
+        done = derive_all(self.build(), loads())
+        ins = dict(W.inputs_doc(), lighting=done["lighting"], routing=done["routing"])
+        ins["circuits"] = dict(ins["circuits"], **done["circuits"])
+        ctx = W.context(engine_inputs=ins, loads=done["loads"])
+        run(ctx, stop_after=2, run_id="r")
+        res = STAGES[2].run(ctx)
+        self.assertEqual(res.status, "ok", res.message)
+        self.assertFalse([f for f in res.findings if f["severity"] == "major"])
+
+    def test_a_shaft_away_from_both_boards_adds_both_horizontal_legs_and_the_height(self):
+        b = self.build()
+        b["floors"][1]["shaft"] = {"x_m": 6.0, "y_m": 8.0}
+        p1 = derive_all(b, loads())["routing"]["P1"]["riser_route"]
+        # main (1, 8) -> shaft (6, 8): 5 m; up 3.2 m; shaft (6, 8) -> board (4, 5): 3 + 2 = 5 m
+        self.assertAlmostEqual(p1["length_m"], 5.0 + 3.2 + 5.0, places=3)
+
+    def test_a_shaft_at_the_floor_board_is_the_board(self):
+        b = self.build()
+        b["floors"][1]["shaft"] = {"x_m": 4.0, "y_m": 5.0}
+        p1 = derive_all(b, loads())["routing"]["P1"]["riser_route"]
+        self.assertAlmostEqual(p1["length_m"], 3.0 + 3.0 + 3.2, places=3)

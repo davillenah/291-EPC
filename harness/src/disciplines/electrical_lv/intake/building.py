@@ -18,6 +18,7 @@ every lighting load, are inputs; a room the caller did not describe is an error 
                  "by_name": {"HALL": {...}},               # the same, by the written name of the room (exact match); `rooms` wins
                  "exclude": ["r7"],                        # room ids that are deliberately not lit
                  "emergency": {"r2": {...}}}],             # antipanic emergency lighting of a room: the epc_lighting emergency fields except id, name, width_m, length_m
+     "main_board": {"floor": "PB", "x_m": 1.0, "y_m": 8.0},   # optional: where the main board is; the riser of every floor is then routed (no `length` on the floors; each one gives `elevation_m` and, unless it is the main floor, `shaft`)
      "exterior": [{"id": "EXT1", "area_m2": 300, "luminaire": "...", "load": {"area": "AZ", "phases": 1, "length": {...}}}]}   # exterior areas: epc_lighting area fields + the load they make
 
 Receptacles (optional, same rules): `building.receptacles` is the epc_receptacles catalogue, each room's data then carries `receptacles`
@@ -31,7 +32,7 @@ A floor may also give `circuits` (`{"lighting": {...}, "receptacles": {...}}`): 
 import copy
 import math
 
-from disciplines.electrical_lv.intake.routing import RoutingError, design_floor
+from disciplines.electrical_lv.intake.routing import RoutingError, design_floor, route_riser
 
 SIZE_FIELDS = ("id", "name", "width_m", "length_m")
 
@@ -58,7 +59,7 @@ def _shape(floor, room):
     return round(sides[0], 3), round(sides[1], 3)
 
 
-FLOOR_KEYS = {"id", "name", "phases", "length", "architecture", "plan", "rooms", "by_name", "exclude", "receptacles_load", "circuits", "board", "emergency"}
+FLOOR_KEYS = {"id", "name", "phases", "length", "architecture", "plan", "rooms", "by_name", "exclude", "receptacles_load", "circuits", "board", "emergency", "shaft", "elevation_m"}
 
 
 def _is_length(value):
@@ -170,7 +171,7 @@ def _one_room(floor, room, with_outlets):
 def _shape_errors(building):
     """Errors of the keys of the building outside the floors: unknown keys, luminaires, receptacle catalogue."""
     errors = []
-    unknown = sorted(set(building) - {"luminaires", "options", "tolerance_pct", "floors", "receptacles", "exterior"})
+    unknown = sorted(set(building) - {"luminaires", "options", "tolerance_pct", "floors", "receptacles", "exterior", "main_board"})
     errors += [f"building: unknown key(s) {', '.join(unknown)}"] if unknown else []
     if not isinstance(building.get("luminaires"), list) or not building["luminaires"]:
         errors.append("building/luminaires: required, the epc_lighting luminaires")
@@ -410,9 +411,64 @@ def _receptacle_result(building, outlets):
     return _run("epc_receptacles", {"schema_version": "1.0", "receptacles": copy.deepcopy(building["receptacles"]), "rooms": rooms})
 
 
+def _is_point(value):
+    return isinstance(value, dict) and set(value) == {"x_m", "y_m"} and all(_is_num(v) for v in value.values())
+
+
+def _riser_errors(building, floor):
+    """Errors of a floor in a building with a main board: no typed length, a board, a level and (off the main floor) a shaft."""
+    main, where = building["main_board"], f"floor {floor.get('id')}"
+    errors = [f"{where}: `length` is routed from the main board: remove it"] if "length" in floor or "length" in (floor.get("receptacles_load") or {}) else []
+    errors += [] if floor.get("board") else [f"{where}: a `board` is required to route its riser"]
+    errors += [] if _is_num(floor.get("elevation_m")) else [f"{where}: `elevation_m` (the level of the floor in metres) is required"]
+    off = floor.get("id") != main["floor"]
+    return errors + ([f"{where}: `shaft` {{x_m, y_m}} (the vertical shaft) is required off the main floor"] if off and not _is_point(floor.get("shaft")) else [])
+
+
+def _is_main_board(main):
+    """{floor, x_m, y_m}: the floor of the main board and its place on the plan."""
+    return isinstance(main, dict) and set(main) == {"floor", "x_m", "y_m"} and isinstance(main["floor"], str) and _is_point({"x_m": main["x_m"], "y_m": main["y_m"]})
+
+
+def _check_main_board(building, main):
+    """Errors of the `main_board` section and of every floor of a building that has one."""
+    if not _is_main_board(main):
+        return ["building/main_board: {floor, x_m, y_m}, the floor of the main board and its place on the plan in metres"]
+    floors = [f for f in (building.get("floors") if isinstance(building.get("floors"), list) else []) if isinstance(f, dict)]
+    if main["floor"] not in {f.get("id") for f in floors}:
+        return [f"building/main_board: floor {main['floor']} is not one of the floors"]
+    return [e for f in floors for e in _riser_errors(building, f)]
+
+
+def _routed_floor(main, floor, base):
+    """The riser route of a floor (a BuildingError when it cannot be routed); the floor gets its `length`, and its receptacle load too."""
+    try:
+        route = route_riser(main, floor, abs(floor["elevation_m"] - base))
+    except RoutingError as exc:
+        raise BuildingError(exc.errors) from exc
+    floor["length"] = {"value": route["length_m"], "unit": "m"}
+    if floor.get("receptacles_load"):
+        floor["receptacles_load"]["length"] = copy.deepcopy(floor["length"])
+    return route
+
+
+def resolve_risers(building):
+    """(building with the `length` of each floor routed from the main board, {floor id: the riser route}); a building without `main_board` is returned as it is."""
+    main = building.get("main_board") if isinstance(building, dict) else None
+    if main is None:
+        return building, {}
+    errors = _check_main_board(building, main)
+    if errors:
+        raise BuildingError(errors)
+    out = copy.deepcopy(building)
+    base = next(f["elevation_m"] for f in out["floors"] if f["id"] == main["floor"])
+    return out, {f["id"]: _routed_floor(main, f, base) for f in out["floors"]}
+
+
 def derive_all(building, loads, inputs_dir=None):
     """{"loads": load list with the derived loads, "lighting": section for stage 3, "routing": {floor id: design} (floors with a `board`), "circuits": {load id: options}}. The inputs are not changed."""
     building = resolve_plans(building, inputs_dir) if inputs_dir is not None else building
+    building, risers = resolve_risers(building)
     errors = _check(building, loads)
     if errors:
         raise BuildingError(errors)
@@ -432,6 +488,9 @@ def derive_all(building, loads, inputs_dir=None):
     _receptacle_loads(building, outlets, out, lengths, plug_result)
     _circuit_loads(building, designs, out)
     _exterior_loads(building, lighting, out)
+    for fid, route in risers.items():
+        if fid in designs:
+            designs[fid]["riser_route"] = route
     return {"loads": out, "lighting": section, "routing": designs, "circuits": _circuit_options(building, designs)}
 
 
