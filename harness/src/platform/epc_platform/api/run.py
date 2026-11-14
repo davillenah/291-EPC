@@ -82,7 +82,7 @@ def _prepare(root, who, loads, engine_inputs):
     return store, answers
 
 
-def _with_building(loads, engine_inputs):
+def _with_building(loads, engine_inputs, inputs_dir=None):
     """(loads, engine_inputs) after the building section, if any, has been turned into lighting loads and the lighting section of stage 3."""
     if not engine_inputs or "building" not in engine_inputs:
         return loads, engine_inputs
@@ -91,7 +91,7 @@ def _with_building(loads, engine_inputs):
     if "lighting" in engine_inputs:
         raise ApiError("invalid_arguments", "engine_inputs has both `building` and `lighting`: the lighting section is derived from the building")
     try:
-        done = derive_all(engine_inputs["building"], loads)
+        done = derive_all(engine_inputs["building"], loads, inputs_dir)
     except BuildingError as exc:
         raise ApiError("invalid_arguments", f"building: {exc}", {"errors": exc.errors}) from exc
     loads = done["loads"]
@@ -136,7 +136,7 @@ def run_pipeline(project_dir, *, loads=None, engine_inputs=None, stop_after=None
     trail = _trail(log, clock, run_id, rng)
     _authorise(trail, who, root)
     store, answers = _prepare(root, who, loads, engine_inputs)
-    loads, engine_inputs = _with_building(loads, engine_inputs)
+    loads, engine_inputs = _with_building(loads, engine_inputs, store.inputs_dir)
     from_stage = _start_stage(store, (answers, loads, engine_inputs), from_stage, resume)
     workflow = Workflow(root, log, store)
     flow.enter_running(workflow, who, trail.run_id)

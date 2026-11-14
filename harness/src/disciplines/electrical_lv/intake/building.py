@@ -12,7 +12,8 @@ every lighting load, are inputs; a room the caller did not describe is an error 
      "tolerance_pct": 1,                                   # optional; with it stage 3 compares each load with its rooms
      "floors": [{"id": "PB", "name": "Ground floor",       # `id` is also the area of the load list (added when it is not there)
                  "phases": 1, "length": {"value": 20, "unit": "m"},
-                 "architecture": {...},                    # `epc_arch` result as a dict (rooms with `area_m2` and `size_m`)
+                 "architecture": {...},                    # `epc_arch` result as a dict (rooms with `area_m2` and `size_m`), or
+                 "plan": "plans/PB.dxf",                   # the plan of the floor in `inputs/`: the pipeline recognises it with `epc_arch` (see `resolve_plans`)
                  "rooms": {"r1": {...}},                   # per recognised room id: the epc_lighting room fields except id, name and size
                  "by_name": {"HALL": {...}},               # the same, by the written name of the room (exact match); `rooms` wins
                  "exclude": ["r7"],                        # room ids that are deliberately not lit
@@ -57,7 +58,7 @@ def _shape(floor, room):
     return round(sides[0], 3), round(sides[1], 3)
 
 
-FLOOR_KEYS = {"id", "name", "phases", "length", "architecture", "rooms", "by_name", "exclude", "receptacles_load", "circuits", "board", "emergency"}
+FLOOR_KEYS = {"id", "name", "phases", "length", "architecture", "plan", "rooms", "by_name", "exclude", "receptacles_load", "circuits", "board", "emergency"}
 
 
 def _is_length(value):
@@ -375,8 +376,43 @@ def _exterior_loads(building, lighting, out):
                              "power": {"value": item["energy"]["installed_power_w"], "unit": "W"}, "phases": spec["phases"], "length": copy.deepcopy(spec["length"])})
 
 
-def derive_all(building, loads):
+def _recognise(plan, inputs_dir, floor_id):
+    """The architecture of a plan file of `inputs/` as a dict (`epc_arch.recognize`); raises BuildingError when the path leaves `inputs/`, the file is missing or the engine cannot read it."""
+    from pathlib import Path
+    import epc_arch
+    root = Path(inputs_dir).resolve()
+    path = (root / plan).resolve()
+    if root not in path.parents or not path.is_file():
+        raise BuildingError([f"floor {floor_id}: the plan {plan!r} is not a file of the inputs folder"])
+    try:
+        return epc_arch.recognize(path.read_bytes(), path.name).architecture.as_dict()
+    except epc_arch.ArchError as exc:
+        raise BuildingError([f"floor {floor_id}: the plan {plan!r} cannot be read: {exc}"]) from exc
+
+
+def resolve_plans(building, inputs_dir):
+    """A copy of the building where every floor that names its `plan` (a file of `inputs/`) has its `architecture` recognised by `epc_arch`; a floor that gives both is an error."""
+    out = copy.deepcopy(building)
+    for floor in (out.get("floors") if isinstance(out, dict) and isinstance(out.get("floors"), list) else []):
+        if not isinstance(floor, dict) or "plan" not in floor:
+            continue
+        if "architecture" in floor or not isinstance(floor["plan"], str):
+            raise BuildingError([f"floor {floor.get('id')}: give `architecture` or `plan` (a file name of the inputs folder), not both"])
+        floor["architecture"] = _recognise(floor.pop("plan"), inputs_dir, floor.get("id"))
+    return out
+
+
+def _receptacle_result(building, outlets):
+    """The epc_receptacles result for the rooms that have outlets, or None when no room has any."""
+    rooms = [r for plugs in outlets.values() for r in plugs]
+    if not rooms:
+        return None
+    return _run("epc_receptacles", {"schema_version": "1.0", "receptacles": copy.deepcopy(building["receptacles"]), "rooms": rooms})
+
+
+def derive_all(building, loads, inputs_dir=None):
     """{"loads": load list with the derived loads, "lighting": section for stage 3, "routing": {floor id: design} (floors with a `board`), "circuits": {load id: options}}. The inputs are not changed."""
+    building = resolve_plans(building, inputs_dir) if inputs_dir is not None else building
     errors = _check(building, loads)
     if errors:
         raise BuildingError(errors)
@@ -387,7 +423,7 @@ def derive_all(building, loads):
     document = {"schema_version": "1.0", "luminaires": copy.deepcopy(building["luminaires"]), "rooms": rooms}
     document.update(_extra_lighting(building))
     lighting = _run("epc_lighting", document, building.get("options") or {})
-    plug_result = _run("epc_receptacles", {"schema_version": "1.0", "receptacles": copy.deepcopy(building["receptacles"]), "rooms": [r for p in outlets.values() for r in p]}) if any(outlets.values()) else None
+    plug_result = _receptacle_result(building, outlets)
     try:
         designs, lengths = _routing(building, lit, rooms, lighting, outlets, plug_result)
     except RoutingError as exc:

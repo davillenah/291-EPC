@@ -790,3 +790,63 @@ class ResumeTests(unittest.TestCase):
             self.assertEqual((refused["ok"], refused["error"]["code"]), (False, "cannot_resume"))
             both = api.run_pipeline(root / "API-1", loads=loads(), engine_inputs=dict(W.inputs_doc(), building=b), clock=A.CLOCK, actor=A.ORC, resume=True, from_stage=3)
             self.assertEqual(both["error"]["code"], "invalid_arguments")
+
+
+class PlanFromInputsTests(unittest.TestCase):
+    """A floor can name its plan (a DXF of `inputs/`): the pipeline recognises it with epc_arch instead of taking the recognised architecture as data."""
+
+    def building(self, plan="plans/PB.dxf"):
+        data = {"activity": "task.reading", "luminaire": "LED1", "height_m": 2.8, "coefficient_of_utilisation": 0.6}
+        return {"luminaires": [dict(LUM)], "floors": [{"id": "PB", "name": "Ground floor", "phases": 1, "length": {"value": 20, "unit": "m"}, "plan": plan, "rooms": {"r1": data}}]}
+
+    def project(self, tmp, name="PB.dxf", data=None):
+        sys.path.insert(0, str(Path(W.__file__).resolve().parents[2] / "src" / "engines" / "cad" / "arch" / "tests"))
+        import helpers
+        plans = Path(tmp) / "inputs" / "plans"
+        plans.mkdir(parents=True, exist_ok=True)
+        (plans / name).write_bytes(data if data is not None else helpers.room_dxf())
+        return Path(tmp) / "inputs"
+
+    def test_the_architecture_is_what_epc_arch_recognises_in_the_file(self):
+        import tempfile
+        import epc_arch
+        with tempfile.TemporaryDirectory() as tmp:
+            inputs = self.project(tmp)
+            done = derive_all(self.building(), loads(), inputs)
+            direct = epc_arch.recognize((inputs / "plans" / "PB.dxf").read_bytes(), "PB.dxf").architecture.as_dict()
+        rooms = done["lighting"]["document"]["rooms"]
+        self.assertEqual([r["id"] for r in rooms], ["PB-r1"])
+        self.assertAlmostEqual(rooms[0]["width_m"] * rooms[0]["length_m"], direct["rooms"][0]["area_m2"], places=2)
+
+    def test_a_missing_file_a_path_outside_inputs_and_both_keys_are_errors(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as tmp:
+            inputs = self.project(tmp)
+            for plan in ("plans/none.dxf", "../outside.dxf"):
+                with self.subTest(plan=plan), self.assertRaises(BuildingError) as ctx:
+                    derive_all(self.building(plan), loads(), inputs)
+                self.assertIn("not a file of the inputs folder", ctx.exception.errors[0])
+            both = self.building()
+            both["floors"][0]["architecture"] = {"rooms": []}
+            with self.assertRaises(BuildingError):
+                derive_all(both, loads(), inputs)
+
+    def test_a_file_the_engine_cannot_read_is_an_error(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as tmp:
+            inputs = self.project(tmp, data=b"not a dxf at all")
+            with self.assertRaises(BuildingError) as ctx:
+                derive_all(self.building(), loads(), inputs)
+        self.assertIn("cannot be read", ctx.exception.errors[0])
+
+    def test_through_the_api_the_plan_of_the_inputs_folder_feeds_the_run(self):
+        import tempfile
+        import test_platform_api as A
+        from epc_platform import api
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            api.init_project(root, "API-1", A.ANSWERS, clock=A.CLOCK, actor=A.ORC)
+            self.project(root / "API-1")
+            res = api.run_pipeline(root / "API-1", loads=loads(), engine_inputs=dict(W.inputs_doc(), building=self.building()), stop_after=3, clock=A.CLOCK, actor=A.ORC)
+        self.assertTrue(res["ok"], res)
+        self.assertIn("L-PB", [x["id"] for x in res["data"]["run"]["results"][0]["outputs"]["loads"]["loads"]])
