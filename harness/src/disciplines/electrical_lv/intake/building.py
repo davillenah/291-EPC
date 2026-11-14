@@ -55,44 +55,53 @@ def _shape(floor, room):
     return round(sides[0], 3), round(sides[1], 3)
 
 
+def _is_length(length):
+    """A run length: {value > 0, unit m}."""
+    return isinstance(length, dict) and _is_num(length.get("value")) and length["value"] > 0 and length.get("unit") == "m"
+
+
+def _core_rules(floor, here):
+    """(is wrong, message) of the required data of a floor: id, name, phases, length, architecture."""
+    arch = floor.get("architecture")
+    rules = [(not isinstance(floor.get(key), str) or not floor.get(key), f"{here}/{key}: required text") for key in ("id", "name")]
+    return rules + [
+        (floor.get("phases") not in (1, 3) or isinstance(floor.get("phases"), bool), f"{here}/phases: required, 1 or 3 (no default)"),
+        (not _is_length(floor.get("length")), f"{here}/length: required, {{value > 0, unit m}} (the run from the board; no default)"),
+        (not isinstance(arch, dict) or not isinstance(arch.get("rooms"), list), f"{here}/architecture: required, the epc_arch result with its `rooms`"),
+    ]
+
+
+def _board_ok(board):
+    return board is None or (isinstance(board, dict) and set(board) == {"x_m", "y_m"} and all(_is_num(v) for v in board.values()))
+
+
+def _optional_rules(floor, here):
+    """(is wrong, message) of the optional data of a floor: board, circuits, rooms, by_name, exclude."""
+    circuits = floor.get("circuits", {})
+    rules = [
+        (not _board_ok(floor.get("board")), f"{here}/board: {{x_m, y_m}}, the place of the floor board on the plan in metres"),
+        (not isinstance(circuits, dict) or not set(circuits) <= {"lighting", "receptacles"}, f"{here}/circuits: an object with `lighting` and/or `receptacles`"),
+    ]
+    rules += [(not isinstance(floor.get(key, {}), dict), f"{here}/{key}: must be an object") for key in ("rooms", "by_name")]
+    return rules + [(not isinstance(floor.get("exclude", []), list), f"{here}/exclude: must be a list of room ids")]
+
+
 def _check_floor(floor, index):
     here = f"floors/{index}"
-    errors = []
     if not isinstance(floor, dict):
         return [f"{here}: must be an object"]
     unknown = sorted(set(floor) - {"id", "name", "phases", "length", "architecture", "rooms", "by_name", "exclude", "receptacles_load", "circuits", "board"})
-    errors += [f"{here}: unknown key(s) {', '.join(unknown)}"] if unknown else []
-    for key in ("id", "name"):
-        if not isinstance(floor.get(key), str) or not floor.get(key):
-            errors.append(f"{here}/{key}: required text")
-    if floor.get("phases") not in (1, 3) or isinstance(floor.get("phases"), bool):
-        errors.append(f"{here}/phases: required, 1 or 3 (no default)")
-    length = floor.get("length")
-    if not (isinstance(length, dict) and _is_num(length.get("value")) and length["value"] > 0 and length.get("unit") == "m"):
-        errors.append(f"{here}/length: required, {{value > 0, unit m}} (the run from the board; no default)")
-    if not isinstance(floor.get("architecture"), dict) or not isinstance(floor["architecture"].get("rooms"), list):
-        errors.append(f"{here}/architecture: required, the epc_arch result with its `rooms`")
+    errors = [f"{here}: unknown key(s) {', '.join(unknown)}"] if unknown else []
+    errors += [message for wrong, message in _core_rules(floor, here) if wrong]
     errors += _check_receptacles_load(floor, here)
-    board = floor.get("board")
-    if board is not None and not (isinstance(board, dict) and set(board) == {"x_m", "y_m"} and all(_is_num(v) for v in board.values())):
-        errors.append(f"{here}/board: {{x_m, y_m}}, the place of the floor board on the plan in metres")
-    if not isinstance(floor.get("circuits", {}), dict) or not set(floor.get("circuits", {})) <= {"lighting", "receptacles"}:
-        errors.append(f"{here}/circuits: an object with `lighting` and/or `receptacles`")
-    for key in ("rooms", "by_name"):
-        if not isinstance(floor.get(key, {}), dict):
-            errors.append(f"{here}/{key}: must be an object")
-    if not isinstance(floor.get("exclude", []), list):
-        errors.append(f"{here}/exclude: must be a list of room ids")
-    return errors
+    return errors + [message for wrong, message in _optional_rules(floor, here) if wrong]
 
 
 def _check_receptacles_load(floor, here):
     spec = floor.get("receptacles_load")
     if spec is None:
         return []
-    length = spec.get("length") if isinstance(spec, dict) else None
-    if not (isinstance(spec, dict) and spec.get("phases") in (1, 3) and not isinstance(spec.get("phases"), bool)
-            and isinstance(length, dict) and _is_num(length.get("value")) and length["value"] > 0 and length.get("unit") == "m"):
+    if not (isinstance(spec, dict) and spec.get("phases") in (1, 3) and not isinstance(spec.get("phases"), bool) and _is_length(spec.get("length"))):
         return [f"{here}/receptacles_load: {{phases 1|3, length {{value > 0, unit m}}}} (no default)"]
     return []
 
@@ -128,27 +137,29 @@ def _floor_rooms(floor, with_outlets):
     unknown = sorted(excluded - {r["id"] for r in found}) + sorted(set(floor.get("rooms") or {}) - {r["id"] for r in found})
     errors += [f"floor {floor['id']}: room id {i} is not in the recognised architecture" for i in unknown]
     for room in found:
-        if room["id"] in excluded:
-            continue
-        data, outlets, errs = _split(floor, room, with_outlets)
-        if errs:
+        if room["id"] not in excluded:
+            lit, plug, errs = _one_room(floor, room, with_outlets)
             errors += errs
-            continue
-        try:
-            width, length = _shape(floor, room)
-        except BuildingError as exc:
-            errors += exc.errors
-            continue
-        base = {"id": f"{floor['id']}-{room['id']}", "name": f"{floor['name']} {room.get('name') or room['id']}", "width_m": width, "length_m": length}
-        rooms.append({**base, **copy.deepcopy(data)})
-        if outlets:
-            outlet_rooms.append({**base, **copy.deepcopy(outlets)})
+            rooms += [lit] if lit else []
+            outlet_rooms += [plug] if plug else []
     return rooms, outlet_rooms, errors
 
 
-def _check(building, loads):
-    if not isinstance(building, dict):
-        return ["building must be an object"]
+def _one_room(floor, room, with_outlets):
+    """(lighting room, receptacle room or None, errors) of one recognised room; the rooms are None when it has errors."""
+    data, outlets, errs = _split(floor, room, with_outlets)
+    if errs:
+        return None, None, errs
+    try:
+        width, length = _shape(floor, room)
+    except BuildingError as exc:
+        return None, None, exc.errors
+    base = {"id": f"{floor['id']}-{room['id']}", "name": f"{floor['name']} {room.get('name') or room['id']}", "width_m": width, "length_m": length}
+    return {**base, **copy.deepcopy(data)}, ({**base, **copy.deepcopy(outlets)} if outlets else None), []
+
+
+def _shape_errors(building):
+    """Errors of the keys of the building outside the floors: unknown keys, luminaires, receptacle catalogue."""
     errors = []
     unknown = sorted(set(building) - {"luminaires", "options", "tolerance_pct", "floors", "receptacles"})
     errors += [f"building: unknown key(s) {', '.join(unknown)}"] if unknown else []
@@ -156,19 +167,34 @@ def _check(building, loads):
         errors.append("building/luminaires: required, the epc_lighting luminaires")
     if building.get("receptacles") is not None and not (isinstance(building["receptacles"], list) and building["receptacles"]):
         errors.append("building/receptacles: the epc_receptacles catalogue (a non-empty list)")
-    if not isinstance(building.get("floors"), list) or not building["floors"]:
-        errors.append("building/floors: required, at least one floor")
-        return errors
+    return errors
+
+
+def _floors_errors(building, loads):
+    """Errors of the tolerance and of the floors: each floor, repeated ids, derived loads that already exist in the load list."""
+    errors = []
     tol = building.get("tolerance_pct")
     if tol is not None and (not _is_num(tol) or tol < 0):
         errors.append("building/tolerance_pct: a number >= 0 (no default)")
     for i, floor in enumerate(building["floors"]):
         errors += _check_floor(floor, i)
-    ids = [f.get("id") for f in building["floors"] if isinstance(f, dict)]
-    errors += [f"building/floors: id {d} is repeated" for d in sorted({i for i in ids if ids.count(i) > 1})]
+    return errors + _id_errors([f.get("id") for f in building["floors"] if isinstance(f, dict)], loads)
+
+
+def _id_errors(ids, loads):
+    """Repeated floor ids and derived loads (`L-<floor>`, `T-<floor>`) that already exist in the load list."""
     have = {load["id"] for load in loads["loads"]}
-    errors += [f"load {p}-{i} already exists in the load list: it is derived from the floor {i}" for i in ids for p in "LT" if f"{p}-{i}" in have]
-    return errors
+    errors = [f"building/floors: id {d} is repeated" for d in sorted({i for i in ids if ids.count(i) > 1})]
+    return errors + [f"load {p}-{i} already exists in the load list: it is derived from the floor {i}" for i in ids for p in "LT" if f"{p}-{i}" in have]
+
+
+def _check(building, loads):
+    if not isinstance(building, dict):
+        return ["building must be an object"]
+    errors = _shape_errors(building)
+    if not isinstance(building.get("floors"), list) or not building["floors"]:
+        return errors + ["building/floors: required, at least one floor"]
+    return errors + _floors_errors(building, loads)
 
 
 def _run(engine, document, options=None):
@@ -230,6 +256,25 @@ def _receptacle_loads(building, outlets, out, lengths, result):
                              "power": {"value": sum(va[r["id"]] for r in plugs), "unit": "VA"}, "phases": spec["phases"], "length": lengths[floor["id"]]("receptacles", spec["length"])})
 
 
+def _route_floor(floor, building, mine, lighting, plug_result):
+    """The design of one floor with a `board` (see routing.py) for its lit rooms `mine`."""
+    arch = {r["id"]: r for r in floor["architecture"]["rooms"]}
+    boxes = {r["id"]: arch[r["id"].split("-", 1)[1]].get("box_m") for r in mine}
+    if not all(boxes.values()):
+        raise BuildingError([f"floor {floor['id']}: a room has no position in metres (`box_m`): the plan units are not known"])
+    plugs = {"rooms": [x for x in (plug_result or {"rooms": []})["rooms"] if x["id"] in boxes]} if plug_result else None
+    return design_floor(floor, mine, boxes, {"rooms": [x for x in lighting["rooms"] if x["id"] in boxes]}, plugs, building.get("receptacles"))
+
+
+def _routed_length(design):
+    riser = design["riser_m"]
+    return lambda part, own=None: {"value": round(riser + design["branch_m"][part], 3), "unit": "m"}
+
+
+def _own_length(floor):
+    return lambda part, own=None: copy.deepcopy(own or floor["length"])
+
+
 def _routing(building, lit_rooms, rooms, lighting, outlets, plug_result):
     """{floor id: design of the floor} for the floors that have a `board` (see routing.py), and the function that gives the length of each derived load."""
     by_id = {r["id"]: r for r in rooms}
@@ -237,18 +282,10 @@ def _routing(building, lit_rooms, rooms, lighting, outlets, plug_result):
     for floor in building["floors"]:
         fid = floor["id"]
         if not floor.get("board"):
-            lengths[fid] = lambda part, own=None, floor=floor: copy.deepcopy(own or floor["length"])
+            lengths[fid] = _own_length(floor)
             continue
-        arch = {r["id"]: r for r in floor["architecture"]["rooms"]}
-        mine = [by_id[i] for i in lit_rooms[fid]]
-        boxes = {r["id"]: arch[r["id"].split("-", 1)[1]].get("box_m") for r in mine}
-        if not all(boxes.values()):
-            raise BuildingError([f"floor {fid}: a room has no position in metres (`box_m`): the plan units are not known"])
-        plugs = {"rooms": [x for x in (plug_result or {"rooms": []})["rooms"] if x["id"] in boxes]} if plug_result else None
-        design = design_floor(floor, mine, boxes, {"rooms": [x for x in lighting["rooms"] if x["id"] in boxes]}, plugs, building.get("receptacles"))
-        designs[fid] = design
-        riser = floor["length"]["value"]
-        lengths[fid] = lambda part, own=None, riser=riser, design=design: {"value": round(riser + design["branch_m"][part], 3), "unit": "m"}
+        designs[fid] = _route_floor(floor, building, [by_id[i] for i in lit_rooms[fid]], lighting, plug_result)
+        lengths[fid] = _routed_length(designs[fid])
     return designs, lengths
 
 

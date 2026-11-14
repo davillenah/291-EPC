@@ -17,14 +17,19 @@ def _process(doc):
     return core.process(doc)
 
 
+def _lighting_lines(design, tags):
+    """Ids of the lines the engine routes the circuits `tags` over."""
+    circuits = _process(routed_document(design))["circuits"]
+    return {line for tag in tags for line in circuits[tag]["lines"]}
+
+
 def lighting_document(design):
     """The floor document reduced to the lighting: its luminaires and board, its circuits and the lines the engine routes them over."""
-    full = _process(routed_document(design))
-    mine = [c for c in design["wiring"]["circuits"] if c["family"].startswith("I")]
-    keep = {line for c in mine for line in full["circuits"][c["tag"]]["lines"]}
+    tags = {c["tag"] for c in design["wiring"]["circuits"] if c["family"].startswith("I")}
+    keep = _lighting_lines(design, tags)
     doc = routed_document(design)
     doc["nodes"] = [n for n in doc["nodes"] if n["kind"] in LIGHTING_KINDS]
-    doc["circuits"] = [c for c in doc["circuits"] if c["tag"] in {m["tag"] for m in mine}]
+    doc["circuits"] = [c for c in doc["circuits"] if c["tag"] in tags]
     doc["lines"] = [ln for ln in doc.get("lines", []) if ln["id"] in keep]
     return doc
 
