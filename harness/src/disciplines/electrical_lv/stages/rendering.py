@@ -115,6 +115,25 @@ def _render_one(name, report, out_dir, formats):
     return done
 
 
+def transmittal_data(transmittal, project, revision, run_id, rows, records):
+    """The data the transmittal renderer of the drawing engine takes: header, a row per issued file (code, name, file, short hash) and the review status with the count of unverified norm records."""
+    not_verified = sum(1 for r in records if r["review_status"] != "verified")
+    table = [[str(n), r.get("code") or "", r["name"], r.get("path") or "(structured document)", r["sha256"][:12]] for n, r in enumerate(rows, start=1)]
+    return {"title": "TRANSMITTAL", "subtitle": transmittal, "header": [["Project", project or ""], ["Revision", revision], ["Run", run_id or ""], ["Status", "draft"]],
+            "columns": [["No", 0.06], ["Code", 0.2], ["Name", 0.28], ["File", 0.34], ["SHA-256", 0.12]], "rows": table,
+            "sections": [["Review", f"Draft: not approved for construction (D21). {not_verified} of {len(records)} norm records listed in this transmittal are not verified."]],
+            "footer": f"{project or ''} {transmittal}", "page_label": PAGE_LABEL}
+
+
+def render_transmittal(data, work_dir, transmittal):
+    """Writes `<work_dir>/documents/<transmittal>_transmittal.pdf` with `epc_drawing.export.transmittal_pdf`; returns (the path relative to `work_dir`, the engine call)."""
+    from epc_drawing.export import transmittal_pdf
+    out = Path(work_dir) / "documents" / f"{transmittal}_transmittal.pdf"
+    out.parent.mkdir(parents=True, exist_ok=True)
+    transmittal_pdf.render(data, out)
+    return out.relative_to(work_dir).as_posix(), EC.record_for(ENGINE, "epc_drawing.export.transmittal_pdf.render")
+
+
 def _reports(docs, project):
     """([(name, report)] of the documents that have a report structure, [names of the ones that do not])."""
     every = [(name, to_report(name, document, project)) for name, document in docs.items()]

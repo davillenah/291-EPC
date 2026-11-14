@@ -25,6 +25,7 @@ from pathlib import Path
 from disciplines.electrical_lv import naming
 from disciplines.electrical_lv.manifest import DRAFT, ManifestError, build_manifest, sha256_file, supersede
 from disciplines.electrical_lv.norm_records import VERIFIED, read_norm_records
+from disciplines.electrical_lv.stages import rendering
 from disciplines.electrical_lv.stages.base import Stage, StageInputError
 from disciplines.electrical_lv.stages.calc_check_stage import by_severity, engine_inputs_for_check, run_dict
 
@@ -251,12 +252,24 @@ class PackageIssueStage(Stage):
         manifest, replaced = self._manifest_of(context, plan, rows, records, before)
         path = store.manifest_rel(manifest)
         copies = [{"source": i["source"], "to": f"deliverables/{transmittal}/{i['path']}"} for i in items if i["file"] is not None]
+        calls = self._cover(context, transmittal, rows, records, copies)
         outputs = self._outputs(context, (transmittal, path), (manifest, replaced, copies), rows, records)
         after = self._check_manifests(context, outputs, files, project, start + len(before))
         outputs["calc_check"] = {"findings_count": len(before) + len(after), "by_severity": by_severity(before + after)}
         longest = max((len(f"{store.root}/deliverables/{transmittal}/{r['path']}") for r in rows if r["path"]), default=0)
         outputs["naming"] = {"named": names is not None, "longest_path": longest}
-        return self.result("ok", outputs=outputs, findings=before + after, message=self._message(context, transmittal, rows, records, longest))
+        return self.result("ok", outputs=outputs, findings=before + after, engine_calls=calls, message=self._message(context, transmittal, rows, records, longest))
+
+    @staticmethod
+    def _cover(context, transmittal, rows, records, copies):
+        """The cover PDF of the transmittal (when the run renders PDF files, see `rendering.py`): written under the work folder and copied with the other files; it lists them, so it is not one of them
+        in the manifest. Returns the engine calls."""
+        if "pdf" not in rendering.formats_of(context) or not context.work_dir:
+            return []
+        data = rendering.transmittal_data(transmittal, (context.profile or {}).get("project_code"), context.revision, context.pipeline_run_id, rows, records)
+        source, call = rendering.render_transmittal(data, context.work_dir, transmittal)
+        copies.append({"source": source, "to": f"deliverables/{transmittal}/{transmittal}_transmittal.pdf"})
+        return [call]
 
     @staticmethod
     def _check_manifests(context, outputs, files, project, start):

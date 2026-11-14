@@ -922,3 +922,22 @@ class VerticalRiserTests(unittest.TestCase):
         b["floors"][1]["shaft"] = {"x_m": 4.0, "y_m": 5.0}
         p1 = derive_all(b, loads())["routing"]["P1"]["riser_route"]
         self.assertAlmostEqual(p1["length_m"], 3.0 + 3.0 + 3.2, places=3)
+
+
+class TransmittalCoverTests(unittest.TestCase):
+    def test_a_building_run_issues_the_cover_pdf_of_the_transmittal_and_a_run_without_pdf_does_not(self):
+        res, files = RenderedDocumentsTests().run_api()
+        self.assertTrue(res["ok"], res)
+        self.assertIn("TR-001_transmittal.pdf", files)
+        out = res["data"]["run"]["results"][11]["outputs"]
+        self.assertNotIn("TR-001_transmittal", [f["name"] for f in out["transmittal"]["files"]])       # it lists the files: it is not one of them
+        res, files = RenderedDocumentsTests().run_api(documents={"formats": ["docx"]})
+        self.assertTrue(res["ok"], res)
+        self.assertNotIn("TR-001_transmittal.pdf", files)
+
+    def test_the_data_lists_every_file_with_its_short_hash_and_the_unverified_records(self):
+        from disciplines.electrical_lv.stages import rendering
+        rows = [{"name": "a", "code": "C-1", "path": "a.dxf", "sha256": "0123456789abcdef" * 4}, {"name": "memo", "code": None, "path": None, "sha256": "f" * 64}]
+        data = rendering.transmittal_data("TR-007", "P-1", "R1", "run-1", rows, [{"review_status": "verified"}, {"review_status": "pending"}])
+        self.assertEqual((data["subtitle"], [r[4] for r in data["rows"]], data["rows"][1][3]), ("TR-007", ["0123456789ab", "ffffffffffff"], "(structured document)"))
+        self.assertIn("1 of 2 norm records", data["sections"][0][1])
