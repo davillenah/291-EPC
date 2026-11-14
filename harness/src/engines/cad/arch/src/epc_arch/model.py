@@ -137,18 +137,18 @@ class Level:
     key: str = ""                         # GROUND_FLOOR, FIRST_FLOOR, SECOND_FLOOR..., BASEMENT, ROOF; empty when the plan has no floor
 
 
-def _size_m(r: "Room", units_per_metre: Optional[float]) -> Optional[List[float]]:
-    """[extent along x, extent along y] in metres of the box that holds the rectangles of the room; None when the units or the rectangles are not known."""
+def _box_m(r: "Room", units_per_metre: Optional[float]) -> Optional[List[float]]:
+    """[x0, y0, x1, y1] in metres of the box that holds the rectangles of the room, in the plan's own frame; None when the units or the rectangles are not known."""
     if not units_per_metre or not r.rects:
         return None
-    x0, y0 = min(q[0] for q in r.rects), min(q[1] for q in r.rects)
-    x1, y1 = max(q[2] for q in r.rects), max(q[3] for q in r.rects)
-    return [round((x1 - x0) / units_per_metre, 3), round((y1 - y0) / units_per_metre, 3)]
+    k = units_per_metre
+    return [round(min(q[0] for q in r.rects) / k, 3), round(min(q[1] for q in r.rects) / k, 3), round(max(q[2] for q in r.rects) / k, 3), round(max(q[3] for q in r.rects) / k, 3)]
 
 
 def _room_dict(r: "Room", units_per_metre: Optional[float] = None) -> Dict[str, Any]:
+    box = _box_m(r, units_per_metre)
     return {"id": r.id, "area": round(r.area, 1), "area_m2": None if r.area_m2 is None else round(r.area_m2, 2), "at": _r3(r.at), "name": r.name, "key": r.key, "code": r.code, "written_m2": r.written_m2,
-            "size_m": _size_m(r, units_per_metre)}
+            "size_m": None if box is None else [round(box[2] - box[0], 3), round(box[3] - box[1], 3)], "box_m": box}
 
 
 @dataclass

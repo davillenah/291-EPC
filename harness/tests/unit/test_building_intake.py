@@ -8,15 +8,15 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import epc_lighting as EL  # noqa: E402
 import test_pipeline_wiring as W  # noqa: E402
-from disciplines.electrical_lv.intake.building import BuildingError, derive  # noqa: E402
+from disciplines.electrical_lv.intake.building import BuildingError, derive, derive_all  # noqa: E402
 from disciplines.electrical_lv.pipeline import STAGES, run  # noqa: E402
 
 LUM = {"id": "LED1", "lamps": 1, "lamp_flux_lm": 3600, "power_w": 36}
 DATA = {"activity": "task.reading", "luminaire": "LED1", "height_m": 2.8, "coefficient_of_utilisation": 0.6}
 # two rectangular rooms and an L-shaped one, as epc_arch gives them (area and the box of the rectangles in metres)
-ARCH = {"rooms": [{"id": "r1", "name": "OFICINA", "area_m2": 20.0, "size_m": [4.0, 5.0]},
-                  {"id": "r2", "name": "HALL", "area_m2": 12.0, "size_m": [3.0, 4.0]},
-                  {"id": "r3", "name": "L", "area_m2": 16.0, "size_m": [5.0, 5.0]}]}
+ARCH = {"rooms": [{"id": "r1", "name": "OFICINA", "area_m2": 20.0, "size_m": [4.0, 5.0], "box_m": [0.0, 0.0, 4.0, 5.0]},
+                  {"id": "r2", "name": "HALL", "area_m2": 12.0, "size_m": [3.0, 4.0], "box_m": [4.0, 0.0, 7.0, 4.0]},
+                  {"id": "r3", "name": "L", "area_m2": 16.0, "size_m": [5.0, 5.0], "box_m": [0.0, 5.0, 5.0, 10.0]}]}
 
 
 def building(**floor):
@@ -165,6 +165,46 @@ class ReceptacleTests(unittest.TestCase):
         self.assertEqual(circuit_options(b, out), {"L-PB": {"kind": "mcb"}, "T-PB": {"kind": "rcbo"}})
 
 
+class RoutingTests(unittest.TestCase):
+    def routed(self, **floor):
+        b = with_plugs(board={"x_m": 4.0, "y_m": 5.0}, **floor)
+        return b, derive_all(b, loads())
+
+    def test_the_length_of_a_load_is_the_riser_plus_the_longest_route_of_the_engine(self):
+        b, done = self.routed()
+        design = done["routing"]["PB"]
+        by_id = {x["id"]: x for x in done["loads"]["loads"]}
+        for load, part in (("L-PB", "lighting"), ("T-PB", "receptacles")):
+            self.assertGreater(design["branch_m"][part], 0)
+            self.assertAlmostEqual(by_id[load]["length"]["value"], b["floors"][0]["length"]["value"] + design["branch_m"][part], places=3)
+        self.assertEqual(by_id["L-PB"]["length"]["unit"], "m")
+
+    def test_the_design_has_runs_circuits_and_found_routes(self):
+        _, done = self.routed()
+        design = done["routing"]["PB"]
+        self.assertTrue(design["runs"]["lines"])
+        self.assertTrue(all(r["found"] for r in design["wiring"]["routes"].values()))
+        self.assertEqual({c["family"] for c in design["wiring"]["circuits"]}, {"IUG", "TUG"})
+        self.assertEqual(design["document"]["lines"][0]["id"], "RUN-001")
+
+    def test_without_a_board_there_is_no_routing_and_the_length_is_the_given_one(self):
+        done = derive_all(with_plugs(), loads())
+        self.assertEqual(done["routing"], {})
+        self.assertEqual([x for x in done["loads"]["loads"] if x["id"] == "L-PB"][0]["length"], {"value": 20, "unit": "m"})
+
+    def test_a_room_without_position_in_metres_is_an_error(self):
+        b = with_plugs(board={"x_m": 4.0, "y_m": 5.0})
+        del b["floors"][0]["architecture"]["rooms"][0]["box_m"]
+        with self.assertRaises(BuildingError) as ctx:
+            derive_all(b, loads())
+        self.assertIn("box_m", ctx.exception.errors[0])
+
+    def test_a_wrong_board_is_named(self):
+        with self.assertRaises(BuildingError) as ctx:
+            derive_all(with_plugs(board={"x_m": 1}), loads())
+        self.assertIn("board", ctx.exception.errors[0])
+
+
 class ApiTests(unittest.TestCase):
     """The platform run: the load list given by the caller gets its lighting loads from the building, and stage 3 receives the lighting section."""
 
@@ -196,3 +236,50 @@ class ApiTests(unittest.TestCase):
     def test_building_and_lighting_together_are_refused(self):
         res = self.run_api(building(), lighting={"document": {}})
         self.assertEqual((res["ok"], res["error"]["code"]), (False, "invalid_arguments"))
+
+
+class RoutingStageTests(unittest.TestCase):
+    """Stage 3 re-routes the derived design with `epc_plan.core.process` and checks it against the load list."""
+
+    def stage(self, tamper=None):
+        import epc_plan
+        b = with_plugs(board={"x_m": 4.0, "y_m": 5.0})
+        b["tolerance_pct"] = 1
+        done = derive_all(b, loads())
+        if tamper:
+            tamper(done)
+        inputs = dict(W.inputs_doc(), lighting=done["lighting"], routing=done["routing"])
+        ctx = W.context(engine_inputs=inputs, loads=done["loads"])
+        run(ctx, stop_after=2, run_id="r3")
+        return done, STAGES[2].run(ctx), epc_plan
+
+    def test_the_routes_are_the_engines_and_agree_with_the_loads(self):
+        done, res, plan = self.stage()
+        self.assertEqual(res.status, "ok", res.message)
+        floor = res.outputs["routing"]["floors"]["PB"]
+        self.assertEqual(set(floor["circuits"]), {c["tag"] for c in done["routing"]["PB"]["wiring"]["circuits"]})
+        self.assertTrue(all(r["found"] for r in floor["circuits"].values()))
+        self.assertIn({"engine": "cad/plan", "function": "epc_plan.core.process", "version": plan.__version__}, res.engine_calls)
+        self.assertFalse([f for f in res.findings if f["severity"] == "major"])
+        json.dumps(res.to_dict())
+
+    def test_a_load_length_that_is_not_riser_plus_route_is_a_finding(self):
+        def tamper(done):
+            [x for x in done["loads"]["loads"] if x["id"] == "L-PB"][0]["length"]["value"] += 5
+        _, res, _ = self.stage(tamper)
+        self.assertEqual([f["field"] for f in res.findings if f["severity"] == "major"], ["L-PB/length"])
+
+    def test_a_recorded_route_that_changed_is_a_finding(self):
+        def tamper(done):
+            first = done["routing"]["PB"]["wiring"]["circuits"][0]["tag"]
+            done["routing"]["PB"]["wiring"]["routes"][first]["max_distance_m"] += 3
+        _, res, _ = self.stage(tamper)
+        self.assertTrue([f for f in res.findings if f["field"].endswith("/max_distance_m")])
+
+    def test_a_wrong_section_blocks(self):
+        inputs = dict(W.inputs_doc(), routing={"PB": {"nope": 1}})
+        ctx = W.context(engine_inputs=inputs)
+        run(ctx, stop_after=2, run_id="r3")
+        res = STAGES[2].run(ctx)
+        self.assertEqual(res.status, "blocked")
+        self.assertTrue(res.message.startswith("routing: "))
