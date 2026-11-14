@@ -17,7 +17,13 @@ every lighting load, are inputs; a room the caller did not describe is an error 
                  "by_name": {"HALL": {...}},               # the same, by the written name of the room (exact match); `rooms` wins
                  "exclude": ["r7"]}]}                      # room ids that are deliberately not lit
 
-`derive` returns the load list with one `L-<floor id>` load per floor and the `lighting` section for stage 3 (document, options, load map).
+Receptacles (optional, same rules): `building.receptacles` is the epc_receptacles catalogue, each room's data then carries `receptacles`
+(`{"use": ..., "receptacle": <catalogue id>, "count"?, "height_m"?}`, or `false` for a room that deliberately has none), and each floor gives
+`receptacles_load` (`{"phases", "length"}`); the load `T-<floor id>` (kind receptacles, VA) is the sum of the load of the engine for the rooms of the floor.
+A floor may also give `circuits` (`{"lighting": {...}, "receptacles": {...}}`): the per-circuit options of `engine_inputs.circuits` for its derived loads.
+
+`derive` returns the load list with the derived loads and the `lighting` section for stage 3 (document, options, load map).
+`engine_inputs_for` returns the `engine_inputs` of the run: the `lighting` section and the circuit options of the derived loads added.
 """
 import copy
 import math
@@ -52,7 +58,7 @@ def _check_floor(floor, index):
     errors = []
     if not isinstance(floor, dict):
         return [f"{here}: must be an object"]
-    unknown = sorted(set(floor) - {"id", "name", "phases", "length", "architecture", "rooms", "by_name", "exclude"})
+    unknown = sorted(set(floor) - {"id", "name", "phases", "length", "architecture", "rooms", "by_name", "exclude", "receptacles_load", "circuits"})
     errors += [f"{here}: unknown key(s) {', '.join(unknown)}"] if unknown else []
     for key in ("id", "name"):
         if not isinstance(floor.get(key), str) or not floor.get(key):
@@ -64,6 +70,9 @@ def _check_floor(floor, index):
         errors.append(f"{here}/length: required, {{value > 0, unit m}} (the run from the board; no default)")
     if not isinstance(floor.get("architecture"), dict) or not isinstance(floor["architecture"].get("rooms"), list):
         errors.append(f"{here}/architecture: required, the epc_arch result with its `rooms`")
+    errors += _check_receptacles_load(floor, here)
+    if not isinstance(floor.get("circuits", {}), dict) or not set(floor.get("circuits", {})) <= {"lighting", "receptacles"}:
+        errors.append(f"{here}/circuits: an object with `lighting` and/or `receptacles`")
     for key in ("rooms", "by_name"):
         if not isinstance(floor.get(key, {}), dict):
             errors.append(f"{here}/{key}: must be an object")
@@ -72,47 +81,76 @@ def _check_floor(floor, index):
     return errors
 
 
+def _check_receptacles_load(floor, here):
+    spec = floor.get("receptacles_load")
+    if spec is None:
+        return []
+    length = spec.get("length") if isinstance(spec, dict) else None
+    if not (isinstance(spec, dict) and spec.get("phases") in (1, 3) and not isinstance(spec.get("phases"), bool)
+            and isinstance(length, dict) and _is_num(length.get("value")) and length["value"] > 0 and length.get("unit") == "m"):
+        return [f"{here}/receptacles_load: {{phases 1|3, length {{value > 0, unit m}}}} (no default)"]
+    return []
+
+
 def _room_data(floor, room):
     """The caller's data for a recognised room (by id, else by written name), or None."""
     data = (floor.get("rooms") or {}).get(room["id"])
     return data if data is not None else (floor.get("by_name") or {}).get(room.get("name"))
 
 
-def _floor_rooms(floor):
-    """(document rooms of the floor, errors): one room per recognised room that is not excluded."""
-    rooms, errors, excluded = [], [], set(floor.get("exclude") or [])
+def _split(floor, room, with_outlets):
+    """(lighting data, outlet data, errors) of a recognised room; `data` is None when the caller gave none."""
+    data = _room_data(floor, room)
+    where = f"floor {floor['id']}: room {room['id']} ({room.get('name') or 'no name'})"
+    if not isinstance(data, dict):
+        return None, None, [f"{where} has no lighting data: describe it or exclude it"]
+    data = dict(data)
+    outlets = data.pop("receptacles", None)
+    clash = sorted(set(data) & set(SIZE_FIELDS))
+    if clash:
+        return None, None, [f"{where}: {', '.join(clash)} come from the architecture, not from the data"]
+    if with_outlets and not (outlets is False or isinstance(outlets, dict)):
+        return None, None, [f"{where}: `receptacles` must be the receptacle data, or false when the room has none"]
+    if outlets is not None and not with_outlets:
+        return None, None, [f"{where}: `receptacles` given but building.receptacles (the catalogue) is not"]
+    return data, outlets, []
+
+
+def _floor_rooms(floor, with_outlets):
+    """(lighting rooms, receptacle rooms, errors) of the floor: one room per recognised room that is not excluded."""
+    rooms, outlet_rooms, errors, excluded = [], [], [], set(floor.get("exclude") or [])
     found = floor["architecture"]["rooms"]
     unknown = sorted(excluded - {r["id"] for r in found}) + sorted(set(floor.get("rooms") or {}) - {r["id"] for r in found})
     errors += [f"floor {floor['id']}: room id {i} is not in the recognised architecture" for i in unknown]
     for room in found:
         if room["id"] in excluded:
             continue
-        data = _room_data(floor, room)
-        if data is None or not isinstance(data, dict):
-            errors.append(f"floor {floor['id']}: room {room['id']} ({room.get('name') or 'no name'}) has no lighting data: describe it or exclude it")
-            continue
-        clash = sorted(set(data) & set(SIZE_FIELDS))
-        if clash:
-            errors.append(f"floor {floor['id']}: room {room['id']}: {', '.join(clash)} come from the architecture, not from the data")
+        data, outlets, errs = _split(floor, room, with_outlets)
+        if errs:
+            errors += errs
             continue
         try:
             width, length = _shape(floor, room)
         except BuildingError as exc:
             errors += exc.errors
             continue
-        label = room.get("name") or room["id"]
-        rooms.append({"id": f"{floor['id']}-{room['id']}", "name": f"{floor['name']} {label}", "width_m": width, "length_m": length, **copy.deepcopy(data)})
-    return rooms, errors
+        base = {"id": f"{floor['id']}-{room['id']}", "name": f"{floor['name']} {room.get('name') or room['id']}", "width_m": width, "length_m": length}
+        rooms.append({**base, **copy.deepcopy(data)})
+        if outlets:
+            outlet_rooms.append({**base, **copy.deepcopy(outlets)})
+    return rooms, outlet_rooms, errors
 
 
 def _check(building, loads):
     if not isinstance(building, dict):
         return ["building must be an object"]
     errors = []
-    unknown = sorted(set(building) - {"luminaires", "options", "tolerance_pct", "floors"})
+    unknown = sorted(set(building) - {"luminaires", "options", "tolerance_pct", "floors", "receptacles"})
     errors += [f"building: unknown key(s) {', '.join(unknown)}"] if unknown else []
     if not isinstance(building.get("luminaires"), list) or not building["luminaires"]:
         errors.append("building/luminaires: required, the epc_lighting luminaires")
+    if building.get("receptacles") is not None and not (isinstance(building["receptacles"], list) and building["receptacles"]):
+        errors.append("building/receptacles: the epc_receptacles catalogue (a non-empty list)")
     if not isinstance(building.get("floors"), list) or not building["floors"]:
         errors.append("building/floors: required, at least one floor")
         return errors
@@ -124,42 +162,43 @@ def _check(building, loads):
     ids = [f.get("id") for f in building["floors"] if isinstance(f, dict)]
     errors += [f"building/floors: id {d} is repeated" for d in sorted({i for i in ids if ids.count(i) > 1})]
     have = {load["id"] for load in loads["loads"]}
-    errors += [f"load {f'L-{i}'} already exists in the load list: it is derived from the floor {i}" for i in ids if f"L-{i}" in have]
+    errors += [f"load {p}-{i} already exists in the load list: it is derived from the floor {i}" for i in ids for p in "LT" if f"{p}-{i}" in have]
     return errors
 
 
-def _lighting_run(document, options):
-    import epc_lighting
+def _run(engine, document, options=None):
+    import importlib
+    module = importlib.import_module(engine)
     try:
-        return epc_lighting.run(copy.deepcopy(document), epc_lighting.Options(**(options or {}))).as_dict()
-    except (epc_lighting.LightingError, TypeError) as exc:
-        raise BuildingError([str(exc)]) from exc
+        args = (copy.deepcopy(document),) + ((module.Options(**options),) if options is not None else ())
+        return module.run(*args).as_dict()
+    except (getattr(module, "LightingError", ValueError), getattr(module, "ReceptaclesError", ValueError), TypeError) as exc:   # TypeError: an option the engine does not have
+        raise BuildingError([f"{engine}: {exc}"]) from exc
 
 
-def derive(building, loads):
-    """(loads with the lighting loads added, `lighting` section for stage 3). The inputs are not changed."""
-    errors = _check(building, loads)
-    if errors:
-        raise BuildingError(errors)
-    rooms, floors_rooms = [], {}
+def _floors(building):
+    """({floor id: [lit room ids]}, lighting rooms, {floor id: receptacle rooms}); raises with every error found."""
+    with_outlets = bool(building.get("receptacles"))
+    lit, rooms, outlets, errors = {}, [], {}, []
     for floor in building["floors"]:
-        found, errs = _floor_rooms(floor)
+        found, plugs, errs = _floor_rooms(floor, with_outlets)
         errors += errs
-        floors_rooms[floor["id"]] = [r["id"] for r in found]
+        lit[floor["id"]], outlets[floor["id"]] = [r["id"] for r in found], plugs
         rooms += found
-    empty = [i for i, ids in floors_rooms.items() if not ids]
-    errors += [f"floor {i}: no room is lit" for i in empty] if not errors else []
+        if plugs and not floor.get("receptacles_load"):
+            errors.append(f"floor {floor['id']}: `receptacles_load` (phases and length of the receptacle load) is required")
+    errors += [f"floor {i}: no room is lit" for i, ids in lit.items() if not ids] if not errors else []
     if errors:
         raise BuildingError(errors)
+    return lit, rooms, outlets
+
+
+def _lighting_loads(building, lit, rooms, out):
     document = {"schema_version": "1.0", "luminaires": copy.deepcopy(building["luminaires"]), "rooms": rooms}
-    result = _lighting_run(document, building.get("options"))
+    result = _run("epc_lighting", document, building.get("options") or {})
     installed = {r["id"]: r["energy"]["installed_power_w"] for r in result["rooms"]}
-    out = copy.deepcopy(loads)
-    known = {a["id"] for a in out["areas"]}
     for floor in building["floors"]:
-        if floor["id"] not in known:
-            out["areas"].append({"id": floor["id"], "name": floor["name"]})
-        watts = sum(installed[i] for i in floors_rooms[floor["id"]])
+        watts = sum(installed[i] for i in lit[floor["id"]])
         if not watts or watts <= 0:
             raise BuildingError([f"floor {floor['id']}: the lighting calculation gives no installed power"])
         out["loads"].append({"id": f"L-{floor['id']}", "description": f"Lighting {floor['name']}", "area": floor["id"], "kind": "lighting",
@@ -168,6 +207,46 @@ def derive(building, loads):
     if building.get("options"):
         section["options"] = copy.deepcopy(building["options"])
     if building.get("tolerance_pct") is not None:
-        section["loads"] = {f"L-{i}": ids for i, ids in floors_rooms.items()}
+        section["loads"] = {f"L-{i}": ids for i, ids in lit.items()}
         section["tolerance_pct"] = building["tolerance_pct"]
+    return section
+
+
+def _receptacle_loads(building, outlets, out):
+    rooms = [r for plugs in outlets.values() for r in plugs]
+    if not rooms:
+        return
+    result = _run("epc_receptacles", {"schema_version": "1.0", "receptacles": copy.deepcopy(building["receptacles"]), "rooms": rooms})
+    va = {r["id"]: r["load_va"] for r in result["rooms"]}
+    for floor in building["floors"]:
+        plugs = outlets[floor["id"]]
+        if not plugs:
+            continue
+        spec = floor["receptacles_load"]
+        out["loads"].append({"id": f"T-{floor['id']}", "description": f"Receptacles {floor['name']}", "area": floor["id"], "kind": "receptacles",
+                             "power": {"value": sum(va[r["id"]] for r in plugs), "unit": "VA"}, "phases": spec["phases"], "length": copy.deepcopy(spec["length"])})
+
+
+def derive(building, loads):
+    """(loads with the derived loads added, `lighting` section for stage 3). The inputs are not changed."""
+    errors = _check(building, loads)
+    if errors:
+        raise BuildingError(errors)
+    lit, rooms, outlets = _floors(building)
+    out = copy.deepcopy(loads)
+    known = {a["id"] for a in out["areas"]}
+    out["areas"] += [{"id": f["id"], "name": f["name"]} for f in building["floors"] if f["id"] not in known]
+    section = _lighting_loads(building, lit, rooms, out)
+    _receptacle_loads(building, outlets, out)
     return out, section
+
+
+def circuit_options(building, loads):
+    """{load id: options} of the derived loads, from each floor's `circuits`; they go into `engine_inputs.circuits`."""
+    ids = {x["id"] for x in loads["loads"]}
+    options = {}
+    for floor in building["floors"]:
+        for part, prefix in (("lighting", "L"), ("receptacles", "T")):
+            if part in (floor.get("circuits") or {}) and f"{prefix}-{floor['id']}" in ids:
+                options[f"{prefix}-{floor['id']}"] = copy.deepcopy(floor["circuits"][part])
+    return options

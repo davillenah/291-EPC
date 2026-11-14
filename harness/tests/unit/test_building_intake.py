@@ -106,6 +106,65 @@ if __name__ == "__main__":
     unittest.main()
 
 
+TUG = {"id": "tug", "name": "Socket outlet 2x10 A + E", "kind": "general", "poles": 2, "rated_a": 10, "power_va": 100, "height_m": 0.3, "ip": "IP20"}
+PLUGS = {"use": "office", "receptacle": "tug"}
+
+
+def with_plugs(**floor):
+    b = building(**floor)
+    b["receptacles"] = [dict(TUG)]
+    f = b["floors"][0]
+    f["receptacles_load"] = {"phases": 1, "length": {"value": 25, "unit": "m"}}
+    for data in list(f["rooms"].values()) + list(f["by_name"].values()):
+        data["receptacles"] = dict(PLUGS)
+    return b
+
+
+class ReceptacleTests(unittest.TestCase):
+    def test_the_receptacle_load_is_the_load_of_the_engine_for_the_rooms(self):
+        import epc_receptacles as ER
+        out, section = derive(with_plugs(), loads())
+        rooms = [dict(r, **PLUGS) for r in section["document"]["rooms"]]
+        for r in rooms:
+            for key in ("luminaire", "activity", "height_m", "coefficient_of_utilisation"):
+                r.pop(key, None)
+            r["receptacle"] = r.pop("receptacle", "tug")
+            r.pop("use", None)
+            r["use"] = "office"
+        direct = ER.run({"schema_version": "1.0", "receptacles": [dict(TUG)], "rooms": rooms}).as_dict()
+        load = [x for x in out["loads"] if x["id"] == "T-PB"][0]
+        self.assertEqual((load["kind"], load["power"], load["phases"], load["length"]), ("receptacles", {"value": sum(r["load_va"] for r in direct["rooms"]), "unit": "VA"}, 1, {"value": 25, "unit": "m"}))
+
+    def test_a_room_with_false_has_no_outlets_and_the_rest_are_required_to_say(self):
+        b = with_plugs()
+        b["floors"][0]["rooms"]["r3"]["receptacles"] = False
+        out, _ = derive(b, loads())
+        self.assertTrue([x for x in out["loads"] if x["id"] == "T-PB"])
+        b = with_plugs()
+        del b["floors"][0]["rooms"]["r3"]["receptacles"]
+        with self.assertRaises(BuildingError) as ctx:
+            derive(b, loads())
+        self.assertIn("receptacles", ctx.exception.errors[0])
+
+    def test_the_load_needs_its_phases_and_length_and_the_catalogue(self):
+        b = with_plugs()
+        del b["floors"][0]["receptacles_load"]
+        with self.assertRaises(BuildingError) as ctx:
+            derive(b, loads())
+        self.assertIn("receptacles_load", ctx.exception.errors[0])
+        b = with_plugs()
+        del b["receptacles"]
+        with self.assertRaises(BuildingError):
+            derive(b, loads())
+
+    def test_circuit_options_go_to_the_derived_loads(self):
+        from disciplines.electrical_lv.intake.building import circuit_options
+        b = with_plugs()
+        b["floors"][0]["circuits"] = {"lighting": {"kind": "mcb"}, "receptacles": {"kind": "rcbo"}}
+        out, _ = derive(b, loads())
+        self.assertEqual(circuit_options(b, out), {"L-PB": {"kind": "mcb"}, "T-PB": {"kind": "rcbo"}})
+
+
 class ApiTests(unittest.TestCase):
     """The platform run: the load list given by the caller gets its lighting loads from the building, and stage 3 receives the lighting section."""
 
