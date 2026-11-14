@@ -17,6 +17,7 @@ every lighting load, are inputs; a room the caller did not describe is an error 
                  "rooms": {"r1": {...}},                   # per recognised room id: the epc_lighting room fields except id, name and size
                  "by_name": {"HALL": {...}},               # the same, by the written name of the room (exact match); `rooms` wins
                  "exclude": ["r7"],                        # room ids that are deliberately not lit
+                 "special": {"r6": {"type": "bathroom", ...}},   # a room of a special location (the kind and what the engine needs: see `stages/extra_stages.py`, slice `special_locations`)
                  "emergency": {"r2": {...}}}],             # antipanic emergency lighting of a room: the epc_lighting emergency fields except id, name, width_m, length_m
      "main_board": {"floor": "PB", "x_m": 1.0, "y_m": 8.0},   # optional: where the main board is; the riser of every floor is then routed (no `length` on the floors; each one gives `elevation_m` and, unless it is the main floor, `shaft`)
      "exterior": [{"id": "EXT1", "area_m2": 300, "luminaire": "...", "load": {"area": "AZ", "phases": 1, "length": {...}}}]}   # exterior areas: epc_lighting area fields + the load they make
@@ -59,7 +60,7 @@ def _shape(floor, room):
     return round(sides[0], 3), round(sides[1], 3)
 
 
-FLOOR_KEYS = {"id", "name", "phases", "length", "architecture", "plan", "rooms", "by_name", "exclude", "receptacles_load", "circuits", "board", "emergency", "shaft", "elevation_m"}
+FLOOR_KEYS = {"id", "name", "phases", "length", "architecture", "plan", "rooms", "by_name", "exclude", "receptacles_load", "circuits", "board", "emergency", "shaft", "elevation_m", "special"}
 
 
 def _is_length(value):
@@ -353,6 +354,23 @@ def _circuit_options(building, designs):
     return options
 
 
+SPECIAL_TYPES = ("bathroom", "ev_charging")
+
+
+def _special_items(building):
+    """([{room, name, type, ...data}], errors): the rooms the floors declare as special locations; the room must be in the recognised architecture and its kind one of `SPECIAL_TYPES`."""
+    items, errors = [], []
+    for floor in building["floors"]:
+        found = {r["id"]: r for r in floor["architecture"]["rooms"]}
+        for rid, data in sorted((floor.get("special") or {}).items()):
+            ok = rid in found and isinstance(data, dict) and data.get("type") in SPECIAL_TYPES
+            if not ok:
+                errors.append(f"floor {floor['id']}: special room {rid} must be a room of the architecture with `type` one of {', '.join(SPECIAL_TYPES)}")
+                continue
+            items.append({"room": f"{floor['id']}-{rid}", "name": f"{floor['name']} {found[rid].get('name') or rid}", **copy.deepcopy(data)})
+    return items, errors
+
+
 def _extra_lighting(building):
     """The emergency items of every floor and the exterior areas, as keys of the lighting document (raises with every error found)."""
     emergency, errors = [], []
@@ -360,8 +378,9 @@ def _extra_lighting(building):
         items, errs = _emergency_items(floor)
         emergency, errors = emergency + items, errors + errs
     areas, _, area_errors = _exterior(building)
-    if errors + area_errors:
-        raise BuildingError(errors + area_errors)
+    _, special_errors = _special_items(building)
+    if errors + area_errors + special_errors:
+        raise BuildingError(errors + area_errors + special_errors)
     return {**({"emergency": emergency} if emergency else {}), **({"areas": areas} if areas else {})}
 
 
@@ -491,7 +510,7 @@ def derive_all(building, loads, inputs_dir=None):
     for fid, route in risers.items():
         if fid in designs:
             designs[fid]["riser_route"] = route
-    return {"loads": out, "lighting": section, "routing": designs, "circuits": _circuit_options(building, designs)}
+    return {"loads": out, "lighting": section, "routing": designs, "circuits": _circuit_options(building, designs), "special": _special_items(building)[0]}
 
 
 def derive(building, loads):

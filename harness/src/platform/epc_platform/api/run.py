@@ -82,6 +82,15 @@ def _prepare(root, who, loads, engine_inputs):
     return store, answers
 
 
+def _special(engine_inputs, done):
+    """The `special_locations` section the rooms declared in the building make (an explicit section of the caller is refused: it would be given twice)."""
+    if not done["special"]:
+        return {}
+    if "special_locations" in engine_inputs:
+        raise ApiError("invalid_arguments", "engine_inputs has both `building` rooms with `special` and `special_locations`: the section is derived from the building")
+    return {"special_locations": {"locations": done["special"]}}
+
+
 def _with_building(loads, engine_inputs, inputs_dir=None):
     """(loads, engine_inputs) after the building section, if any, has been turned into lighting loads and the lighting section of stage 3."""
     if not engine_inputs or "building" not in engine_inputs:
@@ -100,7 +109,7 @@ def _with_building(loads, engine_inputs, inputs_dir=None):
         if load_id in circuits:
             raise ApiError("invalid_arguments", f"building: circuit options of {load_id} are given twice (building floor and engine_inputs.circuits)")
         circuits[load_id] = options
-    return loads, dict(engine_inputs, lighting=done["lighting"], circuits=circuits, **({"routing": done["routing"]} if done["routing"] else {}))
+    return loads, dict(engine_inputs, lighting=done["lighting"], circuits=circuits, **({"routing": done["routing"]} if done["routing"] else {}), **_special(engine_inputs, done))
 
 
 def _resume_stage(store, answers, loads, engine_inputs):

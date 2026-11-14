@@ -941,3 +941,61 @@ class TransmittalCoverTests(unittest.TestCase):
         data = rendering.transmittal_data("TR-007", "P-1", "R1", "run-1", rows, [{"review_status": "verified"}, {"review_status": "pending"}])
         self.assertEqual((data["subtitle"], [r[4] for r in data["rows"]], data["rows"][1][3]), ("TR-007", ["0123456789ab", "ffffffffffff"], "(structured document)"))
         self.assertIn("1 of 2 norm records", data["sections"][0][1])
+
+
+class SpecialLocationsTests(unittest.TestCase):
+    def build(self, **data):
+        b = building()
+        b["floors"][0]["special"] = {"r1": dict({"type": "bathroom", "conductor_current_a": 16, "distance_m": 0.5, "partition_width_m": 0.2}, **data)}
+        return b
+
+    def stage6(self, b):
+        done = derive_all(b, loads())
+        ins = dict(W.inputs_doc(), lighting=done["lighting"], special_locations={"locations": done["special"]})
+        ctx = W.context(engine_inputs=ins, loads=done["loads"])
+        res = run(ctx, stop_after=6, run_id="r6")
+        return done, res.results[-1]
+
+    def test_the_building_declares_the_kind_of_room_and_the_engine_is_called(self):
+        from epc_aea90364 import aea_special_locations as SL
+        done, s6 = self.stage6(self.build())
+        self.assertEqual(done["special"][0]["room"], "PB-r1")
+        self.assertEqual(s6.status, "ok", s6.message)
+        row = s6.outputs["special_locations"]["locations"][0]
+        self.assertEqual((row["induction_t"], row["induction_complies"], row["zone2_radius_m"]), (SL.induccion_conductor_t(16, 0.5), SL.induccion_admisible(16, 0.5), SL.radio_zona2_con_tabique_m(0.2)))
+
+    def test_an_electric_vehicle_room_uses_the_multiple_load_rule_and_a_failure_is_a_finding(self):
+        from epc_aea90364 import aea_special_locations as SL
+        b = building()
+        b["floors"][0]["special"] = {"r2": {"type": "ev_charging", "outlets": 12, "points": 12, "circuit_current_a": 32, "max_point_current_a": 16, "max_demand": 30, "installed_load": 60}}
+        _, s6 = self.stage6(b)
+        row = s6.outputs["special_locations"]["locations"][0]
+        self.assertEqual(row["multiple_load"], SL.load_multiple_complies(12, 12, 32, 16))
+        self.assertEqual(row["demand_factor"], 0.5)
+        self.assertFalse(row["multiple_load"]["cumple"])
+        self.assertEqual([f["field"] for f in s6.findings if f["severity"] == "major"], ["PB-r2/special_location_complies"])
+
+    def test_a_missing_datum_blocks_and_a_wrong_room_or_kind_is_an_error(self):
+        b = self.build()
+        del b["floors"][0]["special"]["r1"]["distance_m"]
+        _, s6 = self.stage6(b)
+        self.assertEqual(s6.status, "blocked")
+        self.assertIn("distance_m", s6.message)
+        for special in ({"r9": {"type": "bathroom"}}, {"r1": {"type": "sauna"}}):
+            bad = building()
+            bad["floors"][0]["special"] = special
+            with self.assertRaises(BuildingError):
+                derive_all(bad, loads())
+
+    def test_without_the_section_nothing_runs_and_the_api_refuses_two_sources(self):
+        ctx = W.context()
+        res = run(ctx, stop_after=6, run_id="r6")
+        self.assertNotIn("special_locations", res.results[5].outputs)
+        import tempfile
+        import test_platform_api as A
+        from epc_platform import api
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            api.init_project(root, "API-1", A.ANSWERS, clock=A.CLOCK, actor=A.ORC)
+            out = api.run_pipeline(root / "API-1", loads=loads(), engine_inputs=dict(W.inputs_doc(), building=self.build(), special_locations={"locations": []}), stop_after=3, clock=A.CLOCK, actor=A.ORC)
+        self.assertEqual(out["error"]["code"], "invalid_arguments")

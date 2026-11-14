@@ -14,6 +14,8 @@ lists them, so the runs of the golden projects keep their results.
   hvac             epc_hvac.run for the `engine_inputs["hvac"]` document (design conditions and spaces)
   raceway_sizing   epc_plan.sizing.size_containers: the smallest tray or conduit that holds the cables of each run of the routed floors, with the sections stage 6 sized
   coordination     epc_plan.footprint and epc_plan.clash: the clashes of the routed floors with the drawings of other disciplines given in `engine_inputs["coordination"]`
+  special_locations  epc_aea90364.aea_special_locations for the rooms the building declares as bathrooms (701: induction of a conductor, radius of zone 2) or electric-vehicle charging (722:
+                   multiple load, demand factor), with the data the engineer gives for each (`engine_inputs["special_locations"]["locations"]`)
   phase_balance    epc_load_balance.phase_balance: the phase of each single-phase circuit (`phase_assigned` of `engine_inputs["circuits"]` is kept) and the unbalance between R, S and T
 
 The values the engines use from their norm records are pending review (D21): every slice says so with a note finding.
@@ -282,3 +284,51 @@ class CoordinationStage(ExtraStage):
             raise StageInputError([str(exc)]) from exc
         findings = [engine_finding(n, context.pipeline_run_id, self.spec.slug, c["id"], f"clash_{c['type']}", c["gap_m"], c["clearance_m"]) for n, c in enumerate(found, start=1) if c["severity"] == "error"]
         return {"elements": len(items), "clashes": found}, findings
+
+
+SPECIAL_REQUIRED = {"bathroom": ("conductor_current_a", "distance_m"), "ev_charging": ("outlets", "points", "circuit_current_a", "max_point_current_a")}
+
+
+class SpecialLocationsStage(ExtraStage):
+    key, engine = "special_locations", "calculation/aea90364"
+    functions = ("epc_aea90364.aea_special_locations.induccion_conductor_t", "epc_aea90364.aea_special_locations.induccion_admisible",
+                 "epc_aea90364.aea_special_locations.radio_zona2_con_tabique_m", "epc_aea90364.aea_special_locations.load_multiple_complies",
+                 "epc_aea90364.aea_special_locations.factor_demand")
+
+    def applies(self, context):
+        return self.section(context) is not None
+
+    @staticmethod
+    def _missing(location):
+        return [k for k in SPECIAL_REQUIRED[location["type"]] if k not in location]
+
+    @staticmethod
+    def _bathroom(SL, loc):
+        out = {"induction_t": SL.induccion_conductor_t(loc["conductor_current_a"], loc["distance_m"]), "induction_complies": SL.induccion_admisible(loc["conductor_current_a"], loc["distance_m"])}
+        if loc.get("partition_width_m") is not None:
+            out["zone2_radius_m"] = SL.radio_zona2_con_tabique_m(loc["partition_width_m"])
+        return out
+
+    @staticmethod
+    def _charging(SL, loc):
+        out = {"multiple_load": SL.load_multiple_complies(loc["outlets"], loc["points"], loc["circuit_current_a"], loc["max_point_current_a"])}
+        if loc.get("max_demand") is not None and loc.get("installed_load") is not None:
+            out["demand_factor"] = SL.factor_demand(loc["max_demand"], loc["installed_load"])
+        return out
+
+    def run(self, context):
+        from epc_aea90364 import aea_special_locations as SL
+        rows, findings = [], []
+        for loc in (self.section(context) or {}).get("locations") or []:
+            missing = self._missing(loc)
+            if missing:
+                raise StageInputError([f"`special_locations`: {loc.get('room')} ({loc['type']}) is missing {', '.join(missing)} (no default)"])
+            try:
+                result = self._bathroom(SL, loc) if loc["type"] == "bathroom" else self._charging(SL, loc)
+            except ValueError as exc:
+                raise StageInputError([f"`special_locations`: {loc['room']}: {exc}"]) from exc
+            rows.append({"room": loc["room"], "name": loc.get("name", ""), "type": loc["type"], **result})
+            complies = result.get("induction_complies", (result.get("multiple_load") or {}).get("cumple", True))
+            if not complies:
+                findings.append(engine_finding(len(findings) + 1, context.pipeline_run_id, self.spec.slug, loc["room"], "special_location_complies", False, True))
+        return {"locations": rows}, findings
