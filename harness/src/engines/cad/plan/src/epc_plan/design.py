@@ -348,7 +348,7 @@ class _Wiring:
         except core.PlanError as e:
             self.warnings.append(f"the proposal could not be checked: {e}")
             return {}
-        routes = {t: {"found": r["found"], "length_m": r["length_m"], "max_distance_m": r.get("max_distance_m", 0.0), "unreached": r.get("unreached", [])} for t, r in done["circuits"].items()}
+        routes = {t: {"found": r["found"], "length_m": r["length_m"], "max_distance_m": r.get("max_distance_m", 0.0), "moment_length_m": r.get("moment_length_m", 0.0), "unreached": r.get("unreached", [])} for t, r in done["circuits"].items()}
         for t, r in routes.items():
             if not r["found"]:
                 self.warnings.append(f"circuit {t}: the runs do not reach {', '.join(r['unreached'][:6]) or 'all its loads'}: draw a run to them or apply the runs first")

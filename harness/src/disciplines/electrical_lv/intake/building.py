@@ -219,6 +219,8 @@ def _lighting_loads(building, lit, out, lengths, result, document):
     """Adds the `L-<floor>` loads (power: installed power of the engine) to `out`; returns the `lighting` section of stage 3."""
     installed = {r["id"]: r["energy"]["installed_power_w"] for r in result["rooms"]}
     for floor in building["floors"]:
+        if floor["id"] not in lengths:
+            continue                                   # a floor with a board has one load per branch circuit (see `_circuit_loads`)
         watts = sum(installed[i] for i in lit[floor["id"]])
         if not watts or watts <= 0:
             raise BuildingError([f"floor {floor['id']}: the lighting calculation gives no installed power"])
@@ -228,8 +230,9 @@ def _lighting_loads(building, lit, out, lengths, result, document):
     if building.get("options"):
         section["options"] = copy.deepcopy(building["options"])
     if building.get("tolerance_pct") is not None:
-        section["loads"] = {f"L-{i}": ids for i, ids in lit.items()}
-        section["tolerance_pct"] = building["tolerance_pct"]
+        floor_loads = {f"L-{i}": ids for i, ids in lit.items() if i in lengths}
+        if floor_loads:                                # the circuits of a routed floor come from the same rooms: only the loads by floor are compared
+            section["loads"], section["tolerance_pct"] = floor_loads, building["tolerance_pct"]
     return section
 
 
@@ -240,26 +243,21 @@ def _receptacle_loads(building, outlets, out, lengths, result):
     va = {r["id"]: r["load_va"] for r in result["rooms"]}
     for floor in building["floors"]:
         plugs = outlets[floor["id"]]
-        if not plugs:
+        if not plugs or floor["id"] not in lengths:
             continue
         spec = floor["receptacles_load"]
         out["loads"].append({"id": f"T-{floor['id']}", "description": f"Receptacles {floor['name']}", "area": floor["id"], "kind": "receptacles",
                              "power": {"value": sum(va[r["id"]] for r in plugs), "unit": "VA"}, "phases": spec["phases"], "length": lengths[floor["id"]]("receptacles", spec["length"])})
 
 
-def _route_floor(floor, building, mine, lighting, plug_result):
+def _route_floor(floor, building, mine, lighting, plug_result, taken):
     """The design of one floor with a `board` (see routing.py) for its lit rooms `mine`."""
     arch = {r["id"]: r for r in floor["architecture"]["rooms"]}
     boxes = {r["id"]: arch[r["id"].split("-", 1)[1]].get("box_m") for r in mine}
     if not all(boxes.values()):
         raise BuildingError([f"floor {floor['id']}: a room has no position in metres (`box_m`): the plan units are not known"])
     plugs = {"rooms": [x for x in (plug_result or {"rooms": []})["rooms"] if x["id"] in boxes]} if plug_result else None
-    return design_floor(floor, mine, boxes, {"rooms": [x for x in lighting["rooms"] if x["id"] in boxes]}, plugs, building.get("receptacles"))
-
-
-def _routed_length(design):
-    riser = design["riser_m"]
-    return lambda part, own=None: {"value": round(riser + design["branch_m"][part], 3), "unit": "m"}
+    return design_floor(floor, mine, boxes, {"rooms": [x for x in lighting["rooms"] if x["id"] in boxes]}, plugs, building.get("receptacles"), taken)
 
 
 def _own_length(floor):
@@ -269,19 +267,43 @@ def _own_length(floor):
 def _routing(building, lit_rooms, rooms, lighting, outlets, plug_result):
     """{floor id: design of the floor} for the floors that have a `board` (see routing.py), and the function that gives the length of each derived load."""
     by_id = {r["id"]: r for r in rooms}
-    designs, lengths = {}, {}
+    designs, lengths, taken = {}, {}, set()
     for floor in building["floors"]:
         fid = floor["id"]
         if not floor.get("board"):
             lengths[fid] = _own_length(floor)
             continue
-        designs[fid] = _route_floor(floor, building, [by_id[i] for i in lit_rooms[fid]], lighting, plug_result)
-        lengths[fid] = _routed_length(designs[fid])
+        designs[fid] = _route_floor(floor, building, [by_id[i] for i in lit_rooms[fid]], lighting, plug_result, taken)
+        taken.update(designs[fid]["circuits"])
     return designs, lengths
 
 
+def _circuit_loads(building, designs, out):
+    """Adds one load per branch circuit of the routed floors: its power from the engines, its length riser + moment length (voltage drop by electrical moments), the phases of the floor."""
+    for floor in building["floors"]:
+        design = designs.get(floor["id"])
+        for tag, c in (design or {"circuits": {}})["circuits"].items():
+            phases = floor["phases"] if c["part"] == "lighting" else floor["receptacles_load"]["phases"]
+            label = "Lighting" if c["part"] == "lighting" else "Receptacles"
+            out["loads"].append({"id": c["load"], "description": f"{label} {floor['name']} {tag}", "area": floor["id"], "kind": c["part"],
+                                 "power": {"value": c["power"], "unit": c["unit"]}, "phases": phases, "length": {"value": round(design["riser_m"][c["part"]] + c["moment_m"], 3), "unit": "m"}})
+
+
+def _circuit_options(building, designs):
+    """{load id: options of the circuit}: what each floor says for its `circuits` and, for a branch circuit, the moments flag (its length is the one equivalent to the moments)."""
+    options = {}
+    for floor in building["floors"]:
+        given = floor.get("circuits") or {}
+        if floor["id"] in designs:
+            for c in designs[floor["id"]]["circuits"].values():
+                options[c["load"]] = {**copy.deepcopy(given.get(c["part"]) or {}), "moments": True}
+        else:
+            options.update({f"{p}-{floor['id']}": copy.deepcopy(given[part]) for part, p in (("lighting", "L"), ("receptacles", "T")) if part in given})
+    return options
+
+
 def derive_all(building, loads):
-    """{"loads": load list with the derived loads, "lighting": section for stage 3, "routing": {floor id: design}} (the last only for floors with a `board`). The inputs are not changed."""
+    """{"loads": load list with the derived loads, "lighting": section for stage 3, "routing": {floor id: design} (floors with a `board`), "circuits": {load id: options}}. The inputs are not changed."""
     errors = _check(building, loads)
     if errors:
         raise BuildingError(errors)
@@ -298,21 +320,11 @@ def derive_all(building, loads):
         raise BuildingError(exc.errors) from exc
     section = _lighting_loads(building, lit, out, lengths, lighting, document)
     _receptacle_loads(building, outlets, out, lengths, plug_result)
-    return {"loads": out, "lighting": section, "routing": designs}
+    _circuit_loads(building, designs, out)
+    return {"loads": out, "lighting": section, "routing": designs, "circuits": _circuit_options(building, designs)}
 
 
 def derive(building, loads):
     """(loads with the derived loads added, `lighting` section for stage 3)."""
     done = derive_all(building, loads)
     return done["loads"], done["lighting"]
-
-
-def circuit_options(building, loads):
-    """{load id: options} of the derived loads, from each floor's `circuits`; they go into `engine_inputs.circuits`."""
-    ids = {x["id"] for x in loads["loads"]}
-    options = {}
-    for floor in building["floors"]:
-        for part, prefix in (("lighting", "L"), ("receptacles", "T")):
-            if part in (floor.get("circuits") or {}) and f"{prefix}-{floor['id']}" in ids:
-                options[f"{prefix}-{floor['id']}"] = copy.deepcopy(floor["circuits"][part])
-    return options

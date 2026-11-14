@@ -4,7 +4,7 @@ The role must be allowed to `start_run` (RACI: the orchestrator). The workflow i
 complete, healthy run. Every number in the result is a stage result produced by an engine call inside the pipeline.
 """
 from disciplines.electrical_lv import pipeline
-from disciplines.electrical_lv.intake.building import BuildingError, circuit_options, derive_all
+from disciplines.electrical_lv.intake.building import BuildingError, derive_all
 from disciplines.electrical_lv.stages import STAGES, PipelineContext
 from disciplines.electrical_lv.store import ProjectStore, StoreError, check_run_id
 from epc_platform.api import flow
@@ -93,7 +93,7 @@ def _with_building(loads, engine_inputs):
         raise ApiError("invalid_arguments", f"building: {exc}", {"errors": exc.errors}) from exc
     loads = done["loads"]
     circuits = dict(engine_inputs.get("circuits") or {})
-    for load_id, options in circuit_options(engine_inputs["building"], loads).items():
+    for load_id, options in done["circuits"].items():
         if load_id in circuits:
             raise ApiError("invalid_arguments", f"building: circuit options of {load_id} are given twice (building floor and engine_inputs.circuits)")
         circuits[load_id] = options

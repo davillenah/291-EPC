@@ -1,22 +1,18 @@
 """The cable list: one row per sized circuit, selected from the engine result of stages 6 and 8 and joined with the runs of stage 3. Nothing is calculated here.
 
-The sizing works on the loads of the load list, so a row is a sized circuit of the board (a derived `L-<floor>` is one row, not one row per branch circuit). When stage 3 routed the floors
-(`routing` slice) a row also names the trays and conduits that carry the branch circuits of that load: the engine's own schedule of containers, joined by the family of the load and the floor.
+The sizing works on the loads of the load list. On a routed floor every branch circuit (IUG-xx, TUG-xx) is a load of its own, sized by the voltage drop by electrical moments, so each is one row; when stage 3
+routed the floors (`routing` slice) the row also names the room and the trays and conduits that carry that circuit (the engine's own schedule of containers).
 """
 import copy
 
-FAMILY_OF_LOAD = {"lighting": ("IUG", "IUE"), "receptacles": ("TUG", "TUE")}
-
-
-def raceway_of(load, floor, routing):
-    """{"circuits": [...], "containers": [{tag, kind, cables}]} of the branch circuits of a derived load (kind lighting or receptacles) on a floor; None when the floor was not routed."""
-    data = ((routing or {}).get("floors") or {}).get(floor)
-    families = FAMILY_OF_LOAD.get(load["kind"])
-    if data is None or families is None:
-        return None
-    mine = sorted(c["tag"] for c in data["proposed"] if c["family"] in families)
-    held = [{"tag": c["tag"], "kind": c["kind"], "cables": c["cables"]} for c in data["schedule"]["containers"] if set(c["circuits"]) & set(mine)]
-    return {"circuits": mine, "containers": held}
+def raceway_of(load_id, routing):
+    """{"circuit": tag, "containers": [{tag, kind, cables}]} of a branch-circuit load (the trays and conduits that carry it, from the schedule of the plan engine); None when the load is not a routed circuit."""
+    for data in ((routing or {}).get("floors") or {}).values():
+        for c in data["proposed"]:
+            if c["load"] == load_id:
+                held = [{"tag": k["tag"], "kind": k["kind"], "cables": k["cables"]} for k in data["schedule"]["containers"] if c["tag"] in k["circuits"]]
+                return {"circuit": c["tag"], "room": c["room"], "outlets": c["outlets"], "containers": held}
+    return None
 
 
 def cable_rows(ch, loads, routing=None):
@@ -31,7 +27,7 @@ def cable_rows(ch, loads, routing=None):
                "length_m": detail.get("largo_m"), "ib_a": detail.get("ib_a"), "in_a": data.get("In"), "du_pct": data.get("dU"), "compliant": detail.get("cumple")}
         if load is not None and load.get("area"):
             row["area"] = load["area"]
-            row["raceway"] = raceway_of(load, load["area"], routing)
+            row["raceway"] = raceway_of(tag, routing)
         rows.append(row)
     return rows
 

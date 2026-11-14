@@ -5,8 +5,9 @@ The discipline measures nothing: with a `routing` section in `context.engine_inp
 assigned, and returns what comes back: the route of each circuit, the schedule of trays and conduits and the engine warnings.
 
   no `routing` section   the slice is not available and the stage goes on without it (`optional`, see `grouped.py`)
-  valid section          `ok`: per floor the circuits, the routes and the schedule of the engine, one engine call, a `major` finding for a circuit the runs do not reach, for a route that no
-                         longer has the length the loads were derived with, and for a load of the load list whose length is not the riser plus that route; one `note` finding per warning
+  valid section          `ok`: per floor the circuits, the routes and the schedule of the engine, one engine call, a `major` finding for a circuit the runs do not reach, for a route whose
+                         moment length is no longer the one the loads were derived with, and for a branch-circuit load of the load list whose length is not the riser plus that moment length
+                         or whose power is not the one of its circuit; one `note` finding per warning
 """
 import copy
 
@@ -38,33 +39,35 @@ def _process(floor, design):
         raise StageInputError([f"floor {floor}: {exc}"]) from exc
 
 
-def _checks(floor, design, done, loads):
-    """[(item, flag, value, expected)] of the checks of a floor: reached circuits, the lengths the design recorded and the lengths of the loads."""
-    out = []
-    for c in design["wiring"]["circuits"]:
-        route = done["circuits"][c["tag"]]
-        if not route["found"]:
-            out.append((f"{floor}/{c['tag']}", "reached", False, True))
-        recorded = design["wiring"]["routes"][c["tag"]]["max_distance_m"]
-        if abs(route.get("max_distance_m", 0.0) - recorded) > TOLERANCE_M:
-            out.append((f"{floor}/{c['tag']}", "max_distance_m", route.get("max_distance_m", 0.0), recorded))
-    branch = {}
-    for c in design["wiring"]["circuits"]:
-        part = "lighting" if c["family"].startswith("I") else "receptacles"
-        branch[part] = max(branch.get(part, 0.0), done["circuits"][c["tag"]].get("max_distance_m", 0.0))
-    for part, load_id in design["loads"].items():
-        load = loads.get(load_id)
-        expected = round(design["riser_m"] + branch.get(part, 0.0), 3)
-        if load is not None and part in branch and abs(load["length"]["value"] - expected) > TOLERANCE_M:
-            out.append((load_id, "length", load["length"]["value"], expected))
+def _circuit_checks(floor, tag, c, design, route, loads):
+    """[(item, flag, value, expected)] of one branch circuit: reached, route length as recorded, and its load (length riser + moments, power)."""
+    item, out = f"{floor}/{tag}", []
+    if not route["found"]:
+        out.append((item, "reached", False, True))
+    moment = route.get("moment_length_m", 0.0)
+    if abs(moment - c["moment_m"]) > TOLERANCE_M:
+        out.append((item, "moment_length_m", moment, c["moment_m"]))
+    load = loads.get(c["load"])
+    if load is None:
+        return out + [(c["load"], "in_load_list", False, True)]
+    expected = round(design["riser_m"][c["part"]] + moment, 3)
+    if abs(load["length"]["value"] - expected) > TOLERANCE_M:
+        out.append((c["load"], "length", load["length"]["value"], expected))
+    if load["power"] != {"value": c["power"], "unit": c["unit"]}:
+        out.append((c["load"], "power", load["power"]["value"], c["power"]))
     return out
+
+
+def _checks(floor, design, done, loads):
+    """[(item, flag, value, expected)] of the checks of a floor: for every branch circuit the route and its load."""
+    return [check for tag, c in design["circuits"].items() for check in _circuit_checks(floor, tag, c, design, done["circuits"][tag], loads)]
 
 
 def _section(context):
     section = (context.engine_inputs or {}).get("routing")
     if section is None:
         return None
-    if not isinstance(section, dict) or not section or not all(isinstance(d, dict) and {"document", "wiring", "riser_m", "loads"} <= set(d) for d in section.values()):
+    if not isinstance(section, dict) or not section or not all(isinstance(d, dict) and {"document", "wiring", "riser_m", "circuits"} <= set(d) for d in section.values()):
         raise StageInputError(["must be an object {floor id: design of the floor} as derived from the building section"])
     return section
 
@@ -84,7 +87,7 @@ class RoutingStage(Stage):
             done = _process(floor, design)
             checks += _checks(floor, design, done, loads)
             warnings += [f"{floor}: {w}" for w in done["warnings"] + design.get("warnings", [])]
-            floors[floor] = {"circuits": done["circuits"], "schedule": done["schedule"], "proposed": copy.deepcopy(design["wiring"]["circuits"]),
+            floors[floor] = {"circuits": done["circuits"], "schedule": done["schedule"], "proposed": [dict(copy.deepcopy(c), load=design["circuits"][c["tag"]]["load"]) for c in design["wiring"]["circuits"]],
                              "assignments": copy.deepcopy(design["wiring"]["assignments"])}
         run_id, slug = context.pipeline_run_id, self.spec.slug
         findings = [engine_finding(n, run_id, slug, item, flag, value, expected) for n, (item, flag, value, expected) in enumerate(checks, start=1)]

@@ -158,11 +158,9 @@ class ReceptacleTests(unittest.TestCase):
             derive(b, loads())
 
     def test_circuit_options_go_to_the_derived_loads(self):
-        from disciplines.electrical_lv.intake.building import circuit_options
         b = with_plugs()
         b["floors"][0]["circuits"] = {"lighting": {"kind": "mcb"}, "receptacles": {"kind": "rcbo"}}
-        out, _ = derive(b, loads())
-        self.assertEqual(circuit_options(b, out), {"L-PB": {"kind": "mcb"}, "T-PB": {"kind": "rcbo"}})
+        self.assertEqual(derive_all(b, loads())["circuits"], {"L-PB": {"kind": "mcb"}, "T-PB": {"kind": "rcbo"}})
 
 
 class RoutingTests(unittest.TestCase):
@@ -170,14 +168,30 @@ class RoutingTests(unittest.TestCase):
         b = with_plugs(board={"x_m": 4.0, "y_m": 5.0}, **floor)
         return b, derive_all(b, loads())
 
-    def test_the_length_of_a_load_is_the_riser_plus_the_longest_route_of_the_engine(self):
+    def test_each_branch_circuit_is_a_load_with_the_length_equivalent_to_the_moments(self):
         b, done = self.routed()
         design = done["routing"]["PB"]
         by_id = {x["id"]: x for x in done["loads"]["loads"]}
-        for load, part in (("L-PB", "lighting"), ("T-PB", "receptacles")):
-            self.assertGreater(design["branch_m"][part], 0)
-            self.assertAlmostEqual(by_id[load]["length"]["value"], b["floors"][0]["length"]["value"] + design["branch_m"][part], places=3)
-        self.assertEqual(by_id["L-PB"]["length"]["unit"], "m")
+        self.assertNotIn("L-PB", by_id)                                     # a routed floor has no load by floor: its circuits are the loads
+        self.assertNotIn("T-PB", by_id)
+        self.assertEqual(sorted(c["load"] for c in design["circuits"].values()), sorted(i for i in by_id if i.startswith(("L-IUG", "T-TUG"))))
+        for tag, c in design["circuits"].items():
+            load = by_id[c["load"]]
+            riser = b["floors"][0]["length"]["value"] if c["part"] == "lighting" else b["floors"][0]["receptacles_load"]["length"]["value"]
+            self.assertGreater(c["moment_m"], 0)
+            self.assertAlmostEqual(load["length"]["value"], riser + design["wiring"]["routes"][tag]["moment_length_m"], places=3)
+            self.assertEqual((load["power"], load["kind"], load["area"]), ({"value": c["power"], "unit": c["unit"]}, c["part"], "PB"))
+        self.assertEqual(done["circuits"][design["circuits"]["IUG-01"]["load"]], {"moments": True})
+
+    def test_the_circuit_tags_are_unique_in_the_whole_building(self):
+        b = with_plugs(board={"x_m": 4.0, "y_m": 5.0})
+        second = copy.deepcopy(b["floors"][0])
+        second["id"], second["name"] = "P1", "Floor 1"
+        b["floors"].append(second)
+        done = derive_all(b, loads())
+        tags = [t for d in done["routing"].values() for t in d["circuits"]]
+        self.assertEqual(len(tags), len(set(tags)))
+        self.assertEqual(len([x for x in done["loads"]["loads"] if x["area"] in ("PB", "P1")]), len(tags))
 
     def test_the_design_has_runs_circuits_and_found_routes(self):
         _, done = self.routed()
@@ -263,18 +277,23 @@ class RoutingStageTests(unittest.TestCase):
         self.assertFalse([f for f in res.findings if f["severity"] == "major"])
         json.dumps(res.to_dict())
 
-    def test_a_load_length_that_is_not_riser_plus_route_is_a_finding(self):
+    def test_a_load_length_that_is_not_riser_plus_moments_is_a_finding(self):
         def tamper(done):
-            [x for x in done["loads"]["loads"] if x["id"] == "L-PB"][0]["length"]["value"] += 5
+            [x for x in done["loads"]["loads"] if x["id"] == "L-IUG-01"][0]["length"]["value"] += 5
         _, res, _ = self.stage(tamper)
-        self.assertEqual([f["field"] for f in res.findings if f["severity"] == "major"], ["L-PB/length"])
+        self.assertEqual([f["field"] for f in res.findings if f["severity"] == "major"], ["L-IUG-01/length"])
+
+    def test_a_circuit_load_with_another_power_is_a_finding(self):
+        def tamper(done):
+            [x for x in done["loads"]["loads"] if x["id"] == "T-TUG-01"][0]["power"]["value"] += 100
+        _, res, _ = self.stage(tamper)
+        self.assertEqual([f["field"] for f in res.findings if f["severity"] == "major"], ["T-TUG-01/power"])
 
     def test_a_recorded_route_that_changed_is_a_finding(self):
         def tamper(done):
-            first = done["routing"]["PB"]["wiring"]["circuits"][0]["tag"]
-            done["routing"]["PB"]["wiring"]["routes"][first]["max_distance_m"] += 3
+            done["routing"]["PB"]["circuits"]["IUG-01"]["moment_m"] += 3
         _, res, _ = self.stage(tamper)
-        self.assertTrue([f for f in res.findings if f["field"].endswith("/max_distance_m")])
+        self.assertIn("PB/IUG-01/moment_length_m", [f["field"] for f in res.findings])
 
     def test_a_wrong_section_blocks(self):
         inputs = dict(W.inputs_doc(), routing={"PB": {"nope": 1}})
@@ -292,6 +311,7 @@ class CableListTests(unittest.TestCase):
         b = with_plugs(**({"board": {"x_m": 4.0, "y_m": 5.0}} if routed else {}))
         done = derive_all(b, loads())
         inputs = dict(W.inputs_doc(), lighting=done["lighting"], **({"routing": done["routing"]} if routed else {}))
+        inputs["circuits"] = dict(inputs["circuits"], **done["circuits"])
         ctx = W.context(engine_inputs=inputs, loads=done["loads"])
         res = run(ctx, stop_after=11, run_id="r", stages=[s for s in STAGES if s.number != 10])
         docs = res.results[-1]
@@ -310,15 +330,22 @@ class CableListTests(unittest.TestCase):
             self.assertEqual((row["s_mm2"], row["in_a"], row["du_pct"]), (calc["datos"][row["circuit"]]["S"], calc["datos"][row["circuit"]]["In"], calc["datos"][row["circuit"]]["dU"]))
         self.assertNotIn("cable list", [p["name"] for p in docs.outputs["pending_documents"]])
 
-    def test_a_routed_load_names_the_trays_and_conduits_that_carry_its_circuits(self):
+    def test_a_routed_circuit_has_its_own_row_with_its_room_and_containers(self):
         _, docs, doc = self.documents(True)
-        row = {r["circuit"]: r for r in doc["rows"]}["L-PB"]
-        self.assertTrue(row["raceway"]["circuits"] and all(c.startswith("IUG") for c in row["raceway"]["circuits"]))
-        self.assertTrue(row["raceway"]["containers"])
-        self.assertEqual(row["area"], "PB")
-        plugs = {r["circuit"]: r for r in doc["rows"]}["T-PB"]
-        self.assertTrue(all(c.startswith("TUG") for c in plugs["raceway"]["circuits"]))
+        rows = {r["circuit"]: r for r in doc["rows"]}
+        self.assertTrue([k for k in rows if k.startswith("L-IUG")] and [k for k in rows if k.startswith("T-TUG")])
+        self.assertNotIn("L-PB", rows)
+        row = rows["L-IUG-01"]
+        self.assertEqual((row["area"], row["raceway"]["circuit"]), ("PB", "IUG-01"))
+        self.assertTrue(row["raceway"]["containers"] and row["raceway"]["room"])
+        self.assertTrue(all(c["cables"] > 0 for c in row["raceway"]["containers"]))
         json.dumps(docs.to_dict())
+
+    def test_the_cable_of_a_branch_is_sized_with_the_moments_flag(self):
+        ctx, _, doc = self.documents(True)
+        form = ctx.engine_cache["chain"]["form"]
+        flagged = [c for c in form["circuits"] if c.get("moments")]
+        self.assertEqual(sorted(c["tag"] for c in flagged), sorted(r["circuit"] for r in doc["rows"] if r["circuit"].startswith(("L-IUG", "T-TUG"))))
 
 
 class FloorPlanTests(unittest.TestCase):

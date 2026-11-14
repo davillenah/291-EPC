@@ -166,6 +166,7 @@ class TestWiring(unittest.TestCase):
         self.assertEqual(len(p["assignments"]), 32)
         self.assertEqual(p["warnings"], [])
         self.assertTrue(all(r["found"] for r in p["routes"].values()), p["routes"])
+        self.assertTrue(all(0 < r["moment_length_m"] <= r["max_distance_m"] for r in p["routes"].values()), p["routes"])      # the length equivalent to the electrical moments of the loads
 
     def test_each_family_of_load_has_its_own_circuits_in_a_room(self):
         d = self.drawn([BOARD, *lights(ROOMS[0], 4), *lights(ROOMS[0], 3, "TG", "t"), *lights(ROOMS[0], 2, "TE", "e")])

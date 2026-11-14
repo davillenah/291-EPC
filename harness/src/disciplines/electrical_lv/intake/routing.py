@@ -2,8 +2,9 @@
 
 The discipline draws nothing and measures nothing: the positions come from `epc_lighting` and `epc_receptacles` (in the frame of each room), the rooms from the recognised
 architecture (`box_m`), the board from the caller (`board`: its place on the plan, an input), and the runs, the circuits and their lengths from `epc_plan`.
-The length of a derived load is the run from the main board to the board of the floor (`length` of the floor, an input) plus the longest route of the circuits of its family
-(`max_distance_m` of the engine). A circuit the runs do not reach is an error: its length would be wrong.
+Every branch circuit the engine proposes (IUG-xx, TUG-xx) becomes a load of its own. Its length is the run from the main board to the board of the floor (an input) plus the length
+the plan engine gives for the voltage drop by electrical moments (`moment_length_m`: the length equivalent to the sum of current x distance of its loads), and the circuit is sized
+with the moments flag of the calculation engine. A circuit the runs do not reach is an error: its length would be wrong.
 
 The plan is drawn in metres (scale 1 unit = 1 m) in the frame of the architecture, which the floors share.
 """
@@ -13,6 +14,8 @@ KINDS = {"general": "TG", "special": "TE"}                # kind of receptacle (
 FAMILIES = {"IUG": "lighting", "IUE": "lighting", "TUG": "receptacles", "TUE": "receptacles"}
 SCALE = {"p1": [0, 0], "p2": [1, 0], "distance_m": 1}
 BOARD_ID = "TB-01"
+UNITS = {"lighting": "W", "receptacles": "VA"}
+LOAD_PREFIX = {"lighting": "L", "receptacles": "T"}
 
 
 class RoutingError(ValueError):
@@ -62,12 +65,12 @@ def backdrop_of(architecture):
     return {"walls": walls, "rooms": rooms}
 
 
-def _propose(design, document, floor, boxes):
-    """(runs, wiring) the plan engine proposes for the floor document; adds the runs to the document as lines."""
+def _propose(design, document, floor, boxes, taken):
+    """(runs, wiring) the plan engine proposes for the floor document; adds the runs to the document as lines. `taken`: the circuit tags of the floors before (the tags are unique in the building)."""
     try:
         runs = design.propose_runs(document)
         document["lines"] = [{"id": f"RUN-{i:03d}", "kind": r["kind"], "points": r["points"]} for i, r in enumerate(runs["lines"], 1)]
-        return runs, design.propose_wiring(document, _room_polygons(boxes))
+        return runs, design.propose_wiring(document, _room_polygons(boxes), {"taken": sorted(taken)})
     except ValueError as exc:
         raise RoutingError([f"floor {floor['id']}: {exc}"]) from exc
 
@@ -79,23 +82,29 @@ def _refuse_unrouted(floor, wiring):
         raise RoutingError(lost + [f"floor {floor['id']}: {w}" for w in wiring["warnings"] if "outside every room" in w])
 
 
-def _branch_lengths(wiring):
-    """{part of the installation: longest branch distance in metres} over the circuits of each family."""
-    branch = {}
+def _circuits(wiring):
+    """{circuit tag: its data as a load}: family and part of the installation, room, power (W for lighting, VA for receptacles), the load id and the length the engine gives for the moments."""
+    out = {}
     for c in wiring["circuits"]:
         part = FAMILIES[c["family"]]
-        branch[part] = max(branch.get(part, 0.0), wiring["routes"][c["tag"]]["max_distance_m"])
-    return branch
+        out[c["tag"]] = {"family": c["family"], "part": part, "room": c["room"], "outlets": c["outlets"], "power": c["va"], "unit": UNITS[part], "load": f"{LOAD_PREFIX[part]}-{c['tag']}",
+                         "moment_m": wiring["routes"][c["tag"]]["moment_length_m"], "max_m": wiring["routes"][c["tag"]]["max_distance_m"]}
+    return out
 
 
-def design_floor(floor, rooms, boxes, lighting, outlets, catalogue):
-    """{document, runs, wiring, branch_m, warnings} of one floor. `rooms`: the lit rooms of the document (the lighting and receptacle results are keyed by their ids); `boxes`: room id -> box in metres."""
+def _risers(floor):
+    """{part: run in metres from the main board to the board of the floor}: lighting by the `length` of the floor, receptacles by that of `receptacles_load` (else the same)."""
+    given = (floor.get("receptacles_load") or {}).get("length") or floor["length"]
+    return {"lighting": floor["length"]["value"], "receptacles": given["value"]}
+
+
+def design_floor(floor, rooms, boxes, lighting, outlets, catalogue, taken=()):
+    """{document, runs, wiring, circuits, riser_m, backdrop, warnings} of one floor. `rooms`: the lit rooms of the document (the lighting and receptacle results are keyed by their ids); `boxes`: room id -> box in metres."""
     import epc_plan.design as design
     board = floor["board"]
     kinds = {r["id"]: r["kind"] for r in catalogue or []}
     document = {"schema_version": "1.0", "plan": {"id": floor["id"], "scale": copy.deepcopy(SCALE)}, "discipline": "electrica_BT",
                 "nodes": [{"id": BOARD_ID, "kind": "TB", "x": board["x_m"], "y": board["y_m"]}] + _nodes(rooms, boxes, lighting, outlets, kinds)}
-    runs, wiring = _propose(design, document, floor, boxes)
+    runs, wiring = _propose(design, document, floor, boxes, taken)
     _refuse_unrouted(floor, wiring)
-    branch = _branch_lengths(wiring)
-    return {"document": document, "runs": runs, "wiring": wiring, "branch_m": branch, "riser_m": floor["length"]["value"], "backdrop": backdrop_of(floor["architecture"]), "loads": {"lighting": f"L-{floor['id']}", "receptacles": f"T-{floor['id']}"}, "warnings": [f"floor {floor['id']}: {w}" for w in runs["warnings"] + wiring["warnings"]]}
+    return {"document": document, "runs": runs, "wiring": wiring, "circuits": _circuits(wiring), "riser_m": _risers(floor), "backdrop": backdrop_of(floor["architecture"]), "warnings": [f"floor {floor['id']}: {w}" for w in runs["warnings"] + wiring["warnings"]]}
