@@ -23,6 +23,13 @@ def rated_current_a(sn_kva, un_v):
     return corriente_asignada_trafo(sn_kva * 1000.0, un_v)
 
 
+def apparent_power_kva(i_a, un_v):
+    """S [kVA] = sqrt(3) * Un * I / 1000 of a three-phase load of `i_a` amperes at line voltage `un_v` (V): the demand a board head current represents."""
+    _check(i_a, "i_a")
+    _check(un_v, "un_v")
+    return math.sqrt(3.0) * un_v * i_a / 1000.0
+
+
 def required_apparent_power_kva(demand_kva, reserve_pct):
     """Demand x (1 + reserve / 100). `reserve_pct` is required: no growth or reserve criterion has been decided."""
     if reserve_pct is None:

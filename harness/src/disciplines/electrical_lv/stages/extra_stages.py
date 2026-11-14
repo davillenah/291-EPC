@@ -12,6 +12,7 @@ lists them, so the runs of the golden projects keep their results.
   backup           grupo, ups and transferencia of epc_aea90364.aea_backup for the loads named in `engine_inputs["backup"]`
   lightning        evaluar of epc_aea90364.aea_lightning for the structure given in `engine_inputs["lightning"]`
   hvac             epc_hvac.run for the `engine_inputs["hvac"]` document (design conditions and spaces)
+  phase_balance    epc_load_balance.phase_balance: the phase of each single-phase circuit (`phase_assigned` of `engine_inputs["circuits"]` is kept) and the unbalance between R, S and T
 
 The values the engines use from their norm records are pending review (D21): every slice says so with a note finding.
 """
@@ -29,10 +30,8 @@ def _inputs(context):
 
 
 def enabled(context, name):
-    """True when the slice has to run without a section of its own: a building run (stage 3 routed the floors) or the study listed in `engine_inputs["studies"]`."""
-    stage3 = context.results.get(3)
-    routed = stage3 is not None and stage3.status == "ok" and bool((stage3.outputs or {}).get("routing"))
-    return routed or name in (_inputs(context).get(STUDIES) or [])
+    """True when the slice has to run without a section of its own: a building run (the floors were routed: `engine_inputs["routing"]`) or the study listed in `engine_inputs["studies"]`."""
+    return bool(_inputs(context).get("routing")) or name in (_inputs(context).get(STUDIES) or [])
 
 
 def note(n, run_id, slug, text):
@@ -211,3 +210,25 @@ class HvacStage(ExtraStage):
         except epc_hvac.HvacError as exc:
             raise StageInputError([str(exc)]) from exc
         return {"hvac": result}, []
+
+
+class PhaseBalanceStage(ExtraStage):
+    key, engine = "phase_balance", "calculation/load_balance"
+    functions = ("epc_load_balance.phase_balance.balance",)
+
+    def applies(self, context):
+        return enabled(context, self.key)
+
+    def run(self, context):
+        from epc_load_balance import phase_balance
+        ch = EC.chain(context)
+        u_v = ch["form"]["board"]["voltage_v"]
+        assigned = {tag: (spec or {}).get("phase_assigned", "") for tag, spec in (_inputs(context).get("circuits") or {}).items()}
+        rows = []
+        for tag, detail in ch["calc"]["detalle"].items():
+            kva = phase_balance.apparent_kva(detail["ib_a"], u_v, detail["fases"])
+            if not detail.get("padre") and kva:
+                rows.append((tag, kva, detail["fases"], assigned.get(ch["tags"].get(tag, tag), "")))
+        result = phase_balance.balance(rows)
+        findings = [] if result["complies"] else [engine_finding(1, context.pipeline_run_id, self.spec.slug, ch["form"]["board"]["name"], "phase_unbalance_complies", False, True)]
+        return {"phases": ["R", "S", "T"], **result}, findings

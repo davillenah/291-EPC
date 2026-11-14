@@ -73,3 +73,31 @@ class SupplyStageTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class DemandFromTheBoard(unittest.TestCase):
+    """`"demand": "board"` asks the engines for the demand: head current of the board as three-phase apparent power."""
+
+    def run4(self, section):
+        import test_pipeline_wiring as W
+        inputs = W.inputs_doc()
+        inputs["transformer"] = section
+        ctx = W.context(engine_inputs=inputs)
+        run(ctx, stop_after=3, run_id="r")
+        return ctx, STAGES[3].run(ctx)
+
+    def test_the_demand_is_the_apparent_power_of_the_head_current(self):
+        import epc_transformer_sizing as TS
+        from epc_aea90364 import board_feeders
+        ctx, res = self.run4({"demand": "board", "reserve_pct": 20, "secondary_v": 400})
+        self.assertEqual(res.status, "ok", res.message)
+        ch = ctx.engine_cache["chain"]
+        amps, _ = board_feeders.head(ch["calc"]["datos"], ch["calc"]["detalle"], ch["criteria"])
+        self.assertEqual(res.outputs["required_kva"], TS.required_apparent_power_kva(TS.apparent_power_kva(amps, ch["form"]["board"]["voltage_v"]), 20))
+        self.assertTrue([f for f in res.findings if "demand of the board" in f["value"]])
+        self.assertIn("epc_transformer_sizing.apparent_power_kva", [c["function"] for c in res.engine_calls])
+
+    def test_both_a_demand_and_the_board_or_another_word_block(self):
+        for section in ({"demand": "board", "demand_kva": 10, "reserve_pct": 20, "secondary_v": 400}, {"demand": "mine", "reserve_pct": 20, "secondary_v": 400}):
+            _, res = self.run4(section)
+            self.assertEqual(res.status, "blocked")

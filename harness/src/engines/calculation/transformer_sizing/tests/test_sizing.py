@@ -22,6 +22,19 @@ class RatedCurrent(unittest.TestCase):
                 T.rated_current_a(*args)
 
 
+class ApparentPower(unittest.TestCase):
+    def test_is_the_inverse_of_the_rated_current(self):
+        self.assertAlmostEqual(T.apparent_power_kva(T.rated_current_a(630, 400), 400), 630.0, places=9)
+
+    def test_value(self):
+        self.assertAlmostEqual(T.apparent_power_kva(100, 400), 69.282, places=3)
+
+    def test_invalid(self):
+        for args in ((0, 400), (-1, 400), (100, 0), (True, 400), (float("nan"), 400)):
+            with self.assertRaises(ValueError):
+                T.apparent_power_kva(*args)
+
+
 class RequiredPower(unittest.TestCase):
     def test_reserve_applied(self):
         self.assertAlmostEqual(T.required_apparent_power_kva(400, 25), 500.0)

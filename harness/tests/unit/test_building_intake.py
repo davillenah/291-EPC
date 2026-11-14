@@ -572,3 +572,25 @@ class ExtraSlicesTests(unittest.TestCase):
         self.assertEqual(s3.outputs["hvac"]["hvac"], epc_hvac.run(copy.deepcopy(doc)).as_dict())
         _, s3, _ = self.stage6(hvac={"design": {}, "spaces": []})
         self.assertEqual(s3.status, "blocked")
+
+
+class PhaseBalanceSliceTests(unittest.TestCase):
+    def test_a_building_run_assigns_the_phases_with_the_engine(self):
+        from epc_load_balance import phase_balance as PB
+        b = with_plugs(board={"x_m": 4.0, "y_m": 5.0})
+        done = derive_all(b, loads())
+        ins = dict(W.inputs_doc(), lighting=done["lighting"], routing=done["routing"])
+        ins["circuits"] = dict(ins["circuits"], **done["circuits"])
+        ctx = W.context(engine_inputs=ins, loads=done["loads"])
+        res = run(ctx, stop_after=3, run_id="r3")
+        out = res.results[2].outputs["phase_balance"]
+        self.assertEqual(res.results[2].status, "ok")
+        self.assertEqual(len(out["totals"]), 3)
+        self.assertAlmostEqual(sum(out["totals"]), sum(sum(v) for v in out["circuits"].values()), places=9)
+        self.assertEqual(out["limit_pct"], PB.aea_demand.DESEQUILIBRIO_MAX_PCT)
+        self.assertIn("epc_load_balance.phase_balance.balance", [c["function"] for c in res.results[2].engine_calls])
+
+    def test_without_a_building_or_the_list_the_slice_does_not_run(self):
+        ctx = W.context()
+        res = run(ctx, stop_after=3, run_id="r3")
+        self.assertNotIn("phase_balance", res.results[2].outputs)
