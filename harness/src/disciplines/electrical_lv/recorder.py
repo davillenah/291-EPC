@@ -60,7 +60,7 @@ class RunRecorder:
     def _write_signatures(self, context):
         """The signatures of the inputs of this run, in the folder of this run (whatever the work folder of its drawings is): what a later `resume` compares with (see `resume.py`)."""
         sigs = resume.signatures(context.answers, context.loads, context.engine_inputs)
-        (Path(self.store.make_run_dir(self.token, self.run_id)) / resume.FILE).write_bytes((json.dumps(sigs, indent=1, sort_keys=True) + chr(10)).encode("utf-8"))
+        self.store.write_run_file(self.token, self.run_id, resume.FILE, (json.dumps(sigs, indent=1, sort_keys=True) + chr(10)).encode("utf-8"))
 
     def adopt(self, reused, stages):
         """Count the stages reused from an earlier run as part of this one: their entries, findings and one progress line each ("reused")."""

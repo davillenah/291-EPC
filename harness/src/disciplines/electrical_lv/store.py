@@ -286,6 +286,16 @@ class ProjectStore:
         path.mkdir(parents=True, exist_ok=True)
         return str(path)
 
+    def write_run_file(self, token, run_id, name, data):
+        """Write `runs/<run_id>/<name>` (bytes; a plain file name, no folders): a small record of the run itself, such as the signatures of its inputs."""
+        self._require(token)
+        if not isinstance(name, str) or "/" in name or "\\" in name or name in ("", ".", ".."):
+            raise StoreError(f"run file name {name!r} must be a plain file name")
+        path = self.resolve(check_run_id(run_id), RUNS_DIR) / name
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(data)
+        return str(path)
+
     def manifest_rel(self, manifest):
         """`.epc/manifests/<transmittal>.manifest.json` of a manifest (checked against the schema first)."""
         errors = validate(manifest, load_schema(MANIFEST_SCHEMA))
