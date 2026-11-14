@@ -594,3 +594,71 @@ class PhaseBalanceSliceTests(unittest.TestCase):
         ctx = W.context()
         res = run(ctx, stop_after=3, run_id="r3")
         self.assertNotIn("phase_balance", res.results[2].outputs)
+
+
+class RacewaySizingAndCoordinationTests(unittest.TestCase):
+    def stage6(self, **inputs):
+        return ExtraSlicesTests().stage6(**inputs)
+
+    def test_each_run_gets_the_smallest_size_that_holds_its_cables(self):
+        import epc_plan.sizing as sizing
+        ctx, _, s6 = self.stage6()
+        self.assertEqual(s6.status, "ok", s6.message)
+        sized = s6.outputs["raceway_sizing"]["floors"]["PB"]
+        self.assertTrue(sized and all(s["fits"] and s["used_pct"] <= s["limit_pct"] for s in sized))
+        self.assertIn({"engine": "cad/plan", "function": "epc_plan.sizing.size_containers", "version": __import__("epc_plan").__version__}, s6.engine_calls)
+        self.assertTrue(all(isinstance(s["size"], dict) for s in sized))
+        self.assertTrue(hasattr(sizing, "size_containers"))
+
+    def test_coordination_needs_its_section_and_reports_the_clashes_of_the_engine(self):
+        _, _, s6 = self.stage6()
+        self.assertNotIn("coordination", s6.outputs)
+        _, _, s6 = self.stage6(coordination={"documents": []})
+        self.assertEqual(s6.status, "ok", s6.message)
+        self.assertEqual(set(s6.outputs["coordination"]), {"elements", "clashes"})
+        self.assertGreater(s6.outputs["coordination"]["elements"], 0)
+
+
+class EmergencyAndExteriorTests(unittest.TestCase):
+    def build(self):
+        b = building()
+        b["floors"][0]["emergency"] = {"r1": {"luminaire": "LED1", "height_m": 2.8}}
+        b["exterior"] = [{"id": "EXT1", "name": "Yard", "area_m2": 300, "luminaire": "LED1", "activity": "circulation.indoor",
+                          "load": {"area": "A1", "phases": 1, "length": {"value": 40, "unit": "m"}}}]
+        return b
+
+    def test_the_emergency_and_the_exterior_go_to_the_lighting_document(self):
+        done = derive_all(self.build(), loads())
+        doc = done["lighting"]["document"]
+        self.assertEqual([e["id"] for e in doc["emergency"]], ["PB-r1-EM"])
+        self.assertAlmostEqual(doc["emergency"][0]["width_m"] * doc["emergency"][0]["length_m"], 20.0, places=2)
+        self.assertEqual([a["id"] for a in doc["areas"]], ["EXT1"])
+        self.assertNotIn("load", doc["areas"][0])
+
+    def test_the_exterior_makes_a_load_with_the_engine_power(self):
+        import epc_lighting
+        done = derive_all(self.build(), loads())
+        direct = epc_lighting.run(copy.deepcopy(done["lighting"]["document"])).as_dict()
+        load = [x for x in done["loads"]["loads"] if x["id"] == "L-EXT1"][0]
+        self.assertEqual(load["power"], {"value": direct["areas"][0]["energy"]["installed_power_w"], "unit": "W"})
+        self.assertEqual((load["area"], load["phases"], load["length"]), ("A1", 1, {"value": 40, "unit": "m"}))
+
+    def test_stage_3_checks_the_emergency_and_the_exterior_with_the_engine(self):
+        done = derive_all(self.build(), loads())
+        ins = dict(W.inputs_doc(), lighting=done["lighting"])
+        ctx = W.context(engine_inputs=ins, loads=done["loads"])
+        run(ctx, stop_after=2, run_id="r")
+        res = STAGES[2].run(ctx)
+        self.assertEqual(res.status, "ok", res.message)
+        self.assertEqual((res.outputs["lighting"]["counts"]["areas"], res.outputs["lighting"]["counts"]["emergency"]), (1, 1))
+
+    def test_a_wrong_emergency_room_or_an_exterior_without_its_load_is_an_error(self):
+        b = self.build()
+        b["floors"][0]["emergency"] = {"r9": {}}
+        with self.assertRaises(BuildingError):
+            derive_all(b, loads())
+        b = self.build()
+        del b["exterior"][0]["load"]
+        with self.assertRaises(BuildingError) as ctx:
+            derive_all(b, loads())
+        self.assertIn("exterior", ctx.exception.errors[0])

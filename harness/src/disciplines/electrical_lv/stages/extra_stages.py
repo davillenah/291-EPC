@@ -12,6 +12,8 @@ lists them, so the runs of the golden projects keep their results.
   backup           grupo, ups and transferencia of epc_aea90364.aea_backup for the loads named in `engine_inputs["backup"]`
   lightning        evaluar of epc_aea90364.aea_lightning for the structure given in `engine_inputs["lightning"]`
   hvac             epc_hvac.run for the `engine_inputs["hvac"]` document (design conditions and spaces)
+  raceway_sizing   epc_plan.sizing.size_containers: the smallest tray or conduit that holds the cables of each run of the routed floors, with the sections stage 6 sized
+  coordination     epc_plan.footprint and epc_plan.clash: the clashes of the routed floors with the drawings of other disciplines given in `engine_inputs["coordination"]`
   phase_balance    epc_load_balance.phase_balance: the phase of each single-phase circuit (`phase_assigned` of `engine_inputs["circuits"]` is kept) and the unbalance between R, S and T
 
 The values the engines use from their norm records are pending review (D21): every slice says so with a note finding.
@@ -232,3 +234,51 @@ class PhaseBalanceStage(ExtraStage):
         result = phase_balance.balance(rows)
         findings = [] if result["complies"] else [engine_finding(1, context.pipeline_run_id, self.spec.slug, ch["form"]["board"]["name"], "phase_unbalance_complies", False, True)]
         return {"phases": ["R", "S", "T"], **result}, findings
+
+
+class RacewaySizingStage(ExtraStage):
+    key, engine = "raceway_sizing", "cad/plan"
+    functions = ("epc_plan.sizing.size_containers",)
+
+    def applies(self, context):
+        return enabled(context, self.key) and bool(_inputs(context).get("routing"))
+
+    def run(self, context):
+        import epc_plan.core as core
+        from epc_plan import sizing
+        from disciplines.electrical_lv.stages.routing_stage import routed_document
+        ch = EC.chain(context)
+        line_kinds = core._kinds(core.load_profile("electrica_BT"))[0]
+        floors, findings = {}, []
+        for floor, design in sorted(_inputs(context)["routing"].items()):
+            done = core.process(routed_document(design))
+            sections = {tag: ch["calc"]["datos"][c["load"]]["S"] for tag, c in design["circuits"].items()}
+            sized = sizing.size_containers(done["schedule"]["containers"], sections, {}, line_kinds, core.PARAMS)
+            floors[floor] = sized
+            findings += [engine_finding(len(findings) + 1, context.pipeline_run_id, self.spec.slug, f"{floor}/{s['tag']}", "fits_largest_size", False, True) for s in sized if not s["fits"]]
+        return {"floors": floors}, findings
+
+
+class CoordinationStage(ExtraStage):
+    key, engine = "coordination", "cad/plan"
+    functions = ("epc_plan.footprint.footprints", "epc_plan.clash.detect")
+
+    def applies(self, context):
+        return self.section(context) is not None and bool(_inputs(context).get("routing"))
+
+    def run(self, context):
+        import epc_plan.core as core
+        from epc_plan import clash, footprint
+        from disciplines.electrical_lv.stages.routing_stage import routed_document
+        given = self.section(context)
+        items = []
+        for floor, design in sorted(_inputs(context)["routing"].items()):
+            items += footprint.footprints(routed_document(design), f"floor-{floor}")
+        for other in given.get("documents") or []:
+            items += footprint.footprints(other["document"], other["sheet"])
+        try:
+            found = clash.detect(items, given.get("rules"))
+        except core.PlanError as exc:
+            raise StageInputError([str(exc)]) from exc
+        findings = [engine_finding(n, context.pipeline_run_id, self.spec.slug, c["id"], f"clash_{c['type']}", c["gap_m"], c["clearance_m"]) for n, c in enumerate(found, start=1) if c["severity"] == "error"]
+        return {"elements": len(items), "clashes": found}, findings

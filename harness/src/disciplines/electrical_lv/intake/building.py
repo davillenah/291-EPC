@@ -15,7 +15,9 @@ every lighting load, are inputs; a room the caller did not describe is an error 
                  "architecture": {...},                    # `epc_arch` result as a dict (rooms with `area_m2` and `size_m`)
                  "rooms": {"r1": {...}},                   # per recognised room id: the epc_lighting room fields except id, name and size
                  "by_name": {"HALL": {...}},               # the same, by the written name of the room (exact match); `rooms` wins
-                 "exclude": ["r7"]}]}                      # room ids that are deliberately not lit
+                 "exclude": ["r7"],                        # room ids that are deliberately not lit
+                 "emergency": {"r2": {...}}}],             # antipanic emergency lighting of a room: the epc_lighting emergency fields except id, name, width_m, length_m
+     "exterior": [{"id": "EXT1", "area_m2": 300, "luminaire": "...", "load": {"area": "AZ", "phases": 1, "length": {...}}}]}   # exterior areas: epc_lighting area fields + the load they make
 
 Receptacles (optional, same rules): `building.receptacles` is the epc_receptacles catalogue, each room's data then carries `receptacles`
 (`{"use": ..., "receptacle": <catalogue id>, "count"?, "height_m"?}`, or `false` for a room that deliberately has none), and each floor gives
@@ -55,7 +57,7 @@ def _shape(floor, room):
     return round(sides[0], 3), round(sides[1], 3)
 
 
-FLOOR_KEYS = {"id", "name", "phases", "length", "architecture", "rooms", "by_name", "exclude", "receptacles_load", "circuits", "board"}
+FLOOR_KEYS = {"id", "name", "phases", "length", "architecture", "rooms", "by_name", "exclude", "receptacles_load", "circuits", "board", "emergency"}
 
 
 def _is_length(value):
@@ -167,7 +169,7 @@ def _one_room(floor, room, with_outlets):
 def _shape_errors(building):
     """Errors of the keys of the building outside the floors: unknown keys, luminaires, receptacle catalogue."""
     errors = []
-    unknown = sorted(set(building) - {"luminaires", "options", "tolerance_pct", "floors", "receptacles"})
+    unknown = sorted(set(building) - {"luminaires", "options", "tolerance_pct", "floors", "receptacles", "exterior"})
     errors += [f"building: unknown key(s) {', '.join(unknown)}"] if unknown else []
     if not isinstance(building.get("luminaires"), list) or not building["luminaires"]:
         errors.append("building/luminaires: required, the epc_lighting luminaires")
@@ -211,6 +213,36 @@ def _run(engine, document, options=None):
         return module.run(*args).as_dict()
     except (getattr(module, "LightingError", ValueError), getattr(module, "ReceptaclesError", ValueError), TypeError) as exc:   # TypeError: an option the engine does not have
         raise BuildingError([f"{engine}: {exc}"]) from exc
+
+
+def _emergency_items(floor):
+    """The antipanic emergency lighting of the rooms of a floor that ask for it: one item per room, sized like the room (see `_shape`), with the data the caller gives."""
+    found = {r["id"]: r for r in floor["architecture"]["rooms"]}
+    items, errors = [], []
+    for rid, data in sorted((floor.get("emergency") or {}).items()):
+        if rid not in found or not isinstance(data, dict):
+            errors.append(f"floor {floor['id']}: emergency room {rid} is not in the recognised architecture or its data is not an object")
+            continue
+        try:
+            width, length = _shape(floor, found[rid])
+        except BuildingError as exc:
+            errors += exc.errors
+            continue
+        items.append({"id": f"{floor['id']}-{rid}-EM", "name": f"{floor['name']} {found[rid].get('name') or rid} emergency", "width_m": width, "length_m": length, **copy.deepcopy(data)})
+    return items, errors
+
+
+def _exterior(building):
+    """(exterior areas for the lighting document, {area id: load spec}, errors): the `load` of each area (area of the load list, phases, length) is not an epc_lighting field."""
+    areas, specs, errors = [], {}, []
+    for i, raw in enumerate(building.get("exterior") or []):
+        spec = raw.get("load") if isinstance(raw, dict) else None
+        if not (isinstance(spec, dict) and isinstance(spec.get("area"), str) and spec.get("phases") in (1, 3) and _is_length(spec.get("length"))):
+            errors.append(f"building/exterior/{i}: `load` is required: {{area, phases 1|3, length {{value > 0, unit m}}}} (no default)")
+            continue
+        areas.append({k: v for k, v in raw.items() if k != "load"})
+        specs[raw.get("id")] = spec
+    return areas, specs, errors
 
 
 def _floors(building):
@@ -319,6 +351,30 @@ def _circuit_options(building, designs):
     return options
 
 
+def _extra_lighting(building):
+    """The emergency items of every floor and the exterior areas, as keys of the lighting document (raises with every error found)."""
+    emergency, errors = [], []
+    for floor in building["floors"]:
+        items, errs = _emergency_items(floor)
+        emergency, errors = emergency + items, errors + errs
+    areas, _, area_errors = _exterior(building)
+    if errors + area_errors:
+        raise BuildingError(errors + area_errors)
+    return {**({"emergency": emergency} if emergency else {}), **({"areas": areas} if areas else {})}
+
+
+def _exterior_loads(building, lighting, out):
+    """One lighting load per exterior area: the installed power of the engine and the area, phases and length the caller gave."""
+    _, specs, _ = _exterior(building)
+    known = {a["id"] for a in out["areas"]}
+    for item in lighting.get("areas") or []:
+        spec = specs[item["id"]]
+        if spec["area"] not in known:
+            raise BuildingError([f"exterior area {item['id']}: the area {spec['area']} of its load is not in the load list"])
+        out["loads"].append({"id": f"L-{item['id']}", "description": f"Exterior lighting {item.get('name') or item['id']}", "area": spec["area"], "kind": "lighting",
+                             "power": {"value": item["energy"]["installed_power_w"], "unit": "W"}, "phases": spec["phases"], "length": copy.deepcopy(spec["length"])})
+
+
 def derive_all(building, loads):
     """{"loads": load list with the derived loads, "lighting": section for stage 3, "routing": {floor id: design} (floors with a `board`), "circuits": {load id: options}}. The inputs are not changed."""
     errors = _check(building, loads)
@@ -329,6 +385,7 @@ def derive_all(building, loads):
     known = {a["id"] for a in out["areas"]}
     out["areas"] += [{"id": f["id"], "name": f["name"]} for f in building["floors"] if f["id"] not in known]
     document = {"schema_version": "1.0", "luminaires": copy.deepcopy(building["luminaires"]), "rooms": rooms}
+    document.update(_extra_lighting(building))
     lighting = _run("epc_lighting", document, building.get("options") or {})
     plug_result = _run("epc_receptacles", {"schema_version": "1.0", "receptacles": copy.deepcopy(building["receptacles"]), "rooms": [r for p in outlets.values() for r in p]}) if any(outlets.values()) else None
     try:
@@ -338,6 +395,7 @@ def derive_all(building, loads):
     section = _lighting_loads(building, lit, out, lengths, lighting, document)
     _receptacle_loads(building, outlets, out, lengths, plug_result)
     _circuit_loads(building, designs, out)
+    _exterior_loads(building, lighting, out)
     return {"loads": out, "lighting": section, "routing": designs, "circuits": _circuit_options(building, designs)}
 
 

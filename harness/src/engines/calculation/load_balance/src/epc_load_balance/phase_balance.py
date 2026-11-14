@@ -17,26 +17,27 @@ def apparent_kva(ib_a, voltage_v, phases):
     return (sqrt(3) * voltage_v * ib_a if phases == 3 else voltage_v / sqrt(3) * ib_a) / 1000.0
 
 
+def _place(split, load, tag, kva, phase):
+    """Put the whole of a single-phase circuit on phase `phase` (0, 1 or 2)."""
+    split[tag] = [kva if i == phase else 0.0 for i in range(3)]
+    load[phase] += kva
+
+
+def _three_phase(circuits):
+    """({tag: a third of the circuit on each phase}, the load of each phase) of the three-phase circuits."""
+    split = {tag: [kva / 3.0] * 3 for tag, kva, phases, _ in circuits if phases == 3}
+    third = sum(kva for _, kva, phases, _ in circuits if phases == 3) / 3.0
+    return split, [third, third, third]
+
+
 def assign_phases(circuits):
     """`circuits`: [(tag, kva, phases, assigned)] of the circuits that carry load (assigned: 'R', 'S', 'T' or ''). Returns {tag: [R, S, T] kVA}."""
-    split, load = {}, [0.0, 0.0, 0.0]
-    for tag, kva, phases, _ in circuits:
-        if phases == 3:
-            split[tag] = [kva / 3.0] * 3
-            load = [x + kva / 3.0 for x in load]
-    pending = []
-    for tag, kva, phases, assigned in circuits:
-        if phases == 3:
-            continue
-        if assigned in LETTERS:
-            split[tag] = [kva if i == LETTERS.index(assigned) else 0.0 for i in range(3)]
-            load[LETTERS.index(assigned)] += kva
-        else:
-            pending.append((tag, kva))
-    for tag, kva in sorted(pending, key=lambda p: (-p[1], p[0])):
-        i = load.index(min(load))
-        split[tag] = [kva if k == i else 0.0 for k in range(3)]
-        load[i] += kva
+    split, load = _three_phase(circuits)
+    singles = [c for c in circuits if c[2] != 3]
+    for tag, kva, _, assigned in (c for c in singles if c[3] in LETTERS):
+        _place(split, load, tag, kva, LETTERS.index(assigned))
+    for tag, kva, _, _ in sorted((c for c in singles if c[3] not in LETTERS), key=lambda c: (-c[1], c[0])):
+        _place(split, load, tag, kva, load.index(min(load)))
     return split
 
 
