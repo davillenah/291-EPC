@@ -16,6 +16,14 @@ Actualizado: 2026-11-08.
 - [ ] **RUN-01 · Etapa de partida automática.** `epc run --from-stage N` hoy deja la elección de N a quien corrige (tabla en `harness/docs/architecture/GUIA_MOTORES.md`). Cada etapa debería declarar qué entradas lee; con eso `epc run --resume` calcularía la primera etapa afectada comparando las entradas de la corrida anterior con las nuevas. Aceptación: cambiar solo `boq` reejecuta desde la 15, solo la fecha de planos desde la 14, y un cambio en la lista de cargas se rechaza; el resultado es igual al de una corrida completa.
 - [ ] **(Dueño) NORM-01 · Revisar los valores de norma** con `harness/docs/validation/norm_verification_worksheet.xlsx` y luego pedir la regeneración de los golden (87 casos de `aea90364` y `drawing`), único motivo por el que la CI queda roja.
 
+- [x] **PRB-01 · Lista de cargas inválida por `--loads`** (2026-11-13). La etapa 1 valida con el esquema la lista recibida en memoria; antes una carga con `kind` inválido rompía la etapa 4 con `KeyError`.
+- [x] **PRB-02 · La etapa 3 lee el contenido del plano** (2026-11-13). Regla IV-05: un `.dxf` que `epc_arch` no puede leer bloquea la etapa 3 (antes bastaba que el archivo existiera). Otros formatos de plano siguen sin abrirse.
+- [ ] **PRB-03 · `epc approve` inalcanzable por CLI.** `epc review` pasa de `draft_ready` a `corrected` sin dejar el proyecto en `in_review`. Decidir cómo se llega a `in_review` (comando o API de envío a revisión); toca permisos (RACI), MCP y el roster.
+- [ ] **PRB-04 · Cables en paralelo.** Si ninguna sección ≤ 300 mm² cumple, el motor avisa «usar paralelo» pero no lo calcula: deja ΔU 0 e Iz vacío y `calc_check` lo marca. Usar paralelo exige factores de norma sin verificar (pendiente de revisión del dueño).
+- [ ] **PRB-05 · Acometidas con `together`.** En la prueba «Aurora Sur» dos acometidas en paralelo salieron con 834,9 A cada una, sin repartir la corriente de cabecera. Confirmar si es un error o el uso del parámetro.
+- [ ] **PRB-06 · Motores fuera del pipeline.** Iluminación, climatización y tomacorrientes no entran en las 16 etapas (la potencia se escribe a mano); el transformador usa un `demand_kva` escrito a mano porque la demanda total del tablero está pendiente (etapa 5).
+- [ ] **PRB-07 · Tensión fuera de 380/400 V.** El pipeline bloquea media tensión (p. ej. 13200 V) en la etapa 4. Obra civil y estructura (`civil_structural`) no tienen motores.
+
 ## Harness (HRN)
 
 > **2026-11-11:** the HRN queue below is replaced by `migration-loop/BACKLOG.md` (plan §8, `docs/harness/MIGRATION_PLAN.md`). No HRN item is deleted; they stay as history.

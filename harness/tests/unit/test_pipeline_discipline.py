@@ -46,7 +46,8 @@ class Inputs:
         test.addCleanup(tmp.cleanup)
         root = Path(tmp.name)
         (root / "inputs" / "plans").mkdir(parents=True)
-        (root / "inputs" / "plans" / "a1.dxf").write_text("plan", encoding="utf-8")
+        import ezdxf
+        ezdxf.new("R2018").saveas(root / "inputs" / "plans" / "a1.dxf")        # a real (empty) DXF: stage 3 reads the content (IV-05)
         self.loads_path = root / "loads.json"
         self.loads_path.write_text(json.dumps(loads), encoding="utf-8")
         self.inputs_dir = str(root / "inputs")
@@ -140,6 +141,22 @@ class EarlyStageTests(unittest.TestCase):
         self.assertEqual(res.results[2].outputs, {})
         self.assertIn("supply.voltage", res.results[2].message)
         self.assertFalse(res.summary["ok"])
+
+    def test_a_load_list_handed_in_memory_is_validated_like_a_file(self):
+        # found by the Aurora Sur limit test: `kind: hvac` used to reach stage 4 and crash with KeyError
+        ctx = Inputs(self).context()
+        ctx.loads = {**LOADS, "loads": [{**LOADS["loads"][0], "kind": "hvac"}]}
+        res = run(ctx, run_id="r1")
+        self.assertEqual([r.status for r in res.results], ["blocked"])
+        self.assertEqual(res.summary["stopped_at"], 1)
+
+    def test_a_plan_that_is_not_a_dxf_blocks_stage_3(self):
+        # found by the Aurora Sur limit test: a text file named .dxf used to pass all 16 stages
+        inputs = Inputs(self)
+        (Path(inputs.inputs_dir) / "plans" / "a1.dxf").write_text("not a drawing", encoding="utf-8")
+        res = run(inputs.context(), run_id="r1")
+        self.assertEqual([r.status for r in res.results], ["ok", "blocked"])      # slice 3 runs inside stage 2
+        self.assertIn("IV-05", json.dumps(res.results[1].findings))
 
     def test_missing_earthing_blocks_stage_1(self):
         ctx = Inputs(self).context()

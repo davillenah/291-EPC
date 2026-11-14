@@ -45,11 +45,25 @@ class TempCase(unittest.TestCase):
         self.addCleanup(holder.cleanup)
         return Path(holder.name)
 
+    _dxf_text = None
+
+    @classmethod
+    def empty_dxf(cls):
+        """One real (empty) DXF per test run: ezdxf stamps the time and a GUID, so two calls would give two different files."""
+        if cls._dxf_text is None:
+            import io
+
+            import ezdxf
+            buffer = io.StringIO()
+            ezdxf.new("R2018").write(buffer)
+            cls._dxf_text = buffer.getvalue()
+        return cls._dxf_text
+
     def new_store(self, name="proj", plan=True):
         store = ProjectStore(self.tmp() / name)
         store.init_from_template()
         if plan:
-            store.write_input("plans/a1.dxf", "plan")
+            store.write_input("plans/a1.dxf", self.empty_dxf())        # a real (empty) DXF: stage 3 reads the content (IV-05)
         return store
 
     def loads_path(self):
@@ -420,7 +434,7 @@ class PipelineWithStoreTests(TempCase):
         with_store = self.run_to(store, 3)
         plain_inputs = self.tmp() / "inputs" / "plans"
         plain_inputs.mkdir(parents=True)
-        (plain_inputs / "a1.dxf").write_text("plan", encoding="utf-8")
+        (plain_inputs / "a1.dxf").write_bytes(self.empty_dxf().encode("utf-8"))
         ctx = PipelineContext(answers=ANSWERS, inputs_dir=str(plain_inputs.parent), load_list_path=self.loads_path())
         without = run(ctx, stop_after=3, run_id="r1", clock=CLOCK)
         self.assertEqual([r.to_dict() for r in with_store.results], [r.to_dict() for r in without.results])

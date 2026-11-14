@@ -19,6 +19,11 @@ def read_load_list(path):
         data = json.loads(Path(path).read_text(encoding="utf-8"))
     except (OSError, ValueError) as exc:
         raise LoadListError([f"{Path(path).name}: cannot be read as JSON ({exc})"]) from exc
+    return check_load_list(data)
+
+
+def check_load_list(data):
+    """Validate a load list already in memory (for example the one handed to `epc run --loads`); return it unchanged."""
     errors = validate(data, load_schema("load_list.schema.json"))
     if errors:
         raise LoadListError(errors)
