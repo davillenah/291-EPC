@@ -144,7 +144,11 @@ def _riser_document(main, floor, height):
 def route_riser(main, floor, height):
     """{"length_m", "height_m", "document"}: the run from the main board to the board of `floor`, measured by the plan engine (the height of the shaft included)."""
     import epc_plan.core as core
+    if height == 0 and main["floor"] == floor["id"] and (main["x_m"], main["y_m"]) == (floor["board"]["x_m"], floor["board"]["y_m"]):
+        return {"length_m": 0.0, "height_m": 0.0, "document": None}            # the board of the floor is the main board: there is no run
     document = _riser_document(main, floor, height)
+    if document["circuits"][0]["from"] == document["circuits"][0]["to"]:
+        return {"length_m": height, "height_m": height, "document": document}   # both boards stand at the shaft: the run is the shaft itself
     try:
         route = core.process(document)["circuits"]["RISER"]
     except (core.PlanError, KeyError) as exc:

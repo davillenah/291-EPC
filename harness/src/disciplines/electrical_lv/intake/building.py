@@ -68,6 +68,11 @@ def _is_length(value):
     return isinstance(value, dict) and _is_num(value.get("value")) and value["value"] > 0 and value.get("unit") == "m"
 
 
+def _is_riser(value):
+    """The run from the main board to the board of a floor: {value >= 0, unit m} (zero when the board of the floor is the main board)."""
+    return isinstance(value, dict) and _is_num(value.get("value")) and value["value"] >= 0 and value.get("unit") == "m"
+
+
 def _is_board(value):
     return isinstance(value, dict) and set(value) == {"x_m", "y_m"} and all(_is_num(v) for v in value.values())
 
@@ -77,8 +82,8 @@ def _check_floor_basics(floor, here):
     errors = [f"{here}/{key}: required text" for key in ("id", "name") if not isinstance(floor.get(key), str) or not floor.get(key)]
     if floor.get("phases") not in (1, 3) or isinstance(floor.get("phases"), bool):
         errors.append(f"{here}/phases: required, 1 or 3 (no default)")
-    if not _is_length(floor.get("length")):
-        errors.append(f"{here}/length: required, {{value > 0, unit m}} (the run from the board; no default)")
+    if not _is_riser(floor.get("length")):
+        errors.append(f"{here}/length: required, {{value >= 0, unit m}} (the run from the main board; no default)")
     if not isinstance(floor.get("architecture"), dict) or not isinstance(floor["architecture"].get("rooms"), list):
         errors.append(f"{here}/architecture: required, the epc_arch result with its `rooms`")
     return errors
@@ -112,7 +117,7 @@ def _check_receptacles_load(floor, here):
     spec = floor.get("receptacles_load")
     if spec is None:
         return []
-    if not (isinstance(spec, dict) and spec.get("phases") in (1, 3) and not isinstance(spec.get("phases"), bool) and _is_length(spec.get("length"))):
+    if not (isinstance(spec, dict) and spec.get("phases") in (1, 3) and not isinstance(spec.get("phases"), bool) and _is_riser(spec.get("length"))):
         return [f"{here}/receptacles_load: {{phases 1|3, length {{value > 0, unit m}}}} (no default)"]
     return []
 
