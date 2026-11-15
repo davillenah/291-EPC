@@ -85,6 +85,10 @@ def sig2(x) -> str:
     return "Pendiente" if x is None else fmt.sig2(x)
 
 
+def hz(x) -> str:
+    return "Pendiente" if x is None else f"{fmt.sig2(x)} Hz"
+
+
 def mm(x) -> str:
     return "Pendiente" if x is None else fmt.mm(x)
 
@@ -336,7 +340,7 @@ def memoria_doc(m: dict) -> dict:
           {"type": "bullets", "items": list(NORMA_MARCO)},
           {"type": "h", "text": "2. Datos generales"},
           {"type": "kv", "rows": [["Proyecto", b.get("project") or "Pendiente"], ["Tensión", f"{p1(b['voltage_v'])} V"], ["Esquema de conexión a tierra", b["system"]],
-                                  ["Icc en barras", f"{sig2(b['icc_ka'])} kA"], ["Frecuencia", f"{sig2(b['frequency_hz'])} Hz"],
+                                  ["Icc en barras", f"{sig2(b['icc_ka'])} kA"], ["Frecuencia", hz(b["frequency_hz"])],
                                   ["Factor de potencia", str(b["fp"]).replace(".", ",")], ["Conductor", f"{mat}, aislación {str(cond.get('aislacion', '')).upper()}"],
                                   ["Caída de tensión máxima acumulada desde el origen", f"seccionales {p1(lim['seccional'])} %, iluminación y tomas {p1(lim['terminal'])} %, motores {p1(lim['motor'])} %"],
                                   ["Sensibilidad del diferencial", f"{sig2(cr['rcd_ma'])} mA"]]},

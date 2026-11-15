@@ -713,6 +713,30 @@ Van después de la disciplina eléctrica, salvo que una tarea eléctrica las nec
 - [x] **AGT-01** (2026-11-09) Agentes especialistas de la disciplina eléctrica en `harness/.claude/agents/` (12 `electrical-*`: cargas, conductores, protecciones, tierra y descargas, iluminación, fuerza motriz, respaldo y reactiva, tableros, planos, redactor del informe, redactor del pliego, listado de materiales).
 - [ ] **AGT-03** Enlazar los agentes eléctricos a los plugins que los usan (`agents` en su `plugin.json`) y probarlos con un proyecto real.
 
+### Simulación real del 2026-11-15 (`SIM`)
+
+Origen: `BUGS-Y-TEMPORALES.md` de la simulación (proyecto ficticio, modo edición). Arreglados en la misma rama: B-03 (el resumen de la etapa 9 ahora da también el total de la corrida), B-06 (el manifiesto ya no lista dos veces el documento que tiene PDF/DOCX), B-11 (la Memoria dice "Pendiente" sin "Hz" si falta la frecuencia), T-06 (`catalog_dir` acepta un nombre relativo al catálogo del repositorio), y la etapa 6 ya no se cae con un aparato de más de 125 A.
+
+- [ ] **SIM-01** (T-01) Vía soportada (CLI/MCP o formulario) para definir ambientes, muros y aberturas desde cero; hoy `epc_arch` solo lee o redibuja planos existentes.
+- [ ] **SIM-02** (T-02) El lector de planos pierde ambientes (5 de 7) cuando hay ventanas en un muro vertical exterior (x = 0).
+- [ ] **SIM-03** (T-03) Leer el código del ambiente (PB-01…) del texto del plano; hoy vuelven `r1`…`r7` con `code` vacío.
+- [ ] **SIM-04** (T-04) Poder indicar el ambiente (por id) donde va el tablero o el shaft, en vez de coordenadas en el marco de la hoja.
+- [ ] **SIM-05** (T-05, T-07) Bloque guiado para cargas y `engine_inputs` (luminarias, tomas, estudios, HVAC, tierra) y que el agente `electrical_lv` pueda guardar las respuestas sin intervención manual.
+- [ ] **SIM-06** (B-01) Tras `approve` e `issue`, el manifiesto y el PDF del transmittal siguen en `draft` y `signed: null`; deben reflejar el estado del flujo (decisión del dueño: cómo se firma sin romper el hash del manifiesto).
+- [ ] **SIM-07** (B-02) `approve`/`issue` no se bloquean con hallazgos `major` abiertos (decisión del dueño: qué severidad bloquea y si el ingeniero puede aceptar un hallazgo con motivo).
+- [ ] **SIM-08** (B-04) Falta el dato de protección diferencial en el formulario y en `engine_inputs`: 20 hallazgos `major` (`differential_ok = False`, esquema TT).
+- [ ] **SIM-09** (B-05) F-0060: la caída de tensión máxima del dibujo (2,17) no coincide con la esperada (2,53); averiguar si es redondeo o fuente.
+- [ ] **SIM-10** (B-07) Los entregables sin entrada en `engine_inputs.deliverable_names` salen sin el código del proyecto; derivar el nombre AAAA-PROVEEDOR-CLIENTE-CODIGO desde el proyecto.
+- [ ] **SIM-11** (B-08) Unificar las tres convenciones de capas (`A-*`, `ARQ-/ELEC-/PLAN-*`, `291-*`) y la tipografía (OpenSans/Liberation vs Arial).
+- [ ] **SIM-12** (B-09) El rótulo del unifilar deja vacíos cliente, ubicación, estado y revisión; llenarlos desde `fields`.
+- [ ] **SIM-13** (B-10) Plano eléctrico de PB: el edificio ocupa poca hoja y los circuitos tapan los muros; ajustar escala y capas (observado, no medido).
+- [ ] **SIM-14** (B-11) Idioma: con el proyecto en `es`, el informe descriptivo sale en inglés.
+- [ ] **SIM-15** (B-12) Etapa 4: sin etapa para un edificio alimentado en BT directo.
+- [ ] **SIM-16** (B-13) Iluminación: entrada de coeficiente de utilización en el formulario; hoy se usa una tabla ilustrativa.
+- [ ] **SIM-17** (B-14) Los hallazgos `note` quedan abiertos sin dueño; el manifiesto no distingue los ya vistos.
+- [ ] **SIM-18** (B-15) Probar si una nueva corrida marca como cambiado el acta de `inputs/minutes/` editada después de la corrida.
+- [ ] **SIM-19** (B-06) Cinco entradas del manifiesto no tienen archivo (`boq`, `datasheets`, `lighting_study`, `rfq`, `terminal_block_list`): decidir si se renderizan o se quitan.
+
 ## En espera / más adelante
 Nada de esto se hace hasta que el dueño lo pida.
 

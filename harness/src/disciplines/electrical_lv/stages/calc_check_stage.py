@@ -98,6 +98,20 @@ def by_severity(findings):
     return counts
 
 
+def run_totals(context, number, found):
+    """Findings of the stages before this one plus this stage's own: what the manifest will carry (B-03)."""
+    every = [f for k in sorted(context.results) if k < number for f in context.results[k].findings] + list(found)
+    return {"count": len(every), "by_severity": by_severity(every)}
+
+
+def _counts(by):
+    return ", ".join(f"{n} {s}" for s, n in by.items())
+
+
+def summary_message(found, total):
+    return f"{len(found)} finding(s): {_counts(by_severity(found))}; whole run: {total['count']} finding(s): {_counts(total['by_severity'])}"
+
+
 class CalcCheckStage(Stage):
     """Stage 9: deterministic checks (recalculation, invariants, format) of stages 3-8."""
 
@@ -109,5 +123,5 @@ class CalcCheckStage(Stage):
         found = epc_calc_check.check_run(run_dict(context, 8), project=engine_inputs_for_check(context), run_id=context.pipeline_run_id, groups=STAGE_GROUPS)
         outputs = {"findings_count": len(found), "by_severity": by_severity(found)}
         calls = [{"engine": "validation/calc_check", "function": "epc_calc_check.check_run", "version": epc_calc_check.__version__}]
-        return self.result("ok", outputs=outputs, findings=found, engine_calls=calls,
-                           message=f"{len(found)} finding(s): " + ", ".join(f"{n} {s}" for s, n in by_severity(found).items()))
+        outputs["run_findings"] = run_totals(context, self.spec.number, found)
+        return self.result("ok", outputs=outputs, findings=found, engine_calls=calls, message=summary_message(found, outputs["run_findings"]))

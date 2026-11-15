@@ -129,22 +129,38 @@ class PanelThermalStage(ExtraStage):
     def applies(self, context):
         return self.section(context) is not None or enabled(context, self.key)
 
+    @staticmethod
+    def _devices(PT, calc):
+        """(rows, no_data): the dissipation of each device; the engine table stops at 125 A, so a bigger device needs the manufacturer's figure, which is not invented here."""
+        rows, no_data = [], []
+        for tag, detail in calc["detalle"].items():
+            head = (detail.get("cadena") or [{}])[0]
+            if not (head.get("poles") and detail.get("in_a")):
+                continue
+            row = {"circuit": tag, "in_a": detail["in_a"], "poles": head["poles"]}
+            try:
+                rows.append(dict(row, dissipated_w=PT.potencia_disipada_aparato_w(detail["in_a"], head["poles"])))
+            except ValueError as exc:
+                no_data.append(dict(row, reason=str(exc)))
+        return rows, no_data
+
     def run(self, context):
         from epc_aea90364 import aea_panel_thermal as PT
         ch = EC.chain(context)
-        rows = []
-        for tag, detail in ch["calc"]["detalle"].items():
-            head = (detail.get("cadena") or [{}])[0]
-            if head.get("poles") and detail.get("in_a"):
-                rows.append({"circuit": tag, "in_a": detail["in_a"], "poles": head["poles"], "dissipated_w": PT.potencia_disipada_aparato_w(detail["in_a"], head["poles"])})
+        board = ch["form"]["board"]["name"]
+        rows, no_data = self._devices(PT, ch["calc"])
         total = PT.potencia_tablero_w(sum(r["dissipated_w"] for r in rows))
-        outputs = {"devices": rows, "p_total_w": total}
+        outputs, findings = {"devices": rows, "p_total_w": total}, []
         allowed = (self.section(context) or {}).get("p_admissible_w")
-        findings = []
-        if allowed is not None:
+        if no_data:
+            outputs.update(needs_manufacturer_data=no_data, p_total_complete=False)
+            findings.append(engine_finding(1, context.pipeline_run_id, self.spec.slug, board, "panel_thermal_incomplete", f"{len(no_data)} device(s) above the engine table", "manufacturer dissipation of every device"))
+            if allowed is not None:
+                outputs["p_admissible_w"] = allowed        # no verdict: the total misses the devices above 125 A
+        elif allowed is not None:
             outputs["p_admissible_w"], outputs["complies"] = allowed, PT.verify_panel(total, allowed)
             if not outputs["complies"]:
-                findings.append(engine_finding(1, context.pipeline_run_id, self.spec.slug, ch["form"]["board"]["name"], "panel_thermal_complies", False, True))
+                findings.append(engine_finding(1, context.pipeline_run_id, self.spec.slug, board, "panel_thermal_complies", False, True))
         return outputs, findings
 
 

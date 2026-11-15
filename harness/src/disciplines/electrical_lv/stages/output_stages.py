@@ -158,6 +158,18 @@ DATASHEETS_PENDING_NAME = "datasheets"
 NO_CATALOG_DIR = "no_catalog_dir"
 
 
+REPO_CATALOGS = Path(__file__).resolve().parents[4] / "catalogs"
+
+
+def catalog_path(given):
+    """The catalog folder as given; a relative name that is not a folder from the working directory is looked up in the repository `catalogs/` folder (T-06)."""
+    path = Path(given)
+    if path.is_absolute() or path.is_dir():
+        return str(path)
+    repo = REPO_CATALOGS / path
+    return str(repo) if repo.is_dir() else str(path)
+
+
 def datasheets_inputs(context):
     """The explicit datasheets input `{"catalog_dir", "voltage_v"?}` the engineer gave, or None: the stage never searches the repository for a catalog."""
     given = EC.inputs_of(context).get("datasheets")
@@ -228,7 +240,7 @@ class DocumentsStage(Stage):
         """The datasheet records: the catalog is read through `epc_datasheets.load_catalog_dir` from the folder the engineer gave (nothing else is read)."""
         import epc_datasheets
         try:
-            catalog = epc_datasheets.load_catalog_dir(given["catalog_dir"])
+            catalog = epc_datasheets.load_catalog_dir(catalog_path(given["catalog_dir"]))
             requirements = epc_datasheets.requirements_from_circuits(boq_circuits(ch), given.get("voltage_v"))
             return epc_datasheets.build_datasheets(ch["form"]["board"]["name"], requirements, catalog)
         except ValueError as exc:
