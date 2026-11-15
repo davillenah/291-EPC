@@ -188,13 +188,21 @@ def _reaches(mesh: Dict[str, Any], i: int, at: float) -> bool:
     return bool(values) and min(values) - EPS <= at <= max(values) + EPS
 
 
+def _measured(loops: List[List[List[float]]]) -> Dict[str, Any]:
+    """What a cut outline measures: its middle, the levels of its bottom and its top and its size as it is ordered (a diameter for a round one, width by height for the rest), in millimetres."""
+    us, zs = [p[0] for loop in loops for p in loop], [p[1] for loop in loops for p in loop]
+    centre = [round(sum(us) / len(us), 4), round(sum(zs) / len(zs), 4)]
+    width, height = round(max(us) - min(us), 4), round(max(zs) - min(zs), 4)
+    is_round = len(loops[0]) > 4 and abs(width - height) < 1e-3
+    size = f"D{round(width * 1000)}" if is_round else f"{round(width * 1000)}x{round(height * 1000)}"
+    return {"centre": centre, "level_m": centre[1], "bottom_m": round(min(zs), 4), "top_m": round(max(zs), 4), "size": size}
+
+
 def _cut_solid(s: Dict[str, Any], i: int, j: int, sign: float, at: float) -> Optional[Dict[str, Any]]:
     loops = _cut_loops(s["mesh"], i, j, sign, at) if _reaches(s["mesh"], i, at) else []
     if not loops:
         return None
-    pts = [p for loop in loops for p in loop]
-    centre = [round(sum(p[0] for p in pts) / len(pts), 4), round(sum(p[1] for p in pts) / len(pts), 4)]
-    return dict(_described(s), loops=loops, centre=centre, level_m=centre[1])
+    return dict(_described(s), loops=loops, **_measured(loops))
 
 
 def _beyond(p, i: int, at: float, direction: float, depth: Optional[float]) -> bool:
@@ -274,14 +282,37 @@ def _add_cut(doc, msp, c: Dict[str, Any], params: Dict[str, Any]) -> Tuple[int, 
         return len(c["loops"]), 0
     height = params["scene"]["detail_text_m"]
     top = max(p[1] for loop in c["loops"] for p in loop)
-    text = msp.add_text(f"{c['tag']} {c['level_m']:+.2f}", height=height, dxfattribs={"layer": _layer(doc, params["dxf"]["tag_layer"])})
+    text = msp.add_text(f"{c['tag']} {c['size']} {c['level_m']:+.2f} (BOT {c['bottom_m']:+.2f})", height=height, dxfattribs={"layer": _layer(doc, params["dxf"]["tag_layer"])})
     text.set_placement((c["centre"][0], top + height / 2), align=ezdxf.enums.TextEntityAlignment.BOTTOM_CENTER)
     return len(c["loops"]), 1
 
 
+def dimension_points(section: Dict[str, Any]) -> List[float]:
+    """The places a chain of dimensions across a section measures between: the two ends of what the building is cut at (when it is) and the middle of every cut service, left to right."""
+    services = [c["centre"][0] for c in section["cut"] if _is_service(c)]
+    walls = [p[0] for c in section["cut"] if not _is_service(c) for loop in c["loops"] for p in loop]
+    ends = [min(walls), max(walls)] if walls and services else []
+    return sorted({round(u, 3) for u in services + ends})
+
+
+def _add_dimensions(doc, msp, section: Dict[str, Any], params: Dict[str, Any]) -> int:
+    """A chain of horizontal dimensions over the section, between the places of `dimension_points`. Returns how many were drawn."""
+    points = dimension_points(section)
+    if len(points) < 2 or not section.get("box"):
+        return 0
+    h = params["scene"]["detail_text_m"]
+    y = section["box"][3] + 6 * h
+    look = {"dimtxt": h, "dimasz": h, "dimexe": h / 2, "dimexo": h / 2, "dimgap": h / 4, "dimdec": 2}
+    layer = _layer(doc, params["dxf"]["dimension_layer"])
+    for a, b in zip(points, points[1:]):
+        msp.add_linear_dim(base=(a, y), p1=(a, section["box"][3]), p2=(b, section["box"][3]), dimstyle="EZDXF", override=look, dxfattribs={"layer": layer}).render()
+    return len(points) - 1
+
+
 def write_section_dxf(section: Dict[str, Any], path: Path, version: str = "", params: Dict[str, Any] = core.PARAMS) -> Dict[str, int]:
-    """The section as a 2D DXF in real metres: each cut outline closed and filled on the layer of its solid, what is beyond as lines on the same layers, and by every cut service its tag and
-    the level of its middle ("BN-001 +2.60"). Returns how many outlines, lines and tags were written."""
+    """The section as a 2D DXF in real metres: each cut outline closed and filled on the layer of its solid, what is beyond as lines on the same layers, and by every cut service its tag, its
+    size, the level of its middle and the one of its bottom ("BN-001 300x100 +2.60 (BOT +2.55)"), and over it all a chain of dimensions between the services and the ends of the building.
+    Returns how many outlines, lines, tags and dimensions were written."""
     import ezdxf
     from epc_plan.dxfout import _dxf_version
     if not isinstance(section, dict) or section.get("kind") != "section":
@@ -289,7 +320,7 @@ def write_section_dxf(section: Dict[str, Any], path: Path, version: str = "", pa
     doc = ezdxf.new(dxfversion=_dxf_version(params["dxf"], version), setup=True)
     doc.units = 6
     msp = doc.modelspace()
-    count = {"outlines": 0, "lines": _add_seen(doc, msp, section), "tags": 0}
+    count = {"outlines": 0, "lines": _add_seen(doc, msp, section), "tags": 0, "dimensions": _add_dimensions(doc, msp, section, params)}
     for c in section["cut"]:
         outlines, tags = _add_cut(doc, msp, c, params)
         count["outlines"] += outlines

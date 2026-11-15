@@ -93,7 +93,7 @@ class Sections(unittest.TestCase):
             self.assertEqual((n["outlines"], n["tags"]), (2, 2))
             msp = list(ezdxf.readfile(str(path)).modelspace())
             texts = sorted(e.dxf.text for e in msp if e.dxftype() == "TEXT")
-            self.assertTrue(all(t.endswith("+2.60") for t in texts), texts)
+            self.assertEqual(texts, ["BN-001 300x100 +2.60 (BOT +2.55)", "CN-001 D50 +2.60 (BOT +2.58)"])
             self.assertEqual(sum(1 for e in msp if e.dxftype() == "HATCH"), 2)
             tray = next(e for e in msp if e.dxftype() == "LWPOLYLINE" and e.dxf.layer == "ELEC-BANDEJA")
             xs = [p[0] for p in tray.get_points("xy")]

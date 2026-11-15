@@ -122,7 +122,7 @@ def _box_of(points: List[List[float]]) -> Optional[List[List[float]]]:
 
 def scene(items: List[Dict[str, Any]], params: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
     """The solids with their meshes and the box that holds them all: what a 3D viewer needs, as plain data (stable order, fixed precision)."""
-    done = [dict(s, mesh=mesh(s, params)) for s in items]
+    done = [dict(s, mesh=s.get("mesh") or mesh(s, params)) for s in items]         # a part that brings its own mesh (a fitting, a support) keeps it
     return {"schema_version": "1.0", "units": "m", "solids": done, "box": _box_of([v for s in done for v in s["mesh"]["vertices"]])}
 
 
