@@ -54,7 +54,7 @@
     "Ib": 120.0,
     "In": 125,
     "S": 95,
-    "dU": 0.78,
+    "dU": 0.82,
     "disp": "MCCB (125 A)",
     "icu": 25
    }
@@ -91,7 +91,7 @@
     "fases": 3,
     "fp": 0.9,
     "ib_a": 30.387,
-    "icc_min_a": 3377.3,
+    "icc_min_a": 3375.6,
     "in_a": 32,
     "instalacion": {
      "rho": 1.0,
@@ -117,7 +117,7 @@
     "topologia": "single"
    },
    "G-02": {
-    "aislacion": "pvc",
+    "aislacion": "xlpe",
     "cadena": [
      {
       "label": "4P",
@@ -144,12 +144,12 @@
      "t_amb": 40.0,
      "t_suelo": 25.0
     },
-    "iz_a": 25.0,
+    "iz_a": 32.0,
     "kind": "rccb",
     "largo_m": 0.0,
     "limite_pct": 1.0,
     "material": "cu",
-    "metodo": "B1",
+    "metodo": "B2",
     "neutro_mm2": 4,
     "p_kw": 4.0,
     "padre": "",
@@ -184,7 +184,7 @@
     "fases": 1,
     "fp": 0.9,
     "ib_a": 11.142,
-    "icc_min_a": 326.1,
+    "icc_min_a": 327.0,
     "in_a": 13,
     "instalacion": {
      "rho": 1.0,
@@ -231,7 +231,7 @@
     "fases": 1,
     "fp": 0.9,
     "ib_a": 9.116,
-    "icc_min_a": 558.6,
+    "icc_min_a": 560.1,
     "in_a": 10,
     "instalacion": {
      "rho": 1.0,
@@ -278,7 +278,7 @@
     "fases": 1,
     "fp": 0.9,
     "ib_a": 21.271,
-    "icc_min_a": 641.0,
+    "icc_min_a": 642.6,
     "in_a": 25,
     "instalacion": {
      "rho": 1.0,
@@ -335,7 +335,7 @@
     "fases": 3,
     "fp": 0.85,
     "ib_a": 13.406,
-    "icc_min_a": 701.1,
+    "icc_min_a": 701.0,
     "in_a": 20,
     "instalacion": {
      "rho": 1.0,
@@ -361,7 +361,7 @@
     "topologia": "dol"
    },
    "TG": {
-    "aislacion": "pvc",
+    "aislacion": "xlpe",
     "cadena": [
      {
       "label": null,
@@ -376,31 +376,31 @@
      }
     ],
     "cumple": true,
-    "du_acum_pct": 0.782,
-    "du_propia_pct": 0.782,
+    "du_acum_pct": 0.825,
+    "du_propia_pct": 0.825,
     "fases": 3,
     "fp": 0.85,
     "ib_a": 120.0,
-    "icc_min_a": 7660.0,
+    "icc_min_a": 7373.1,
     "in_a": 125,
     "instalacion": {
      "rho": 1.0,
      "t_amb": 40.0,
      "t_suelo": 25.0
     },
-    "iz_a": 180.0,
+    "iz_a": 212.0,
     "kind": "mccb",
     "largo_m": 60.0,
     "limite_pct": 1.0,
     "material": "cu",
-    "metodo": "B1",
+    "metodo": "B2",
     "neutro_mm2": 50,
     "p_kw": 67.1343,
     "padre": "",
-    "pe_mm2": 47.5,
+    "pe_mm2": 50,
     "ruta": [],
     "ruta_limitante": null,
-    "s_termica_mm2": 70,
+    "s_termica_mm2": 50,
     "seccion_min_mm2": 2.5,
     "solucion": "feeder-mccb",
     "tipo": "seccional",
@@ -414,8 +414,8 @@
    "SUB": {
     "Ib": 73.6,
     "In": 80,
-    "S": 35,
-    "dU": 0.58,
+    "S": 25,
+    "dU": 0.84,
     "disp": "RCCB 4P 80 A 30 mA",
     "icu": 25
    },
@@ -423,7 +423,7 @@
     "Ib": 20.0,
     "In": 25,
     "S": 4,
-    "dU": 1.66,
+    "dU": 1.91,
     "disp": "MCB > VFD (25 A)",
     "icu": 25
    },
@@ -431,14 +431,14 @@
     "Ib": 53.6,
     "In": 80,
     "S": 35,
-    "dU": 1.7,
+    "dU": 1.96,
     "disp": "MCCB > KM > KM > KM > OL (80 A)",
     "icu": 25
    }
   },
   "detalle": {
    "SUB": {
-    "aislacion": "pvc",
+    "aislacion": "xlpe",
     "cadena": [
      {
       "label": "4P",
@@ -453,12 +453,12 @@
      }
     ],
     "cumple": true,
-    "du_acum_pct": 0.579,
-    "du_propia_pct": 0.579,
+    "du_acum_pct": 0.836,
+    "du_propia_pct": 0.836,
     "fases": 3,
     "fp": 0.85,
     "ib_a": 73.618,
-    "icc_min_a": 6417.5,
+    "icc_min_a": 4861.6,
     "in_a": 80,
     "instalacion": {
      "rho": 1.0,
@@ -470,14 +470,14 @@
     "largo_m": 30.0,
     "limite_pct": 1.0,
     "material": "cu",
-    "metodo": "B1",
-    "neutro_mm2": 25,
+    "metodo": "B2",
+    "neutro_mm2": 16,
     "p_kw": 41.1855,
     "padre": "",
     "pe_mm2": 16,
     "ruta": [],
     "ruta_limitante": null,
-    "s_termica_mm2": 35,
+    "s_termica_mm2": 25,
     "seccion_min_mm2": 2.5,
     "solucion": "group-differential",
     "tipo": "seccional",
@@ -510,12 +510,12 @@
      }
     ],
     "cumple": true,
-    "du_acum_pct": 1.657,
+    "du_acum_pct": 1.913,
     "du_propia_pct": 1.078,
     "fases": 3,
     "fp": 0.85,
     "ib_a": 19.994,
-    "icc_min_a": 1087.5,
+    "icc_min_a": 1031.4,
     "in_a": 25,
     "instalacion": {
      "rho": 1.0,
@@ -596,12 +596,12 @@
      }
     ],
     "cumple": true,
-    "du_acum_pct": 1.703,
+    "du_acum_pct": 1.96,
     "du_propia_pct": 1.124,
     "fases": 3,
     "fp": 0.85,
     "ib_a": 53.624,
-    "icc_min_a": 2294.3,
+    "icc_min_a": 2059.3,
     "in_a": 80,
     "instalacion": {
      "rho": 1.0,
@@ -635,14 +635,14 @@
     "Ib": 120.0,
     "In": 125,
     "S": 95,
-    "dU": 0.78,
+    "dU": 0.82,
     "disp": "MCCB (125 A)",
     "icu": 25
    }
   },
   "detalle": {
    "C-01": {
-    "aislacion": "pvc",
+    "aislacion": "xlpe",
     "cadena": [
      {
       "label": null,
@@ -657,31 +657,31 @@
      }
     ],
     "cumple": true,
-    "du_acum_pct": 0.782,
-    "du_propia_pct": 0.782,
+    "du_acum_pct": 0.825,
+    "du_propia_pct": 0.825,
     "fases": 3,
     "fp": 0.85,
     "ib_a": 120.0,
-    "icc_min_a": 7660.0,
+    "icc_min_a": 7373.1,
     "in_a": 125,
     "instalacion": {
      "rho": 1.0,
      "t_amb": 40.0,
      "t_suelo": 25.0
     },
-    "iz_a": 180.0,
+    "iz_a": 212.0,
     "kind": "mccb",
     "largo_m": 60.0,
     "limite_pct": 1.0,
     "material": "cu",
-    "metodo": "B1",
+    "metodo": "B2",
     "neutro_mm2": 50,
     "p_kw": 67.1343,
     "padre": "",
-    "pe_mm2": 47.5,
+    "pe_mm2": 50,
     "ruta": [],
     "ruta_limitante": null,
-    "s_termica_mm2": 70,
+    "s_termica_mm2": 50,
     "seccion_min_mm2": 2.5,
     "solucion": "feeder-mccb",
     "tipo": "seccional",
@@ -723,7 +723,7 @@
     "fases": 3,
     "fp": 0.85,
     "ib_a": 120.0,
-    "icc_min_a": 7380.6,
+    "icc_min_a": 7373.1,
     "in_a": 125,
     "instalacion": {
      "rho": 2.0,
@@ -739,7 +739,7 @@
     "neutro_mm2": 50,
     "p_kw": 67.1343,
     "padre": "",
-    "pe_mm2": 47.5,
+    "pe_mm2": 50,
     "ruta": [],
     "ruta_limitante": null,
     "s_termica_mm2": 50,
@@ -784,7 +784,7 @@
     "fases": 3,
     "fp": 0.85,
     "ib_a": 120.0,
-    "icc_min_a": 4143.9,
+    "icc_min_a": 4141.5,
     "in_a": 125,
     "instalacion": {
      "rho": 1.0,
@@ -800,7 +800,7 @@
     "neutro_mm2": 35,
     "p_kw": 67.1343,
     "padre": "",
-    "pe_mm2": 35.0,
+    "pe_mm2": 35,
     "ruta": [],
     "ruta_limitante": null,
     "s_termica_mm2": 70,
@@ -818,14 +818,14 @@
     "Ib": 120.0,
     "In": 125,
     "S": 95,
-    "dU": 0.78,
+    "dU": 0.82,
     "disp": "MCCB (125 A)",
     "icu": 25
    }
   },
   "detalle": {
    "C-01": {
-    "aislacion": "pvc",
+    "aislacion": "xlpe",
     "cadena": [
      {
       "label": null,
@@ -840,31 +840,31 @@
      }
     ],
     "cumple": true,
-    "du_acum_pct": 0.782,
-    "du_propia_pct": 0.782,
+    "du_acum_pct": 0.825,
+    "du_propia_pct": 0.825,
     "fases": 3,
     "fp": 0.85,
     "ib_a": 120.0,
-    "icc_min_a": 7660.0,
+    "icc_min_a": 7373.1,
     "in_a": 125,
     "instalacion": {
      "rho": 1.0,
      "t_amb": 40.0,
      "t_suelo": 25.0
     },
-    "iz_a": 180.0,
+    "iz_a": 212.0,
     "kind": "mccb",
     "largo_m": 60.0,
     "limite_pct": 1.0,
     "material": "cu",
-    "metodo": "B1",
+    "metodo": "B2",
     "neutro_mm2": 50,
     "p_kw": 67.1343,
     "padre": "",
-    "pe_mm2": 47.5,
+    "pe_mm2": 50,
     "ruta": [],
     "ruta_limitante": null,
-    "s_termica_mm2": 70,
+    "s_termica_mm2": 50,
     "seccion_min_mm2": 2.5,
     "solucion": "feeder-mccb",
     "tipo": "seccional",
@@ -879,14 +879,14 @@
     "Ib": 120.0,
     "In": 125,
     "S": 95,
-    "dU": 0.78,
+    "dU": 0.82,
     "disp": "MCCB (125 A)",
     "icu": 25
    }
   },
   "detalle": {
    "C-01": {
-    "aislacion": "pvc",
+    "aislacion": "xlpe",
     "cadena": [
      {
       "label": null,
@@ -901,31 +901,31 @@
      }
     ],
     "cumple": true,
-    "du_acum_pct": 0.782,
-    "du_propia_pct": 0.782,
+    "du_acum_pct": 0.825,
+    "du_propia_pct": 0.825,
     "fases": 3,
     "fp": 0.85,
     "ib_a": 120.0,
-    "icc_min_a": 7660.0,
+    "icc_min_a": 7373.1,
     "in_a": 125,
     "instalacion": {
      "rho": 1.0,
      "t_amb": 40.0,
      "t_suelo": 25.0
     },
-    "iz_a": 180.0,
+    "iz_a": 212.0,
     "kind": "mccb",
     "largo_m": 60.0,
     "limite_pct": 1.0,
     "material": "cu",
-    "metodo": "B1",
+    "metodo": "B2",
     "neutro_mm2": 50,
     "p_kw": 67.1343,
     "padre": "",
-    "pe_mm2": 47.5,
+    "pe_mm2": 50,
     "ruta": [],
     "ruta_limitante": null,
-    "s_termica_mm2": 70,
+    "s_termica_mm2": 50,
     "seccion_min_mm2": 2.5,
     "solucion": "feeder-mccb",
     "tipo": "seccional",
@@ -939,15 +939,15 @@
    "C-01": {
     "Ib": 151.9,
     "In": 160,
-    "S": 240,
-    "dU": 0.96,
+    "S": 300,
+    "dU": 0.86,
     "disp": "MCCB (160 A)",
     "icu": 25
    }
   },
   "detalle": {
    "C-01": {
-    "aislacion": "pvc",
+    "aislacion": "xlpe",
     "cadena": [
      {
       "label": null,
@@ -962,31 +962,31 @@
      }
     ],
     "cumple": true,
-    "du_acum_pct": 0.965,
-    "du_propia_pct": 0.965,
+    "du_acum_pct": 0.863,
+    "du_propia_pct": 0.863,
     "fases": 3,
     "fp": 0.9,
     "ib_a": 151.934,
-    "icc_min_a": 8122.9,
+    "icc_min_a": 8683.8,
     "in_a": 160,
     "instalacion": {
      "rho": 1.0,
      "t_amb": 40.0,
      "t_suelo": 25.0
     },
-    "iz_a": 301.0,
+    "iz_a": 414.0,
     "kind": "mccb",
     "largo_m": 120.0,
     "limite_pct": 1.0,
     "material": "cu",
-    "metodo": "B1",
-    "neutro_mm2": 120,
+    "metodo": "B2",
+    "neutro_mm2": 150,
     "p_kw": 90.0,
     "padre": "",
-    "pe_mm2": 120.0,
+    "pe_mm2": 150,
     "ruta": [],
     "ruta_limitante": null,
-    "s_termica_mm2": 95,
+    "s_termica_mm2": 70,
     "seccion_min_mm2": 2.5,
     "solucion": "auto-mccb",
     "tipo": "seccional",
@@ -1028,7 +1028,7 @@
     "fases": 3,
     "fp": 0.9,
     "ib_a": 151.934,
-    "icc_min_a": 8693.3,
+    "icc_min_a": 8683.8,
     "in_a": 160,
     "instalacion": {
      "rho": 2.0,
@@ -1044,7 +1044,7 @@
     "neutro_mm2": 150,
     "p_kw": 90.0,
     "padre": "",
-    "pe_mm2": 150.0,
+    "pe_mm2": 150,
     "ruta": [],
     "ruta_limitante": null,
     "s_termica_mm2": 95,
@@ -1089,7 +1089,7 @@
     "fases": 3,
     "fp": 0.9,
     "ib_a": 151.934,
-    "icc_min_a": 3677.1,
+    "icc_min_a": 3675.3,
     "in_a": 160,
     "instalacion": {
      "rho": 1.0,
@@ -1105,7 +1105,7 @@
     "neutro_mm2": 70,
     "p_kw": 90.0,
     "padre": "",
-    "pe_mm2": 60.0,
+    "pe_mm2": 70,
     "ruta": [],
     "ruta_limitante": null,
     "s_termica_mm2": 95,
@@ -1122,15 +1122,15 @@
    "C-01": {
     "Ib": 151.9,
     "In": 160,
-    "S": 240,
-    "dU": 0.96,
+    "S": 300,
+    "dU": 0.86,
     "disp": "MCCB (160 A)",
     "icu": 25
    }
   },
   "detalle": {
    "C-01": {
-    "aislacion": "pvc",
+    "aislacion": "xlpe",
     "cadena": [
      {
       "label": null,
@@ -1145,31 +1145,31 @@
      }
     ],
     "cumple": true,
-    "du_acum_pct": 0.965,
-    "du_propia_pct": 0.965,
+    "du_acum_pct": 0.863,
+    "du_propia_pct": 0.863,
     "fases": 3,
     "fp": 0.9,
     "ib_a": 151.934,
-    "icc_min_a": 8122.9,
+    "icc_min_a": 8683.8,
     "in_a": 160,
     "instalacion": {
      "rho": 1.0,
      "t_amb": 40.0,
      "t_suelo": 25.0
     },
-    "iz_a": 301.0,
+    "iz_a": 414.0,
     "kind": "mccb",
     "largo_m": 120.0,
     "limite_pct": 1.0,
     "material": "cu",
-    "metodo": "B1",
-    "neutro_mm2": 120,
+    "metodo": "B2",
+    "neutro_mm2": 150,
     "p_kw": 90.0,
     "padre": "",
-    "pe_mm2": 120.0,
+    "pe_mm2": 150,
     "ruta": [],
     "ruta_limitante": null,
-    "s_termica_mm2": 95,
+    "s_termica_mm2": 70,
     "seccion_min_mm2": 2.5,
     "solucion": "auto-mccb",
     "tipo": "seccional",
@@ -1183,15 +1183,15 @@
    "C-01": {
     "Ib": 151.9,
     "In": 160,
-    "S": 240,
-    "dU": 0.96,
+    "S": 300,
+    "dU": 0.86,
     "disp": "MCCB (160 A)",
     "icu": 25
    }
   },
   "detalle": {
    "C-01": {
-    "aislacion": "pvc",
+    "aislacion": "xlpe",
     "cadena": [
      {
       "label": null,
@@ -1206,31 +1206,31 @@
      }
     ],
     "cumple": true,
-    "du_acum_pct": 0.965,
-    "du_propia_pct": 0.965,
+    "du_acum_pct": 0.863,
+    "du_propia_pct": 0.863,
     "fases": 3,
     "fp": 0.9,
     "ib_a": 151.934,
-    "icc_min_a": 8122.9,
+    "icc_min_a": 8683.8,
     "in_a": 160,
     "instalacion": {
      "rho": 1.0,
      "t_amb": 40.0,
      "t_suelo": 25.0
     },
-    "iz_a": 301.0,
+    "iz_a": 414.0,
     "kind": "mccb",
     "largo_m": 120.0,
     "limite_pct": 1.0,
     "material": "cu",
-    "metodo": "B1",
-    "neutro_mm2": 120,
+    "metodo": "B2",
+    "neutro_mm2": 150,
     "p_kw": 90.0,
     "padre": "",
-    "pe_mm2": 120.0,
+    "pe_mm2": 150,
     "ruta": [],
     "ruta_limitante": null,
-    "s_termica_mm2": 95,
+    "s_termica_mm2": 70,
     "seccion_min_mm2": 2.5,
     "solucion": "auto-mccb",
     "tipo": "seccional",
@@ -1273,7 +1273,7 @@
     "fases": 1,
     "fp": 0.9,
     "ib_a": 21.271,
-    "icc_min_a": 641.0,
+    "icc_min_a": 642.6,
     "in_a": 25,
     "instalacion": {
      "rho": 1.0,
@@ -1307,14 +1307,14 @@
     "Ib": 21.3,
     "In": 25,
     "S": 10,
-    "dU": 1.91,
+    "dU": 1.8,
     "disp": "MCB (25 A)",
     "icu": 25
    }
   },
   "detalle": {
    "C-01": {
-    "aislacion": "xlpe",
+    "aislacion": "pvc",
     "cadena": [
      {
       "label": "1P",
@@ -1330,31 +1330,31 @@
      }
     ],
     "cumple": true,
-    "du_acum_pct": 1.913,
-    "du_propia_pct": 1.913,
+    "du_acum_pct": 1.797,
+    "du_propia_pct": 1.797,
     "fases": 1,
     "fp": 0.9,
     "ib_a": 21.271,
-    "icc_min_a": 603.6,
+    "icc_min_a": 642.6,
     "in_a": 25,
     "instalacion": {
      "rho": 2.0,
      "t_amb": 50.0,
      "t_suelo": 30.0
     },
-    "iz_a": 56.7,
+    "iz_a": 41.0,
     "kind": "mcb",
     "largo_m": 70.0,
     "limite_pct": 3.0,
     "material": "cu",
-    "metodo": "B2",
+    "metodo": "B1",
     "neutro_mm2": 10,
     "p_kw": 4.2,
     "padre": "",
     "pe_mm2": 10,
     "ruta": [],
     "ruta_limitante": null,
-    "s_termica_mm2": 4,
+    "s_termica_mm2": 6,
     "seccion_min_mm2": 1.5,
     "solucion": "circuit-mcb",
     "tipo": "iluminacion",
@@ -1363,20 +1363,22 @@
   }
  },
  "kind:lighting:loose": {
-  "avisos": [],
+  "avisos": [
+   "C-01: ninguna sección ≤ 300 mm² cumple Iz/caída (In 25 A, ΔU 0.00 %): usar paralelo [sección 300 mm² fuera de 771.16.I/pvc/al]"
+  ],
   "datos": {
    "C-01": {
     "Ib": 21.3,
     "In": 25,
-    "S": 16,
-    "dU": 2.01,
+    "S": 300,
+    "dU": 0.0,
     "disp": "MCB (25 A)",
     "icu": 25
    }
   },
   "detalle": {
    "C-01": {
-    "aislacion": "xlpe",
+    "aislacion": "pvc",
     "cadena": [
      {
       "label": "1P",
@@ -1391,32 +1393,32 @@
       "symbol": "lv_mcb"
      }
     ],
-    "cumple": true,
-    "du_acum_pct": 2.006,
-    "du_propia_pct": 2.006,
+    "cumple": false,
+    "du_acum_pct": 0.0,
+    "du_propia_pct": 0.0,
     "fases": 1,
     "fp": 0.9,
     "ib_a": 21.271,
-    "icc_min_a": 576.7,
+    "icc_min_a": 5643.3,
     "in_a": 25,
     "instalacion": {
      "rho": 1.0,
      "t_amb": 40.0,
      "t_suelo": 25.0
     },
-    "iz_a": 66.0,
+    "iz_a": null,
     "kind": "mcb",
     "largo_m": 70.0,
     "limite_pct": 5.0,
     "material": "al",
-    "metodo": "B2",
-    "neutro_mm2": 16,
+    "metodo": "B1",
+    "neutro_mm2": 150,
     "p_kw": 4.2,
     "padre": "",
-    "pe_mm2": 16,
+    "pe_mm2": 150,
     "ruta": [],
     "ruta_limitante": null,
-    "s_termica_mm2": 16,
+    "s_termica_mm2": null,
     "seccion_min_mm2": 1.5,
     "solucion": "circuit-mcb",
     "tipo": "iluminacion",
@@ -1459,7 +1461,7 @@
     "fases": 1,
     "fp": 0.9,
     "ib_a": 21.271,
-    "icc_min_a": 641.0,
+    "icc_min_a": 642.6,
     "in_a": 25,
     "instalacion": {
      "rho": 1.0,
@@ -1521,7 +1523,7 @@
     "fases": 1,
     "fp": 0.9,
     "ib_a": 21.271,
-    "icc_min_a": 986.1,
+    "icc_min_a": 988.6,
     "in_a": 25,
     "instalacion": {
      "rho": 1.0,
@@ -1593,7 +1595,7 @@
     "fases": 3,
     "fp": 0.85,
     "ib_a": 13.406,
-    "icc_min_a": 701.1,
+    "icc_min_a": 701.0,
     "in_a": 20,
     "instalacion": {
      "rho": 1.0,
@@ -1737,7 +1739,7 @@
     "fases": 3,
     "fp": 0.85,
     "ib_a": 13.406,
-    "icc_min_a": 1510.9,
+    "icc_min_a": 1510.6,
     "in_a": 20,
     "instalacion": {
      "rho": 1.0,
@@ -1809,7 +1811,7 @@
     "fases": 3,
     "fp": 0.85,
     "ib_a": 13.406,
-    "icc_min_a": 701.1,
+    "icc_min_a": 701.0,
     "in_a": 20,
     "instalacion": {
      "rho": 1.0,
@@ -1881,7 +1883,7 @@
     "fases": 3,
     "fp": 0.85,
     "ib_a": 13.406,
-    "icc_min_a": 701.1,
+    "icc_min_a": 701.0,
     "in_a": 20,
     "instalacion": {
      "rho": 1.0,
@@ -1982,7 +1984,7 @@
     "fases": 3,
     "fp": 0.85,
     "ib_a": 53.624,
-    "icc_min_a": 3022.7,
+    "icc_min_a": 3021.4,
     "in_a": 80,
     "instalacion": {
      "rho": 1.0,
@@ -2083,7 +2085,7 @@
     "fases": 3,
     "fp": 0.85,
     "ib_a": 53.624,
-    "icc_min_a": 2158.6,
+    "icc_min_a": 2157.9,
     "in_a": 80,
     "instalacion": {
      "rho": 2.0,
@@ -2184,7 +2186,7 @@
     "fases": 3,
     "fp": 0.85,
     "ib_a": 53.624,
-    "icc_min_a": 1833.4,
+    "icc_min_a": 1832.9,
     "in_a": 80,
     "instalacion": {
      "rho": 1.0,
@@ -2285,7 +2287,7 @@
     "fases": 3,
     "fp": 0.85,
     "ib_a": 53.624,
-    "icc_min_a": 3022.7,
+    "icc_min_a": 3021.4,
     "in_a": 80,
     "instalacion": {
      "rho": 1.0,
@@ -2386,7 +2388,7 @@
     "fases": 3,
     "fp": 0.85,
     "ib_a": 53.624,
-    "icc_min_a": 3022.7,
+    "icc_min_a": 3021.4,
     "in_a": 80,
     "instalacion": {
      "rho": 1.0,
@@ -2458,7 +2460,7 @@
     "fases": 3,
     "fp": 0.85,
     "ib_a": 19.994,
-    "icc_min_a": 1226.9,
+    "icc_min_a": 1226.6,
     "in_a": 25,
     "instalacion": {
      "rho": 1.0,
@@ -2530,7 +2532,7 @@
     "fases": 3,
     "fp": 0.85,
     "ib_a": 19.994,
-    "icc_min_a": 1155.7,
+    "icc_min_a": 1155.5,
     "in_a": 25,
     "instalacion": {
      "rho": 2.0,
@@ -2602,7 +2604,7 @@
     "fases": 3,
     "fp": 0.85,
     "ib_a": 19.994,
-    "icc_min_a": 2561.6,
+    "icc_min_a": 2560.7,
     "in_a": 25,
     "instalacion": {
      "rho": 1.0,
@@ -2674,7 +2676,7 @@
     "fases": 3,
     "fp": 0.85,
     "ib_a": 19.994,
-    "icc_min_a": 1226.9,
+    "icc_min_a": 1226.6,
     "in_a": 25,
     "instalacion": {
      "rho": 1.0,
@@ -2746,7 +2748,7 @@
     "fases": 3,
     "fp": 0.85,
     "ib_a": 19.994,
-    "icc_min_a": 1226.9,
+    "icc_min_a": 1226.6,
     "in_a": 25,
     "instalacion": {
      "rho": 1.0,
@@ -2808,7 +2810,7 @@
     "fases": 1,
     "fp": 0.9,
     "ib_a": 11.142,
-    "icc_min_a": 326.1,
+    "icc_min_a": 327.0,
     "in_a": 13,
     "instalacion": {
      "rho": 1.0,
@@ -2841,15 +2843,15 @@
    "C-01": {
     "Ib": 11.1,
     "In": 13,
-    "S": 4,
-    "dU": 1.89,
+    "S": 2.5,
+    "dU": 2.85,
     "disp": "MCB (13 A)",
     "icu": 25
    }
   },
   "detalle": {
    "C-01": {
-    "aislacion": "xlpe",
+    "aislacion": "pvc",
     "cadena": [
      {
       "label": "1P",
@@ -2865,28 +2867,28 @@
      }
     ],
     "cumple": true,
-    "du_acum_pct": 1.893,
-    "du_propia_pct": 1.893,
+    "du_acum_pct": 2.849,
+    "du_propia_pct": 2.849,
     "fases": 1,
     "fp": 0.9,
     "ib_a": 11.142,
-    "icc_min_a": 484.8,
+    "icc_min_a": 327.0,
     "in_a": 13,
     "instalacion": {
      "rho": 2.0,
      "t_amb": 50.0,
      "t_suelo": 30.0
     },
-    "iz_a": 32.4,
+    "iz_a": 17.22,
     "kind": "mcb",
     "largo_m": 35.0,
     "limite_pct": 3.0,
     "material": "cu",
-    "metodo": "B2",
-    "neutro_mm2": 4,
+    "metodo": "B1",
+    "neutro_mm2": 2.5,
     "p_kw": 2.2,
     "padre": "",
-    "pe_mm2": 4,
+    "pe_mm2": 2.5,
     "ruta": [],
     "ruta_limitante": null,
     "s_termica_mm2": 2.5,
@@ -2898,20 +2900,22 @@
   }
  },
  "kind:sockets:loose": {
-  "avisos": [],
+  "avisos": [
+   "C-01: ninguna sección ≤ 300 mm² cumple Iz/caída (In 13 A, ΔU 0.00 %): usar paralelo [sección 300 mm² fuera de 771.16.I/pvc/al]"
+  ],
   "datos": {
    "C-01": {
     "Ib": 11.1,
     "In": 13,
-    "S": 16,
-    "dU": 0.8,
+    "S": 300,
+    "dU": 0.0,
     "disp": "MCB (13 A)",
     "icu": 25
    }
   },
   "detalle": {
    "C-01": {
-    "aislacion": "xlpe",
+    "aislacion": "pvc",
     "cadena": [
      {
       "label": "1P",
@@ -2926,32 +2930,32 @@
       "symbol": "lv_mcb"
      }
     ],
-    "cumple": true,
-    "du_acum_pct": 0.796,
-    "du_propia_pct": 0.796,
+    "cumple": false,
+    "du_acum_pct": 0.0,
+    "du_propia_pct": 0.0,
     "fases": 1,
     "fp": 0.9,
     "ib_a": 11.142,
-    "icc_min_a": 1097.4,
+    "icc_min_a": 7609.0,
     "in_a": 13,
     "instalacion": {
      "rho": 1.0,
      "t_amb": 40.0,
      "t_suelo": 25.0
     },
-    "iz_a": 66.0,
+    "iz_a": null,
     "kind": "mcb",
     "largo_m": 35.0,
     "limite_pct": 5.0,
     "material": "al",
-    "metodo": "B2",
-    "neutro_mm2": 16,
+    "metodo": "B1",
+    "neutro_mm2": 150,
     "p_kw": 2.2,
     "padre": "",
-    "pe_mm2": 16,
+    "pe_mm2": 150,
     "ruta": [],
     "ruta_limitante": null,
-    "s_termica_mm2": 16,
+    "s_termica_mm2": null,
     "seccion_min_mm2": 2.5,
     "solucion": "circuit-mcb",
     "tipo": "tomacorrientes",
@@ -2994,7 +2998,7 @@
     "fases": 1,
     "fp": 0.9,
     "ib_a": 11.142,
-    "icc_min_a": 326.1,
+    "icc_min_a": 327.0,
     "in_a": 13,
     "instalacion": {
      "rho": 1.0,
@@ -3056,7 +3060,7 @@
     "fases": 1,
     "fp": 0.9,
     "ib_a": 11.142,
-    "icc_min_a": 753.9,
+    "icc_min_a": 755.9,
     "in_a": 13,
     "instalacion": {
      "rho": 1.0,
@@ -3127,7 +3131,7 @@
     "fases": 3,
     "fp": 0.9,
     "ib_a": 30.387,
-    "icc_min_a": 3377.3,
+    "icc_min_a": 3375.6,
     "in_a": 32,
     "instalacion": {
      "rho": 1.0,
@@ -3160,15 +3164,15 @@
    "C-01": {
     "Ib": 30.4,
     "In": 32,
-    "S": 6,
-    "dU": 0.59,
+    "S": 10,
+    "dU": 0.33,
     "disp": "MCB > UPS (32 A)",
     "icu": 25
    }
   },
   "detalle": {
    "C-01": {
-    "aislacion": "xlpe",
+    "aislacion": "pvc",
     "cadena": [
      {
       "label": "3P",
@@ -3193,31 +3197,31 @@
      }
     ],
     "cumple": true,
-    "du_acum_pct": 0.593,
-    "du_propia_pct": 0.593,
+    "du_acum_pct": 0.333,
+    "du_propia_pct": 0.333,
     "fases": 3,
     "fp": 0.9,
     "ib_a": 30.387,
-    "icc_min_a": 3203.2,
+    "icc_min_a": 5080.5,
     "in_a": 32,
     "instalacion": {
      "rho": 2.0,
      "t_amb": 50.0,
      "t_suelo": 30.0
     },
-    "iz_a": 36.0,
+    "iz_a": 36.08,
     "kind": "mcb",
     "largo_m": 12.0,
     "limite_pct": 3.0,
     "material": "cu",
-    "metodo": "B2",
-    "neutro_mm2": 6,
+    "metodo": "B1",
+    "neutro_mm2": 10,
     "p_kw": 18.0,
     "padre": "",
-    "pe_mm2": 6,
+    "pe_mm2": 10,
     "ruta": [],
     "ruta_limitante": null,
-    "s_termica_mm2": 6,
+    "s_termica_mm2": 10,
     "seccion_min_mm2": 2.5,
     "solucion": "circuit-mcb",
     "tipo": "tomacorrientes",
@@ -3226,20 +3230,22 @@
   }
  },
  "kind:ups:loose": {
-  "avisos": [],
+  "avisos": [
+   "C-01: ninguna sección ≤ 300 mm² cumple Iz/caída (In 32 A, ΔU 0.00 %): usar paralelo [sección 300 mm² fuera de 771.16.I/pvc/al]"
+  ],
   "datos": {
    "C-01": {
     "Ib": 30.4,
     "In": 32,
-    "S": 16,
-    "dU": 0.37,
+    "S": 300,
+    "dU": 0.0,
     "disp": "MCB > UPS (32 A)",
     "icu": 25
    }
   },
   "detalle": {
    "C-01": {
-    "aislacion": "xlpe",
+    "aislacion": "pvc",
     "cadena": [
      {
       "label": "3P",
@@ -3263,32 +3269,32 @@
       "symbol": "lv_ups"
      }
     ],
-    "cumple": true,
-    "du_acum_pct": 0.372,
-    "du_propia_pct": 0.372,
+    "cumple": false,
+    "du_acum_pct": 0.0,
+    "du_propia_pct": 0.0,
     "fases": 3,
     "fp": 0.9,
     "ib_a": 30.387,
-    "icc_min_a": 4674.7,
+    "icc_min_a": 16830.1,
     "in_a": 32,
     "instalacion": {
      "rho": 1.0,
      "t_amb": 40.0,
      "t_suelo": 25.0
     },
-    "iz_a": 58.0,
+    "iz_a": null,
     "kind": "mcb",
     "largo_m": 12.0,
     "limite_pct": 5.0,
     "material": "al",
-    "metodo": "B2",
-    "neutro_mm2": 16,
+    "metodo": "B1",
+    "neutro_mm2": 150,
     "p_kw": 18.0,
     "padre": "",
-    "pe_mm2": 16,
+    "pe_mm2": 150,
     "ruta": [],
     "ruta_limitante": null,
-    "s_termica_mm2": 16,
+    "s_termica_mm2": null,
     "seccion_min_mm2": 2.5,
     "solucion": "circuit-mcb",
     "tipo": "tomacorrientes",
@@ -3340,7 +3346,7 @@
     "fases": 3,
     "fp": 0.9,
     "ib_a": 30.387,
-    "icc_min_a": 3377.3,
+    "icc_min_a": 3375.6,
     "in_a": 32,
     "instalacion": {
      "rho": 1.0,
@@ -3411,7 +3417,7 @@
     "fases": 3,
     "fp": 0.9,
     "ib_a": 30.387,
-    "icc_min_a": 3377.3,
+    "icc_min_a": 3375.6,
     "in_a": 32,
     "instalacion": {
      "rho": 1.0,
@@ -3474,7 +3480,7 @@
     "fases": 3,
     "fp": 0.85,
     "ib_a": 120.0,
-    "icc_min_a": 10549.0,
+    "icc_min_a": 10534.0,
     "in_a": 125,
     "instalacion": {
      "rho": 1.0,
@@ -3490,7 +3496,7 @@
     "neutro_mm2": 150,
     "p_kw": 67.1343,
     "padre": "",
-    "pe_mm2": 150.0,
+    "pe_mm2": 150,
     "ruta": [],
     "ruta_limitante": null,
     "s_termica_mm2": null,
@@ -3535,7 +3541,7 @@
     "fases": 3,
     "fp": 0.85,
     "ib_a": 120.0,
-    "icc_min_a": 7660.0,
+    "icc_min_a": 7651.9,
     "in_a": 125,
     "instalacion": {
      "rho": 1.0,
@@ -3551,7 +3557,7 @@
     "neutro_mm2": 50,
     "p_kw": 67.1343,
     "padre": "",
-    "pe_mm2": 47.5,
+    "pe_mm2": 50,
     "ruta": [],
     "ruta_limitante": null,
     "s_termica_mm2": 95,
@@ -3598,7 +3604,7 @@
     "fases": 3,
     "fp": 0.85,
     "ib_a": 120.0,
-    "icc_min_a": 10270.1,
+    "icc_min_a": 10255.8,
     "in_a": 125,
     "instalacion": {
      "rho": 1.0,
@@ -3614,7 +3620,7 @@
     "neutro_mm2": 150,
     "p_kw": 67.1343,
     "padre": "",
-    "pe_mm2": 150.0,
+    "pe_mm2": 150,
     "ruta": [],
     "ruta_limitante": null,
     "s_termica_mm2": null,
@@ -3661,7 +3667,7 @@
     "fases": 3,
     "fp": 0.85,
     "ib_a": 120.0,
-    "icc_min_a": 12343.8,
+    "icc_min_a": 12323.5,
     "in_a": 125,
     "instalacion": {
      "rho": 1.0,
@@ -3677,7 +3683,7 @@
     "neutro_mm2": 150,
     "p_kw": 67.1343,
     "padre": "",
-    "pe_mm2": 150.0,
+    "pe_mm2": 150,
     "ruta": [],
     "ruta_limitante": null,
     "s_termica_mm2": null,
@@ -3722,7 +3728,7 @@
     "fases": 3,
     "fp": 0.85,
     "ib_a": 120.0,
-    "icc_min_a": 8365.0,
+    "icc_min_a": 8355.4,
     "in_a": 125,
     "instalacion": {
      "rho": 1.0,
@@ -3738,7 +3744,7 @@
     "neutro_mm2": 95,
     "p_kw": 67.1343,
     "padre": "",
-    "pe_mm2": 92.5,
+    "pe_mm2": 95,
     "ruta": [],
     "ruta_limitante": null,
     "s_termica_mm2": 185,
@@ -3783,7 +3789,7 @@
     "fases": 3,
     "fp": 0.85,
     "ib_a": 120.0,
-    "icc_min_a": 8694.2,
+    "icc_min_a": 8683.9,
     "in_a": 125,
     "instalacion": {
      "rho": 1.0,
@@ -3799,7 +3805,7 @@
     "neutro_mm2": 70,
     "p_kw": 67.1343,
     "padre": "",
-    "pe_mm2": 60.0,
+    "pe_mm2": 70,
     "ruta": [],
     "ruta_limitante": null,
     "s_termica_mm2": 120,
@@ -3844,7 +3850,7 @@
     "fases": 3,
     "fp": 0.85,
     "ib_a": 120.0,
-    "icc_min_a": 7073.8,
+    "icc_min_a": 7066.8,
     "in_a": 125,
     "instalacion": {
      "rho": 1.0,
@@ -3860,7 +3866,7 @@
     "neutro_mm2": 95,
     "p_kw": 67.1343,
     "padre": "",
-    "pe_mm2": 75.0,
+    "pe_mm2": 95,
     "ruta": [],
     "ruta_limitante": null,
     "s_termica_mm2": 95,
@@ -3905,7 +3911,7 @@
     "fases": 3,
     "fp": 0.85,
     "ib_a": 120.0,
-    "icc_min_a": 7380.6,
+    "icc_min_a": 7373.1,
     "in_a": 125,
     "instalacion": {
      "rho": 1.0,
@@ -3921,7 +3927,7 @@
     "neutro_mm2": 50,
     "p_kw": 67.1343,
     "padre": "",
-    "pe_mm2": 47.5,
+    "pe_mm2": 50,
     "ruta": [],
     "ruta_limitante": null,
     "s_termica_mm2": 70,
@@ -3966,7 +3972,7 @@
     "fases": 3,
     "fp": 0.85,
     "ib_a": 120.0,
-    "icc_min_a": 6476.6,
+    "icc_min_a": 6470.7,
     "in_a": 125,
     "instalacion": {
      "rho": 1.0,
@@ -3982,7 +3988,7 @@
     "neutro_mm2": 70,
     "p_kw": 67.1343,
     "padre": "",
-    "pe_mm2": 60.0,
+    "pe_mm2": 70,
     "ruta": [],
     "ruta_limitante": null,
     "s_termica_mm2": 95,
@@ -4027,7 +4033,7 @@
     "fases": 3,
     "fp": 0.85,
     "ib_a": 120.0,
-    "icc_min_a": 7660.0,
+    "icc_min_a": 7651.9,
     "in_a": 125,
     "instalacion": {
      "rho": 1.0,
@@ -4043,7 +4049,7 @@
     "neutro_mm2": 50,
     "p_kw": 67.1343,
     "padre": "",
-    "pe_mm2": 47.5,
+    "pe_mm2": 50,
     "ruta": [],
     "ruta_limitante": null,
     "s_termica_mm2": 70,
@@ -4088,7 +4094,7 @@
     "fases": 3,
     "fp": 0.85,
     "ib_a": 120.0,
-    "icc_min_a": 7073.8,
+    "icc_min_a": 7066.8,
     "in_a": 125,
     "instalacion": {
      "rho": 1.0,
@@ -4104,7 +4110,7 @@
     "neutro_mm2": 95,
     "p_kw": 67.1343,
     "padre": "",
-    "pe_mm2": 75.0,
+    "pe_mm2": 95,
     "ruta": [],
     "ruta_limitante": null,
     "s_termica_mm2": 70,
@@ -4149,7 +4155,7 @@
     "fases": 3,
     "fp": 0.85,
     "ib_a": 120.0,
-    "icc_min_a": 7380.6,
+    "icc_min_a": 7373.1,
     "in_a": 125,
     "instalacion": {
      "rho": 1.0,
@@ -4165,7 +4171,7 @@
     "neutro_mm2": 50,
     "p_kw": 67.1343,
     "padre": "",
-    "pe_mm2": 47.5,
+    "pe_mm2": 50,
     "ruta": [],
     "ruta_limitante": null,
     "s_termica_mm2": 50,
@@ -4210,7 +4216,7 @@
     "fases": 3,
     "fp": 0.85,
     "ib_a": 120.0,
-    "icc_min_a": 6476.6,
+    "icc_min_a": 6470.7,
     "in_a": 125,
     "instalacion": {
      "rho": 1.0,
@@ -4226,7 +4232,7 @@
     "neutro_mm2": 70,
     "p_kw": 67.1343,
     "padre": "",
-    "pe_mm2": 60.0,
+    "pe_mm2": 70,
     "ruta": [],
     "ruta_limitante": null,
     "s_termica_mm2": 95,
@@ -4271,7 +4277,7 @@
     "fases": 3,
     "fp": 0.85,
     "ib_a": 120.0,
-    "icc_min_a": 7660.0,
+    "icc_min_a": 7651.9,
     "in_a": 125,
     "instalacion": {
      "rho": 1.0,
@@ -4287,7 +4293,7 @@
     "neutro_mm2": 50,
     "p_kw": 67.1343,
     "padre": "",
-    "pe_mm2": 47.5,
+    "pe_mm2": 50,
     "ruta": [],
     "ruta_limitante": null,
     "s_termica_mm2": 70,
@@ -4332,7 +4338,7 @@
     "fases": 3,
     "fp": 0.85,
     "ib_a": 120.0,
-    "icc_min_a": 7073.8,
+    "icc_min_a": 7066.8,
     "in_a": 125,
     "instalacion": {
      "rho": 1.0,
@@ -4348,7 +4354,7 @@
     "neutro_mm2": 95,
     "p_kw": 67.1343,
     "padre": "",
-    "pe_mm2": 75.0,
+    "pe_mm2": 95,
     "ruta": [],
     "ruta_limitante": null,
     "s_termica_mm2": 70,
@@ -4393,7 +4399,7 @@
     "fases": 3,
     "fp": 0.85,
     "ib_a": 120.0,
-    "icc_min_a": 7380.6,
+    "icc_min_a": 7373.1,
     "in_a": 125,
     "instalacion": {
      "rho": 1.0,
@@ -4409,7 +4415,7 @@
     "neutro_mm2": 50,
     "p_kw": 67.1343,
     "padre": "",
-    "pe_mm2": 47.5,
+    "pe_mm2": 50,
     "ruta": [],
     "ruta_limitante": null,
     "s_termica_mm2": 50,
@@ -4454,14 +4460,14 @@
     "fases": 3,
     "fp": 0.85,
     "ib_a": 120.0,
-    "icc_min_a": 6476.6,
+    "icc_min_a": 6470.7,
     "in_a": 125,
     "instalacion": {
      "rho": 1.0,
      "t_amb": 40.0,
      "t_suelo": 25.0
     },
-    "iz_a": 173.25,
+    "iz_a": 132.0,
     "kind": "mccb",
     "largo_m": 60.0,
     "limite_pct": 1.0,
@@ -4470,10 +4476,10 @@
     "neutro_mm2": 70,
     "p_kw": 67.1343,
     "padre": "",
-    "pe_mm2": 60.0,
+    "pe_mm2": 70,
     "ruta": [],
     "ruta_limitante": null,
-    "s_termica_mm2": 70,
+    "s_termica_mm2": 120,
     "seccion_min_mm2": 2.5,
     "solucion": "feeder-mccb",
     "tipo": "seccional",
@@ -4515,14 +4521,14 @@
     "fases": 3,
     "fp": 0.85,
     "ib_a": 120.0,
-    "icc_min_a": 7660.0,
+    "icc_min_a": 7651.9,
     "in_a": 125,
     "instalacion": {
      "rho": 1.0,
      "t_amb": 40.0,
      "t_suelo": 25.0
     },
-    "iz_a": 190.5,
+    "iz_a": 150.75,
     "kind": "mccb",
     "largo_m": 60.0,
     "limite_pct": 1.0,
@@ -4531,10 +4537,10 @@
     "neutro_mm2": 50,
     "p_kw": 67.1343,
     "padre": "",
-    "pe_mm2": 47.5,
+    "pe_mm2": 50,
     "ruta": [],
     "ruta_limitante": null,
-    "s_termica_mm2": 50,
+    "s_termica_mm2": 70,
     "seccion_min_mm2": 2.5,
     "solucion": "feeder-mccb",
     "tipo": "seccional",
@@ -4576,14 +4582,14 @@
     "fases": 3,
     "fp": 0.85,
     "ib_a": 120.0,
-    "icc_min_a": 7073.8,
+    "icc_min_a": 7066.8,
     "in_a": 125,
     "instalacion": {
      "rho": 1.0,
      "t_amb": 40.0,
      "t_suelo": 25.0
     },
-    "iz_a": 228.75,
+    "iz_a": 178.5,
     "kind": "mccb",
     "largo_m": 60.0,
     "limite_pct": 1.0,
@@ -4592,10 +4598,10 @@
     "neutro_mm2": 95,
     "p_kw": 67.1343,
     "padre": "",
-    "pe_mm2": 75.0,
+    "pe_mm2": 95,
     "ruta": [],
     "ruta_limitante": null,
-    "s_termica_mm2": 70,
+    "s_termica_mm2": 95,
     "seccion_min_mm2": 2.5,
     "solucion": "feeder-mccb",
     "tipo": "seccional",
@@ -4637,14 +4643,14 @@
     "fases": 3,
     "fp": 0.85,
     "ib_a": 120.0,
-    "icc_min_a": 7380.6,
+    "icc_min_a": 7373.1,
     "in_a": 125,
     "instalacion": {
      "rho": 1.0,
      "t_amb": 40.0,
      "t_suelo": 25.0
     },
-    "iz_a": 231.0,
+    "iz_a": 179.25,
     "kind": "mccb",
     "largo_m": 60.0,
     "limite_pct": 1.0,
@@ -4653,10 +4659,10 @@
     "neutro_mm2": 50,
     "p_kw": 67.1343,
     "padre": "",
-    "pe_mm2": 47.5,
+    "pe_mm2": 50,
     "ruta": [],
     "ruta_limitante": null,
-    "s_termica_mm2": 35,
+    "s_termica_mm2": 70,
     "seccion_min_mm2": 2.5,
     "solucion": "feeder-mccb",
     "tipo": "seccional",
@@ -4698,7 +4704,7 @@
     "fases": 3,
     "fp": 0.85,
     "ib_a": 120.0,
-    "icc_min_a": 6476.6,
+    "icc_min_a": 6470.7,
     "in_a": 125,
     "instalacion": {
      "rho": 1.0,
@@ -4714,7 +4720,7 @@
     "neutro_mm2": 70,
     "p_kw": 67.1343,
     "padre": "",
-    "pe_mm2": 60.0,
+    "pe_mm2": 70,
     "ruta": [],
     "ruta_limitante": null,
     "s_termica_mm2": 95,
@@ -4759,7 +4765,7 @@
     "fases": 3,
     "fp": 0.85,
     "ib_a": 120.0,
-    "icc_min_a": 7660.0,
+    "icc_min_a": 7651.9,
     "in_a": 125,
     "instalacion": {
      "rho": 1.0,
@@ -4775,7 +4781,7 @@
     "neutro_mm2": 50,
     "p_kw": 67.1343,
     "padre": "",
-    "pe_mm2": 47.5,
+    "pe_mm2": 50,
     "ruta": [],
     "ruta_limitante": null,
     "s_termica_mm2": 70,
@@ -4820,7 +4826,7 @@
     "fases": 3,
     "fp": 0.85,
     "ib_a": 120.0,
-    "icc_min_a": 7073.8,
+    "icc_min_a": 7066.8,
     "in_a": 125,
     "instalacion": {
      "rho": 1.0,
@@ -4836,7 +4842,7 @@
     "neutro_mm2": 95,
     "p_kw": 67.1343,
     "padre": "",
-    "pe_mm2": 75.0,
+    "pe_mm2": 95,
     "ruta": [],
     "ruta_limitante": null,
     "s_termica_mm2": 70,
@@ -4881,7 +4887,7 @@
     "fases": 3,
     "fp": 0.85,
     "ib_a": 120.0,
-    "icc_min_a": 7380.6,
+    "icc_min_a": 7373.1,
     "in_a": 125,
     "instalacion": {
      "rho": 1.0,
@@ -4897,7 +4903,7 @@
     "neutro_mm2": 50,
     "p_kw": 67.1343,
     "padre": "",
-    "pe_mm2": 47.5,
+    "pe_mm2": 50,
     "ruta": [],
     "ruta_limitante": null,
     "s_termica_mm2": 35,
@@ -4942,7 +4948,7 @@
     "fases": 3,
     "fp": 0.85,
     "ib_a": 120.0,
-    "icc_min_a": 6476.6,
+    "icc_min_a": 6470.7,
     "in_a": 125,
     "instalacion": {
      "rho": 1.0,
@@ -4958,7 +4964,7 @@
     "neutro_mm2": 70,
     "p_kw": 67.1343,
     "padre": "",
-    "pe_mm2": 60.0,
+    "pe_mm2": 70,
     "ruta": [],
     "ruta_limitante": null,
     "s_termica_mm2": 70,
@@ -5003,7 +5009,7 @@
     "fases": 3,
     "fp": 0.85,
     "ib_a": 120.0,
-    "icc_min_a": 7660.0,
+    "icc_min_a": 7651.9,
     "in_a": 125,
     "instalacion": {
      "rho": 1.0,
@@ -5019,7 +5025,7 @@
     "neutro_mm2": 50,
     "p_kw": 67.1343,
     "padre": "",
-    "pe_mm2": 47.5,
+    "pe_mm2": 50,
     "ruta": [],
     "ruta_limitante": null,
     "s_termica_mm2": 50,
@@ -5064,7 +5070,7 @@
     "fases": 3,
     "fp": 0.85,
     "ib_a": 120.0,
-    "icc_min_a": 7073.8,
+    "icc_min_a": 7066.8,
     "in_a": 125,
     "instalacion": {
      "rho": 1.0,
@@ -5080,7 +5086,7 @@
     "neutro_mm2": 95,
     "p_kw": 67.1343,
     "padre": "",
-    "pe_mm2": 75.0,
+    "pe_mm2": 95,
     "ruta": [],
     "ruta_limitante": null,
     "s_termica_mm2": 50,
@@ -5125,7 +5131,7 @@
     "fases": 3,
     "fp": 0.85,
     "ib_a": 120.0,
-    "icc_min_a": 7380.6,
+    "icc_min_a": 7373.1,
     "in_a": 125,
     "instalacion": {
      "rho": 1.0,
@@ -5141,7 +5147,7 @@
     "neutro_mm2": 50,
     "p_kw": 67.1343,
     "padre": "",
-    "pe_mm2": 47.5,
+    "pe_mm2": 50,
     "ruta": [],
     "ruta_limitante": null,
     "s_termica_mm2": 35,
@@ -5186,7 +5192,7 @@
     "fases": 3,
     "fp": 0.85,
     "ib_a": 120.0,
-    "icc_min_a": 6476.6,
+    "icc_min_a": 6470.7,
     "in_a": 125,
     "instalacion": {
      "rho": 1.0,
@@ -5202,7 +5208,7 @@
     "neutro_mm2": 70,
     "p_kw": 67.1343,
     "padre": "",
-    "pe_mm2": 60.0,
+    "pe_mm2": 70,
     "ruta": [],
     "ruta_limitante": null,
     "s_termica_mm2": 50,
@@ -5247,7 +5253,7 @@
     "fases": 3,
     "fp": 0.85,
     "ib_a": 120.0,
-    "icc_min_a": 7660.0,
+    "icc_min_a": 7651.9,
     "in_a": 125,
     "instalacion": {
      "rho": 1.0,
@@ -5263,7 +5269,7 @@
     "neutro_mm2": 50,
     "p_kw": 67.1343,
     "padre": "",
-    "pe_mm2": 47.5,
+    "pe_mm2": 50,
     "ruta": [],
     "ruta_limitante": null,
     "s_termica_mm2": 25,
@@ -5308,7 +5314,7 @@
     "fases": 3,
     "fp": 0.85,
     "ib_a": 120.0,
-    "icc_min_a": 7073.8,
+    "icc_min_a": 7066.8,
     "in_a": 125,
     "instalacion": {
      "rho": 1.0,
@@ -5324,7 +5330,7 @@
     "neutro_mm2": 95,
     "p_kw": 67.1343,
     "padre": "",
-    "pe_mm2": 75.0,
+    "pe_mm2": 95,
     "ruta": [],
     "ruta_limitante": null,
     "s_termica_mm2": 25,
@@ -5369,7 +5375,7 @@
     "fases": 3,
     "fp": 0.85,
     "ib_a": 120.0,
-    "icc_min_a": 7380.6,
+    "icc_min_a": 7373.1,
     "in_a": 125,
     "instalacion": {
      "rho": 1.0,
@@ -5385,7 +5391,7 @@
     "neutro_mm2": 50,
     "p_kw": 67.1343,
     "padre": "",
-    "pe_mm2": 47.5,
+    "pe_mm2": 50,
     "ruta": [],
     "ruta_limitante": null,
     "s_termica_mm2": 25,
@@ -5405,14 +5411,14 @@
     "Ib": 250.0,
     "In": 250,
     "S": 300,
-    "dU": 0.92,
+    "dU": 0.95,
     "disp": "MCCB (250 A)",
     "icu": 25
    }
   },
   "detalle": {
    "C-01": {
-    "aislacion": "pvc",
+    "aislacion": "xlpe",
     "cadena": [
      {
       "label": null,
@@ -5427,28 +5433,28 @@
      }
     ],
     "cumple": true,
-    "du_acum_pct": 0.918,
-    "du_propia_pct": 0.918,
+    "du_acum_pct": 0.954,
+    "du_propia_pct": 0.954,
     "fases": 3,
     "fp": 0.85,
     "ib_a": 250.0,
-    "icc_min_a": 11222.8,
+    "icc_min_a": 10974.6,
     "in_a": 250,
     "instalacion": {
      "rho": 1.0,
      "t_amb": 40.0,
      "t_suelo": 25.0
     },
-    "iz_a": 282.8,
+    "iz_a": 336.8,
     "kind": "mccb",
     "largo_m": 78.0,
     "limite_pct": 1.0,
     "material": "cu",
-    "metodo": "B1",
+    "metodo": "B2",
     "neutro_mm2": 150,
     "p_kw": 139.8631,
     "padre": "",
-    "pe_mm2": 150.0,
+    "pe_mm2": 150,
     "ruta": [
      {
       "circuits": 3,
@@ -5456,7 +5462,7 @@
       "f_agrup": 0.75,
       "f_suelo": 1.0,
       "f_temp": 1.0,
-      "iz_a": 282.8,
+      "iz_a": 336.8,
       "kind": "buried_duct",
       "label": "",
       "length_m": 60.0,
@@ -5473,7 +5479,7 @@
       "f_agrup": 1.0,
       "f_suelo": 1.0,
       "f_temp": 1.0,
-      "iz_a": 377.0,
+      "iz_a": 449.0,
       "kind": "road_crossing",
       "label": "",
       "length_m": 8.0,
@@ -5490,7 +5496,7 @@
       "f_agrup": 1.0,
       "f_suelo": 1.0,
       "f_temp": 1.0,
-      "iz_a": 295.0,
+      "iz_a": 414.0,
       "kind": "conduit_air",
       "label": "",
       "length_m": 10.0,
@@ -5503,7 +5509,7 @@
      }
     ],
     "ruta_limitante": 1,
-    "s_termica_mm2": 185,
+    "s_termica_mm2": 150,
     "seccion_min_mm2": 2.5,
     "solucion": "feeder-mccb",
     "tipo": "seccional",
@@ -5547,7 +5553,7 @@
     "fases": 3,
     "fp": 0.85,
     "ib_a": 250.0,
-    "icc_min_a": 10990.3,
+    "icc_min_a": 10974.6,
     "in_a": 250,
     "instalacion": {
      "rho": 2.0,
@@ -5563,7 +5569,7 @@
     "neutro_mm2": 150,
     "p_kw": 139.8631,
     "padre": "",
-    "pe_mm2": 150.0,
+    "pe_mm2": 150,
     "ruta": [
      {
       "circuits": 3,
@@ -5627,233 +5633,9 @@
   }
  },
  "route:tray_buried_tray:default": {
-  "avisos": [
-   "C-01: ninguna sección ≤ 300 mm² cumple Iz/caída (In 250 A, ΔU 1.06 %): usar paralelo"
-  ],
-  "datos": {
-   "C-01": {
-    "Ib": 250.0,
-    "In": 250,
-    "S": 300,
-    "dU": 1.06,
-    "disp": "MCCB (250 A)",
-    "icu": 25
-   }
-  },
-  "detalle": {
-   "C-01": {
-    "aislacion": "pvc",
-    "cadena": [
-     {
-      "label": null,
-      "poles": 3,
-      "short": "MCCB",
-      "slots": {
-       "breaking_capacity": "25 kA",
-       "rated_current": "250 A",
-       "tag": "C-01"
-      },
-      "symbol": "lv_mccb_basic"
-     }
-    ],
-    "cumple": false,
-    "du_acum_pct": 1.059,
-    "du_propia_pct": 1.059,
-    "fases": 3,
-    "fp": 0.85,
-    "ib_a": 250.0,
-    "icc_min_a": 10457.8,
-    "in_a": 250,
-    "instalacion": {
-     "rho": 1.0,
-     "t_amb": 40.0,
-     "t_suelo": 25.0
-    },
-    "iz_a": null,
-    "kind": "mccb",
-    "largo_m": 90.0,
-    "limite_pct": 1.0,
-    "material": "cu",
-    "metodo": "B1",
-    "neutro_mm2": 150,
-    "p_kw": 139.8631,
-    "padre": "",
-    "pe_mm2": 150.0,
-    "ruta": [
-     {
-      "circuits": 1,
-      "depth_m": null,
-      "f_agrup": 1.0,
-      "f_suelo": 1.0,
-      "f_temp": 1.0,
-      "iz_a": 432.0,
-      "kind": "tray_perforated",
-      "label": "",
-      "length_m": 20.0,
-      "limitante": false,
-      "metodo": "E",
-      "n": 1,
-      "rho_kmw": 1.0,
-      "t_amb": 40.0,
-      "t_suelo": 25.0
-     },
-     {
-      "circuits": 1,
-      "depth_m": null,
-      "f_agrup": 1.0,
-      "f_suelo": 0.705,
-      "f_temp": 1.0,
-      "iz_a": 341.2,
-      "kind": "buried_direct",
-      "label": "",
-      "length_m": 40.0,
-      "limitante": true,
-      "metodo": "D2",
-      "n": 2,
-      "rho_kmw": 2.0,
-      "t_amb": 40.0,
-      "t_suelo": 30.0
-     },
-     {
-      "circuits": 1,
-      "depth_m": null,
-      "f_agrup": 1.0,
-      "f_suelo": 1.0,
-      "f_temp": 1.0,
-      "iz_a": 432.0,
-      "kind": "tray_perforated",
-      "label": "",
-      "length_m": 30.0,
-      "limitante": false,
-      "metodo": "E",
-      "n": 3,
-      "rho_kmw": 1.0,
-      "t_amb": 40.0,
-      "t_suelo": 25.0
-     }
-    ],
-    "ruta_limitante": 2,
-    "s_termica_mm2": 185,
-    "seccion_min_mm2": 2.5,
-    "solucion": "feeder-mccb",
-    "tipo": "seccional",
-    "topologia": "single"
-   }
-  }
+  "error": "C-01: método D2 (directamente enterrado) con 3 conductores cargados: falta o no corresponde COLUMNA_D2 (None); indique la columna de la Tabla 771.16.VI según la instalación: c1_1x = 1x (columna 1 de la tabla); c4_3x = 3x (columna 4; ver figura de la tabla); c5_3x = 3x (columna 5; ver figura de la tabla). No hay columna por defecto"
  },
  "route:tray_buried_tray:hot": {
-  "avisos": [
-   "C-01: ninguna sección ≤ 300 mm² cumple Iz/caída (In 250 A, ΔU 1.10 %): usar paralelo"
-  ],
-  "datos": {
-   "C-01": {
-    "Ib": 250.0,
-    "In": 250,
-    "S": 300,
-    "dU": 1.1,
-    "disp": "MCCB (250 A)",
-    "icu": 25
-   }
-  },
-  "detalle": {
-   "C-01": {
-    "aislacion": "xlpe",
-    "cadena": [
-     {
-      "label": null,
-      "poles": 3,
-      "short": "MCCB",
-      "slots": {
-       "breaking_capacity": "25 kA",
-       "rated_current": "250 A",
-       "tag": "C-01"
-      },
-      "symbol": "lv_mccb_basic"
-     }
-    ],
-    "cumple": false,
-    "du_acum_pct": 1.1,
-    "du_propia_pct": 1.1,
-    "fases": 3,
-    "fp": 0.85,
-    "ib_a": 250.0,
-    "icc_min_a": 10228.3,
-    "in_a": 250,
-    "instalacion": {
-     "rho": 2.0,
-     "t_amb": 50.0,
-     "t_suelo": 30.0
-    },
-    "iz_a": null,
-    "kind": "mccb",
-    "largo_m": 90.0,
-    "limite_pct": 1.0,
-    "material": "cu",
-    "metodo": "B2",
-    "neutro_mm2": 150,
-    "p_kw": 139.8631,
-    "padre": "",
-    "pe_mm2": 150.0,
-    "ruta": [
-     {
-      "circuits": 1,
-      "depth_m": null,
-      "f_agrup": 1.0,
-      "f_suelo": 1.0,
-      "f_temp": 0.9,
-      "iz_a": 508.5,
-      "kind": "tray_perforated",
-      "label": "",
-      "length_m": 20.0,
-      "limitante": false,
-      "metodo": "E",
-      "n": 1,
-      "rho_kmw": 2.0,
-      "t_amb": 50.0,
-      "t_suelo": 30.0
-     },
-     {
-      "circuits": 1,
-      "depth_m": null,
-      "f_agrup": 1.0,
-      "f_suelo": 0.728,
-      "f_temp": 1.0,
-      "iz_a": 426.3,
-      "kind": "buried_direct",
-      "label": "",
-      "length_m": 40.0,
-      "limitante": true,
-      "metodo": "D2",
-      "n": 2,
-      "rho_kmw": 2.0,
-      "t_amb": 50.0,
-      "t_suelo": 30.0
-     },
-     {
-      "circuits": 1,
-      "depth_m": null,
-      "f_agrup": 1.0,
-      "f_suelo": 1.0,
-      "f_temp": 0.9,
-      "iz_a": 508.5,
-      "kind": "tray_perforated",
-      "label": "",
-      "length_m": 30.0,
-      "limitante": false,
-      "metodo": "E",
-      "n": 3,
-      "rho_kmw": 2.0,
-      "t_amb": 50.0,
-      "t_suelo": 30.0
-     }
-    ],
-    "ruta_limitante": 2,
-    "s_termica_mm2": 185,
-    "seccion_min_mm2": 2.5,
-    "solucion": "feeder-mccb",
-    "tipo": "seccional",
-    "topologia": "single"
-   }
-  }
+  "error": "C-01: método D2 (directamente enterrado) con 3 conductores cargados: falta o no corresponde COLUMNA_D2 (None); indique la columna de la Tabla 771.16.VI según la instalación: c1_1x = 1x (columna 1 de la tabla); c4_3x = 3x (columna 4; ver figura de la tabla); c5_3x = 3x (columna 5; ver figura de la tabla). No hay columna por defecto"
  }
 }
