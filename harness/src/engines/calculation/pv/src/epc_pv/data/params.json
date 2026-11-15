@@ -1,0 +1,9 @@
+{
+  "_note": "Typical values of the method, to be confirmed by the owner on the norms page. Nothing here is a value of a standard.",
+  "solar_constant_w_m2": 1366.1,
+  "iam_ashrae_b0": 0.05,
+  "faiman": {"u0": 25.0, "u1": 6.84},
+  "losses_pct": {"soiling": 2.0, "shading": 3.0, "snow": 0.0, "mismatch": 2.0, "wiring": 2.0, "connections": 0.5, "lid": 1.5, "nameplate_rating": 1.0, "age": 0.0, "availability": 3.0},
+  "inverter": {"eta_nom": 0.96, "eta_ref": 0.9637},
+  "strings": {"isc_factor": 1.25, "policy": "mid_mppt"}
+}

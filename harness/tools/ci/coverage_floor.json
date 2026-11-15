@@ -15,6 +15,7 @@
  "engine-lighting": 99.0,
  "engine-receptacles": 95.0,
  "engine-hvac": 90.0,
+ "engine-pv": 98.9,
  "engine-calc_common": 44.5,
  "engine-load_balance": 62.4,
  "engine-voltage_drop": 51.0,

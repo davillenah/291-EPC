@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "epc_pv output",
+  "type": "object",
+  "required": ["schema_version", "counts", "warnings", "labels", "totals", "arrays"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "counts": {"type": "object", "required": ["arrays", "inverters", "modules", "hours"]},
+    "warnings": {"type": "array", "items": {"type": "object", "required": ["code", "en", "es"]}},
+    "labels": {"type": "object", "additionalProperties": {"type": "object", "required": ["en", "es"]}},
+    "totals": {"type": "object", "required": ["dc_kwp", "ac_kw", "dc_kwh", "ac_kwh", "clipping_kwh", "specific_yield_kwh_kwp", "monthly_ac_kwh"]},
+    "arrays": {
+      "type": "array",
+      "items": {"type": "object", "required": ["id", "modules", "inverters", "dc_kwp", "ac_kw", "dc_ac_ratio", "strings", "poa_kwh_m2", "dc_kwh", "ac_kwh", "clipping_kwh", "peak_ac_kw", "specific_yield_kwh_kwp", "performance_ratio", "capacity_factor", "monthly_ac_kwh"]}
+    }
+  }
+}

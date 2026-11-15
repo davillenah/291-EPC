@@ -131,7 +131,7 @@ class RenderTests(Base):
         stages = self.run_epc("stages")[1]
         self.assertIn("feeder_sizing", stages)
         self.assertTrue(stages.rstrip().endswith("12 stages"))
-        self.assertIn("30 engines", self.run_epc("engines", "list")[1])
+        self.assertIn("31 engines", self.run_epc("engines", "list")[1])
         status = self.run_epc("status", CODE) if self.init() else None
         self.assertIn("workflow", status[1])
         self.assertIn("create:inputs", status[1])

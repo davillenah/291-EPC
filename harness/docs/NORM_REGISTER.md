@@ -4,9 +4,9 @@ Generado por `python harness/tools/build/norm_register.py --report`; no se edita
 
 ## Resumen
 
-- Registros a mano: **282** en 32 archivos.
+- Registros a mano: **300** en 33 archivos.
 - Reglas indexadas automáticamente: **200**.
-- Sin cláusula: **182**.
+- Sin cláusula: **200**.
 - Conflictos o duplicados señalados: **21**.
 
 ### Registros a mano por motor, procedencia y estado
@@ -19,7 +19,7 @@ Generado por `python harness/tools/build/norm_register.py --report`; no se edita
 | src | norm | pending | 133 |
 | src | physics | pending | 14 |
 | src | teaching | pending | 6 |
-| src | typical | pending | 47 |
+| src | typical | pending | 65 |
 
 ### Reglas indexadas por motor
 
@@ -462,6 +462,31 @@ Archivo: `harness/src/engines/cad/plan/src/epc_plan/norm_register/typical_values
 | `plan.typical.occupancy.conduit_pct` | - | - | - | `typical-values.json#/occupancy/conduit_pct` | % | typical | low | pending | no clause: file says confirm against the standard and the catalogue; 53/31/40 % (1 / 2 / many cables) vs 35 % in AEA rules canalizaciones (non-tabulated cases) and criterion raceway_fill_max_pct (default 40, range 40-60); the AEA rules refer to Tabla 771.12.IX for tabulated cases; compare these values with it |
 | `plan.typical.design.families` | - | - | - | `typical-values.json#/design/families` | outlets; VA | typical | low | pending | no clause: file says confirm against the standard and the catalogue; TUG 15 outlets and TUE 1 outlet repeat receptacles circuits values (two copies); IUG 100 VA, IUE 10 VA, ACU 1500 VA, FMO 7500 VA per outlet are design assumptions |
 
+## pv / typical
+
+Archivo: `harness/src/engines/calculation/pv/src/epc_pv/norm_register/typical.json` (18 registros)
+
+| id | norma | cláusula | página | valor / ubicación | unidad | procedencia | confianza | estado | problemas |
+|---|---|---|---|---|---|---|---|---|---|
+| `pv.typical.losses_pct.soiling` | - | - | - | `params.json#/losses_pct/soiling` | % | typical | low | pending | no clause; a common default of public PV yield tools, not a standard value |
+| `pv.typical.losses_pct.shading` | - | - | - | `params.json#/losses_pct/shading` | % | typical | low | pending | no clause; a common default of public PV yield tools, not a standard value |
+| `pv.typical.losses_pct.snow` | - | - | - | `params.json#/losses_pct/snow` | % | typical | low | pending | no clause; a common default of public PV yield tools, not a standard value |
+| `pv.typical.losses_pct.mismatch` | - | - | - | `params.json#/losses_pct/mismatch` | % | typical | low | pending | no clause; a common default of public PV yield tools, not a standard value |
+| `pv.typical.losses_pct.wiring` | - | - | - | `params.json#/losses_pct/wiring` | % | typical | low | pending | no clause; a common default of public PV yield tools, not a standard value |
+| `pv.typical.losses_pct.connections` | - | - | - | `params.json#/losses_pct/connections` | % | typical | low | pending | no clause; a common default of public PV yield tools, not a standard value |
+| `pv.typical.losses_pct.lid` | - | - | - | `params.json#/losses_pct/lid` | % | typical | low | pending | no clause; a common default of public PV yield tools, not a standard value |
+| `pv.typical.losses_pct.nameplate_rating` | - | - | - | `params.json#/losses_pct/nameplate_rating` | % | typical | low | pending | no clause; a common default of public PV yield tools, not a standard value |
+| `pv.typical.losses_pct.age` | - | - | - | `params.json#/losses_pct/age` | % | typical | low | pending | no clause; a common default of public PV yield tools, not a standard value |
+| `pv.typical.losses_pct.availability` | - | - | - | `params.json#/losses_pct/availability` | % | typical | low | pending | no clause; a common default of public PV yield tools, not a standard value |
+| `pv.typical.iam_ashrae_b0` | - | - | - | `params.json#/iam_ashrae_b0` | - | typical | low | pending | no clause; typical value for glass modules |
+| `pv.typical.faiman.u0` | - | - | - | `params.json#/faiman/u0` | W/m2/K | typical | low | pending | no clause; typical open-rack value |
+| `pv.typical.faiman.u1` | - | - | - | `params.json#/faiman/u1` | W s/m3/K | typical | low | pending | no clause; typical open-rack value |
+| `pv.typical.inverter.eta_nom` | - | - | - | `params.json#/inverter/eta_nom` | 1 | typical | low | pending | no clause; typical of the PVWatts inverter curve |
+| `pv.typical.inverter.eta_ref` | - | - | - | `params.json#/inverter/eta_ref` | 1 | typical | low | pending | no clause; reference point of the PVWatts inverter curve |
+| `pv.typical.strings.isc_factor` | - | - | - | `params.json#/strings/isc_factor` | 1 | typical | low | pending | no clause; the 1.25 factor is a design convention to confirm against the adopted standard |
+| `pv.typical.strings.policy` | - | - | - | `params.json#/strings/policy` | - | typical | low | pending | design choice, not a standard value |
+| `pv.typical.solar_constant_w_m2` | - | - | - | `params.json#/solar_constant_w_m2` | W/m2 | typical | low | pending | physical constant used by the Spencer series; the value is a convention (1366.1) |
+
 ## receptacles / data
 
 Archivo: `harness/src/engines/calculation/receptacles/src/epc_receptacles/norm_register/data.json` (21 registros)
@@ -703,6 +728,24 @@ Archivo: `harness/src/engines/calculation/transformer_sizing/src/epc_transformer
 - `plan.typical.sizing.cable_mm_by_section` (-; hand)
 - `plan.typical.sizing.conduit_mm` (-; hand)
 - `plan.typical.sizing.tray_mm` (-; hand)
+- `pv.typical.faiman.u0` (-; hand)
+- `pv.typical.faiman.u1` (-; hand)
+- `pv.typical.iam_ashrae_b0` (-; hand)
+- `pv.typical.inverter.eta_nom` (-; hand)
+- `pv.typical.inverter.eta_ref` (-; hand)
+- `pv.typical.losses_pct.age` (-; hand)
+- `pv.typical.losses_pct.availability` (-; hand)
+- `pv.typical.losses_pct.connections` (-; hand)
+- `pv.typical.losses_pct.lid` (-; hand)
+- `pv.typical.losses_pct.mismatch` (-; hand)
+- `pv.typical.losses_pct.nameplate_rating` (-; hand)
+- `pv.typical.losses_pct.shading` (-; hand)
+- `pv.typical.losses_pct.snow` (-; hand)
+- `pv.typical.losses_pct.soiling` (-; hand)
+- `pv.typical.losses_pct.wiring` (-; hand)
+- `pv.typical.solar_constant_w_m2` (-; hand)
+- `pv.typical.strings.isc_factor` (-; hand)
+- `pv.typical.strings.policy` (-; hand)
 - `receptacles.data.circuits.tue` (-; hand)
 - `receptacles.data.circuits.tug` (-; hand)
 - `receptacles.data.mounting.wet_min_m` (-; hand)

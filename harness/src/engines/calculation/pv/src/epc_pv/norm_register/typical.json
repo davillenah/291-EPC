@@ -1,0 +1,601 @@
+{
+ "schema_version": "1.0",
+ "engine": "pv",
+ "topic": "typical",
+ "records": [
+  {
+   "id": "pv.typical.losses_pct.soiling",
+   "kind": "typical",
+   "title": {
+    "es": "Pérdida: Suciedad",
+    "en": "Loss: Soiling"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "%",
+   "applies_to": "energy yield losses",
+   "provenance": "typical",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/pv/src/epc_pv/data/params.json",
+    "pointer": "/losses_pct/soiling"
+   },
+   "review_point": "table:pv-typical-values|losses_pct:soiling",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause; a common default of public PV yield tools, not a standard value"
+   ],
+   "note": "Confirm with the project design criteria."
+  },
+  {
+   "id": "pv.typical.losses_pct.shading",
+   "kind": "typical",
+   "title": {
+    "es": "Pérdida: Sombras",
+    "en": "Loss: Shading"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "%",
+   "applies_to": "energy yield losses",
+   "provenance": "typical",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/pv/src/epc_pv/data/params.json",
+    "pointer": "/losses_pct/shading"
+   },
+   "review_point": "table:pv-typical-values|losses_pct:shading",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause; a common default of public PV yield tools, not a standard value"
+   ],
+   "note": "Confirm with the project design criteria."
+  },
+  {
+   "id": "pv.typical.losses_pct.snow",
+   "kind": "typical",
+   "title": {
+    "es": "Pérdida: Nieve",
+    "en": "Loss: Snow"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "%",
+   "applies_to": "energy yield losses",
+   "provenance": "typical",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/pv/src/epc_pv/data/params.json",
+    "pointer": "/losses_pct/snow"
+   },
+   "review_point": "table:pv-typical-values|losses_pct:snow",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause; a common default of public PV yield tools, not a standard value"
+   ],
+   "note": "Confirm with the project design criteria."
+  },
+  {
+   "id": "pv.typical.losses_pct.mismatch",
+   "kind": "typical",
+   "title": {
+    "es": "Pérdida: Desajuste entre módulos",
+    "en": "Loss: Module mismatch"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "%",
+   "applies_to": "energy yield losses",
+   "provenance": "typical",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/pv/src/epc_pv/data/params.json",
+    "pointer": "/losses_pct/mismatch"
+   },
+   "review_point": "table:pv-typical-values|losses_pct:mismatch",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause; a common default of public PV yield tools, not a standard value"
+   ],
+   "note": "Confirm with the project design criteria."
+  },
+  {
+   "id": "pv.typical.losses_pct.wiring",
+   "kind": "typical",
+   "title": {
+    "es": "Pérdida: Cableado de continua",
+    "en": "Loss: DC wiring"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "%",
+   "applies_to": "energy yield losses",
+   "provenance": "typical",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/pv/src/epc_pv/data/params.json",
+    "pointer": "/losses_pct/wiring"
+   },
+   "review_point": "table:pv-typical-values|losses_pct:wiring",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause; a common default of public PV yield tools, not a standard value"
+   ],
+   "note": "Confirm with the project design criteria."
+  },
+  {
+   "id": "pv.typical.losses_pct.connections",
+   "kind": "typical",
+   "title": {
+    "es": "Pérdida: Conexiones",
+    "en": "Loss: Connections"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "%",
+   "applies_to": "energy yield losses",
+   "provenance": "typical",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/pv/src/epc_pv/data/params.json",
+    "pointer": "/losses_pct/connections"
+   },
+   "review_point": "table:pv-typical-values|losses_pct:connections",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause; a common default of public PV yield tools, not a standard value"
+   ],
+   "note": "Confirm with the project design criteria."
+  },
+  {
+   "id": "pv.typical.losses_pct.lid",
+   "kind": "typical",
+   "title": {
+    "es": "Pérdida: Degradación inicial por luz (LID)",
+    "en": "Loss: Light-induced degradation (LID)"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "%",
+   "applies_to": "energy yield losses",
+   "provenance": "typical",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/pv/src/epc_pv/data/params.json",
+    "pointer": "/losses_pct/lid"
+   },
+   "review_point": "table:pv-typical-values|losses_pct:lid",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause; a common default of public PV yield tools, not a standard value"
+   ],
+   "note": "Confirm with the project design criteria."
+  },
+  {
+   "id": "pv.typical.losses_pct.nameplate_rating",
+   "kind": "typical",
+   "title": {
+    "es": "Pérdida: Tolerancia de potencia de placa",
+    "en": "Loss: Nameplate rating tolerance"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "%",
+   "applies_to": "energy yield losses",
+   "provenance": "typical",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/pv/src/epc_pv/data/params.json",
+    "pointer": "/losses_pct/nameplate_rating"
+   },
+   "review_point": "table:pv-typical-values|losses_pct:nameplate_rating",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause; a common default of public PV yield tools, not a standard value"
+   ],
+   "note": "Confirm with the project design criteria."
+  },
+  {
+   "id": "pv.typical.losses_pct.age",
+   "kind": "typical",
+   "title": {
+    "es": "Pérdida: Envejecimiento",
+    "en": "Loss: Ageing"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "%",
+   "applies_to": "energy yield losses",
+   "provenance": "typical",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/pv/src/epc_pv/data/params.json",
+    "pointer": "/losses_pct/age"
+   },
+   "review_point": "table:pv-typical-values|losses_pct:age",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause; a common default of public PV yield tools, not a standard value"
+   ],
+   "note": "Confirm with the project design criteria."
+  },
+  {
+   "id": "pv.typical.losses_pct.availability",
+   "kind": "typical",
+   "title": {
+    "es": "Pérdida: Disponibilidad",
+    "en": "Loss: Availability"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "%",
+   "applies_to": "energy yield losses",
+   "provenance": "typical",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/pv/src/epc_pv/data/params.json",
+    "pointer": "/losses_pct/availability"
+   },
+   "review_point": "table:pv-typical-values|losses_pct:availability",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause; a common default of public PV yield tools, not a standard value"
+   ],
+   "note": "Confirm with the project design criteria."
+  },
+  {
+   "id": "pv.typical.iam_ashrae_b0",
+   "kind": "typical",
+   "title": {
+    "es": "Modificador de ángulo de incidencia ASHRAE b0",
+    "en": "ASHRAE incidence-angle modifier b0"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": null,
+   "applies_to": "angle-of-incidence loss",
+   "provenance": "typical",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/pv/src/epc_pv/data/params.json",
+    "pointer": "/iam_ashrae_b0"
+   },
+   "review_point": "table:pv-typical-values|iam_ashrae_b0",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause; typical value for glass modules"
+   ],
+   "note": "Replace with the module data sheet value when available."
+  },
+  {
+   "id": "pv.typical.faiman.u0",
+   "kind": "typical",
+   "title": {
+    "es": "Constante u0 del modelo térmico de Faiman",
+    "en": "Faiman thermal model constant u0"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "W/m2/K",
+   "applies_to": "cell temperature",
+   "provenance": "typical",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/pv/src/epc_pv/data/params.json",
+    "pointer": "/faiman/u0"
+   },
+   "review_point": "table:pv-typical-values|faiman:u0",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause; typical open-rack value"
+   ],
+   "note": "Depends on the mounting; confirm with the module data sheet or a measurement."
+  },
+  {
+   "id": "pv.typical.faiman.u1",
+   "kind": "typical",
+   "title": {
+    "es": "Coeficiente de viento u1 del modelo térmico de Faiman",
+    "en": "Faiman thermal model wind coefficient u1"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "W s/m3/K",
+   "applies_to": "cell temperature",
+   "provenance": "typical",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/pv/src/epc_pv/data/params.json",
+    "pointer": "/faiman/u1"
+   },
+   "review_point": "table:pv-typical-values|faiman:u1",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause; typical open-rack value"
+   ],
+   "note": "Depends on the mounting; confirm with the module data sheet or a measurement."
+  },
+  {
+   "id": "pv.typical.inverter.eta_nom",
+   "kind": "typical",
+   "title": {
+    "es": "Rendimiento nominal del inversor",
+    "en": "Inverter nominal efficiency"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "1",
+   "applies_to": "inverter curve",
+   "provenance": "typical",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/pv/src/epc_pv/data/params.json",
+    "pointer": "/inverter/eta_nom"
+   },
+   "review_point": "table:pv-typical-values|inverter:eta_nom",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause; typical of the PVWatts inverter curve"
+   ],
+   "note": "Replace with the inverter data sheet (weighted efficiency) when available."
+  },
+  {
+   "id": "pv.typical.inverter.eta_ref",
+   "kind": "typical",
+   "title": {
+    "es": "Rendimiento de referencia del inversor",
+    "en": "Inverter reference efficiency"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "1",
+   "applies_to": "inverter curve",
+   "provenance": "typical",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/pv/src/epc_pv/data/params.json",
+    "pointer": "/inverter/eta_ref"
+   },
+   "review_point": "table:pv-typical-values|inverter:eta_ref",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause; reference point of the PVWatts inverter curve"
+   ],
+   "note": "Part of the curve shape; keep it with eta_nom."
+  },
+  {
+   "id": "pv.typical.strings.isc_factor",
+   "kind": "typical",
+   "title": {
+    "es": "Factor de corriente de cortocircuito para el límite de entrada",
+    "en": "Short-circuit current factor for the input limit"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "1",
+   "applies_to": "string layout",
+   "provenance": "typical",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/pv/src/epc_pv/data/params.json",
+    "pointer": "/strings/isc_factor"
+   },
+   "review_point": "table:pv-typical-values|strings:isc_factor",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause; the 1.25 factor is a design convention to confirm against the adopted standard"
+   ],
+   "note": "Confirm the clause of the PV installation standard adopted by the project."
+  },
+  {
+   "id": "pv.typical.strings.policy",
+   "kind": "typical",
+   "title": {
+    "es": "Política de longitud de string",
+    "en": "String length policy"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": null,
+   "applies_to": "string layout",
+   "provenance": "typical",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/pv/src/epc_pv/data/params.json",
+    "pointer": "/strings/policy"
+   },
+   "review_point": "table:pv-typical-values|strings:policy",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "design choice, not a standard value"
+   ],
+   "note": "mid_mppt centres the maximum-power voltage in the MPPT window; max_voltage takes the longest string."
+  },
+  {
+   "id": "pv.typical.solar_constant_w_m2",
+   "kind": "typical",
+   "title": {
+    "es": "Constante solar",
+    "en": "Solar constant"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "W/m2",
+   "applies_to": "extraterrestrial irradiance",
+   "provenance": "typical",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/pv/src/epc_pv/data/params.json",
+    "pointer": "/solar_constant_w_m2"
+   },
+   "review_point": "table:pv-typical-values|solar_constant_w_m2",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "physical constant used by the Spencer series; the value is a convention (1366.1)"
+   ],
+   "note": "Keep in step with the reference tool used in the validation."
+  }
+ ]
+}
