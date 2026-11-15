@@ -13,4 +13,4 @@ dependencies = ["ezdxf", "numpy", "pillow", "pypdfium2"]
 where = ["src"]
 
 [tool.setuptools.package-data]
-epc_arch = ["params.json"]
+epc_arch = ["params.json", "epc_style.json"]

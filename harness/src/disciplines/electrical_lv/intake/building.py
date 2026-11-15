@@ -19,6 +19,7 @@ every lighting load, are inputs; a room the caller did not describe is an error 
                  "exclude": ["r7"],                        # room ids that are deliberately not lit
                  "special": {"r6": {"type": "bathroom", ...}},   # a room of a special location (the kind and what the engine needs: see `stages/extra_stages.py`, slice `special_locations`)
                  "emergency": {"r2": {...}}}],             # antipanic emergency lighting of a room: the epc_lighting emergency fields except id, name, width_m, length_m
+     # rooms may be named by their code on the plan ("PB-03") in `rooms`, `special`, `emergency` and `exclude`; `board`, `shaft` and `main_board` may be {"room": <id, code or name>} (its centre): see `resolve_rooms`
      "main_board": {"floor": "PB", "x_m": 1.0, "y_m": 8.0},   # optional: where the main board is; the riser of every floor is then routed (no `length` on the floors; each one gives `elevation_m` and, unless it is the main floor, `shaft`)
      "exterior": [{"id": "EXT1", "area_m2": 300, "luminaire": "...", "load": {"area": "AZ", "phases": 1, "length": {...}}}]}   # exterior areas: epc_lighting area fields + the load they make
 
@@ -427,6 +428,73 @@ def resolve_plans(building, inputs_dir):
     return out
 
 
+def _plan_rooms(floor):
+    """The recognised rooms of a floor (those that are objects)."""
+    return [r for r in ((floor.get("architecture") or {}).get("rooms") or []) if isinstance(r, dict)]
+
+
+def _find_room(floor, ref):
+    """The recognised room a reference names: by its id, else by its code on the plan ("PB-03"), else by its written name (exact). A BuildingError when none or several match."""
+    for key in ("id", "code", "name"):
+        found = [r for r in _plan_rooms(floor) if ref and r.get(key) == ref]
+        if len(found) == 1:
+            return found[0]
+        if found:
+            raise BuildingError([f"floor {floor.get('id')}: {len(found)} rooms have the {key} {ref!r}: name the room by its id"])
+    raise BuildingError([f"floor {floor.get('id')}: no room {ref!r} on the plan (ids, codes and names are accepted)"])
+
+
+def _place(floor, value):
+    """`{"room": ref}` as the centre of that room, `{x_m, y_m}` in the frame of the plan; any other value comes back as it is (the checks judge it)."""
+    if not (isinstance(value, dict) and set(value) == {"room"} and isinstance(value["room"], str)):
+        return value
+    room = _find_room(floor, value["room"])
+    box = room.get("box_m")
+    if not box:
+        raise BuildingError([f"floor {floor.get('id')}: room {value['room']!r} has no position in metres (`box_m`): the plan units are not known"])
+    return {"x_m": round((box[0] + box[2]) / 2, 3), "y_m": round((box[1] + box[3]) / 2, 3)}
+
+
+def _by_id(floor, mapping):
+    """A room mapping whose keys may be room codes, keyed by room id (a key that is no code stays: the checks judge it)."""
+    codes = {r.get("code"): r["id"] for r in _plan_rooms(floor) if r.get("code") and r.get("id")}
+    ids = set(codes.values())
+    return {(codes[k] if k in codes and k not in ids else k): v for k, v in mapping.items()}
+
+
+def _rooms_by_id(floor):
+    """The room keys of a floor (`rooms`, `special`, `emergency`, `exclude`) by room id, where they were given by code. Changes the floor."""
+    for key in ("rooms", "special", "emergency"):
+        if isinstance(floor.get(key), dict):
+            floor[key] = _by_id(floor, floor[key])
+    if isinstance(floor.get("exclude"), list):
+        floor["exclude"] = [next(iter(_by_id(floor, {e: 0}))) if isinstance(e, str) else e for e in floor["exclude"]]
+
+
+def _main_board_placed(out, floors):
+    """The building with a `main_board` given as `{floor, room}` put at the centre of that room of that floor."""
+    main = out.get("main_board")
+    if not (isinstance(main, dict) and set(main) == {"floor", "room"}):
+        return out
+    home = next((f for f in floors if f.get("id") == main["floor"]), None)
+    if home is not None:
+        out["main_board"] = dict({"floor": main["floor"]}, **_place(home, {"room": main["room"]}))
+    return out
+
+
+def resolve_rooms(building):
+    """A copy of the building where the rooms may be named as the plan names them (SIM-03, SIM-04): the keys of `rooms`, `special` and `emergency` and the entries of `exclude` may be room codes
+    ("PB-03"), and `board`, `shaft` and `main_board` may be `{"room": <id, code or name>}` (the centre of that room) in place of `{x_m, y_m}`."""
+    out = copy.deepcopy(building)
+    if not isinstance(out, dict):
+        return out
+    floors = [f for f in (out.get("floors") if isinstance(out.get("floors"), list) else []) if isinstance(f, dict)]
+    for floor in floors:
+        _rooms_by_id(floor)
+        floor.update({key: _place(floor, floor[key]) for key in ("board", "shaft") if key in floor})
+    return _main_board_placed(out, floors)
+
+
 def _receptacle_result(building, outlets):
     """The epc_receptacles result for the rooms that have outlets, or None when no room has any."""
     rooms = [r for plugs in outlets.values() for r in plugs]
@@ -492,6 +560,7 @@ def resolve_risers(building):
 def derive_all(building, loads, inputs_dir=None):
     """{"loads": load list with the derived loads, "lighting": section for stage 3, "routing": {floor id: design} (floors with a `board`), "circuits": {load id: options}}. The inputs are not changed."""
     building = resolve_plans(building, inputs_dir) if inputs_dir is not None else building
+    building = resolve_rooms(building)
     building, risers = resolve_risers(building)
     errors = _check(building, loads)
     if errors:

@@ -9,12 +9,13 @@ import re
 from collections import defaultdict
 from typing import Dict, Iterable, List, Set, Tuple
 
-from epc_arch.config import PARAMS
+from epc_arch.config import PARAMS, Hints
 from epc_arch.geometry import angle_gap, arc_point, dist_point_segment, seg_angle, seg_length
 from epc_arch.model import Arc, Line, Marks, Primitives, Text
 
 Pt = Tuple[float, float]
 KINDS = ("axes", "dimensions", "labels")
+BUILDING = ("wall", "door", "window")
 NUMBER = re.compile(r"^[+\-]?\d+([.,]\d+)?\s*(m|cm|mm|%)?$", re.I)
 
 
@@ -48,6 +49,12 @@ class _Grid:
         return {i for i in self.around(p[0] - r, p[1] - r, p[0] + r, p[1] + r) if dist_point_segment(p, self.lines[i].a, self.lines[i].b) <= r}
 
 
+def _building_lines(prims: Primitives) -> Set[int]:
+    """The strokes of layers named as walls, doors or windows: the layer vouches for them, they are never an annotation."""
+    hints = Hints()
+    return {i for i, l in enumerate(prims.lines) if hints.of(l.layer) in BUILDING}
+
+
 class Sketch:
     """The primitives of a plan while they are being sorted: which line, arc or text belongs to which kind of annotation."""
 
@@ -59,6 +66,7 @@ class Sketch:
         self.lines: Dict[int, str] = {}
         self.arcs: Dict[int, str] = {}
         self.texts: Dict[int, str] = {}
+        self.building = _building_lines(prims)
 
     def length(self, i: int) -> float:
         return seg_length(self.prims.lines[i].a, self.prims.lines[i].b)
@@ -67,7 +75,7 @@ class Sketch:
         return i not in self.lines
 
     def take(self, kind: str, lines: Iterable[int] = (), arcs: Iterable[int] = (), texts: Iterable[int] = ()) -> None:
-        for i in lines:
+        for i in set(lines) - self.building:
             self.lines.setdefault(i, kind)
         for i in arcs:
             self.arcs.setdefault(i, kind)
@@ -131,11 +139,20 @@ def _caps(s: Sketch, dashes: List[int]) -> List[int]:
     return out
 
 
+def _distinct(s: Sketch, dashes: List[int]) -> int:
+    """How many different dashes there are: a stroke drawn twice in the same place (the outline of a wall and the one of the window beside it) is one."""
+    seen = set()
+    for i in dashes:
+        l = s.prims.lines[i]
+        seen.add(tuple(sorted(((round(l.a[0] / s.eps), round(l.a[1] / s.eps)), (round(l.b[0] / s.eps), round(l.b[1] / s.eps))))))
+    return len(seen)
+
+
 def axes(s: Sketch) -> None:
     """Dashes strung along one line, with no wall face beside them."""
     for chain in _chains(s):
         dashes = [i for i in chain if not s.has_partner(i)]
-        if len(dashes) >= PARAMS["annotations"]["dash_min"]:
+        if _distinct(s, dashes) >= PARAMS["annotations"]["dash_min"]:
             s.take("axes", lines=dashes)
             s.take("axes", lines=_caps(s, dashes))
 
@@ -361,12 +378,20 @@ def _held(s: Sketch, shape: List[Node], anchors: List[Tuple[int, Pt]]) -> List[i
     return [k for k, (px, py) in anchors if x0 - s.eps <= px <= x1 + s.eps and y0 - s.eps <= py <= y1 + s.eps]
 
 
-def _held(s: Sketch, shape: List[Node], anchors: List[Tuple[int, Pt]]) -> List[int]:
-    """The texts that sit inside the box of a group of strokes, when the group can be a label (small, and not a door)."""
+def _fits_its_text(s: Sketch, shape: List[Node], held: List[int]) -> bool:
+    """A box round a text is about the size of the text. A loop of wall faces several times bigger (the corner of a building between two windows, with the name of the room inside) is the building."""
     x0, y0, x1, y1 = _bbox(s, shape)
-    if max(x1 - x0, y1 - y0) > PARAMS["annotations"]["tag_max"] * s.side or _is_door(s, shape):
-        return []
-    return [k for k, (px, py) in anchors if x0 - s.eps <= px <= x1 + s.eps and y0 - s.eps <= py <= y1 + s.eps]
+    texts = [s.prims.texts[k] for k in held]
+    wide = max(len(t.value) * t.height * 0.6 for t in texts)
+    tall = sum(t.height for t in texts)
+    k = PARAMS["annotations"].get("box_to_text", 3.0)
+    return max(x1 - x0, y1 - y0) <= k * max(wide, tall) and min(x1 - x0, y1 - y0) <= 2 * k * max(tall, s.eps)
+
+
+def _boxed(s: Sketch, shape: List[Node], anchors: List[Tuple[int, Pt]]) -> List[int]:
+    """The texts a closed loop of strokes holds when the loop is the box of a tag (wall faces allowed): closed, and of the size of its text."""
+    held = _held(s, shape, anchors) if _closed(s, shape) else []
+    return held if held and _fits_its_text(s, shape, held) else []
 
 
 def _take_shape(s: Sketch, shape: List[Node], held: List[int]) -> None:
@@ -382,7 +407,7 @@ def labels(s: Sketch) -> None:
         if held:
             _take_shape(s, shape, held)
     for shape in _shapes(s, walls_too=True):
-        held = _held(s, shape, anchors) if _closed(s, shape) else []
+        held = _boxed(s, shape, anchors)
         if held:
             _take_shape(s, shape, held)
     s.take("labels", texts=[k for k, _ in anchors])

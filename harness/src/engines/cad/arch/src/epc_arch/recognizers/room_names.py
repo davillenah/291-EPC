@@ -28,7 +28,7 @@ def key_of(name: str, ctx: Context) -> str:
 
 
 CODE = re.compile(r"^(?:[A-Z]|P[A-Z0-9]|PO)$")
-TAG_CODE = re.compile(r"^[A-Z]{1,3}-\d+$")
+TAG_CODE = re.compile(r"^[A-Z][A-Z0-9]{0,2}-\d+$")                    # `PT-03`, `P-03`, and a floor in the code: `P1-02`, `N1-01`
 
 
 def _clean(value: str) -> str:
@@ -47,7 +47,7 @@ def _name(room: Room, texts: List[Text]) -> str:
     return " ".join(w for w in (_clean(t.value) for t in held) if w)
 
 
-TAG = re.compile(r"^(?P<code>[A-Z]{1,3}\s?-\s?\d+)\s*·\s*(?P<area>\d+(?:[.,]\d+)?)\s*m[²2]\s*$")
+TAG = re.compile(r"^(?P<code>[A-Z][A-Z0-9]{0,2}\s?-\s?\d+)\s*·\s*(?P<area>\d+(?:[.,]\d+)?)\s*m[²2]\s*$")
 
 
 def _tag(room: Room, texts: List[Text]) -> Tuple[str, Optional[float]]:

@@ -83,9 +83,16 @@ def _best(free: np.ndarray, w: int, h: int, want: Pt) -> Optional[Tuple[int, int
     return int(xs[i]), int(ys[i])
 
 
-def _lines_of(room: Room, index: int, tagged: bool) -> List[str]:
+def _tag_line(room: Room, tagged: bool) -> str:
+    """The line under the name: the area, with the code of the room before it ("PB-01 · 16,0 m²": the tag a reader finds again) when the room has one and no tag of the source says it."""
     area = f"{room.area_m2:.1f} m²".replace(".", ",") if room.area_m2 else ""
-    return [t for t in ("" if tagged else room.name, area or str(index + 1)) if t]
+    if not room.code or tagged:
+        return area
+    return f"{room.code} · {area}" if area else room.code
+
+
+def _lines_of(room: Room, index: int, tagged: bool) -> List[str]:
+    return [t for t in ("" if tagged else room.name, _tag_line(room, tagged) or str(index + 1)) if t]
 
 
 def _place(lines: List[str], height: float, obstacle: np.ndarray, floor: np.ndarray, origin: Pt, want: Pt) -> Optional[Pt]:

@@ -154,10 +154,12 @@
       },
       "skills": [],
       "engine": [
+        "arch",
         "dxf",
-        "plan"
+        "plan",
+        "titleblock"
       ],
-      "hash": "00580a297dab737e"
+      "hash": "0ca37d9dd3c9609f"
     },
     "pm2-docs": {
       "version": "0.1.0",

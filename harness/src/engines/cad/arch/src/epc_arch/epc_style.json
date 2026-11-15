@@ -10,6 +10,7 @@
     {"name": "A-ROOM",         "pen": null,      "linetype": "CONTINUOUS", "aci": 254, "hex": "#EDEDED"},
     {"name": "A-WALL-FILL",    "pen": "pen_013", "linetype": "CONTINUOUS", "aci": 253, "hex": "#8C8C8C"},
     {"name": "A-WALL-CUT",     "pen": "pen_050", "linetype": "CONTINUOUS", "aci": 7,   "hex": "#111111"},
+    {"name": "A-ELEV",         "pen": "pen_025", "linetype": "CONTINUOUS", "aci": 251, "hex": "#333333"},
     {"name": "A-OPENING",      "pen": "pen_018", "linetype": "HIDDEN",     "aci": 252, "hex": "#555555"},
     {"name": "A-DOOR-SWING",   "pen": "pen_018", "linetype": "DASHED",     "aci": 250, "hex": "#333333"},
     {"name": "A-DOOR",         "pen": "pen_035", "linetype": "CONTINUOUS", "aci": 250, "hex": "#333333"},

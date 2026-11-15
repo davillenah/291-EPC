@@ -43,5 +43,46 @@ class OpenFindingsTests(unittest.TestCase):
         self.assertEqual(open_findings(self.Store(), "major"), ["F-3"])
 
 
+class RoomsNamedAsThePlanNamesThem(unittest.TestCase):
+    """SIM-03 and SIM-04: room data by the code on the plan, and the board, the shaft and the main board by the room they are in."""
+    ARCH = {"rooms": [{"id": "r1", "code": "PB-01", "name": "OFICINA", "box_m": [0.0, 0.0, 4.0, 5.0]}, {"id": "r2", "code": "PB-02", "name": "HALL", "box_m": [4.0, 0.0, 7.0, 4.0]},
+                      {"id": "r3", "code": "", "name": "HALL 2", "box_m": [0.0, 5.0, 5.0, 10.0]}]}
+
+    def building(self, **floor):
+        return {"floors": [dict({"id": "PB", "architecture": self.ARCH}, **floor)]}
+
+    def resolve(self, **floor):
+        from disciplines.electrical_lv.intake.building import resolve_rooms
+        return resolve_rooms(self.building(**floor))["floors"][0]
+
+    def test_room_data_by_code_is_keyed_by_room_id(self):
+        out = self.resolve(rooms={"PB-01": {"a": 1}, "r3": {"b": 2}}, special={"PB-02": {"type": "bathroom"}}, emergency={"PB-01": {}}, exclude=["PB-02", "r3"])
+        self.assertEqual((out["rooms"], out["special"], out["emergency"], out["exclude"]), ({"r1": {"a": 1}, "r3": {"b": 2}}, {"r2": {"type": "bathroom"}}, {"r1": {}}, ["r2", "r3"]))
+
+    def test_a_board_in_a_room_is_put_at_its_centre(self):
+        out = self.resolve(board={"room": "PB-02"}, shaft={"room": "HALL 2"})
+        self.assertEqual((out["board"], out["shaft"]), ({"x_m": 5.5, "y_m": 2.0}, {"x_m": 2.5, "y_m": 7.5}))
+
+    def test_a_point_is_left_as_it_is(self):
+        self.assertEqual(self.resolve(board={"x_m": 1.0, "y_m": 2.0})["board"], {"x_m": 1.0, "y_m": 2.0})
+
+    def test_the_main_board_by_room(self):
+        from disciplines.electrical_lv.intake.building import resolve_rooms
+        b = dict(self.building(), main_board={"floor": "PB", "room": "r1"})
+        self.assertEqual(resolve_rooms(b)["main_board"], {"floor": "PB", "x_m": 2.0, "y_m": 2.5})
+
+    def test_a_room_that_is_not_on_the_plan_is_an_error(self):
+        from disciplines.electrical_lv.intake.building import BuildingError
+        with self.assertRaises(BuildingError) as ctx:
+            self.resolve(board={"room": "PB-99"})
+        self.assertIn("no room 'PB-99'", str(ctx.exception))
+
+    def test_the_inputs_are_not_changed(self):
+        from disciplines.electrical_lv.intake.building import resolve_rooms
+        b = self.building(board={"room": "PB-02"})
+        resolve_rooms(b)
+        self.assertEqual(b["floors"][0]["board"], {"room": "PB-02"})
+
+
 if __name__ == "__main__":
     unittest.main()
