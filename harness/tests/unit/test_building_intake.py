@@ -574,6 +574,20 @@ class ExtraSlicesTests(unittest.TestCase):
         _, s3, _ = self.stage6(hvac={"design": {}, "spaces": []})
         self.assertEqual(s3.status, "blocked")
 
+    def test_receptacles_run_in_stage_3_for_their_document_and_report_failed_checks(self):
+        import epc_receptacles
+        doc = {"schema_version": "1.0", "receptacles": [{"id": "tug", "name": "Outlet", "kind": "general", "poles": 2, "rated_a": 10, "power_va": 100, "height_m": 0.3, "ip": "IP20"}],
+               "rooms": [{"id": "R1", "name": "Office", "use": "office", "length_m": 8, "width_m": 5, "receptacle": "tug"},
+                         {"id": "R2", "name": "Kitchen", "use": "kitchen", "length_m": 3, "width_m": 3, "receptacle": "tug", "height_m": 0.1}]}
+        _, s3, _ = self.stage6(receptacles=doc)
+        self.assertEqual(s3.status, "ok", s3.message)
+        self.assertEqual(s3.outputs["receptacles"]["receptacles"], epc_receptacles.run(copy.deepcopy(doc)).as_dict())
+        major = [f for f in s3.findings if f["severity"] == "major" and f["field"].startswith("R2/")]
+        self.assertTrue(major)
+        self.assertTrue(all(f["i18n"]["es"]["message"] and f["i18n"]["es"]["action"] for f in major))
+        _, s3, _ = self.stage6(receptacles={"schema_version": "1.0", "receptacles": [], "rooms": [{"id": "X", "name": "X", "use": "no-such-use", "length_m": 3, "width_m": 3}]})
+        self.assertEqual(s3.status, "blocked")
+
 
 class PhaseBalanceSliceTests(unittest.TestCase):
     def test_a_building_run_assigns_the_phases_with_the_engine(self):
