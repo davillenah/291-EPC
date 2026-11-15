@@ -84,6 +84,33 @@
       }
     },
     {
+      "id": "pluvial",
+      "prefix": "PLU-",
+      "profile": "sanitaria_pluvial",
+      "name": {
+        "es": "Sanitaria (pluviales)",
+        "en": "Plumbing (storm drainage)"
+      }
+    },
+    {
+      "id": "agua",
+      "prefix": "AGU-",
+      "profile": "sanitaria_agua",
+      "name": {
+        "es": "Sanitaria (agua fría y caliente)",
+        "en": "Plumbing (cold and hot water)"
+      }
+    },
+    {
+      "id": "gas",
+      "prefix": "GAS-",
+      "profile": "gas",
+      "name": {
+        "es": "Gas",
+        "en": "Gas"
+      }
+    },
+    {
       "id": "general",
       "prefix": "PLAN-",
       "profile": null,

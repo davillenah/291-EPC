@@ -2,7 +2,8 @@
 
 Everything comes from the footprint of the drawing (`footprint.footprints`: plan points in metres, width, and the heights each element spans from the floor of the project), so the 3D
 never disagrees with the plan or with the clash detection. A line (a tray, a conduit, a duct, a pipe) becomes a path at its height and a section swept along it: a rectangle (width x height)
-or a circle (its width as diameter). A node (a board, a chamber, an equipment) becomes a box. A vertical element (a shaft, a riser: `vertical` in its kind) rises from its bottom to its top.
+or a circle (its width as diameter). A node (a board, a chamber, an equipment) becomes a box. A vertical element (a riser, a downpipe, a duct or lift shaft: `vertical` in its kind) is a run
+too, straight up from its bottom to its top (`altura_m`), round or rectangular like any other.
 
     solids(document, sheet)      -> [{"id", "tag", "kind", "discipline", "level", "layer", "shape": "run" | "box", "section": "rect" | "round", "width_m", "height_m", "path": [[x, y, z], ...]}]
     mesh(solid)                  -> {"vertices": [[x, y, z]], "faces": [[i, j, k, l]]}        # quads; what a 3D viewer or an exporter draws
@@ -11,7 +12,7 @@ or a circle (its width as diameter). A node (a board, a chamber, an equipment) b
     write_dxf_3d(solids, path)   -> a 3D DXF: each path as a 3D polyline and each solid as a mesh of faces, on the layer of its kind
 
 Sizes are those of the kind in the profile of the discipline unless the person wrote others on the element (`ancho_m`, `alto_m`, `z_m`): nothing is calculated here.
-Whether a kind is round or rectangular is data: `geom.seccion` of the kind in its profile ("round" or "rect"), else the pattern `solid.round_layers` of `params.json` on its layer.
+Whether a kind is round or rectangular is data: `seccion` of the kind in its profile ("round" or "rect"), else the pattern `solid.round_layers` of `params.json` on its layer.
 Fittings (elbows, tees, reducers) are not generated: at a bend the two stretches simply meet.
 """
 import math
@@ -26,7 +27,7 @@ SECTIONS = ("round", "rect")
 
 
 def _section(kind: Dict[str, Any], params: Dict[str, Any]) -> str:
-    given = (kind.get("geom") or {}).get("seccion")
+    given = kind.get("seccion")
     if given in SECTIONS:
         return given
     return "round" if re.search(params["solid"]["round_layers"], kind.get("capa_dxf", ""), re.I) else "rect"
@@ -43,11 +44,11 @@ def _path(item: Dict[str, Any], vertical: bool) -> List[List[float]]:
 
 def _solid(item: Dict[str, Any], kind: Dict[str, Any], params: Dict[str, Any]) -> Dict[str, Any]:
     vertical = bool(kind.get("vertical"))
-    run = item["shape"] == "line" and not vertical
-    height = round(item["z1"] - item["z0"], 4)
+    flat = item["shape"] == "line" and not vertical                  # a run along the floor: its section is its width by its height
+    run = flat or vertical                                           # a riser, a downpipe or a shaft is a run too, straight up: its section is its width both ways
     return {"id": item["id"], "tag": item["tag"], "kind": item["kind"], "discipline": item["discipline"], "level": item["level"], "sheet": item["sheet"], "layer": kind.get("capa_dxf", ""),
             "shape": "run" if run else "box", "section": _section(kind, params) if run else "rect", "width_m": item["width_m"],
-            "height_m": height if run else item["width_m"], "path": _path(item, vertical)}
+            "height_m": round(item["z1"] - item["z0"], 4) if flat else item["width_m"], "path": _path(item, vertical)}
 
 
 def solids(document: Dict[str, Any], sheet: str, story_height_m: Optional[float] = None, params: Optional[Dict[str, Any]] = None) -> List[Dict[str, Any]]:

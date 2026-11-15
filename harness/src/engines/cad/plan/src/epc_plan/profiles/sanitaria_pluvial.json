@@ -1,0 +1,185 @@
+{
+  "id": "sanitaria_pluvial",
+  "nombre": {
+    "es": "Desagües pluviales",
+    "en": "Storm drainage"
+  },
+  "subdisciplinas": [
+    {
+      "id": "cubierta",
+      "nombre": {
+        "es": "Cubierta y bajadas",
+        "en": "Roof and downpipes"
+      },
+      "tipos": [
+        "CN",
+        "EM",
+        "BP"
+      ]
+    },
+    {
+      "id": "red",
+      "nombre": {
+        "es": "Red horizontal",
+        "en": "Horizontal network"
+      },
+      "tipos": [
+        "CP",
+        "BD",
+        "CA",
+        "RT"
+      ]
+    }
+  ],
+  "disciplina_proyecto": "plumbing",
+  "tramos": [
+    {
+      "id": "CP",
+      "etiqueta": {
+        "es": "Cañería pluvial",
+        "en": "Storm pipe"
+      },
+      "prefijo_tag": "CP",
+      "atributos": [
+        "diametro_mm",
+        "material"
+      ],
+      "simbolo_2d": "linea_simple",
+      "capa_dxf": "PLU-TUBERIA",
+      "geom": {
+        "z_m": -0.5,
+        "ancho_m": 0.11,
+        "alto_m": 0.11
+      }
+    },
+    {
+      "id": "CN",
+      "etiqueta": {
+        "es": "Canaleta",
+        "en": "Gutter"
+      },
+      "prefijo_tag": "CN",
+      "atributos": [
+        "dimensiones",
+        "material"
+      ],
+      "simbolo_2d": "linea_simple",
+      "capa_dxf": "PLU-CANALETA",
+      "geom": {
+        "z_m": 3.0,
+        "ancho_m": 0.15,
+        "alto_m": 0.1
+      }
+    }
+  ],
+  "nodos": [
+    {
+      "id": "EM",
+      "etiqueta": {
+        "es": "Embudo",
+        "en": "Roof drain"
+      },
+      "prefijo_tag": "EM",
+      "atributos": [
+        "tipo"
+      ],
+      "simbolo_2d": "boca_registro",
+      "capa_dxf": "PLU-BOCA",
+      "geom": {
+        "z_m": 3.0,
+        "ancho_m": 0.2,
+        "alto_m": 0.1
+      }
+    },
+    {
+      "id": "BD",
+      "etiqueta": {
+        "es": "Boca de desagüe",
+        "en": "Yard drain"
+      },
+      "prefijo_tag": "BD",
+      "atributos": [
+        "dimensiones"
+      ],
+      "simbolo_2d": "boca_registro",
+      "capa_dxf": "PLU-BOCA",
+      "geom": {
+        "z_m": -0.3,
+        "ancho_m": 0.4,
+        "alto_m": 0.4
+      }
+    },
+    {
+      "id": "CA",
+      "etiqueta": {
+        "es": "Cámara pluvial",
+        "en": "Storm chamber"
+      },
+      "prefijo_tag": "CA",
+      "atributos": [
+        "dimensiones"
+      ],
+      "simbolo_2d": "camara",
+      "capa_dxf": "PLU-CAMARA",
+      "geom": {
+        "z_m": -0.5,
+        "ancho_m": 0.6,
+        "alto_m": 1.0
+      }
+    },
+    {
+      "id": "RT",
+      "etiqueta": {
+        "es": "Rejilla o canal con reja",
+        "en": "Grating or trench drain"
+      },
+      "prefijo_tag": "RT",
+      "atributos": [
+        "dimensiones"
+      ],
+      "simbolo_2d": "caja_pase",
+      "capa_dxf": "PLU-BOCA",
+      "geom": {
+        "z_m": -0.1,
+        "ancho_m": 0.3,
+        "alto_m": 0.2
+      }
+    },
+    {
+      "id": "BP",
+      "etiqueta": {
+        "es": "Bajada pluvial",
+        "en": "Downpipe"
+      },
+      "prefijo_tag": "BP",
+      "atributos": [
+        "diametro_mm",
+        "material"
+      ],
+      "simbolo_2d": "caja_pase",
+      "capa_dxf": "PLU-TUBERIA",
+      "geom": {
+        "z_m": 0.0,
+        "ancho_m": 0.11,
+        "alto_m": 0.11,
+        "altura_m": 3.0
+      },
+      "vertical": true,
+      "seccion": "round"
+    }
+  ],
+  "calculos": [
+    "longitud",
+    "cantidad"
+  ],
+  "normas": [],
+  "atajos_teclado": {
+    "p": "CP",
+    "n": "CN",
+    "e": "EM",
+    "b": "BP",
+    "d": "BD",
+    "c": "CA"
+  },
+  "unidades_salida": "m"
+}

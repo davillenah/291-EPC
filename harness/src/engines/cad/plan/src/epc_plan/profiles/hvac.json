@@ -29,6 +29,41 @@
         "UE",
         "UC"
       ]
+    },
+    {
+      "id": "agua",
+      "nombre": {
+        "es": "Agua helada y caliente",
+        "en": "Chilled and hot water"
+      },
+      "tipos": [
+        "AH",
+        "AQ",
+        "CD",
+        "CH",
+        "TO",
+        "CL",
+        "BH",
+        "FC",
+        "MH"
+      ]
+    },
+    {
+      "id": "ventilacion",
+      "nombre": {
+        "es": "Ventilación y extracción",
+        "en": "Ventilation and exhaust"
+      },
+      "tipos": [
+        "DR",
+        "DE",
+        "VE",
+        "CF",
+        "VV",
+        "UM",
+        "MD",
+        "RJ"
+      ]
     }
   ],
   "disciplina_proyecto": "hvac",
@@ -69,6 +104,101 @@
         "z_m": 2.7,
         "ancho_m": 0.05,
         "alto_m": 0.05
+      }
+    },
+    {
+      "id": "DR",
+      "etiqueta": {
+        "es": "Conducto de retorno",
+        "en": "Return duct"
+      },
+      "prefijo_tag": "DR",
+      "atributos": [
+        "dimensiones",
+        "material"
+      ],
+      "simbolo_2d": "linea_simple",
+      "capa_dxf": "HVAC-DUCTO-RETORNO",
+      "geom": {
+        "z_m": 2.7,
+        "ancho_m": 0.4,
+        "alto_m": 0.3
+      }
+    },
+    {
+      "id": "DE",
+      "etiqueta": {
+        "es": "Conducto de extracción",
+        "en": "Exhaust duct"
+      },
+      "prefijo_tag": "DE",
+      "atributos": [
+        "dimensiones",
+        "material"
+      ],
+      "simbolo_2d": "linea_simple",
+      "capa_dxf": "HVAC-DUCTO-EXTRACCION",
+      "geom": {
+        "z_m": 2.7,
+        "ancho_m": 0.3,
+        "alto_m": 0.3
+      }
+    },
+    {
+      "id": "AH",
+      "etiqueta": {
+        "es": "Cañería de agua helada",
+        "en": "Chilled water pipe"
+      },
+      "prefijo_tag": "AH",
+      "atributos": [
+        "diametro_mm",
+        "material"
+      ],
+      "simbolo_2d": "linea_simple",
+      "capa_dxf": "HVAC-TUBERIA-AGUA",
+      "geom": {
+        "z_m": 2.7,
+        "ancho_m": 0.08,
+        "alto_m": 0.08
+      }
+    },
+    {
+      "id": "AQ",
+      "etiqueta": {
+        "es": "Cañería de agua caliente de calefacción",
+        "en": "Heating hot water pipe"
+      },
+      "prefijo_tag": "AQ",
+      "atributos": [
+        "diametro_mm",
+        "material"
+      ],
+      "simbolo_2d": "linea_simple",
+      "capa_dxf": "HVAC-TUBERIA-AGUA",
+      "geom": {
+        "z_m": 2.7,
+        "ancho_m": 0.08,
+        "alto_m": 0.08
+      }
+    },
+    {
+      "id": "CD",
+      "etiqueta": {
+        "es": "Cañería de condensado",
+        "en": "Condensate pipe"
+      },
+      "prefijo_tag": "CD",
+      "atributos": [
+        "diametro_mm",
+        "material"
+      ],
+      "simbolo_2d": "linea_simple",
+      "capa_dxf": "HVAC-TUBERIA",
+      "geom": {
+        "z_m": 2.5,
+        "ancho_m": 0.032,
+        "alto_m": 0.032
       }
     }
   ],
@@ -128,6 +258,220 @@
         "ancho_m": 0.6,
         "alto_m": 0.6
       }
+    },
+    {
+      "id": "UM",
+      "etiqueta": {
+        "es": "Unidad manejadora de aire",
+        "en": "Air handling unit"
+      },
+      "prefijo_tag": "UM",
+      "atributos": [
+        "caudal",
+        "potencia_w",
+        "tipo"
+      ],
+      "simbolo_2d": "hvac",
+      "capa_dxf": "HVAC-EQUIPO",
+      "geom": {
+        "z_m": 1.0,
+        "ancho_m": 2.0,
+        "alto_m": 2.0
+      }
+    },
+    {
+      "id": "CH",
+      "etiqueta": {
+        "es": "Enfriadora (chiller)",
+        "en": "Chiller"
+      },
+      "prefijo_tag": "CH",
+      "atributos": [
+        "potencia_w",
+        "tipo"
+      ],
+      "simbolo_2d": "hvac",
+      "capa_dxf": "HVAC-EQUIPO",
+      "geom": {
+        "z_m": 1.0,
+        "ancho_m": 2.5,
+        "alto_m": 2.0
+      }
+    },
+    {
+      "id": "TO",
+      "etiqueta": {
+        "es": "Torre de enfriamiento",
+        "en": "Cooling tower"
+      },
+      "prefijo_tag": "TO",
+      "atributos": [
+        "potencia_w",
+        "tipo"
+      ],
+      "simbolo_2d": "hvac",
+      "capa_dxf": "HVAC-EQUIPO",
+      "geom": {
+        "z_m": 1.5,
+        "ancho_m": 2.5,
+        "alto_m": 3.0
+      }
+    },
+    {
+      "id": "CL",
+      "etiqueta": {
+        "es": "Caldera",
+        "en": "Boiler"
+      },
+      "prefijo_tag": "CL",
+      "atributos": [
+        "potencia_w",
+        "tipo"
+      ],
+      "simbolo_2d": "equipo_mec",
+      "capa_dxf": "HVAC-EQUIPO",
+      "geom": {
+        "z_m": 0.9,
+        "ancho_m": 1.2,
+        "alto_m": 1.8
+      }
+    },
+    {
+      "id": "BH",
+      "etiqueta": {
+        "es": "Bomba de circulación",
+        "en": "Circulation pump"
+      },
+      "prefijo_tag": "BH",
+      "atributos": [
+        "potencia_w",
+        "caudal"
+      ],
+      "simbolo_2d": "motor",
+      "capa_dxf": "HVAC-EQUIPO",
+      "geom": {
+        "z_m": 0.4,
+        "ancho_m": 0.5,
+        "alto_m": 0.8
+      }
+    },
+    {
+      "id": "FC",
+      "etiqueta": {
+        "es": "Fan coil",
+        "en": "Fan coil"
+      },
+      "prefijo_tag": "FC",
+      "atributos": [
+        "potencia_w",
+        "tipo"
+      ],
+      "simbolo_2d": "hvac",
+      "capa_dxf": "HVAC-EQUIPO",
+      "geom": {
+        "z_m": 2.6,
+        "ancho_m": 0.8,
+        "alto_m": 0.3
+      }
+    },
+    {
+      "id": "VV",
+      "etiqueta": {
+        "es": "Caja de volumen variable",
+        "en": "VAV box"
+      },
+      "prefijo_tag": "VV",
+      "atributos": [
+        "caudal"
+      ],
+      "simbolo_2d": "pleno",
+      "capa_dxf": "HVAC-EQUIPO",
+      "geom": {
+        "z_m": 2.7,
+        "ancho_m": 0.6,
+        "alto_m": 0.4
+      }
+    },
+    {
+      "id": "VE",
+      "etiqueta": {
+        "es": "Ventilador o extractor",
+        "en": "Fan"
+      },
+      "prefijo_tag": "VE",
+      "atributos": [
+        "caudal",
+        "potencia_w"
+      ],
+      "simbolo_2d": "motor",
+      "capa_dxf": "HVAC-EQUIPO",
+      "geom": {
+        "z_m": 2.7,
+        "ancho_m": 0.6,
+        "alto_m": 0.6
+      }
+    },
+    {
+      "id": "CF",
+      "etiqueta": {
+        "es": "Compuerta cortafuego",
+        "en": "Fire damper"
+      },
+      "prefijo_tag": "CF",
+      "atributos": [
+        "dimensiones"
+      ],
+      "simbolo_2d": "caja_pase",
+      "capa_dxf": "HVAC-COMPUERTA",
+      "geom": {
+        "z_m": 2.7,
+        "ancho_m": 0.4,
+        "alto_m": 0.3
+      }
+    },
+    {
+      "id": "MD",
+      "etiqueta": {
+        "es": "Montante de conducto",
+        "en": "Duct riser"
+      },
+      "prefijo_tag": "MD",
+      "atributos": [
+        "diametro_mm",
+        "material"
+      ],
+      "simbolo_2d": "caja_pase",
+      "capa_dxf": "HVAC-DUCTO",
+      "geom": {
+        "z_m": 0.0,
+        "ancho_m": 0.6,
+        "alto_m": 0.6,
+        "altura_m": 3.0
+      },
+      "vertical": true,
+      "seccion": "rect"
+    },
+    {
+      "id": "MH",
+      "etiqueta": {
+        "es": "Montante de agua helada",
+        "en": "Chilled water riser"
+      },
+      "prefijo_tag": "MH",
+      "atributos": [
+        "diametro_mm",
+        "material"
+      ],
+      "simbolo_2d": "caja_pase",
+      "capa_dxf": "HVAC-TUBERIA-AGUA",
+      "geom": {
+        "z_m": 0.0,
+        "ancho_m": 0.1,
+        "alto_m": 0.1,
+        "altura_m": 3.0
+      },
+      "vertical": true,
+      "seccion": "round"
     }
   ],
   "calculos": [
@@ -140,7 +484,11 @@
     "t": "TF",
     "e": "UE",
     "c": "UC",
-    "r": "RJ"
+    "r": "RJ",
+    "m": "UM",
+    "h": "AH",
+    "v": "VE",
+    "x": "DE"
   },
   "unidades_salida": "m"
 }

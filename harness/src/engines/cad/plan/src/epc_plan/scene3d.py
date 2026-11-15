@@ -182,8 +182,14 @@ def _box2(points: List[List[float]]) -> Optional[List[float]]:
     return [min(p[0] for p in points), min(p[1] for p in points), max(p[0] for p in points), max(p[1] for p in points)]
 
 
+def _reaches(mesh: Dict[str, Any], i: int, at: float) -> bool:
+    """Does the plane pass through the box of the mesh? Most solids of a project are far from any one plane: they are left out before their faces are looked at."""
+    values = [v[i] for v in mesh["vertices"]]
+    return bool(values) and min(values) - EPS <= at <= max(values) + EPS
+
+
 def _cut_solid(s: Dict[str, Any], i: int, j: int, sign: float, at: float) -> Optional[Dict[str, Any]]:
-    loops = _cut_loops(s["mesh"], i, j, sign, at)
+    loops = _cut_loops(s["mesh"], i, j, sign, at) if _reaches(s["mesh"], i, at) else []
     if not loops:
         return None
     pts = [p for loop in loops for p in loop]
