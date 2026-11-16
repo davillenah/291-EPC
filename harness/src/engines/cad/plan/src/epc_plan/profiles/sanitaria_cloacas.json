@@ -24,6 +24,25 @@
         "ancho_m": 0.11,
         "alto_m": 0.11
       }
+    },
+    {
+      "id": "CV",
+      "etiqueta": {
+        "es": "Cañería de ventilación",
+        "en": "Vent pipe"
+      },
+      "prefijo_tag": "CV",
+      "atributos": [
+        "diametro_mm",
+        "material"
+      ],
+      "simbolo_2d": "linea_simple",
+      "capa_dxf": "SAN-VENTILACION",
+      "geom": {
+        "z_m": 2.6,
+        "ancho_m": 0.06,
+        "alto_m": 0.06
+      }
     }
   ],
   "nodos": [
@@ -62,6 +81,65 @@
         "ancho_m": 1.0,
         "alto_m": 1.5
       }
+    },
+    {
+      "id": "MC",
+      "etiqueta": {
+        "es": "Montante cloacal",
+        "en": "Soil stack"
+      },
+      "prefijo_tag": "MC",
+      "atributos": [
+        "diametro_mm",
+        "material"
+      ],
+      "simbolo_2d": "caja_pase",
+      "capa_dxf": "SAN-CLOACA",
+      "geom": {
+        "z_m": 0.0,
+        "ancho_m": 0.11,
+        "alto_m": 0.11,
+        "altura_m": 3.0
+      },
+      "vertical": true,
+      "seccion": "round"
+    },
+    {
+      "id": "PP",
+      "etiqueta": {
+        "es": "Pileta de patio",
+        "en": "Floor drain"
+      },
+      "prefijo_tag": "PP",
+      "atributos": [
+        "tipo"
+      ],
+      "simbolo_2d": "boca_registro",
+      "capa_dxf": "SAN-BOCA",
+      "geom": {
+        "z_m": -0.2,
+        "ancho_m": 0.2,
+        "alto_m": 0.2
+      }
+    },
+    {
+      "id": "PZ",
+      "etiqueta": {
+        "es": "Pozo de bombeo",
+        "en": "Sump pit"
+      },
+      "prefijo_tag": "PZ",
+      "atributos": [
+        "dimensiones",
+        "potencia_w"
+      ],
+      "simbolo_2d": "camara",
+      "capa_dxf": "SAN-CAMARA",
+      "geom": {
+        "z_m": -1.0,
+        "ancho_m": 1.2,
+        "alto_m": 2.0
+      }
     }
   ],
   "calculos": [
@@ -75,7 +153,11 @@
   "atajos_teclado": {
     "c": "CI",
     "b": "BR",
-    "n": "CC"
+    "n": "CC",
+    "v": "CV",
+    "m": "MC",
+    "p": "PP"
   },
-  "unidades_salida": "m"
+  "unidades_salida": "m",
+  "subdisciplinas": []
 }

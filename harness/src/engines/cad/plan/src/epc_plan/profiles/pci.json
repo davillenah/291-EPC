@@ -40,6 +40,22 @@
         "EX",
         "TA"
       ]
+    },
+    {
+      "id": "abastecimiento",
+      "nombre": {
+        "es": "Abastecimiento y montantes",
+        "en": "Water supply and risers"
+      },
+      "tipos": [
+        "TA",
+        "MI",
+        "BI",
+        "TR",
+        "EC",
+        "VI",
+        "BS"
+      ]
     }
   ],
   "disciplina_proyecto": "fire",
@@ -190,6 +206,140 @@
         "ancho_m": 0.2,
         "alto_m": 0.2
       }
+    },
+    {
+      "id": "MI",
+      "etiqueta": {
+        "es": "Montante de incendio",
+        "en": "Fire riser"
+      },
+      "prefijo_tag": "MI",
+      "atributos": [
+        "diametro_mm",
+        "material"
+      ],
+      "simbolo_2d": "caja_pase",
+      "capa_dxf": "PCI-TUBERIA",
+      "geom": {
+        "z_m": 0.0,
+        "ancho_m": 0.1,
+        "alto_m": 0.1,
+        "altura_m": 3.0
+      },
+      "vertical": true,
+      "seccion": "round"
+    },
+    {
+      "id": "BI",
+      "etiqueta": {
+        "es": "Bomba de incendio",
+        "en": "Fire pump"
+      },
+      "prefijo_tag": "BI",
+      "atributos": [
+        "potencia_w",
+        "caudal",
+        "tipo"
+      ],
+      "simbolo_2d": "motor",
+      "capa_dxf": "PCI-EQUIPO",
+      "geom": {
+        "z_m": 0.5,
+        "ancho_m": 1.0,
+        "alto_m": 1.0
+      }
+    },
+    {
+      "id": "TR",
+      "etiqueta": {
+        "es": "Tanque de reserva de incendio",
+        "en": "Fire water tank"
+      },
+      "prefijo_tag": "TR",
+      "atributos": [
+        "capacidad_l"
+      ],
+      "simbolo_2d": "equipo_mec",
+      "capa_dxf": "PCI-EQUIPO",
+      "geom": {
+        "z_m": 1.5,
+        "ancho_m": 3.0,
+        "alto_m": 3.0
+      }
+    },
+    {
+      "id": "EC",
+      "etiqueta": {
+        "es": "Estación de control y alarma",
+        "en": "Alarm check valve station"
+      },
+      "prefijo_tag": "EC",
+      "atributos": [
+        "diametro_mm",
+        "tipo"
+      ],
+      "simbolo_2d": "instrumento",
+      "capa_dxf": "PCI-VALVULA",
+      "geom": {
+        "z_m": 1.2,
+        "ancho_m": 0.4,
+        "alto_m": 0.6
+      }
+    },
+    {
+      "id": "VI",
+      "etiqueta": {
+        "es": "Válvula de incendio",
+        "en": "Fire valve"
+      },
+      "prefijo_tag": "VI",
+      "atributos": [
+        "diametro_mm",
+        "tipo"
+      ],
+      "simbolo_2d": "instrumento",
+      "capa_dxf": "PCI-VALVULA",
+      "geom": {
+        "z_m": 1.2,
+        "ancho_m": 0.15,
+        "alto_m": 0.15
+      }
+    },
+    {
+      "id": "CI",
+      "etiqueta": {
+        "es": "Central de incendio",
+        "en": "Fire alarm panel"
+      },
+      "prefijo_tag": "CI",
+      "atributos": [
+        "tipo"
+      ],
+      "simbolo_2d": "tablero",
+      "capa_dxf": "PCI-CENTRAL",
+      "geom": {
+        "z_m": 1.5,
+        "ancho_m": 0.5,
+        "alto_m": 0.7
+      }
+    },
+    {
+      "id": "BS",
+      "etiqueta": {
+        "es": "Boca de impulsión",
+        "en": "Fire department connection"
+      },
+      "prefijo_tag": "BS",
+      "atributos": [
+        "diametro_mm"
+      ],
+      "simbolo_2d": "caja_pase",
+      "capa_dxf": "PCI-HIDRANTE",
+      "geom": {
+        "z_m": 0.6,
+        "ancho_m": 0.4,
+        "alto_m": 0.4
+      }
     }
   ],
   "calculos": [
@@ -202,7 +352,11 @@
     "r": "RO",
     "d": "DH",
     "h": "HI",
-    "e": "EX"
+    "e": "EX",
+    "m": "MI",
+    "b": "BI",
+    "v": "VI",
+    "c": "CI"
   },
   "unidades_salida": "m"
 }

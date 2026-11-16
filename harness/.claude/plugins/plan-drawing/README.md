@@ -8,11 +8,11 @@ The platform uses it through the layout module; it installs and updates on its o
 
 | | |
 |---|---|
-| Incluye (motor) | `dxf`, `plan` |
+| Incluye (motor) | `arch`, `dxf`, `plan`, `titleblock` |
 | Es dueño de | `plan` |
 | Necesita (plugins) | `dxf-output` |
 | Lo necesitan | — |
-| Paquetes de Python | `ezdxf`, `lxml`, `shapely`, `svgelements`, `vtracer` |
+| Paquetes de Python | `ezdxf`, `lxml`, `numpy`, `pillow`, `pypdfium2`, `shapely`, `svgelements`, `vtracer` |
 | Si lo modificas, revisa | plugins —; módulos del backend — |
 
 Generado por `python harness/tools/build/regen_plugins.py`; el mapa completo está en `harness/docs/architecture/DEPENDENCIAS.md`.

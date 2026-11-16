@@ -1,4 +1,4 @@
-"""DXF reader: lines, polylines (with their arcs and width), arcs, hatch boundaries and the blocks that are inserted, in the layers that are visible."""
+"""DXF reader: lines, polylines (with their arcs and width), arcs, circles, hatch boundaries and the blocks that are inserted, in the layers that are visible."""
 import math
 import tempfile
 from collections import Counter
@@ -12,7 +12,7 @@ from ezdxf.math import bulge_to_arc
 from epc_arch.model import Arc, ArchError, Block, Line, Options, Primitives, Text
 from epc_arch.sources import register
 
-SKIPPED = ("DIMENSION", "SPLINE", "ELLIPSE", "IMAGE", "LEADER", "POINT", "CIRCLE", "SOLID", "TRACE")
+SKIPPED = ("DIMENSION", "SPLINE", "ELLIPSE", "IMAGE", "LEADER", "POINT", "SOLID", "TRACE")
 MAX_DEPTH = 3
 
 
@@ -55,6 +55,14 @@ def _hatch(e):
     return lines, []
 
 
+def _circle(e):
+    """A whole turn: the bubble of a grid axis, the round tag of a door (the annotations take them; a circle is never a door swing)."""
+    return [], [Arc(_xy(e.dxf.center), float(e.dxf.radius), 0.0, 360.0, e.dxf.layer)]
+
+
+_BY_KIND = {"CIRCLE": _circle, "LWPOLYLINE": _lwpolyline, "POLYLINE": _polyline, "HATCH": _hatch}
+
+
 def _entity(e):
     """(lines, arcs) of one entity, or None when it is not geometry this reader uses."""
     kind = e.dxftype()
@@ -62,11 +70,8 @@ def _entity(e):
         return [Line(_xy(e.dxf.start), _xy(e.dxf.end), 0.0, e.dxf.layer)], []
     if kind == "ARC":
         return [], [Arc(_xy(e.dxf.center), float(e.dxf.radius), float(e.dxf.start_angle), float(e.dxf.end_angle), e.dxf.layer)]
-    if kind == "LWPOLYLINE":
-        return _lwpolyline(e)
-    if kind == "POLYLINE":
-        return _polyline(e)
-    return _hatch(e) if kind == "HATCH" else None
+    reader = _BY_KIND.get(kind)
+    return reader(e) if reader else None
 
 
 def _insert_width(virtual) -> float:

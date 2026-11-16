@@ -87,8 +87,17 @@ class DrawingsStage(Stage):
         if not summary["ok"]:
             return self.result("failed", message=f"drawing engine: {summary['error']}", reason="engine", engine_calls=calls)
         extra = self._floor_plans(context, target, name, calls)
+        extra.update(self._model3d(context, target, name, calls))
         outputs = {"directory": f"drawings/{name}/out", "files": list_files(target / "out"), "summary": {k: copy.deepcopy(summary[k]) for k in SUMMARY_KEYS}}
         return self.result("ok", outputs=dict(outputs, **extra), engine_calls=calls)
+
+    @staticmethod
+    def _model3d(context, target, name, calls):
+        """Writes the 3D model and the detail sections of a building run when the engineer gave `engine_inputs["model3d"]` (see `stages/model3d.py`) and records the calls."""
+        from disciplines.electrical_lv.stages import model3d
+        outputs, used = model3d.write(EC.inputs_of(context), target / "out", name, drawing_date(context))
+        calls += [EC.record_for(engine, function) for engine, function in used]
+        return outputs
 
     @staticmethod
     def _floor_plans(context, target, name, calls):
@@ -156,6 +165,18 @@ DATASHEETS_BUILD = "epc_datasheets.build_datasheets"
 DATASHEETS_ENGINE = "procurement/datasheets"
 DATASHEETS_PENDING_NAME = "datasheets"
 NO_CATALOG_DIR = "no_catalog_dir"
+
+
+REPO_CATALOGS = Path(__file__).resolve().parents[4] / "catalogs"
+
+
+def catalog_path(given):
+    """The catalog folder as given; a relative name that is not a folder from the working directory is looked up in the repository `catalogs/` folder (T-06)."""
+    path = Path(given)
+    if path.is_absolute() or path.is_dir():
+        return str(path)
+    repo = REPO_CATALOGS / path
+    return str(repo) if repo.is_dir() else str(path)
 
 
 def datasheets_inputs(context):
@@ -228,7 +249,7 @@ class DocumentsStage(Stage):
         """The datasheet records: the catalog is read through `epc_datasheets.load_catalog_dir` from the folder the engineer gave (nothing else is read)."""
         import epc_datasheets
         try:
-            catalog = epc_datasheets.load_catalog_dir(given["catalog_dir"])
+            catalog = epc_datasheets.load_catalog_dir(catalog_path(given["catalog_dir"]))
             requirements = epc_datasheets.requirements_from_circuits(boq_circuits(ch), given.get("voltage_v"))
             return epc_datasheets.build_datasheets(ch["form"]["board"]["name"], requirements, catalog)
         except ValueError as exc:

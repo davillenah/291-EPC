@@ -1,0 +1,157 @@
+{
+  "id": "gas",
+  "nombre": {
+    "es": "Gas",
+    "en": "Gas"
+  },
+  "subdisciplinas": [
+    {
+      "id": "interna",
+      "nombre": {
+        "es": "Instalación interna",
+        "en": "Internal installation"
+      },
+      "tipos": [
+        "CG",
+        "MG",
+        "ME",
+        "RG",
+        "LL",
+        "AG"
+      ]
+    }
+  ],
+  "disciplina_proyecto": "plumbing",
+  "tramos": [
+    {
+      "id": "CG",
+      "etiqueta": {
+        "es": "Cañería de gas",
+        "en": "Gas pipe"
+      },
+      "prefijo_tag": "CG",
+      "atributos": [
+        "diametro_mm",
+        "material"
+      ],
+      "simbolo_2d": "linea_simple",
+      "capa_dxf": "GAS-TUBERIA",
+      "geom": {
+        "z_m": 2.6,
+        "ancho_m": 0.025,
+        "alto_m": 0.025
+      }
+    }
+  ],
+  "nodos": [
+    {
+      "id": "ME",
+      "etiqueta": {
+        "es": "Medidor",
+        "en": "Meter"
+      },
+      "prefijo_tag": "ME",
+      "atributos": [
+        "tipo"
+      ],
+      "simbolo_2d": "instrumento",
+      "capa_dxf": "GAS-EQUIPO",
+      "geom": {
+        "z_m": 1.0,
+        "ancho_m": 0.4,
+        "alto_m": 0.4
+      }
+    },
+    {
+      "id": "RG",
+      "etiqueta": {
+        "es": "Regulador",
+        "en": "Regulator"
+      },
+      "prefijo_tag": "RG",
+      "atributos": [
+        "tipo"
+      ],
+      "simbolo_2d": "instrumento",
+      "capa_dxf": "GAS-EQUIPO",
+      "geom": {
+        "z_m": 1.2,
+        "ancho_m": 0.2,
+        "alto_m": 0.2
+      }
+    },
+    {
+      "id": "LL",
+      "etiqueta": {
+        "es": "Llave de paso",
+        "en": "Shut-off valve"
+      },
+      "prefijo_tag": "LL",
+      "atributos": [
+        "diametro_mm"
+      ],
+      "simbolo_2d": "instrumento",
+      "capa_dxf": "GAS-VALVULA",
+      "geom": {
+        "z_m": 1.2,
+        "ancho_m": 0.08,
+        "alto_m": 0.08
+      }
+    },
+    {
+      "id": "AG",
+      "etiqueta": {
+        "es": "Artefacto a gas",
+        "en": "Gas appliance"
+      },
+      "prefijo_tag": "AG",
+      "atributos": [
+        "potencia_w",
+        "tipo"
+      ],
+      "simbolo_2d": "equipo_mec",
+      "capa_dxf": "GAS-ARTEFACTO",
+      "geom": {
+        "z_m": 0.5,
+        "ancho_m": 0.6,
+        "alto_m": 1.0
+      }
+    },
+    {
+      "id": "MG",
+      "etiqueta": {
+        "es": "Montante de gas",
+        "en": "Gas riser"
+      },
+      "prefijo_tag": "MG",
+      "atributos": [
+        "diametro_mm",
+        "material"
+      ],
+      "simbolo_2d": "caja_pase",
+      "capa_dxf": "GAS-TUBERIA",
+      "geom": {
+        "z_m": 0.0,
+        "ancho_m": 0.05,
+        "alto_m": 0.05,
+        "altura_m": 3.0
+      },
+      "vertical": true,
+      "seccion": "round"
+    }
+  ],
+  "calculos": [
+    "longitud",
+    "cantidad"
+  ],
+  "normas": [],
+  "atajos_teclado": {
+    "g": "CG",
+    "m": "MG",
+    "e": "ME",
+    "r": "RG",
+    "l": "LL",
+    "a": "AG"
+  },
+  "unidades_salida": "m"
+}

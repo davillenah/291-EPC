@@ -371,12 +371,24 @@ def _placer(rooms, items, m, tagged):
     return place(rooms, items, m, tagged)
 
 
+def _is_own_tag(room, text) -> bool:
+    """Is the text the tag of this room (its code and area, inside it) with no name of its own?"""
+    from epc_arch.recognizers.room_names import TAG, _centre, _clean, _inside
+    m = TAG.match(text.value.strip()) if room.code else None
+    return bool(m) and m["code"].replace(" ", "") == room.code and not _clean(text.value) and _inside(room, _centre(text))
+
+
+def _own_tags(arch: Architecture, marks) -> set:
+    """The ids of the texts that are the tag this engine writes under the name of a room (its code and area): the room label writes it again."""
+    return {id(t) for r in arch.rooms for t in (marks.texts if marks else []) if _is_own_tag(r, t)}
+
+
 def _name_sources(arch: Architecture) -> Tuple[set, set]:
     """The texts of the source that gave a room its name. A text that is only the name is dropped (the room label says it); a tag that carries more (a code, the area the designer wrote, after a dot)
     stays as drawn and its room's label does not repeat the name. Returns the ids of the texts to drop and the indices of the rooms whose name is already on a tag."""
     from epc_arch.recognizers.room_names import _centre, _clean, _inside
     marks = arch.annotations.get("labels")
-    drop: set = set()
+    drop: set = _own_tags(arch, marks)
     tagged: set = set()
     for i, r in enumerate(arch.rooms):
         for t in (marks.texts if marks else []):

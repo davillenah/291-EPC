@@ -840,6 +840,356 @@
         "es": "Conductores de bajada y equipotenciales (plano)",
         "en": "Down and bonding conductors (plan)"
       }
+    },
+    "plan.PLU-TUBERIA": {
+      "name": "PLU-TUBERIA",
+      "color": 4,
+      "lineweight": null,
+      "linetype": "CONTINUOUS",
+      "on": true,
+      "frozen": false,
+      "locked": false,
+      "plot": true,
+      "description": {
+        "es": "Cañerías y bajadas pluviales (plano)",
+        "en": "Storm pipes and downpipes (plan)"
+      }
+    },
+    "plan.PLU-CANALETA": {
+      "name": "PLU-CANALETA",
+      "color": 4,
+      "lineweight": null,
+      "linetype": "CONTINUOUS",
+      "on": true,
+      "frozen": false,
+      "locked": false,
+      "plot": true,
+      "description": {
+        "es": "Canaletas (plano)",
+        "en": "Gutters (plan)"
+      }
+    },
+    "plan.PLU-BOCA": {
+      "name": "PLU-BOCA",
+      "color": 5,
+      "lineweight": null,
+      "linetype": "CONTINUOUS",
+      "on": true,
+      "frozen": false,
+      "locked": false,
+      "plot": true,
+      "description": {
+        "es": "Embudos, bocas y rejillas pluviales (plano)",
+        "en": "Roof drains, yard drains and gratings (plan)"
+      }
+    },
+    "plan.PLU-CAMARA": {
+      "name": "PLU-CAMARA",
+      "color": 5,
+      "lineweight": null,
+      "linetype": "CONTINUOUS",
+      "on": true,
+      "frozen": false,
+      "locked": false,
+      "plot": true,
+      "description": {
+        "es": "Cámaras pluviales (plano)",
+        "en": "Storm chambers (plan)"
+      }
+    },
+    "plan.AGU-TUBERIA": {
+      "name": "AGU-TUBERIA",
+      "color": 5,
+      "lineweight": null,
+      "linetype": "CONTINUOUS",
+      "on": true,
+      "frozen": false,
+      "locked": false,
+      "plot": true,
+      "description": {
+        "es": "Cañerías y montantes de agua fría (plano)",
+        "en": "Cold water pipes and risers (plan)"
+      }
+    },
+    "plan.AGU-TUBERIA-AC": {
+      "name": "AGU-TUBERIA-AC",
+      "color": 1,
+      "lineweight": null,
+      "linetype": "CONTINUOUS",
+      "on": true,
+      "frozen": false,
+      "locked": false,
+      "plot": true,
+      "description": {
+        "es": "Cañerías de agua caliente (plano)",
+        "en": "Hot water pipes (plan)"
+      }
+    },
+    "plan.AGU-EQUIPO": {
+      "name": "AGU-EQUIPO",
+      "color": 5,
+      "lineweight": null,
+      "linetype": "CONTINUOUS",
+      "on": true,
+      "frozen": false,
+      "locked": false,
+      "plot": true,
+      "description": {
+        "es": "Tanques, bombas y termotanques (plano)",
+        "en": "Tanks, pumps and heaters (plan)"
+      }
+    },
+    "plan.AGU-VALVULA": {
+      "name": "AGU-VALVULA",
+      "color": 5,
+      "lineweight": null,
+      "linetype": "CONTINUOUS",
+      "on": true,
+      "frozen": false,
+      "locked": false,
+      "plot": true,
+      "description": {
+        "es": "Válvulas de agua (plano)",
+        "en": "Water valves (plan)"
+      }
+    },
+    "plan.AGU-ARTEFACTO": {
+      "name": "AGU-ARTEFACTO",
+      "color": 8,
+      "lineweight": null,
+      "linetype": "CONTINUOUS",
+      "on": true,
+      "frozen": false,
+      "locked": false,
+      "plot": true,
+      "description": {
+        "es": "Artefactos sanitarios (plano)",
+        "en": "Sanitary fixtures (plan)"
+      }
+    },
+    "plan.GAS-TUBERIA": {
+      "name": "GAS-TUBERIA",
+      "color": 2,
+      "lineweight": null,
+      "linetype": "CONTINUOUS",
+      "on": true,
+      "frozen": false,
+      "locked": false,
+      "plot": true,
+      "description": {
+        "es": "Cañerías y montantes de gas (plano)",
+        "en": "Gas pipes and risers (plan)"
+      }
+    },
+    "plan.GAS-EQUIPO": {
+      "name": "GAS-EQUIPO",
+      "color": 2,
+      "lineweight": null,
+      "linetype": "CONTINUOUS",
+      "on": true,
+      "frozen": false,
+      "locked": false,
+      "plot": true,
+      "description": {
+        "es": "Medidores y reguladores de gas (plano)",
+        "en": "Gas meters and regulators (plan)"
+      }
+    },
+    "plan.GAS-VALVULA": {
+      "name": "GAS-VALVULA",
+      "color": 2,
+      "lineweight": null,
+      "linetype": "CONTINUOUS",
+      "on": true,
+      "frozen": false,
+      "locked": false,
+      "plot": true,
+      "description": {
+        "es": "Llaves de paso de gas (plano)",
+        "en": "Gas shut-off valves (plan)"
+      }
+    },
+    "plan.GAS-ARTEFACTO": {
+      "name": "GAS-ARTEFACTO",
+      "color": 30,
+      "lineweight": null,
+      "linetype": "CONTINUOUS",
+      "on": true,
+      "frozen": false,
+      "locked": false,
+      "plot": true,
+      "description": {
+        "es": "Artefactos a gas (plano)",
+        "en": "Gas appliances (plan)"
+      }
+    },
+    "plan.SAN-VENTILACION": {
+      "name": "SAN-VENTILACION",
+      "color": 3,
+      "lineweight": null,
+      "linetype": "CONTINUOUS",
+      "on": true,
+      "frozen": false,
+      "locked": false,
+      "plot": true,
+      "description": {
+        "es": "Ventilaciones cloacales (plano)",
+        "en": "Sewer vents (plan)"
+      }
+    },
+    "plan.PCI-EQUIPO": {
+      "name": "PCI-EQUIPO",
+      "color": 1,
+      "lineweight": null,
+      "linetype": "CONTINUOUS",
+      "on": true,
+      "frozen": false,
+      "locked": false,
+      "plot": true,
+      "description": {
+        "es": "Bombas y tanques de incendio (plano)",
+        "en": "Fire pumps and tanks (plan)"
+      }
+    },
+    "plan.PCI-VALVULA": {
+      "name": "PCI-VALVULA",
+      "color": 1,
+      "lineweight": null,
+      "linetype": "CONTINUOUS",
+      "on": true,
+      "frozen": false,
+      "locked": false,
+      "plot": true,
+      "description": {
+        "es": "Válvulas y estaciones de control de incendio (plano)",
+        "en": "Fire valves and control stations (plan)"
+      }
+    },
+    "plan.PCI-CENTRAL": {
+      "name": "PCI-CENTRAL",
+      "color": 6,
+      "lineweight": null,
+      "linetype": "CONTINUOUS",
+      "on": true,
+      "frozen": false,
+      "locked": false,
+      "plot": true,
+      "description": {
+        "es": "Central de incendio (plano)",
+        "en": "Fire alarm panel (plan)"
+      }
+    },
+    "plan.HVAC-DUCTO-RETORNO": {
+      "name": "HVAC-DUCTO-RETORNO",
+      "color": 4,
+      "lineweight": null,
+      "linetype": "CONTINUOUS",
+      "on": true,
+      "frozen": false,
+      "locked": false,
+      "plot": true,
+      "description": {
+        "es": "Conductos de retorno (plano)",
+        "en": "Return ducts (plan)"
+      }
+    },
+    "plan.HVAC-DUCTO-EXTRACCION": {
+      "name": "HVAC-DUCTO-EXTRACCION",
+      "color": 30,
+      "lineweight": null,
+      "linetype": "CONTINUOUS",
+      "on": true,
+      "frozen": false,
+      "locked": false,
+      "plot": true,
+      "description": {
+        "es": "Conductos de extracción (plano)",
+        "en": "Exhaust ducts (plan)"
+      }
+    },
+    "plan.HVAC-TUBERIA-AGUA": {
+      "name": "HVAC-TUBERIA-AGUA",
+      "color": 5,
+      "lineweight": null,
+      "linetype": "CONTINUOUS",
+      "on": true,
+      "frozen": false,
+      "locked": false,
+      "plot": true,
+      "description": {
+        "es": "Cañerías de agua helada y caliente (plano)",
+        "en": "Chilled and hot water pipes (plan)"
+      }
+    },
+    "plan.HVAC-COMPUERTA": {
+      "name": "HVAC-COMPUERTA",
+      "color": 1,
+      "lineweight": null,
+      "linetype": "CONTINUOUS",
+      "on": true,
+      "frozen": false,
+      "locked": false,
+      "plot": true,
+      "description": {
+        "es": "Compuertas cortafuego (plano)",
+        "en": "Fire dampers (plan)"
+      }
+    },
+    "plan.MEC-PARRAL": {
+      "name": "MEC-PARRAL",
+      "color": 8,
+      "lineweight": null,
+      "linetype": "CONTINUOUS",
+      "on": true,
+      "frozen": false,
+      "locked": false,
+      "plot": true,
+      "description": {
+        "es": "Parrales de cañerías (plano)",
+        "en": "Pipe racks (plan)"
+      }
+    },
+    "plan.MEC-VALVULA": {
+      "name": "MEC-VALVULA",
+      "color": 6,
+      "lineweight": null,
+      "linetype": "CONTINUOUS",
+      "on": true,
+      "frozen": false,
+      "locked": false,
+      "plot": true,
+      "description": {
+        "es": "Válvulas de proceso (plano)",
+        "en": "Process valves (plan)"
+      }
+    },
+    "plan.MEC-TRANSPORTE": {
+      "name": "MEC-TRANSPORTE",
+      "color": 30,
+      "lineweight": null,
+      "linetype": "CONTINUOUS",
+      "on": true,
+      "frozen": false,
+      "locked": false,
+      "plot": true,
+      "description": {
+        "es": "Cintas y puentes grúa (plano)",
+        "en": "Conveyors and cranes (plan)"
+      }
+    },
+    "plan.MEC-ASCENSOR": {
+      "name": "MEC-ASCENSOR",
+      "color": 6,
+      "lineweight": null,
+      "linetype": "CONTINUOUS",
+      "on": true,
+      "frozen": false,
+      "locked": false,
+      "plot": true,
+      "description": {
+        "es": "Ascensores, montacargas y escaleras mecánicas (plano)",
+        "en": "Lifts and escalators (plan)"
+      }
     }
   }
 }
