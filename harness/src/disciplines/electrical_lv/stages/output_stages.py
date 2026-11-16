@@ -87,8 +87,17 @@ class DrawingsStage(Stage):
         if not summary["ok"]:
             return self.result("failed", message=f"drawing engine: {summary['error']}", reason="engine", engine_calls=calls)
         extra = self._floor_plans(context, target, name, calls)
+        extra.update(self._model3d(context, target, name, calls))
         outputs = {"directory": f"drawings/{name}/out", "files": list_files(target / "out"), "summary": {k: copy.deepcopy(summary[k]) for k in SUMMARY_KEYS}}
         return self.result("ok", outputs=dict(outputs, **extra), engine_calls=calls)
+
+    @staticmethod
+    def _model3d(context, target, name, calls):
+        """Writes the 3D model and the detail sections of a building run when the engineer gave `engine_inputs["model3d"]` (see `stages/model3d.py`) and records the calls."""
+        from disciplines.electrical_lv.stages import model3d
+        outputs, used = model3d.write(EC.inputs_of(context), target / "out", name, drawing_date(context))
+        calls += [EC.record_for(engine, function) for engine, function in used]
+        return outputs
 
     @staticmethod
     def _floor_plans(context, target, name, calls):

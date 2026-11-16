@@ -11,7 +11,7 @@ The scene is the same plain data `epc_plan.solid.scene` gives for the raceways a
 The heights are those of `epc_arch.sections` (`heights_errors`). Limits: walls along the two directions of the plan; one height per floor; the slab is the box of the floor."""
 from typing import Any, Dict, List, Optional, Tuple
 
-from epc_arch.model import Architecture
+from epc_arch.model import Architecture, Level, Opening, Wall
 from epc_arch.sections import _W, _checked, _cut_pieces, _minus, _plan_in_metres
 
 LAYERS = {"wall": "A-WALL-CUT", "slab": "A-WALL-FILL", "glass": "A-WINDOW-GLASS", "room": "A-ROOM"}
@@ -80,6 +80,17 @@ def building_solids(arch: Architecture, heights: Dict[str, float]) -> List[Dict[
     out.append(_solid(f"{level}:slab:floor", "slab", "slab", level, (x0, y0, -slab, x1, y1, 0.0), base))
     out.append(_solid(f"{level}:slab:top", "slab", "slab", level, (x0, y0, H, x1, y1, H + slab), base))
     return out + _rooms(arch, k, level, base)
+
+
+def from_backdrop(backdrop: Dict[str, Any], level: str = "") -> Architecture:
+    """An architecture from the walls (`{a, b, thickness_m}`) and openings (`{kind, at, width_m, angle}`) of a floor given in metres of its plan (what the platform keeps of a recognised
+    floor): enough for its sections and its 3D. Rooms are not carried (they have no floor here)."""
+    walls = [Wall(f"w{i}", tuple(w["a"]), tuple(w["b"]), w["thickness_m"], 1.0, "given") for i, w in enumerate(backdrop.get("walls", []), 1)]
+    openings = [Opening(f"o{i}", o["kind"], tuple(o["at"]), o["width_m"], o["angle"], "", 1.0, "given") for i, o in enumerate(backdrop.get("openings", []), 1)]
+    size = (max((c for w in walls for c in (w.a[0], w.b[0])), default=0.0), max((c for w in walls for c in (w.a[1], w.b[1])), default=0.0))
+    thickness = max((w.thickness for w in walls), default=None)
+    return Architecture(source=level, size=size, units_per_metre=1.0, scale_hint=None, wall_thickness=thickness, walls=walls, openings=openings,
+                        level=Level(level, None, "text") if level else None)
 
 
 def _box_of(solids: List[Dict[str, Any]]) -> Optional[List[List[float]]]:

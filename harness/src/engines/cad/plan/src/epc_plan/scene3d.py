@@ -86,7 +86,15 @@ def write_obj(scene: Dict[str, Any], path: Path) -> int:
     return faces
 
 
-def write_dxf(scene: Dict[str, Any], path: Path, version: str = "", params: Dict[str, Any] = core.PARAMS) -> int:
+def _save(doc, path: Path, stamp_date: Optional[str]) -> None:
+    """Save a DXF as the other deliverables are saved: with `stamp_date` (an ISO date) the file carries that date and identifiers derived from it, so the same model gives the same bytes."""
+    from epc_dxf import deliverable
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    deliverable.finish_draft(doc, path, None, stamp_date)
+
+
+def write_dxf(scene: Dict[str, Any], path: Path, version: str = "", params: Dict[str, Any] = core.PARAMS, stamp_date: Optional[str] = None) -> int:
     """A 3D DXF of the scene in metres: every face as a 3DFACE on the layer of its solid. Returns how many faces were written."""
     import ezdxf
     from epc_plan.dxfout import _dxf_version
@@ -102,9 +110,7 @@ def write_dxf(scene: Dict[str, Any], path: Path, version: str = "", params: Dict
         for f in s["mesh"]["faces"]:
             msp.add_3dface([tuple(s["mesh"]["vertices"][i]) for i in f], dxfattribs={"layer": layer})
             faces += 1
-    path = Path(path)
-    path.parent.mkdir(parents=True, exist_ok=True)
-    doc.saveas(str(path))
+    _save(doc, path, stamp_date)
     return faces
 
 
@@ -309,7 +315,7 @@ def _add_dimensions(doc, msp, section: Dict[str, Any], params: Dict[str, Any]) -
     return len(points) - 1
 
 
-def write_section_dxf(section: Dict[str, Any], path: Path, version: str = "", params: Dict[str, Any] = core.PARAMS) -> Dict[str, int]:
+def write_section_dxf(section: Dict[str, Any], path: Path, version: str = "", params: Dict[str, Any] = core.PARAMS, stamp_date: Optional[str] = None) -> Dict[str, int]:
     """The section as a 2D DXF in real metres: each cut outline closed and filled on the layer of its solid, what is beyond as lines on the same layers, and by every cut service its tag, its
     size, the level of its middle and the one of its bottom ("BN-001 300x100 +2.60 (BOT +2.55)"), and over it all a chain of dimensions between the services and the ends of the building.
     Returns how many outlines, lines, tags and dimensions were written."""
@@ -325,7 +331,5 @@ def write_section_dxf(section: Dict[str, Any], path: Path, version: str = "", pa
         outlines, tags = _add_cut(doc, msp, c, params)
         count["outlines"] += outlines
         count["tags"] += tags
-    path = Path(path)
-    path.parent.mkdir(parents=True, exist_ok=True)
-    doc.saveas(str(path))
+    _save(doc, path, stamp_date)
     return count
