@@ -74,6 +74,18 @@ class Model3dInTheRun(unittest.TestCase):
         self.assertTrue(tags, "the plane cuts no service")
         self.assertTrue(all("(BOT " in t for t in tags), tags)
 
+    def test_the_elevations_come_out_on_their_sheet(self):
+        res, files, _, _ = stage10(model3d=dict(MODEL, elevations=[{"floor": "PB", "side": "S"}, {"floor": "PB", "side": "E"}]))
+        self.assertEqual(res.status, "ok", res.message)
+        self.assertEqual(sorted(res.outputs["model3d"]["elevations"]), ["PB_E", "PB_S"])
+        self.assertEqual(len([f for f in files if "_elevation_PB_" in f]), 2, files)
+        self.assertIn("epc_arch.sections.elevation", [c["function"] for c in res.engine_calls])
+
+    def test_a_wrong_elevation_blocks(self):
+        for bad in ([{"floor": "P9", "side": "S"}], [{"floor": "PB", "side": "X"}], [{"floor": "PB"}], [{"floor": "PB", "side": "S"}] * 2, "S"):
+            res, _, _, _ = stage10(model3d=dict(MODEL, elevations=bad))
+            self.assertEqual(res.status, "blocked", bad)
+
     def test_no_supports_without_a_spacing(self):
         res, _, _, _ = stage10(model3d={"floors": {"PB": HEIGHTS}})
         self.assertEqual(res.status, "ok", res.message)
@@ -99,3 +111,26 @@ class Errors(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class WholePipeline(unittest.TestCase):
+    """The platform run from the first stage to the last, with the building drawn from a description: every stage runs and the transmittal carries the 3D model and the detail section."""
+
+    def test_the_twelve_stages_run_and_the_package_carries_the_3d_files(self):
+        import test_platform_api as A
+        from epc_platform import api
+        done = B.derive_all(building(), B.loads())
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            api.init_project(root, "API-1", A.ANSWERS, clock=A.CLOCK, actor=A.ORC)
+            ins = dict(W.inputs_doc(), building=building(), transformer={"demand_kva": 40, "reserve_pct": 20, "secondary_v": 400}, model3d=MODEL)
+            res = api.run_pipeline(root / "API-1", loads=B.loads(), engine_inputs=ins, clock=A.CLOCK, actor=A.ORC)
+            self.assertTrue(res["ok"], res)
+            self.assertEqual(res["data"]["run"]["summary"]["by_status"], {"ok": 12})
+            files = sorted(p.name for p in (root / "API-1" / "deliverables" / "TR-001").glob("*"))
+            self.assertTrue([f for f in files if f.endswith("_model_3d.dxf")], files)
+            self.assertTrue([f for f in files if f.endswith("_section_A.dxf")], files)
+            self.assertTrue([f for f in files if f.startswith("SLD_")] and [f for f in files if f.endswith("_tables.xlsx")], files)
+            drawings = res["data"]["run"]["results"][9]["outputs"]["model3d"]
+            self.assertGreater(drawings["solids"], 0)
+        self.assertTrue(done["routing"])

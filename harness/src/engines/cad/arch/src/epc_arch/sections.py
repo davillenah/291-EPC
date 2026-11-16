@@ -458,3 +458,12 @@ def view_dxf(view: View, arch: Architecture, sheet: str = "A1", scale: Optional[
     from epc_arch.sheets import iram_template
     style = load_style()
     return to_dxf(view_drawing(view, arch, style, sheet, scale, iram_template(sheet), dict({"denominacion": view.title}, **(fields or {}))), style)
+
+
+def write_view_dxf(view: View, arch: Architecture, path, sheet: str = "A1", scale: Optional[int] = None, fields: Optional[Dict[str, str]] = None) -> str:
+    """The view on its IRAM sheet written to `path` as a DXF; returns the file name."""
+    from pathlib import Path
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(view_dxf(view, arch, sheet, scale, fields), encoding="utf-8")
+    return path.name
