@@ -17,7 +17,7 @@
         "short_circuit",
         "voltage_drop"
       ],
-      "hash": "c4eb137d1285b556"
+      "hash": "3011ba7ba85d5077"
     },
     "board-design": {
       "version": "0.2.1",
@@ -49,7 +49,7 @@
         "titleblock",
         "voltage_drop"
       ],
-      "hash": "624d3b0bd5fdad06"
+      "hash": "0e47eb118a04fe55"
     },
     "doc-quality": {
       "version": "0.1.0",
@@ -60,7 +60,7 @@
       "engine": [
         "documents"
       ],
-      "hash": "4056ed77a2620d7f"
+      "hash": "07113a5b8fe1fa79"
     },
     "dxf-output": {
       "version": "0.1.0",
@@ -71,7 +71,7 @@
       "engine": [
         "dxf"
       ],
-      "hash": "4056ed77a2620d7f"
+      "hash": "0ebc1c95fff62b42"
     },
     "equipment-catalog": {
       "version": "0.1.0",
@@ -80,7 +80,7 @@
       "requires": {},
       "skills": [],
       "engine": [],
-      "hash": "8e2d0c61b0acc423"
+      "hash": "5bdc1c926c810f0e"
     },
     "iec-symbols": {
       "version": "0.4.19",
@@ -91,7 +91,7 @@
       "engine": [
         "symbols"
       ],
-      "hash": "4056ed77a2620d7f"
+      "hash": "5123317d8bac67e0"
     },
     "intake-analysis": {
       "version": "0.1.0",
@@ -102,7 +102,7 @@
         "structure-customer-input"
       ],
       "engine": [],
-      "hash": "8e2d0c61b0acc423"
+      "hash": "40d509910df7f5f4"
     },
     "iram-titleblock": {
       "version": "0.5.4",
@@ -116,7 +116,7 @@
         "dxf",
         "titleblock"
       ],
-      "hash": "d9617a772556568d"
+      "hash": "9125f0fcdbd4fb6a"
     },
     "mld": {
       "version": "0.2.2",
@@ -143,7 +143,7 @@
         "titleblock",
         "voltage_drop"
       ],
-      "hash": "fcc71236aa149cc4"
+      "hash": "5736af2d2475fd79"
     },
     "plan-drawing": {
       "version": "0.1.0",
@@ -154,10 +154,12 @@
       },
       "skills": [],
       "engine": [
+        "arch",
         "dxf",
-        "plan"
+        "plan",
+        "titleblock"
       ],
-      "hash": "d9617a772556568d"
+      "hash": "ea64a701c5793b54"
     },
     "pm2-docs": {
       "version": "0.1.0",
@@ -172,7 +174,7 @@
       "engine": [
         "documents"
       ],
-      "hash": "4056ed77a2620d7f"
+      "hash": "72daa543041929ec"
     },
     "procurement": {
       "version": "0.1.0",
@@ -185,7 +187,7 @@
         "request-quotation"
       ],
       "engine": [],
-      "hash": "8e2d0c61b0acc423"
+      "hash": "9aff2afd8ff59f37"
     },
     "sld": {
       "version": "0.1.4",
@@ -212,7 +214,7 @@
         "titleblock",
         "voltage_drop"
       ],
-      "hash": "fcc71236aa149cc4"
+      "hash": "ce7bcd5d2d581601"
     },
     "spec-writer": {
       "version": "0.1.0",
@@ -227,7 +229,7 @@
       "engine": [
         "documents"
       ],
-      "hash": "4056ed77a2620d7f"
+      "hash": "49fae3751a1f8488"
     },
     "standard-ingest": {
       "version": "0.1.0",
@@ -241,7 +243,7 @@
         "rules",
         "standards"
       ],
-      "hash": "d9617a772556568d"
+      "hash": "4718f973a56d0737"
     }
   },
   "skills": {

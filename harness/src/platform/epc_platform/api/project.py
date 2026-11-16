@@ -82,6 +82,13 @@ def _edit_notice(workflow):
     return {"mode": "edit", "notice": "edit mode: norm records that are not verified did not stop this step; the package is not for production and nothing was signed"}
 
 
+def _major_notice(workflow):
+    """The `major` findings still open in the manifests in force: they do not stop the step, but the answer says how many there are (SIM-07)."""
+    from epc_platform.workflow.machine import open_findings
+    n = len(open_findings(workflow.store, "major"))
+    return {"open_major_findings": n} if n else {}
+
+
 def _mode_of(store):
     """{"mode": "edit"} when the project is in edit mode (ADR-0035), else nothing: the answers of a production project are what they always were."""
     return {"mode": "edit"} if store.read_mode() == "edit" else {}
@@ -133,7 +140,7 @@ def issue(project_dir, actor, *, clock):
     root, who = existing_project(project_dir), actor_of(actor)
     workflow = Workflow(root, open_log(root, clock))
     state = flow.apply(workflow, "issue", who, "issue")
-    return ok({"workflow_state": state, **_edit_notice(workflow)})
+    return ok({"workflow_state": state, **_edit_notice(workflow), **_major_notice(workflow)})
 
 
 @api_call
@@ -151,4 +158,4 @@ def approve(project_dir, actor, *, clock):
     root, who = existing_project(project_dir), actor_of(actor)
     workflow = Workflow(root, open_log(root, clock))
     state = flow.apply(workflow, "approve", who, "approve")
-    return ok({"workflow_state": state, **_edit_notice(workflow)})
+    return ok({"workflow_state": state, **_edit_notice(workflow), **_major_notice(workflow)})

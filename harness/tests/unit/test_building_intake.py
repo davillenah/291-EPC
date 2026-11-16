@@ -539,6 +539,22 @@ class ExtraSlicesTests(unittest.TestCase):
         self.assertFalse(s6.outputs["panel_thermal"]["complies"])
         self.assertTrue([f for f in s6.findings if f["severity"] == "major"])
 
+    def test_panel_thermal_does_not_crash_on_a_device_above_the_engine_table(self):
+        # found by the limit test: a breaker above 125 A made stage 6 fail with ValueError; it now says which devices need the manufacturer's figure
+        b = with_plugs(board={"x_m": 4.0, "y_m": 5.0})
+        done = derive_all(b, loads())
+        big = {"id": "E-99", "description": "Big special load", "area": done["loads"]["areas"][0]["id"], "kind": "special", "power": {"value": 120, "unit": "kW"}, "phases": 3, "length": {"value": 30, "unit": "m"}}
+        done["loads"]["loads"].append(big)
+        ins = dict(W.inputs_doc(), lighting=done["lighting"], routing=done["routing"], panel_thermal={"p_admissible_w": 1.0})
+        ins["circuits"] = dict(ins["circuits"], **done["circuits"])
+        res = run(W.context(engine_inputs=ins, loads=done["loads"]), stop_after=6, run_id="r6")
+        s6 = res.results[5]
+        self.assertEqual(s6.status, "ok", s6.message)
+        out = s6.outputs["panel_thermal"]
+        self.assertFalse(out["p_total_complete"])
+        self.assertIn("E-99", [d["circuit"] for d in out["needs_manufacturer_data"]])
+        self.assertNotIn("complies", out)
+
     def test_backup_lightning_and_hvac_need_their_sections(self):
         _, s3, s6 = self.stage6()
         self.assertNotIn("backup", s6.outputs)
@@ -572,6 +588,20 @@ class ExtraSlicesTests(unittest.TestCase):
         self.assertEqual(s3.status, "ok", s3.message)
         self.assertEqual(s3.outputs["hvac"]["hvac"], epc_hvac.run(copy.deepcopy(doc)).as_dict())
         _, s3, _ = self.stage6(hvac={"design": {}, "spaces": []})
+        self.assertEqual(s3.status, "blocked")
+
+    def test_receptacles_run_in_stage_3_for_their_document_and_report_failed_checks(self):
+        import epc_receptacles
+        doc = {"schema_version": "1.0", "receptacles": [{"id": "tug", "name": "Outlet", "kind": "general", "poles": 2, "rated_a": 10, "power_va": 100, "height_m": 0.3, "ip": "IP20"}],
+               "rooms": [{"id": "R1", "name": "Office", "use": "office", "length_m": 8, "width_m": 5, "receptacle": "tug"},
+                         {"id": "R2", "name": "Kitchen", "use": "kitchen", "length_m": 3, "width_m": 3, "receptacle": "tug", "height_m": 0.1}]}
+        _, s3, _ = self.stage6(receptacles=doc)
+        self.assertEqual(s3.status, "ok", s3.message)
+        self.assertEqual(s3.outputs["receptacles"]["receptacles"], epc_receptacles.run(copy.deepcopy(doc)).as_dict())
+        major = [f for f in s3.findings if f["severity"] == "major" and f["field"].startswith("R2/")]
+        self.assertTrue(major)
+        self.assertTrue(all(f["i18n"]["es"]["message"] and f["i18n"]["es"]["action"] for f in major))
+        _, s3, _ = self.stage6(receptacles={"schema_version": "1.0", "receptacles": [], "rooms": [{"id": "X", "name": "X", "use": "no-such-use", "length_m": 3, "width_m": 3}]})
         self.assertEqual(s3.status, "blocked")
 
 

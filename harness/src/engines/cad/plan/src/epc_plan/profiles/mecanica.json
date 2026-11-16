@@ -24,6 +24,82 @@
         "ancho_m": 0.1,
         "alto_m": 0.1
       }
+    },
+    {
+      "id": "PR",
+      "etiqueta": {
+        "es": "Parral de cañerías (pipe rack)",
+        "en": "Pipe rack"
+      },
+      "prefijo_tag": "PR",
+      "atributos": [
+        "dimensiones",
+        "niveles"
+      ],
+      "simbolo_2d": "linea_simple",
+      "capa_dxf": "MEC-PARRAL",
+      "geom": {
+        "z_m": 4.5,
+        "ancho_m": 2.0,
+        "alto_m": 0.3
+      }
+    },
+    {
+      "id": "AI",
+      "etiqueta": {
+        "es": "Cañería de aire comprimido",
+        "en": "Compressed air pipe"
+      },
+      "prefijo_tag": "AI",
+      "atributos": [
+        "diametro_mm",
+        "material"
+      ],
+      "simbolo_2d": "linea_simple",
+      "capa_dxf": "MEC-TUBERIA",
+      "geom": {
+        "z_m": 3.0,
+        "ancho_m": 0.05,
+        "alto_m": 0.05
+      }
+    },
+    {
+      "id": "VP",
+      "etiqueta": {
+        "es": "Cañería de vapor",
+        "en": "Steam pipe"
+      },
+      "prefijo_tag": "VP",
+      "atributos": [
+        "diametro_mm",
+        "material"
+      ],
+      "simbolo_2d": "linea_simple",
+      "capa_dxf": "MEC-TUBERIA",
+      "geom": {
+        "z_m": 3.0,
+        "ancho_m": 0.1,
+        "alto_m": 0.1
+      }
+    },
+    {
+      "id": "CT",
+      "etiqueta": {
+        "es": "Cinta transportadora",
+        "en": "Conveyor"
+      },
+      "prefijo_tag": "CT",
+      "atributos": [
+        "dimensiones",
+        "potencia_w"
+      ],
+      "simbolo_2d": "linea_simple",
+      "capa_dxf": "MEC-TRANSPORTE",
+      "geom": {
+        "z_m": 1.0,
+        "ancho_m": 0.8,
+        "alto_m": 0.4
+      }
     }
   ],
   "nodos": [
@@ -63,6 +139,181 @@
         "ancho_m": 0.3,
         "alto_m": 0.3
       }
+    },
+    {
+      "id": "TK",
+      "etiqueta": {
+        "es": "Tanque o recipiente",
+        "en": "Tank or vessel"
+      },
+      "prefijo_tag": "TK",
+      "atributos": [
+        "capacidad_l",
+        "tipo"
+      ],
+      "simbolo_2d": "equipo_mec",
+      "capa_dxf": "MEC-EQUIPO",
+      "geom": {
+        "z_m": 1.5,
+        "ancho_m": 2.0,
+        "alto_m": 3.0
+      }
+    },
+    {
+      "id": "BM",
+      "etiqueta": {
+        "es": "Bomba",
+        "en": "Pump"
+      },
+      "prefijo_tag": "BM",
+      "atributos": [
+        "potencia_w",
+        "caudal"
+      ],
+      "simbolo_2d": "motor",
+      "capa_dxf": "MEC-EQUIPO",
+      "geom": {
+        "z_m": 0.4,
+        "ancho_m": 0.6,
+        "alto_m": 0.8
+      }
+    },
+    {
+      "id": "CO",
+      "etiqueta": {
+        "es": "Compresor",
+        "en": "Compressor"
+      },
+      "prefijo_tag": "CO",
+      "atributos": [
+        "potencia_w"
+      ],
+      "simbolo_2d": "motor",
+      "capa_dxf": "MEC-EQUIPO",
+      "geom": {
+        "z_m": 0.75,
+        "ancho_m": 1.2,
+        "alto_m": 1.5
+      }
+    },
+    {
+      "id": "IC",
+      "etiqueta": {
+        "es": "Intercambiador de calor",
+        "en": "Heat exchanger"
+      },
+      "prefijo_tag": "IC",
+      "atributos": [
+        "potencia_w",
+        "tipo"
+      ],
+      "simbolo_2d": "equipo_mec",
+      "capa_dxf": "MEC-EQUIPO",
+      "geom": {
+        "z_m": 1.0,
+        "ancho_m": 0.8,
+        "alto_m": 1.0
+      }
+    },
+    {
+      "id": "VL",
+      "etiqueta": {
+        "es": "Válvula",
+        "en": "Valve"
+      },
+      "prefijo_tag": "VL",
+      "atributos": [
+        "diametro_mm",
+        "tipo"
+      ],
+      "simbolo_2d": "instrumento",
+      "capa_dxf": "MEC-VALVULA",
+      "geom": {
+        "z_m": 1.2,
+        "ancho_m": 0.2,
+        "alto_m": 0.2
+      }
+    },
+    {
+      "id": "PG",
+      "etiqueta": {
+        "es": "Puente grúa",
+        "en": "Overhead crane"
+      },
+      "prefijo_tag": "PG",
+      "atributos": [
+        "capacidad_kg",
+        "luz_m"
+      ],
+      "simbolo_2d": "equipo_mec",
+      "capa_dxf": "MEC-TRANSPORTE",
+      "geom": {
+        "z_m": 7.0,
+        "ancho_m": 1.5,
+        "alto_m": 1.0
+      }
+    },
+    {
+      "id": "AS",
+      "etiqueta": {
+        "es": "Ascensor (pasadizo)",
+        "en": "Lift (shaft)"
+      },
+      "prefijo_tag": "AS",
+      "atributos": [
+        "diametro_mm",
+        "material"
+      ],
+      "simbolo_2d": "caja_pase",
+      "capa_dxf": "MEC-ASCENSOR",
+      "geom": {
+        "z_m": 0.0,
+        "ancho_m": 2.0,
+        "alto_m": 2.0,
+        "altura_m": 3.0
+      },
+      "vertical": true,
+      "seccion": "rect"
+    },
+    {
+      "id": "MO",
+      "etiqueta": {
+        "es": "Montacargas (pasadizo)",
+        "en": "Goods lift (shaft)"
+      },
+      "prefijo_tag": "MO",
+      "atributos": [
+        "diametro_mm",
+        "material"
+      ],
+      "simbolo_2d": "caja_pase",
+      "capa_dxf": "MEC-ASCENSOR",
+      "geom": {
+        "z_m": 0.0,
+        "ancho_m": 2.5,
+        "alto_m": 2.5,
+        "altura_m": 3.0
+      },
+      "vertical": true,
+      "seccion": "rect"
+    },
+    {
+      "id": "EM",
+      "etiqueta": {
+        "es": "Escalera mecánica",
+        "en": "Escalator"
+      },
+      "prefijo_tag": "EM",
+      "atributos": [
+        "potencia_w"
+      ],
+      "simbolo_2d": "equipo_mec",
+      "capa_dxf": "MEC-ASCENSOR",
+      "geom": {
+        "z_m": 1.5,
+        "ancho_m": 1.6,
+        "alto_m": 3.0
+      }
     }
   ],
   "calculos": [
@@ -73,7 +324,48 @@
   "atajos_teclado": {
     "t": "TP",
     "e": "EQ",
-    "s": "SP"
+    "s": "SP",
+    "p": "PR",
+    "k": "TK",
+    "b": "BM",
+    "v": "VL",
+    "a": "AS"
   },
-  "unidades_salida": "m"
+  "unidades_salida": "m",
+  "subdisciplinas": [
+    {
+      "id": "procesos",
+      "nombre": {
+        "es": "Cañerías y equipos de proceso",
+        "en": "Process piping and equipment"
+      },
+      "tipos": [
+        "TP",
+        "PR",
+        "AI",
+        "VP",
+        "TK",
+        "BM",
+        "CO",
+        "IC",
+        "VL",
+        "EQ",
+        "SP"
+      ]
+    },
+    {
+      "id": "transporte",
+      "nombre": {
+        "es": "Transporte vertical y de materiales",
+        "en": "Vertical and material transport"
+      },
+      "tipos": [
+        "AS",
+        "MO",
+        "EM",
+        "CT",
+        "PG"
+      ]
+    }
+  ]
 }

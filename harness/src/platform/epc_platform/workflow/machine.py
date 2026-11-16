@@ -45,6 +45,12 @@ def unverified_records(store):
     return sorted({r["id"] for m in latest for r in m["normative_profile"]["norm_records"] if r["review_status"] != "verified"})
 
 
+def open_findings(store, severity):
+    """Findings of `severity` carried by the latest manifests (those not superseded)."""
+    latest = [m for _, m in store.read_manifests() if m.get("superseded_by") is None]
+    return [f.get("id") for m in latest for f in m.get("findings", []) if f.get("severity") == severity]
+
+
 class Workflow:
     def __init__(self, project_dir, log, store=None):
         self.store = store or ProjectStore(project_dir)
@@ -99,6 +105,7 @@ class Workflow:
         """True when the D21 guard was not applied because of the edit mode, False when it passed or the transition has none; raises `WorkflowBlocked` when it blocks."""
         if name not in GUARDED:
             return False
+        self._no_blocking()
         if self._edit_mode():
             return True
         self._d21()
@@ -115,6 +122,12 @@ class Workflow:
             return False
         latest = [m for _, m in self.store.read_manifests() if m.get("superseded_by") is None]
         return bool(latest) and all(m.get("mode") == "edit" for m in latest)
+
+    def _no_blocking(self):
+        """A `blocking` finding open in the manifests in force stops approve and issue in every mode (SIM-07): it is fixed and the run repeated, or the engineer corrects it first."""
+        bad = open_findings(self.store, "blocking")
+        if bad:
+            raise WorkflowBlocked(f"{len(bad)} blocking finding(s) still open ({', '.join(map(str, bad[:5]))}{' ...' if len(bad) > 5 else ''})")
 
     def _d21(self):
         bad = unverified_records(self.store)

@@ -1,0 +1,213 @@
+{
+  "id": "sanitaria_agua",
+  "nombre": {
+    "es": "Agua fría y caliente",
+    "en": "Cold and hot water"
+  },
+  "subdisciplinas": [
+    {
+      "id": "fria",
+      "nombre": {
+        "es": "Agua fría",
+        "en": "Cold water"
+      },
+      "tipos": [
+        "AF",
+        "MA",
+        "TQ",
+        "BA",
+        "VA",
+        "AR"
+      ]
+    },
+    {
+      "id": "caliente",
+      "nombre": {
+        "es": "Agua caliente",
+        "en": "Hot water"
+      },
+      "tipos": [
+        "AC",
+        "MA",
+        "TE",
+        "VA",
+        "AR"
+      ]
+    }
+  ],
+  "disciplina_proyecto": "plumbing",
+  "tramos": [
+    {
+      "id": "AF",
+      "etiqueta": {
+        "es": "Cañería de agua fría",
+        "en": "Cold water pipe"
+      },
+      "prefijo_tag": "AF",
+      "atributos": [
+        "diametro_mm",
+        "material"
+      ],
+      "simbolo_2d": "linea_simple",
+      "capa_dxf": "AGU-TUBERIA",
+      "geom": {
+        "z_m": 2.6,
+        "ancho_m": 0.025,
+        "alto_m": 0.025
+      }
+    },
+    {
+      "id": "AC",
+      "etiqueta": {
+        "es": "Cañería de agua caliente",
+        "en": "Hot water pipe"
+      },
+      "prefijo_tag": "AC",
+      "atributos": [
+        "diametro_mm",
+        "material"
+      ],
+      "simbolo_2d": "linea_simple",
+      "capa_dxf": "AGU-TUBERIA-AC",
+      "geom": {
+        "z_m": 2.6,
+        "ancho_m": 0.025,
+        "alto_m": 0.025
+      }
+    }
+  ],
+  "nodos": [
+    {
+      "id": "TQ",
+      "etiqueta": {
+        "es": "Tanque de reserva",
+        "en": "Storage tank"
+      },
+      "prefijo_tag": "TQ",
+      "atributos": [
+        "capacidad_l",
+        "tipo"
+      ],
+      "simbolo_2d": "equipo_mec",
+      "capa_dxf": "AGU-EQUIPO",
+      "geom": {
+        "z_m": 0.75,
+        "ancho_m": 1.5,
+        "alto_m": 1.5
+      }
+    },
+    {
+      "id": "BA",
+      "etiqueta": {
+        "es": "Bomba de agua",
+        "en": "Water pump"
+      },
+      "prefijo_tag": "BA",
+      "atributos": [
+        "potencia_w",
+        "tipo"
+      ],
+      "simbolo_2d": "motor",
+      "capa_dxf": "AGU-EQUIPO",
+      "geom": {
+        "z_m": 0.3,
+        "ancho_m": 0.5,
+        "alto_m": 0.6
+      }
+    },
+    {
+      "id": "TE",
+      "etiqueta": {
+        "es": "Termotanque o caldera",
+        "en": "Water heater or boiler"
+      },
+      "prefijo_tag": "TE",
+      "atributos": [
+        "capacidad_l",
+        "potencia_w",
+        "tipo"
+      ],
+      "simbolo_2d": "equipo_mec",
+      "capa_dxf": "AGU-EQUIPO",
+      "geom": {
+        "z_m": 0.8,
+        "ancho_m": 0.6,
+        "alto_m": 1.6
+      }
+    },
+    {
+      "id": "VA",
+      "etiqueta": {
+        "es": "Válvula",
+        "en": "Valve"
+      },
+      "prefijo_tag": "VA",
+      "atributos": [
+        "diametro_mm",
+        "tipo"
+      ],
+      "simbolo_2d": "instrumento",
+      "capa_dxf": "AGU-VALVULA",
+      "geom": {
+        "z_m": 1.2,
+        "ancho_m": 0.1,
+        "alto_m": 0.1
+      }
+    },
+    {
+      "id": "AR",
+      "etiqueta": {
+        "es": "Artefacto sanitario",
+        "en": "Sanitary fixture"
+      },
+      "prefijo_tag": "AR",
+      "atributos": [
+        "tipo"
+      ],
+      "simbolo_2d": "caja_pase",
+      "capa_dxf": "AGU-ARTEFACTO",
+      "geom": {
+        "z_m": 0.4,
+        "ancho_m": 0.5,
+        "alto_m": 0.8
+      }
+    },
+    {
+      "id": "MA",
+      "etiqueta": {
+        "es": "Montante de agua",
+        "en": "Water riser"
+      },
+      "prefijo_tag": "MA",
+      "atributos": [
+        "diametro_mm",
+        "material"
+      ],
+      "simbolo_2d": "caja_pase",
+      "capa_dxf": "AGU-TUBERIA",
+      "geom": {
+        "z_m": 0.0,
+        "ancho_m": 0.05,
+        "alto_m": 0.05,
+        "altura_m": 3.0
+      },
+      "vertical": true,
+      "seccion": "round"
+    }
+  ],
+  "calculos": [
+    "longitud",
+    "cantidad"
+  ],
+  "normas": [],
+  "atajos_teclado": {
+    "f": "AF",
+    "c": "AC",
+    "m": "MA",
+    "t": "TQ",
+    "b": "BA",
+    "v": "VA",
+    "a": "AR"
+  },
+  "unidades_salida": "m"
+}

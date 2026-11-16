@@ -21,6 +21,14 @@ def _write(out: Path, stem: str, result: Result) -> None:
     (out / f"{stem}.architecture.svg").write_text(result.svg, encoding="utf-8")
 
 
+def _write_review(out: Path, stem: str, sheet, wanted: bool) -> None:
+    if not wanted:
+        return
+    from epc_arch.review import review
+    levels = [dict(review(r.architecture), level=_tag(r, i)) for i, r in enumerate(sheet.levels, 1)]
+    (out / f"{stem}.review.json").write_text(json.dumps({"levels": levels}, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(prog="epc_arch", description="walls, doors and windows from a DXF, a PDF or an image")
     ap.add_argument("plan")
@@ -28,6 +36,7 @@ def main(argv=None) -> int:
     ap.add_argument("--units-per-metre", type=float, default=None)
     ap.add_argument("--page", type=int, default=0)
     ap.add_argument("--background", action="store_true", help="draw the original linework faintly under the plan")
+    ap.add_argument("--review", action="store_true", help="also write <name>.review.json: the rooms each door joins and the things worth a second look")
     ap.add_argument("--as-drawn", action="store_true", help="a vector PDF: the SVG is the picture of the page, as the person drew it")
     a = ap.parse_args(argv)
     src = Path(a.plan)
@@ -47,6 +56,7 @@ def main(argv=None) -> int:
             listing["levels"][i - 1]["file"] = f"{src.stem}.{_tag(r, i)}.architecture.json"
         (out / f"{src.stem}.sheet.json").write_text(json.dumps(listing, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
     _write(out, src.stem, first)
+    _write_review(out, src.stem, sheet, a.review)
     c = first.as_dict()["counts"]
     print(f"OK {len(sheet.levels)} plan(s): {c['walls']} walls, {c['doors']} doors, {c['windows']} windows, {c['openings']} openings (the first) -> {out}")
     return 0

@@ -95,8 +95,15 @@ def _rendered(context):
              "source": f["path"]} for f in files]
 
 
+def _unrendered(documents, rendered):
+    stems = {r["name"].rsplit("_", 1)[0] for r in rendered}
+    return [d for d in documents if d["name"] not in stems]
+
+
 def deliverables(context):
-    return _drawings(context) + _rendered(context) + _documents(context)
+    """Drawings, rendered files and the structured documents that have no rendered file (one that has them is listed through its files, not twice: B-06)."""
+    rendered = _rendered(context)
+    return _drawings(context) + rendered + _unrendered(_documents(context), rendered)
 
 
 def _name_one(item, names, project_code, code_ok):

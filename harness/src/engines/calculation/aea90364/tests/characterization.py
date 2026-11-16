@@ -52,7 +52,7 @@ def cases():
     for (cname, crit), (kname, base) in itertools.product(CRITERIA.items(), KINDS.items()):
         out.append({"id": f"kind:{kname}:{cname}", "criteria": crit, "circuits": [circuit("C-01", base)]})
     for m, ais, mat in itertools.product(METHODS, ("pvc", "xlpe"), ("cu", "al")):
-        out.append({"id": f"method:{m}:{ais}:{mat}", "criteria": None, "circuits": [circuit("C-01", KINDS["feeder_A"], METODO=m, AISLACION=ais, MATERIAL=mat, AGRUP_CIRCUITOS=2)]})
+        out.append({"id": f"method:{m}:{ais}:{mat}", "criteria": None, "circuits": [circuit("C-01", KINDS["feeder_A"], METODO=m, AISLACION=ais, MATERIAL=mat, AGRUP_CIRCUITOS=2, **({"SEPARACION_CABLES": "en contacto", "COLUMNA_D2": "c5_3x"} if m == "D2" else {}))]})   # D18: buried D2 asks for the spacing
     for rname, route in ROUTES.items():
         for crit in ("default", "hot"):
             out.append({"id": f"route:{rname}:{crit}", "criteria": CRITERIA[crit], "circuits": [circuit("C-01", KINDS["feeder_A"], RUTA=route, CARGA=250)]})

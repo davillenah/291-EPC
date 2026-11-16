@@ -60,13 +60,14 @@ def _room_polygons(boxes):
 
 
 def backdrop_of(architecture):
-    """The walls and room names of a recognised floor in metres, for the DXF under the services (the plan units divided by the units per metre the architecture reports)."""
+    """The walls, the room names and the openings of a recognised floor in metres, for the DXF under the services and the 3D model (the plan units divided by the units per metre the architecture reports)."""
     k = architecture.get("units_per_metre")
     if not k:
         return None
     walls = [{"a": [w["a"][0] / k, w["a"][1] / k], "b": [w["b"][0] / k, w["b"][1] / k], "thickness_m": w["thickness"] / k} for w in architecture.get("walls", [])]
     rooms = [{"name": r["name"], "at": [(r["box_m"][0] + r["box_m"][2]) / 2, (r["box_m"][1] + r["box_m"][3]) / 2]} for r in architecture.get("rooms", []) if r.get("name") and r.get("box_m")]
-    return {"walls": walls, "rooms": rooms}
+    openings = [{"kind": o["kind"], "at": [o["at"][0] / k, o["at"][1] / k], "width_m": o["width"] / k, "angle": o["angle"]} for o in architecture.get("openings", [])]
+    return {"walls": walls, "rooms": rooms, "openings": openings}
 
 
 def _propose(design, document, floor, boxes, taken):

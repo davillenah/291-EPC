@@ -20,6 +20,8 @@ lists them, so the runs of the golden projects keep their results.
                    a generator (`generator`: its reactances and time constants), for `engine_inputs["icc_decay"]`
   earthing         epc_grounding.aea_earthing: the resistance of the earth electrodes given in `engine_inputs["earthing"]` (soil resistivity and the geometry of each rod, conductor, plate or mesh), their
                    parallel, and, in a TT scheme with a residual current device, whether it complies with the maximum Ra; the engine formulas are called as they are (D15, D26)
+  receptacles      epc_receptacles.run for the `engine_inputs["receptacles"]` document (socket outlets and rectangular rooms): outlets needed per use, layout, mounting height and load; a `major` finding for every
+                   check that fails (mounting height, wet room, drawn outlets fewer than needed), with its Spanish text in `i18n.es`
   phase_balance    epc_load_balance.phase_balance: the phase of each single-phase circuit (`phase_assigned` of `engine_inputs["circuits"]` is kept) and the unbalance between R, S and T
 
 The values the engines use from their norm records are pending review (D21): every slice says so with a note finding.
@@ -129,22 +131,38 @@ class PanelThermalStage(ExtraStage):
     def applies(self, context):
         return self.section(context) is not None or enabled(context, self.key)
 
+    @staticmethod
+    def _devices(PT, calc):
+        """(rows, no_data): the dissipation of each device; the engine table stops at 125 A, so a bigger device needs the manufacturer's figure, which is not invented here."""
+        rows, no_data = [], []
+        for tag, detail in calc["detalle"].items():
+            head = (detail.get("cadena") or [{}])[0]
+            if not (head.get("poles") and detail.get("in_a")):
+                continue
+            row = {"circuit": tag, "in_a": detail["in_a"], "poles": head["poles"]}
+            try:
+                rows.append(dict(row, dissipated_w=PT.potencia_disipada_aparato_w(detail["in_a"], head["poles"])))
+            except ValueError as exc:
+                no_data.append(dict(row, reason=str(exc)))
+        return rows, no_data
+
     def run(self, context):
         from epc_aea90364 import aea_panel_thermal as PT
         ch = EC.chain(context)
-        rows = []
-        for tag, detail in ch["calc"]["detalle"].items():
-            head = (detail.get("cadena") or [{}])[0]
-            if head.get("poles") and detail.get("in_a"):
-                rows.append({"circuit": tag, "in_a": detail["in_a"], "poles": head["poles"], "dissipated_w": PT.potencia_disipada_aparato_w(detail["in_a"], head["poles"])})
+        board = ch["form"]["board"]["name"]
+        rows, no_data = self._devices(PT, ch["calc"])
         total = PT.potencia_tablero_w(sum(r["dissipated_w"] for r in rows))
-        outputs = {"devices": rows, "p_total_w": total}
+        outputs, findings = {"devices": rows, "p_total_w": total}, []
         allowed = (self.section(context) or {}).get("p_admissible_w")
-        findings = []
-        if allowed is not None:
+        if no_data:
+            outputs.update(needs_manufacturer_data=no_data, p_total_complete=False)
+            findings.append(engine_finding(1, context.pipeline_run_id, self.spec.slug, board, "panel_thermal_incomplete", f"{len(no_data)} device(s) above the engine table", "manufacturer dissipation of every device"))
+            if allowed is not None:
+                outputs["p_admissible_w"] = allowed        # no verdict: the total misses the devices above 125 A
+        elif allowed is not None:
             outputs["p_admissible_w"], outputs["complies"] = allowed, PT.verify_panel(total, allowed)
             if not outputs["complies"]:
-                findings.append(engine_finding(1, context.pipeline_run_id, self.spec.slug, ch["form"]["board"]["name"], "panel_thermal_complies", False, True))
+                findings.append(engine_finding(1, context.pipeline_run_id, self.spec.slug, board, "panel_thermal_complies", False, True))
         return outputs, findings
 
 
@@ -218,6 +236,35 @@ class HvacStage(ExtraStage):
         except epc_hvac.HvacError as exc:
             raise StageInputError([str(exc)]) from exc
         return {"hvac": result}, []
+
+
+CHECK_TEXT = {"mounting_height": ("mounting height outside the limits of the norm", "altura de montaje fuera de los límites de la norma"),
+              "wet_room_height": ("outlet too low for a wet room", "tomacorriente demasiado bajo para un local húmedo"),
+              "enough_outlets": ("fewer outlets drawn than the use needs", "menos tomacorrientes dibujados que los que pide el uso")}
+ACTION = ("Move or add outlets, or confirm the typical value with the owner.", "Mueva o agregue tomacorrientes, o confirme el valor típico con el dueño.")
+
+
+class ReceptaclesStage(ExtraStage):
+    key, engine = "receptacles", "calculation/receptacles"
+    functions = ("epc_receptacles.run",)
+
+    def applies(self, context):
+        return self.section(context) is not None
+
+    def run(self, context):
+        import epc_receptacles
+        try:
+            result = epc_receptacles.run(copy.deepcopy(self.section(context))).as_dict()
+        except epc_receptacles.ReceptaclesError as exc:
+            raise StageInputError([str(exc)]) from exc
+        findings = []
+        for room in result["rooms"]:
+            for check in (c for c in room["checks"] if not c["ok"]):
+                en, es = CHECK_TEXT.get(check["id"], (check["message"], check["message"]))
+                item = engine_finding(len(findings) + 1, context.pipeline_run_id, self.spec.slug, room["id"], check["id"], False, True)
+                item.update(action=ACTION[0], message=f"{en}: {check['message']}", i18n={"es": {"message": f"{es}: {check['message']}", "action": ACTION[1]}})
+                findings.append(item)
+        return {"receptacles": result}, findings
 
 
 class PhaseBalanceStage(ExtraStage):
