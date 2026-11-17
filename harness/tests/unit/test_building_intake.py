@@ -58,7 +58,7 @@ class DeriveTests(unittest.TestCase):
     def test_a_room_without_data_is_an_error_unless_it_is_excluded(self):
         with self.assertRaises(BuildingError) as ctx:
             derive(building(rooms={"r1": dict(DATA)}, by_name={}), loads())
-        self.assertTrue(any("r2" in e and "no lighting data" in e for e in ctx.exception.errors))
+        self.assertTrue(any("r3" in e and "no lighting data" in e for e in ctx.exception.errors))          # r2 (HALL) is lit by its name; r3 (L) matches no kind of room
         _, section = derive(building(rooms={"r1": dict(DATA)}, by_name={}, exclude=["r2", "r3"]), loads())
         self.assertEqual([r["id"] for r in section["document"]["rooms"]], ["PB-r1"])
 
@@ -1114,3 +1114,21 @@ class IccDecayAndEarthingTests(unittest.TestCase):
             with self.subTest(section=section):
                 _, s6 = self.stage6(earthing=section)
                 self.assertEqual(s6.status, "blocked")
+
+
+class RoomAuto(unittest.TestCase):
+    """A room nobody described is lit from what the harness knows: the activity of its name, the first luminaire and the engine's default height."""
+
+    def test_the_activity_comes_from_the_name(self):
+        from disciplines.electrical_lv.intake import room_auto
+        self.assertEqual([room_auto.activity_of(n) for n in ("Consultorio 4", "Pasillo central", "Deposito de insumos", "Sanitarios", "Sala de servidores", "Sala X1")],
+                         ["task.fine", "circulation.indoor", "room.storage", "room.living", "task.reading", "room.living"])
+        self.assertIsNone(room_auto.activity_of("Planetario"))
+
+    def test_the_data_of_a_room(self):
+        from disciplines.electrical_lv.intake import room_auto
+        lum = [{"id": "L1"}, {"id": "L2"}]
+        lighting, outlets = room_auto.room_data({"name": "Oficina"}, lum, [{"id": "tug", "kind": "general"}])
+        self.assertEqual((lighting["activity"], lighting["luminaire"], outlets), ("task.reading", "L1", {"use": "general", "receptacle": "tug"}))
+        self.assertIsNone(room_auto.room_data({"name": "Planetario"}, lum, None))
+        self.assertIsNone(room_auto.room_data({"name": "Oficina"}, [], None))

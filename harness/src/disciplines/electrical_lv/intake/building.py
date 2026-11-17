@@ -126,7 +126,15 @@ def _check_receptacles_load(floor, here):
 def _room_data(floor, room):
     """The caller's data for a recognised room (by id, else by written name), or None."""
     data = (floor.get("rooms") or {}).get(room["id"])
-    return data if data is not None else (floor.get("by_name") or {}).get(room.get("name"))
+    data = data if data is not None else (floor.get("by_name") or {}).get(room.get("name"))
+    return data if data is not None else _auto(floor, room)
+
+
+def _auto(floor, room):
+    """The data of a room nobody described, derived by the harness (see `room_auto`), receptacles included; None when its name matches no kind of room."""
+    from disciplines.electrical_lv.intake import room_auto
+    got = room_auto.room_data(room, floor.get("_luminaires"), floor.get("_receptacles"))
+    return None if not got else {**got[0], **({"receptacles": got[1]} if got[1] else {})}
 
 
 def _split(floor, room, with_outlets):
@@ -134,7 +142,7 @@ def _split(floor, room, with_outlets):
     data = _room_data(floor, room)
     where = f"floor {floor['id']}: room {room['id']} ({room.get('name') or 'no name'})"
     if not isinstance(data, dict):
-        return None, None, [f"{where} has no lighting data: describe it or exclude it"]
+        return None, None, [f"{where} has no lighting data and its name matches no known kind of room: give its `activity` (or `target_lux`, `height_m`, `luminaire`) in `rooms`, or exclude it"]
     data = dict(data)
     outlets = data.pop("receptacles", None)
     clash = sorted(set(data) & set(SIZE_FIELDS))
@@ -258,7 +266,8 @@ def _floors(building):
     """({floor id: [lit room ids]}, lighting rooms, {floor id: receptacle rooms}); raises with every error found."""
     with_outlets = bool(building.get("receptacles"))
     lit, rooms, outlets, errors = {}, [], {}, []
-    for floor in building["floors"]:
+    for given in building["floors"]:
+        floor = {**given, "_luminaires": building.get("luminaires"), "_receptacles": building.get("receptacles")}
         found, plugs, errs = _floor_rooms(floor, with_outlets)
         errors += errs
         lit[floor["id"]], outlets[floor["id"]] = [r["id"] for r in found], plugs

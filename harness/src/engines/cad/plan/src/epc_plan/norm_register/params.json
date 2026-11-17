@@ -98,7 +98,7 @@
    "verified_by": null,
    "verified_at": null,
    "issues": [
-    "0.25 m in plan units; no scale link, no IRAM 4503 text height cited"
+    "0.15 m in plan units (was 0.25 m: labels ran into each other); no scale link, no IRAM 4503 text height cited"
    ],
    "note": "Plan-unit text height; design default."
   },

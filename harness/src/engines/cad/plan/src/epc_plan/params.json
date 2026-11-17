@@ -11,7 +11,7 @@
             "layer_opacity": {"A-WINDOW-GLASS": 0.35, "A-WALL-FILL": 0.25, "A-ROOM": 0.6, "A-WALL-CUT": 0.85}},
   "levels": {"pattern": "^L(0|[1-9][0-9]*|-[1-9][0-9]*)$", "ground": "L0"},
   "tags": {"junction_prefix": "J", "end_prefix": "E", "digits": 3, "stretch_separator": "/"},
-  "dxf": {"default_version": "R2018", "versions": ["R2000", "R2004", "R2007", "R2010", "R2013", "R2018"], "text_height_m": 0.25, "node_symbol_size_m": 0.6,
+  "dxf": {"default_version": "R2018", "versions": ["R2000", "R2004", "R2007", "R2010", "R2013", "R2018"], "text_height_m": 0.15, "node_symbol_size_m": 0.6,
           "tag_layer": "PLAN-TAG", "dimension_layer": "PLAN-COTA", "junction_layer": "PLAN-NODO", "wall_layer": "ARQ-MUROS", "room_layer": "ARQ-LOCALES", "default_units": "m"},
   "style": {"line_width_mm": 0.25, "font_size_mm": 2.0, "colors": {"line": "#000000", "highlight": "#d62728"}}
 }
