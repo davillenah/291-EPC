@@ -13,8 +13,14 @@ TEMPLATE = Path(__file__).resolve().parents[5] / "projects" / "_template" / ".ep
 STATUS = "draft"
 
 
+def _existing(source):
+    if not source.is_file():
+        raise FileNotFoundError(f"the project template is missing: {source} (the repository folder `projects/_template` must come with the harness)")
+    return source
+
+
 def load_template(path=None):
-    return json.loads(Path(path or TEMPLATE).read_text(encoding="utf-8"))
+    return json.loads(_existing(Path(path or TEMPLATE)).read_text(encoding="utf-8"))
 
 
 def _merge(base, extra):

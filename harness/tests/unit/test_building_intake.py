@@ -462,7 +462,7 @@ class FloorPlanTests(unittest.TestCase):
         self.assertIn("SYM_TOMACORRIENTE", blocks(plan))
         self.assertNotIn("SYM_TOMACORRIENTE", blocks(light))
         self.assertIn("SYM_LUMINARIA", blocks(light))
-        self.assertTrue([e for e in plan.modelspace().query("LWPOLYLINE") if e.dxf.layer.endswith("ARQ-MUROS")])
+        self.assertTrue([e for e in plan.modelspace().query("LWPOLYLINE") if e.dxf.layer == "A-WALL-CUT"])
 
     def test_without_routing_no_floor_plan_is_written(self):
         import tempfile
@@ -491,7 +491,7 @@ class WholeBuildingTests(unittest.TestCase):
             run_ = res["data"]["run"]
             self.assertEqual(run_["summary"]["by_status"], {"ok": 12})
             self.assertEqual(res["data"]["workflow_state"], "draft_ready")
-            names = sorted(p.name for p in (root / "API-1" / "deliverables" / "TR-001").glob("*.dxf"))
+            names = sorted(p.name for p in (root / "API-1" / "deliverables" / "TR-001").rglob("*.dxf"))
             self.assertTrue([n for n in names if "_plan_PB" in n] and [n for n in names if "_lighting_PB" in n])
             docs = [d["name"] for d in run_["results"][10]["outputs"]["documents"]]
             self.assertIn("cable_list", docs)
@@ -706,7 +706,7 @@ class RenderedDocumentsTests(unittest.TestCase):
             api.init_project(root, "API-1", A.ANSWERS, clock=A.CLOCK, actor=A.ORC)
             ins = dict(W.inputs_doc(), building=b, transformer={"demand_kva": 40, "reserve_pct": 20, "secondary_v": 400}, **extra)
             res = api.run_pipeline(root / "API-1", loads=loads(), engine_inputs=ins, clock=A.CLOCK, actor=A.ORC)
-            files = sorted(p.name for p in (root / "API-1" / "deliverables" / "TR-001").glob("*"))
+            files = sorted(p.name for p in (root / "API-1" / "deliverables" / "TR-001").rglob("*") if p.is_file())
         return res, files
 
     def test_a_building_run_issues_pdf_word_and_workbook_files_of_the_documents(self):
@@ -717,7 +717,8 @@ class RenderedDocumentsTests(unittest.TestCase):
             self.assertIn(name, files)
         self.assertTrue([f for f in files if f.endswith("_tables.xlsx")])
         rendered = res["data"]["run"]["results"][10]["outputs"]["rendered"]
-        self.assertIn("terminal_block_list", rendered["not_rendered"])
+        self.assertEqual(rendered["not_rendered"], [])                  # the terminal list, BOQ, datasheets, RFQ and lighting study have files too (SIM-19)
+        self.assertIn("terminal_block_list.pdf", files)
 
     def test_the_formats_can_be_chosen_and_a_wrong_one_blocks(self):
         res, files = self.run_api(documents={"formats": ["pdf"]})

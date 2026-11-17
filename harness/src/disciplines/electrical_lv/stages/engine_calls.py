@@ -86,6 +86,22 @@ def _needs_fp(circuits, board):
     return []
 
 
+STATUS_WORD = {"es": "BORRADOR", "en": "DRAFT"}
+
+
+def titleblock_defaults(context):
+    """The title block fields the project already knows (SIM-12): client, site, installation and status (the revision is not one of them: a re-run of a later stage reuses the drawings of an earlier revision, so the drawing's revision is the engineer's `titleblock.revision`); what `engine_inputs.titleblock` gives wins."""
+    profile = context.profile or {}
+    fields = {"client": (profile.get("client") or {}).get("name"), "location": (profile.get("site") or {}).get("address"), "description": (profile.get("site") or {}).get("installation_type"),
+              "status": STATUS_WORD.get(profile.get("language"), STATUS_WORD["en"])}
+    return {k: v for k, v in fields.items() if v}
+
+
+def titleblock_of(context, form):
+    """The title block data of the form: what the project knows, then what `engine_inputs.titleblock` says."""
+    return dict(titleblock_defaults(context), **(form.get("titleblock") or {}))
+
+
 def build_form(context):
     """(form, tags, kinds): the board form for `board_design`, {engine tag: load id} and {engine tag: load kind}."""
     errors, loads = [], (context.loads or {}).get("loads") or []
@@ -101,6 +117,7 @@ def build_form(context):
         raise StageInputError(errors)
     form = {"board": board, "circuits": circuits + extra}
     form.update({k: copy.deepcopy(inputs_of(context)[k]) for k in PASS_THROUGH if k in inputs_of(context)})
+    form["titleblock"] = titleblock_of(context, form)
     form["validated"] = bool(inputs_of(context).get("criteria_validated", False))
     tags = {c["tag"]: load["id"] for c, load in zip(circuits, loads)}
     kinds = {c["tag"]: load["kind"] for c, load in zip(circuits, loads)}

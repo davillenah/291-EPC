@@ -66,6 +66,44 @@ def _ok(context, number):
     return res if res is not None and res.status == "ok" else None
 
 
+def drawing_folder(stem):
+    """Folder of a drawing inside the transmittal: single-line diagrams, board layouts and plans each have one (the names are those of stage 10)."""
+    for prefix, folder in (("SLD", "drawings/sld"), ("MLD", "drawings/mld")):
+        if stem.startswith(prefix + "_"):
+            return folder
+    if "_model_3d" in stem or "_section_" in stem:
+        return "drawings/3d"
+    return "drawings/plans"
+
+
+def document_folder(suffix):
+    """Folder of a rendered document: the workbook of the tables apart from the reports (PDF and Word)."""
+    return "tables" if suffix == ".xlsx" else "documents"
+
+
+def _architecture_item(store, floor):
+    """The deliverable entry of the plan file a floor names (a file of `inputs/`), or None."""
+    plan = floor.get("plan") if isinstance(floor, dict) else None
+    file = Path(store.inputs_dir) / plan if plan else None
+    if file is None or not file.is_file():
+        return None
+    return {"name": f"architecture_{Path(plan).stem}", "title": f"Architecture plan {floor.get('name') or floor.get('id')}", "path": f"architecture/{Path(plan).name}", "code": None,
+            "file": file, "recorded": sha256_file(file), "source": str(file), "support": True}
+
+
+def _architecture(context):
+    """The architecture plans the building run used (`engine_inputs.building.floors[].plan`, files of `inputs/plans/`): the DXF as the engineer gave it, copied to `architecture/`.
+    A supporting file, not a document of the issue: it needs no entry in `deliverable_names`."""
+    store = getattr(context, "store", None)
+    items = [] if store is None else [_architecture_item(store, f) for f in _floors(context)]
+    unique = {i["name"]: i for i in items if i}
+    return list(unique.values())
+
+
+def _floors(context):
+    return ((getattr(context, "engine_inputs", None) or {}).get("building") or {}).get("floors") or []
+
+
 def _drawings(context):
     res = _ok(context, DRAWINGS)
     if res is None:
@@ -75,7 +113,7 @@ def _drawings(context):
         if not f["path"].endswith(DRAWING_SUFFIXES):
             continue
         file = Path(context.work_dir or "") / res.outputs["directory"] / f["path"]
-        out.append({"name": Path(f["path"]).stem, "title": f"Drawing {f['path']}", "path": f["path"], "code": None, "file": file, "recorded": f["sha256"],
+        out.append({"name": Path(f["path"]).stem, "title": f"Drawing {f['path']}", "path": f"{drawing_folder(Path(f['path']).stem)}/{Path(f['path']).name}", "code": None, "file": file, "recorded": f["sha256"],
                     "source": f"{res.outputs['directory']}/{f['path']}"})
     return out
 
@@ -91,7 +129,7 @@ def _rendered(context):
     """The files of the documents that stage 11 rendered (PDF, Word, workbook): named `<document>_<format>`, copied from `<work_dir>/documents/`."""
     res = _ok(context, DOCUMENTS)
     files = ((res.outputs.get("rendered") or {}).get("files") or []) if res is not None else []
-    return [{"name": f["name"], "title": f"Document file {f['path']}", "path": Path(f["path"]).name, "code": None, "file": Path(context.work_dir or "") / f["path"], "recorded": f["sha256"],
+    return [{"name": f["name"], "title": f"Document file {f['path']}", "path": f"{document_folder(Path(f['path']).suffix)}/{Path(f['path']).name}", "code": None, "file": Path(context.work_dir or "") / f["path"], "recorded": f["sha256"],
              "source": f["path"]} for f in files]
 
 
@@ -103,7 +141,7 @@ def _unrendered(documents, rendered):
 def deliverables(context):
     """Drawings, rendered files and the structured documents that have no rendered file (one that has them is listed through its files, not twice: B-06)."""
     rendered = _rendered(context)
-    return _drawings(context) + rendered + _unrendered(_documents(context), rendered)
+    return _drawings(context) + rendered + _unrendered(_documents(context), rendered) + _architecture(context)
 
 
 def _name_one(item, names, project_code, code_ok):
@@ -113,7 +151,9 @@ def _name_one(item, names, project_code, code_ok):
     if not bad and code_ok:
         item["code"] = naming.document_code(project_code, entry)
         if item["file"] is not None:
-            item["path"] = naming.file_path(project_code, entry, Path(item["path"]).suffix)
+            folder = Path(item["path"]).parent.as_posix()                       # the type folder of the transmittal (`drawings/sld`, `documents`...) stays in front of the named path
+            named = naming.file_path(project_code, entry, Path(item["path"]).suffix, in_type_folder=folder != ".")
+            item["path"] = named if folder == "." else f"{folder}/{named}"
     return [f"{item['name']}: {b}" for b in bad]
 
 
@@ -132,7 +172,8 @@ def apply_names(items, names, project_code):
     errors = [] if code_ok else [f"the project code {project_code!r} must be AAAA-PROVIDER-CLIENT-CODE to name deliverables"]
     names = names if isinstance(names, dict) else {}
     for item in items:
-        errors += _name_one(item, names, project_code, code_ok)
+        if not item.get("support"):
+            errors += _name_one(item, names, project_code, code_ok)
     errors += _shared_paths(items)
     if errors:
         raise StageInputError(errors)
@@ -213,9 +254,17 @@ class PackageIssueStage(Stage):
         return self._unavailable("no_deliverables", "no deliverable to issue: stages 10 and 11 produced no drawing file or document in this run")
 
     @staticmethod
-    def _name_items(context, items):
-        """Names the deliverables when the engine inputs give `deliverable_names`; returns them (None when absent)."""
-        names = (context.engine_inputs or {}).get("deliverable_names")
+    def _given_or_catalogue(context, items):
+        """`engine_inputs.deliverable_names`, or (project code AAAA-PROV-CLI-CODE) the names of the catalogue for the items (SIM-10); None when neither applies."""
+        given = (context.engine_inputs or {}).get("deliverable_names")
+        if given is not None or not naming.PROJECT_CODE.fullmatch((context.profile or {}).get("project_code") or ""):
+            return given
+        return naming.automatic([i["name"] for i in items if not i.get("support")], _floors(context))
+
+    @classmethod
+    def _name_items(cls, context, items):
+        """Names the deliverables from the given or the catalogue names; returns them (None when there are none)."""
+        names = cls._given_or_catalogue(context, items)
         if names is not None:
             apply_names(items, names, (context.profile or {}).get("project_code"))
         return names
@@ -268,7 +317,7 @@ class PackageIssueStage(Stage):
         manifest, replaced = self._manifest_of(context, plan, rows, records, before)
         path = store.manifest_rel(manifest)
         copies = [{"source": i["source"], "to": f"deliverables/{transmittal}/{i['path']}"} for i in items if i["file"] is not None]
-        calls = self._cover(context, transmittal, rows, records, copies)
+        calls = self._cover(context, transmittal, rows, records, copies, manifest["findings"])
         outputs = self._outputs(context, (transmittal, path), (manifest, replaced, copies), rows, records)
         after = self._check_manifests(context, outputs, files, project, start + len(before))
         outputs["calc_check"] = {"findings_count": len(before) + len(after), "by_severity": by_severity(before + after)}
@@ -294,12 +343,13 @@ class PackageIssueStage(Stage):
                  "clause": "ADR-0035", "action": "This package is for checking the system, not for production: rerun in production mode once the records are verified.", "evidence": ["manifest mode edit"], "status": "open"}]
 
     @staticmethod
-    def _cover(context, transmittal, rows, records, copies):
+    def _cover(context, transmittal, rows, records, copies, findings=()):
         """The cover PDF of the transmittal (when the run renders PDF files, see `rendering.py`): written under the work folder and copied with the other files; it lists them, so it is not one of them
         in the manifest. Returns the engine calls."""
         if "pdf" not in rendering.formats_of(context) or not context.work_dir:
             return []
-        data = rendering.transmittal_data(transmittal, (context.profile or {}).get("project_code"), context.revision, context.pipeline_run_id, rows, records, getattr(context, "mode", "production"))
+        data = rendering.transmittal_data(transmittal, (context.profile or {}).get("project_code"), context.revision, context.pipeline_run_id, rows, records, getattr(context, "mode", "production"),
+                                         findings=findings)
         source, call = rendering.render_transmittal(data, context.work_dir, transmittal)
         copies.append({"source": source, "to": f"deliverables/{transmittal}/{transmittal}_transmittal.pdf"})
         return [call]

@@ -13,7 +13,7 @@ ENGINE = "calculation/transformer_sizing"
 ENGINE_CHAIN = "calculation/aea90364"
 FUNCTION = "epc_transformer_sizing.size_transformer"
 KEYS = ("demand_kva", "demand", "reserve_pct", "secondary_v")
-NOT_PROVIDED = "not available in Phase 1: transformer inputs not provided"
+NOT_PROVIDED = "no transformer to size: no `transformer` inputs were given (the installation is taken from the low-voltage network as the supply data say)"
 
 
 def assumption_finding(n, run_id, slug, text):

@@ -88,7 +88,7 @@
         "additionalProperties": false
       }
     },
-    "review_status": {"type": "string", "enum": ["draft", "for_review", "approved_for_construction"]},
+    "review_status": {"type": "string", "enum": ["draft", "for_review", "approved", "approved_for_construction", "issued"], "description": "Follows the workflow: draft (the run), for_review (submitted), approved and issued (edit mode: not for production) or approved_for_construction and issued (production: D21 guards it). `signed` is filled by `approve`."},
     "mode": {"type": "string", "enum": ["edit"], "description": "Present only when the package was made in edit mode (ADR-0035): norm records not verified did not stop the workflow and the package is not for production."},
     "signed": {
       "type": ["object", "null"],

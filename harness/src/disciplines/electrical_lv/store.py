@@ -41,6 +41,8 @@ PROGRESS = f"{INTERNAL}/epc-progress.txt"
 MANIFEST_SCHEMA = "deliverable_manifest.schema.json"
 MANIFEST_SUFFIX = ".manifest.json"
 SUPERSEDE_FIELDS = ("superseded_by", "signed", "superseded_signature")
+COVER_SUFFIX = "_transmittal.pdf"      # the cover lists the files and shows the review state; it is not one of them, so a review step may rewrite it
+REVIEW_FIELDS = ("review_status", "signed")
 MANIFEST_NAME = "inputs_manifest.json"
 WORKFLOW = "workflow.json"
 MODE = "mode.json"
@@ -337,7 +339,7 @@ class ProjectStore:
         parts = clean_parts(rel)
         if len(parts) < 3 or parts[0] != "deliverables" or not re.fullmatch(r"TR-[0-9]{3,4}", parts[1]):
             raise StoreError(f"{rel!r} must be deliverables/TR-NNN/<file>")
-        if self._signed(parts[1]):
+        if self._signed(parts[1]) and not parts[-1].endswith(COVER_SUFFIX):
             raise StoreError(f"{parts[1]} is signed: its files cannot be overwritten")
         data = Path(source).read_bytes()
         atomic_write(self.resolve(rel), data)
@@ -358,6 +360,19 @@ class ProjectStore:
         moved = manifest["signed"] is None and old["signed"] is not None and manifest["superseded_signature"] == old["signed"]
         if (manifest["signed"], manifest["superseded_signature"]) != (old["signed"], old["superseded_signature"]) and not (moved and old["superseded_signature"] is None):
             problems.append("signed: can only be moved to superseded_signature")
+        if problems:
+            raise StoreError([f"{rel}: {p}" for p in problems])
+        self._write_json(rel, manifest)
+        return rel
+
+    def record_review(self, token, manifest):
+        """Reflect the workflow in an existing manifest: only `review_status` and `signed` may differ from the stored one, and a signature is set once (by `approve`), never edited or dropped."""
+        self._require(token)
+        rel = self.manifest_rel(manifest)
+        old = self.read_json(rel)
+        problems = [f"{k}: cannot change in a review step" for k in sorted(set(old) | set(manifest)) if k not in REVIEW_FIELDS and old.get(k) != manifest.get(k)]
+        if old["signed"] is not None and manifest["signed"] != old["signed"]:
+            problems.append("signed: a signature is not edited or dropped")
         if problems:
             raise StoreError([f"{rel}: {p}" for p in problems])
         self._write_json(rel, manifest)

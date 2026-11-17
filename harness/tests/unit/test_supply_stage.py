@@ -26,7 +26,7 @@ class SupplyStageTests(unittest.TestCase):
     def test_without_the_section_it_is_not_available(self):
         res = STAGES[3].run(ctx_with())
         self.assertEqual((res.status, res.reason, res.outputs, res.engine_calls, res.findings), ("not_available", "no_transformer_inputs", {}, [], []))
-        self.assertEqual(res.message, "not available in Phase 1: transformer inputs not provided")
+        self.assertEqual(res.message, "no transformer to size: no `transformer` inputs were given (the installation is taken from the low-voltage network as the supply data say)")
 
     def test_with_the_section_it_runs_the_engine(self):
         res = STAGES[3].run(ctx_with(GOOD))

@@ -37,6 +37,9 @@
     "requires": [
       "ezdxf",
       "lxml",
+      "numpy",
+      "pillow",
+      "pypdfium2",
       "shapely",
       "svgelements",
       "vtracer"
@@ -48,7 +51,9 @@
     "source": "291_G_IRAM_Custom_TitleBlocks_Generator"
   },
   "engine": [
+    "arch",
     "dxf",
+    "plan",
     "titleblock"
   ],
   "owns": [

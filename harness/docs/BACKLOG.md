@@ -723,20 +723,21 @@ Origen: `BUGS-Y-TEMPORALES.md` de la simulación (proyecto ficticio, modo edici�
 - [x] **SIM-03** (T-03) Leer el código del ambiente (PB-01…) del texto del plano; hoy vuelven `r1`…`r7` con `code` vacío. **Hecho 2026-11-15:** el plano escribe "PB-01 · 53,0 m²" bajo el nombre y el lector lo recupera (`code`, `written_m2`); en `building`, `rooms`, `special`, `emergency` y `exclude` aceptan el código del ambiente.
 - [x] **SIM-04** (T-04) Poder indicar el ambiente (por id) donde va el tablero o el shaft, en vez de coordenadas en el marco de la hoja. **Hecho 2026-11-15:** `board`, `shaft` y `main_board` aceptan `{"room": id, código o nombre}` y se ubican en el centro del ambiente (`resolve_rooms`).
 - [ ] **SIM-05** (T-05, T-07) Bloque guiado para cargas y `engine_inputs` (luminarias, tomas, estudios, HVAC, tierra) y que el agente `electrical_lv` pueda guardar las respuestas sin intervención manual.
-- [ ] **SIM-06** (B-01) Tras `approve` e `issue`, el manifiesto y el PDF del transmittal siguen en `draft` y `signed: null`; deben reflejar el estado del flujo (decisión del dueño: cómo se firma sin romper el hash del manifiesto).
-- [ ] **SIM-07** (B-02) `approve`/`issue` no se bloquean con hallazgos `major` abiertos (decisión del dueño: qué severidad bloquea y si el ingeniero puede aceptar un hallazgo con motivo).
-- [ ] **SIM-08** (B-04) Falta el dato de protección diferencial en el formulario y en `engine_inputs`: 20 hallazgos `major` (`differential_ok = False`, esquema TT).
-- [ ] **SIM-09** (B-05) F-0060: la caída de tensión máxima del dibujo (2,17) no coincide con la esperada (2,53); averiguar si es redondeo o fuente.
-- [ ] **SIM-10** (B-07) Los entregables sin entrada en `engine_inputs.deliverable_names` salen sin el código del proyecto; derivar el nombre AAAA-PROVEEDOR-CLIENTE-CODIGO desde el proyecto.
-- [ ] **SIM-11** (B-08) Unificar las tres convenciones de capas (`A-*`, `ARQ-/ELEC-/PLAN-*`, `291-*`) y la tipografía (OpenSans/Liberation vs Arial).
-- [ ] **SIM-12** (B-09) El rótulo del unifilar deja vacíos cliente, ubicación, estado y revisión; llenarlos desde `fields`.
+- [x] **SIM-06** (hecho 2026-11-16: `review_state.py`; el manifiesto sigue el flujo y la carátula muestra estado, firmante y hallazgos mayores) (B-01) Tras `approve` e `issue`, el manifiesto y el PDF del transmittal siguen en `draft` y `signed: null`; deben reflejar el estado del flujo (decisión del dueño: cómo se firma sin romper el hash del manifiesto).
+- [x] **SIM-07** (parcial 2026-11-16, opción «solo reflejar»: los `major` se listan en la carátula y en la respuesta de `approve`/`issue`; **decisión del dueño pendiente:** si algún `major` debe bloquear o aceptarse con motivo) (B-02) `approve`/`issue` no se bloquean con hallazgos `major` abiertos (decisión del dueño: qué severidad bloquea y si el ingeniero puede aceptar un hallazgo con motivo).
+- [x] **SIM-08** (B-04) Falta el dato de protección diferencial en el formulario y en `engine_inputs`: 20 hallazgos `major` (`differential_ok = False`, esquema TT).
+- [x] **SIM-09** (B-05) F-0060: la caída de tensión máxima del dibujo (2,17) no coincide con la esperada (2,53); averiguar si es redondeo o fuente.
+- [x] **SIM-10** (B-07) Los entregables sin entrada en `engine_inputs.deliverable_names` salen sin el código del proyecto; derivar el nombre AAAA-PROVEEDOR-CLIENTE-CODIGO desde el proyecto.
+- [x] **SIM-11** (B-08) Unificar las tres convenciones de capas (`A-*`, `ARQ-/ELEC-/PLAN-*`, `291-*`) y la tipografía (OpenSans/Liberation vs Arial).
+- [x] **SIM-12** (B-09) El rótulo del unifilar deja vacíos cliente, ubicación, estado y revisión; llenarlos desde `fields`.
 - [ ] **SIM-13** (B-10) Plano eléctrico de PB: el edificio ocupa poca hoja y los circuitos tapan los muros; ajustar escala y capas (observado, no medido).
-- [ ] **SIM-14** (B-11) Idioma: con el proyecto en `es`, el informe descriptivo sale en inglés.
-- [ ] **SIM-15** (B-12) Etapa 4: sin etapa para un edificio alimentado en BT directo.
+- [x] **SIM-14** (B-11) Idioma: con el proyecto en `es`, el informe descriptivo sale en inglés.
+- [x] **SIM-15** (B-12) Etapa 4: sin etapa para un edificio alimentado en BT directo.
+- [ ] **S1-B02** El lector devuelve 27 muros donde se dibujaron 11 (los muros se parten en tramos entre aberturas y encuentros, no es un error) y en la planta alta `P1` lee 7 de 8 ventanas: falta la del muro norte entre x≈33 y 35 (en `PB` esa misma ventana sí se lee). Causa sin investigar: mirar `recognizers/openings.py` (`find_gaps`, `_window_evidence`).
 - [ ] **SIM-16** (B-13) Iluminación: entrada de coeficiente de utilización en el formulario; hoy se usa una tabla ilustrativa.
 - [ ] **SIM-17** (B-14) Los hallazgos `note` quedan abiertos sin dueño; el manifiesto no distingue los ya vistos.
 - [ ] **SIM-18** (B-15) Probar si una nueva corrida marca como cambiado el acta de `inputs/minutes/` editada después de la corrida.
-- [ ] **SIM-19** (B-06) Cinco entradas del manifiesto no tienen archivo (`boq`, `datasheets`, `lighting_study`, `rfq`, `terminal_block_list`): decidir si se renderizan o se quitan.
+- [x] **SIM-19** (B-06) Cinco entradas del manifiesto no tienen archivo (`boq`, `datasheets`, `lighting_study`, `rfq`, `terminal_block_list`): decidir si se renderizan o se quitan.
 
 ## En espera / más adelante
 Nada de esto se hace hasta que el dueño lo pida.

@@ -733,6 +733,11 @@ class _Sheet:
         etree.fromstring(final.encode('utf-8'))
         return final
 
+    def accumulated_drop(self, tag):
+        """Voltage drop (%) from the source to the circuit, as the calculation reports it (its own plus the upstream ones); the own drop when the calculation gives none."""
+        acc = self.det[tag].get('du_acum_pct')
+        return acc if isinstance(acc, (int, float)) else self.r[tag]['dv']
+
     def export(self, final):
         """El SVG en desarrollo pasa a entregable por el servicio de epc_dxf (capas del catálogo, símbolos como bloques, color y grosor del trazo)."""
         svg_path = os.path.join(self.out, self.name + '.svg')
@@ -742,7 +747,7 @@ class _Sheet:
             print(ln, file=sys.stderr)
         summ = {t: dict(In=self.r[t]['In'], Ib=round(self.r[t]['Ib'], 1), icu=self.r[t]['icu'], S=self.r[t]['S'], dU=round(self.r[t]['dv'], 2), disp=self.r[t]['disp']) for t in self.tree}
         json.dump(summ, open(os.path.join(self.out, self.name + '_calculo.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
-        dvmax = max((self.r[t]['dv'] for t in self.order if not self.kids[t]), default=0.0)
+        dvmax = max((self.accumulated_drop(t) for t in self.order), default=0.0)     # the calculation's du_pct is the drop up to the circuit: own + the upstream ones
         print('OK', self.name, 'circuitos', len(self.tree), 'y_out', round(self.y_out, 1), 'fin tabla', round(self.ry, 1), 'dU max', round(dvmax, 2))
         return {"name": self.name, "svg": svg_path, "circuits": len(self.tree)}
 

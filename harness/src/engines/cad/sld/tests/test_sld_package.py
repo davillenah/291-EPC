@@ -7,8 +7,8 @@ import unittest
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-ENGINES = HERE.parents[3]                                    # harness/src/engines: one folder per group (cad, calculation, ...)
-SRC = [str(ENGINES / g / a / "src") for g, a in (("cad", "sld"), ("calculation", "aea90364"), ("cad", "symbols"), ("cad", "titleblock"))]
+ENGINES = HERE.parents[2]                                    # harness/src/engines: one folder per group (cad, calculation, ...)
+SRC = [str(d) for d in sorted(ENGINES.glob("*/*/src"))]    # every engine: the generator imports the calculation engines, which import each other
 
 
 class TestSldPackage(unittest.TestCase):

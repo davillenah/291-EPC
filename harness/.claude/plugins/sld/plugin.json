@@ -42,7 +42,10 @@
     "requires": [
       "ezdxf",
       "lxml",
+      "numpy",
       "openpyxl",
+      "pillow",
+      "pypdfium2",
       "shapely",
       "svgelements",
       "vtracer"
@@ -64,11 +67,13 @@
   },
   "engine": [
     "aea90364",
+    "arch",
     "calc_common",
     "dxf",
     "feeder_sizing",
     "grounding",
     "load_balance",
+    "plan",
     "selectivity",
     "short_circuit",
     "sld",

@@ -4,11 +4,12 @@ TRANSITIONS: name -> (from state, to state). Who may trigger each one is in `per
 the permission to `sign` deliverables and `issue` the permission to `issue` them (both checked with `permissions.enforce`).
 
 Guards of `approve` and `issue` (D21): refused while any norm record listed by the latest manifests (those not superseded) is not
-`verified`, and while the project has no manifest at all. Signing is out of scope here (no signature is created or checked).
+`verified`, and while the project has no manifest at all. A transition also writes its state in the manifests in force (`review_state.py`): `for_review`, `approved`/`approved_for_construction` with the signer and the date, `issued`.
 
 A transition is applied only if every guard passes: it is then written to `reviews/workflow.json` through the project store (a
 short write session of its own, `workflow-<n>`) and appended to the event log as `ok`. A refusal appends a `denied` event and raises.
 """
+from disciplines.electrical_lv import review_state
 from disciplines.electrical_lv.store import ProjectStore
 from epc_platform.permissions import Decision, PermissionDenied, enforce, may_trigger
 from epc_platform.permissions import rules as R
@@ -140,6 +141,7 @@ class Workflow:
             if review is not None:
                 self.store.write_review(token, f"{history[-1]['transition']}-{len(history)}.json", review)
             self.store.write_workflow(token, {"state": state, "history": history})
+            review_state.reflect(self.store, token, history[-1]["transition"], history[-1]["actor_id"], str(self.log._clock()))
 
     def _log(self, name, role, actor_id, run_id, result, detail):
         self.log.append({"pipeline_run_id": run_id, "actor": {"role": role, "id": actor_id}, "action": f"transition:{name}",

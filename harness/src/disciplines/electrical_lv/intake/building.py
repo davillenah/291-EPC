@@ -347,6 +347,10 @@ def _circuit_loads(building, designs, out):
                                  "power": {"value": c["power"], "unit": c["unit"]}, "phases": phases, "length": {"value": round(design["riser_m"][c["part"]] + c["moment_m"], 3), "unit": "m"}})
 
 
+# A receptacle circuit needs a residual-current device (the calculation flags it `differential_ok = false` otherwise): the branch circuits the engines propose get an RCBO unless the floor says another `kind`.
+RECEPTACLE_DEFAULTS = {"receptacles": {"kind": "rcbo"}}
+
+
 def _circuit_options(building, designs):
     """{load id: options of the circuit}: what each floor says for its `circuits` and, for a branch circuit, the moments flag (its length is the one equivalent to the moments)."""
     options = {}
@@ -354,7 +358,7 @@ def _circuit_options(building, designs):
         given = floor.get("circuits") or {}
         if floor["id"] in designs:
             for c in designs[floor["id"]]["circuits"].values():
-                options[c["load"]] = {**copy.deepcopy(given.get(c["part"]) or {}), "moments": True}
+                options[c["load"]] = {**RECEPTACLE_DEFAULTS.get(c["part"], {}), **copy.deepcopy(given.get(c["part"]) or {}), "moments": True}
         else:
             options.update({f"{p}-{floor['id']}": copy.deepcopy(given[part]) for part, p in (("lighting", "L"), ("receptacles", "T")) if part in given})
     return options

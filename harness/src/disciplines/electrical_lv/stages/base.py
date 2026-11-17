@@ -77,12 +77,15 @@ def make_finding(n, run_id, document, field_name, value, expected, rule, action)
     }
 
 
+FLAG_ACTIONS = {"differential_ok": "The circuit needs a residual-current device: set `kind` to `rcbo` for it in `engine_inputs.circuits` (or give it a parent circuit of kind `rccb` or `rcbo`) and rerun; otherwise review it with the engineer of record."}
+
+
 def engine_finding(n, run_id, document, circuit, flag, value, expected):
     """A finding for a verdict the ENGINE returned (a boolean flag it computed); the stage only reports it."""
     return {
         "id": f"F-{n:04d}", "run_id": run_id, "verifier": "calc-check", "severity": "major",
         "document": document, "field": f"{circuit}/{flag}", "value": value, "expected": expected,
-        "clause": f"engine result {flag}", "action": "Review the engine result with the engineer of record.",
+        "clause": f"engine result {flag}", "action": FLAG_ACTIONS.get(flag, "Review the engine result with the engineer of record."),
         "evidence": [f"engine flag {flag} of {circuit}"], "status": "open",
     }
 
