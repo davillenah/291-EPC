@@ -35,18 +35,29 @@ def _entities(doc):
         yield from block
 
 
-def _fix_layers(doc):
-    renamed = {n: new_layer_name(n) for n in [l.dxf.name for l in doc.layers] if new_layer_name(n) != n}
+def _rename_layers(doc, renamed):
     for old, new in renamed.items():
-        if new in doc.layers:
-            continue
-        doc.layers.get(old).dxf.name = new
+        if new not in doc.layers:
+            doc.layers.get(old).dxf.name = new
+
+
+def _move_entities(doc, renamed):
     for entity in _entities(doc):
         if entity.dxf.hasattr("layer") and entity.dxf.layer in renamed:
             entity.dxf.layer = renamed[entity.dxf.layer]
+
+
+def _drop_old_layers(doc, renamed):
     for old, new in renamed.items():
         if old in doc.layers and new in doc.layers and old != new:
             doc.layers.remove(old)
+
+
+def _fix_layers(doc):
+    renamed = {n: new_layer_name(n) for n in [l.dxf.name for l in doc.layers] if new_layer_name(n) != n}
+    _rename_layers(doc, renamed)
+    _move_entities(doc, renamed)
+    _drop_old_layers(doc, renamed)
     return renamed
 
 

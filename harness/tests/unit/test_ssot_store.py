@@ -285,6 +285,15 @@ class InputsTests(TempCase):
             self.assertEqual((f["severity"], f["run_id"], f["status"]), ("blocking", "r9", "open"))
         self.assertEqual(validate(findings, {"type": "array", "items": load_schema(STATE_SCHEMA)["properties"]["open_findings"]["items"]}), [])
 
+    def test_a_minutes_file_edited_after_the_freeze_is_a_changed_input(self):
+        """SIM-18: the minutes of `inputs/minutes/` are inputs like any other; editing one after the run is reported (IM-01)."""
+        store = self.new_store()
+        store.write_input("minutes/acta.md", "# Acta\nuno\n")
+        with store.pipeline_session("r1") as token:
+            store.freeze_inputs(token)
+        (store.inputs_dir / "minutes" / "acta.md").write_text("# Acta\ndos\n", encoding="utf-8")
+        self.assertEqual([(f["field"], f["value"]) for f in store.verify_inputs_unchanged("r2")], [("inputs/minutes/acta.md", "changed")])
+
     def test_inputs_cannot_be_written_after_the_freeze(self):
         store, _ = self.frozen()
         with self.assertRaises(StoreError):

@@ -86,7 +86,7 @@ class EditMode(Base):
     def test_approve_and_issue_are_reachable_and_say_it_is_edit_mode(self):
         self.run_it(mode="edit")
         self.assertTrue(api.submit(self.project, ENG, clock=A.CLOCK)["ok"])
-        approved = api.approve(self.project, ENG, clock=A.CLOCK)
+        approved = api.approve(self.project, ENG, clock=A.CLOCK, accept_major="open majors reviewed in the test")      # SIM-07: a major finding still open needs the engineer's reason
         self.assertEqual((approved["ok"], approved["data"]["workflow_state"], approved["data"]["mode"]), (True, "approved", "edit"))
         self.assertIn("not for production", approved["data"]["notice"])
         issued = api.issue(self.project, ENG, clock=A.CLOCK)
@@ -94,6 +94,15 @@ class EditMode(Base):
         events = [json.loads(line) for line in (self.project / ".epc" / "audit" / "events.jsonl").read_text(encoding="utf-8").splitlines()] if (self.project / ".epc" / "audit" / "events.jsonl").exists() else []
         done = [e for e in events if e.get("action") == "transition:approve" and e.get("result") == "ok"]
         self.assertTrue(not events or done and done[-1]["detail"].get("d21") == "not applied (edit mode)")
+
+    def test_a_major_finding_still_open_stops_approve_without_a_reason(self):
+        self.run_it(mode="edit")
+        self.assertTrue(api.submit(self.project, ENG, clock=A.CLOCK)["ok"])
+        refused = api.approve(self.project, ENG, clock=A.CLOCK)
+        self.assertEqual((refused["ok"], refused["error"]["code"]), (False, "blocked_d21"))
+        self.assertIn("--accept-major", refused["error"]["message"])
+        self.assertTrue(api.approve(self.project, ENG, clock=A.CLOCK, accept_major="reviewed")["ok"])
+        self.assertEqual([f["status"] for f in self.manifest()["findings"] if f["severity"] == "major"][:1], ["accepted"])
 
     def test_a_package_of_production_in_a_project_in_edit_mode_keeps_the_guard(self):
         self.run_it()                                                                  # a production manifest

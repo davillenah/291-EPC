@@ -77,7 +77,23 @@ def make_finding(n, run_id, document, field_name, value, expected, rule, action)
     }
 
 
-FLAG_ACTIONS = {"differential_ok": "The circuit needs a residual-current device: set `kind` to `rcbo` for it in `engine_inputs.circuits` (or give it a parent circuit of kind `rccb` or `rcbo`) and rerun; otherwise review it with the engineer of record."}
+FLAG_ACTIONS = {
+    "differential_ok": "The circuit needs a residual-current device: set `kind` to `rcbo` for it in `engine_inputs.circuits` (or give it a parent circuit of kind `rccb` or `rcbo`) and rerun; otherwise review it with the engineer of record.",
+    "compliant": "The conductor does not meet the criteria of the calculation: check the load, the length and the installation method of the circuit (a bigger section or a shorter route may be needed), then rerun; or review it with the engineer of record.",
+    "overload_ok": "The protection does not cover the conductor against overload: check the rating of the device against the current of the circuit and the capacity of the conductor, then rerun.",
+    "coordination_ok": "The protection and the conductor are not coordinated: check the device rating and its tripping curve against the conductor, then rerun.",
+    "protection_ok": "The protection does not meet the checks of the calculation: review the device rating, its breaking capacity and its curve for this circuit, then rerun.",
+    "trip_ok": "The device may not trip on a short circuit at the end of the line: check the length of the circuit, the section and the curve of the device, then rerun.",
+    "breaking_ok": "The breaking capacity of the device is below the short-circuit current at its point: choose a device with a higher breaking capacity, or review the short-circuit level given in the supply data.",
+    "selectivity": "The devices upstream and downstream are not selective: review the ratings and curves of both, or the manufacturer's selectivity table, then rerun.",
+    "panel_thermal_incomplete": "A device above the table of the engine has no dissipation: give the manufacturer's dissipation of each device in `engine_inputs.panel_thermal` and rerun.",
+    "ra_complies": "The earth electrode resistance is above what the earthing system allows: review the electrode (more or longer rods, or a different arrangement) with the engineer of record, then rerun.",
+    "phase_unbalance_complies": "The load is unbalanced between phases beyond the limit: redistribute the single-phase circuits among the phases, then rerun.",
+    "fits_largest_size": "The conductors do not fit the largest raceway of the table: split the circuits among more raceways or choose another installation method, then rerun.",
+    "special_location_complies": "The room is a special location and its circuits do not meet its requirements: review them with the engineer of record, then rerun.",
+    "start_voltage_drop_complies": "The voltage drop while the motor starts is above the limit: review the section, the length or the starting method of the motor, then rerun.",
+    "panel_thermal_complies": "The heat the devices dissipate is above what the enclosure admits: review the enclosure or its ventilation, or the devices, then rerun.",
+}
 
 
 def engine_finding(n, run_id, document, circuit, flag, value, expected):

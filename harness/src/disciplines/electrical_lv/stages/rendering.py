@@ -249,6 +249,12 @@ def findings_text(findings, severity="major"):
     return f"{len(open_ones)} {severity} finding(s) still open. {'; '.join(parts)}. The list is in the manifest."
 
 
+def accepted_text(findings):
+    """One line about the `major` findings the engineer of record accepted: how many, who, and the reason (empty text when none)."""
+    done = [f for f in findings or [] if f.get("severity") == "major" and f.get("status") == "accepted"]
+    return f"{len(done)} major finding(s) accepted by {done[0]['accepted_by']}: {done[0]['accepted_reason']}" if done else ""
+
+
 def _cover_header(project, revision, run_id, status, signed, mode):
     header = [["Project", project or ""], ["Revision", revision], ["Run", run_id or ""], ["Status", status.replace("_", " ")]]
     header += [["Signed by", f"{signed['signer']}, {signed['date']}"]] if signed else []
@@ -258,7 +264,7 @@ def _cover_header(project, revision, run_id, status, signed, mode):
 def transmittal_data(transmittal, project, revision, run_id, rows, records, mode="production", status="draft", signed=None, findings=None):
     """The data the transmittal renderer of the drawing engine takes: header, a row per issued file (code, name, file, short hash), the review status (and who signed) with the count of unverified norm records, and the open major findings."""
     table = [[str(n), r.get("code") or "", r["name"], r.get("path") or "(structured document)", r["sha256"][:12]] for n, r in enumerate(rows, start=1)]
-    sections = [x for x in (["Review", _review_text(records, mode, status, signed)], ["Open findings", findings_text(findings)]) if x[1]]
+    sections = [x for x in (["Review", _review_text(records, mode, status, signed)], ["Open findings", findings_text(findings)], ["Accepted findings", accepted_text(findings)]) if x[1]]
     return {"title": "TRANSMITTAL", "subtitle": transmittal, "header": _cover_header(project, revision, run_id, status, signed, mode),
             "columns": [["No", 0.06], ["Code", 0.2], ["Name", 0.28], ["File", 0.34], ["SHA-256", 0.12]], "rows": table,
             "sections": sections, "footer": f"{project or ''} {transmittal}" + (f" - {EDIT_MARK}" if mode == "edit" else ""), "page_label": PAGE_LABEL}

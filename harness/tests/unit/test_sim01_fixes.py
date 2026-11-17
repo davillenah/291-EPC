@@ -86,3 +86,27 @@ class Documents(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class AcceptedMajors(unittest.TestCase):
+    FINDINGS = [{"id": "F-0001", "severity": "major", "document": "earthing", "status": "open"}, {"id": "F-0002", "severity": "minor", "document": "x"}]
+
+    def test_a_reason_marks_only_the_open_majors(self):
+        out = review_state.reviewed(dict(MANIFEST, findings=self.FINDINGS), "approve", "ing", "d", "checked on site")
+        self.assertEqual((out["findings"][0]["status"], out["findings"][0]["accepted_by"], out["findings"][0]["accepted_reason"]), ("accepted", "ing", "checked on site"))
+        self.assertNotIn("status", out["findings"][1])
+
+    def test_without_a_reason_findings_are_untouched(self):
+        out = review_state.reviewed(dict(MANIFEST, findings=self.FINDINGS), "approve", "ing", "d")
+        self.assertEqual(out["findings"], self.FINDINGS)
+
+    def test_the_cover_says_who_accepted_and_why(self):
+        done = review_state.accept_majors(dict(MANIFEST, findings=self.FINDINGS), "ing", "checked on site")
+        self.assertIn("accepted by ing: checked on site", rendering.accepted_text(done))
+        self.assertEqual(rendering.findings_text(done), "")
+
+    def test_approval_marks_the_notes_as_seen(self):
+        findings = [{"id": "F-0003", "severity": "note", "document": "x"}, {"id": "F-0004", "severity": "minor", "document": "x"}]
+        out = review_state.reviewed(dict(MANIFEST, findings=findings), "approve", "ing", "d")["findings"]
+        self.assertEqual((out[0]["status"], out[0]["accepted_reason"]), ("accepted", "seen at approval"))
+        self.assertNotIn("status", out[1])

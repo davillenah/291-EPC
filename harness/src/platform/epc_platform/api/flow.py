@@ -15,12 +15,12 @@ def _not_a_trigger(workflow, name, actor, run_id):
     raise ApiError("permission_denied", reason, {"role": actor["role"], "transition": name})
 
 
-def apply(workflow, name, actor, run_id, review=None):
+def apply(workflow, name, actor, run_id, review=None, accept_major=None):
     """Apply one transition for the actor; returns the new state. The workflow logs its own `ok` and `denied` events."""
     if not may_trigger(actor["role"], name):
         _not_a_trigger(workflow, name, actor, run_id)
     try:
-        return workflow.transition(name, actor["role"], actor["id"], run_id=run_id, review=review)
+        return workflow.transition(name, actor["role"], actor["id"], run_id=run_id, review=review, accept_major=accept_major)
     except WorkflowBlocked as exc:
         raise ApiError("blocked_d21", str(exc)) from exc
     except WorkflowError as exc:

@@ -21,13 +21,28 @@ def status_after(transition, manifest):
     return REVIEW_STATUS.get(transition)
 
 
-def reviewed(manifest, transition, signer, date):
-    """The manifest after `transition`: its `review_status` and, for `approve`, `signed`. None when nothing changes."""
+def accept_majors(manifest, signer, reason):
+    """The findings of `manifest` with every open `major` one accepted: the reason and the engineer who accepted it stay in the finding (SIM-07)."""
+    return [dict(f, status="accepted", accepted_reason=reason, accepted_by=signer) if f.get("severity") == "major" and f.get("status", "open") == "open" else f
+            for f in manifest["findings"]]
+
+
+def see_notes(findings, signer):
+    """The open `note` findings once the engineer of record approved: seen by them (status `accepted`, reason `seen at approval`), so the manifest tells the seen ones from the new ones (SIM-17)."""
+    return [dict(f, status="accepted", accepted_reason="seen at approval", accepted_by=signer) if f.get("severity") == "note" and f.get("status", "open") == "open" else f for f in findings]
+
+
+def reviewed(manifest, transition, signer, date, accept_reason=None):
+    """The manifest after `transition`: its `review_status`, for `approve` `signed`, and with a reason the open `major` findings accepted. None when nothing changes."""
     status = status_after(transition, manifest)
     if status is None:
         return None
     out = copy.deepcopy(manifest)
     out["review_status"] = status
+    if accept_reason:
+        out["findings"] = accept_majors(manifest, signer, accept_reason)
+    if transition == "approve" and "findings" in out:
+        out["findings"] = see_notes(out.get("findings", []), signer)
     if transition == "approve":
         out["signed"] = {"signer": signer, "date": date}
     return out
@@ -47,13 +62,13 @@ def _cover(store, token, manifest):
         store.copy_deliverable(token, Path(tmp) / source, rel)
 
 
-def reflect(store, token, transition, signer, date):
+def reflect(store, token, transition, signer, date, accept_reason=None):
     """Apply `transition` to every manifest in force (not superseded): the manifest first, then its cover. Returns the transmittals changed."""
     changed = []
     for _rel, manifest in store.read_manifests():
         if manifest.get("superseded_by") is not None:
             continue
-        new = reviewed(manifest, transition, signer, date)
+        new = reviewed(manifest, transition, signer, date, accept_reason)
         if new is None:
             continue
         store.record_review(token, new)
