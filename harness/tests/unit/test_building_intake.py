@@ -491,7 +491,7 @@ class WholeBuildingTests(unittest.TestCase):
             run_ = res["data"]["run"]
             self.assertEqual(run_["summary"]["by_status"], {"ok": 12})
             self.assertEqual(res["data"]["workflow_state"], "draft_ready")
-            names = sorted(p.name for p in (root / "API-1" / "deliverables" / "TR-001").rglob("*.dxf"))
+            names = sorted(p.name for p in (root / "API-1" / "deliverables" / "TR-001" / "04_PLANS").glob("*.dxf"))
             self.assertTrue([n for n in names if "_plan_PB" in n] and [n for n in names if "_lighting_PB" in n])
             docs = [d["name"] for d in run_["results"][10]["outputs"]["documents"]]
             self.assertIn("cable_list", docs)

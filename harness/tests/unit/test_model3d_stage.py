@@ -127,7 +127,7 @@ class WholePipeline(unittest.TestCase):
             res = api.run_pipeline(root / "API-1", loads=B.loads(), engine_inputs=ins, clock=A.CLOCK, actor=A.ORC)
             self.assertTrue(res["ok"], res)
             self.assertEqual(res["data"]["run"]["summary"]["by_status"], {"ok": 12})
-            files = sorted(p.name for p in (root / "API-1" / "deliverables" / "TR-001").rglob("*") if p.is_file())
+            files = sorted(p.name for p in (root / "API-1" / "deliverables" / "TR-001").glob("*/*"))
             self.assertTrue([f for f in files if f.endswith("_model_3d.dxf")], files)
             self.assertTrue([f for f in files if f.endswith("_section_A.dxf")], files)
             self.assertTrue([f for f in files if f.startswith("SLD_")] and [f for f in files if f.endswith("_tables.xlsx")], files)

@@ -10,6 +10,7 @@ the document (not to its type) and never changed once issued. No revision and no
 transmittal and inside the file.
 Plans and diagrams (SLD, MLD, PLN, SEC, ELV, DET) always sit in a folder `<code>_<description>/` with one file per page, `<code>_<description>_P01.dxf`, `_P02`...;
 single-piece documents (CAL, RPT, LST, SPC, ANL, SCH, TAB, CIR) are loose files.
+In the transmittal each of them sits in a numbered kind folder (`01_SLD`, `02_MLD`, `04_PLANS`, `06_DOCUMENTS`...; see `stages/package_stage.py`).
 
 The names are given by a person in the engine inputs (`deliverable_names`, keyed by the name the engine uses); nothing here invents a description.
 """

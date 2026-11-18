@@ -7,6 +7,8 @@ Transmittal numbers: a run of a revision that has no transmittal yet gets the ne
 run of a revision whose transmittal is still an unsigned draft replaces that draft (same number); a signed or superseded revision blocks (use a new revision).
 
 What counts as a deliverable today:
+  - every file sits in a numbered folder of the transmittal by kind: `01_SLD`, `02_MLD`, `03_ARCHITECTURE` (the plans of `inputs/plans/` the building run used), `04_PLANS`, `05_3D`,
+    `06_DOCUMENTS` (PDF and Word) and `07_TABLES` (workbook); the cover `TR-NNN_transmittal.pdf` is at the root of the transmittal. A named plan or diagram keeps its own folder inside.
   - drawings: the `.dxf` files of stage 10 (`.svg` is not a deliverable; the `.json` and `.md` files of the engine's output folder are internal);
   - documents: the structured documents of stage 11, whose hash is the one stage 11 recorded (no rendered file exists yet: their `path` is null).
 
@@ -31,6 +33,9 @@ from disciplines.electrical_lv.stages.calc_check_stage import by_severity, engin
 
 DRAWINGS, DOCUMENTS, LAST_PRODUCER = 10, 11, 11
 DRAWING_SUFFIXES = (".dxf",)
+# Folders of a transmittal, numbered in reading order (UPPER_CASE, as in the naming proposal): the first level of `deliverables/TR-NNN/`.
+FOLDER_SLD, FOLDER_MLD, FOLDER_ARCHITECTURE = "01_SLD", "02_MLD", "03_ARCHITECTURE"
+FOLDER_PLANS, FOLDER_3D, FOLDER_DOCUMENTS, FOLDER_TABLES = "04_PLANS", "05_3D", "06_DOCUMENTS", "07_TABLES"
 TRANSMITTAL = re.compile(r"TR-([0-9]{3,4})")
 
 
@@ -67,41 +72,51 @@ def _ok(context, number):
 
 
 def drawing_folder(stem):
-    """Folder of a drawing inside the transmittal: single-line diagrams, board layouts and plans each have one (the names are those of stage 10)."""
-    for prefix, folder in (("SLD", "drawings/sld"), ("MLD", "drawings/mld")):
+    """Transmittal folder of a drawing, from the file name stage 10 and stage 9b give it: single-line diagrams, board layouts, 3D views and sections, and plans."""
+    for prefix, folder in (("SLD", FOLDER_SLD), ("MLD", FOLDER_MLD)):
         if stem.startswith(prefix + "_"):
             return folder
-    if "_model_3d" in stem or "_section_" in stem:
-        return "drawings/3d"
-    return "drawings/plans"
+    if any(mark in stem for mark in ("_model_3d", "_section_", "_elevation_")):
+        return FOLDER_3D
+    return FOLDER_PLANS
 
 
 def document_folder(suffix):
-    """Folder of a rendered document: the workbook of the tables apart from the reports (PDF and Word)."""
-    return "tables" if suffix == ".xlsx" else "documents"
+    """Transmittal folder of a rendered document: the workbook of the tables apart from the reports (PDF and Word)."""
+    return FOLDER_TABLES if suffix == ".xlsx" else FOLDER_DOCUMENTS
 
 
-def _architecture_item(store, floor):
-    """The deliverable entry of the plan file a floor names (a file of `inputs/`), or None."""
-    plan = floor.get("plan") if isinstance(floor, dict) else None
-    file = Path(store.inputs_dir) / plan if plan else None
-    if file is None or not file.is_file():
-        return None
-    return {"name": f"architecture_{Path(plan).stem}", "title": f"Architecture plan {floor.get('name') or floor.get('id')}", "path": f"architecture/{Path(plan).name}", "code": None,
-            "file": file, "recorded": sha256_file(file), "source": str(file), "support": True}
+def in_folder(item, folder):
+    """Put a deliverable that has a file under `folder` (the path inside the transmittal becomes `<folder>/<path>`)."""
+    if item["path"]:
+        item["path"] = f"{folder}/{item['path']}"
+    item["folder"] = folder
+    return item
+
+
+def _building_floors(context):
+    """The floors of `engine_inputs.building` that name a plan file."""
+    building = (getattr(context, "engine_inputs", None) or {}).get("building") or {}
+    return [f for f in building.get("floors") or [] if isinstance(f, dict) and f.get("plan")]
+
+
+def _plan_files(context):
+    """[(plan name as given, floor, file)] of the floors whose plan file exists in `inputs/plans/` (each plan once)."""
+    store = getattr(context, "store", None)
+    found = {}
+    for floor in _building_floors(context) if store is not None else []:
+        file = Path(store.inputs_dir) / floor["plan"]
+        if file.is_file():
+            found.setdefault(floor["plan"], (floor, file))
+    return [(plan, floor, file) for plan, (floor, file) in found.items()]
 
 
 def _architecture(context):
-    """The architecture plans the building run used (`engine_inputs.building.floors[].plan`, files of `inputs/plans/`): the DXF as the engineer gave it, copied to `architecture/`.
+    """The architecture plans the building run used (`engine_inputs.building.floors[].plan`, files of `inputs/plans/`): the DXF as the engineer gave it, copied to `03_ARCHITECTURE/`.
     A supporting file, not a document of the issue: it needs no entry in `deliverable_names`."""
-    store = getattr(context, "store", None)
-    items = [] if store is None else [_architecture_item(store, f) for f in _floors(context)]
-    unique = {i["name"]: i for i in items if i}
-    return list(unique.values())
-
-
-def _floors(context):
-    return ((getattr(context, "engine_inputs", None) or {}).get("building") or {}).get("floors") or []
+    return [{"name": f"architecture_{Path(plan).stem}", "title": f"Architecture plan {floor.get('name') or floor.get('id')}", "path": f"{FOLDER_ARCHITECTURE}/{Path(plan).name}",
+             "code": None, "file": file, "recorded": sha256_file(file), "source": str(file), "support": True, "folder": FOLDER_ARCHITECTURE}
+            for plan, floor, file in _plan_files(context)]
 
 
 def _drawings(context):
@@ -113,8 +128,8 @@ def _drawings(context):
         if not f["path"].endswith(DRAWING_SUFFIXES):
             continue
         file = Path(context.work_dir or "") / res.outputs["directory"] / f["path"]
-        out.append({"name": Path(f["path"]).stem, "title": f"Drawing {f['path']}", "path": f"{drawing_folder(Path(f['path']).stem)}/{Path(f['path']).name}", "code": None, "file": file, "recorded": f["sha256"],
-                    "source": f"{res.outputs['directory']}/{f['path']}"})
+        out.append(in_folder({"name": Path(f["path"]).stem, "title": f"Drawing {f['path']}", "path": f["path"], "code": None, "file": file, "recorded": f["sha256"],
+                              "source": f"{res.outputs['directory']}/{f['path']}"}, drawing_folder(Path(f["path"]).stem)))
     return out
 
 
@@ -129,8 +144,8 @@ def _rendered(context):
     """The files of the documents that stage 11 rendered (PDF, Word, workbook): named `<document>_<format>`, copied from `<work_dir>/documents/`."""
     res = _ok(context, DOCUMENTS)
     files = ((res.outputs.get("rendered") or {}).get("files") or []) if res is not None else []
-    return [{"name": f["name"], "title": f"Document file {f['path']}", "path": f"{document_folder(Path(f['path']).suffix)}/{Path(f['path']).name}", "code": None, "file": Path(context.work_dir or "") / f["path"], "recorded": f["sha256"],
-             "source": f["path"]} for f in files]
+    return [in_folder({"name": f["name"], "title": f"Document file {f['path']}", "path": Path(f["path"]).name, "code": None, "file": Path(context.work_dir or "") / f["path"],
+                       "recorded": f["sha256"], "source": f["path"]}, document_folder(Path(f["path"]).suffix)) for f in files]
 
 
 def _unrendered(documents, rendered):
@@ -141,19 +156,19 @@ def _unrendered(documents, rendered):
 def deliverables(context):
     """Drawings, rendered files and the structured documents that have no rendered file (one that has them is listed through its files, not twice: B-06)."""
     rendered = _rendered(context)
-    return _drawings(context) + rendered + _unrendered(_documents(context), rendered) + _architecture(context)
+    return _drawings(context) + _architecture(context) + rendered + _unrendered(_documents(context), rendered)
 
 
 def _name_one(item, names, project_code, code_ok):
     """Name one deliverable from its entry in `names`; the errors of its entry (empty when named, or when the project code is not usable)."""
+    if item.get("support"):
+        return []
     entry = names.get(item["name"])
     bad = ["no entry in engine_inputs.deliverable_names"] if entry is None else naming.problems(entry)
     if not bad and code_ok:
         item["code"] = naming.document_code(project_code, entry)
         if item["file"] is not None:
-            folder = Path(item["path"]).parent.as_posix()                       # the type folder of the transmittal (`drawings/sld`, `documents`...) stays in front of the named path
-            named = naming.file_path(project_code, entry, Path(item["path"]).suffix, in_type_folder=folder != ".")
-            item["path"] = named if folder == "." else f"{folder}/{named}"
+            item["path"] = f"{item['folder']}/{naming.file_path(project_code, entry, Path(item['path']).suffix)}"
     return [f"{item['name']}: {b}" for b in bad]
 
 
