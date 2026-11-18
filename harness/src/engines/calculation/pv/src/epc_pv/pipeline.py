@@ -33,13 +33,24 @@ def _document(doc: Union[dict, str, bytes]) -> dict:
     return doc
 
 
+def _out_of_range(value, minimum, maximum, positive) -> bool:
+    return (positive and value <= 0) or (minimum is not None and value < minimum) or (maximum is not None and value > maximum)
+
+
+def _range_rule(minimum, maximum, positive):
+    if positive:
+        return bi("> 0", "> 0")
+    if maximum is not None:
+        return bi(f"between {minimum} and {maximum}", f"entre {minimum} y {maximum}")
+    return bi(f">= {minimum}", f">= {minimum}")
+
+
 def _number(obj: Dict[str, Any], key: str, where: str, minimum: Optional[float] = None, maximum: Optional[float] = None, positive: bool = False) -> float:
     value = obj.get(key)
     if isinstance(value, bool) or not isinstance(value, (int, float)):
         raise PvError("err_type", name=f"{where}.{key}", kind=bi("a number", "un número"))
-    if (positive and value <= 0) or (minimum is not None and value < minimum) or (maximum is not None and value > maximum):
-        rule = bi("> 0", "> 0") if positive else bi(f"between {minimum} and {maximum}", f"entre {minimum} y {maximum}") if maximum is not None else bi(f">= {minimum}", f">= {minimum}")
-        raise PvError("err_range", name=f"{where}.{key}", rule=rule, value=value)
+    if _out_of_range(value, minimum, maximum, positive):
+        raise PvError("err_range", name=f"{where}.{key}", rule=_range_rule(minimum, maximum, positive), value=value)
     return float(value)
 
 

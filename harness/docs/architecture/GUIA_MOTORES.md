@@ -175,7 +175,7 @@ Convenciones:
 - **Trazabilidad:** cada elemento calculado o reconocido lleva **por qué** (`reason`) y **cuánta confianza** (`confidence` 0–1) cuando el resultado es una estimación (como `epc_arch`).
 - **Archivos** que escribe el CLI en `--out DIR`: `<stem>.<tipo>.json`, `<stem>.<tipo>.svg`, `<stem>.dxf`, `result.json`… Nombres predecibles: el backend los lee por nombre.
 - **SVG** solo como intermedio de trabajo (con capas con los nombres del catálogo). `.svg` **no** es un entregable (CLAUDE.md); los entregables son DXF/PDF/XLSX y se generan con `epc_dxf`/`epc_drawing`.
-- **Capas DXF:** (editables a mano en `harness/config/dxf/`, ver su README) si dibuja, usa nombres del catálogo `harness/src/engines/cad/dxf/src/epc_dxf/data/layers.json` (prefijo por disciplina: `ARQ-`, `ELEC-`, `HVAC-`, `PCI-`, `SAN-`, `COM-`, `CIV-`, `MEC-`, `INS-`, `PLAN-`, `291-`) y registra las nuevas ahí (una sola fuente), agrupadas por `data/disciplines.json`.
+- **Capas DXF:** (editables a mano en `harness/config/dxf/`, ver su README) si dibuja, usa nombres del catálogo `harness/config/dxf/layers.json` (prefijo por disciplina: `ARQ-`, `ELEC-`, `HVAC-`, `PCI-`, `SAN-`, `COM-`, `CIV-`, `MEC-`, `INS-`, `PLAN-`, `291-`) y registra las nuevas ahí (una sola fuente), agrupadas por `data/disciplines.json`.
 - **Resultado reproducible:** nada de fechas, rutas absolutas ni ids aleatorios dentro del JSON (los tests dorados lo comparan byte a byte).
 - El usuario final **no ve formatos internos** (JSON, YAML, Markdown): el motor produce datos; lo que se muestra o entrega lo decide el frontend o el exportador.
 

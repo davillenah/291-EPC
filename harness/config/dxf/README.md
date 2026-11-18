@@ -10,4 +10,4 @@ Open these files with any text editor, change a value, save. The next DXF the ha
 | `text.json` → `trays` | `as_block`: true draws each tray with its text as one block (`TRAY_<tag>`); false leaves them loose. `kinds`: which line kinds are drawn so (`BN` = tray). `block_prefix`: block name prefix. |
 | `unify.json` | The final names of the layers in a transmittal (`ELEC-BANDEJA` becomes `E-TRAY`...) and the English word of each electrical element. The typeface of the final step comes from `text.json`. |
 
-A file may carry only the fields you change (the rest keeps its default). Another folder can be used with the environment variable `EPC_DXF_CONFIG_DIR`; the MASTER's global layer file (`EPC_LAYERS_JSON`) and the company/project files still win over this folder.
+A file may carry only the fields you change (the rest keeps its default). The files here are the only copy of these values (the code has none). Another folder can be used with the environment variable `EPC_DXF_CONFIG_DIR`; the MASTER's global layer file (`EPC_LAYERS_JSON`) and the company/project files still win over this folder.

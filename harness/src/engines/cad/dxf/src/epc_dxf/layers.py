@@ -2,8 +2,8 @@
 
 A drawing asks for a layer by its ROLE (`sld.diagram`, `sld.text`, `plan.ELEC-LUM`...), never by a name written in the code. The catalog says what that role is called and how it looks.
 Three sources, the later one winning role by role (a file may carry only the roles or fields it changes):
-  1. the default catalog that travels with this package (`data/layers.json`);
-  2. the editable folder `harness/config/dxf/layers.json` (or the folder in EPC_DXF_CONFIG_DIR): open it with any text editor, change a name, colour, weight or line type, save;
+  1. `harness/config/dxf/layers.json`, the file the values live in: open it with any text editor, change a name, colour, weight or line type, save;
+  2. the same file name in another folder named in EPC_DXF_CONFIG_DIR;
   3. the global file the platform's MASTER edits: the path in the environment variable EPC_LAYERS_JSON;
   4. files passed to `load` (later: the project's own file).
 """
@@ -13,7 +13,7 @@ from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional
 
 ENV_VAR = "EPC_LAYERS_JSON"
-DEFAULT_FILE = Path(__file__).resolve().parent / "data" / "layers.json"
+DEFAULT_FILE = Path(__file__).resolve().parents[6] / "config" / "dxf" / "layers.json"      # harness/config/dxf: the file the values live in (one source)
 DISCIPLINES_FILE = Path(__file__).resolve().parent / "data" / "disciplines.json"
 LINEWEIGHTS = (0.0, 0.05, 0.09, 0.13, 0.15, 0.18, 0.2, 0.25, 0.3, 0.35, 0.4, 0.5, 0.53, 0.6, 0.7, 0.8, 0.9, 1.0, 1.06, 1.2, 1.4, 1.58, 2.0, 2.11)      # mm: the ones DXF knows
 LINETYPES = ("CONTINUOUS", "DASHED", "DASHDOT", "CENTER", "HIDDEN", "PHANTOM", "DOT")
@@ -30,7 +30,7 @@ def _editable_file() -> List[str]:
     """The layer file of the editable folder (`harness/config/dxf`), when there is one."""
     from epc_dxf import textstyle
     folder = textstyle.config_dir()
-    return [str(folder / "layers.json")] if folder else []
+    return [str(folder / "layers.json")] if folder and folder.resolve() != DEFAULT_FILE.parent.resolve() else []
 
 
 def _files(*extra: Any) -> List[Path]:
