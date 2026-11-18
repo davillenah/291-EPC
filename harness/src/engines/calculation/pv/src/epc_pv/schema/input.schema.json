@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "epc_pv input",
+  "type": "object",
+  "required": ["site", "weather", "arrays"],
+  "properties": {
+    "site": {
+      "type": "object",
+      "required": ["latitude_deg", "longitude_deg", "albedo"],
+      "properties": {
+        "latitude_deg": {"type": "number", "minimum": -90, "maximum": 90},
+        "longitude_deg": {"type": "number", "minimum": -180, "maximum": 180, "description": "East positive."},
+        "albedo": {"type": "number", "minimum": 0, "maximum": 1},
+        "design_t_min_c": {"type": "number", "description": "Coldest air temperature for the voltage check; when missing, the coldest hour of the weather file."}
+      }
+    },
+    "weather": {
+      "type": "object",
+      "required": ["start", "utc_offset_h", "step_minutes", "ghi", "dni", "dhi", "temp_air_c", "wind_ms"],
+      "properties": {
+        "start": {"type": "string", "description": "Local time of the first value, ISO without offset (2023-01-01T00:00)."},
+        "utc_offset_h": {"type": "number", "minimum": -14, "maximum": 14},
+        "step_minutes": {"type": "number", "exclusiveMinimum": 0},
+        "ghi": {"type": "array", "minItems": 1, "items": {"type": "number", "minimum": 0}, "description": "Global horizontal irradiance (W/m2)."},
+        "dni": {"type": "array", "items": {"type": "number", "minimum": 0}, "description": "Direct normal irradiance (W/m2)."},
+        "dhi": {"type": "array", "items": {"type": "number", "minimum": 0}, "description": "Diffuse horizontal irradiance (W/m2)."},
+        "temp_air_c": {"type": "array", "items": {"type": "number"}},
+        "wind_ms": {"type": "array", "items": {"type": "number", "minimum": 0}}
+      }
+    },
+    "assumptions": {
+      "type": "object",
+      "description": "Optional replacement of the typical parameters of data/params.json, one whole block per key.",
+      "properties": {
+        "iam_ashrae_b0": {"type": "number"},
+        "faiman": {"type": "object", "required": ["u0", "u1"]},
+        "losses_pct": {"type": "object"},
+        "inverter": {"type": "object", "required": ["eta_nom", "eta_ref"]},
+        "strings": {"type": "object", "required": ["isc_factor", "policy"]},
+        "solar_constant_w_m2": {"type": "number"}
+      }
+    },
+    "arrays": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "tilt_deg", "azimuth_deg", "n_modules", "module", "inverter"],
+        "properties": {
+          "id": {"type": "string"},
+          "name": {"type": "string"},
+          "tilt_deg": {"type": "number", "minimum": 0, "maximum": 90},
+          "azimuth_deg": {"type": "number", "minimum": 0, "maximum": 360, "description": "From north, clockwise (0 faces north, the sunny side in the southern hemisphere)."},
+          "n_modules": {"type": "integer", "minimum": 1, "description": "Wanted modules; the layout rounds up to whole strings."},
+          "n_series": {"type": "integer", "minimum": 1, "description": "Modules per string; chosen by the policy when missing."},
+          "n_inverters": {"type": "integer", "minimum": 1},
+          "dc_ac_ratio": {"type": "number", "exclusiveMinimum": 0, "description": "Used when n_inverters is missing."},
+          "module": {"type": "object", "required": ["pmax_w", "voc_v", "vmp_v", "isc_a", "imp_a", "beta_voc_pct_c", "gamma_pmax_pct_c"]},
+          "inverter": {"type": "object", "required": ["pac0_w", "mppt_v_min", "mppt_v_max", "vdc_max_v", "n_mppt", "i_max_input_a", "isc_max_input_a"]}
+        }
+      }
+    }
+  }
+}

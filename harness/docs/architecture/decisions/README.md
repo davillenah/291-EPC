@@ -39,3 +39,4 @@ Format: `ADR-NNNN-title.md` with Status, Context, Decision, Consequences. A deci
 | [0033](ADR-0033-hvac-engine.md) | HVAC engine: the thermal side of the air-conditioning | Accepted |
 | [0034](ADR-0034-claude-code-harness.md) | Claude Code harness: the platform driven from Claude Code (commands, MCP tools, roster, no git writes by the loop) | Accepted |
 | [0035](ADR-0035-run-modes-production-and-edit.md) | Run modes: production (strict, the default) and edit (norm records not verified do not stop approve and issue; the package is marked not for production) | Accepted |
+| [0036](ADR-0036-photovoltaic-engine.md) | Photovoltaic engine: hourly yield and string layout, validated against pvlib, no dependencies | Accepted |

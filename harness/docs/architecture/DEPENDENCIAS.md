@@ -26,6 +26,7 @@ Cómo leerlo: **Usa** = de qué depende la unidad; **Lo usan** = quién se rompe
 | `load_balance` | `aea90364`, `calc_common` | `aea90364`, `design_basis`, `selectivity` | `aea90364`, `calc_check`, `calc_common`, `design_basis`, `drawing`, `feeder_sizing`, `grounding`, `lighting`, `mld`, `selectivity`, `short_circuit`, `sld`, `transformer_sizing`, `voltage_drop` |
 | `mld` | `aea90364`, `dxf`, `symbols`, `titleblock` | `drawing` | `drawing` |
 | `plan` | `arch`, `dxf` | `arch` | `arch`, `drawing`, `dxf`, `mld`, `sld`, `titleblock` |
+| `pv` | — | — | — |
 | `receptacles` | — | — | — |
 | `rfq` | `boq`, `datasheets` | — | — |
 | `rules` | — | — | — |
@@ -68,6 +69,7 @@ Lo declarado en `pyproject.toml` frente a lo que el código importa de verdad.
 | `load_balance` | — | `epc-calc-common` | — |
 | `mld` | `lxml` | `epc-aea90364`, `epc-dxf`, `epc-symbols`, `epc-titleblock`, `lxml` | — |
 | `plan` | `ezdxf` | `epc-dxf`, `ezdxf` | — |
+| `pv` | — | — | — |
 | `receptacles` | — | — | — |
 | `rfq` | — | — | — |
 | `rules` | `engines` | — | `engines` |

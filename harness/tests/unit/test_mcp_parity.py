@@ -110,9 +110,9 @@ class EngineQueryTests(Base):
     def test_the_engine_list_has_the_24_engines(self):
         answer = self.call("epc_engine_list")
         engines = answer["data"]["engines"]
-        self.assertEqual((answer["ok"], answer["data"]["count"], len(engines)), (True, 30, 30))
+        self.assertEqual((answer["ok"], answer["data"]["count"], len(engines)), (True, 31, 31))
         self.assertEqual({e["package"] for e in engines}, {f"epc_{a}" for a in (
-            "aea90364", "calc_common", "load_balance", "voltage_drop", "feeder_sizing", "short_circuit", "grounding", "selectivity", "transformer_sizing", "hvac", "lighting", "receptacles", "arch", "drawing", "dxf", "mld", "plan", "sld", "symbols", "titleblock",
+            "aea90364", "calc_common", "load_balance", "voltage_drop", "feeder_sizing", "short_circuit", "grounding", "selectivity", "transformer_sizing", "hvac", "pv", "lighting", "receptacles", "arch", "drawing", "dxf", "mld", "plan", "sld", "symbols", "titleblock",
             "documents", "terminal_blocks", "design_basis", "descriptive_report", "boq", "datasheets", "rfq", "rules", "standards", "calc_check")})
         versions = {e["package"]: e["version"] for e in engines}
         self.assertEqual((versions["epc_aea90364"], versions["epc_hvac"], versions["epc_rules"]), ("1.6.0", "0.1.0", "0.1.0"))

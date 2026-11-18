@@ -20,6 +20,7 @@ Checks
   engine-lighting   lighting engine tests (luminaire count, layout, point illuminance)
   engine-receptacles  receptacles engine tests (socket outlets per room, layout, mounting height)
   engine-hvac       HVAC engine tests (cooling load, supply air, ventilation)
+  engine-pv         photovoltaic engine tests (sun, plane-of-array irradiance, DC and AC power, strings, pvlib parity)
   engine-drawing    symbol library tests
   engine-documents  document verifiers, CCPM, exporters (environment-dependent tests are skipped)
   intake            customer-input pipeline tests
@@ -58,7 +59,7 @@ def first(*paths):
 PYTHON = first(REPO / ".venv" / "Scripts" / "python.exe", REPO / ".venv" / "bin" / "python") or Path(sys.executable)
 PLUGINS = P.PLUGINS
 ENGINE = P.ENGINES
-AREAS = ("aea90364", "calc_common", "load_balance", "voltage_drop", "feeder_sizing", "short_circuit", "grounding", "selectivity", "transformer_sizing", "rules", "standards", "calc_check", "dxf", "symbols", "titleblock", "plan", "arch", "lighting", "receptacles", "hvac", "sld", "mld", "drawing", "documents", "terminal_blocks", "design_basis", "descriptive_report", "boq", "datasheets", "rfq")
+AREAS = ("aea90364", "calc_common", "load_balance", "voltage_drop", "feeder_sizing", "short_circuit", "grounding", "selectivity", "transformer_sizing", "rules", "standards", "calc_check", "dxf", "symbols", "titleblock", "plan", "arch", "lighting", "receptacles", "hvac", "pv", "sld", "mld", "drawing", "documents", "terminal_blocks", "design_basis", "descriptive_report", "boq", "datasheets", "rfq")
 BUILD = first(REPO / "harness" / "tools" / "build" / "epc_build.py")
 CONFLICTS = first(REPO / "harness" / "tools" / "ci" / "check_skill_conflicts.py")
 RESULTS = []
