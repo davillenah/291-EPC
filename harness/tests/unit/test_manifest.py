@@ -344,11 +344,12 @@ class PackageIssueStageTests(unittest.TestCase):
         drawings = [f for f in m["files"] if f["path"]]
         self.assertEqual(len(drawings), 2)
         for f in drawings:
-            run_file = self.store.root / ".epc" / "runs" / "r1" / "drawings" / "TEST-001" / "out" / f["path"]
+            run_file = self.store.root / ".epc" / "runs" / "r1" / "drawings" / "TEST-001" / "out" / Path(f["path"]).name
             copy_file = self.store.root / "deliverables" / "TR-001" / f["path"]
             self.assertEqual(f["sha256"], sha256_file(run_file))
             self.assertEqual(f["sha256"], sha256_file(copy_file))
-        self.assertEqual(sorted(p.name for p in (self.store.root / "deliverables" / "TR-001").iterdir()), sorted(f["path"] for f in drawings))
+        self.assertEqual(sorted(p.name for p in (self.store.root / "deliverables" / "TR-001").iterdir()), ["01_SLD"])
+        self.assertEqual(sorted(f["path"] for f in drawings), ["01_SLD/SLD_TEST-001.dxf", "01_SLD/SLD_TEST-001_TABLA.dxf"])
 
     def test_document_entries_carry_the_hash_stage_11_recorded_and_no_path(self):
         recorded = {d["name"]: d["sha256"] for d in self.res.results[10].outputs["documents"]}
@@ -441,13 +442,13 @@ class NamedDeliverablesTests(unittest.TestCase):
             (manifest,) = [m for _, m in store.read_manifests()]
             by_name = {f["name"]: f for f in manifest["files"]}
             stem = f"{CODE}-E-LV-SLD-001_main_distribution_board"
-            self.assertEqual(by_name[f"SLD_{CODE}"]["path"], f"{stem}/{stem}_P01.dxf")
-            self.assertEqual(by_name[f"SLD_{CODE}_TABLA"]["path"], f"{stem}/{stem}_P02.dxf")
+            self.assertEqual(by_name[f"SLD_{CODE}"]["path"], f"01_SLD/{stem}/{stem}_P01.dxf")
+            self.assertEqual(by_name[f"SLD_{CODE}_TABLA"]["path"], f"01_SLD/{stem}/{stem}_P02.dxf")
             self.assertEqual(by_name["calculation_memo"]["code"], f"{CODE}-E-LV-CAL-001")
             self.assertIsNone(by_name["calculation_memo"]["path"])
             self.assertEqual(M.check(manifest), [])
             folder_files = sorted(p.relative_to(store.root / "deliverables" / "TR-001").as_posix() for p in (store.root / "deliverables" / "TR-001").rglob("*") if p.is_file())
-            self.assertEqual(folder_files, [f"{stem}/{stem}_P01.dxf", f"{stem}/{stem}_P02.dxf"])
+            self.assertEqual(folder_files, [f"01_SLD/{stem}/{stem}_P01.dxf", f"01_SLD/{stem}/{stem}_P02.dxf"])
             for f in manifest["files"]:
                 if f["path"]:
                     self.assertEqual(sha256_file(store.root / "deliverables" / "TR-001" / f["path"]), f["sha256"])

@@ -491,7 +491,7 @@ class WholeBuildingTests(unittest.TestCase):
             run_ = res["data"]["run"]
             self.assertEqual(run_["summary"]["by_status"], {"ok": 12})
             self.assertEqual(res["data"]["workflow_state"], "draft_ready")
-            names = sorted(p.name for p in (root / "API-1" / "deliverables" / "TR-001").glob("*.dxf"))
+            names = sorted(p.name for p in (root / "API-1" / "deliverables" / "TR-001" / "04_PLANS").glob("*.dxf"))
             self.assertTrue([n for n in names if "_plan_PB" in n] and [n for n in names if "_lighting_PB" in n])
             docs = [d["name"] for d in run_["results"][10]["outputs"]["documents"]]
             self.assertIn("cable_list", docs)
@@ -706,7 +706,7 @@ class RenderedDocumentsTests(unittest.TestCase):
             api.init_project(root, "API-1", A.ANSWERS, clock=A.CLOCK, actor=A.ORC)
             ins = dict(W.inputs_doc(), building=b, transformer={"demand_kva": 40, "reserve_pct": 20, "secondary_v": 400}, **extra)
             res = api.run_pipeline(root / "API-1", loads=loads(), engine_inputs=ins, clock=A.CLOCK, actor=A.ORC)
-            files = sorted(p.name for p in (root / "API-1" / "deliverables" / "TR-001").glob("*"))
+            files = sorted(p.name for p in (root / "API-1" / "deliverables" / "TR-001").rglob("*") if p.is_file())
         return res, files
 
     def test_a_building_run_issues_pdf_word_and_workbook_files_of_the_documents(self):
