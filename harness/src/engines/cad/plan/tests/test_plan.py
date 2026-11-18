@@ -362,9 +362,11 @@ class TestDxf(unittest.TestCase):
         layers = {l.dxf.name for l in dxf.layers}
         self.assertTrue({"ELEC-BANDEJA", "ELEC-CANAL", "ELEC-CAMARA", "ELEC-CAJA", "ELEC-TABLERO", "PLAN-TAG", "PLAN-NODO"} <= layers)
         kinds = [e.dxftype() for e in dxf.modelspace()]
-        self.assertEqual(kinds.count("LWPOLYLINE"), len(result["stretches"]))
-        self.assertEqual(kinds.count("TEXT"), len(result["stretches"]))
-        self.assertEqual(kinds.count("INSERT"), 6)
+        trays = [s for s in result["stretches"] if s["kind"] == "BN"]
+        others = len(result["stretches"]) - len(trays)                      # a tray is one block (outline and text inside); the rest stay loose
+        self.assertEqual(kinds.count("LWPOLYLINE"), others)
+        self.assertEqual(kinds.count("TEXT"), others)
+        self.assertEqual(kinds.count("INSERT"), 6 + len(trays))
         tags = {a.dxf.text for e in dxf.modelspace().query("INSERT") for a in e.attribs}
         self.assertEqual(tags, {"TB-001", "CM-001", "CP-001", "LU-001", "TG-001", "HV-001"})
         self.assertEqual(dxf.units, 6)
@@ -387,7 +389,9 @@ class TestDxf(unittest.TestCase):
     def test_lengths_in_the_dxf_are_real_metres(self):
         _, path, _ = self.make(load("input.json"))
         total = 0.0
-        for e in ezdxf.readfile(str(path)).modelspace().query("LWPOLYLINE"):
+        dxf = ezdxf.readfile(str(path))
+        outlines = list(dxf.modelspace().query("LWPOLYLINE")) + [e for blk in dxf.blocks if blk.name.startswith("TRAY_") for e in blk.query("LWPOLYLINE")]      # a tray is one block: its outline sits inside
+        for e in outlines:
             pts = list(e.get_points("xy"))
             total += sum(((pts[i + 1][0] - pts[i][0]) ** 2 + (pts[i + 1][1] - pts[i][1]) ** 2) ** 0.5 for i in range(len(pts) - 1))
         self.assertAlmostEqual(total, core.process(load("input.json"))["schedule"]["total_length_m"], places=3)

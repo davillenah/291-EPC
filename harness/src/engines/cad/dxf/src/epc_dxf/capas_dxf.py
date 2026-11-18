@@ -16,6 +16,7 @@ import xml.etree.ElementTree as ET
 
 from epc_dxf import layers as _L
 from epc_dxf import stamp as _stamp
+from epc_dxf import textstyle as _T
 
 # Las capas no se escriben aquí: el catálogo (epc_dxf.layers) dice cómo se llama y cómo se ve cada rol.
 ROLES = ('sld.diagram', 'sld.text', 'sld.titleblock', 'sld.sheet')
@@ -113,7 +114,8 @@ def colorear(svg_path, dxf_path, catalog=None, a3=None, stamp=None):
                 while j < len(lista) and lista[j][0] != cad: j += 1
                 if j < len(lista):
                     fuera[idx] = lista[j][1]; p_xml = j + 1
-    FACTOR_TEXTO = 1.7 / 2.0   # el texto principal (2 mm en el SVG) queda en 1,7 mm; los demás, proporcionales
+    _look = _T.load()
+    FACTOR_TEXTO = float(_look["heights"]["diagram_text_mm"]) / 2.0   # el texto principal (2 mm en el SVG) queda en 1,7 mm (config/dxf/text.json); los demás, proporcionales
     alto_mm = 0.0
     if svg.height is not None:
         alto_mm = float(svg.height.in_px() if hasattr(svg.height, 'in_px') else svg.height) / S.PX_POR_MM
@@ -128,7 +130,7 @@ def colorear(svg_path, dxf_path, catalog=None, a3=None, stamp=None):
                 col_txt = S._relleno(e)   # el color de un texto SVG es su relleno
                 if a3 and not es_rotulo:
                     if fuera.get(idx, False):
-                        altura = 1.7   # letras del marco de la lámina
+                        altura = float(_look["heights"]["frame_text_mm"])   # letras del marco de la lámina
                     else:   # proporcional al SVG: altura de mayúscula = 0,716 · tamaño de fuente efectivo
                         sc = math.sqrt(abs(e.transform.determinant)) / S.PX_POR_MM
                         altura = max(1.0, round(FACTOR_TEXTO * 0.716 * float(e.font_size or 2.0) * sc, 2))
@@ -165,8 +167,9 @@ def colorear(svg_path, dxf_path, catalog=None, a3=None, stamp=None):
     if len(ents) != len(esperado):
         print(f'AVISO colores DXF: {len(ents)} entidades vs {len(esperado)} formas; no se asignan colores', file=_sys.stderr)
         return False
-    if 'ARIAL_BOLD' not in doc.styles:
-        doc.styles.add('ARIAL_BOLD', font='arialbd.ttf')
+    estilo_negrita = _look["font"]["style_bold"]
+    if estilo_negrita not in doc.styles:
+        doc.styles.add(estilo_negrita, font=_look["font"]["bold"])
     tipos_dash = {}
     def _color(ent, col):
         if col is None: return
@@ -176,7 +179,7 @@ def colorear(svg_path, dxf_path, catalog=None, a3=None, stamp=None):
     for ent, (tipo, color, ancho, extra) in zip(ents, esperado):
         _poner_rol(ent, extra, cat)
         if tipo == 'TEXT':
-            if extra.get('bold'): ent.dxf.style = 'ARIAL_BOLD'
+            if extra.get('bold'): ent.dxf.style = estilo_negrita
             if extra.get('pos'):   # el convertidor del plugin corre textos del diagrama (lógica de rótulo): vuelven a su posición del SVG
                 ox, oy = _ancla(ent)
                 ent.translate(extra['pos'][0] - ox, (alto_mm - extra['pos'][1]) - oy, 0)

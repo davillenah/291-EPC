@@ -3,8 +3,9 @@
 A drawing asks for a layer by its ROLE (`sld.diagram`, `sld.text`, `plan.ELEC-LUM`...), never by a name written in the code. The catalog says what that role is called and how it looks.
 Three sources, the later one winning role by role (a file may carry only the roles or fields it changes):
   1. the default catalog that travels with this package (`data/layers.json`);
-  2. the global file the platform's MASTER edits: the path in the environment variable EPC_LAYERS_JSON;
-  3. files passed to `load` (later: the project's own file).
+  2. the editable folder `harness/config/dxf/layers.json` (or the folder in EPC_DXF_CONFIG_DIR): open it with any text editor, change a name, colour, weight or line type, save;
+  3. the global file the platform's MASTER edits: the path in the environment variable EPC_LAYERS_JSON;
+  4. files passed to `load` (later: the project's own file).
 """
 import json
 import os
@@ -25,9 +26,16 @@ def _read(path: Path) -> Dict[str, dict]:
     return json.loads(path.read_text(encoding="utf-8-sig")).get("layers", {})
 
 
+def _editable_file() -> List[str]:
+    """The layer file of the editable folder (`harness/config/dxf`), when there is one."""
+    from epc_dxf import textstyle
+    folder = textstyle.config_dir()
+    return [str(folder / "layers.json")] if folder else []
+
+
 def _files(*extra: Any) -> List[Path]:
     """The override files in order of authority: those the environment names (several are separated as paths are), then `extra` (each a path or a list of paths)."""
-    named = [x for x in (os.environ.get(ENV_VAR) or "").split(os.pathsep) if x]
+    named = _editable_file() + [x for x in (os.environ.get(ENV_VAR) or "").split(os.pathsep) if x]
     flat = [y for x in extra for y in (x if isinstance(x, (list, tuple)) else [x]) if y]
     return [Path(x) for x in [*named, *flat]]
 

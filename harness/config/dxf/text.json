@@ -1,0 +1,6 @@
+{
+  "schema_version": "1.0",
+  "font": {"regular": "arial.ttf", "bold": "arialbd.ttf", "style": "ARIAL", "style_bold": "ARIAL_BOLD"},
+  "heights": {"plan_text_m": 0.25, "titleblock_mm": 1.7, "legal_notice_mm": 1.0, "diagram_text_mm": 1.7, "frame_text_mm": 1.7},
+  "trays": {"as_block": true, "kinds": ["BN"], "block_prefix": "TRAY_"}
+}
