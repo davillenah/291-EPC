@@ -1,0 +1,76 @@
+{
+  "schema": "epc_pv.feasibility_methods/1",
+  "status": "pending review",
+  "origin": "Own extraction of formulas and criteria from the delivered PV course material (modules M1-M4); no text copied, values to be approved by a person.",
+  "technical": {
+    "performance_ratio": {
+      "formula": "PR = (1 - A - Ptemp) * B * C * D * E * F",
+      "monthly_energy": "Ep_month = Ppeak * HPS * PR * days",
+      "cell_temperature": "Tc = Tamb + (NOCT - 20) * G / 800",
+      "temperature_loss": "Ptemp = abs(alpha) * (Tc - 25)",
+      "hps": "equivalent peak-sun hours: daily irradiation on the module plane divided by 1 kW/m2",
+      "typical_pr_range": [0.73, 0.83]
+    },
+    "sizing_criteria": {
+      "dc_ac_ratio_conservative": [1.1, 1.2],
+      "dc_ac_ratio_current": [1.5, 1.8],
+      "inverter_power_over_array_rule": [0.8, 1.25],
+      "voltage_1500v_above_mwp_approx": 5,
+      "dc_voltage_drop_max_pct": 1.5,
+      "ac_voltage_drop_max_pct": 1.5,
+      "dc_cable_min_current_over_isc": 1.25,
+      "availability_target_pct": 99,
+      "shading_allowance_pct": [3, 5]
+    },
+    "string_sizing": {
+      "max_modules": "floor(Vdc_max / Voc_cold)",
+      "min_modules": "ceil(Vmppt_min / Vmp_hot)",
+      "voc_cold": "Voc * (1 + beta_voc/100 * (Tmin - 25))"
+    },
+    "row_spacing": {
+      "formula": "D = l * (sin(beta)/tan(alpha_s) + cos(beta))",
+      "kf_shortcut": "D = l * KF",
+      "design_hour": "solar noon, 21 June (southern hemisphere); +-2 h variant also tabulated"
+    },
+    "cable_section": {"formula": "S = 2 * I * rho * L / dV", "units": "mm2, A, ohm*mm2/m, m, V"},
+    "orientation_sensitivity": {
+      "east_azimuth_tilt_35_pct": -3.3,
+      "tilt_20_vs_35_pct": -2.8,
+      "note": "course example for one site; indicative only"
+    }
+  },
+  "economic": {
+    "lcoe": "sum((In+On+Mn+Fn)/(1+d)^n) / sum(En/(1+d)^n)",
+    "van": "sum(CFn/(1+d)^n) - I0",
+    "tir": "rate d such that VAN = 0",
+    "tlcc": "total life-cycle cost: initial cost plus discounted O&M, fuel and replacement over the horizon",
+    "rate_note": "keep real and nominal rates consistent; discount rate drives LCOE strongly",
+    "sensitivity_analysis": ["capex", "energy yield (P50/P90)", "discount rate", "O&M", "degradation", "tariff"],
+    "loan_amortization": {
+      "french": "constant instalment: C = P * i / (1 - (1+i)^-n)",
+      "german": "constant principal: P/n plus interest on the outstanding balance",
+      "american": "interest-only, principal at the end"
+    },
+    "leverage_note": "course case: TIR and VAN can rank projects differently (contradiction region below about 8.39 % discount); report both"
+  },
+  "operation_and_maintenance": {
+    "types": ["preventive", "corrective", "predictive"],
+    "thermography_min_per_year": 1,
+    "corrective_response_h": 48,
+    "kpis": ["PR", "availability (target 99 %)"],
+    "monitoring": "weather station (irradiance in plane, module temperature, ambient temperature, wind) plus inverter and string data",
+    "opex_rule_pct_of_capex": [1, 2]
+  },
+  "construction": {
+    "schedule_weeks_range": [0, 32],
+    "note": "course Gantt reference; durations are indicative"
+  },
+  "references_to_verify": {
+    "standards": ["AEA 90364-7-712", "AEA 90364-7-771", "Disposicion 28/2019", "IRAM 2184-1"],
+    "regulatory": {
+      "ley_26190_27191": ["accelerated depreciation", "early VAT refund", "10-year loss carry-forward", "dividend tax exemption", "fiscal certificate 20 % with at least 60 % national content, floor 30 %", "15 % effective execution principle", "goals 8 % (2017) and 20 % (2025)"],
+      "ley_27424": ["usuario-generador regime", "FODIS", "FANSIGED", "12-year promotion"],
+      "note": "legal summary taken from course slides; must be checked against the current text by a person before use"
+    }
+  }
+}

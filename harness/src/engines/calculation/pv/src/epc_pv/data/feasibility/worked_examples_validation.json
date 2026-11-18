@@ -1,0 +1,15 @@
+{
+  "schema": "epc_pv.worked_examples/1",
+  "status": "pending review",
+  "origin": "Numeric examples from the delivered course, used only as regression vectors.",
+  "examples": [
+    {"id": "lcoe_course", "inputs": {"cost_pv_usd": 994450, "energy_mwh": 11232.5}, "expected": {"lcoe_usd_mwh": 88.53}},
+    {"id": "tir_van_course", "expected": {"tir_pct": 13.45, "van_usd": 1581}},
+    {"id": "energy_san_rafael", "inputs": {"kwp": 360, "tilt_deg": 35, "pr": 0.8}, "expected": {"annual_kwh": 539669}},
+    {"id": "cable_section", "expected": {"section_mm2": 2.73}},
+    {"id": "string_cold_voc", "expected": {"voc_cold_v": 51.43, "modules_15_v": 772}},
+    {"id": "pr_example", "expected": {"pr": 0.809, "energy_mwh": 789.74, "yield_kwh_kwp": 1579.48}},
+    {"id": "row_distance_buenos_aires", "inputs": {"row_height_m": 1.046, "rows": 4, "tilt_deg": 30, "alpha_s_deg": 31.65}, "expected": {"d_m": 7.02}},
+    {"id": "p90_uncertainty", "expected": {"der": 0.03674, "p90_mwh": 298.55, "p95_mwh": 294.37}}
+  ]
+}

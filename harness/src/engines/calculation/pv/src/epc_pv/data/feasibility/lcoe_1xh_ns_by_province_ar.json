@@ -1,0 +1,151 @@
+{
+ "schema_version": "1.0",
+ "engine": "pv",
+ "status": "pending review",
+ "topic": "lcoe_1xh_ns_by_province_ar",
+ "_note": {
+  "en": "LCOE (USD/MWh) of a utility-scale plant with 1-axis horizontal N-S tracker by province (min / mean / max across the province), as computed in the UTN Buenos Aires economics course (module 4 unit 3) with the inputs in 'assumptions'. Chubut, Santa Cruz and Tierra del Fuego were left out by the course. Useful to compare with the engine's own LCOE later. Not verified.",
+  "es": "LCOE (USD/MWh) de una planta utility-scale con seguidor de un eje horizontal N-S por provincia (minimo / promedio / maximo en la provincia), calculado en el curso de economia de UTN Buenos Aires (modulo 4 unidad 3) con los datos de 'assumptions'. El curso dejo afuera Chubut, Santa Cruz y Tierra del Fuego. Util para comparar luego con el LCOE propio del motor. No verificado."
+ },
+ "assumptions": {
+  "capacity_kwp": 1000,
+  "degradation_pct_per_year": 0.75,
+  "capex_usd_per_wp": 0.8697,
+  "capex_usd": 869747,
+  "om_usd_per_kw_year": 18,
+  "om_escalation_pct_per_year": 3,
+  "debt_share_pct": 70,
+  "loan_rate_pct": 8,
+  "loan_term_years": 10,
+  "project_term_years": 25,
+  "discount_rate_pct": 15
+ },
+ "provinces": [
+  {
+   "province": "Jujuy",
+   "min_usd_mwh": 30.523,
+   "mean_usd_mwh": 34.613,
+   "max_usd_mwh": 48.572
+  },
+  {
+   "province": "Catamarca",
+   "min_usd_mwh": 31.362,
+   "mean_usd_mwh": 37.449,
+   "max_usd_mwh": 45.962
+  },
+  {
+   "province": "San Juan",
+   "min_usd_mwh": 35.001,
+   "mean_usd_mwh": 40.574,
+   "max_usd_mwh": 45.385
+  },
+  {
+   "province": "La Rioja",
+   "min_usd_mwh": 33.934,
+   "mean_usd_mwh": 40.851,
+   "max_usd_mwh": 44.945
+  },
+  {
+   "province": "Salta",
+   "min_usd_mwh": 30.554,
+   "mean_usd_mwh": 42.583,
+   "max_usd_mwh": 55.655
+  },
+  {
+   "province": "Tucumán",
+   "min_usd_mwh": 36.203,
+   "mean_usd_mwh": 43.298,
+   "max_usd_mwh": 48.036
+  },
+  {
+   "province": "San Luis",
+   "min_usd_mwh": 43.424,
+   "mean_usd_mwh": 44.43,
+   "max_usd_mwh": 45.86
+  },
+  {
+   "province": "Mendoza",
+   "min_usd_mwh": 40.094,
+   "mean_usd_mwh": 44.897,
+   "max_usd_mwh": 48.217
+  },
+  {
+   "province": "La Pampa",
+   "min_usd_mwh": 44.055,
+   "mean_usd_mwh": 46.169,
+   "max_usd_mwh": 47.922
+  },
+  {
+   "province": "Córdoba",
+   "min_usd_mwh": 43.403,
+   "mean_usd_mwh": 46.879,
+   "max_usd_mwh": 49.104
+  },
+  {
+   "province": "Río Negro",
+   "min_usd_mwh": 44.526,
+   "mean_usd_mwh": 47.989,
+   "max_usd_mwh": 63.695
+  },
+  {
+   "province": "Neuquén",
+   "min_usd_mwh": 43.891,
+   "mean_usd_mwh": 49.245,
+   "max_usd_mwh": 59.553
+  },
+  {
+   "province": "Buenos Aires",
+   "min_usd_mwh": 46.059,
+   "mean_usd_mwh": 49.336,
+   "max_usd_mwh": 51.414
+  },
+  {
+   "province": "Capital Federal",
+   "min_usd_mwh": 46.059,
+   "mean_usd_mwh": 49.336,
+   "max_usd_mwh": 51.414
+  },
+  {
+   "province": "Santa Fé",
+   "min_usd_mwh": 48.453,
+   "mean_usd_mwh": 49.336,
+   "max_usd_mwh": 50.529
+  },
+  {
+   "province": "Santiago del Estero",
+   "min_usd_mwh": 44.702,
+   "mean_usd_mwh": 49.464,
+   "max_usd_mwh": 52.232
+  },
+  {
+   "province": "Entre Ríos",
+   "min_usd_mwh": 49.517,
+   "mean_usd_mwh": 49.937,
+   "max_usd_mwh": 50.463
+  },
+  {
+   "province": "Chaco",
+   "min_usd_mwh": 49.524,
+   "mean_usd_mwh": 50.417,
+   "max_usd_mwh": 51.641
+  },
+  {
+   "province": "Corrientes",
+   "min_usd_mwh": 49.565,
+   "mean_usd_mwh": 50.757,
+   "max_usd_mwh": 52.133
+  },
+  {
+   "province": "Formosa",
+   "min_usd_mwh": 50.371,
+   "mean_usd_mwh": 51.065,
+   "max_usd_mwh": 53.188
+  },
+  {
+   "province": "Misiones",
+   "min_usd_mwh": 51.816,
+   "mean_usd_mwh": 52.728,
+   "max_usd_mwh": 53.37
+  }
+ ]
+}

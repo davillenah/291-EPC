@@ -11,6 +11,7 @@ The generation platform for automated electrical engineering (low voltage in Pha
 - **No git writes.** Only `status`, `diff`, `log`, `show`, `ls-files`, `check-ignore`, `rev-parse`. Never read, edit, move or delete `.git`.
 - **No deletes.** Superseded files are replaced through a reviewed change, not removed silently.
 - **`local/` is off limits** (read and write). Standards PDFs are never copied, versioned or deleted.
+- **Copyright material (owner rule, 2026-11-18):** whenever a `.pdf` or any other copyright-protected information is delivered (standards, data sheets, books, reports), extract only the data and build a `.json` that feeds the engines (the format each engine consumes: its `schema/*.schema.json` and `data/`). **Never store** the PDF or the protected content (text, tables, figures) anywhere persistent: not in the repo, not in `local/`, not in project files, not in memory. The `.json` is our own extracted data, not protected, and may be committed to `main` (through the normal release flow). Record the origin in the `.json` as a short citation only (title, edition, clause or page), values stay `pending review` until a person approves them.
 - **Norm values:** never approve, change or "fix" one. New values a task needs are recorded as `pending review` in the norm register, with their clause or "no clause". Only a person approves norm values or signs.
 - **Golden files** are never edited (D27). **D15** (raceway fill) and **D26** (rod formula) stay frozen.
 - **(Owner)** tasks are never executed; they are reported.
