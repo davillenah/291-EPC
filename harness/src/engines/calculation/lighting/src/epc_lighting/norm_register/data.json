@@ -371,6 +371,40 @@
     "flux and power are typical of the kind, not of a maker; flagged illustrative"
    ],
    "note": "Not normative. Replace with maker data; no check against a standard needed."
+  },
+  {
+   "id": "lighting.data.room_types",
+   "kind": "table",
+   "title": {
+    "es": "Tipo de ambiente por palabras del nombre y altura por defecto",
+    "en": "Room kind from the words of its name, and the default height"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "m (default height); activity ids of lighting.data.levels",
+   "applies_to": "intake of the building when a room is not described",
+   "provenance": "design-default",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/calculation/lighting/src/epc_lighting/data/room_types.json",
+    "pointer": "/rules"
+   },
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause: which activity a room is lit for, and the 3.0 m ceiling height, are design defaults",
+    "adds no illuminance value: the lux are those of lighting.data.levels"
+   ],
+   "note": "Confirm the mapping of names to activities and the default height with the lighting engineer."
   }
  ]
 }

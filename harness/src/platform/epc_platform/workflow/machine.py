@@ -4,11 +4,12 @@ TRANSITIONS: name -> (from state, to state). Who may trigger each one is in `per
 the permission to `sign` deliverables and `issue` the permission to `issue` them (both checked with `permissions.enforce`).
 
 Guards of `approve` and `issue` (D21): refused while any norm record listed by the latest manifests (those not superseded) is not
-`verified`, and while the project has no manifest at all. Signing is out of scope here (no signature is created or checked).
+`verified`, and while the project has no manifest at all. A transition also writes its state in the manifests in force (`review_state.py`): `for_review`, `approved`/`approved_for_construction` with the signer and the date, `issued`.
 
 A transition is applied only if every guard passes: it is then written to `reviews/workflow.json` through the project store (a
 short write session of its own, `workflow-<n>`) and appended to the event log as `ok`. A refusal appends a `denied` event and raises.
 """
+from disciplines.electrical_lv import review_state
 from disciplines.electrical_lv.store import ProjectStore
 from epc_platform.permissions import Decision, PermissionDenied, enforce, may_trigger
 from epc_platform.permissions import rules as R
@@ -48,7 +49,7 @@ def unverified_records(store):
 def open_findings(store, severity):
     """Findings of `severity` carried by the latest manifests (those not superseded)."""
     latest = [m for _, m in store.read_manifests() if m.get("superseded_by") is None]
-    return [f.get("id") for m in latest for f in m.get("findings", []) if f.get("severity") == severity]
+    return [f.get("id") for m in latest for f in m.get("findings", []) if f.get("severity") == severity and f.get("status", "open") == "open"]
 
 
 class Workflow:
@@ -69,25 +70,26 @@ class Workflow:
         """Names of the transitions that start from the current state."""
         return sorted(n for n, (src, _) in TRANSITIONS.items() if src == self.state)
 
-    def transition(self, name, role, actor_id, run_id="workflow", review=None):
+    def transition(self, name, role, actor_id, run_id="workflow", review=None, accept_major=None):
         """Apply a transition if it exists, starts from the current state, the role may trigger it and its guards pass. Returns the new state.
 
+        `accept_major` is the engineer's written reason to go on with `major` findings still open (SIM-07): without it `approve` and `issue` are refused while one is open; with it they are accepted, with the reason and who, in the manifest.
         `review` (optional, plain JSON) is stored as `reviews/<transition>-<n>.json` in the same write session (corrections, MIG-33b).
         """
         try:
-            new_state = self._check(name, role, actor_id, run_id)
+            new_state = self._check(name, role, actor_id, run_id, accept_major)
         except (WorkflowError, PermissionDenied) as exc:
             if not isinstance(exc, PermissionDenied) or exc.decision.rule_id == NOT_A_TRIGGER:  # enforce() already logged its own refusal
                 self._log(name, role, actor_id, run_id, "denied", {"reason": str(exc)})
             raise
         old = self.state
         entry = {"from": old, "to": new_state, "transition": name, "role": role, "actor_id": actor_id, "pipeline_run_id": run_id}
-        self._save(new_state, self.history() + [entry], run_id, review)
+        self._save(new_state, self.history() + [entry], run_id, self._with_acceptance(name, review, accept_major, actor_id), accept_major)
         self._log(name, role, actor_id, run_id, "ok", self._detail(old, new_state))
         return new_state
 
     # -- internals -----------------------------------------------------------------------------------------------------------
-    def _check(self, name, role, actor_id, run_id):
+    def _check(self, name, role, actor_id, run_id, accept_major=None):
         if name not in TRANSITIONS:
             raise WorkflowError(f"unknown transition {name!r}")
         src, dst = TRANSITIONS[name]
@@ -98,14 +100,15 @@ class Workflow:
         if name in PERMISSION_OF:
             action, path_class = PERMISSION_OF[name]
             enforce(role, action, path_class, log=self.log, actor_id=actor_id, run_id=run_id, target=name)
-        self.exempt = self._guard(name)
+        self.exempt = self._guard(name, accept_major)
         return dst
 
-    def _guard(self, name):
+    def _guard(self, name, accept_major=None):
         """True when the D21 guard was not applied because of the edit mode, False when it passed or the transition has none; raises `WorkflowBlocked` when it blocks."""
         if name not in GUARDED:
             return False
         self._no_blocking()
+        self._majors_accepted(accept_major)
         if self._edit_mode():
             return True
         self._d21()
@@ -129,17 +132,36 @@ class Workflow:
         if bad:
             raise WorkflowBlocked(f"{len(bad)} blocking finding(s) still open ({', '.join(map(str, bad[:5]))}{' ...' if len(bad) > 5 else ''})")
 
+    def _majors_accepted(self, reason):
+        """SIM-07: a `major` finding still open stops approve and issue unless the engineer of record gives a written reason to go on."""
+        bad = open_findings(self.store, "major")
+        if bad and not (reason or "").strip():
+            raise WorkflowBlocked(f"{len(bad)} major finding(s) still open ({', '.join(map(str, bad[:5]))}{' ...' if len(bad) > 5 else ''}): fix them and run again, or accept them with a written reason (--accept-major)")
+
+    def _with_acceptance(self, name, review, reason, actor_id):
+        """The review file of a transition that accepted major findings: which ones, why and who."""
+        ids = open_findings(self.store, "major") if name in GUARDED and (reason or "").strip() else []
+        return review if not ids else dict(review or {}, accepted_major_findings=ids, reason=reason.strip(), accepted_by=actor_id)
+
     def _d21(self):
         bad = unverified_records(self.store)
         if bad:
             shown = ", ".join(bad[:5]) + (" ..." if len(bad) > 5 else "")
             raise WorkflowBlocked(f"D21: {len(bad)} norm record(s) not verified or no manifest ({shown})")
 
-    def _save(self, state, history, run_id, review=None):
+    def _save(self, state, history, run_id, review=None, accept_major=None):
         with self.store.pipeline_session(f"workflow-{len(history)}") as token:
-            if review is not None:
-                self.store.write_review(token, f"{history[-1]['transition']}-{len(history)}.json", review)
-            self.store.write_workflow(token, {"state": state, "history": history})
+            self._write(token, state, history, review)
+            review_state.reflect(self.store, token, history[-1]["transition"], history[-1]["actor_id"], str(self.log._clock()), self._reason(accept_major))
+
+    @staticmethod
+    def _reason(accept_major):
+        return (accept_major or "").strip() or None
+
+    def _write(self, token, state, history, review):
+        if review is not None:
+            self.store.write_review(token, f"{history[-1]['transition']}-{len(history)}.json", review)
+        self.store.write_workflow(token, {"state": state, "history": history})
 
     def _log(self, name, role, actor_id, run_id, result, detail):
         self.log.append({"pipeline_run_id": run_id, "actor": {"role": role, "id": actor_id}, "action": f"transition:{name}",

@@ -177,7 +177,7 @@ class ApprovalNeedsTheEngineerAndD21(Base):
         self.assertNotIn("approved", history)
         self.assertNotIn("issued", history)
         for _path, manifest in ProjectStore(self.root).read_manifests():
-            self.assertEqual(manifest["review_status"], "draft")
+            self.assertEqual(manifest["review_status"], "for_review")      # submitted, never approved
             self.assertIsNone(manifest["signed"])
 
     def test_the_denials_are_in_the_log_and_the_chain_verifies(self):

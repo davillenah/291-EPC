@@ -92,11 +92,11 @@ def _submit(session, args):
 
 
 def _approve(session, args):
-    return api.approve(_project(session, args), session.actor, clock=session.clock)
+    return api.approve(_project(session, args), session.actor, clock=session.clock, accept_major=args.accept_major)
 
 
 def _issue(session, args):
-    return api.issue(_project(session, args), session.actor, clock=session.clock)
+    return api.issue(_project(session, args), session.actor, clock=session.clock, accept_major=args.accept_major)
 
 
 def _engines_list(session, args):
@@ -139,8 +139,8 @@ COMMANDS = {c.key: c for c in (
     Command("review", "record the reviewer's corrections", "review", _review,
             (PROJECT, (("--corrections",), {"required": True, "metavar": "FILE.json", "help": "a JSON list of corrections"}))),
     Command("submit", "put a finished run in review (draft_ready -> in_review); then the engineer of record approves", "submit", _submit, (PROJECT,)),
-    Command("approve", "approve the reviewed deliverables (engineer of record; D21 guard)", "approve", _approve, (PROJECT,)),
-    Command("issue", "issue the approved deliverables (D21 guard)", "issue", _issue, (PROJECT,)),
+    Command("approve", "approve the reviewed deliverables (engineer of record; D21 guard)", "approve", _approve, (PROJECT, (("--accept-major",), {"metavar": "REASON", "help": "written reason of the engineer of record to go on with major findings still open (they are marked accepted in the manifest); without it the step is refused while one is open"}))),
+    Command("issue", "issue the approved deliverables (D21 guard)", "issue", _issue, (PROJECT, (("--accept-major",), {"metavar": "REASON", "help": "written reason of the engineer of record to go on with major findings still open (they are marked accepted in the manifest); without it the step is refused while one is open"}))),
     Command("engines list", "list the engine packages", "list_engines", _engines_list, (PROJECT_OPT,)),
     Command("engines info", "version and public modules of one engine", "engine_info", _engines_info,
             ((("name",), {"help": "engine package (epc_sld) or area (sld)"}), PROJECT_OPT)),

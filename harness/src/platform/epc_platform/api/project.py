@@ -83,7 +83,7 @@ def _edit_notice(workflow):
 
 
 def _major_notice(workflow):
-    """The `major` findings still open in the manifests in force: they do not stop the step, but the answer says how many there are (SIM-07)."""
+    """The `major` findings still open in the manifests in force: after an acceptance there are none; the answer says how many are left (SIM-07)."""
     from epc_platform.workflow.machine import open_findings
     n = len(open_findings(workflow.store, "major"))
     return {"open_major_findings": n} if n else {}
@@ -135,11 +135,11 @@ def review(project_dir, actor, corrections, *, clock):
 
 
 @api_call
-def issue(project_dir, actor, *, clock):
+def issue(project_dir, actor, *, clock, accept_major=None):
     """The workflow transition `issue` (approved -> issued). The D21 guard refuses it while a norm record is not verified or there is no manifest."""
     root, who = existing_project(project_dir), actor_of(actor)
     workflow = Workflow(root, open_log(root, clock))
-    state = flow.apply(workflow, "issue", who, "issue")
+    state = flow.apply(workflow, "issue", who, "issue", accept_major=accept_major)
     return ok({"workflow_state": state, **_edit_notice(workflow), **_major_notice(workflow)})
 
 
@@ -153,9 +153,9 @@ def submit(project_dir, actor, *, clock):
 
 
 @api_call
-def approve(project_dir, actor, *, clock):
+def approve(project_dir, actor, *, clock, accept_major=None):
     """The workflow transition `approve` (in_review -> approved): engineer of record only, `sign` permission, and the D21 guard."""
     root, who = existing_project(project_dir), actor_of(actor)
     workflow = Workflow(root, open_log(root, clock))
-    state = flow.apply(workflow, "approve", who, "approve")
+    state = flow.apply(workflow, "approve", who, "approve", accept_major=accept_major)
     return ok({"workflow_state": state, **_edit_notice(workflow), **_major_notice(workflow)})

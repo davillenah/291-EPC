@@ -8,11 +8,11 @@ The default catalog travels with the package; the global file the MASTER edits (
 
 | | |
 |---|---|
-| Incluye (motor) | `dxf` |
+| Incluye (motor) | `arch`, `dxf`, `plan`, `titleblock` |
 | Es dueño de | `dxf` |
 | Necesita (plugins) | — |
 | Lo necesitan | `board-design`, `iram-titleblock`, `mld`, `plan-drawing`, `sld` |
-| Paquetes de Python | `ezdxf`, `lxml`, `shapely`, `svgelements`, `vtracer` |
+| Paquetes de Python | `ezdxf`, `lxml`, `numpy`, `pillow`, `pypdfium2`, `shapely`, `svgelements`, `vtracer` |
 | Si lo modificas, revisa | plugins `board-design`, `iram-titleblock`, `mld`, `plan-drawing`, `sld`; módulos del backend — |
 
 Generado por `python harness/tools/build/regen_plugins.py`; el mapa completo está en `harness/docs/architecture/DEPENDENCIAS.md`.

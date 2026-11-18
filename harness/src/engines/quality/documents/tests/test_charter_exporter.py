@@ -228,7 +228,7 @@ class TestProyectoYPdf(unittest.TestCase):
     def test_pdf_con_sello(self):
         self._escribir()
         s = X.sello_md(EJEC)
-        pdf = os.path.join(self.d, "02_PROJECT", "PROJECT_charter_EXECUTIVE.pdf")
+        pdf = os.path.splitext(self.ex)[0] + ".pdf"            # next to the .md, where the verifier looks for it
         _w(pdf, b"%PDF-1.4\n/Subject (sha256:" + s.encode() + b")\n", "wb")
         self.assertEqual(self._hall("charter_ejecutivo_pdf"), [])
         _w(pdf, b"%PDF-1.4\n/Subject (sha256:0000000000000000)\n", "wb")

@@ -27,11 +27,11 @@ This plugin is packaging only. The code lives in `harness/src/engines/cad/drawin
 
 | | |
 |---|---|
-| Incluye (motor) | `dxf`, `titleblock` |
+| Incluye (motor) | `arch`, `dxf`, `plan`, `titleblock` |
 | Es dueño de | `titleblock` |
 | Necesita (plugins) | `dxf-output` |
 | Lo necesitan | `board-design`, `mld`, `sld` |
-| Paquetes de Python | `ezdxf`, `lxml`, `shapely`, `svgelements`, `vtracer` |
+| Paquetes de Python | `ezdxf`, `lxml`, `numpy`, `pillow`, `pypdfium2`, `shapely`, `svgelements`, `vtracer` |
 | Si lo modificas, revisa | plugins `board-design`, `mld`, `sld`; módulos del backend — |
 
 Generado por `python harness/tools/build/regen_plugins.py`; el mapa completo está en `harness/docs/architecture/DEPENDENCIAS.md`.

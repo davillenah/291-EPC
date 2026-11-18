@@ -60,7 +60,7 @@ class WiredRunWithStore(unittest.TestCase):
     def test_progress_has_one_line_per_stage(self):
         lines = self.store.read_progress().splitlines()[2:]
         self.assertEqual(len(lines), 11)
-        self.assertIn("| stage 4 supply_transformer | not_available | not available in Phase 1", lines[3])
+        self.assertIn("| stage 4 supply_transformer | not_available | no transformer to size", lines[3])
 
 
 if __name__ == "__main__":

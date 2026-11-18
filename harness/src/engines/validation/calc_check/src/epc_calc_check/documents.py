@@ -143,8 +143,9 @@ def _memo_summary(view):
 
 
 def _drop_max(summary):
-    found = [m for line in summary.get("log") or [] if isinstance(line, str) for m in re.findall(r"dU max ([0-9.]+)", line)]
-    return float(found[0]) if found else None
+    lines = [line for line in summary.get("log") or [] if isinstance(line, str)]
+    found = [float(m) for line in lines for m in re.findall(r"dU max ([0-9.]+)", line)]
+    return max(found, default=None)
 
 
 def _drawing(view):

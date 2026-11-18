@@ -1,0 +1,95 @@
+{
+ "schema_version": "1.0",
+ "note": "Which activity of levels.json a room is lit for, from the words of its name (first rule that matches, es and en). It adds no illuminance value: the lux come from levels.json. The choices are design defaults, pending review by the lighting engineer; a room no rule matches is not guessed.",
+ "default_height_m": 3.0,
+ "default_height_note": "design default, pending review; the plan has no ceiling height",
+ "rules": [
+  {
+   "activity": "circulation.indoor",
+   "words": [
+    "pasillo",
+    "corredor",
+    "circulacion",
+    "circulación",
+    "hall",
+    "corridor",
+    "escalera",
+    "stair"
+   ]
+  },
+  {
+   "activity": "room.storage",
+   "words": [
+    "deposito",
+    "depósito",
+    "almacen",
+    "almacén",
+    "storage",
+    "archivo",
+    "insumos",
+    "limpieza",
+    "vestuario"
+   ]
+  },
+  {
+   "activity": "task.fine",
+   "words": [
+    "consultorio",
+    "procedimiento",
+    "curacion",
+    "curación",
+    "laboratorio",
+    "examination",
+    "treatment",
+    "quirofano",
+    "quirófano",
+    "taller"
+   ]
+  },
+  {
+   "activity": "task.reading",
+   "words": [
+    "oficina",
+    "administracion",
+    "administración",
+    "recepcion",
+    "recepción",
+    "office",
+    "reception",
+    "secretaria",
+    "secretaría",
+    "servidor",
+    "server",
+    "farmacia",
+    "pharmacy",
+    "dispensario",
+    "caja",
+    "mostrador"
+   ]
+  },
+  {
+   "activity": "education.classroom",
+   "words": [
+    "aula",
+    "classroom"
+   ]
+  },
+  {
+   "activity": "room.living",
+   "words": [
+    "estar",
+    "espera",
+    "sanitario",
+    "baño",
+    "bano",
+    "waiting",
+    "living",
+    "dormitorio",
+    "cocina",
+    "comedor",
+    "sala",
+    "local"
+   ]
+  }
+ ]
+}

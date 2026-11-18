@@ -79,18 +79,43 @@ def _label_position(pts):
     return mid, angle + 180 if (angle > 90 or angle < -90) else angle
 
 
-def _label(s) -> str:
-    """The tag of a stretch, followed by the circuits it carries when it carries any."""
-    return s["tag"] + (" [" + ",".join(c["circuit"] for c in s["carries"]) + "]" if s.get("carries") else "")
+def _carried(s) -> str:
+    """The first circuits a stretch carries and how many more: '[A, B +2]', empty when it carries none."""
+    names = [c["circuit"] for c in s.get("carries") or []]
+    return f" [{', '.join(names[:2])}{f' +{len(names) - 2}' if len(names) > 2 else ''}]" if names else ""
+
+
+def _label(s, room: float, height: float) -> str:
+    """The text of a stretch label: its tag with the circuits it carries when that fits in the `room` of the stretch, else the tag alone, else nothing: a longer text would run over the next one."""
+    return next((t for t in (s["tag"] + _carried(s), s["tag"]) if len(t) * 0.62 * height <= room), "")
+
+
+def _stacked(mid, angle, height, seen):
+    """The place of a label that does not sit on one already written: the labels of stretches that share a line are put one above the other, across the line."""
+    key = (round(mid[0] / (4 * height)), round(mid[1] / (4 * height)))
+    n = seen[key] = seen.get(key, -1) + 1
+    rad = math.radians(angle + 90)
+    return (mid[0] + math.cos(rad) * n * 1.4 * height, mid[1] + math.sin(rad) * n * 1.4 * height)
+
+
+def _add_label(msp, s, pts, height, cfg, layer, seen) -> int:
+    """Write the label of a stretch when it fits; returns the entities added (0 or 1)."""
+    text = _label(s, sum(math.dist(p, q) for p, q in zip(pts, pts[1:])), height)
+    if not text:
+        return 0
+    mid, angle = _label_position(pts)
+    msp.add_text(text, height=height, rotation=angle, dxfattribs={"layer": layer(cfg["tag_layer"])}).set_placement(_stacked(mid, angle, height, seen), align=ezdxf.enums.TextEntityAlignment.BOTTOM_CENTER)
+    return 1
 
 
 def _add_stretches(msp, result, line_kinds, cfg, scale: float, height: float, layer) -> int:
+    seen: Dict[Any, int] = {}
+    count = 0
     for s in result["stretches"]:
         pts = [(x * scale, y * scale) for x, y in s["points_m"]]
         msp.add_lwpolyline(pts, dxfattribs={"layer": layer(line_kinds[s["kind"]]["capa_dxf"])})
-        mid, angle = _label_position(pts)
-        msp.add_text(_label(s), height=height, rotation=angle, dxfattribs={"layer": layer(cfg["tag_layer"])}).set_placement(mid, align=ezdxf.enums.TextEntityAlignment.BOTTOM_CENTER)
-    return 2 * len(result["stretches"])
+        count += 1 + _add_label(msp, s, pts, height, cfg, layer, seen)
+    return count
 
 
 def _wall_corners(a, b, thickness: float):
@@ -138,6 +163,7 @@ def write_dxf(result: Dict[str, Any], path: Path, version: str = "", params: Dic
     code, scale = _UNITS[profile.get("unidades_salida", cfg["default_units"])]
     doc = ezdxf.new(dxfversion=version, setup=True)
     doc.units = code
+    doc.styles.get("Standard").dxf.font = "arial.ttf"                    # one typeface for every text of the drawing
     msp = doc.modelspace()
     layer = lambda base: "plan." + base                          # noqa: E731 - the draft names a layer by its ROLE; the deliverable service gives it its name and look (the catalog the MASTER edits)
     for base in sorted({k["capa_dxf"] for k in list(line_kinds.values()) + list(node_kinds.values())} | {cfg["tag_layer"], cfg["junction_layer"]}):

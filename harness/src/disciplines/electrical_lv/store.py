@@ -41,6 +41,8 @@ PROGRESS = f"{INTERNAL}/epc-progress.txt"
 MANIFEST_SCHEMA = "deliverable_manifest.schema.json"
 MANIFEST_SUFFIX = ".manifest.json"
 SUPERSEDE_FIELDS = ("superseded_by", "signed", "superseded_signature")
+COVER_SUFFIX = "_transmittal.pdf"      # the cover lists the files and shows the review state; it is not one of them, so a review step may rewrite it
+REVIEW_FIELDS = ("review_status", "signed", "findings")
 MANIFEST_NAME = "inputs_manifest.json"
 WORKFLOW = "workflow.json"
 MODE = "mode.json"
@@ -337,7 +339,7 @@ class ProjectStore:
         parts = clean_parts(rel)
         if len(parts) < 3 or parts[0] != "deliverables" or not re.fullmatch(r"TR-[0-9]{3,4}", parts[1]):
             raise StoreError(f"{rel!r} must be deliverables/TR-NNN/<file>")
-        if self._signed(parts[1]):
+        if self._signed(parts[1]) and not parts[-1].endswith(COVER_SUFFIX):
             raise StoreError(f"{parts[1]} is signed: its files cannot be overwritten")
         data = Path(source).read_bytes()
         atomic_write(self.resolve(rel), data)
@@ -358,6 +360,29 @@ class ProjectStore:
         moved = manifest["signed"] is None and old["signed"] is not None and manifest["superseded_signature"] == old["signed"]
         if (manifest["signed"], manifest["superseded_signature"]) != (old["signed"], old["superseded_signature"]) and not (moved and old["superseded_signature"] is None):
             problems.append("signed: can only be moved to superseded_signature")
+        if problems:
+            raise StoreError([f"{rel}: {p}" for p in problems])
+        self._write_json(rel, manifest)
+        return rel
+
+    @staticmethod
+    def _finding_changes(old, new):
+        """A review step may only accept `major` and `note` findings (status, reason, who); everything else of a finding stays as the run wrote it."""
+        if len(old) != len(new):
+            return ["findings: a review step does not add or drop findings"]
+        free = ("status", "accepted_reason", "accepted_by")
+        return [f"findings/{a['id']}: only the acceptance of a major or note finding may change" for a, b in zip(old, new)
+                if {k: v for k, v in a.items() if k not in free} != {k: v for k, v in b.items() if k not in free} or (a != b and a.get("severity") not in ("major", "note"))]
+
+    def record_review(self, token, manifest):
+        """Reflect the workflow in an existing manifest: only `review_status`, `signed` and the acceptance of `major` findings may differ from the stored one, and a signature is set once (by `approve`), never edited or dropped."""
+        self._require(token)
+        rel = self.manifest_rel(manifest)
+        old = self.read_json(rel)
+        problems = [f"{k}: cannot change in a review step" for k in sorted(set(old) | set(manifest)) if k not in REVIEW_FIELDS and old.get(k) != manifest.get(k)]
+        if old["signed"] is not None and manifest["signed"] != old["signed"]:
+            problems.append("signed: a signature is not edited or dropped")
+        problems += self._finding_changes(old["findings"], manifest["findings"])
         if problems:
             raise StoreError([f"{rel}: {p}" for p in problems])
         self._write_json(rel, manifest)

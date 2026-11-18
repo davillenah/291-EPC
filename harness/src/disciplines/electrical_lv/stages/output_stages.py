@@ -88,6 +88,7 @@ class DrawingsStage(Stage):
             return self.result("failed", message=f"drawing engine: {summary['error']}", reason="engine", engine_calls=calls)
         extra = self._floor_plans(context, target, name, calls)
         extra.update(self._model3d(context, target, name, calls))
+        unify_dxf(target / "out", drawing_date(context))
         outputs = {"directory": f"drawings/{name}/out", "files": list_files(target / "out"), "summary": {k: copy.deepcopy(summary[k]) for k in SUMMARY_KEYS}}
         return self.result("ok", outputs=dict(outputs, **extra), engine_calls=calls)
 
@@ -118,6 +119,13 @@ class DrawingsStage(Stage):
             raise StageInputError([f"plan sheets: {exc}"]) from exc
         calls.append(EC.record_for("cad/drawing", "epc_drawing.export.plan_sheet.compose"))
         return dict({"plan_sheets": {n: {"format": r["format"], "scale": r["scale"]} for n, r in sheets.items()}}, **({"plan_warnings": notes} if notes else {}))
+
+
+def unify_dxf(folder, stamp_date=None):
+    """One layer naming and one typeface in every DXF written by the stage, before their hashes are recorded (SIM-11)."""
+    from epc_dxf import style_unify
+    for path in sorted(Path(folder).glob("*.dxf")):
+        style_unify.unify(path, stamp_date)
 
 
 TERMINAL_LIST = "epc_terminal_blocks.build_terminal_list"
@@ -386,6 +394,6 @@ class DocumentsStage(Stage):
             raise StageInputError([str(exc)]) from exc
         if not formats or not context.work_dir:
             return {}
-        done, used = rendering.render_all(docs, (context.profile or {}).get("project_code") or "", Path(context.work_dir) / "documents", formats, getattr(context, "mode", "production"))
+        done, used = rendering.render_all(docs, (context.profile or {}).get("project_code") or "", Path(context.work_dir) / "documents", formats, getattr(context, "mode", "production"), (context.profile or {}).get("language") or "en")
         calls.extend(used)
         return {"rendered": done}

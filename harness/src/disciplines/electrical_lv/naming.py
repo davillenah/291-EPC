@@ -62,9 +62,88 @@ def stem(project_code, entry):
     return f"{document_code(project_code, entry)}_{entry['description']}"
 
 
-def file_path(project_code, entry, extension):
-    """Path of a file inside its transmittal folder: `<stem><ext>` or `<stem>/<stem>_P01<ext>` for plans and diagrams."""
+def file_path(project_code, entry, extension, in_type_folder=False):
+    """Path of a file inside its transmittal folder: `<stem><ext>` or `<stem>/<stem>_P01<ext>` for plans and diagrams (`<stem>_P01<ext>` when the file already sits in the folder of its kind, `drawings/sld`)."""
     name = stem(project_code, entry)
+    if entry["type"] in PAGED_TYPES and in_type_folder:
+        return f"{name}_P{entry.get('page', 1):02d}{extension}"
     if entry["type"] in PAGED_TYPES:
         return f"{name}/{name}_P{entry.get('page', 1):02d}{extension}"
     return f"{name}{extension}"
+
+
+# ---- automatic names (SIM-10): a project that gives no `deliverable_names` still gets the code and the file names of its deliverables --------------------------------------------------
+# Catalogue of the documents the stages produce: engine name -> (type, description). A fixed table of English words, not an invention per project; a project that wants other names gives `deliverable_names`.
+DOCUMENT_CATALOGUE = {
+    "calculation_memo": ("CAL", "feeder_sizing_calculation"), "raceway_memo": ("CAL", "raceway_sizing_calculation"), "short_circuit_study": ("ANL", "short_circuit_study"),
+    "selectivity_study": ("ANL", "selectivity_study"), "lighting_study": ("ANL", "lighting_study"), "descriptive_report": ("RPT", "descriptive_report"), "design_basis": ("RPT", "design_basis"),
+    "project_summary": ("RPT", "project_summary"), "load_schedule": ("LST", "load_schedule"), "terminal_block_list": ("LST", "terminal_block_list"), "boq": ("LST", "bill_of_quantities"),
+    "cable_list": ("CIR", "cable_list"), "specification": ("SPC", "technical_specification"), "rfq": ("SPC", "request_for_quotation"), "datasheets": ("SCH", "datasheets"),
+}
+FORMAT_SUFFIX = re.compile(r"_(pdf|docx|xlsx)$")
+_SHEET = re.compile(r"_H([0-9]+)$")
+
+
+def _drawing_kind(name):
+    """(type, description, level id or None) of a drawing by its engine name: `SLD_X_H1`, `MLD_X_H1`, `X_plan_PB[_sheet]`, `X_lighting_PB[_sheet]`, `X_model_3d`, `X_section_A`."""
+    for prefix, kind, text in (("SLD_", "SLD", "single_line_diagram"), ("MLD_", "MLD", "board_layout")):
+        if name.startswith(prefix):
+            return kind, text, None
+    plan = re.search(r"_(plan|lighting)_([A-Za-z0-9]+?)(_sheet)?$", name)
+    if plan:
+        return "PLN", f"{'electrical' if plan.group(1) == 'plan' else 'lighting'}_plan{'_sheet' if plan.group(3) else ''}", plan.group(2)
+    section = re.search(r"_section_([A-Za-z0-9]+)$", name)
+    if section:
+        return "SEC", f"section_{section.group(1).lower()}", None
+    return ("PLN", "model_3d", None) if name.endswith("_model_3d") else ("DET", re.sub(r"[^a-z0-9]+", "_", name.lower()).strip("_")[:MAX_DESCRIPTION], None)
+
+
+def _level_code(floor_id, floors):
+    """`L00`, `L01`... for a floor id by the order of the levels (`elevation_m`, else the order given); `LS01`.. when it is below ground."""
+    order = sorted(floors, key=lambda f: (f.get("elevation_m") or 0))
+    ids = [f["id"] for f in order]
+    if floor_id not in ids:
+        return None
+    below = [f["id"] for f in order if (f.get("elevation_m") or 0) < 0]
+    if floor_id in below:
+        return f"LS{len(below) - below.index(floor_id):02d}"
+    return f"L{ids.index(floor_id) - len(below):02d}"
+
+
+def _classify(name, floors):
+    """(type, description, level, page, group) of an engine name; the table sheet of a diagram gets page 100 (renumbered after the sheets)."""
+    base = FORMAT_SUFFIX.sub("", name)
+    if base in DOCUMENT_CATALOGUE:
+        return DOCUMENT_CATALOGUE[base] + (None, 1, base)
+    if name.endswith("_tables_xlsx"):
+        return "TAB", "document_tables", None, 1, "tables"
+    kind, text, floor = _drawing_kind(base)
+    sheet = _SHEET.search(base)
+    group = base[:sheet.start()] if sheet else base.removesuffix("_TABLA")
+    page = int(sheet.group(1)) if sheet else (100 if base.endswith("_TABLA") else 1)
+    return kind, text, (_level_code(floor, floors) if floor else None), page, group
+
+
+def automatic(names, floors=()):
+    """{engine name: naming entry} for the engine names `names` (drawings and files of documents), numbered per type by name order; the sheets of one diagram are pages of one document."""
+    out, numbers = {}, {}
+    for name in sorted(names):
+        kind, text, level, page, group = _classify(name, floors)
+        numbers.setdefault((kind, group), 1 + sum(1 for k in numbers if k[0] == kind))
+        entry = {"type": kind, "number": numbers[(kind, group)], "description": text[:MAX_DESCRIPTION]}
+        entry.update({"level": level} if level else {})
+        entry.update({"page": page} if kind in PAGED_TYPES else {})
+        out[name] = entry
+    return _compact_pages(out)
+
+
+def _compact_pages(entries):
+    """Pages as 1, 2, 3 within one document (the table sheet, numbered 100+ while the sheets are sorted, goes last)."""
+    docs = {}
+    for name, e in entries.items():
+        if "page" in e:
+            docs.setdefault((e["type"], e["number"]), []).append(name)
+    for members in docs.values():
+        for n, name in enumerate(sorted(members, key=lambda m: (entries[m]["page"], m)), start=1):
+            entries[name]["page"] = n
+    return entries

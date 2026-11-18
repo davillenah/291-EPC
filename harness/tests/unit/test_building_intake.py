@@ -58,7 +58,7 @@ class DeriveTests(unittest.TestCase):
     def test_a_room_without_data_is_an_error_unless_it_is_excluded(self):
         with self.assertRaises(BuildingError) as ctx:
             derive(building(rooms={"r1": dict(DATA)}, by_name={}), loads())
-        self.assertTrue(any("r2" in e and "no lighting data" in e for e in ctx.exception.errors))
+        self.assertTrue(any("r3" in e and "no lighting data" in e for e in ctx.exception.errors))          # r2 (HALL) is lit by its name; r3 (L) matches no kind of room
         _, section = derive(building(rooms={"r1": dict(DATA)}, by_name={}, exclude=["r2", "r3"]), loads())
         self.assertEqual([r["id"] for r in section["document"]["rooms"]], ["PB-r1"])
 
@@ -462,7 +462,7 @@ class FloorPlanTests(unittest.TestCase):
         self.assertIn("SYM_TOMACORRIENTE", blocks(plan))
         self.assertNotIn("SYM_TOMACORRIENTE", blocks(light))
         self.assertIn("SYM_LUMINARIA", blocks(light))
-        self.assertTrue([e for e in plan.modelspace().query("LWPOLYLINE") if e.dxf.layer.endswith("ARQ-MUROS")])
+        self.assertTrue([e for e in plan.modelspace().query("LWPOLYLINE") if e.dxf.layer == "A-WALL-CUT"])
 
     def test_without_routing_no_floor_plan_is_written(self):
         import tempfile
@@ -491,7 +491,7 @@ class WholeBuildingTests(unittest.TestCase):
             run_ = res["data"]["run"]
             self.assertEqual(run_["summary"]["by_status"], {"ok": 12})
             self.assertEqual(res["data"]["workflow_state"], "draft_ready")
-            names = sorted(p.name for p in (root / "API-1" / "deliverables" / "TR-001").glob("*.dxf"))
+            names = sorted(p.name for p in (root / "API-1" / "deliverables" / "TR-001").rglob("*.dxf"))
             self.assertTrue([n for n in names if "_plan_PB" in n] and [n for n in names if "_lighting_PB" in n])
             docs = [d["name"] for d in run_["results"][10]["outputs"]["documents"]]
             self.assertIn("cable_list", docs)
@@ -706,7 +706,7 @@ class RenderedDocumentsTests(unittest.TestCase):
             api.init_project(root, "API-1", A.ANSWERS, clock=A.CLOCK, actor=A.ORC)
             ins = dict(W.inputs_doc(), building=b, transformer={"demand_kva": 40, "reserve_pct": 20, "secondary_v": 400}, **extra)
             res = api.run_pipeline(root / "API-1", loads=loads(), engine_inputs=ins, clock=A.CLOCK, actor=A.ORC)
-            files = sorted(p.name for p in (root / "API-1" / "deliverables" / "TR-001").glob("*"))
+            files = sorted(p.name for p in (root / "API-1" / "deliverables" / "TR-001").rglob("*") if p.is_file())
         return res, files
 
     def test_a_building_run_issues_pdf_word_and_workbook_files_of_the_documents(self):
@@ -717,7 +717,8 @@ class RenderedDocumentsTests(unittest.TestCase):
             self.assertIn(name, files)
         self.assertTrue([f for f in files if f.endswith("_tables.xlsx")])
         rendered = res["data"]["run"]["results"][10]["outputs"]["rendered"]
-        self.assertIn("terminal_block_list", rendered["not_rendered"])
+        self.assertEqual(rendered["not_rendered"], [])                  # the terminal list, BOQ, datasheets, RFQ and lighting study have files too (SIM-19)
+        self.assertIn("terminal_block_list.pdf", files)
 
     def test_the_formats_can_be_chosen_and_a_wrong_one_blocks(self):
         res, files = self.run_api(documents={"formats": ["pdf"]})
@@ -1113,3 +1114,21 @@ class IccDecayAndEarthingTests(unittest.TestCase):
             with self.subTest(section=section):
                 _, s6 = self.stage6(earthing=section)
                 self.assertEqual(s6.status, "blocked")
+
+
+class RoomAuto(unittest.TestCase):
+    """A room nobody described is lit from what the harness knows: the activity of its name, the first luminaire and the engine's default height."""
+
+    def test_the_activity_comes_from_the_name(self):
+        from disciplines.electrical_lv.intake import room_auto
+        self.assertEqual([room_auto.activity_of(n) for n in ("Consultorio 4", "Pasillo central", "Deposito de insumos", "Sanitarios", "Sala de servidores", "Sala X1")],
+                         ["task.fine", "circulation.indoor", "room.storage", "room.living", "task.reading", "room.living"])
+        self.assertIsNone(room_auto.activity_of("Planetario"))
+
+    def test_the_data_of_a_room(self):
+        from disciplines.electrical_lv.intake import room_auto
+        lum = [{"id": "L1"}, {"id": "L2"}]
+        lighting, outlets = room_auto.room_data({"name": "Oficina"}, lum, [{"id": "tug", "kind": "general"}])
+        self.assertEqual((lighting["activity"], lighting["luminaire"], outlets), ("task.reading", "L1", {"use": "general", "receptacle": "tug"}))
+        self.assertIsNone(room_auto.room_data({"name": "Planetario"}, lum, None))
+        self.assertIsNone(room_auto.room_data({"name": "Oficina"}, [], None))

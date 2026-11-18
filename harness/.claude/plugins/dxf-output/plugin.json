@@ -27,6 +27,9 @@
     "requires": [
       "ezdxf",
       "lxml",
+      "numpy",
+      "pillow",
+      "pypdfium2",
       "shapely",
       "svgelements",
       "vtracer"
@@ -37,6 +40,9 @@
     "dxf"
   ],
   "engine": [
-    "dxf"
+    "arch",
+    "dxf",
+    "plan",
+    "titleblock"
   ]
 }
