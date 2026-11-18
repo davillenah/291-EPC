@@ -34,16 +34,18 @@ def lighting_document(design):
     return doc
 
 
-def write_floor_plans(routing, out_dir, board):
-    """Writes `<board>_plan_<floor>.dxf` and `<board>_lighting_<floor>.dxf` for every floor of the routing section; returns the warnings of the engine."""
+def write_floor_plans(routing, out_dir, board, scales=None):
+    """Writes `<board>_plan_<floor>.dxf` and `<board>_lighting_<floor>.dxf` for every floor of the routing section; returns the warnings of the engine.
+    `scales` ({plan name: N of 1:N}): the scale each plan will be printed at, so its text and symbols are sized for it (see `epc_plan.dxfout.write_dxf`)."""
     import epc_plan.dxfout as dxfout
     warnings, written = [], {}
     for floor, design in sorted(routing.items()):
         backdrop = copy.deepcopy(design.get("backdrop"))
         for stem, doc in (("plan", routed_document(design)), ("lighting", lighting_document(design))):
             path = out_dir / f"{board}_{stem}_{floor}.dxf"
-            warnings += [f"{floor}: {w}" for w in dxfout.write_dxf(_process(doc), path, backdrop=backdrop)]
-            written[f"{board}_{stem}_{floor}"] = path
+            name = f"{board}_{stem}_{floor}"
+            warnings += [f"{floor}: {w}" for w in dxfout.write_dxf(_process(doc), path, backdrop=backdrop, paper_scale=(scales or {}).get(name))]
+            written[name] = path
     return warnings, written
 
 
@@ -67,4 +69,5 @@ def place_on_sheets(plans, request_path, fmt, scale):
     from pathlib import Path
     from epc_drawing.export import plan_sheet
     request = json.loads(Path(request_path).read_text(encoding="utf-8"))
-    return {name: plan_sheet.compose(path, request, path.with_name(path.stem + "_sheet.dxf"), fmt, scale, name) for name, path in sorted(plans.items())}
+    asked = lambda name: scale.get(name) if isinstance(scale, dict) else scale                                        # noqa: E731 - one scale for all, or one for each plan
+    return {name: plan_sheet.compose(path, request, path.with_name(path.stem + "_sheet.dxf"), fmt, asked(name), name) for name, path in sorted(plans.items())}

@@ -74,9 +74,25 @@ def _entity(e):
     return reader(e) if reader else None
 
 
-def _insert_width(virtual) -> float:
-    xs = [p for v in virtual if v.dxftype() == "LINE" for p in (v.dxf.start.x, v.dxf.end.x)]
-    return float(max(xs) - min(xs)) if xs else 0.0
+def _block_points(virtual) -> list:
+    """The ends of what a block draws: lines, the corners of polylines and the ends of arcs, in the drawing."""
+    pts = []
+    for v in virtual:
+        kind = v.dxftype()
+        if kind == "LINE":
+            pts += [(v.dxf.start.x, v.dxf.start.y), (v.dxf.end.x, v.dxf.end.y)]
+        elif kind == "LWPOLYLINE":
+            pts += [(x, y) for x, y, *_ in v.get_points("xy")]
+        elif kind == "ARC":
+            pts += [(p.x, p.y) for p in (v.start_point, v.end_point)]
+    return pts
+
+
+def _insert_width(virtual, rotation: float = 0.0) -> float:
+    """How far what a block draws reaches along its own x axis (the way it is turned in the drawing): the width of a door or a window block drawn with its x along the wall."""
+    c, s = math.cos(math.radians(rotation)), math.sin(math.radians(rotation))
+    along = [x * c + y * s for x, y in _block_points(virtual)]
+    return float(max(along) - min(along)) if along else 0.0
 
 
 def _text(e) -> Optional[Text]:
@@ -89,13 +105,20 @@ def _text(e) -> Optional[Text]:
     return Text(value, _xy(e.dxf.insert), float(e.dxf.get("char_height" if kind == "MTEXT" else "height", 0.0) or 0.0))
 
 
+def _skip(skipped: Counter, e) -> None:
+    """Counts an entity the reader does not use, except a wipeout (a mask over what lies behind a block: it draws nothing a plan reader uses)."""
+    if e.dxftype() != "WIPEOUT":
+        skipped[e.dxftype()] += 1
+
+
 def _walk(entities: Iterable, prims: Primitives, skipped: Counter, depth: int, visible) -> None:
     for e in entities:
         if not visible(e.dxf.layer):
             continue
         if e.dxftype() == "INSERT" and depth < MAX_DEPTH:
             virtual = list(e.virtual_entities())
-            prims.blocks.append(Block(e.dxf.name, _xy(e.dxf.insert), _insert_width(virtual), float(e.dxf.get("rotation", 0.0)), e.dxf.layer))
+            rotation = float(e.dxf.get("rotation", 0.0))
+            prims.blocks.append(Block(e.dxf.name, _xy(e.dxf.insert), _insert_width(virtual, rotation), rotation, e.dxf.layer))
             _walk(virtual, prims, skipped, depth + 1, visible)
             continue
         if e.dxftype() in ("TEXT", "MTEXT"):
@@ -105,7 +128,7 @@ def _walk(entities: Iterable, prims: Primitives, skipped: Counter, depth: int, v
             continue
         got = _entity(e)
         if got is None:
-            skipped[e.dxftype()] += 1
+            _skip(skipped, e)
             continue
         prims.lines += got[0]
         prims.arcs += got[1]

@@ -31,6 +31,16 @@ def loads():
     return json.loads(json.dumps(W.loads_doc()))
 
 
+class PresentationSheetsKeyTests(unittest.TestCase):
+    def test_the_key_is_a_list_of_dxf_files_and_nothing_else(self):
+        ok = dict(building(), presentation_sheets=["plans/ISO.dxf"])
+        derive(ok, loads())
+        for bad in ("plans/ISO.dxf", ["plans/ISO.svg"], [3]):
+            with self.subTest(bad=bad), self.assertRaises(BuildingError) as ctx:
+                derive(dict(building(), presentation_sheets=bad), loads())
+            self.assertIn("presentation_sheets", " ".join(ctx.exception.errors))
+
+
 class DeriveTests(unittest.TestCase):
     def test_the_load_power_is_the_installed_power_of_the_engine(self):
         out, section = derive(building(), loads())

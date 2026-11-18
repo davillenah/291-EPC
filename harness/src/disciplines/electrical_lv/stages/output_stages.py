@@ -115,6 +115,9 @@ class DrawingsStage(Stage):
         notes, written = write_floor_plans(routing, target / "out", name)
         try:
             sheets = place_on_sheets(written, target / "titleblock-request.json", fmt, scale)
+            used = {n: r["scale"] for n, r in sheets.items()}
+            notes, written = write_floor_plans(routing, target / "out", name, used)                      # again, with the text and the symbols sized for the scale each plan is printed at
+            sheets = place_on_sheets(written, target / "titleblock-request.json", fmt, used)
         except (RuntimeError, ValueError, OSError) as exc:
             raise StageInputError([f"plan sheets: {exc}"]) from exc
         calls.append(EC.record_for("cad/drawing", "epc_drawing.export.plan_sheet.compose"))

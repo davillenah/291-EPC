@@ -86,3 +86,36 @@ class RoomsNamedAsThePlanNamesThem(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class PresentationSheetsTests(unittest.TestCase):
+    """The isometric, elevations and sections of the architecture go to 03_ARCHITECTURE of the transmittal when the building lists them."""
+
+    class Store:
+        def __init__(self, inputs):
+            self.inputs_dir = inputs
+
+    class Context:
+        def __init__(self, inputs, sheets):
+            self.store = PresentationSheetsTests.Store(inputs)
+            self.engine_inputs = {"building": {"floors": [{"id": "PB", "plan": "plans/PB.dxf"}], "presentation_sheets": sheets}}
+
+    def project(self, tmp):
+        plans = Path(tmp) / "plans"
+        plans.mkdir()
+        for name in ("PB.dxf", "ISO.dxf", "ELEV_S_PB.dxf"):
+            (plans / name).write_text(name, encoding="utf-8")
+        return tmp
+
+    def test_a_listed_sheet_that_exists_is_a_supporting_file_of_the_architecture_folder(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as tmp:
+            items = PS._architecture(self.Context(self.project(tmp), ["plans/ISO.dxf", "plans/ISO.dxf", "plans/none.dxf"]))
+        self.assertEqual([i["path"] for i in items], ["03_ARCHITECTURE/PB.dxf", "03_ARCHITECTURE/ISO.dxf"])
+        self.assertTrue(all(i["support"] and i["folder"] == "03_ARCHITECTURE" for i in items))
+
+    def test_without_the_key_only_the_floor_plans_are_copied(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as tmp:
+            items = PS._architecture(self.Context(self.project(tmp), None))
+        self.assertEqual([i["path"] for i in items], ["03_ARCHITECTURE/PB.dxf"])

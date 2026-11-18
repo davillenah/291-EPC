@@ -20,6 +20,7 @@ every lighting load, are inputs; a room the caller did not describe is an error 
                  "special": {"r6": {"type": "bathroom", ...}},   # a room of a special location (the kind and what the engine needs: see `stages/extra_stages.py`, slice `special_locations`)
                  "emergency": {"r2": {...}}}],             # antipanic emergency lighting of a room: the epc_lighting emergency fields except id, name, width_m, length_m
      # rooms may be named by their code on the plan ("PB-03") in `rooms`, `special`, `emergency` and `exclude`; `board`, `shaft` and `main_board` may be {"room": <id, code or name>} (its centre): see `resolve_rooms`
+     "presentation_sheets": ["plans/ISO.dxf"],            # optional: other sheets of the architecture in `inputs/plans/` (the isometric, elevations and sections `epc_arch.author` writes); copied to `03_ARCHITECTURE/` of the transmittal as they are
      "main_board": {"floor": "PB", "x_m": 1.0, "y_m": 8.0},   # optional: where the main board is; the riser of every floor is then routed (no `length` on the floors; each one gives `elevation_m` and, unless it is the main floor, `shaft`)
      "exterior": [{"id": "EXT1", "area_m2": 300, "luminaire": "...", "load": {"area": "AZ", "phases": 1, "length": {...}}}]}   # exterior areas: epc_lighting area fields + the load they make
 
@@ -183,11 +184,19 @@ def _one_room(floor, room, with_outlets):
     return {**base, **copy.deepcopy(data)}, ({**base, **copy.deepcopy(outlets)} if outlets else None), []
 
 
+def _sheet_errors(sheets):
+    """The error of `presentation_sheets` when it is not a list of DXF files (empty when it is right or absent)."""
+    if sheets is None or (isinstance(sheets, list) and all(isinstance(s, str) and s.endswith(".dxf") for s in sheets)):
+        return []
+    return ["building/presentation_sheets: a list of DXF files of `inputs/plans/` (as `plans/ISO.dxf`)"]
+
+
 def _shape_errors(building):
     """Errors of the keys of the building outside the floors: unknown keys, luminaires, receptacle catalogue."""
     errors = []
-    unknown = sorted(set(building) - {"luminaires", "options", "tolerance_pct", "floors", "receptacles", "exterior", "main_board"})
+    unknown = sorted(set(building) - {"luminaires", "options", "tolerance_pct", "floors", "receptacles", "exterior", "main_board", "presentation_sheets"})
     errors += [f"building: unknown key(s) {', '.join(unknown)}"] if unknown else []
+    errors += _sheet_errors(building.get("presentation_sheets"))
     if not isinstance(building.get("luminaires"), list) or not building["luminaires"]:
         errors.append("building/luminaires: required, the epc_lighting luminaires")
     if building.get("receptacles") is not None and not (isinstance(building["receptacles"], list) and building["receptacles"]):

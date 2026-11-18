@@ -37,6 +37,7 @@ class TestExportIntegrity(unittest.TestCase):
         in_svg = set(re.findall(r'<g id="(A-[A-Z-]+)"', self.svg))
         doc = ezdxf.read(io.StringIO(self.dxf))
         used = {e.dxf.layer for e in doc.modelspace()}
+        used |= {e.dxf.layer for ins in doc.modelspace().query("INSERT") for e in doc.blocks.get(ins.dxf.name)}        # doors and windows are blocks: their lines are in the block
         self.assertEqual(in_svg, used | {h.dxf.layer for h in doc.entitydb.values() if h.dxftype() == "HATCH"})
 
     def test_layers_of_the_dxf_carry_the_style(self):

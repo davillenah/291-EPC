@@ -7,7 +7,11 @@ The description of one floor:
      "wall_thickness_m": 0.20,
      "rooms": [{"code": "PB-01", "name": "Local comercial", "key": "SHOP", "box_m": [0, 0, 8, 7]}],     # box between wall axes: [west, south, east, north], x to the east, y to the north
      "doors": [{"room": "PB-01", "side": "E", "width_m": 0.9, "offset_m": 3.5, "opens": "in"}],        # offset: from the west (or south) end of that side of the room to the middle of the door; default the middle
-     "windows": [{"room": "PB-01", "side": "W", "width_m": 2.0}]}
+     "windows": [{"room": "PB-01", "side": "W", "width_m": 2.0}],
+     "heights_m": {"wall_height_m": 3.0, "door_head_m": 2.1, "window_sill_m": 0.9, "window_head_m": 2.1, "slab_m": 0.2, "elevation_m": 0.0}}      # optional; never assumed: without it there is no isometric, elevation or section
+
+Every plan is a presentation sheet: the plan with its dimension chains, the tags of the doors and windows, the room schedule, the opening schedule and the general notes (`epc_arch.presentation`),
+the doors and windows being blocks with a wipeout. With `heights_m` in every floor, `ISO.dxf` (the isometric of the whole building), `ELEV_S_<floor>.dxf` and `SEC_A_<floor>.dxf` are written too.
 
 Nothing is assumed: the thickness, every box and every width are given. Rooms must not overlap; walls are the sides of the rooms (a side two rooms share is one wall).
 `python -m epc_arch.author DESCRIPTION.json --out DIR [--sheet A1]` writes one DXF per floor (`<floor>.dxf`); the description is `{"floors": [...]}` or one floor.
@@ -20,10 +24,11 @@ from typing import Any, Dict, List, Optional, Tuple
 
 from epc_arch.model import ArchError, Architecture, Level, Opening, Room, Wall
 
+FIT = 20                                    # the smallest scale denominator asked for: the view takes the first standard scale that fits the sheet
 MM = 1000.0                                # plan units per metre of an authored plan
 SIDES = ("N", "S", "E", "W")
 LEVEL_KEYS = {0: "GROUND_FLOOR", 1: "FIRST_FLOOR", 2: "SECOND_FLOOR", 3: "THIRD_FLOOR", -1: "BASEMENT"}
-FLOOR_FIELDS = {"name", "index", "wall_thickness_m", "rooms", "doors", "windows"}
+FLOOR_FIELDS = {"name", "index", "wall_thickness_m", "rooms", "doors", "windows", "heights_m"}
 ROOM_FIELDS = {"code", "name", "key", "box_m"}
 OPENING_FIELDS = {"room", "side", "width_m", "offset_m", "opens", "id"}
 
@@ -128,7 +133,14 @@ def errors_of(floor: Any) -> List[str]:
     bad = _rooms_errors(floor.get("rooms"))
     if bad:
         return out + bad
-    return out + _openings_errors(floor, {r["code"]: r for r in floor["rooms"]})
+    return out + _openings_errors(floor, {r["code"]: r for r in floor["rooms"]}) + _heights_errors(floor)
+
+
+def _heights_errors(floor: dict) -> List[str]:
+    if "heights_m" not in floor:
+        return []
+    from epc_arch.sections import heights_errors
+    return [f"heights_m: {e}" for e in heights_errors(floor["heights_m"])]
 
 
 def _span(box: List[float], side: str) -> Tuple[float, float]:
@@ -235,8 +247,36 @@ def plan_dxf(arch: Architecture, sheet: str = "A1", fields: Optional[Dict[str, s
     from epc_arch.sheets import iram_template
     style = load_style()
     title = arch.level.name if arch.level else ""
-    drawing = build_drawing(arch, style=style, sheet=sheet, template=iram_template(sheet), document=arch.source, fields=dict({"denominacion": title}, **(fields or {})))
+    drawing = build_drawing(arch, style=style, sheet=sheet, template=iram_template(sheet), document=arch.source, fields=dict({"denominacion": title}, **(fields or {})), presentation=True)
     return to_dxf(drawing, style)
+
+
+def _origin(floor: Dict[str, Any]) -> Tuple[float, float]:
+    """The world point (metres) the plan frame of a floor starts at: west of its west wall face and north of its north wall face."""
+    pad = float(floor["wall_thickness_m"]) / 2
+    return (min(r["box_m"][0] for r in floor["rooms"]) - pad, max(r["box_m"][3] for r in floor["rooms"]) + pad)
+
+
+def building_views(floors: List[Dict[str, Any]], archs: List[Architecture], sheet: str = "A1", fields: Optional[Dict[str, str]] = None) -> Dict[str, str]:
+    """The views the heights allow, as DXF text by file name: the isometric of the building, and the south elevation and the section A of each floor. Empty when a floor has no `heights_m`."""
+    if not floors or any("heights_m" not in f for f in floors):
+        return {}
+    from epc_arch.drawing import load_style
+    from epc_arch.export.export_dxf import to_dxf
+    from epc_arch.isometric import isometric_drawing
+    from epc_arch.sections import elevation, section, view_dxf
+    from epc_arch.sheets import iram_template
+    corner = (min(_origin(f)[0] for f in floors), max(_origin(f)[1] for f in floors))
+    parts = [(a, f["heights_m"], (_origin(f)[0] - corner[0], _origin(f)[1] - corner[1])) for f, a in zip(floors, archs)]
+    style = load_style()
+    out = {"ISO.dxf": to_dxf(isometric_drawing(parts, style, sheet, None, iram_template(sheet), fields), style)}
+    for f, a in zip(floors, archs):
+        stem = _stem(f)
+        h = f["heights_m"]
+        out[f"ELEV_S_{stem}.dxf"] = view_dxf(elevation(a, "S", h), a, sheet, FIT, fields)
+        mid = (min(r["box_m"][0] for r in f["rooms"]) + max(r["box_m"][2] for r in f["rooms"])) / 2 - _origin(f)[0]
+        out[f"SEC_A_{stem}.dxf"] = view_dxf(section(a, "x", mid, "E", h), a, sheet, FIT, fields)
+    return out
 
 
 def floors_of(description: Any) -> List[Dict[str, Any]]:
@@ -262,11 +302,19 @@ def main(argv=None) -> int:
         fields = json.loads(Path(a.fields).read_text(encoding="utf-8")) if a.fields else None
         out = Path(a.out)
         out.mkdir(parents=True, exist_ok=True)
+        archs = []
         for floor in floors:
             name = f"{_stem(floor)}.dxf"
             arch = architecture_of(floor, name)
+            archs.append(arch)
             (out / name).write_text(plan_dxf(arch, a.sheet, fields), encoding="utf-8")
             print(f"OK {name}: {len(arch.rooms)} rooms, {len(arch.walls)} walls, {arch.counts()['doors']} doors, {arch.counts()['windows']} windows")
+        views = building_views(floors, archs, a.sheet, fields)
+        for name, text in views.items():
+            (out / name).write_text(text, encoding="utf-8")
+            print(f"OK {name}")
+        if not views:
+            print("NOTE no isometric, elevations or sections: every floor needs `heights_m` / falta `heights_m` en cada planta para el isométrico, las elevaciones y los cortes")
     except (ArchError, OSError, ValueError) as e:
         print(f"ERROR {e}", file=sys.stderr)
         return 1
