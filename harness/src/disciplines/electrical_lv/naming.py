@@ -77,7 +77,7 @@ def file_path(project_code, entry, extension, in_type_folder=False):
 # Catalogue of the documents the stages produce: engine name -> (type, description). A fixed table of English words, not an invention per project; a project that wants other names gives `deliverable_names`.
 DOCUMENT_CATALOGUE = {
     "calculation_memo": ("CAL", "feeder_sizing_calculation"), "raceway_memo": ("CAL", "raceway_sizing_calculation"), "short_circuit_study": ("ANL", "short_circuit_study"),
-    "selectivity_study": ("ANL", "selectivity_study"), "lighting_study": ("ANL", "lighting_study"), "descriptive_report": ("RPT", "descriptive_report"), "design_basis": ("RPT", "design_basis"),
+    "selectivity_study": ("ANL", "selectivity_study"), "lighting_study": ("ANL", "lighting_study"), "pv_yield_study": ("ANL", "pv_yield_study"), "descriptive_report": ("RPT", "descriptive_report"), "design_basis": ("RPT", "design_basis"),
     "project_summary": ("RPT", "project_summary"), "load_schedule": ("LST", "load_schedule"), "terminal_block_list": ("LST", "terminal_block_list"), "boq": ("LST", "bill_of_quantities"),
     "cable_list": ("CIR", "cable_list"), "specification": ("SPC", "technical_specification"), "rfq": ("SPC", "request_for_quotation"), "datasheets": ("SCH", "datasheets"),
 }

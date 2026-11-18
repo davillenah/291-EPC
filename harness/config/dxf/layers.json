@@ -1190,6 +1190,132 @@
         "es": "Ascensores, montacargas y escaleras mecánicas (plano)",
         "en": "Lifts and escalators (plan)"
       }
+    },
+    "pv.SITE": {
+      "name": "PV-PREDIO",
+      "color": 8,
+      "lineweight": null,
+      "linetype": "CONTINUOUS",
+      "on": true,
+      "frozen": false,
+      "locked": false,
+      "plot": true,
+      "description": {
+        "es": "Predio, cerco y retiros (planta fotovoltaica)",
+        "en": "Site, fence and setbacks (PV plant)"
+      }
+    },
+    "pv.ROAD": {
+      "name": "PV-CAMINO",
+      "color": 9,
+      "lineweight": null,
+      "linetype": "CONTINUOUS",
+      "on": true,
+      "frozen": false,
+      "locked": false,
+      "plot": true,
+      "description": {
+        "es": "Camino interno (planta fotovoltaica)",
+        "en": "Internal road (PV plant)"
+      }
+    },
+    "pv.TABLE": {
+      "name": "PV-MESAS",
+      "color": 5,
+      "lineweight": null,
+      "linetype": "CONTINUOUS",
+      "on": true,
+      "frozen": false,
+      "locked": false,
+      "plot": true,
+      "description": {
+        "es": "Mesas de módulos (planta fotovoltaica)",
+        "en": "Module tables (PV plant)"
+      }
+    },
+    "pv.INVERTER": {
+      "name": "PV-INVERSORES",
+      "color": 30,
+      "lineweight": null,
+      "linetype": "CONTINUOUS",
+      "on": true,
+      "frozen": false,
+      "locked": false,
+      "plot": true,
+      "description": {
+        "es": "Inversores (planta fotovoltaica)",
+        "en": "Inverters (PV plant)"
+      }
+    },
+    "pv.STATION": {
+      "name": "PV-ESTACION",
+      "color": 6,
+      "lineweight": null,
+      "linetype": "CONTINUOUS",
+      "on": true,
+      "frozen": false,
+      "locked": false,
+      "plot": true,
+      "description": {
+        "es": "Estación de media y baja tensión (planta fotovoltaica)",
+        "en": "Medium and low voltage station (PV plant)"
+      }
+    },
+    "pv.DC": {
+      "name": "PV-CABLE-CC",
+      "color": 1,
+      "lineweight": null,
+      "linetype": "CONTINUOUS",
+      "on": true,
+      "frozen": false,
+      "locked": false,
+      "plot": true,
+      "description": {
+        "es": "Cables de corriente continua (planta fotovoltaica)",
+        "en": "DC cables (PV plant)"
+      }
+    },
+    "pv.AC": {
+      "name": "PV-CABLE-CA",
+      "color": 3,
+      "lineweight": null,
+      "linetype": "CONTINUOUS",
+      "on": true,
+      "frozen": false,
+      "locked": false,
+      "plot": true,
+      "description": {
+        "es": "Cables de corriente alterna (planta fotovoltaica)",
+        "en": "AC cables (PV plant)"
+      }
+    },
+    "pv.TEXT": {
+      "name": "PV-TEXTOS",
+      "color": 7,
+      "lineweight": null,
+      "linetype": "CONTINUOUS",
+      "on": true,
+      "frozen": false,
+      "locked": false,
+      "plot": true,
+      "description": {
+        "es": "Textos y etiquetas (planta fotovoltaica)",
+        "en": "Texts and tags (PV plant)"
+      }
+    },
+    "pv.DIAGRAM": {
+      "name": "PV-DIAGRAMA",
+      "color": 5,
+      "lineweight": null,
+      "linetype": "CONTINUOUS",
+      "on": true,
+      "frozen": false,
+      "locked": false,
+      "plot": true,
+      "description": {
+        "es": "Símbolos y líneas del unifilar (planta fotovoltaica)",
+        "en": "Symbols and lines of the single-line (PV plant)"
+      }
     }
   }
 }

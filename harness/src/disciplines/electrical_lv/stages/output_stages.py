@@ -87,10 +87,20 @@ class DrawingsStage(Stage):
         if not summary["ok"]:
             return self.result("failed", message=f"drawing engine: {summary['error']}", reason="engine", engine_calls=calls)
         extra = self._floor_plans(context, target, name, calls)
+        extra.update(self._pv_drawings(context, target, name, calls))
         extra.update(self._model3d(context, target, name, calls))
         unify_dxf(target / "out", drawing_date(context))
         outputs = {"directory": f"drawings/{name}/out", "files": list_files(target / "out"), "summary": {k: copy.deepcopy(summary[k]) for k in SUMMARY_KEYS}}
         return self.result("ok", outputs=dict(outputs, **extra), engine_calls=calls)
+
+    @staticmethod
+    def _pv_drawings(context, target, name, calls):
+        """The PV plant sheets (layout, stringing, cabling, single-line) when stage 3 ran the photovoltaic slice with a `layout` (see `stages/pv_drawings.py`)."""
+        from disciplines.electrical_lv.stages import pv_drawings
+        try:
+            return pv_drawings.write(context, target, name, drawing_date(context), (context.profile or {}).get("language") or "en", calls)
+        except (RuntimeError, ValueError, OSError) as exc:
+            raise StageInputError([f"pv drawings: {exc}"]) from exc
 
     @staticmethod
     def _model3d(context, target, name, calls):
@@ -352,6 +362,16 @@ class DocumentsStage(Stage):
         return {"lighting_study": {"document": "lighting_study", "status": "draft", "engine": copy.deepcopy(result["engine"]), "result": copy.deepcopy(result)}}
 
     @staticmethod
+    def pv_study(context):
+        """{"pv_yield_study": document} from stage 3 (the engine result as it is, draft); empty when stage 3 did not run the photovoltaic slice."""
+        res = context.results.get(3)
+        result = (res.outputs.get("pv") if res is not None and res.status == "ok" else None)
+        if result is None:
+            return {}
+        record = EC.record_for("calculation/pv", "epc_pv.run")
+        return {"pv_yield_study": {"document": "pv_yield_study", "status": "draft", "engine": {"name": record["engine"], "version": record["version"]}, "result": copy.deepcopy(result)}}
+
+    @staticmethod
     def routing(context):
         """The routing section of stage 3 when it ran the slice, else None."""
         res = context.results.get(3)
@@ -379,6 +399,7 @@ class DocumentsStage(Stage):
         docs = {"calculation_memo": board_memo.memoria_doc(memo), "project_summary": board_memo.sintesis_doc(memo), "terminal_block_list": terminals}
         calls = [EC.record_for(ENGINE_CHAIN, fn) for fn in self.calls] + [EC.record_for(TERMINAL_ENGINE, TERMINAL_LIST)]
         docs.update(self.lighting_study(context))
+        docs.update(self.pv_study(context))
         pending = [{"name": n, "status": "planned"} for n in PENDING_DOCUMENTS]
         pending = self.optional_documents(context, ch, terminals, docs, calls, pending)
         pending = self.cable_list(context, ch, docs, pending)

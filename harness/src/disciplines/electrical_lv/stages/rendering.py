@@ -100,6 +100,30 @@ def _lighting_report(d, project):
                        _table(["room", "name", "luminaire", "target (lx)", "required", "installed"], rows)] + _notes({"issues": d["result"].get("warnings")})}
 
 
+MONTHS = ("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+
+
+def _pv_report(d, project):
+    result = d["result"]
+    layout_rows = [[a["id"], a["modules"], a["inverters"], a["dc_kwp"], a["ac_kw"], a["dc_ac_ratio"], a["strings"]["n_series"], a["strings"]["strings"]] for a in result["arrays"]]
+    yield_rows = [[a["id"], a["poa_kwh_m2"], a["ac_kwh"], a["specific_yield_kwh_kwp"], a["performance_ratio"], a["capacity_factor"]] for a in result["arrays"]]
+    totals = result["totals"]
+    months = [[m, round(a, 1)] for m, a in zip(MONTHS, totals["monthly_ac_kwh"])]
+    warnings = [f"{w['en']} / {w['es']}" for w in result["warnings"]]
+    counts = result["counts"]
+    blocks = [{"type": "p", "text": f"Arrays: {counts['arrays']}; inverters: {counts['inverters']}; modules: {counts['modules']}; hours simulated: {counts['hours']}. Engine {d['engine']['name']} {d['engine']['version']}."},
+              _table(["array", "modules", "inverters", "dc_kwp", "ac_kw", "dc_ac_ratio", "modules_in_series", "strings"], layout_rows),
+              _table(["array", "poa_kwh_m2", "ac_kwh", "kwh_per_kwp", "pr", "cf"], yield_rows),
+              {"type": "h", "text": "Monthly AC energy (kWh)"}, _table(["month", "ac_kwh"], months),
+              {"type": "p", "text": f"Total: DC {totals['dc_kwp']} kWp, AC {totals['ac_kw']} kW, {totals['ac_kwh']} kWh per year, specific yield {totals['specific_yield_kwh_kwp']} kWh/kWp, clipping {totals['clipping_kwh']} kWh."}]
+    plan = result.get("layout")
+    if plan:
+        blocks += [{"type": "h", "text": "Plant layout"},
+                   {"type": "p", "text": f"Tables: {plan['counts']['tables']} in {plan['counts']['rows']} row(s); row pitch {', '.join(str(p) for p in plan['pitch_m'])} m; solar altitude at the design hour {plan['solar_altitude_deg']} deg; "
+                                         f"site {plan['site']['width_m']} x {plan['site']['length_m']} m; all tables inside the site: {'yes' if plan['fits'] else 'no'}."}]
+    return {"title": "PV yield study", "subtitle": project, "footer": f"PV yield study - {project}", "page_label": PAGE_LABEL, "blocks": blocks + _notes({"issues": warnings})}
+
+
 def _boq_report(d, project):
     rows = [[i["item_id"], i["category"], i["description"], i["unit"], i["quantity"]] for i in d["items"]]
     totals = d["totals"]
@@ -124,7 +148,7 @@ def _rfq_report(d, project):
                        {"type": "h", "text": "Lines"}, _table(["line", "item", "description", "unit", "quantity"], rows)] + _notes(d)}
 
 
-OWN_REPORTS = {"terminal_block_list": _terminal_block_report, "lighting_study": _lighting_report, "boq": _boq_report, "datasheets": _datasheets_report, "rfq": _rfq_report}
+OWN_REPORTS = {"terminal_block_list": _terminal_block_report, "lighting_study": _lighting_report, "pv_yield_study": _pv_report, "boq": _boq_report, "datasheets": _datasheets_report, "rfq": _rfq_report}
 
 
 def _has_sections(document):
@@ -141,13 +165,13 @@ def marked(report, mode):
 
 
 # Spanish for the words the platform itself puts in a document (SIM-14): titles and the columns of the generic tables. The engines that write Spanish already (the memo, the summary) are not touched.
-ES_TITLES = {"Terminal block list": "Lista de borneras", "Lighting study": "Estudio de iluminación", "Bill of quantities": "Cómputo de materiales", "Datasheets": "Hojas de datos",
+ES_TITLES = {"Terminal block list": "Lista de borneras", "Lighting study": "Estudio de iluminación", "PV yield study": "Estudio de producción fotovoltaica", "Bill of quantities": "Cómputo de materiales", "Datasheets": "Hojas de datos",
              "Request for quotation": "Pedido de cotización", "Cable list": "Lista de cables", "Descriptive report": "Memoria descriptiva", "Design basis": "Bases de diseño", "Load schedule": "Planilla de cargas",
              "Memo of cables and raceways": "Memoria de cables y canalizaciones", "Protection selectivity study": "Estudio de selectividad de protecciones",
              "Short-circuit study": "Estudio de cortocircuito", "Specification": "Pliego de especificaciones técnicas"}
 ES_COLUMNS = {"item": "concepto", "value": "valor", "unit": "unidad", "source": "fuente", "circuit": "circuito", "description": "descripción", "device": "dispositivo", "phases": "fases",
               "conductors": "conductores", "category": "categoría", "quantity": "cantidad", "room": "ambiente", "name": "nombre", "luminaire": "luminaria", "required": "requeridas",
-              "installed": "instaladas", "kind": "tipo", "candidates": "candidatos", "review": "revisión", "term": "condición", "supplier": "proveedor", "contact": "contacto", "line": "línea"}
+              "installed": "instaladas", "array": "arreglo", "modules": "módulos", "inverters": "inversores", "modules_in_series": "módulos en serie", "strings": "strings", "month": "mes", "ac_kwh": "energía AC (kWh)", "kwh_per_kwp": "kWh/kWp", "pr": "PR", "cf": "factor de capacidad", "kind": "tipo", "candidates": "candidatos", "review": "revisión", "term": "condición", "supplier": "proveedor", "contact": "contacto", "line": "línea"}
 ES_PAGE_LABEL = "Página {n} de {total}"
 
 

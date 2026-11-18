@@ -26,7 +26,7 @@ Main guide: **`harness/CLAUDE.md`** (owner rules, numbers, where things live, ho
 When the owner asks to test or stress the harness, these are the standing conditions:
 
 - **Fictional data only.** Invented client, site, loads, plans and suppliers. Never real client data.
-- **Outside the repository.** Projects go in a separate folder (`--projects-root` or `EPC_PROJECTS_ROOT`), never under `projects/` of this repo or any repo folder.
+- **Stored in `tmp/` (owner rule, 2026-11-18).** Every simulation is stored in `tmp/` at the repository root (`--projects-root tmp/<simulation>` or `EPC_PROJECTS_ROOT`), with its inputs, outputs, minutes and log. `tmp/` is git-ignored and never committed; never use `projects/` of this repo or any other repo folder.
 - **Edit mode.** Run with `--mode edit` (ADR-0035). The norm records stay `pending review`; no norm value is changed or marked verified, and the output carries the "EDIT MODE: norm values not verified, not for production" mark.
 - **Simulated sign-off.** To reach `approve` and `issue`, the review steps (`epc submit`, `approve`, `issue`) may be run by a test actor (`--actor-role engineer_of_record --actor-id ing-simulado`), only on fictional edit-mode projects. It is never the owner's name, and it never applies to a real project: there the engineer of record signs.
 - **Use the whole system.** Building run (`engine_inputs.building` with DXF plans in `inputs/plans/`) so that architecture, lighting, receptacles, routing, HVAC, studies, drawings (SLD, MLD, plans), documents (PDF, DOCX, XLSX) and the transmittal are exercised.

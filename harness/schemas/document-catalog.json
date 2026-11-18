@@ -49,6 +49,7 @@
         {"key": "cable_list", "system": "general", "type": "LST", "es": "Lista de cables", "en": "Cable list", "format": "xlsx", "tool": "files", "group": "report", "after": ["calc_memo"], "source": "csv", "generated": true},
         {"key": "electrical_spec", "system": "general", "type": "SPC", "es": "Pliego técnico eléctrico", "en": "Electrical specification", "format": "pdf", "tool": "files", "group": "specification", "after": ["calc_memo"]},
         {"key": "electrical_report", "system": "general", "type": "RPT", "es": "Informe técnico eléctrico", "en": "Electrical technical report", "format": "pdf", "tool": "files", "group": "report", "after": ["calc_memo"], "source": "md", "generated": true},
+        {"key": "pv_yield_study", "system": "pv", "type": "ANL", "es": "Estudio de producción fotovoltaica", "en": "PV yield study", "format": "pdf", "tool": "files", "group": "analysis", "after": []},
         {"key": "lighting_study", "system": "lighting", "type": "ANL", "es": "Análisis de iluminación", "en": "Lighting analysis", "format": "pdf", "tool": "files", "group": "analysis", "after": []},
         {"key": "lighting_calc", "system": "lighting", "type": "CAL", "es": "Memoria de cálculo de iluminación", "en": "Lighting calculation memo", "format": "pdf", "tool": "memos", "group": "calculation", "after": ["lighting_study"]},
         {"key": "lighting_plan", "system": "lighting", "type": "PLN", "es": "Plano de iluminación", "en": "Lighting plan", "format": "dxf", "tool": "layout", "group": "drawings", "after": ["lighting_calc"], "per_floor": true},

@@ -30,6 +30,14 @@ MESSAGES: Dict[str, Dict[str, str]] = {
         "en": "The weather file has {n} hours with the sun above the horizon and no irradiance.",
         "es": "El archivo de clima tiene {n} horas con el sol sobre el horizonte y sin irradiancia.",
     },
+    "layout_no_fit": {
+        "en": "The tables do not fit in the site: {n} table(s) were left out. Enlarge the site, raise the number of modules per table, or reduce the tilt.",
+        "es": "Las mesas no entran en el predio: quedaron {n} mesa(s) afuera. Ampliar el predio, aumentar los módulos por mesa o reducir la inclinación.",
+    },
+    "layout_pad_tight": {
+        "en": "{n} inverter(s) do not fit in the gap between rows (pad deeper than the gap): move them to the end of the row.",
+        "es": "{n} inversor(es) no entran en el espacio entre filas (la base es más profunda que el espacio): moverlos al extremo de la fila.",
+    },
     "err_json": {"en": "the input is not valid JSON: {detail}", "es": "la entrada no es un JSON válido: {detail}"},
     "err_missing": {"en": "{where} is missing: {names}", "es": "falta en {where}: {names}"},
     "err_type": {"en": "{name} must be {kind}", "es": "{name} debe ser {kind}"},
