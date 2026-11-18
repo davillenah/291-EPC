@@ -111,21 +111,30 @@ def _cover(rep: dict, images: List[Tuple[str, bytes, str]]) -> str:
     return out + '<w:p><w:r><w:br w:type="page"/></w:r></w:p>'
 
 
-def _blocks(blocks: List[dict]) -> str:
-    out = []
-    for b in blocks:
-        kind = b.get("type")
-        if kind == "h":
-            out.append(_para(b["text"], "Heading1"))
-        elif kind == "p":
-            out.append(_para(b["text"]))
-        elif kind == "bullets":
-            out += [_para(runs=_run("•  " + str(i))) .replace("<w:p>", '<w:p><w:pPr><w:pStyle w:val="ListBullet"/></w:pPr>', 1) for i in b["items"]]
-        elif kind == "kv":
-            out.append(_kv(b["rows"]))
-        elif kind == "table":
-            out.append(_table(b["columns"], b["rows"], b.get("empty", "")))
-    return "".join(out)
+def _figure(b: dict, images: List[Tuple[str, bytes, str]]) -> str:
+    """A figure block as a picture (PNG drawn from its shapes) with its title and caption."""
+    from epc_drawing.export import report_pdf
+    data, w, h = report_pdf.figure_png(b)
+    rid = f"rIdImg{len(images) + 1}"
+    images.append((rid, data, "png"))
+    out = _para(b["title"], "Heading1") if b.get("title") else ""
+    out += _para(runs=_picture(rid, len(images), int(w * EMU_PER_PT), int(h * EMU_PER_PT)))
+    return out + (_para(b["caption"]) if b.get("caption") else "")
+
+
+def _block(b: dict, images: Optional[List[Tuple[str, bytes, str]]]) -> List[str]:
+    """One block of the report as the XML of the document."""
+    kind = b.get("type")
+    if kind == "bullets":
+        return [_para(runs=_run("•  " + str(i))).replace("<w:p>", '<w:p><w:pPr><w:pStyle w:val="ListBullet"/></w:pPr>', 1) for i in b["items"]]
+    if kind == "figure":
+        return [_figure(b, images)] if images is not None else []
+    one = {"h": lambda: _para(b.get("text"), "Heading1"), "p": lambda: _para(b.get("text")), "kv": lambda: _kv(b.get("rows")), "table": lambda: _table(b.get("columns"), b.get("rows"), b.get("empty", ""))}
+    return [one[kind]()] if kind in one else []
+
+
+def _blocks(blocks: List[dict], images: Optional[List[Tuple[str, bytes, str]]] = None) -> str:
+    return "".join("".join(_block(b, images)) for b in blocks)
 
 
 def _footer(rep: dict) -> str:
@@ -140,7 +149,7 @@ def _footer(rep: dict) -> str:
 def render(rep: dict, dst: Path) -> Path:
     images: List[Tuple[str, bytes, str]] = []
     body = _cover(rep, images) if rep.get("cover") else _para(rep.get("title", ""), "Title") + (_para(rep.get("subtitle", ""), "Subtitle") if rep.get("subtitle") else "")
-    body += _blocks(rep.get("blocks") or [])
+    body += _blocks(rep.get("blocks") or [], images)
     sect = '<w:sectPr><w:footerReference w:type="default" r:id="rIdFooter"/><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="1134" w:right="1134" w:bottom="1134" w:left="1134" w:header="567" w:footer="567" w:gutter="0"/></w:sectPr>'
     document = f'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document {NS}><w:body>{body}{sect}</w:body></w:document>'
     rels = ('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'

@@ -1190,6 +1190,48 @@
         "es": "Ascensores, montacargas y escaleras mecánicas (plano)",
         "en": "Lifts and escalators (plan)"
       }
+    },
+    "plan.ELEC-LUX-MAPA": {
+      "name": "ELEC-LUX-MAPA",
+      "color": 3,
+      "lineweight": null,
+      "linetype": "CONTINUOUS",
+      "on": true,
+      "frozen": false,
+      "locked": false,
+      "plot": true,
+      "description": {
+        "es": "Mapa de lux: celdas de color según el nivel exigido",
+        "en": "Lux map: cells coloured by the required level"
+      }
+    },
+    "plan.ELEC-LUX-CURVAS": {
+      "name": "ELEC-LUX-CURVAS",
+      "color": 7,
+      "lineweight": null,
+      "linetype": "CONTINUOUS",
+      "on": true,
+      "frozen": false,
+      "locked": false,
+      "plot": true,
+      "description": {
+        "es": "Mapa de lux: curvas de igual nivel",
+        "en": "Lux map: lines of equal level"
+      }
+    },
+    "plan.ELEC-LUX-TEXTO": {
+      "name": "ELEC-LUX-TEXTO",
+      "color": 7,
+      "lineweight": null,
+      "linetype": "CONTINUOUS",
+      "on": true,
+      "frozen": false,
+      "locked": false,
+      "plot": true,
+      "description": {
+        "es": "Mapa de lux: valores de las curvas y lectura del ambiente",
+        "en": "Lux map: values of the lines and reading of the room"
+      }
     }
   }
 }
