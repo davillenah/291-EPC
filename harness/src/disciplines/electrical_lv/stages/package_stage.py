@@ -111,12 +111,22 @@ def _plan_files(context):
     return [(plan, floor, file) for plan, (floor, file) in found.items()]
 
 
+def _sheet_files(context):
+    """The other sheets of the architecture (`engine_inputs.building.presentation_sheets`, files of `inputs/`) that exist, each once."""
+    store = getattr(context, "store", None)
+    building = (getattr(context, "engine_inputs", None) or {}).get("building") or {}
+    given = [s for s in building.get("presentation_sheets") or [] if isinstance(s, str)]
+    return [(s, Path(store.inputs_dir) / s) for s in dict.fromkeys(given) if store is not None and (Path(store.inputs_dir) / s).is_file()]
+
+
 def _architecture(context):
     """The architecture plans the building run used (`engine_inputs.building.floors[].plan`, files of `inputs/plans/`): the DXF as the engineer gave it, copied to `03_ARCHITECTURE/`.
     A supporting file, not a document of the issue: it needs no entry in `deliverable_names`."""
     return [{"name": f"architecture_{Path(plan).stem}", "title": f"Architecture plan {floor.get('name') or floor.get('id')}", "path": f"{FOLDER_ARCHITECTURE}/{Path(plan).name}",
              "code": None, "file": file, "recorded": sha256_file(file), "source": str(file), "support": True, "folder": FOLDER_ARCHITECTURE}
-            for plan, floor, file in _plan_files(context)]
+            for plan, floor, file in _plan_files(context)] + [
+        {"name": f"architecture_{Path(s).stem}", "title": f"Architecture sheet {Path(s).stem}", "path": f"{FOLDER_ARCHITECTURE}/{Path(s).name}", "code": None, "file": file,
+         "recorded": sha256_file(file), "source": str(file), "support": True, "folder": FOLDER_ARCHITECTURE} for s, file in _sheet_files(context)]
 
 
 def _drawings(context):

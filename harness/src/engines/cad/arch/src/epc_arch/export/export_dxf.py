@@ -1,7 +1,9 @@
 """DXF R2018 from the common drawing: layers with their colour, lineweight and linetype, the LTYPE table in mm with `$LTSCALE = scale / 1000`, one STYLE per text style, solid HATCH fills and
 `$INSUNITS` = metres. Paper millimetres become model metres (`mm * scale / 1000`) with y up, so reading the file back gives the plan in metres."""
+import hashlib
 import io
-from typing import Optional
+import math
+from typing import Dict, List, Optional
 
 import ezdxf
 from ezdxf.enums import TextEntityAlignment
@@ -81,6 +83,55 @@ class _Writer:
         """A DXF keeps no picture here: the logos of a title block are left out of it."""
 
 
+WIPEOUT_LAYER = "A-WIPEOUT"
+BLOCK_NAMES = {"door": "EPC_DOOR", "window": "EPC_WINDOW"}
+
+
+class _BlockWriter(_Writer):
+    """Writes the items of one door or window into a block, in the frame of the opening: the origin at its centre, the x axis along the wall (so a block is the same wherever it is inserted and turned)."""
+
+    def __init__(self, blk, d: Drawing, style: Style, group: tuple):
+        super().__init__(blk, d, style)
+        self.origin, self.angle = group[2], group[3]
+
+    def pt(self, p):
+        dx, dy = p[0] - self.origin[0], p[1] - self.origin[1]
+        c, s = math.cos(math.radians(self.angle)), math.sin(math.radians(self.angle))
+        return (round((dx * c + dy * s) * self.k, 6), round(-(-dx * s + dy * c) * self.k, 6))
+
+    def arc(self, it: ArcItem) -> None:
+        c = self.pt(it.c)
+        self.msp.add_arc(c, it.r * self.k, -(it.end - self.angle), -(it.start - self.angle), dxfattribs=self._attrs(it))
+
+    def wipeout(self, it: Poly) -> None:
+        w = self.msp.add_wipeout([self.pt(p) for p in it.points], dxfattribs={"layer": it.layer})
+        w.dxf.layer = it.layer
+        w.dxf.flags = 1                                                 # shown (frames are shown or hidden by the viewer: WIPEOUTFRAME)
+
+
+def _signature(kind: str, items: List[object], group: tuple, d: Drawing, style: Style) -> str:
+    """A name for the block that depends only on its shape: equal doors (and windows) share one block."""
+    probe = _BlockWriter(ezdxf.new("R2018", setup=False).blocks.new("_"), d, style, group)
+    parts = [kind] + [(type(i).__name__, i.layer, tuple(round(v, 3) for p in (i.points if isinstance(i, Poly) else [i.c]) for v in probe.pt(p)), round(getattr(i, "r", 0.0), 3),
+                       round(getattr(i, "start", 0.0) - probe.angle, 2), round(getattr(i, "end", 0.0) - probe.angle, 2)) for i in items]
+    return f"{BLOCK_NAMES[kind]}_{hashlib.sha1(repr(parts).encode()).hexdigest()[:8].upper()}"
+
+
+def _write_group(doc, msp, d: Drawing, style: Style, group: tuple, items: List[object]) -> None:
+    """One door or window: its block (wipeout first, then the lines) and the insertion of it at the opening."""
+    kind = group[0]
+    name = _signature(kind, items, group, d, style)
+    if name not in doc.blocks:
+        w = _BlockWriter(doc.blocks.new(name), d, style, group)
+        for it in items:
+            if it.layer == WIPEOUT_LAYER:
+                w.wipeout(it)
+            else:
+                {Poly: w.poly, ArcItem: w.arc}[type(it)](it)
+    k = d.scale / 1000.0
+    msp.add_blockref(name, ((group[2][0]) * k, (d.size[1] - group[2][1]) * k), dxfattribs={"layer": "A-DOOR" if kind == "door" else "A-WINDOW", "rotation": -group[3]})
+
+
 def _extents(doc, d: Drawing) -> None:
     """What the drawing reaches and the limits of the sheet, kept in the model space (the writer copies them to the header), so that a program opens it on the whole sheet."""
     from ezdxf import bbox, zoom
@@ -94,13 +145,27 @@ def _extents(doc, d: Drawing) -> None:
     zoom.extents(msp)
 
 
+def _write_items(doc, d: Drawing, style: Style) -> None:
+    """Every item of the drawing; the items of a door or a window (one group) are written once, as a block and its insertion, where the first of them comes."""
+    w = _Writer(doc.modelspace(), d, style)
+    grouped: Dict[tuple, List[object]] = {}
+    for it in d.items:
+        grouped.setdefault(getattr(it, "group", None), []).append(it)
+    done = set()
+    for it in d.items:
+        g = getattr(it, "group", None)
+        if g is None:
+            {Poly: w.poly, ArcItem: w.arc, TextItem: w.text, ImageItem: w.image}[type(it)](it)
+        elif g not in done:
+            done.add(g)
+            _write_group(doc, doc.modelspace(), d, style, g, grouped[g])
+
+
 def to_dxf(d: Drawing, style: Optional[Style] = None) -> str:
     style = style or load_style()
     doc = ezdxf.new("R2018", setup=False)
     _setup(doc, d, style)
-    w = _Writer(doc.modelspace(), d, style)
-    for it in d.items:
-        {Poly: w.poly, ArcItem: w.arc, TextItem: w.text, ImageItem: w.image}[type(it)](it)
+    _write_items(doc, d, style)
     _extents(doc, d)
     buf = io.StringIO()
     doc.write(buf)

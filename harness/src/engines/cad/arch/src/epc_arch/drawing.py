@@ -4,7 +4,7 @@ Coordinates are paper millimetres of the sheet, y down. A line's width, dash and
 exporter is the only one that leaves paper space: it writes model metres (`mm * scale / 1000`, y up) so that the file is read back in metres."""
 import json
 import math
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from functools import lru_cache
 from pathlib import Path
 from typing import Dict, Iterator, List, Optional, Tuple
@@ -117,6 +117,7 @@ class Poly:
     stroke: bool = True
     linetype: Optional[str] = None
     width: Optional[float] = None         # paper mm; None takes the pen of the layer (a title block sheet says its own widths)
+    group: Optional[tuple] = None         # (kind, id, paper point, paper angle) of the door or window the item belongs to: the DXF writes the group as one block
 
 
 @dataclass(frozen=True)
@@ -129,6 +130,7 @@ class ArcItem:
     layer: str
     linetype: Optional[str] = None
     width: Optional[float] = None
+    group: Optional[tuple] = None
 
 
 @dataclass(frozen=True)
@@ -334,10 +336,32 @@ def _hole_items(o: Opening, T: float, m: _Map) -> List[Poly]:
     return out
 
 
+def _wipeout(o: Opening, T: float, m: _Map) -> Poly:
+    """The area of the wall an opening takes (its width by the thickness of the wall): what the wipeout hides behind the block of a door or a window."""
+    ax = axis_of(o.angle)
+    hw = o.width / 2
+    at = lambda t, n: (o.at[0] + ax.ux * t + ax.nx * n, o.at[1] + ax.uy * t + ax.ny * n)          # noqa: E731
+    return _poly(m, [at(-hw, T / 2), at(hw, T / 2), at(hw, -T / 2), at(-hw, -T / 2)], "A-WIPEOUT", closed=True, stroke=False)
+
+
+def _blocked(o: Opening, items: List[object], T: float, m: _Map) -> List[object]:
+    """The items of a door or a window with their wipeout first, all in one group: the DXF writes them as a block (and a wipeout) inserted where the opening is."""
+    group = (o.kind, o.id, m(o.at), o.angle)
+    return [replace(i, group=group) for i in [_wipeout(o, T, m)] + items]
+
+
+def _door_block(o: Opening, T: float, m: _Map) -> List[object]:
+    return _blocked(o, _door_items(o, T, m), T, m)
+
+
+def _window_block(o: Opening, T: float, m: _Map) -> List[object]:
+    return _blocked(o, _window_items(o, T, m), T, m)
+
+
 def _opening_items(arch: Architecture, T: float, m: _Map) -> List[object]:
     out: List[object] = []
     for o in arch.openings:
-        out += {"door": _door_items, "window": _window_items}.get(o.kind, _hole_items)(o, T, m)
+        out += {"door": _door_block, "window": _window_block}.get(o.kind, _hole_items)(o, T, m)
     return out
 
 
@@ -455,17 +479,42 @@ def _frame_the_sheet(d: Drawing, arch: Architecture, style: Style, free, templat
     add_scale_bar(d, arch, free[0] + 5.0, free[3] - 8.0)
 
 
-def build_drawing(arch: Architecture, style: Optional[Style] = None, sheet: Optional[str] = None, scale: Optional[int] = None, document: str = "", template=None, fields: Optional[dict] = None) -> Drawing:
-    """The plan as a Drawing on a sheet: the building at a standard scale, centred in the free area, then the frame and title block (`export.sheet_layout`). `document` is the name of the file the plan was read from, for the title block. With `template` (a `sheet_iram.SheetTemplate`) the sheet is that IRAM sheet and the plan goes in its free area; `fields` are values for its title block fields, over those the engine gives (`escala`, and `denominacion` when the sheet has only a sample)."""
+def build_drawing(arch: Architecture, style: Optional[Style] = None, sheet: Optional[str] = None, scale: Optional[int] = None, document: str = "", template=None, fields: Optional[dict] = None,
+                  presentation: bool = False) -> Drawing:
+    """The plan as a Drawing on a sheet: the building at a standard scale, centred in the free area, then the frame and title block (`export.sheet_layout`). `document` is the name of the file the plan was read from, for the title block. With `template` (a `sheet_iram.SheetTemplate`) the sheet is that IRAM sheet and the plan goes in its free area; `fields` are values for its title block fields, over those the engine gives (`escala`, and `denominacion` when the sheet has only a sample).
+    With `presentation` the plan leaves room for dimension chains and a panel of tables, and gets them, with the tags of its doors and windows (`epc_arch.presentation`): only for plans the harness authors."""
     style = style or load_style()
     name, size, free = _sheet_of(style, sheet, template)
     d = Drawing(name, size, 0)
-    m = _place(arch, d, free, scale, style)
+    m = _place(arch, d, _plan_area(free, presentation), _first_scale(style, scale, presentation), style)
     d.items = building_items(arch, m)
+    _add_presentation(d, arch, m, free, presentation)
     d.title = arch.level.name.upper() if arch.level else "PLANTA ARQUITECTÓNICA"
     d.document = document
     _frame_the_sheet(d, arch, style, free, template, fields)
     return d
+
+
+def _first_scale(style: Style, scale: Optional[int], presentation: bool) -> Optional[int]:
+    """The scale asked for; a presentation asks for the biggest drawing (the smallest denominator) and takes the first standard scale that fits."""
+    return scale or (style.sheet["scales"][0] if presentation else None)
+
+
+def _add_presentation(d: Drawing, arch: Architecture, m: "_Map", free, presentation: bool) -> None:
+    if not presentation:
+        return
+    from epc_arch.presentation import presentation_items
+    extra, warns = presentation_items(arch, m, free, d.scale)
+    d.items += extra
+    d.warnings += warns
+
+
+def _plan_area(free: Tuple[float, float, float, float], presentation: bool) -> Tuple[float, float, float, float]:
+    """The part of the free area the plan itself may take: all of it, or what is left once the dimension chains and the panel of tables have theirs."""
+    if not presentation:
+        return free
+    from epc_arch.presentation import reserve
+    return (free[0] + reserve("left"), free[1] + reserve("top"), free[2] - reserve("right"), free[3] - reserve("bottom"))
 
 
 def _title_values(template, d: "Drawing", given: dict) -> dict:

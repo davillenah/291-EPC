@@ -21,8 +21,13 @@
     {"name": "A-DIM",          "pen": "pen_018", "linetype": "CONTINUOUS", "aci": 251, "hex": "#444444"},
     {"name": "A-ANNO",         "pen": "pen_018", "linetype": "CONTINUOUS", "aci": 251, "hex": "#444444"},
     {"name": "A-ROOM-TAG",     "pen": "pen_025", "linetype": "CONTINUOUS", "aci": 7,   "hex": "#1A1A1A"},
-    {"name": "A-TITLE",        "pen": "pen_025", "linetype": "CONTINUOUS", "aci": 7,   "hex": "#111111"}
+    {"name": "A-TITLE",        "pen": "pen_025", "linetype": "CONTINUOUS", "aci": 7,   "hex": "#111111"},
+    {"name": "A-WIPEOUT",      "pen": null,      "linetype": "CONTINUOUS", "aci": 7,   "hex": "#FFFFFF"}
   ],
+  "presentation": {
+    "panel_mm": 175, "panel_gap_mm": 6, "dim_offset_mm": 14, "dim_step_mm": 9, "dim_tick_mm": 1.6, "dim_ext_gap_mm": 1.5, "tag_offset_mm": 5,
+    "row_mm": 5.5, "column_pad_mm": 2.0, "wipeout_margin": 0.0, "iso_angle_deg": 30, "iso_fill": {"wall": "#E4E4E4", "wall_lit": "#F2F2F2", "wall_dark": "#C9C9C9", "slab": "#D6D6D6", "glass": "#EAF2F8", "room": "#F6F6F6"}
+  },
   "sheet": {
     "default": "A1", "default_scale": 100, "scales": [20, 25, 50, 75, 100, 125, 150, 200, 250, 500, 1000],
     "sizes_mm": {"A4": [297, 210], "A3": [420, 297], "A2": [594, 420], "A1": [841, 594], "A0": [1189, 841]},

@@ -180,8 +180,18 @@ def _dxf_version(cfg, version):
     return version
 
 
-def write_dxf(result: Dict[str, Any], path: Path, version: str = "", params: Dict[str, Any] = core.PARAMS, layers_file=None, backdrop: Optional[Dict[str, Any]] = None) -> List[str]:
-    """Write the DXF of a result to `path`; returns the warnings (audit findings, read-back differences). `backdrop`: the walls and room names of the building under the services (see `_add_backdrop`)."""
+def _sizes(look: Dict[str, Any], cfg: Dict[str, Any], scale: float, paper_scale: Optional[int]):
+    """(height of the text, size of the node symbols) in the units of the drawing. With the scale of the sheet the plan will be printed at (`paper_scale`, the N of 1:N) both are paper sizes
+    (`plan_text_mm`, `plan_symbol_mm` of `harness/config/dxf/text.json`) turned into real size at that scale, so they look the same on paper at every scale; without it they are the real sizes
+    (`plan_text_m`, `node_symbol_size_m`)."""
+    if paper_scale:
+        return float(look["heights"]["plan_text_mm"]) * paper_scale / 1000.0 * scale, float(look["heights"]["plan_symbol_mm"]) * paper_scale / 1000.0
+    return float(look["heights"]["plan_text_m"]) * scale, cfg["node_symbol_size_m"]
+
+
+def write_dxf(result: Dict[str, Any], path: Path, version: str = "", params: Dict[str, Any] = core.PARAMS, layers_file=None, backdrop: Optional[Dict[str, Any]] = None, paper_scale: Optional[int] = None) -> List[str]:
+    """Write the DXF of a result to `path`; returns the warnings (audit findings, read-back differences). `backdrop`: the walls and room names of the building under the services (see `_add_backdrop`).
+    `paper_scale`: the scale of the sheet it will be placed on, so that text and symbols are sized for it (see `_sizes`)."""
     cfg = params["dxf"]
     version = _dxf_version(cfg, version)
     profile = core.load_profile(result["discipline"])
@@ -197,8 +207,8 @@ def write_dxf(result: Dict[str, Any], path: Path, version: str = "", params: Dic
     look = textstyle.load()                                      # typeface, text height and tray blocks: harness/config/dxf/text.json
     textstyle.add_styles(doc)
     style = look["font"]["style"]
-    height = float(look["heights"]["plan_text_m"]) * scale
-    expected = _add_nodes(doc, msp, result, node_kinds, cfg, scale, height, layer, style) + _add_stretches(msp, result, line_kinds, cfg, scale, height, layer, doc, style, look["trays"])
+    height, symbol = _sizes(look, cfg, scale, paper_scale)
+    expected = _add_nodes(doc, msp, result, node_kinds, dict(cfg, node_symbol_size_m=symbol), scale, height, layer, style) + _add_stretches(msp, result, line_kinds, cfg, scale, height, layer, doc, style, look["trays"])
     if backdrop:
         expected += _add_backdrop(doc, msp, backdrop, cfg, scale, height, layer, style)
 
