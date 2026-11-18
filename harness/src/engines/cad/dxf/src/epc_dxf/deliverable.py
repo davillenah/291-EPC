@@ -40,6 +40,13 @@ def _retarget(entity, name: str) -> None:
         attrib.dxf.layer = name
 
 
+def _retarget_blocks(doc, final: Dict[str, str]) -> None:
+    """What sits inside a block (a tray with its text) follows its role too."""
+    for block in doc.blocks:
+        for entity in ([] if block.name.startswith("*") else block):
+            entity.dxf.layer = final.get(entity.dxf.layer, entity.dxf.layer)
+
+
 def finish_draft(doc, dxf_path, layers_file=None, stamp_date=None, seed=None) -> dict:
     """A DXF in development (an ezdxf document) whose entities sit on layers named by their ROLE (`plan.ELEC-LUM`) becomes the deliverable: every role layer is renamed
     and given the look the catalog says, the entities follow and the file is saved (with `stamp_date`, an ISO date or datetime, the file carries that date and GUIDs derived from it and `seed`, so the same drawing gives the same bytes). Returns {"dxf": path, "layers": {name: entities}, "blocks": inserts}."""
@@ -49,6 +56,7 @@ def finish_draft(doc, dxf_path, layers_file=None, stamp_date=None, seed=None) ->
     for entity in doc.modelspace():
         if entity.dxf.layer in final:
             _retarget(entity, final[entity.dxf.layer])
+    _retarget_blocks(doc, final)
     for role in drafts:
         if final[role] != role:
             doc.layers.remove(role)

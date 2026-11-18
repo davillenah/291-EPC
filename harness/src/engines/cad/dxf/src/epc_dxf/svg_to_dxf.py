@@ -22,6 +22,7 @@ from ezdxf.enums import TextEntityAlignment
 from svgelements import SVG, Circle, Ellipse, Image, Path, Polygon, Rect, Shape, SimpleLine, Text
 
 from epc_dxf import stamp as _stamp
+from epc_dxf import textstyle as _T
 
 try:
     import vtracer
@@ -36,11 +37,11 @@ PARAMETROS_VECTORIZADO = dict(colormode="color", hierarchical="stacked", mode="s
                               color_precision=6, layer_difference=16, corner_threshold=60, length_threshold=4.0,
                               max_iterations=10, splice_threshold=45, path_precision=3)
 FORMATOS_IMAGEN = {"image/png": "png", "image/jpeg": "jpg", "image/jpg": "jpg"}
-ALTURA_TEXTO_MM = 1.7  # altura de los textos del rótulo
+ALTURA_TEXTO_MM = 1.7  # altura de los textos del rótulo (por defecto; la que vale está en config/dxf/text.json)
 FS_ROTULO = 2.778  # font-size que genera el SVG para 2 mm
 ALTURA_LEGAL_MM = 1.0  # aviso de propiedad intelectual
 FS_LEGAL = 1.528
-ESTILO_TEXTO = "ARIAL"
+ESTILO_TEXTO = "ARIAL"   # por defecto; tipo de letra y estilo: config/dxf/text.json
 FUENTE = "arial.ttf"
 MARGEN_ESQUINA_MM = 1.4
 SEPARACION_TITULOS_MM = 1.4  # separación extra entre las dos líneas del título  # distancia de los textos al borde superior de su celda
@@ -125,7 +126,7 @@ def _centrar_en_celda(lineas, textos):
     """Textos del rótulo: se ubican en la esquina superior de su celda.
 
     Devuelve {(texto, x_mm, y_mm): nueva_y_mm} (y en mm, hacia abajo)."""
-    cap = ALTURA_TEXTO_MM * 0.716  # altura de mayúscula de Arial
+    cap = float(_T.get("heights", "titleblock_mm")) * 0.716  # altura de mayúscula de Arial
     nuevas = {}
     tratados = set()
     for e, x, y in textos:
@@ -325,7 +326,10 @@ def convertir(svg_path, dxf_path=None, stamp=None):
 
     doc = _stamp.new("R2010", stamp)   # sin sello: ezdxf.new("R2010") con su reloj y sus GUID
     doc.header["$INSUNITS"] = 4  # milímetros
-    doc.styles.add(ESTILO_TEXTO, font=FUENTE)
+    _look = _T.load()
+    estilo = _look["font"]["style"]
+    doc.styles.add(estilo, font=_look["font"]["regular"])
+    altura_rotulo, altura_legal = float(_look["heights"]["titleblock_mm"]), float(_look["heights"]["legal_notice_mm"])
     msp = doc.modelspace()
 
     def y_dxf(y):
@@ -341,14 +345,14 @@ def convertir(svg_path, dxf_path=None, stamp=None):
                 y = centrados[clave]
             fs = float(e.font_size) if e.font_size else 2.0
             if abs(fs - FS_ROTULO) < 0.01:
-                alto = ALTURA_TEXTO_MM
+                alto = altura_rotulo
             elif abs(fs - FS_LEGAL) < 0.01:
-                alto = ALTURA_LEGAL_MM
+                alto = altura_legal
             else:
                 alto = fs
             angulo = math.degrees(math.atan2(e.transform.b, e.transform.a))
             texto = msp.add_text(e.text, dxfattribs={"height": alto, "layer": "0",
-                                                     "rotation": -angulo, "style": ESTILO_TEXTO})
+                                                     "rotation": -angulo, "style": estilo})
             alineacion = ALINEACION.get(str(e.values.get("text-anchor", "start")), TextEntityAlignment.BOTTOM_LEFT)
             if abs(fs - FS_LEGAL) < 0.01:
                 alineacion = TextEntityAlignment.MIDDLE_CENTER

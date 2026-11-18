@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 import ezdxf
-from epc_dxf import deliverable
+from epc_dxf import deliverable, textstyle
 
 from epc_plan import core
 
@@ -31,7 +31,7 @@ def _symbol_prims(symbol_id: str, size: float, scale: float) -> List[Dict[str, A
     return out
 
 
-def _define_block(doc, sid: str, size: float, scale: float, height: float) -> str:
+def _define_block(doc, sid: str, size: float, scale: float, height: float, style: str = "Standard") -> str:
     """The block of a symbol (one per symbol used), with an attribute that holds the tag. Returns its name."""
     name = f"SYM_{sid.upper()}"
     if name in doc.blocks:
@@ -44,7 +44,7 @@ def _define_block(doc, sid: str, size: float, scale: float, height: float) -> st
             blk.add_line(p["a"], p["b"])
         else:
             blk.add_circle((0, 0), p["r"])
-    blk.add_attdef("TAG", (size * scale * 0.6, size * scale * 0.6), height=height)
+    blk.add_attdef("TAG", (size * scale * 0.6, size * scale * 0.6), height=height, dxfattribs={"style": style})
     return name
 
 
@@ -54,14 +54,14 @@ def _turn(n: Dict[str, Any]) -> Dict[str, float]:
     return {"rotation": -float(rot)} if isinstance(rot, (int, float)) and not isinstance(rot, bool) and rot else {}
 
 
-def _add_nodes(doc, msp, result, node_kinds, cfg, scale: float, height: float, layer) -> int:
+def _add_nodes(doc, msp, result, node_kinds, cfg, scale: float, height: float, layer, style: str = "Standard") -> int:
     """Placed nodes as block insertions with their tag, junctions as small circles. Returns how many entities were added."""
     count = 0
     for n in result["nodes"]:
         at = (n["x_m"] * scale, n["y_m"] * scale)
         if n["placed"]:
             kind = node_kinds[n["kind"]]
-            block = _define_block(doc, kind["simbolo_2d"], cfg["node_symbol_size_m"], scale, height)
+            block = _define_block(doc, kind["simbolo_2d"], cfg["node_symbol_size_m"], scale, height, style)
             msp.add_blockref(block, at, dxfattribs={"layer": layer(kind["capa_dxf"]), **_turn(n)}).add_auto_attribs({"TAG": n["tag"]})
             count += 1
         elif n["kind"] == "J":
@@ -98,24 +98,50 @@ def _stacked(mid, angle, height, seen):
     return (mid[0] + math.cos(rad) * n * 1.4 * height, mid[1] + math.sin(rad) * n * 1.4 * height)
 
 
-def _add_label(msp, s, pts, height, cfg, layer, seen) -> int:
-    """Write the label of a stretch when it fits; returns the entities added (0 or 1)."""
+def _add_label(target, s, pts, height, cfg, layer, seen, style: str = "Standard", origin=(0.0, 0.0)) -> int:
+    """Write the label of a stretch when it fits, into the model space or into a block (`origin`: where the block is inserted); returns the entities added (0 or 1)."""
     text = _label(s, sum(math.dist(p, q) for p, q in zip(pts, pts[1:])), height)
     if not text:
         return 0
     mid, angle = _label_position(pts)
-    msp.add_text(text, height=height, rotation=angle, dxfattribs={"layer": layer(cfg["tag_layer"])}).set_placement(_stacked(mid, angle, height, seen), align=ezdxf.enums.TextEntityAlignment.BOTTOM_CENTER)
+    x, y = _stacked(mid, angle, height, seen)
+    target.add_text(text, height=height, rotation=angle, dxfattribs={"layer": layer(cfg["tag_layer"]), "style": style}).set_placement((x - origin[0], y - origin[1]), align=ezdxf.enums.TextEntityAlignment.BOTTOM_CENTER)
     return 1
 
 
-def _add_stretches(msp, result, line_kinds, cfg, scale: float, height: float, layer) -> int:
+def _block_name(doc, prefix: str, tag: str) -> str:
+    """A block name for a tray: the prefix and its tag without the characters DXF forbids; a repeated tag gets a number."""
+    base = prefix + "".join("_" if c in '<>/\\":;?*|=`,' or c.isspace() else c for c in tag)
+    name, n = base, 1
+    while name in doc.blocks:
+        n += 1
+        name = f"{base}_{n}"
+    return name
+
+
+def _add_tray_block(doc, msp, s, pts, line_layer: str, cfg, height: float, layer, seen, style: str, prefix: str) -> None:
+    """One block per tray: its outline and its text inside, inserted at the first point so the CAD moves everything together."""
+    ox, oy = pts[0]
+    blk = doc.blocks.new(name=_block_name(doc, prefix, s["tag"]))
+    blk.add_lwpolyline([(x - ox, y - oy) for x, y in pts], dxfattribs={"layer": line_layer})
+    _add_label(blk, s, pts, height, cfg, layer, seen, style, (ox, oy))
+    msp.add_blockref(blk.name, (ox, oy), dxfattribs={"layer": line_layer})
+
+
+def _add_stretch(doc, msp, s, line_kinds, cfg, scale: float, height: float, layer, seen, style: str, trays: Dict[str, Any]) -> int:
+    """One stretch: a block when its kind is drawn as one (the tray), else a loose outline and its label. Returns how many entities of the model space were added."""
+    pts = [(x * scale, y * scale) for x, y in s["points_m"]]
+    line_layer = layer(line_kinds[s["kind"]]["capa_dxf"])
+    if doc is not None and trays.get("as_block") and s["kind"] in trays.get("kinds", []):
+        _add_tray_block(doc, msp, s, pts, line_layer, cfg, height, layer, seen, style, trays["block_prefix"])
+        return 1
+    msp.add_lwpolyline(pts, dxfattribs={"layer": line_layer})
+    return 1 + _add_label(msp, s, pts, height, cfg, layer, seen, style)
+
+
+def _add_stretches(msp, result, line_kinds, cfg, scale: float, height: float, layer, doc=None, style: str = "Standard", trays: Optional[Dict[str, Any]] = None) -> int:
     seen: Dict[Any, int] = {}
-    count = 0
-    for s in result["stretches"]:
-        pts = [(x * scale, y * scale) for x, y in s["points_m"]]
-        msp.add_lwpolyline(pts, dxfattribs={"layer": layer(line_kinds[s["kind"]]["capa_dxf"])})
-        count += 1 + _add_label(msp, s, pts, height, cfg, layer, seen)
-    return count
+    return sum(_add_stretch(doc, msp, s, line_kinds, cfg, scale, height, layer, seen, style, trays or {}) for s in result["stretches"])
 
 
 def _wall_corners(a, b, thickness: float):
@@ -128,7 +154,7 @@ def _wall_corners(a, b, thickness: float):
     return [(a[0] + nx, a[1] + ny), (b[0] + nx, b[1] + ny), (b[0] - nx, b[1] - ny), (a[0] - nx, a[1] - ny)]
 
 
-def _add_backdrop(doc, msp, backdrop: Dict[str, Any], cfg, scale: float, height: float, layer) -> int:
+def _add_backdrop(doc, msp, backdrop: Dict[str, Any], cfg, scale: float, height: float, layer, style: str = "Standard") -> int:
     """The building under the services, from the architecture the caller gives in metres: `walls` ({a, b, thickness_m}) as closed outlines and `rooms` ({name, at}) as text, in the frame of the plan on the screen (y down, like the nodes of the drawing: the DXF turns y up). Returns how many entities were added."""
     count = 0
     wall_layer, room_layer = layer(cfg["wall_layer"]), layer(cfg["room_layer"])
@@ -141,7 +167,7 @@ def _add_backdrop(doc, msp, backdrop: Dict[str, Any], cfg, scale: float, height:
             msp.add_lwpolyline([(x * scale, -y * scale) for x, y in corners], close=True, dxfattribs={"layer": wall_layer})
             count += 1
     for r in backdrop.get("rooms", []):
-        msp.add_text(r["name"], height=height, dxfattribs={"layer": room_layer}).set_placement((r["at"][0] * scale, -r["at"][1] * scale), align=ezdxf.enums.TextEntityAlignment.MIDDLE_CENTER)
+        msp.add_text(r["name"], height=height, dxfattribs={"layer": room_layer, "style": style}).set_placement((r["at"][0] * scale, -r["at"][1] * scale), align=ezdxf.enums.TextEntityAlignment.MIDDLE_CENTER)
         count += 1
     return count
 
@@ -168,10 +194,13 @@ def write_dxf(result: Dict[str, Any], path: Path, version: str = "", params: Dic
     layer = lambda base: "plan." + base                          # noqa: E731 - the draft names a layer by its ROLE; the deliverable service gives it its name and look (the catalog the MASTER edits)
     for base in sorted({k["capa_dxf"] for k in list(line_kinds.values()) + list(node_kinds.values())} | {cfg["tag_layer"], cfg["junction_layer"]}):
         doc.layers.add(layer(base))
-    height = cfg["text_height_m"] * scale
-    expected = _add_nodes(doc, msp, result, node_kinds, cfg, scale, height, layer) + _add_stretches(msp, result, line_kinds, cfg, scale, height, layer)
+    look = textstyle.load()                                      # typeface, text height and tray blocks: harness/config/dxf/text.json
+    textstyle.add_styles(doc)
+    style = look["font"]["style"]
+    height = float(look["heights"]["plan_text_m"]) * scale
+    expected = _add_nodes(doc, msp, result, node_kinds, cfg, scale, height, layer, style) + _add_stretches(msp, result, line_kinds, cfg, scale, height, layer, doc, style, look["trays"])
     if backdrop:
-        expected += _add_backdrop(doc, msp, backdrop, cfg, scale, height, layer)
+        expected += _add_backdrop(doc, msp, backdrop, cfg, scale, height, layer, style)
 
     path.parent.mkdir(parents=True, exist_ok=True)
     warnings = [f"DXF audit: {e.message}" for e in doc.audit().errors]

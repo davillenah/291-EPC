@@ -2,24 +2,23 @@
 
 The engines name their layers in three ways (`ARQ-/ELEC-/PLAN-*` of the plan engine, `291-*` of the sheets and diagrams, `A-*` of the architecture style `epc_arch/epc_style.json`) and the plans
 carry the fonts of the plan engine. `unify(path)` rewrites a DXF so that its layers follow the `<discipline>-<element>` convention of the architecture style (`A-*` architecture and sheet,
-`E-*` electrical) and every text style uses the typeface of that style (Arial, bold where the style is bold). Colours, line types and every entity are kept: only names change.
+`E-*` electrical; the table is `harness/config/dxf/unify.json`) and every text style uses the typeface of `config/dxf/text.json` (Arial by default, bold where the style is bold). Colours, line types and every entity are kept: only names change.
 """
 import re
 from pathlib import Path
 
-LAYER_NAMES = {"ARQ-MUROS": "A-WALL-CUT", "plan.ARQ-LOCALES": "A-ROOM", "ARQ-LOCALES": "A-ROOM", "PLAN-NODO": "E-NODE", "PLAN-TAG": "E-TAG",
-               "291-A-LAMINA": "A-SHEET", "291-G-ROTULO": "A-TITLE", "291-E-DIAGRAMA": "E-DIAGRAM", "291-E-TEXTOS": "E-TEXT"}
-ELEC_ELEMENTS = {"BANDEJA": "TRAY", "CANAL": "CONDUIT", "LUM": "LIGHT", "TABLERO": "BOARD", "TUG": "SOCKET", "TUE": "SOCKET-SPECIAL"}
-TYPEFACE, TYPEFACE_BOLD = "arial.ttf", "arialbd.ttf"
+from epc_dxf import textstyle
+
 
 
 def new_layer_name(name):
     """The layer name in the unified convention (a name that already follows it, or the layers `0` and `Defpoints`, stay as they are)."""
-    if name in LAYER_NAMES:
-        return LAYER_NAMES[name]
+    names = textstyle.load_file("unify.json")
+    if name in names["layer_names"]:
+        return names["layer_names"][name]
     elec = re.fullmatch(r"ELEC-(.+)", name)
     if elec:
-        return "E-" + ELEC_ELEMENTS.get(elec.group(1), elec.group(1))
+        return "E-" + names["elec_elements"].get(elec.group(1), elec.group(1))
     arq = re.fullmatch(r"ARQ-(.+)", name)
     if arq:
         return "A-" + arq.group(1)
@@ -62,9 +61,10 @@ def _fix_layers(doc):
 
 
 def _fix_fonts(doc):
+    font = textstyle.get_section("font")
     for style in doc.styles:
         bold = "bd" in (style.dxf.font or "").lower() or "bold" in (style.dxf.font or "").lower()
-        style.dxf.font = TYPEFACE_BOLD if bold else TYPEFACE
+        style.dxf.font = font["bold"] if bold else font["regular"]
 
 
 def unify(path, stamp_date=None):
