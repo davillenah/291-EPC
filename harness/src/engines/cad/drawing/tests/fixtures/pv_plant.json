@@ -1,0 +1,192 @@
+{
+ "result": {
+  "arrays": [
+   {
+    "id": "A1",
+    "name": "A1",
+    "modules": 210,
+    "inverters": 1,
+    "dc_kwp": 115.5,
+    "ac_kw": 100.0,
+    "dc_ac_ratio": 1.155,
+    "strings": {
+     "n_series": 14,
+     "series_range": {
+      "s_min": 5,
+      "s_max": 20
+     },
+     "strings": 15,
+     "strings_per_inverter": 15,
+     "strings_per_mppt": 2,
+     "strings_per_mppt_limit": 2
+    },
+    "poa_kwh_m2": 15.146,
+    "dc_kwh": 1427.892,
+    "ac_kwh": 1369.333,
+    "clipping_kwh": 0.0,
+    "peak_ac_kw": 71.969,
+    "specific_yield_kwh_kwp": 11.856,
+    "performance_ratio": 0.78276,
+    "capacity_factor": 0.19019,
+    "monthly_ac_kwh": [
+     1369.333,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ]
+   }
+  ]
+ },
+ "geometry": {
+  "schema_version": "1.0",
+  "site": {
+   "width_m": 200.0,
+   "length_m": 120.0,
+   "setback_m": 5.0
+  },
+  "road_width_m": 4.0,
+  "solar_altitude_deg": 31.987,
+  "table": {
+   "rows": 2,
+   "modules_per_row": 28,
+   "orientation": "portrait",
+   "width_m": 32.292,
+   "slope_m": 4.576
+  },
+  "pitch_m": [
+   7.626
+  ],
+  "frame": {
+   "x0": 5.0,
+   "x1": 195.0,
+   "y0": 9.0,
+   "y1": 115.0
+  },
+  "station": {
+   "x": 5.0,
+   "y": 5.0,
+   "width_m": 6.0,
+   "depth_m": 2.5
+  },
+  "tables": [
+   {
+    "id": "T-001",
+    "array": "A1",
+    "row": 1,
+    "x": 5.0,
+    "y": 9.0,
+    "width_m": 32.292,
+    "depth_m": 3.963,
+    "modules": 56,
+    "strings": [
+     "S-001",
+     "S-002",
+     "S-003",
+     "S-004"
+    ],
+    "inverters": [
+     "INV-01"
+    ]
+   },
+   {
+    "id": "T-002",
+    "array": "A1",
+    "row": 1,
+    "x": 37.792,
+    "y": 9.0,
+    "width_m": 32.292,
+    "depth_m": 3.963,
+    "modules": 56,
+    "strings": [
+     "S-005",
+     "S-006",
+     "S-007",
+     "S-008"
+    ],
+    "inverters": [
+     "INV-01"
+    ]
+   },
+   {
+    "id": "T-003",
+    "array": "A1",
+    "row": 1,
+    "x": 70.584,
+    "y": 9.0,
+    "width_m": 32.292,
+    "depth_m": 3.963,
+    "modules": 56,
+    "strings": [
+     "S-009",
+     "S-010",
+     "S-011",
+     "S-012"
+    ],
+    "inverters": [
+     "INV-01"
+    ]
+   },
+   {
+    "id": "T-004",
+    "array": "A1",
+    "row": 1,
+    "x": 103.376,
+    "y": 9.0,
+    "width_m": 32.292,
+    "depth_m": 3.963,
+    "modules": 42,
+    "strings": [
+     "S-013",
+     "S-014",
+     "S-015"
+    ],
+    "inverters": [
+     "INV-01"
+    ]
+   }
+  ],
+  "inverters": [
+   {
+    "id": "INV-01",
+    "array": "A1",
+    "strings": [
+     "S-001",
+     "S-002",
+     "S-003",
+     "S-004",
+     "S-005",
+     "S-006",
+     "S-007",
+     "S-008",
+     "S-009",
+     "S-010",
+     "S-011",
+     "S-012",
+     "S-013",
+     "S-014",
+     "S-015"
+    ],
+    "x": 21.146,
+    "y": 13.213,
+    "width_m": 0.7,
+    "depth_m": 0.4
+   }
+  ],
+  "counts": {
+   "tables": 4,
+   "tables_left_out": 0,
+   "inverters": 1,
+   "rows": 1
+  },
+  "fits": true,
+  "warnings": []
+ }
+}

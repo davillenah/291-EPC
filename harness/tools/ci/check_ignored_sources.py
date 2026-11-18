@@ -14,7 +14,7 @@ import epc_paths as P  # noqa: E402
 
 REPO = P.REPO
 ALLOWED_PARTS = {"node_modules", ".venv", "__pycache__", "dist", ".import_linter_cache", ".pytest_cache", "_out", ".mypy_cache", ".cov"}
-ALLOWED_TOP = {"local", ".claude", "respuestas.md"}
+ALLOWED_TOP = {"local", ".claude", "respuestas.md", "tmp"}      # tmp: simulations (owner rule, CLAUDE.md)
 ALLOWED_SUFFIX = (".egg-info", ".pyc", ".bak", ".tmp", ".plugin")
 ALLOWED_PREFIX = (f"{P.ENGINE_FOLDERS_REL['arch']}/samples", f"{P.ENGINE_FOLDERS_REL['arch']}/out")       # third-party training plans and what the arch scripts generate from them
 

@@ -46,6 +46,19 @@ class TestLayout(unittest.TestCase):
         self.assertEqual(out["warnings"][0]["code"], "layout_no_fit")
         self.assertTrue(out["warnings"][0]["en"] and out["warnings"][0]["es"])
 
+    def test_rows_that_do_not_fit_the_length_of_the_site_are_left_out(self):
+        short = copy.deepcopy(LAYOUT)
+        short["site"].update(length_m=30)
+        out, _ = planned(short)
+        self.assertFalse(out["fits"])
+        self.assertGreater(out["counts"]["tables"], 0)
+
+    def test_a_pad_deeper_than_the_gap_between_rows_is_warned(self):
+        deep = copy.deepcopy(LAYOUT)
+        deep["inverter_pad"]["depth_m"] = 50
+        out, _ = planned(deep)
+        self.assertIn("layout_pad_tight", [w["code"] for w in out["warnings"]])
+
     def test_deterministic(self):
         self.assertEqual(planned()[0], planned()[0])
 
