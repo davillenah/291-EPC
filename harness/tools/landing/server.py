@@ -104,25 +104,29 @@ def set_path(target, path, value):
     target[parts[-1]] = value
 
 
+def _value(field, v):
+    """One raw form value converted to the type of its field."""
+    if field["kind"] == "number" and isinstance(v, str):
+        try:
+            return float(v)
+        except ValueError:
+            return v
+    if field["kind"] == "list" and isinstance(v, str):
+        return [x.strip() for x in v.split(",") if x.strip()]
+    return v
+
+
 def clean(flat, form):
     """Dotted flat answers -> nested answers; empty values dropped, numbers converted, units fixed by the schema."""
     nested = {}
     for f in form["fields"]:
-        v = flat.get(f["path"])
         if f["kind"] == "unit":
             if flat.get(f["path"].rsplit(".", 1)[0] + ".value") not in (None, ""):
                 set_path(nested, f["path"], f["value"])
             continue
-        if v in (None, "", []):
-            continue
-        if f["kind"] == "number" and isinstance(v, str):
-            try:
-                v = float(v)
-            except ValueError:
-                pass
-        if f["kind"] == "list" and isinstance(v, str):
-            v = [x.strip() for x in v.split(",") if x.strip()]
-        set_path(nested, f["path"], v)
+        v = flat.get(f["path"])
+        if v not in (None, "", []):
+            set_path(nested, f["path"], _value(f, v))
     return nested
 
 
@@ -144,47 +148,64 @@ def split_folder(text):
     return Path(str(pure.parent)), pure.name
 
 
+def _checked_root(payload, default_root):
+    """(root, project code, error): the folder the person typed split in parent and code; refused inside the repository."""
+    root, code = split_folder(payload.get("folder"))
+    if root is None:
+        return default_root, None, None
+    try:
+        resolved = Path(root).resolve()
+        inside = resolved == HARNESS.parent or HARNESS.parent in resolved.parents
+    except OSError:
+        inside = False
+    return root, code, ("inside_repo" if inside else None)
+
+
+def _electrical(root, code, flat, submit):
+    """Validate the electrical answers; on submit run `epc init`. Returns (result, folder or None)."""
+    answers = clean(flat, form_of("electrical")["forms"][0])
+    answers.setdefault("language", flat.get("language") or "es")
+    errors = validate_answers(answers)
+    if code and answers.get("project_code") != code:
+        errors.append(f"project_code: must equal the folder name {code}")
+    if errors or not submit:
+        return {"state": "invalid" if errors else "valid", "errors": errors}, None
+    res = run_epc(root, ["--projects-root", str(root), "init", answers["project_code"], "--answers", _tmp(answers)])
+    return {"state": "created" if res.get("ok") else "failed", "detail": res}, Path(root) / answers["project_code"]
+
+
+def _pending(where, d, payload, flat):
+    """A discipline without a pipeline: its request is saved, nothing is calculated."""
+    answers = clean(flat, form_of(d)["forms"][0])
+    pending = where / "_pending"
+    pending.mkdir(parents=True, exist_ok=True)
+    (pending / f"{d}_request.json").write_text(json.dumps({"request": payload.get("request", ""), "answers": answers}, indent=1), encoding="utf-8")
+
+
+def _run_disciplines(selected, root, code, flat, payload, submit):
+    """Per-discipline results, the project folder and whether `epc init` created it."""
+    results, folder, created = {}, (Path(root) / code) if code else None, False
+    for d in sorted(selected, key=lambda x: x != "electrical"):   # electrical first: `epc init` needs a new or empty folder
+        if d == "electrical":
+            results[d], made = _electrical(root, code, flat, submit)
+            created, folder = made is not None and results[d]["state"] == "created", made or folder
+            continue
+        results[d] = {"state": "saved" if submit else "valid", "note": "no_pipeline"}
+        if submit:
+            _pending(folder or root, d, payload, flat)
+    return results, folder, created
+
+
 def handle(default_root, payload, submit):
     selected = selected_of(payload.get("discipline", []))
-    flat = payload.get("answers", {})
-    report = {"results": {}}
-    root, code = split_folder(payload.get("folder"))
-    if not selected:
-        return {"results": {}, "error": "no_discipline"}
-    if root is None:
-        root, code = default_root, None
-    else:
-        try:
-            inside = Path(root).resolve() == HARNESS.parent or HARNESS.parent in Path(root).resolve().parents
-        except OSError:
-            inside = False
-        if inside:
-            return {"results": {}, "error": "inside_repo"}
+    root, code, error = _checked_root(payload, default_root)
+    if not selected or error:
+        return {"results": {}, "error": error or "no_discipline"}
+    flat = dict(payload.get("answers", {}))
     if code:
-        flat = dict(flat, project_code=flat.get("project_code") or code)
-    folder = (Path(root) / code) if code else None
-    created = False
-    for d in sorted(selected, key=lambda x: x != "electrical"):   # electrical first: `epc init` needs a new or empty folder
-        form = form_of(d)["forms"][0]
-        answers = clean(flat, form)
-        if d == "electrical":
-            answers.setdefault("language", flat.get("language") or "es")
-            errors = validate_answers(answers)
-            if code and answers.get("project_code") != code:
-                errors.append(f"project_code: must equal the folder name {code}")
-            if errors or not submit:
-                report["results"][d] = {"state": "invalid" if errors else "valid", "errors": errors}
-                continue
-            res = run_epc(root, ["--projects-root", str(root), "init", answers["project_code"], "--answers", _tmp(answers)])
-            created = bool(res.get("ok"))
-            folder = Path(root) / answers["project_code"]
-            report["results"][d] = {"state": "created" if created else "failed", "detail": res}
-        else:
-            report["results"][d] = {"state": "saved" if submit else "valid", "note": "no_pipeline"}
-            if submit:
-                pending = (folder or root) / "_pending"
-                pending.mkdir(parents=True, exist_ok=True)
-                (pending / f"{d}_request.json").write_text(json.dumps({"request": payload.get("request", ""), "answers": answers}, indent=1), encoding="utf-8")
+        flat["project_code"] = flat.get("project_code") or code
+    results, folder, created = _run_disciplines(selected, root, code, flat, payload, submit)
+    report = {"results": results}
     if submit:
         report["saved_docs"] = save_docs(folder or root, created, payload)
     return report

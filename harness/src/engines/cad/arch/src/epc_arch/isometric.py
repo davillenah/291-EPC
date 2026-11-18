@@ -86,6 +86,26 @@ def _level_labels(floors, per_floor, at, angle: float, right: float) -> List[obj
     return out
 
 
+def _floor_faces(floors, fill):
+    """The faces of every floor (the top slab of the highest level is not drawn) and all of them sorted back to front."""
+    top = max(h["elevation_m"] for _, h, _ in floors)
+    per_floor = [[f for s in building_solids(arch, heights) if not (heights["elevation_m"] == top and s["id"].endswith(":slab:top")) for f in _faces(s, off, fill)] for arch, heights, off in floors]
+    return per_floor, sorted((f for fs in per_floor for f in fs), key=lambda f: f[0])
+
+
+def _view_box(faces, angle):
+    """The projected bounding box (xmin, ymin, xmax, ymax) of the faces, in metres."""
+    pts = [_project(v, angle) for f in faces for v in f[1]]
+    return (min(q[0] for q in pts), min(q[1] for q in pts), max(q[0] for q in pts), max(q[1] for q in pts))
+
+
+def _sheet_scale(d, box, area, scale, style):
+    """Set the scale of the view on the sheet; a requested scale that does not fit is replaced and warned."""
+    d.scale, changed = D._scale_for(((box[2] - box[0]) * 1000.0, (box[3] - box[1]) * 1000.0), (area[2] - area[0], area[3] - area[1]), scale or style.sheet["scales"][0], style)
+    if changed and scale:
+        d.warnings.append(f"the view does not fit sheet {d.sheet} at the requested scale: drawn at 1:{d.scale}")
+
+
 def isometric_drawing(floors: List[Tuple[Architecture, Dict[str, float], Tuple[float, float]]], style=None, sheet: Optional[str] = None, scale: Optional[int] = None, template=None,
                       fields: Optional[dict] = None, title: str = "ISOMÉTRICO / ISOMETRIC") -> Drawing:
     """The building as an isometric view on a sheet, at the smallest standard scale denominator that fits it unless `scale` is given."""
@@ -94,17 +114,12 @@ def isometric_drawing(floors: List[Tuple[Architecture, Dict[str, float], Tuple[f
     style = style or D.load_style()
     p = settings()
     angle = float(p["iso_angle_deg"])
-    top = max(h["elevation_m"] for _, h, _ in floors)
-    per_floor = [[f for s in building_solids(arch, heights) if not (heights["elevation_m"] == top and s["id"].endswith(":slab:top")) for f in _faces(s, off, p["iso_fill"])] for arch, heights, off in floors]
-    faces = sorted((f for fs in per_floor for f in fs), key=lambda f: f[0])
-    pts = [_project(v, angle) for f in faces for v in f[1]]
-    box = (min(q[0] for q in pts), min(q[1] for q in pts), max(q[0] for q in pts), max(q[1] for q in pts))
+    per_floor, faces = _floor_faces(floors, p["iso_fill"])
+    box = _view_box(faces, angle)
     name, size, free = D._sheet_of(style, sheet, template)
     d = Drawing(name, size, 0)
     area = (free[0], free[1] + 4.0, free[2] - p["panel_mm"] / 2, free[3] - 12.0)
-    d.scale, changed = D._scale_for(((box[2] - box[0]) * 1000.0, (box[3] - box[1]) * 1000.0), (area[2] - area[0], area[3] - area[1]), scale or style.sheet["scales"][0], style)
-    if changed and scale:
-        d.warnings.append(f"the view does not fit sheet {d.sheet} at the requested scale: drawn at 1:{d.scale}")
+    _sheet_scale(d, box, area, scale, style)
     at = _paper(box, area, d.scale)
     for _, corners, fill, layer in faces:
         d.items.append(Poly(tuple(at(_project(v, angle)) for v in corners), layer, closed=True, fill=fill, width=LINE_MM))
