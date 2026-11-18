@@ -38,11 +38,7 @@ def _out_of_range(value, minimum, maximum, positive) -> bool:
 
 
 def _range_rule(minimum, maximum, positive):
-    if positive:
-        return bi("> 0", "> 0")
-    if maximum is not None:
-        return bi(f"between {minimum} and {maximum}", f"entre {minimum} y {maximum}")
-    return bi(f">= {minimum}", f">= {minimum}")
+    return bi("> 0", "> 0") if positive else bi(f"between {minimum} and {maximum}", f"entre {minimum} y {maximum}") if maximum is not None else bi(f">= {minimum}", f">= {minimum}")
 
 
 def _number(obj: Dict[str, Any], key: str, where: str, minimum: Optional[float] = None, maximum: Optional[float] = None, positive: bool = False) -> float:
