@@ -4,6 +4,10 @@ All notable changes. Format: Keep a Changelog; versions follow `harness/docs/BRA
 
 ## [Unreleased]
 
+### Added
+- `harness/tools/landing/`: a local one-screen landing page (`python harness/tools/landing/server.py`) with a request box, a checklist of the disciplines, the dynamic intake form (electrical built from `intake_answers.schema.json`), the project folder and the documentation drop zone; submit runs `epc init`. In English and Spanish.
+- Standing authorization for the feature release flow (`harness/CLAUDE.md`); the CI gate now also runs on `dev` and on pull requests to `dev`.
+
 ### Changed
 - `approve` and `issue` are refused while a `major` finding is open (SIM-07, owner's option A); `--accept-major "reason"` (engineer of record) goes on and marks them `accepted` with the reason and who, in the manifest and on the cover. `note` findings are marked seen at approval. Every engine flag has an actionable text in its finding. The drawing summary and `CC-D05` compare the drop up to the circuit.
 - Findings of the simulation `sim-01` (SIM-06..SIM-19): after `epc submit`, `approve` and `issue` the manifest says `for_review`, `approved` (edit mode) or `approved_for_construction` (production, D21), then `issued`, `approve` records who signed and when (`signed`), and the cover of the transmittal is rendered again with the status, the signer and the open `major` findings (`review_state.py`; the schema gains `approved` and `issued`). `major` findings still do not block (owner decision pending); `blocking` ones do.
