@@ -7,7 +7,7 @@
 <style>
 :root{--bg:#f2f2f2;--panel:#fafafa;--ink:#2b2b2b;--mute:#7a7a7a;--line:#d6d6d6;--acc:#2e7d4f;--acc-ink:#fff;--ok:#2e7d4f;--bad:#555;--r:4px}
 @media (prefers-color-scheme:dark){:root{--bg:#1c1c1c;--panel:#242424;--ink:#dcdcdc;--mute:#8d8d8d;--line:#3a3a3a;--acc:#3f9b66;--acc-ink:#fff;--ok:#5cb985;--bad:#bdbdbd}}
-*{box-sizing:border-box}
+*{box-sizing:border-box}[hidden]{display:none!important}
 html,body{height:100%;margin:0;overflow:hidden}
 body{background:var(--bg);color:var(--ink);font:12.5px/1.35 Arial,Tahoma,sans-serif;display:grid;grid-template-rows:auto 1fr;gap:12px;padding:14px 18px}
 header{display:flex;align-items:center;justify-content:space-between;gap:12px}
@@ -44,15 +44,23 @@ input,select{width:100%;border:1px solid var(--line);border-radius:var(--r);padd
 .go{background:var(--acc);color:var(--acc-ink);border:1px solid var(--acc);border-radius:var(--r);padding:7px 16px;font:inherit;font-weight:600;cursor:pointer}.go:hover,.seg button:hover:not(.on){filter:brightness(1.08)}
 .go.alt{background:transparent;color:var(--ink);border:1px solid var(--line);font-weight:500}
 .msg{font-size:12px;color:var(--mute);overflow:hidden;white-space:nowrap;text-overflow:ellipsis;flex:1}.msg.ok{color:var(--ok)}.msg.bad{color:var(--ink);font-weight:600}
+
+.chips{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px;min-height:20px}.chips span{border:1px solid var(--line);border-radius:var(--r);padding:1px 7px;font-size:11px;color:var(--ink)}.chips .n{color:var(--mute);border-style:dashed}
+.tabs{display:flex;gap:6px;margin-bottom:8px}.tabs button{border:1px solid var(--line);background:transparent;color:var(--mute);border-radius:var(--r);padding:4px 10px;font:inherit;cursor:pointer}.tabs button.on{background:var(--acc);border-color:var(--acc);color:var(--acc-ink)}.tabs button i{font-style:normal;font-size:10.5px;margin-left:6px;opacity:.85}
+.f.miss input,.f.miss select{border-color:var(--ink)}.badge.pend{border-style:dashed}
+.runv{flex:1;min-height:0;display:grid;grid-template-columns:minmax(190px,32%) 1fr;gap:14px}.runv[hidden]{display:none}
+.stg{display:grid;grid-template-columns:18px 1fr;gap:6px;padding:3px 0;border-top:1px solid var(--line);align-items:baseline}.stg:first-child{border-top:0}.stg b{font-weight:400;color:var(--mute)}.stg.ok b,.stg.run b{color:var(--ok)}.stg.bad b{color:var(--ink);font-weight:700}.stg small{display:block;color:var(--mute);font-size:10.5px}
+.out{min-height:0;overflow:auto}.out details{border-top:1px solid var(--line);padding:4px 0}.out summary{cursor:pointer;display:flex;justify-content:space-between;gap:8px}.out summary small{color:var(--mute)}.out .fl{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:2px 12px;padding:4px 0 2px 12px}.out a{color:var(--ink);text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11.5px}.out a:hover{color:var(--acc);text-decoration:underline}
+.path{font-family:Consolas,monospace;font-size:11px;color:var(--mute);margin:0 0 8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 @media (max-width:760px){main{grid-template-columns:1fr;grid-template-rows:140px 1fr}}
 </style>
 </head>
 <body>
 <header><h1>EPC-291 <small id="sub"></small></h1><div class="lang"><button data-l="es" class="on">ES</button><button data-l="en">EN</button></div></header>
 <main>
-  <section class="card"><label class="t" id="reqL" for="req"></label><textarea id="req"></textarea><label class="drop" id="drop"><input type="file" id="files" multiple hidden><span id="dropT"></span><span id="dropL"></span></label><div class="seg" id="seg"></div></section>
+  <section class="card"><label class="t" id="reqL" for="req"></label><textarea id="req"></textarea><div class="chips" id="chips"></div><label class="drop" id="drop"><input type="file" id="files" multiple hidden><span id="dropT"></span><span id="dropL"></span></label><div class="seg" id="seg"></div></section>
   <section class="card">
-    <label class="f fold"><span id="foldL"></span><input id="folder" autocomplete="off"></label><div class="form" id="form"></div>
+    <label class="f fold"><span id="foldL"></span><input id="folder" autocomplete="off"></label><div class="tabs" id="tabs"></div><div class="form" id="form"></div><div class="runv" id="runv" hidden></div>
     <div class="bar"><button class="go alt" id="check"></button><button class="go" id="send"></button><div class="msg" id="msg"></div></div>
   </section>
 </main>
@@ -67,12 +75,13 @@ en:{sub:"Ask for what you need; the form builds itself",req:"What do you want to
  scope:"Scope / what is needed",err:{inside_repo:"The folder cannot be inside the repository.",no_discipline:"Tick at least one discipline."},plan:"No engine or intake yet: the request is saved, nothing is calculated.",ok:"Data is valid.",created:"Project created (edit mode, unverified data).",saved:"Saved; this discipline has no pipeline yet.",fail:"Could not complete:",
  sec:{electrical:"Electrical (LV)",architectural:"Architectural",civil:"Civil & structural"},
  L:{project_code:"Project code","client.name":"Client","client.contact":"Contact","site.address":"Address","site.country":"Country (2 letters)","site.installation_type":"Installation type","supply.source":"Source","supply.voltage.value":"Voltage","supply.earthing_system":"Earthing scheme","supply.short_circuit_level.value":"Short-circuit level","supply.short_circuit_level.origin":"Short-circuit origin","criteria.set":"Criteria set","criteria.exceptions":"Exceptions (comma)","engineer_of_record.name":"Engineer of record","engineer_of_record.registration":"Registration","engineer_of_record.college":"College","language":"Deliverables language","floor.name":"Floor (name)","floor.index":"Level (0 = ground)","floor.wall_thickness_m":"Wall thickness (m)","floor.rooms":"Rooms (boxes in m: W, S, E, N)","civil.scope":"Scope","civil.standard":"Standard",code:"Code",name:"Name",west:"W",south:"S",east:"E",north:"N",foundations:"Foundations",reinforced_concrete:"Reinforced concrete",steel:"Steel",geotechnics:"Geotechnics"},add:"+ room"}};
-let lang="es",disc=[],docs=[],forms=[],vals={},errs=[];
+const ALL=["architectural","civil","electrical","electrical_mv","mechanical","hvac","piping","fire","instrumentation","telecom"];
+let lang="es",disc=[],docs=[],forms=[],vals={},errs=[],tab=null,touched=new Set(),said=null,timer=0,job=null,poll=0,problem=null;
 const $=s=>document.querySelector(s),t=()=>T[lang];
 const lab=k=>t().L[k]||(k.endsWith(".scope")?t().scope:k.endsWith(".standard")?t().L["civil.standard"]:k);
 async function load(){if(!disc.length){forms=[];return draw()}const r=await (await fetch("/api/form?discipline="+disc.join(","))).json();forms=r.forms;draw()}
 function field(f){
-  const star=f.required?" <b>*</b>":"",bad=errs.some(e=>e.startsWith(f.path))?" err":"";
+  const star=f.required?" <b>*</b>":"",bad=errs.some(e=>e.startsWith(f.path))?" err":(isMissing(f)?" miss":"");
   if(f.kind==="unit")return"";
   const v=vals[f.path]??(f.path==="language"?lang:"");let inp;
   if(f.kind==="select")inp=`<select data-p="${f.path}"><option value=""></option>${f.options.map(o=>`<option value="${o}" ${v==o?"selected":""}>${t().L[o]||o}</option>`).join("")}</select>`;
@@ -84,16 +93,19 @@ function rooms(f){
   const rs=vals[f.path]||(vals[f.path]=[{}]),c=f.columns;
   return`<div class="f" style="grid-column:1/-1"><span>${lab(f.path)} <b>*</b></span><div class="rooms">${c.map(k=>`<div class="h">${lab(k)}</div>`).join("")}${rs.map((r,i)=>c.map(k=>`<input data-r="${i}" data-k="${k}" value="${r[k]??""}">`).join("")).join("")}</div><button class="add" id="addroom">${t().add}</button></div>`}
 function draw(){
-  const ALL=["architectural","civil","electrical","electrical_mv","mechanical","hvac","piping","fire","instrumentation","telecom"],stt=d=>({electrical:"available",architectural:"partial"})[d]||"planned";
+  const stt=d=>({electrical:"available",architectural:"partial"})[d]||"planned";
   const svg='<svg viewBox="0 0 18 18"><rect class="bx" x="1.5" y="1.5" width="15" height="15" rx="3"/><path class="tk" d="M5 9.5l2.8 2.8L13 6.2"/></svg>';
   const row=(id,on,txt,sm,att)=>`<label class="ck ${on?"on":""} ${id==="all"?"all":""}"><input type="checkbox" ${att} ${on?"checked":""}>${svg}<span>${txt}</span><small>${sm}</small></label>`;
   $("#seg").innerHTML=`<div class="chead"><span>${t().discs}</span><span>${disc.length} / ${ALL.length}</span></div>`+ALL.map(d=>row(d,disc.includes(d),t()[d],t().st[stt(d)],`data-d="${d}"`)).join("")+row("all",disc.length===ALL.length,t().all,"",'id="allc"');
-  $("#form").innerHTML=!forms.length?`<div class="empty">${t().none}</div>`:forms.map(fm=>`<div class="sec"><h3>${t().sec[fm.id]||t()[fm.id]}<span class="badge">${t().st[fm.status]}</span></h3><div class="grid ${forms.length>1?"tight":""}">${fm.fields.map(field).join("")}</div></div>`).join("");
-  $("#sub").textContent=t().sub;$("#foldL").textContent=t().folder;$("#folder").placeholder=t().folderph;$("#folder").title=t().folderh;$("#dropT").textContent=t().docs+" · "+t().docsh;$("#dropL").textContent=docs.length?docs.length+" "+t().files:"";$("#reqL").textContent=t().req;$("#req").placeholder=t().ph;$("#check").textContent=t().check;$("#send").textContent=t().send;document.documentElement.lang=lang;
+  if(!forms.some(f=>f.id===tab))tab=forms.length?forms[0].id:null;
+  const vis=forms.length>1?forms.filter(f=>f.id===tab):forms;
+  renderTabs();
+  $("#form").innerHTML=!forms.length?`<div class="empty">${t().none}</div>`:vis.map(fm=>`<div class="sec"><h3>${t().sec[fm.id]||t()[fm.id]}<span class="badge ${fm.id==="house"?"pend":""}">${fm.id==="house"?t().pend:t().st[fm.status]}</span></h3><div class="grid ${forms.length>1?"tight":""}">${fm.fields.map(field).join("")}</div></div>`).join("");
+  $("#sub").textContent=t().sub;$("#foldL").textContent=t().folder;$("#folder").placeholder=t().folderph;$("#folder").title=t().folderh;$("#dropT").textContent=t().docs+" · "+t().docsh;$("#dropL").textContent=docs.length?docs.length+" "+t().files:"";$("#reqL").textContent=t().req;$("#req").placeholder=t().ph;$("#check").textContent=t().check;$("#send").textContent=disc.includes("electrical")&&disc.includes("architectural")?t().run:t().send;document.documentElement.lang=lang;
   document.querySelectorAll("[data-d]").forEach(b=>b.onchange=()=>{const d=b.dataset.d,on=disc.includes(d);disc=ALL.filter(x=>x===d?!on:disc.includes(x));errs=[];load()});
   $("#allc").onchange=()=>{disc=disc.length===ALL.length?[]:[...ALL];errs=[];load()};
-  document.querySelectorAll("[data-p]").forEach(i=>i.oninput=()=>vals[i.dataset.p]=i.value);
-  document.querySelectorAll("[data-r]").forEach(i=>i.oninput=()=>{const p="floor.rooms";vals[p][i.dataset.r][i.dataset.k]=i.value});
+  document.querySelectorAll("[data-p]").forEach(i=>{i.oninput=()=>{vals[i.dataset.p]=i.value;touched.add(i.dataset.p);renderTabs();i.closest(".f").classList.toggle("miss",isMissing({required:i.closest(".f").querySelector("b")!==null,kind:"text",path:i.dataset.p}))};i.onchange=i.oninput});
+  document.querySelectorAll("[data-r]").forEach(i=>i.oninput=()=>{const p="floor.rooms";vals[p][i.dataset.r][i.dataset.k]=i.value;touched.add(p)});
   const a=$("#addroom");if(a)a.onclick=()=>{vals["floor.rooms"].push({});draw()}}
 async function payload(){const a={...vals};a.language=a.language||lang;
   if(Array.isArray(a["floor.rooms"]))a["floor.rooms"]=a["floor.rooms"].filter(r=>Object.keys(r).length);
@@ -102,9 +114,10 @@ async function payload(){const a={...vals};a.language=a.language||lang;
 function say(s,c){const m=$("#msg");m.textContent=s;m.className="msg "+(c||"");m.title=s}
 async function post(u){if(!disc.length)return say(t().none,"bad");say("…");const r=await (await fetch(u,{method:"POST",body:JSON.stringify(await payload())})).json();
   errs=[];let bad=[],last="ok";if(r.error)return say(t().err[r.error],"bad");
-  for(const [d,x] of Object.entries(r.results)){if(x.errors?.length){errs.push(...x.errors);bad.push(x.errors[0])}else if(x.state==="failed"){bad.push(t().fail+" "+(x.detail?.error?.message||""))}else if(last!=="created")last=x.state}
+  for(const [d,x] of Object.entries(r.results)){if(x.problem){bad.push(t().prob[x.problem.code]+(x.problem.detail?" ("+x.problem.detail+")":""));continue}if(x.errors?.length){errs.push(...x.errors);bad.push(x.errors[0])}else if(x.state==="failed"){bad.push(t().fail+" "+(x.detail?.error?.message||""))}else if(last!=="created")last=x.state}
   draw();
   if(bad.length)return say(bad[0]+(bad.length>1?` (+${bad.length-1})`:""),"bad");
+  if(r.job)return startRun(r.job);
   say(t()[last==="valid"?"ok":last]||t().ok,"ok")}
 document.querySelectorAll(".lang button").forEach(b=>b.onclick=()=>{lang=b.dataset.l;document.querySelectorAll(".lang button").forEach(x=>x.classList.toggle("on",x===b));draw()});
 $("#check").onclick=()=>post("/api/check");$("#send").onclick=()=>post("/api/submit");
@@ -114,6 +127,51 @@ dz.onclick=e=>{if(e.target!==fi)fi.click()};fi.onchange=()=>{addFiles(fi.files);
 dz.ondragover=e=>{e.preventDefault();dz.classList.add("over")};dz.ondragleave=()=>dz.classList.remove("over");dz.ondrop=e=>{e.preventDefault();dz.classList.remove("over");addFiles(e.dataTransfer.files)};
 $("#folder").oninput=e=>{const n=e.target.value.trim().replace(/[\\/]+$/,"").split(/[\\/]/).pop();if(n&&!vals.project_code_touched){vals.project_code=n;const i=document.querySelector('[data-p="project_code"]');if(i)i.value=n}};
 document.addEventListener("input",e=>{if(e.target.dataset&&e.target.dataset.p==="project_code")vals.project_code_touched=true});
+
+Object.assign(T.es,{miss:"faltan",pend:"propuesto · a confirmar",run:"Ejecutar",again:"Nuevo pedido",seen:"Entendido",added:"agregado por el harness",stage:"Etapa",
+ sec:Object.assign({},T.es.sec,{house:"Supuestos de la casa (editables)"}),
+ stages:["Ingreso de datos","Requisitos y entradas","Cargas y demanda","Suministro y transformador","Estructura del tablero","Cables y protecciones","Selectividad","Puesta a tierra","Verificación de cálculo","Planos y diagramas","Documentos","Paquete y transmittal"],
+ prob:{rooms:"Revisá los locales: faltan medidas.",no_rooms:"Falta al menos un local.",plan:"No se pudo dibujar el plano:",read_back:"El lector del plano no reconoce los locales dibujados (reconocidos/dibujados)."},
+ notes:{no_hvac_engine:"Aire acondicionado todavía no tiene motor: el pedido solo se guarda."},
+ kinds:{bedroom:"dormitorio(s)",bathroom:"baño(s)",kitchen:"cocina",living:"living",garage:"cochera",laundry:"lavadero",garden:"jardín"},svc:{lighting:"iluminación",receptacles:"tomacorrientes"},
+ running:"Ejecutando…",doneok:"Terminó: 12 etapas.",fail2:"Se detuvo:",trs:"Transmittal",na:"no se calcula: no se pidió",mode:"Modo edición: normas sin verificar, no apto para producción.",
+ L:Object.assign({},T.es.L,{"house.wall_height_m":"Altura de muro (m)","house.luminaire_power_w":"Luminaria (W)","house.luminaire_flux_lm":"Luminaria (lm)","house.receptacles":"Tomacorrientes","house.receptacle_va":"Toma (VA)","house.board_fp":"fp del tablero","house.garden_area_m2":"Jardín (m²)","house.garden_lux":"Jardín (lux)","house.garden_length_m":"Jardín: tendido (m)",yes:"sí",no:"no"})});
+Object.assign(T.en,{miss:"missing",pend:"proposed · to confirm",run:"Run",again:"New request",seen:"Understood",added:"added by the harness",stage:"Stage",
+ sec:Object.assign({},T.en.sec,{house:"House assumptions (editable)"}),
+ stages:["Intake","Requirements and inputs","Loads and demand","Supply and transformer","Board structure","Cables and protection","Selectivity","Earthing","Calculation check","Drawings and diagrams","Documents","Package and transmittal"],
+ prob:{rooms:"Check the rooms: some sizes are missing.",no_rooms:"At least one room is needed.",plan:"The plan could not be drawn:",read_back:"The plan reader does not find the rooms that were drawn (found/drawn)."},
+ notes:{no_hvac_engine:"Air conditioning has no engine yet: the request is only saved."},
+ kinds:{bedroom:"bedroom(s)",bathroom:"bathroom(s)",kitchen:"kitchen",living:"living room",garage:"garage",laundry:"laundry",garden:"garden"},svc:{lighting:"lighting",receptacles:"receptacles"},
+ running:"Running…",doneok:"Finished: 12 stages.",fail2:"Stopped:",trs:"Transmittal",na:"not calculated: not requested",mode:"Edit mode: norm values not verified, not for production.",
+ L:Object.assign({},T.en.L,{"house.wall_height_m":"Wall height (m)","house.luminaire_power_w":"Luminaire (W)","house.luminaire_flux_lm":"Luminaire (lm)","house.receptacles":"Receptacles","house.receptacle_va":"Outlet (VA)","house.board_fp":"Board pf","house.garden_area_m2":"Garden (m²)","house.garden_lux":"Garden (lux)","house.garden_length_m":"Garden: run (m)",yes:"yes",no:"no"})});
+function renderTabs(){
+  $("#tabs").innerHTML=forms.length>1?forms.map(f=>{const m=missing(f);return`<button data-tab="${f.id}" class="${f.id===tab?"on":""}">${t().sec[f.id]||t()[f.id]}${m?`<i>${m} ${t().miss}</i>`:""}</button>`}).join(""):"";
+  document.querySelectorAll("[data-tab]").forEach(b=>b.onclick=()=>{tab=b.dataset.tab;draw()})}
+const isMissing=f=>f.required&&f.kind!=="unit"&&(f.kind==="rooms"?!(vals[f.path]||[]).some(r=>r.name):(v=>v===""||v==null)(vals[f.path]??(f.path==="language"?lang:"")));
+const missing=fm=>fm.fields.filter(isMissing).length;
+function chips(){
+  const b=said?.brief;if(!b||!Object.keys(b.rooms).length&&!Object.keys(b.services).length){$("#chips").innerHTML="";return}
+  const k=t().kinds,c=Object.entries(b.rooms).map(([r,n])=>`<span>${n>1||r==="bedroom"||r==="bathroom"?n+" ":""}${k[r]}</span>`).concat(Object.keys(b.services).map(x=>`<span>${t().svc[x]}</span>`),(said.added||[]).map(r=>`<span class="n" title="${t().added}">+ ${k[r]}</span>`),b.notes.map(n=>`<span class="n" title="${t().notes[n]}">${t().notes[n]}</span>`));
+  $("#chips").innerHTML=c.join("")}
+async function interpret(){
+  const text=$("#req").value.trim();
+  if(!text){said=null;return chips()}
+  said=await (await fetch("/api/interpret",{method:"POST",body:JSON.stringify({request:text,lang})})).json();
+  for(const [k,v] of Object.entries(said.values))if(!touched.has(k))vals[k]=Array.isArray(v)?v.map(r=>({...r})):v;
+  const want=said.brief.disciplines;if(want.length)disc=ALL.filter(d=>disc.includes(d)||want.includes(d));
+  chips();errs=[];await load()}
+$("#req").addEventListener("input",()=>{clearTimeout(timer);timer=setTimeout(interpret,600)});
+function startRun(id){
+  job=id;clearInterval(poll);["#tabs","#form",".fold",".bar"].forEach(q=>document.querySelector(q).hidden=true);$("#runv").hidden=false;showRun({state:"running",stages:[]});
+  poll=setInterval(async()=>{const s=await (await fetch("/api/job?id="+id)).json();showRun(s);if(s.state!=="running")clearInterval(poll)},1200)}
+function showRun(s){
+  const done=Object.fromEntries((s.stages||[]).map(x=>[x.stage,x])),n=(s.stages||[]).length;
+  const rows=t().stages.map((nm,i)=>{const x=done[i+1],cls=x?(x.status==="ok"?"ok":x.status==="not_available"?"":"bad"):(s.state==="running"&&i===n?"run":""),mark=x?(x.status==="ok"?"✓":x.status==="not_available"?"–":"✕"):(cls==="run"?"●":"○");
+    return`<div class="stg ${cls}"><b>${mark}</b><span>${i+1}. ${nm}${x&&x.status==="not_available"?`<small>${t().na}</small>`:x&&x.status!=="ok"&&x.message?`<small>${x.message.slice(0,140)}</small>`:""}</span></div>`}).join("");
+  const dv=s.deliverables,head=s.state==="running"?t().running+" "+n+"/12":s.state==="done"?t().doneok:t().fail2+" "+(s.error||"");
+  const out=dv&&dv.folders.length?dv.folders.map(f=>`<details><summary><span>${f.name}</span><small>${f.files.length} ${t().files}</small></summary><div class="fl">${f.files.map(x=>`<a target="_blank" href="/api/file?job=${job}&p=${encodeURIComponent(x.path)}" title="${x.name}">${x.name}</a>`).join("")}</div></details>`).join(""):"";
+  $("#runv").innerHTML=`<section class="card" style="border:0;padding:0"><div class="chead"><span>${t().stage}s</span><span>${head}</span></div>${rows}</section><section class="card" style="border:0;padding:0;min-height:0"><div class="path" title="${s.path||""}">${s.path||""}</div>${dv&&dv.transmittal?`<div class="chead"><span>${t().trs} ${dv.transmittal}</span><span>${s.mode==="edit"?t().mode:""}</span></div>`:""}<div class="out">${out}</div>${s.state!=="running"?`<div class="bar"><button class="go alt" id="again">${t().again}</button></div>`:""}</section>`;
+  const a=$("#again");if(a)a.onclick=()=>{["#tabs","#form",".fold",".bar"].forEach(q=>document.querySelector(q).hidden=false);$("#runv").hidden=true;job=null;say("");draw()}}
 load();
 </script>
 </body>

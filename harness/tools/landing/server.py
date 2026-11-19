@@ -16,6 +16,7 @@ import os
 import subprocess
 import sys
 import tempfile
+from urllib.parse import parse_qs, urlparse
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path, PurePosixPath, PureWindowsPath
 
@@ -23,6 +24,11 @@ HARNESS = Path(__file__).resolve().parents[2]
 SRC = HARNESS / "src"
 PATHS = [str(SRC), str(SRC / "platform")] + [str(p) for p in sorted(SRC.glob("engines/*/*/src"))] + [str(p) for p in sorted(SRC.glob("disciplines/*/src"))]
 sys.path[:0] = PATHS
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import brief  # noqa: E402
+import build  # noqa: E402
+import house  # noqa: E402
+import runner  # noqa: E402
 from disciplines.electrical_lv.intake.form import validate_answers  # noqa: E402
 from disciplines.electrical_lv.intake.schema_check import load_schema  # noqa: E402
 
@@ -62,7 +68,12 @@ def flatten(schema, prefix="", required_parent=True):
 
 
 def electrical_form():
-    return {"id": "electrical", "status": STATUS["electrical"], "fields": flatten(load_schema("intake_answers.schema.json"))}
+    """The intake form of the schema; the line voltage is a choice of the two systems the calculation knows (230/400 and 220/380) and has no default."""
+    fields = flatten(load_schema("intake_answers.schema.json"))
+    for f in fields:
+        if f["path"] == "supply.voltage.value":
+            f.update(kind="select", options=["400", "380"], required=True, numeric=True)
+    return {"id": "electrical", "status": STATUS["electrical"], "fields": fields}
 
 
 def architectural_form():
@@ -74,6 +85,15 @@ def architectural_form():
         {"path": "floor.rooms", "kind": "rooms", "required": True,
          "columns": ["code", "name", "west", "south", "east", "north"]},
     ]}
+
+
+def house_form():
+    """The values of a house that the request did not give and the harness proposes (all pending review, see `house_defaults.json`): the page shows them as editable fields."""
+    num = lambda p: {"path": p, "kind": "number", "required": False}    # noqa: E731
+    return {"id": "house", "status": "available", "fields": [
+        num("house.wall_height_m"), num("house.luminaire_power_w"), num("house.luminaire_flux_lm"),
+        {"path": "house.receptacles", "kind": "select", "required": False, "options": ["yes", "no"]}, num("house.receptacle_va"), num("house.board_fp"),
+        num("house.garden_area_m2"), num("house.garden_lux"), num("house.garden_length_m")]}
 
 
 def planned_form(discipline):
@@ -94,7 +114,40 @@ def selected_of(discipline):
 def form_of(discipline):
     makers = {"electrical": electrical_form, "architectural": architectural_form}
     chosen = selected_of(discipline)
-    return {"discipline": list(chosen), "forms": [makers[d]() if d in makers else planned_form(d) for d in chosen]}
+    forms = [makers[d]() if d in makers else planned_form(d) for d in chosen]
+    if {"electrical", "architectural"} <= set(chosen):
+        forms.insert(max(chosen.index("electrical"), chosen.index("architectural")) + 1, house_form())
+    return {"discipline": list(chosen), "forms": forms}
+
+
+def _proposals(said):
+    """The form values that are proposals of the harness (not said in the request): the house assumptions, with the receptacles on unless only lighting was asked."""
+    d, services = house.DEFAULTS, said["services"]
+    return {"house.wall_height_m": d["wall_height_m"], "house.luminaire_power_w": d["luminaire"]["power_w"], "house.luminaire_flux_lm": d["luminaire"]["lamp_flux_lm"],
+            "house.receptacles": "no" if services and not services.get("receptacles") else "yes", "house.receptacle_va": d["receptacle"]["power_va"],
+            "house.board_fp": d["board"]["fp_default"], "house.garden_lux": d["garden"]["target_lux"], "house.garden_length_m": d["garden"]["length_m"]}
+
+
+def _floor_values(said, rows, lang):
+    """The form values of the proposed floor: its name, the room rows, the type of installation and the garden area (the width of the house times the depth of the garden)."""
+    d = house.DEFAULTS
+    garden = round(max(r["east"] for r in rows) * d["garden"]["depth_m"], 1) if said["rooms"].get("garden") else ""
+    return {"floor.name": "PLANTA BAJA" if lang == "es" else "GROUND FLOOR", "floor.index": 0, "floor.wall_thickness_m": d["wall_thickness_m"],
+            "floor.rooms": [{k: r[k] for k in ("code", "name", "west", "south", "east", "north")} for r in rows],
+            "site.installation_type": "Vivienda unifamiliar" if lang == "es" else "Single-family house", "house.garden_area_m2": garden}
+
+
+def interpret(payload):
+    """What the request says (`brief.interpret`) and the form values it fills: the rooms of the proposed floor, the services and the proposals of the house.
+
+    {brief, added, values, assumed}: `values` are form paths, `assumed` the paths whose value is a proposal of the harness and not something the request said."""
+    lang = payload.get("lang") if payload.get("lang") in ("es", "en") else "es"
+    said = brief.interpret(payload.get("request"))
+    named = any(k in house.DEFAULTS["rooms"] for k in said["rooms"])
+    rows, added = house.propose(said["rooms"], lang, said["floors"]) if named else ([], [])
+    values = _floor_values(said, rows, lang) if rows else {}
+    values.update(_proposals(said))
+    return {"brief": said, "added": added, "values": values, "assumed": [k for k in values if k.startswith("house.") or k == "floor.wall_thickness_m"]}
 
 
 def set_path(target, path, value):
@@ -106,7 +159,7 @@ def set_path(target, path, value):
 
 def _value(field, v):
     """One raw form value converted to the type of its field."""
-    if field["kind"] == "number" and isinstance(v, str):
+    if (field["kind"] == "number" or field.get("numeric")) and isinstance(v, str):
         try:
             return float(v)
         except ValueError:
@@ -130,9 +183,9 @@ def clean(flat, form):
     return nested
 
 
-def run_epc(projects_root, args):
+def run_epc(projects_root, args, timeout=120):
     env = dict(os.environ, PYTHONPATH=os.pathsep.join(PATHS), EPC_PROJECTS_ROOT=str(projects_root))
-    p = subprocess.run([sys.executable, "-m", "epc_platform.cli", "--json", *args], capture_output=True, text=True, env=env, timeout=120)
+    p = subprocess.run([sys.executable, "-m", "epc_platform.cli", "--json", *args], capture_output=True, text=True, env=env, timeout=timeout)
     try:
         return json.loads(p.stdout)
     except ValueError:
@@ -182,18 +235,44 @@ def _pending(where, d, payload, flat):
     (pending / f"{d}_request.json").write_text(json.dumps({"request": payload.get("request", ""), "answers": answers}, indent=1), encoding="utf-8")
 
 
+def _others(selected):
+    """The disciplines without a pipeline of their own: architecture is drawn with the electrical run (`_architecture`) when both are ticked."""
+    return [x for x in selected if x != "electrical" and not (x == "architectural" and "electrical" in selected)]
+
+
 def _run_disciplines(selected, root, code, flat, payload, submit):
     """Per-discipline results, the project folder and whether `epc init` created it."""
     results, folder, created = {}, (Path(root) / code) if code else None, False
-    for d in sorted(selected, key=lambda x: x != "electrical"):   # electrical first: `epc init` needs a new or empty folder
-        if d == "electrical":
-            results[d], made = _electrical(root, code, flat, submit)
-            created, folder = made is not None and results[d]["state"] == "created", made or folder
-            continue
+    if "electrical" in selected:      # electrical first: `epc init` needs a new or empty folder
+        results["electrical"], made = _electrical(root, code, flat, submit)
+        created, folder = made is not None and results["electrical"]["state"] == "created", made or folder
+    for d in _others(selected):
         results[d] = {"state": "saved" if submit else "valid", "note": "no_pipeline"}
         if submit:
             _pending(folder or root, d, payload, flat)
     return results, folder, created
+
+
+def _architecture(selected, flat, submit):
+    """The architecture of a building run: (result, run data or None). It needs the electrical discipline as well; the plans are drawn and read back, nothing is written."""
+    if not {"electrical", "architectural"} <= set(selected):
+        return None, None
+    rows, plans, problem = build.check_floor(flat, flat.get("floor.rooms"))
+    if problem:
+        return {"state": "invalid", "errors": [], "problem": problem}, None
+    loads, inputs = build.engine_inputs(flat, rows, list(plans))
+    return {"state": "created" if submit else "valid", "errors": []}, {"plans": plans, "loads": loads, "inputs": inputs}
+
+
+def _launch(root, folder, code, data, created):
+    """Writes the plans as intake inputs (before the run freezes them) and starts the run; the job id, or None when the project was not created."""
+    if not (data and created):
+        return None
+    from disciplines.electrical_lv.store import ProjectStore
+    store = ProjectStore(folder)
+    for name, text in data["plans"].items():
+        store.write_input(f"plans/{name}", text)
+    return runner.start(run_epc, root, code, data["loads"], data["inputs"])
 
 
 def handle(default_root, payload, submit):
@@ -204,10 +283,18 @@ def handle(default_root, payload, submit):
     flat = dict(payload.get("answers", {}))
     if code:
         flat["project_code"] = flat.get("project_code") or code
+    if submit:      # nothing is written unless every check passes
+        checked = handle(default_root, payload, False)
+        if any(x["state"] == "invalid" for x in checked["results"].values()):
+            return checked
+    arch, data = _architecture(selected, flat, submit)
     results, folder, created = _run_disciplines(selected, root, code, flat, payload, submit)
+    if arch:
+        results["architectural"] = arch
     report = {"results": results}
     if submit:
         report["saved_docs"] = save_docs(folder or root, created, payload)
+        report["job"] = _launch(root, folder, code, data, created)
     return report
 
 
@@ -257,13 +344,34 @@ def make_handler(root):
             self.wfile.write(data)
 
         def do_GET(self):
+            url = urlparse(self.path)
+            query = {k: v[0] for k, v in parse_qs(url.query).items()}
+            if url.path == "/api/job":
+                return self._send(200, runner.status(query.get("id", "")))
+            if url.path == "/api/file":
+                return self._file(query.get("job", ""), query.get("p", ""))
             if self.path.startswith("/api/form"):
                 d = self.path.split("discipline=")[-1] if "discipline=" in self.path else "electrical"
                 return self._send(200, form_of(d.replace("%2C", ",")))
             self._send(200, index.read_bytes(), "text/html")
 
+        def _file(self, job, rel):
+            target = runner.file_of(job, rel)
+            if target is None:
+                return self._send(404, {"error": "not found"})
+            ctype = {".pdf": "application/pdf", ".png": "image/png"}.get(target.suffix.lower(), "application/octet-stream")
+            data = target.read_bytes()
+            self.send_response(200)
+            self.send_header("Content-Type", ctype)
+            self.send_header("Content-Length", str(len(data)))
+            self.send_header("Content-Disposition", f'inline; filename="{target.name}"')
+            self.end_headers()
+            self.wfile.write(data)
+
         def do_POST(self):
             payload = json.loads(self.rfile.read(int(self.headers.get("Content-Length", 0))) or b"{}")
+            if self.path == "/api/interpret":
+                return self._send(200, interpret(payload))
             if self.path == "/api/check":
                 return self._send(200, handle(root, payload, False))
             if self.path == "/api/submit":

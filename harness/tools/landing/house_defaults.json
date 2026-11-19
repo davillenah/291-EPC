@@ -1,0 +1,144 @@
+{
+ "note": "Design proposals of the landing page for a house asked in words. They are NOT norm values and are all pending review: the page shows each one as an editable field and the engineer of record confirms them. The harness engines take the numbers from here only because the request gave none.",
+ "wall_thickness_m": 0.2,
+ "wall_height_m": 2.6,
+ "bands": {
+  "public_depth_m": 4.5,
+  "private_depth_m": 3.5
+ },
+ "rooms": {
+  "living": {
+   "band": "public",
+   "width_m": 5.5,
+   "name": {
+    "es": "Living comedor",
+    "en": "Living-dining"
+   },
+   "activity": "room.living",
+   "use": "living"
+  },
+  "kitchen": {
+   "band": "public",
+   "width_m": 3.5,
+   "name": {
+    "es": "Cocina",
+    "en": "Kitchen"
+   },
+   "activity": "task.reading",
+   "use": "kitchen"
+  },
+  "garage": {
+   "band": "public",
+   "width_m": 3.0,
+   "name": {
+    "es": "Cochera",
+    "en": "Garage"
+   },
+   "activity": "room.storage",
+   "use": "general"
+  },
+  "bedroom": {
+   "band": "private",
+   "width_m": 3.5,
+   "name": {
+    "es": "Dormitorio",
+    "en": "Bedroom"
+   },
+   "activity": "room.living",
+   "use": "bedroom"
+  },
+  "bathroom": {
+   "band": "private",
+   "width_m": 2.0,
+   "name": {
+    "es": "Baño",
+    "en": "Bathroom"
+   },
+   "activity": "room.living",
+   "use": "bathroom"
+  },
+  "laundry": {
+   "band": "private",
+   "width_m": 2.0,
+   "name": {
+    "es": "Lavadero",
+    "en": "Laundry"
+   },
+   "activity": "room.storage",
+   "use": "general"
+  },
+  "stair": {
+   "band": "stair",
+   "width_m": 2.4,
+   "name": {
+    "es": "Escalera",
+    "en": "Stair"
+   },
+   "activity": "circulation.indoor",
+   "use": "corridor",
+   "note": "the plan reader drops rooms narrower than about 2.4 m"
+  }
+ },
+ "hall_activity": "circulation.indoor",
+ "hall_use": "corridor",
+ "garden": {
+  "depth_m": 6.0,
+  "target_lux": 20,
+  "luminaire": "FLOOD",
+  "phases": 1,
+  "length_m": 15
+ },
+ "luminaire": {
+  "id": "LED",
+  "name": "Panel LED 18 W",
+  "lamps": 1,
+  "lamp_flux_lm": 1800,
+  "power_w": 18
+ },
+ "floodlight": {
+  "id": "FLOOD",
+  "name": "Proyector LED 30 W",
+  "lamps": 1,
+  "lamp_flux_lm": 3000,
+  "power_w": 30
+ },
+ "receptacle": {
+  "id": "tug",
+  "name": "Toma 2x10 A + T",
+  "kind": "general",
+  "poles": 2,
+  "rated_a": 10,
+  "power_va": 100,
+  "height_m": 0.3,
+  "ip": "IP20"
+ },
+ "board": {
+  "fp_default": 0.9,
+  "name": "TGBT"
+ },
+ "phases": 1,
+ "floor_names": {
+  "PB": {
+   "es": "PLANTA BAJA",
+   "en": "GROUND FLOOR"
+  },
+  "P1": {
+   "es": "PLANTA ALTA",
+   "en": "FIRST FLOOR"
+  }
+ },
+ "floors": {
+  "two": {
+   "ground": [
+    "living",
+    "kitchen",
+    "garage"
+   ],
+   "upper": [
+    "bedroom",
+    "bathroom",
+    "laundry"
+   ]
+  }
+ }
+}
