@@ -31,7 +31,8 @@
         "sld": "^0.1.4"
       },
       "skills": [
-        "design-board"
+        "design-board",
+        "freecad"
       ],
       "engine": [
         "aea90364",
@@ -52,7 +53,7 @@
         "titleblock",
         "voltage_drop"
       ],
-      "hash": "3edeb378f96998f7"
+      "hash": "90664557bbf18741"
     },
     "doc-quality": {
       "version": "0.1.0",
@@ -266,6 +267,9 @@
       "owner": "pm2-docs"
     },
     "design-board": {
+      "owner": "board-design"
+    },
+    "freecad": {
       "owner": "board-design"
     },
     "generate-specification": {
