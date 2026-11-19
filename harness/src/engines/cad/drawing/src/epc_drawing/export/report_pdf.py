@@ -252,6 +252,36 @@ def _paint_image(ax, op, patches) -> None:
 _PAINTERS = {"image": _paint_image, "text": _paint_text, "line": _paint_line, "poly": _paint_poly, "circle": _paint_circle, "rect": _paint_rect}       # operation of a page -> how it is drawn
 
 
+def figure_png(b: dict, width_pt: float = 480.0):
+    """(png bytes, width, height in points) of a figure block drawn on its own (what a Word document carries in place of the page drawing)."""
+    import io
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    from matplotlib import patches
+    x0, y0, x1, y1 = b["bounds"]
+    bw, bh = max(x1 - x0, 1e-9), max(y1 - y0, 1e-9)
+    scale = min(width_pt / bw, float(b.get("max_height", 300)) / bh)
+    w, h = bw * scale, bh * scale
+    ops: list = []
+    at = lambda px, py: ((px - x0) * scale, (py - y0) * scale)                              # noqa: E731
+    for shape in b.get("shapes", []):
+        _shape(shape, at, scale, lambda: ops)
+    fig = plt.figure(figsize=(w / 72, h / 72))
+    try:
+        ax = fig.add_axes([0, 0, 1, 1])
+        ax.set_xlim(0, w)
+        ax.set_ylim(h, 0)
+        ax.axis("off")
+        for op in ops:
+            _PAINTERS.get(op[0], _paint_rect)(ax, op, patches)
+        out = io.BytesIO()
+        fig.savefig(out, format="png", dpi=200, facecolor="#fbfbfd")
+    finally:
+        plt.close(fig)
+    return out.getvalue(), w, h
+
+
 def render(rep: dict, dst: Path) -> Path:
     import matplotlib
     matplotlib.use("Agg")
