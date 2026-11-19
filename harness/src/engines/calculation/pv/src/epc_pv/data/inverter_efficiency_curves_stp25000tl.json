@@ -1,0 +1,88 @@
+{
+ "schema": "epc_pv.inverter_efficiency_curves/1",
+ "status": "pending review",
+ "origin": "Digitised by eye from the efficiency-curve graph of the SMA STP 25000TL-30 datasheet (own extraction, no image stored). Estimated accuracy about +-0.15 % above 10 % load and +-1.5 % below 5 % load.",
+ "model": "STP 25000TL-30",
+ "x_label": "Pac / Pac_rated",
+ "y_label": "efficiency_pct",
+ "load_fraction": [
+  0.01,
+  0.02,
+  0.03,
+  0.05,
+  0.1,
+  0.2,
+  0.3,
+  0.4,
+  0.5,
+  0.6,
+  0.7,
+  0.8,
+  0.9,
+  1.0
+ ],
+ "curves": {
+  "udc_600_v": [
+   91.5,
+   94.5,
+   96.0,
+   97.0,
+   97.6,
+   98.15,
+   98.25,
+   98.27,
+   98.25,
+   98.2,
+   98.15,
+   98.1,
+   98.0,
+   97.94
+  ],
+  "udc_390_v": [
+   87.5,
+   92.0,
+   94.5,
+   95.8,
+   96.5,
+   97.1,
+   97.2,
+   97.2,
+   97.1,
+   97.0,
+   96.9,
+   96.7,
+   96.55,
+   96.4
+  ],
+  "udc_800_v": [
+   84.0,
+   90.0,
+   93.0,
+   95.0,
+   96.5,
+   97.4,
+   97.75,
+   97.8,
+   97.8,
+   97.7,
+   97.65,
+   97.6,
+   97.5,
+   97.4
+  ]
+ },
+ "euro_efficiency_vs_udc": {
+  "udc_v": [
+   390,
+   600,
+   800
+  ],
+  "eta_eu_pct": [
+   96.8,
+   98.1,
+   97.4
+  ],
+  "note": "inset graph; datasheet gives 98.1 % European and 98.3 % max"
+ },
+ "note": "Same shape is typical of the 15 and 20 kW siblings but their own graphs were not delivered."
+}

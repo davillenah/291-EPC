@@ -1,0 +1,40 @@
+{
+  "_note": "Proposals of the landing for a photovoltaic project: every value is typical, pending review, and editable in the form. Nothing here is a value of a standard. The engine itself defaults nothing (epc_pv). Tilt and azimuth are not proposed here: the engine chooses them from the weather year (epc_pv.orient) when the form leaves them empty.",
+  "status": "pending review",
+  "utc_offset_h": -3,
+  "albedo": 0.2,
+  "layout": {
+    "setback_m": 5,
+    "table_rows": 2,
+    "table_modules_per_row": 28,
+    "table_orientation": "portrait",
+    "module_gap_m": 0.02,
+    "table_gap_m": 0.5,
+    "road_width_m": 4,
+    "station": {
+      "width_m": 6,
+      "depth_m": 2.5
+    },
+    "inverter_pad": {
+      "width_m": 0.7,
+      "depth_m": 0.4
+    }
+  },
+  "dc_ac_ratio": 1.2,
+  "roof_setback_m": 0.5,
+  "roof_type": "flat",
+  "flat_roof": {
+    "walkway_m": 0.8,
+    "table": {
+      "rows": 1,
+      "modules_per_row": 4,
+      "orientation": "landscape"
+    },
+    "table_gap_m": 0.3,
+    "front_clearance_m": 0.3,
+    "station": {
+      "width_m": 1,
+      "depth_m": 1
+    }
+  }
+}

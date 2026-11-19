@@ -11,6 +11,7 @@ The generation platform for automated electrical engineering (low voltage in Pha
 - **No git writes**, except the standing feature-release authorization below. Otherwise only `status`, `diff`, `log`, `show`, `ls-files`, `check-ignore`, `rev-parse`. Never read, edit, move or delete `.git`.
 - **No deletes.** Superseded files are replaced through a reviewed change, not removed silently.
 - **`local/` is off limits** (read and write). Standards PDFs are never copied, versioned or deleted.
+- **Copyright material (owner rule, 2026-11-18):** whenever a `.pdf` or any other copyright-protected information is delivered (standards, data sheets, books, reports), extract only the data and build a `.json` that feeds the engines (the format each engine consumes: its `schema/*.schema.json` and `data/`). **Never store** the PDF or the protected content (text, tables, figures) anywhere persistent: not in the repo, not in `local/`, not in project files, not in memory. The `.json` is our own extracted data, not protected, and may be committed to `main` (through the normal release flow). Record the origin in the `.json` as a short citation only (title, edition, clause or page), values stay `pending review` until a person approves them.
 - **Norm values:** never approve, change or "fix" one. New values a task needs are recorded as `pending review` in the norm register, with their clause or "no clause". Only a person approves norm values or signs.
 - **Golden files** are never edited (D27). **D15** (raceway fill) and **D26** (rod formula) stay frozen.
 - **(Owner)** tasks are never executed; they are reported.
@@ -36,6 +37,17 @@ When the owner gives the OK for a FEATURE (in that thread, in words), the owner 
 6. Close the thread with a short report (what was released, gate and CI result, commit of `dev` and of `main`).
 
 Unchanged by this authorization: agents never approve or change norm values, never edit golden files, and never commit `local/` or standards PDFs. If a step cannot be completed (for example a gate failure that needs a norm decision by a person), stop and report instead of forcing it.
+
+## Before closing a thread (owner rule, 2026-11-19)
+
+Always, before closing a thread and before the owner is told it can be closed (and again whenever the owner asks to close it), verify everything. Nothing is closed on "it looked fine":
+
+1. The full gate passes: `python harness/tools/ci/run_gate.py` (47 of 47 checks; a failure is fixed at its root, never by weakening a test or a check).
+2. GitHub CI is **green** on the pull request and on `dev` and `main` after the merges. Read the real result (check runs), do not assume it.
+2b. If the work is a feature, follow "Feature release" below to the end (the owner's OK for the feature, in words, authorizes it).
+3. The working tree is clean, the local clone and the remote are identical, and `dev` and `main` are in sync (`dev` edit, `main` production).
+4. The generated files are fresh (`epc_build.py registry`, `impact_map.py`, `regen_agents.py --check`) and the BACKLOG and CHANGELOG say what was done and what is left.
+5. The closing report states the gate and CI results and the commits of `dev` and `main`. If any step fails or cannot be done, the thread stays open and the report says why.
 
 ## Language and i18n (owner rule, 2026-11-14)
 

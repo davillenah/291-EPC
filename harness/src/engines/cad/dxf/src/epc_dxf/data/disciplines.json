@@ -120,6 +120,15 @@
       }
     },
     {
+      "id": "fotovoltaica",
+      "prefix": "PV-",
+      "profile": null,
+      "name": {
+        "es": "Fotovoltaica",
+        "en": "Photovoltaic"
+      }
+    },
+    {
       "id": "diagramas",
       "prefix": "291-",
       "profile": null,

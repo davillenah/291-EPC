@@ -1,0 +1,165 @@
+{
+ "schema_version": "1.0",
+ "engine": "pv",
+ "status": "pending review",
+ "topic": "land_use_fixed_structure_by_province_ar",
+ "_note": {
+  "en": "Land occupied (hectares in the horizontal plane) by a 1 MWp plant with fixed structure at the optimum tilt, min / mean / max across each province (latitude sweep). From the UTN Buenos Aires PV design course, module 2 unit 1, under its design premises (rows spaced so as not to shade, see row_spacing_kf.json). Pre-feasibility use only. Not verified.",
+  "es": "Terreno ocupado (hectareas en el plano horizontal) por una planta de 1 MWp con estructura fija a la inclinacion optima, minimo / promedio / maximo por provincia (barrido de latitud). Del curso de diseno FV de UTN Buenos Aires, modulo 2 unidad 1, con sus premisas de diseno (filas separadas para no sombrearse, ver row_spacing_kf.json). Solo para prefactibilidad. No verificado."
+ },
+ "rules_of_thumb": {
+  "site_area_over_module_area_fixed": 1.8,
+  "tracker_1xh_ns_ha_per_mwp": 1.9,
+  "tracker_axis_pitch_m": [
+   4,
+   6
+  ],
+  "tracker_unit_kwp_per_motor": 500
+ },
+ "provinces": [
+  {
+   "province": "Jujuy",
+   "min_ha": 0.857,
+   "mean_ha": 0.89,
+   "max_ha": 0.928
+  },
+  {
+   "province": "Salta",
+   "min_ha": 0.868,
+   "mean_ha": 0.911,
+   "max_ha": 0.95
+  },
+  {
+   "province": "Formosa",
+   "min_ha": 0.895,
+   "mean_ha": 0.937,
+   "max_ha": 0.944
+  },
+  {
+   "province": "Chaco",
+   "min_ha": 0.903,
+   "mean_ha": 0.938,
+   "max_ha": 0.975
+  },
+  {
+   "province": "Misiones",
+   "min_ha": 0.921,
+   "mean_ha": 0.938,
+   "max_ha": 0.981
+  },
+  {
+   "province": "Catamarca",
+   "min_ha": 0.903,
+   "mean_ha": 0.953,
+   "max_ha": 1.016
+  },
+  {
+   "province": "Tucumán",
+   "min_ha": 0.933,
+   "mean_ha": 0.958,
+   "max_ha": 0.976
+  },
+  {
+   "province": "Santiago del Estero",
+   "min_ha": 0.903,
+   "mean_ha": 0.962,
+   "max_ha": 1.022
+  },
+  {
+   "province": "Corrientes",
+   "min_ha": 0.943,
+   "mean_ha": 0.988,
+   "max_ha": 1.027
+  },
+  {
+   "province": "La Rioja",
+   "min_ha": 0.971,
+   "mean_ha": 1.007,
+   "max_ha": 1.035
+  },
+  {
+   "province": "Santa Fé",
+   "min_ha": 0.981,
+   "mean_ha": 1.023,
+   "max_ha": 1.089
+  },
+  {
+   "province": "San Juan",
+   "min_ha": 0.986,
+   "mean_ha": 1.026,
+   "max_ha": 1.046
+  },
+  {
+   "province": "Entre Ríos",
+   "min_ha": 1.016,
+   "mean_ha": 1.043,
+   "max_ha": 1.076
+  },
+  {
+   "province": "Córdoba",
+   "min_ha": 1.006,
+   "mean_ha": 1.046,
+   "max_ha": 1.102
+  },
+  {
+   "province": "San Luis",
+   "min_ha": 1.035,
+   "mean_ha": 1.08,
+   "max_ha": 1.189
+  },
+  {
+   "province": "Mendoza",
+   "min_ha": 1.035,
+   "mean_ha": 1.106,
+   "max_ha": 1.243
+  },
+  {
+   "province": "Buenos Aires",
+   "min_ha": 1.063,
+   "mean_ha": 1.195,
+   "max_ha": 1.33
+  },
+  {
+   "province": "Capital Federal",
+   "min_ha": 1.063,
+   "mean_ha": 1.195,
+   "max_ha": 1.33
+  },
+  {
+   "province": "La Pampa",
+   "min_ha": 1.12,
+   "mean_ha": 1.221,
+   "max_ha": 1.266
+  },
+  {
+   "province": "Neuquén",
+   "min_ha": 1.138,
+   "mean_ha": 1.256,
+   "max_ha": 1.342
+  },
+  {
+   "province": "Río Negro",
+   "min_ha": 1.243,
+   "mean_ha": 1.32,
+   "max_ha": 1.445
+  },
+  {
+   "province": "Chubut",
+   "min_ha": 1.392,
+   "mean_ha": 1.55,
+   "max_ha": 1.716
+  },
+  {
+   "province": "Santa Cruz",
+   "min_ha": 1.724,
+   "mean_ha": 1.96,
+   "max_ha": 2.541
+  },
+  {
+   "province": "Tierra del Fuego",
+   "min_ha": 2.598,
+   "mean_ha": 3.073,
+   "max_ha": 3.281
+  }
+ ]
+}

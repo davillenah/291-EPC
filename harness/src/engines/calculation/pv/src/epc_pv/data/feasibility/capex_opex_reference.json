@@ -1,0 +1,367 @@
+{
+ "schema_version": "1.0",
+ "engine": "pv",
+ "status": "pending review",
+ "topic": "capex_opex_reference",
+ "_note": {
+  "en": "CAPEX breakdown (USD/Wp, net of VAT) for Argentina (CADER 2017 survey as printed in the UTN Buenos Aires economics course), plus headline benchmarks quoted from NREL, IRENA and the course. Reference values for pre-feasibility only; prices age quickly, so each entry carries its year and source. Not verified.",
+  "es": "Desglose de CAPEX (USD/Wp, sin IVA) para Argentina (relevamiento CADER 2017 tal como lo imprime el curso de economia de UTN Buenos Aires), mas valores de referencia de NREL, IRENA y del curso. Solo para prefactibilidad; los precios envejecen rapido, por eso cada entrada lleva su ano y fuente. No verificado."
+ },
+ "argentina_cader_2017_usd_per_wp": {
+  "residential_fixed": {
+   "sizes_kw": [
+    5,
+    10
+   ],
+   "module": [
+    0.626,
+    0.626
+   ],
+   "inverter": [
+    0.347,
+    0.3
+   ],
+   "structure_bos": [
+    0.394,
+    0.3
+   ],
+   "electrical_bos": [
+    0.222,
+    0.2
+   ],
+   "supply_chain": [
+    0.238,
+    0.2
+   ],
+   "installation_labour": [
+    0.335,
+    0.3
+   ],
+   "permits_interconnection": [
+    0,
+    0
+   ],
+   "epc_total": [
+    2.162,
+    1.926
+   ],
+   "sales_marketing_pct_of_equipment_and_labour": 34.0,
+   "general_admin_pct": 31.0,
+   "net_profit_pct": 35.0,
+   "dev_total": [
+    1.067,
+    0.97
+   ],
+   "total": [
+    3.23,
+    2.896
+   ]
+  },
+  "commercial_industrial_fixed": {
+   "sizes_kw": [
+    100,
+    200,
+    500,
+    1000
+   ],
+   "module": [
+    0.35,
+    0.35,
+    0.35,
+    0.35
+   ],
+   "inverter": [
+    0.104,
+    0.104,
+    0.104,
+    0.104
+   ],
+   "structure_bos": [
+    0.22,
+    0.22,
+    0.2,
+    0.2
+   ],
+   "electrical_bos": [
+    0.191,
+    0.154,
+    0.145,
+    0.14
+   ],
+   "installation_equipment": [
+    0.231,
+    0.169,
+    0.137,
+    0.126
+   ],
+   "permits_interconnection_testing": [
+    0.154,
+    0.127,
+    0.11,
+    0.105
+   ],
+   "epc_overheads": [
+    0.216,
+    0.187,
+    0.176,
+    0.171
+   ],
+   "epc_total": [
+    1.467,
+    1.311,
+    1.223,
+    1.196
+   ],
+   "contingency_4pct_of_epc": [
+    0.059,
+    0.052,
+    0.049,
+    0.048
+   ],
+   "dev_overheads": [
+    0.397,
+    0.397,
+    0.397,
+    0.397
+   ],
+   "dev_total": [
+    0.455,
+    0.449,
+    0.446,
+    0.445
+   ],
+   "net_profit_epc_dev": [
+    0.133,
+    0.121,
+    0.116,
+    0.114
+   ],
+   "total": [
+    2.05,
+    1.88,
+    1.78,
+    1.75
+   ]
+  },
+  "utility_fixed": {
+   "sizes_mw": [
+    5,
+    10,
+    50,
+    100
+   ],
+   "module": [
+    0.35,
+    0.35,
+    0.35,
+    0.35
+   ],
+   "inverter": [
+    0.06,
+    0.06,
+    0.06,
+    0.06
+   ],
+   "structure_bos": [
+    0.12,
+    0.12,
+    0.11,
+    0.1
+   ],
+   "electrical_bos": [
+    0.19,
+    0.16,
+    0.12,
+    0.1
+   ],
+   "installation_equipment": [
+    0.15,
+    0.15,
+    0.14,
+    0.13
+   ],
+   "epc_overheads": [
+    0.11,
+    0.1,
+    0.08,
+    0.06
+   ],
+   "epc_total": [
+    0.99,
+    0.95,
+    0.87,
+    0.8
+   ],
+   "engineering_studies_direction": [
+    0.06,
+    0.03,
+    0.01,
+    0.0
+   ],
+   "dev_overheads": [
+    0.13,
+    0.09,
+    0.04,
+    0.03
+   ],
+   "net_profit_epc_dev": [
+    0.07,
+    0.06,
+    0.05,
+    0.05
+   ],
+   "dev_total": [
+    0.25,
+    0.18,
+    0.1,
+    0.08
+   ],
+   "total": [
+    1.24,
+    1.12,
+    0.97,
+    0.88
+   ],
+   "net_profit_range_pct": [
+    5,
+    8
+   ]
+  },
+  "utility_tracker_1xh_ns": {
+   "sizes_mw": [
+    10,
+    50,
+    100
+   ],
+   "module": [
+    0.365,
+    0.335,
+    0.315
+   ],
+   "inverter": [
+    0.068,
+    0.059,
+    0.058
+   ],
+   "structure_bos": [
+    0.201,
+    0.164,
+    0.158
+   ],
+   "electrical_bos": [
+    0.095,
+    0.113,
+    0.136
+   ],
+   "installation_equipment": [
+    0.102,
+    0.102,
+    0.098
+   ],
+   "epc_overheads": [
+    0.012,
+    0.008,
+    0.012
+   ],
+   "epc_total": [
+    0.843,
+    0.781,
+    0.777
+   ],
+   "engineering_studies_direction": [
+    0.03,
+    0.026,
+    0.024
+   ],
+   "dev_overheads": [
+    0.016,
+    0.027,
+    0.027
+   ],
+   "net_profit_epc_dev": [
+    0.071,
+    0.042,
+    0.041
+   ],
+   "dev_total": [
+    0.117,
+    0.094,
+    0.093
+   ],
+   "total": [
+    0.96,
+    0.875,
+    0.869
+   ]
+  },
+  "note": "1 MWp commercial/industrial installed at 1.76 USD/Wp vs about 1 USD/Wp utility scale in the same survey; the course attributes the gap to scale, financing access and the tax and import benefits of utility-scale projects (possible reduction of up to 0.5 USD/Wp for medium plants with the same conditions)."
+ },
+ "opex_reference": {
+  "commercial_pct_of_capex_per_year": [
+   1,
+   2
+  ],
+  "om_usd_per_mwp_year_1_to_10_mwp": [
+   9000,
+   30000
+  ],
+  "om_usd_per_kwp_year_examples": [
+   17,
+   18,
+   30
+  ],
+  "fixed_plus_variable_structure": true,
+  "source": "UTN Buenos Aires course module 2 unit 2 (O&M range quoted from a US DOE Office of Indian Energy figure)"
+ },
+ "module_price_trend": {
+  "usd_per_wp_from_to": [
+   3.0,
+   0.2
+  ],
+  "note": "course statement of the fall in module price over the last years (NREL Q4 2019/Q1 2020 slide)",
+  "module_power_example": "60-cell module 235 Wp in 2012 vs 290 Wp at the time of the course"
+ },
+ "nrel_us_benchmarks_q1_2018_usd_per_wdc": {
+  "residential_6_2kw": 2.7,
+  "commercial_200kw": 1.83,
+  "utility_fixed_tilt": 1.06,
+  "utility_one_axis_tracker": 1.13,
+  "per_wac": {
+   "residential": 3.11,
+   "commercial": 2.1,
+   "utility_fixed": 1.44,
+   "utility_tracker": 1.47
+  },
+  "source": "NREL/TP-6A20-72399, executive summary"
+ },
+ "nrel_other_points": {
+  "q4_2019_residential_median_usd_per_wdc": 2.89,
+  "q4_2019_utility_median_installed_2019_usd_per_wac": 1.34,
+  "q4_2019_utility_median_installed_2019_usd_per_wdc": 0.89,
+  "q4_2019_global_module_usd_per_w": {
+   "mono_c_si": 0.21,
+   "multi_c_si": 0.19
+  },
+  "summer_2023_us_module_usd_per_wdc_q2": 0.37,
+  "summer_2023_global_module_low_usd_per_w": 0.17,
+  "winter_2024_us_module_usd_per_wdc_q3_2023": 0.33,
+  "winter_2024_global_module_usd_per_wdc_mid_jan_2024": 0.11,
+  "winter_2024_us_median_system_price_usd_per_wdc_2023": {
+   "2_5_to_10_kw": 4.25,
+   "10_to_100_kw": 3.66,
+   "100_to_500_kw": 2.49,
+   "500_kw_to_5_mw": 1.92
+  },
+  "source": "NREL Solar Industry Update decks (Q4 2019/Q1 2020, Summer 2023, Winter 2024)"
+ },
+ "irena_2019": {
+  "utility_pv_global_weighted_lcoe_usd_per_kwh": {
+   "2010": 0.378,
+   "2019": 0.068
+  },
+  "lcoe_fall_pct_2010_2019": 82,
+  "module_price_fall_pct_2010_2019": 90,
+  "total_installed_cost_fall_pct_2010_2019": 79,
+  "source": "IRENA, Renewable Power Generation Costs in 2019, cost trends by technology"
+ }
+}

@@ -62,3 +62,6 @@ Thumbs.db
 *.mobi
 *.djvu
 !harness/**/templates/**/*.docx
+
+# simulations (owner rule, CLAUDE.md)
+tmp/

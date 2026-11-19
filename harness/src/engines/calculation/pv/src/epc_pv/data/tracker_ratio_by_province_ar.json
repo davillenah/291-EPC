@@ -1,0 +1,759 @@
+{
+ "schema_version": "1.0",
+ "engine": "pv",
+ "topic": "tracker_energy_ratio_by_province_ar",
+ "_note": {
+  "en": "Ratio of annual energy of a PV plant with a tracking system to the same plant with fixed structure at optimum tilt, minimum / mean / maximum by province. Extracted as numbers from a congress paper (Quintero, Wallace, Alustiza, III Congreso Argentino de Energias Sustentables). Reference plant: 1 MWp, polycrystalline CS6P-250P, SMA-SC 1000MV, DC/AC 1, NASA climate, PVsyst, Perez model, no shading. Useful as a sanity check for the future tracker feature; epc_pv does not model trackers. Not verified (status pending review).",
+  "es": "Cociente entre la energia anual de una planta FV con seguimiento y la misma planta con estructura fija a inclinacion optima, minimo / promedio / maximo por provincia. Extraido como numeros de un trabajo de congreso (Quintero, Wallace, Alustiza, III Congreso Argentino de Energias Sustentables). Planta de referencia: 1 MWp, policristalina CS6P-250P, SMA-SC 1000MV, DC/AC 1, clima NASA, PVsyst, modelo Perez, sin sombras. Util como control de cordura para la futura funcion de seguidores; epc_pv no modela seguidores. No verificado (status pending review)."
+ },
+ "ratios": {
+  "single_axis_horizontal_ns": [
+   {
+    "province": "Jujuy",
+    "min": 1.215,
+    "mean": 1.296,
+    "max": 1.332,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "Catamarca",
+    "min": 1.22,
+    "mean": 1.279,
+    "max": 1.337,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "San Juan",
+    "min": 1.222,
+    "mean": 1.259,
+    "max": 1.296,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "Salta",
+    "min": 1.196,
+    "mean": 1.254,
+    "max": 1.338,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "La Rioja",
+    "min": 1.221,
+    "mean": 1.248,
+    "max": 1.3,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "Mendoza",
+    "min": 1.226,
+    "mean": 1.247,
+    "max": 1.268,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "Formosa",
+    "min": 1.214,
+    "mean": 1.233,
+    "max": 1.242,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "Tucumán",
+    "min": 1.209,
+    "mean": 1.233,
+    "max": 1.276,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "San Luis",
+    "min": 1.222,
+    "mean": 1.231,
+    "max": 1.236,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "Chaco",
+    "min": 1.204,
+    "mean": 1.228,
+    "max": 1.242,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "Neuquén",
+    "min": 1.165,
+    "mean": 1.225,
+    "max": 1.257,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "Córdoba",
+    "min": 1.208,
+    "mean": 1.221,
+    "max": 1.242,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "Santiago del Estero",
+    "min": 1.198,
+    "mean": 1.219,
+    "max": 1.237,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "Río Negro",
+    "min": 1.15,
+    "mean": 1.218,
+    "max": 1.239,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "Corrientes",
+    "min": 1.211,
+    "mean": 1.216,
+    "max": 1.22,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "Entre Ríos",
+    "min": 1.207,
+    "mean": 1.214,
+    "max": 1.222,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "Buenos Aires",
+    "min": 1.194,
+    "mean": 1.209,
+    "max": 1.222,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "Misiones",
+    "min": 1.203,
+    "mean": 1.209,
+    "max": 1.216,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "La Pampa",
+    "min": 1.216,
+    "mean": 1.2,
+    "max": 1.246,
+    "source_flags": [
+     "mean outside [min,max] as printed in the source"
+    ],
+    "status": "pending review"
+   },
+   {
+    "province": "Santa Fé",
+    "min": 1.208,
+    "mean": 1.2,
+    "max": 1.231,
+    "source_flags": [
+     "mean outside [min,max] as printed in the source"
+    ],
+    "status": "pending review"
+   },
+   {
+    "province": "Chubut",
+    "min": 1.101,
+    "mean": 1.182,
+    "max": 1.213,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "Santa Cruz",
+    "min": 1.064,
+    "mean": 1.135,
+    "max": 1.188,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "Tierra del Fuego",
+    "min": 1.072,
+    "mean": 1.094,
+    "max": 1.111,
+    "source_flags": [],
+    "status": "pending review"
+   }
+  ],
+  "single_axis_polar": [
+   {
+    "province": "Jujuy",
+    "min": 1.272,
+    "mean": 1.354,
+    "max": 1.387,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "Catamarca",
+    "min": 1.291,
+    "mean": 1.349,
+    "max": 1.404,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "San Juan",
+    "min": 1.306,
+    "mean": 1.333,
+    "max": 1.366,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "La Rioja",
+    "min": 1.296,
+    "mean": 1.325,
+    "max": 1.37,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "Río Negro",
+    "min": 1.244,
+    "mean": 1.325,
+    "max": 1.345,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "Mendoza",
+    "min": 1.298,
+    "mean": 1.324,
+    "max": 1.344,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "La Pampa",
+    "min": 1.311,
+    "mean": 1.324,
+    "max": 1.336,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "San Luis",
+    "min": 1.306,
+    "mean": 1.319,
+    "max": 1.327,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "Neuquén",
+    "min": 1.256,
+    "mean": 1.312,
+    "max": 1.336,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "Salta",
+    "min": 1.237,
+    "mean": 1.311,
+    "max": 1.406,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "Buenos Aires",
+    "min": 1.29,
+    "mean": 1.305,
+    "max": 1.338,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "Tucumán",
+    "min": 1.276,
+    "mean": 1.303,
+    "max": 1.346,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "Córdoba",
+    "min": 1.287,
+    "mean": 1.302,
+    "max": 1.323,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "Chubut",
+    "min": 1.197,
+    "mean": 1.298,
+    "max": 1.331,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "Santa Fé",
+    "min": 1.278,
+    "mean": 1.291,
+    "max": 1.303,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "Entre Ríos",
+    "min": 1.283,
+    "mean": 1.29,
+    "max": 1.296,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "Santiago del Estero",
+    "min": 1.26,
+    "mean": 1.282,
+    "max": 1.309,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "Chaco",
+    "min": 1.26,
+    "mean": 1.281,
+    "max": 1.29,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "Formosa",
+    "min": 1.255,
+    "mean": 1.279,
+    "max": 1.29,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "Corrientes",
+    "min": 1.268,
+    "mean": 1.278,
+    "max": 1.289,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "Misiones",
+    "min": 1.256,
+    "mean": 1.262,
+    "max": 1.272,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "Santa Cruz",
+    "min": 1.157,
+    "mean": 1.259,
+    "max": 1.322,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "Tierra del Fuego",
+    "min": 1.196,
+    "mean": 1.233,
+    "max": 1.26,
+    "source_flags": [],
+    "status": "pending review"
+   }
+  ],
+  "single_axis_azimuth": [
+   {
+    "province": "Río Negro",
+    "min": 1.239,
+    "mean": 1.298,
+    "max": 1.317,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "Chubut",
+    "min": 1.207,
+    "mean": 1.289,
+    "max": 1.317,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "Neuquén",
+    "min": 1.246,
+    "mean": 1.284,
+    "max": 1.303,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "La Pampa",
+    "min": 1.263,
+    "mean": 1.282,
+    "max": 1.297,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "Mendoza",
+    "min": 1.247,
+    "mean": 1.271,
+    "max": 1.297,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "Santa Cruz",
+    "min": 1.181,
+    "mean": 1.27,
+    "max": 1.317,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "Buenos Aires",
+    "min": 1.222,
+    "mean": 1.263,
+    "max": 1.308,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "San Luis",
+    "min": 1.242,
+    "mean": 1.261,
+    "max": 1.277,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "Tierra del Fuego",
+    "min": 1.225,
+    "mean": 1.26,
+    "max": 1.286,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "San Juan",
+    "min": 1.237,
+    "mean": 1.257,
+    "max": 1.273,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "La Rioja",
+    "min": 1.218,
+    "mean": 1.242,
+    "max": 1.267,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "Catamarca",
+    "min": 1.21,
+    "mean": 1.241,
+    "max": 1.263,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "Córdoba",
+    "min": 1.223,
+    "mean": 1.241,
+    "max": 1.27,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "Entre Ríos",
+    "min": 1.219,
+    "mean": 1.233,
+    "max": 1.243,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "Santa Fé",
+    "min": 1.21,
+    "mean": 1.228,
+    "max": 1.253,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "Jujuy",
+    "min": 1.174,
+    "mean": 1.215,
+    "max": 1.241,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "Corrientes",
+    "min": 1.202,
+    "mean": 1.212,
+    "max": 1.226,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "Tucumán",
+    "min": 1.192,
+    "mean": 1.209,
+    "max": 1.23,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "Santiago del Estero",
+    "min": 1.179,
+    "mean": 1.206,
+    "max": 1.232,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "Chaco",
+    "min": 1.181,
+    "mean": 1.203,
+    "max": 1.215,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "Salta",
+    "min": 1.154,
+    "mean": 1.201,
+    "max": 1.26,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "Formosa",
+    "min": 1.17,
+    "mean": 1.196,
+    "max": 1.206,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "Misiones",
+    "min": 1.184,
+    "mean": 1.194,
+    "max": 1.214,
+    "source_flags": [],
+    "status": "pending review"
+   }
+  ],
+  "two_axis": [
+   {
+    "province": "Jujuy",
+    "min": 1.309,
+    "mean": 1.398,
+    "max": 1.433,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "Catamarca",
+    "min": 1.33,
+    "mean": 1.391,
+    "max": 1.453,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "San Juan",
+    "min": 1.342,
+    "mean": 1.371,
+    "max": 1.407,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "La Rioja",
+    "min": 1.335,
+    "mean": 1.365,
+    "max": 1.412,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "Río Negro",
+    "min": 1.279,
+    "mean": 1.365,
+    "max": 1.387,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "La Pampa",
+    "min": 1.349,
+    "mean": 1.363,
+    "max": 1.376,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "Mendoza",
+    "min": 1.332,
+    "mean": 1.361,
+    "max": 1.383,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "San Luis",
+    "min": 1.344,
+    "mean": 1.358,
+    "max": 1.366,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "Salta",
+    "min": 1.267,
+    "mean": 1.35,
+    "max": 1.454,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "Neuquén",
+    "min": 1.291,
+    "mean": 1.348,
+    "max": 1.375,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "Tucumán",
+    "min": 1.313,
+    "mean": 1.343,
+    "max": 1.388,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "Buenos Aires",
+    "min": 1.327,
+    "mean": 1.343,
+    "max": 1.379,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "Córdoba",
+    "min": 1.325,
+    "mean": 1.34,
+    "max": 1.361,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "Chubut",
+    "min": 1.232,
+    "mean": 1.337,
+    "max": 1.372,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "Santa Fé",
+    "min": 1.312,
+    "mean": 1.327,
+    "max": 1.341,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "Entre Ríos",
+    "min": 1.318,
+    "mean": 1.326,
+    "max": 1.333,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "Santiago del Estero",
+    "min": 1.294,
+    "mean": 1.317,
+    "max": 1.348,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "Chaco",
+    "min": 1.294,
+    "mean": 1.314,
+    "max": 1.324,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "Corrientes",
+    "min": 1.301,
+    "mean": 1.313,
+    "max": 1.325,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "Formosa",
+    "min": 1.201,
+    "mean": 1.305,
+    "max": 1.323,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "Santa Cruz",
+    "min": 1.198,
+    "mean": 1.301,
+    "max": 1.365,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "Misiones",
+    "min": 1.289,
+    "mean": 1.296,
+    "max": 1.305,
+    "source_flags": [],
+    "status": "pending review"
+   },
+   {
+    "province": "Tierra del Fuego",
+    "min": 1.249,
+    "mean": 1.284,
+    "max": 1.311,
+    "source_flags": [],
+    "status": "pending review"
+   }
+  ]
+ }
+}

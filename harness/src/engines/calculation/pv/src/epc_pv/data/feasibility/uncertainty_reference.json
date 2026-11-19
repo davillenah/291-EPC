@@ -1,0 +1,111 @@
+{
+ "schema_version": "1.0",
+ "engine": "pv",
+ "status": "pending review",
+ "topic": "uncertainty_reference",
+ "_note": {
+  "en": "Sources of uncertainty and variability in the annual energy estimate of a PV plant and how to combine them into P50/P90/P95 (UTN Buenos Aires course module 4 unit 1, citing IEA PVPS and NREL SAM). Uncertainties are fractions; they combine as the root of the sum of squares and the yield is assumed normally distributed. Not verified.",
+  "es": "Fuentes de incertidumbre y variabilidad en la estimacion de energia anual de una planta FV y como combinarlas en P50/P90/P95 (curso de UTN Buenos Aires modulo 4 unidad 1, que cita IEA PVPS y NREL SAM). Las incertidumbres son fracciones; se combinan como raiz de la suma de cuadrados y se supone distribucion normal. No verificado."
+ },
+ "sources": {
+  "irradiation_database": {
+   "range_pct": [
+    5,
+    17
+   ],
+   "modelled_sources_measurement_pct": [
+    8,
+    15
+   ],
+   "iea_survey_84_plants_pct": [
+    2.5,
+    8
+   ],
+   "high_quality_pyranometer_annual_ghi_pct": 2,
+   "satellite_monthly_sd_pct": [
+    4,
+    8
+   ],
+   "satellite_annual_sd_pct": [
+    2,
+    6
+   ]
+  },
+  "interannual_ghi_variability_pct": {
+   "arid": [
+    1,
+    2
+   ],
+   "humid": [
+    2.5,
+    4.5
+   ]
+  },
+  "transposition_model_pct": [
+   2,
+   5
+  ],
+  "system_design_and_yield_software_pct": 4,
+  "temperature_loss_survey_pct": {
+   "loss_range": [
+    0.1,
+    14.5
+   ],
+   "stated_uncertainty": [
+    0.2,
+    0.5,
+    1.0
+   ]
+  },
+  "temperature_model_accuracy_c": [
+   1,
+   2
+  ]
+ },
+ "formulas": {
+  "relative_sd": "DER = sqrt(sum(I_i^2))",
+  "sigma": "sigma = P50 * DER",
+  "P90": "P50 - 1.282 * sigma",
+  "P95": "P50 - 1.645 * sigma",
+  "P99": "P50 - 2.326 * sigma",
+  "z_values": {
+   "P90": -1.282,
+   "P95": -1.645,
+   "P99": -2.326
+  }
+ },
+ "worked_example": {
+  "plant_kwp": 200,
+  "P50_mwh_year": 313.3,
+  "uncertainties_pct": {
+   "irradiation_database": 2.5,
+   "interannual": 2.0,
+   "plane_irradiation_calc": 0.5,
+   "soiling": 1.0,
+   "module_mismatch": 1.0,
+   "inverter_efficiency": 1.0
+  },
+  "DER": 0.03674,
+  "sigma_mwh": 11.511,
+  "P90_mwh": 298.55,
+  "P95_mwh": 294.37
+ },
+ "exercise_values": {
+  "uncertainties_pct": {
+   "irradiation_database": 5,
+   "interannual": 1.5,
+   "plane_irradiation_calc": 0.75,
+   "soiling": 1.2,
+   "module_mismatch": 2.0,
+   "inverter_efficiency": 1.0
+  },
+  "plant_mwp": 2.5,
+  "specific_yield_kwh_kwp": 1795.8,
+  "answers_P50_P90_P95_mwh": [
+   4489.5,
+   4152.8,
+   4057.3
+  ]
+ },
+ "note": "The course note: for a portfolio of plants the investor risk is the P90 of the portfolio, not of each plant."
+}

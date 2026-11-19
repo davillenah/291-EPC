@@ -37,5 +37,9 @@
     "owner": null,
     "status": "superseded",
     "note": "kept only in _legacy"
+  },
+  "freecad": {
+    "owner": "board-design",
+    "status": "active"
   }
 }
