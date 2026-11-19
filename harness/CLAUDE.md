@@ -38,6 +38,17 @@ When the owner gives the OK for a FEATURE (in that thread, in words), the owner 
 
 Unchanged by this authorization: agents never approve or change norm values, never edit golden files, and never commit `local/` or standards PDFs. If a step cannot be completed (for example a gate failure that needs a norm decision by a person), stop and report instead of forcing it.
 
+## Before closing a thread (owner rule, 2026-11-19)
+
+Always, before closing a thread and before the owner is told it can be closed (and again whenever the owner asks to close it), verify everything. Nothing is closed on "it looked fine":
+
+1. The full gate passes: `python harness/tools/ci/run_gate.py` (47 of 47 checks; a failure is fixed at its root, never by weakening a test or a check).
+2. GitHub CI is **green** on the pull request and on `dev` and `main` after the merges. Read the real result (check runs), do not assume it.
+2b. If the work is a feature, follow "Feature release" below to the end (the owner's OK for the feature, in words, authorizes it).
+3. The working tree is clean, the local clone and the remote are identical, and `dev` and `main` are in sync (`dev` edit, `main` production).
+4. The generated files are fresh (`epc_build.py registry`, `impact_map.py`, `regen_agents.py --check`) and the BACKLOG and CHANGELOG say what was done and what is left.
+5. The closing report states the gate and CI results and the commits of `dev` and `main`. If any step fails or cannot be done, the thread stays open and the report says why.
+
 ## Language and i18n (owner rule, 2026-11-14)
 
 - **Everything is written in English**: code, identifiers, comments, docs, ADRs, commit messages and branch names. Only the explanations to the owner in the chat are in Spanish.
