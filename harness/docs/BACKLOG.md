@@ -27,6 +27,13 @@ Actualizado: 2026-11-08.
 - [ ] **PRB-06 · Motores fuera del pipeline.** Iluminación, climatización y tomacorrientes no entran en las 16 etapas (la potencia se escribe a mano); el transformador usa un `demand_kva` escrito a mano porque la demanda total del tablero está pendiente (etapa 5).
 - [ ] **PRB-07 · Tensión fuera de 380/400 V.** El pipeline bloquea media tensión (p. ej. 13200 V) en la etapa 4. Obra civil y estructura (`civil_structural`) no tienen motores.
 
+## Landing (LND)
+
+- [~] **LND-01 · Landing conectada al pipeline** (2026-11-19). Hecho: lectura del pedido por reglas, propuesta de casa de una planta, campos editables, corrida de 12 etapas y lista de entregables. Dos plantas con escalera y montante ya corren. Falta: más de dos plantas, techos, otras disciplinas (solo se guarda el pedido), abrir DXF desde la página.
+- [ ] **LND-02 · El lector de planos parte los pasillos en ambientes fantasma** cuando las paredes de los dos lados no coinciden. La casa generada no lleva pasillo por esto (los dormitorios abren al living). Arreglar `epc_arch.recognizers` y volver a poner el pasillo.
+- [ ] **LND-03 · Pedido libre con un modelo de lenguaje.** Las reglas no entienden descripciones sin cantidades, medidas ("living de 6 m al sur"), negaciones ni otros idiomas. Un LLM detrás de `brief.interpret` lo haría; las salidas seguirían siendo campos editables.
+- [ ] **LND-04 · Valores propuestos de la casa** (`house_defaults.json`: tamaños de ambientes, 2,6 m de altura, luminaria 18 W, toma 100 VA, fp 0,9, jardín 20 lux). Son propuestas de diseño, no norma; el ingeniero los confirma. (Dueño)
+
 ## Harness (HRN)
 
 > **2026-11-11:** the HRN queue below is replaced by `migration-loop/BACKLOG.md` (plan §8, `docs/harness/MIGRATION_PLAN.md`). No HRN item is deleted; they stay as history.

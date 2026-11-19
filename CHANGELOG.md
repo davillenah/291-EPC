@@ -5,6 +5,7 @@ All notable changes. Format: Keep a Changelog; versions follow `harness/docs/BRA
 ## [Unreleased]
 
 ### Added
+- Landing page connected to the pipeline (`harness/tools/landing/`): the request is read with fixed rules (`brief.py`: rooms, garden, lighting, receptacles, disciplines), a house is proposed as editable fields (`house.py`, `house_defaults.json`, pending review), only what cannot be proposed is asked (client, address, earthing, short-circuit, voltage) in tabs of the same form, and `Run` draws the plans (`epc_arch.author`), creates the project, runs the 12 stages (`runner.py`) and lists the deliverables by numbered folder with links. In English and Spanish.
 - `harness/tools/landing/`: a local one-screen landing page (`python harness/tools/landing/server.py`) with a request box, a checklist of the disciplines, the dynamic intake form (electrical built from `intake_answers.schema.json`), the project folder and the documentation drop zone; submit runs `epc init`. In English and Spanish.
 - Standing authorization for the feature release flow (`harness/CLAUDE.md`); the CI gate now also runs on `dev` and on pull requests to `dev`.
 
