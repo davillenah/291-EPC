@@ -90,7 +90,8 @@ def _local(stamp: str, utc_offset_h: float) -> datetime:
     return moment
 
 
-def _series(rows: List[Dict[str, Any]], utc_offset_h: float) -> Dict[str, Any]:
+def _records(rows: List[Dict[str, Any]], utc_offset_h: float) -> List[Any]:
+    """[(local time, [G(h), Gb(n), Gd(h), T2m, WS10m])] in time order; the year must be 8760 consecutive hours."""
     try:
         records = sorted(((_local(r["time(UTC)"], utc_offset_h), [float(r[c]) for c in COLUMNS.values()]) for r in rows), key=lambda x: x[0])
     except (KeyError, TypeError, ValueError) as exc:
@@ -98,9 +99,14 @@ def _series(rows: List[Dict[str, Any]], utc_offset_h: float) -> Dict[str, Any]:
     steps = {records[k + 1][0] - records[k][0] for k in range(len(records) - 1)}
     if len(records) != HOURS or steps != {timedelta(hours=1)}:
         raise PvError("err_pvgis_shape", n=len(records), expected=HOURS)
+    return records
+
+
+def _series(rows: List[Dict[str, Any]], utc_offset_h: float) -> Dict[str, Any]:
+    records = _records(rows, utc_offset_h)
     columns = list(zip(*(values for _, values in records)))
-    return {"start": records[0][0].strftime("%Y-%m-%dT%H:%M"), "utc_offset_h": utc_offset_h, "step_minutes": 60,
-            **{key: [max(v, 0.0) if key != "temp_air_c" else v for v in columns[i]] for i, key in enumerate(COLUMNS)}}
+    clean = {key: [v if key == "temp_air_c" else max(v, 0.0) for v in columns[i]] for i, key in enumerate(COLUMNS)}
+    return {"start": records[0][0].strftime("%Y-%m-%dT%H:%M"), "utc_offset_h": utc_offset_h, "step_minutes": 60, **clean}
 
 
 def _source(payload: Dict[str, Any], utc_offset_h: float, retrieved: str) -> Dict[str, Any]:
