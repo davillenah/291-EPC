@@ -11,11 +11,11 @@ DEFAULTS = json.loads(Path(__file__).with_name("pv_defaults.json").read_text(enc
 WEATHER_FILE = "weather/weather_pvgis.json"
 MODES = ("ground", "rooftop")
 ORIENTATIONS = ("portrait", "landscape")
-NUMBERS = ("latitude_deg", "longitude_deg", "utc_offset_h", "n_modules", "tilt_deg", "azimuth_deg", "dc_ac_ratio", "albedo", "design_t_min_c", "isc_max_input_a",
-           "aux_load_kw", "aux_phases", "aux_length_m", "board_fp", "site_width_m", "site_length_m", "setback_m", "table_rows", "table_modules_per_row", "module_gap_m", "table_gap_m", "road_width_m")
+NUMBERS = ("latitude_deg", "longitude_deg", "utc_offset_h", "target_kwp", "tilt_deg", "azimuth_deg", "dc_ac_ratio", "albedo", "design_t_min_c", "isc_max_input_a",
+           "aux_load_kw", "aux_phases", "aux_length_m", "board_fp", "roof_width_m", "roof_slope_m", "roof_setback_m", "site_width_m", "site_length_m", "setback_m", "table_rows", "table_modules_per_row", "module_gap_m", "table_gap_m", "road_width_m")
 GROUND_ONLY = ("site_width_m", "site_length_m", "setback_m", "table_rows", "table_modules_per_row", "table_orientation", "module_gap_m", "table_gap_m", "road_width_m")
-REQUIRED = ("mode", "latitude_deg", "longitude_deg", "utc_offset_h", "module", "inverter", "n_modules", "tilt_deg", "azimuth_deg", "dc_ac_ratio")
-RANGES = {"latitude_deg": (-90, 90), "longitude_deg": (-180, 180), "utc_offset_h": (-14, 14), "tilt_deg": (0, 90), "azimuth_deg": (0, 360)}
+REQUIRED = ("mode", "latitude_deg", "longitude_deg", "utc_offset_h", "module", "inverter", "target_kwp", "dc_ac_ratio")
+RANGES = {"target_kwp": (0.001, 1e6), "tilt_deg": (0, 90), "azimuth_deg": (0, 360), "latitude_deg": (-90, 90), "longitude_deg": (-180, 180), "utc_offset_h": (-14, 14)}
 
 
 def catalogs():
@@ -35,7 +35,8 @@ def form():
         sel("mode", list(MODES)), num("latitude_deg"), num("longitude_deg"), num("utc_offset_h"),
         sel("module", sorted(modules)), sel("inverter", sorted(inverters)), num("isc_max_input_a", False),
         num("aux_load_kw", False), sel("aux_phases", ["1", "3"], False), num("aux_length_m", False), num("board_fp", False),
-        num("n_modules"), num("tilt_deg"), num("azimuth_deg"), num("dc_ac_ratio"), num("albedo", False), num("design_t_min_c", False),
+        num("target_kwp"), num("tilt_deg", False), num("azimuth_deg", False), num("dc_ac_ratio"), num("albedo", False), num("design_t_min_c", False),
+        num("roof_width_m", False), num("roof_slope_m", False), num("roof_setback_m", False),
         num("site_width_m", False), num("site_length_m", False), num("setback_m", False), num("table_rows", False), num("table_modules_per_row", False),
         sel("table_orientation", list(ORIENTATIONS), False), num("module_gap_m", False), num("table_gap_m", False), num("road_width_m", False)]}
     for f in out["fields"]:
@@ -49,7 +50,7 @@ def proposals():
     d, lay = DEFAULTS, DEFAULTS["layout"]
     keys = ("setback_m", "table_rows", "table_modules_per_row", "table_orientation", "module_gap_m", "table_gap_m", "road_width_m")
     import house
-    return {"pv.board_fp": house.DEFAULTS["board"]["fp_default"], "pv.utc_offset_h": d["utc_offset_h"], "pv.albedo": d["albedo"], "pv.azimuth_deg": d["azimuth_deg"], **{f"pv.{k}": lay[k] for k in keys}}
+    return {"pv.board_fp": house.DEFAULTS["board"]["fp_default"], "pv.utc_offset_h": d["utc_offset_h"], "pv.albedo": d["albedo"], "pv.dc_ac_ratio": d["dc_ac_ratio"], "pv.roof_setback_m": d["roof_setback_m"], **{f"pv.{k}": lay[k] for k in keys}}
 
 
 def values_of(flat):
@@ -66,6 +67,24 @@ def values_of(flat):
     return out, None
 
 
+def _catalog_problem(v):
+    """The first problem with the equipment chosen (unknown ids, or a data sheet gap the person must fill), or None."""
+    modules, inverters = catalogs()
+    if v["module"] not in modules or v["inverter"] not in inverters:
+        return {"code": "pv_range", "detail": "module / inverter"}
+    if inverters[v["inverter"]]["inverter"].get("isc_max_input_a") is None and "isc_max_input_a" not in v:
+        return {"code": "pv_isc", "detail": inverters[v["inverter"]]["model"]}
+    return None
+
+
+def _missing(v, building):
+    """The first group of answers that is still missing (the auxiliaries of a plant-only run, the site of a ground plant or the plane of a roof), or None."""
+    groups = [] if building else [("aux_load_kw", "aux_phases", "aux_length_m", "board_fp")]
+    groups.append(("site_width_m", "site_length_m") if v["mode"] == "ground" else ("roof_width_m", "roof_slope_m"))
+    gap = next((g for g in groups if not all(k in v for k in g)), None)
+    return {"code": "pv_missing", "detail": ", ".join(gap)} if gap else None
+
+
 def check(flat, building=False):
     """The first problem of the form as {code, detail}, or None. Catalog gaps are asked, never filled: a null `isc_max_input_a` must be typed by the person."""
     v, problem = values_of(flat)
@@ -74,29 +93,37 @@ def check(flat, building=False):
     missing = [k for k in REQUIRED if k not in v]
     if missing:
         return {"code": "pv_missing", "detail": ", ".join(missing)}
-    for name, (lo, hi) in RANGES.items():
-        if not lo <= v[name] <= hi:
-            return {"code": "pv_range", "detail": f"{name} {lo}..{hi}"}
+    out = next(({"code": "pv_range", "detail": f"{n} {lo}..{hi}"} for n, (lo, hi) in RANGES.items() if n in v and not lo <= v[n] <= hi), None)
     if v["mode"] not in MODES:
-        return {"code": "pv_range", "detail": "mode"}
-    modules, inverters = catalogs()
-    if v["module"] not in modules or v["inverter"] not in inverters:
-        return {"code": "pv_range", "detail": "module / inverter"}
-    if inverters[v["inverter"]]["inverter"].get("isc_max_input_a") is None and "isc_max_input_a" not in v:
-        return {"code": "pv_isc", "detail": inverters[v["inverter"]]["model"]}
-    if not building and not all(k in v for k in ("aux_load_kw", "aux_phases", "aux_length_m", "board_fp")):
-        return {"code": "pv_missing", "detail": "aux_load_kw, aux_phases, aux_length_m, board_fp"}
-    if v["mode"] == "ground" and not all(k in v for k in ("site_width_m", "site_length_m")):
-        return {"code": "pv_missing", "detail": "site_width_m, site_length_m"}
-    return None
+        out = {"code": "pv_range", "detail": "mode"}
+    return out or _catalog_problem(v) or _missing(v, building)
 
 
-def _array(v, modules, inverters):
+def _template(v, modules, inverters):
+    """The module and inverter of the plant and the DC/AC ratio: what every array shares."""
     inverter = dict(inverters[v["inverter"]]["inverter"])
     if inverter.get("isc_max_input_a") is None:
         inverter["isc_max_input_a"] = v["isc_max_input_a"]
-    return {"id": "A1", "name": "A1", "tilt_deg": v["tilt_deg"], "azimuth_deg": v["azimuth_deg"], "n_modules": int(v["n_modules"]), "dc_ac_ratio": v["dc_ac_ratio"],
-            "module": dict(modules[v["module"]]["module"]), "inverter": inverter}
+    return {"module": dict(modules[v["module"]]["module"]), "inverter": inverter, "dc_ac_ratio": v["dc_ac_ratio"]}
+
+
+def _n_modules(v, modules):
+    import epc_pv.orient
+    return epc_pv.orient.modules_for_kwp(v["target_kwp"], modules[v["module"]]["module"]["pmax_w"])
+
+
+def _array(v, modules, inverters):
+    """The array of a ground plant; tilt and azimuth only when the person gave them (otherwise the engine chooses them)."""
+    given = {k: v[k] for k in ("tilt_deg", "azimuth_deg") if k in v}
+    return {"id": "A1", "name": "A1", "n_modules": _n_modules(v, modules), **given, **_template(v, modules, inverters)}
+
+
+def _roof(v, modules, inverters):
+    """One roof plane typed in the form; the modules are placed by `epc_pv.plan_roof` and the orientation is the roof's or, when not given, the engine's."""
+    plane = {"id": "R1", "width_m": v["roof_width_m"], "slope_m": v["roof_slope_m"], "setback_m": v.get("roof_setback_m", DEFAULTS["roof_setback_m"])}
+    plane.update({k: v[k] for k in ("tilt_deg", "azimuth_deg") if k in v})
+    return {"planes": [plane], "module_dimensions_mm": list(modules[v["module"]]["dimensions_mm"][:2]), "module_gap_m": v.get("module_gap_m", DEFAULTS["layout"]["module_gap_m"]),
+            "array": _template(v, modules, inverters), "target_modules": _n_modules(v, modules)}
 
 
 def _layout(v, module):
@@ -114,10 +141,9 @@ def section(flat):
     site = {"latitude_deg": v["latitude_deg"], "longitude_deg": v["longitude_deg"], "albedo": v.get("albedo", DEFAULTS["albedo"])}
     if "design_t_min_c" in v:
         site["design_t_min_c"] = v["design_t_min_c"]
-    out = {"document": {"site": site, "arrays": [_array(v, modules, inverters)]}, "weather_file": WEATHER_FILE}
-    if v["mode"] == "ground":
-        out["layout"] = _layout(v, modules[v["module"]])
-    return out
+    if v["mode"] == "rooftop":
+        return {"document": {"site": site}, "weather_file": WEATHER_FILE, "roof": _roof(v, modules, inverters)}
+    return {"document": {"site": site, "arrays": [_array(v, modules, inverters)]}, "weather_file": WEATHER_FILE, "layout": _layout(v, modules[v["module"]])}
 
 
 def board_of(flat):

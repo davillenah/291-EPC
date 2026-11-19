@@ -10,6 +10,8 @@ counterpart of the `lighting` section: the generation side cannot come from the 
   valid section     `ok`: the engine result as it is, one engine call, and one `note` finding per engine warning (draft, D21: the engine's typical values are not confirmed)
   `weather_file`  path inside the project `inputs/` of the PVGIS file written by the data step `epc_pv.weather` (`{"weather", "source"}`); its `weather` replaces the one of `document` and its `source` is stated by one
                     `note` finding (typical year, pending review). The stage never reads the network: PVGIS is asked before the run (landing page or `python -m epc_pv.weather`).
+  `roof`          the roof planes (`epc_pv.plan_roof`): the modules are placed on each plane and the arrays of the run are the result (one per plane); the plane's tilt and azimuth are optional.
+  without tilt or azimuth   the harness chooses them (`epc_pv.orient.optimal`: facing the equator, tilt searched on the weather year) and says so in one `note` finding.
   with `layout`     the plant layout (`epc_pv.plan_layout`: tables, inverters, station, strings on each table) is added as `outputs["layout"]`, one more engine call, a `major` finding when the
                     tables do not fit the site, and stage 10 draws the layout, stringing and cabling plans and the single-line diagram of the plant from it (`pv_drawings.py`)
 
@@ -24,7 +26,7 @@ from disciplines.electrical_lv.stages.base import Stage, StageInputError
 ENGINE = "calculation/pv"
 FUNCTION = "epc_pv.run"
 LAYOUT_FUNCTION = "epc_pv.plan_layout"
-KEYS = ("document", "options", "layout", "weather_file")
+KEYS = ("document", "options", "layout", "weather_file", "roof")
 NOT_PROVIDED = "pv inputs not provided"
 
 
@@ -94,6 +96,66 @@ def _with_weather_file(section, inputs_dir):
     return dict(section, document=document), data.get("source") or {}
 
 
+ORIENTATION_KEYS = ("tilt_deg", "azimuth_deg")
+
+
+def orientation_finding(n, run_id, slug, chosen):
+    value = f"tilt {chosen['tilt_deg']:g} deg, azimuth {chosen['azimuth_deg']:g} deg (from north), {chosen['specific_yield_kwh_kwp']:g} kWh/kWp: {chosen['method']}"
+    return {"id": f"F-{n:04d}", "run_id": run_id, "verifier": "calc-check", "severity": "note", "document": slug, "field": "orientation/chosen", "value": value, "expected": "reviewed by the engineer of record",
+            "clause": "engine proposal", "action": "Confirm the orientation or give the real one (a roof fixes it).", "evidence": ["engine epc_pv.orient.optimal"], "status": "open"}
+
+
+def _choose_orientation(document, template):
+    """The orientation the engine proposes for `document` with `template` as its array (module, inverter, ratio)."""
+    import epc_pv.orient
+    probe = dict(document, arrays=[dict(template, id="PROBE", tilt_deg=0, azimuth_deg=0, n_modules=1)])
+    try:
+        return epc_pv.orient.optimal(probe)
+    except epc_pv.PvError as exc:
+        raise StageInputError([f"orientation: {exc} / {exc.es}"]) from exc
+
+
+def _fill_planes(roof, document):
+    """The orientation the engine chose when some plane lacks tilt or azimuth (the planes are completed in place), else None."""
+    planes = [p for p in roof.get("planes", []) if isinstance(p, dict)]
+    if not any(k not in p for p in planes for k in ORIENTATION_KEYS):
+        return None
+    chosen = _choose_orientation(document, roof.get("array") or {})
+    for p in planes:
+        for k in ORIENTATION_KEYS:
+            p.setdefault(k, chosen[k])
+    return chosen
+
+
+def _with_roof(section):
+    """(section, roof result or None, orientation chosen or None): the arrays come from the roof planes; tilt and azimuth missing are chosen by the engine."""
+    if section.get("roof") is None:
+        return section, None, None
+    import copy
+    import epc_pv
+    roof, document = copy.deepcopy(section["roof"]), _document_of(section)
+    chosen = _fill_planes(roof, document)
+    try:
+        result = epc_pv.plan_roof(roof)
+    except epc_pv.PvError as exc:
+        raise StageInputError([f"roof: {exc} / {exc.es}"]) from exc
+    return dict(section, document=dict(document, arrays=result["arrays"])), result, chosen
+
+
+def _with_orientation(section):
+    """Arrays of the document without tilt or azimuth get the engine's choice; (section, chosen or None)."""
+    document = _document_of(section)
+    arrays = document.get("arrays") or []
+    if not arrays or all(k in a for a in arrays for k in ORIENTATION_KEYS):
+        return section, None
+    chosen = _choose_orientation(document, arrays[0])
+    return dict(section, document=dict(document, arrays=[{**chosen_keys(chosen), **a} for a in arrays])), chosen
+
+
+def chosen_keys(chosen):
+    return {k: chosen[k] for k in ORIENTATION_KEYS}
+
+
 def _run(section):
     import epc_pv
     try:
@@ -115,7 +177,12 @@ class PvStage(Stage):
         if section is None:
             return self.result("not_available", message=NOT_PROVIDED, reason="no_pv_inputs")
         section, source = _with_weather_file(section, context.inputs_dir)
+        section, roof, chosen = _with_roof(section)
+        if roof is None:
+            section, chosen = _with_orientation(section)
         result = _run(section)
+        if roof is not None:
+            result = dict(result, roof=roof)
         warnings = list(result["warnings"])
         calls = [EC.record_for(ENGINE, FUNCTION)]
         findings = []
@@ -125,6 +192,8 @@ class PvStage(Stage):
             warnings += geometry["warnings"]
             calls.append(EC.record_for(ENGINE, LAYOUT_FUNCTION))
             findings += [layout_finding(1, context.pipeline_run_id, self.spec.slug, geometry)] if not geometry["fits"] else []
+        warnings += roof["warnings"] if roof is not None else []
+        findings += [orientation_finding(len(findings) + 1, context.pipeline_run_id, self.spec.slug, chosen)] if chosen else []
         findings += [source_finding(len(findings) + 1, context.pipeline_run_id, self.spec.slug, source)] if source else []
         findings += [warning_finding(len(findings) + n, context.pipeline_run_id, self.spec.slug, w) for n, w in enumerate(warnings, start=1)]
         totals, counts = result["totals"], result["counts"]

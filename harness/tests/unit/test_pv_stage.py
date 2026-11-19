@@ -94,6 +94,43 @@ class PvWeatherFileTests(unittest.TestCase):
                 self.assertEqual(res.status, "blocked", name)
 
 
+class PvOrientationAndRoofTests(unittest.TestCase):
+    """The harness chooses tilt and azimuth when they are missing, and places the modules on the roof planes."""
+
+    def test_arrays_without_tilt_and_azimuth_get_the_engine_choice_and_a_finding(self):
+        document = PV.doc()
+        for key in ("tilt_deg", "azimuth_deg"):
+            del document["arrays"][0][key]
+        res = STAGES[2].run(ctx_with({"document": document}))
+        self.assertEqual(res.status, "ok")
+        chosen = [f for f in res.findings if f["field"] == "orientation/chosen"]
+        self.assertEqual(len(chosen), 1)
+        self.assertIn("azimuth 0 deg", chosen[0]["value"])
+
+    def test_given_orientation_is_kept_and_no_finding_is_raised(self):
+        res = STAGES[2].run(ctx_with({"document": PV.doc()}))
+        self.assertFalse([f for f in res.findings if f["field"] == "orientation/chosen"])
+
+    def test_a_roof_gives_the_arrays_the_placement_and_the_orientation(self):
+        document = PV.doc()
+        template = {k: document["arrays"][0][k] for k in ("module", "inverter", "dc_ac_ratio")}
+        document["arrays"] = []
+        roof = {"planes": [{"id": "R1", "width_m": 12.0, "slope_m": 6.0, "setback_m": 0.5}], "module_dimensions_mm": [2278, 1134], "module_gap_m": 0.02, "array": template, "target_modules": 10}
+        res = STAGES[2].run(ctx_with({"document": document, "roof": roof}))
+        self.assertEqual(res.status, "ok")
+        self.assertEqual(res.outputs["pv"]["roof"]["counts"]["modules"], 10)
+        self.assertEqual(res.outputs["pv"]["counts"]["arrays"], 1)
+        self.assertTrue([f for f in res.findings if f["field"] == "orientation/chosen"])
+        json.dumps(res.to_dict())
+        small = dict(roof, target_modules=500)
+        res = STAGES[2].run(ctx_with({"document": document, "roof": small}))
+        self.assertIn("roof_short", [f["field"].split("/")[-1] for f in res.findings])
+
+    def test_a_wrong_roof_blocks(self):
+        res = STAGES[2].run(ctx_with({"document": PV.doc(), "roof": {"planes": []}}))
+        self.assertEqual(res.status, "blocked")
+
+
 class PvDrawingsTests(unittest.TestCase):
     def test_the_four_drafts_are_written_from_the_engine_geometry(self):
         import epc_pv

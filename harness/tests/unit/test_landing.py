@@ -159,8 +159,7 @@ class ServerTests(unittest.TestCase):
 
 PV_ANSWERS = {"client.name": "Cliente Ficticio", "site.address": "Calle Ficticia 1", "site.installation_type": "Planta fotovoltaica", "supply.voltage.value": "400", "supply.earthing_system": "TT",
               "supply.short_circuit_level.value": "6", "supply.short_circuit_level.origin": "dato ficticio", "pv.mode": "ground", "pv.latitude_deg": "-34.6", "pv.longitude_deg": "-58.4",
-              "pv.utc_offset_h": "-3", "pv.module": "longi.lr5-72hgd-560m", "pv.inverter": "sma.stp25000tl-30", "pv.isc_max_input_a": "49.5", "pv.n_modules": "1000", "pv.tilt_deg": "30",
-              "pv.azimuth_deg": "0", "pv.dc_ac_ratio": "1.2", "pv.aux_load_kw": "5", "pv.aux_phases": "3", "pv.aux_length_m": "60", "pv.board_fp": "0.9", "pv.site_width_m": "200", "pv.site_length_m": "120"}
+              "pv.utc_offset_h": "-3", "pv.module": "longi.lr5-72hgd-560m", "pv.inverter": "sma.stp25000tl-30", "pv.isc_max_input_a": "49.5", "pv.target_kwp": "560", "pv.dc_ac_ratio": "1.2", "pv.aux_load_kw": "5", "pv.aux_phases": "3", "pv.aux_length_m": "60", "pv.board_fp": "0.9", "pv.site_width_m": "200", "pv.site_length_m": "120"}
 
 
 class PvProjectTests(unittest.TestCase):
@@ -187,7 +186,9 @@ class PvProjectTests(unittest.TestCase):
     def test_the_request_names_the_discipline_and_proposes_what_is_pending_review(self):
         it = server.interpret({"request": "Una planta fotovoltaica de 1 MWp", "lang": "es"})
         self.assertEqual(it["brief"]["disciplines"], ["electrical", "pv"])
-        self.assertEqual((it["values"]["pv.utc_offset_h"], it["values"]["pv.azimuth_deg"]), (-3, 0))
+        self.assertEqual((it["values"]["pv.utc_offset_h"], it["values"]["pv.dc_ac_ratio"]), (-3, 1.2))
+        self.assertNotIn("pv.azimuth_deg", it["values"])
+        self.assertNotIn("pv.tilt_deg", it["values"])
         self.assertIn("pv.utc_offset_h", it["assumed"])
         self.assertNotIn("pv.latitude_deg", it["values"])
 
@@ -237,12 +238,18 @@ class PvProjectTests(unittest.TestCase):
         self.assertEqual(inputs["pv"]["weather_file"], "weather/weather_pvgis.json")
         self.assertNotIn("weather", inputs["pv"]["document"])
         self.assertEqual(inputs["pv"]["document"]["site"]["latitude_deg"], -34.6)
-        self.assertEqual(inputs["pv"]["document"]["arrays"][0]["inverter"]["isc_max_input_a"], 49.5)
+        array = inputs["pv"]["document"]["arrays"][0]
+        self.assertEqual((array["inverter"]["isc_max_input_a"], array["n_modules"]), (49.5, 1000))
+        self.assertNotIn("tilt_deg", array)
+        self.assertNotIn("azimuth_deg", array)
         self.assertEqual(inputs["pv"]["layout"]["site"]["width_m"], 200.0)
         self.assertEqual(inputs["board"]["fp_default"], 0.9)
 
     def test_a_rooftop_plant_has_no_layout_and_a_pvgis_failure_creates_nothing(self):
-        self.assertNotIn("layout", pv.section({k: v for k, v in PV_ANSWERS.items() if k != "pv.mode"} | {"pv.mode": "rooftop"}))
+        roof = pv.section(dict(PV_ANSWERS, **{"pv.mode": "rooftop", "pv.roof_width_m": "12", "pv.roof_slope_m": "6"}))
+        self.assertNotIn("layout", roof)
+        self.assertEqual((roof["roof"]["target_modules"], roof["roof"]["planes"][0]["width_m"], "tilt_deg" in roof["roof"]["planes"][0]), (1000, 12.0, False))
+        self.assertEqual(pv.check(dict(PV_ANSWERS, **{"pv.mode": "rooftop"}))["detail"], "roof_width_m, roof_slope_m")
 
         def down(flat):
             raise OSError("no route")

@@ -34,6 +34,10 @@ MESSAGES: Dict[str, Dict[str, str]] = {
         "en": "The tables do not fit in the site: {n} table(s) were left out. Enlarge the site, raise the number of modules per table, or reduce the tilt.",
         "es": "Las mesas no entran en el predio: quedaron {n} mesa(s) afuera. Ampliar el predio, aumentar los módulos por mesa o reducir la inclinación.",
     },
+    "roof_short": {
+        "en": "The roof holds {capacity} modules and {n} more were asked: add planes, reduce the margin or ask for fewer modules.",
+        "es": "El techo admite {capacity} módulos y se pidieron {n} más: agregar faldones, reducir el retiro o pedir menos módulos.",
+    },
     "layout_pad_tight": {
         "en": "{n} inverter(s) do not fit in the gap between rows (pad deeper than the gap): move them to the end of the row.",
         "es": "{n} inversor(es) no entran en el espacio entre filas (la base es más profunda que el espacio): moverlos al extremo de la fila.",
