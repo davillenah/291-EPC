@@ -35,6 +35,7 @@ A floor may also give `circuits` (`{"lighting": {...}, "receptacles": {...}}`): 
 import copy
 import math
 
+from disciplines.electrical_lv import lux_map
 from disciplines.electrical_lv.intake.routing import RoutingError, design_floor, route_riser
 
 SIZE_FIELDS = ("id", "name", "width_m", "length_m")
@@ -292,8 +293,7 @@ def _floors(building):
 def _lighting_section(building, lit, lengths, document):
     """The `lighting` section of stage 3: the document, the options and, with a tolerance, the loads by floor to compare (the circuits of a routed floor come from the same rooms, so only floors without a board)."""
     section = {"document": document}
-    if building.get("options"):
-        section["options"] = copy.deepcopy(building["options"])
+    section["options"] = {**lux_map.RETURN_GRID, **copy.deepcopy(building.get("options") or {})}
     floor_loads = {f"L-{i}": ids for i, ids in lit.items() if i in lengths}
     if building.get("tolerance_pct") is not None and floor_loads:
         section["loads"], section["tolerance_pct"] = floor_loads, building["tolerance_pct"]
@@ -593,7 +593,7 @@ def derive_all(building, loads, inputs_dir=None):
     out["areas"] += [{"id": f["id"], "name": f["name"]} for f in building["floors"] if f["id"] not in known]
     document = {"schema_version": "1.0", "luminaires": copy.deepcopy(building["luminaires"]), "rooms": rooms}
     document.update(_extra_lighting(building))
-    lighting = _run("epc_lighting", document, building.get("options") or {})
+    lighting = _run("epc_lighting", document, {**lux_map.RETURN_GRID, **(building.get("options") or {})})
     plug_result = _receptacle_result(building, outlets)
     try:
         designs, lengths = _routing(building, lit, rooms, lighting, outlets, plug_result)

@@ -1,4 +1,4 @@
-"""The floor plans of stage 10: for each routed floor, the plan with everything (luminaires, outlets, trays, conduits, circuits) and the lighting plan (luminaires and the runs of the lighting circuits).
+"""The floor plans of stage 10: for each routed floor, the plan with everything (luminaires, outlets, trays, conduits, circuits) and the lighting plan (luminaires and the runs of the lighting circuits) and, when the engine gave the lux of the cells, the lux map (`luxmap`: the lighting plan over the coloured cells and lines of equal level of `lux_map.py`).
 
 The discipline draws nothing: it hands each floor document to `epc_plan.core.process` and the result to `epc_plan.dxfout.write_dxf` (with the walls and room names of the architecture under it).
 The lighting plan is the same floor with the outlets and the circuits of the receptacles taken out, and only the lines that the engine says carry a lighting circuit.
@@ -41,10 +41,12 @@ def write_floor_plans(routing, out_dir, board, scales=None):
     warnings, written = [], {}
     for floor, design in sorted(routing.items()):
         backdrop = copy.deepcopy(design.get("backdrop"))
-        for stem, doc in (("plan", routed_document(design)), ("lighting", lighting_document(design))):
+        luxmap = design.get("luxmap")
+        drawn = [("plan", routed_document(design), None), ("lighting", lighting_document(design), None)] + ([("luxmap", lighting_document(design), luxmap)] if luxmap else [])
+        for stem, doc, lux in drawn:
             path = out_dir / f"{board}_{stem}_{floor}.dxf"
             name = f"{board}_{stem}_{floor}"
-            warnings += [f"{floor}: {w}" for w in dxfout.write_dxf(_process(doc), path, backdrop=backdrop, paper_scale=(scales or {}).get(name))]
+            warnings += [f"{floor}: {w}" for w in dxfout.write_dxf(_process(doc), path, backdrop=backdrop, paper_scale=(scales or {}).get(name), luxmap=lux)]
             written[name] = path
     return warnings, written
 
