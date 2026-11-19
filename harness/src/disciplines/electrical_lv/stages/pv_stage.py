@@ -10,7 +10,10 @@ counterpart of the `lighting` section: the generation side cannot come from the 
   valid section     `ok`: the engine result as it is, one engine call, and one `note` finding per engine warning (draft, D21: the engine's typical values are not confirmed)
   `weather_file`  path inside the project `inputs/` of the PVGIS file written by the data step `epc_pv.weather` (`{"weather", "source"}`); its `weather` replaces the one of `document` and its `source` is stated by one
                     `note` finding (typical year, pending review). The stage never reads the network: PVGIS is asked before the run (landing page or `python -m epc_pv.weather`).
-  `roof`          the roof planes (`epc_pv.plan_roof`): the modules are placed on each plane and the arrays of the run are the result (one per plane); the plane's tilt and azimuth are optional.
+  `roof`          the roof planes (`epc_pv.plan_roof`): the modules are placed on each plane and the arrays of the run are the result (one per plane, so one MPPT never mixes orientations); the plane's tilt and
+                    azimuth are optional. Stage 10 draws the roof layout, stringing and cabling plans from it (`pv_drawings.py`). Wind uplift and ballast are not calculated (no wind value in the norm register).
+  `roof_dxf`      `{"file": <DXF inside the project inputs>, "setback_m": <margin>}`: the planes of `roof` come from the DXF of the roof (`epc_pv.roofdxf`); `roof` then carries the rest (module size, gap,
+                    array, target) and no `planes`.
   `flat_roof`     nothing is known about the roof: it is assumed flat and the harness proposes the structure (`epc_pv.flatroof`): the tilt that gives the most energy from the roof, the frames that fit,
                     their heights, the layout (so stage 10 draws the plans) and a `note` finding that states the assumption. Wind, ballast and fixings are not calculated.
   without tilt or azimuth   the harness chooses them (`epc_pv.orient.optimal`: facing the equator, tilt searched on the weather year) and says so in one `note` finding.
@@ -28,7 +31,7 @@ from disciplines.electrical_lv.stages.base import Stage, StageInputError
 ENGINE = "calculation/pv"
 FUNCTION = "epc_pv.run"
 LAYOUT_FUNCTION = "epc_pv.plan_layout"
-KEYS = ("document", "options", "layout", "weather_file", "roof", "flat_roof")
+KEYS = ("document", "options", "layout", "weather_file", "roof", "flat_roof", "roof_dxf")
 NOT_PROVIDED = "pv inputs not provided"
 
 
@@ -81,15 +84,21 @@ def source_finding(n, run_id, slug, source):
             "clause": "data source", "action": "Review the typical year (not a measured year) before relying on the yield.", "evidence": [f"{source.get('citation')}"], "status": "open"}
 
 
+def _input_file(inputs_dir, name, label):
+    """The file `name` inside the project inputs, or raises StageInputError (a path that leaves the inputs folder is refused)."""
+    base = Path(inputs_dir).resolve() if inputs_dir else None
+    target = (base / name).resolve() if base else None
+    if target is None or base not in target.parents or not target.is_file():
+        raise StageInputError([f"{label}: `{name}` is not a file inside the project inputs / no es un archivo dentro de las entradas del proyecto"])
+    return target
+
+
 def _with_weather_file(section, inputs_dir):
     """(section with the weather of the PVGIS file in its document, source) or raises StageInputError; `section` without `weather_file` comes back as it is."""
     name = section.get("weather_file")
     if name is None:
         return section, None
-    base = Path(inputs_dir).resolve() if inputs_dir else None
-    target = (base / name).resolve() if base else None
-    if target is None or base not in target.parents or not target.is_file():
-        raise StageInputError([f"weather_file: `{name}` is not a file inside the project inputs / no es un archivo dentro de las entradas del proyecto"])
+    target = _input_file(inputs_dir, name, "weather_file")
     try:
         data = json.loads(target.read_text(encoding="utf-8"))
         document = dict(_document_of(section), weather=data["weather"])
@@ -155,19 +164,38 @@ def _with_flat_roof(section):
     return dict(section, document=dict(document, arrays=[array]), layout=proposal["layout"]), proposal
 
 
-def _with_roof(section):
+def _dxf_planes(section, inputs_dir):
+    """(roof with the planes of the DXF, warnings of the reading); a section without `roof_dxf` comes back as it is."""
+    spec = section.get("roof_dxf")
+    roof = section.get("roof")
+    if spec is None:
+        return roof, []
+    import epc_pv
+    import epc_pv.roofdxf as roofdxf
+    if not isinstance(spec, dict) or "file" not in spec or "setback_m" not in spec or not isinstance(roof, dict) or "planes" in roof:
+        raise StageInputError(["roof_dxf: needs `file` and `setback_m`, and `roof` without `planes` (module size, gap and array) / necesita `file` y `setback_m`, y `roof` sin `planes` (tamaño del módulo, separación y arreglo)"])
+    target = _input_file(inputs_dir, spec["file"], "roof_dxf")
+    try:
+        read = roofdxf.read(target.read_bytes().decode("utf-8", errors="replace"), spec["setback_m"])
+    except epc_pv.PvError as exc:
+        raise StageInputError([f"roof_dxf: {exc} / {exc.es}"]) from exc
+    return dict(roof, planes=read["planes"]), read["warnings"]
+
+
+def _with_roof(section, inputs_dir=None):
     """(section, roof result or None, orientation chosen or None): the arrays come from the roof planes; tilt and azimuth missing are chosen by the engine."""
     if section.get("roof") is None:
         return section, None, None
     import copy
     import epc_pv
-    roof, document = copy.deepcopy(section["roof"]), _document_of(section)
+    roof, warned = _dxf_planes(copy.deepcopy(section), inputs_dir)
+    document = _document_of(section)
     chosen = _fill_planes(roof, document)
     try:
         result = epc_pv.plan_roof(roof)
     except epc_pv.PvError as exc:
         raise StageInputError([f"roof: {exc} / {exc.es}"]) from exc
-    return dict(section, document=dict(document, arrays=result["arrays"])), result, chosen
+    return dict(section, document=dict(document, arrays=result["arrays"])), dict(result, warnings=warned + result["warnings"]), chosen
 
 
 def _with_orientation(section):
@@ -204,7 +232,7 @@ class PvStage(Stage):
         """(section ready for the engine, source, flat roof proposal, roof result, orientation chosen): every step that completes the section before the run."""
         section, source = _with_weather_file(_section(context), context.inputs_dir)
         section, flat = _with_flat_roof(section)
-        section, roof, chosen = _with_roof(section)
+        section, roof, chosen = _with_roof(section, context.inputs_dir)
         if roof is None and flat is None:
             section, chosen = _with_orientation(section)
         return section, source, flat, roof, chosen
@@ -226,6 +254,7 @@ class PvStage(Stage):
         result = _run(section)
         result = dict(result, **({"roof": roof} if roof is not None else {}), **({"flat_roof": flat} if flat is not None else {}))
         warnings, calls, findings = list(result["warnings"]) + (roof or flat or {"warnings": []})["warnings"], [EC.record_for(ENGINE, FUNCTION)], []
+        calls += [EC.record_for(ENGINE, "epc_pv.plan_roof")] if roof is not None else []
         if section.get("layout") is not None:
             geometry = _layout(section, _document_of(section), result)
             result, warnings = dict(result, layout=geometry), warnings + geometry["warnings"]

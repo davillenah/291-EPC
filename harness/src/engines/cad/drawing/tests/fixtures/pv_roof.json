@@ -1,0 +1,230 @@
+{
+ "roof": {
+  "planes": [
+   {
+    "id": "N1",
+    "width_m": 10.0,
+    "slope_m": 5.0,
+    "tilt_deg": 25.0,
+    "azimuth_deg": 0.0,
+    "setback_m": 0.5,
+    "obstacles": [
+     {
+      "x": 4.0,
+      "y": 2.0,
+      "width_m": 1.0,
+      "depth_m": 1.0
+     }
+    ],
+    "orientation": "landscape",
+    "module": {
+     "width_m": 2.278,
+     "depth_m": 1.134
+    },
+    "capacity": 7,
+    "modules": 7,
+    "cells": [
+     {
+      "x": 0.5,
+      "y": 0.5,
+      "row": 1
+     },
+     {
+      "x": 2.798,
+      "y": 0.5,
+      "row": 1
+     },
+     {
+      "x": 5.096,
+      "y": 0.5,
+      "row": 1
+     },
+     {
+      "x": 0.5,
+      "y": 1.654,
+      "row": 2
+     },
+     {
+      "x": 5.096,
+      "y": 1.654,
+      "row": 2
+     },
+     {
+      "x": 0.5,
+      "y": 2.808,
+      "row": 3
+     },
+     {
+      "x": 5.096,
+      "y": 2.808,
+      "row": 3
+     }
+    ]
+   },
+   {
+    "id": "E1",
+    "width_m": 8.0,
+    "slope_m": 4.0,
+    "tilt_deg": 20.0,
+    "azimuth_deg": 90.0,
+    "setback_m": 0.5,
+    "obstacles": [],
+    "orientation": "portrait",
+    "module": {
+     "width_m": 1.134,
+     "depth_m": 2.278
+    },
+    "capacity": 6,
+    "modules": 6,
+    "cells": [
+     {
+      "x": 0.5,
+      "y": 0.5,
+      "row": 1
+     },
+     {
+      "x": 1.654,
+      "y": 0.5,
+      "row": 1
+     },
+     {
+      "x": 2.808,
+      "y": 0.5,
+      "row": 1
+     },
+     {
+      "x": 3.962,
+      "y": 0.5,
+      "row": 1
+     },
+     {
+      "x": 5.116,
+      "y": 0.5,
+      "row": 1
+     },
+     {
+      "x": 6.27,
+      "y": 0.5,
+      "row": 1
+     }
+    ]
+   }
+  ],
+  "counts": {
+   "planes": 2,
+   "modules": 13,
+   "capacity": 13,
+   "short": 7
+  }
+ },
+ "result": {
+  "arrays": [
+   {
+    "id": "N1",
+    "name": "N1",
+    "modules": 14,
+    "inverters": 1,
+    "dc_kwp": 7.7,
+    "ac_kw": 100.0,
+    "dc_ac_ratio": 0.077,
+    "strings": {
+     "n_series": 14,
+     "series_range": {
+      "s_min": 6,
+      "s_max": 20
+     },
+     "strings": 1,
+     "strings_per_inverter": 1,
+     "strings_per_mppt": 1,
+     "strings_per_mppt_limit": 2
+    },
+    "poa_kwh_m2": 15.566,
+    "dc_kwh": 97.869,
+    "ac_kwh": 76.865,
+    "clipping_kwh": 0.0,
+    "peak_ac_kw": 4.38,
+    "specific_yield_kwh_kwp": 9.982,
+    "performance_ratio": 0.64132,
+    "capacity_factor": 0.01068,
+    "monthly_ac_kwh": [
+     76.865,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "id": "E1",
+    "name": "E1",
+    "modules": 14,
+    "inverters": 1,
+    "dc_kwp": 7.7,
+    "ac_kw": 100.0,
+    "dc_ac_ratio": 0.077,
+    "strings": {
+     "n_series": 14,
+     "series_range": {
+      "s_min": 6,
+      "s_max": 20
+     },
+     "strings": 1,
+     "strings_per_inverter": 1,
+     "strings_per_mppt": 1,
+     "strings_per_mppt_limit": 2
+    },
+    "poa_kwh_m2": 16.55,
+    "dc_kwh": 104.269,
+    "ac_kwh": 82.361,
+    "clipping_kwh": 0.0,
+    "peak_ac_kw": 4.515,
+    "specific_yield_kwh_kwp": 10.696,
+    "performance_ratio": 0.6463,
+    "capacity_factor": 0.01144,
+    "monthly_ac_kwh": [
+     82.361,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ]
+   }
+  ],
+  "totals": {
+   "dc_kwp": 15.4,
+   "ac_kw": 200.0,
+   "dc_kwh": 202.138,
+   "ac_kwh": 159.226,
+   "clipping_kwh": 0.0,
+   "specific_yield_kwh_kwp": 10.339,
+   "monthly_ac_kwh": [
+    159.226,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ]
+  }
+ }
+}
