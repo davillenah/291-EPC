@@ -211,7 +211,8 @@ def _checked_root(payload, default_root):
         return default_root, None, None
     try:
         resolved = Path(root).resolve()
-        inside = resolved == HARNESS.parent or HARNESS.parent in resolved.parents
+        scratch = HARNESS.parent / "tmp"      # `tmp/` of the repository is git-ignored: simulations live there (owner rule 2026-11-18)
+        inside = (resolved == HARNESS.parent or HARNESS.parent in resolved.parents) and scratch not in (resolved, *resolved.parents)
     except OSError:
         inside = False
     return root, code, ("inside_repo" if inside else None)

@@ -2,7 +2,8 @@
 
 Nothing here calculates. The form values become the `pv` section of `engine_inputs` that stage 3 hands to `epc_pv` (see `stages/pv_stage.py`); the typical year comes from PVGIS
 (`epc_pv.weather`, one call before the project is created) and is stored in the project as `inputs/weather/weather_pvgis.json`, so the run itself never touches the network.
-Proposals (`pv_defaults.json`) are pending review. Two kinds of plant: `ground` (tables in a site, the layout and its four drawings) and `rooftop` (roof planes, yield, strings and the roof drawings; up to four planes in the form, more from a roof DXF).
+The person gives the structure (roof planes or site) and the place; the harness fills it with modules and sizes strings, inverters and yield from what fits (the power is a result, `target_kwp` only a cap).
+Module, inverter (`auto`), DC/AC ratio, time zone and the rest are advanced fields with proposals; auxiliaries are optional. Proposals (`pv_defaults.json`) are pending review. Two kinds of plant: `ground` (tables in a site, the layout and its four drawings) and `rooftop` (roof planes, yield, strings and the roof drawings; up to four planes in the form, more from a roof DXF).
 """
 import json
 from pathlib import Path
@@ -14,11 +15,13 @@ ORIENTATIONS = ("portrait", "landscape")
 ROOF_TYPES = ("flat", "pitched")
 EXTRA_PLANES = (2, 3, 4)      # a pitched roof can have up to four planes: the first one is the `roof_*` fields, the others `roof2_*` to `roof4_*`
 PLANE_FIELDS = ("width_m", "slope_m", "tilt_deg", "azimuth_deg")
-NUMBERS = ("latitude_deg", "longitude_deg", "utc_offset_h", "target_kwp", "tilt_deg", "azimuth_deg", "dc_ac_ratio", "albedo", "design_t_min_c", "isc_max_input_a",
+NUMBERS = ("latitude_deg", "longitude_deg", "utc_offset_h", "target_kwp", "tilt_deg", "azimuth_deg", "dc_ac_ratio", "albedo", "design_t_min_c", "isc_max_input_a", "energy_price", "investment",
            "aux_load_kw", "aux_phases", "aux_length_m", "board_fp", "roof_width_m", "roof_slope_m", "roof_setback_m", "site_width_m", "site_length_m", "setback_m", "table_rows", "table_modules_per_row", "module_gap_m", "table_gap_m", "road_width_m") + tuple(f"roof{n}_{k}" for n in EXTRA_PLANES for k in PLANE_FIELDS)
 GROUND_ONLY = ("site_width_m", "site_length_m", "setback_m", "table_rows", "table_modules_per_row", "table_orientation", "module_gap_m", "table_gap_m", "road_width_m")
-REQUIRED = ("mode", "latitude_deg", "longitude_deg", "utc_offset_h", "module", "inverter", "target_kwp", "dc_ac_ratio")
-RANGES = {"target_kwp": (0.001, 1e6), "tilt_deg": (0, 90), "azimuth_deg": (0, 360), "latitude_deg": (-90, 90), "longitude_deg": (-180, 180), "utc_offset_h": (-14, 14),
+REQUIRED = ("mode", "latitude_deg", "longitude_deg")
+ADVANCED = ("currency", "utc_offset_h", "module", "inverter", "isc_max_input_a", "aux_load_kw", "aux_phases", "aux_length_m", "board_fp", "target_kwp", "tilt_deg", "azimuth_deg", "dc_ac_ratio", "albedo", "design_t_min_c",
+            "roof_setback_m", "setback_m", "table_rows", "table_modules_per_row", "table_orientation", "module_gap_m", "table_gap_m", "road_width_m")
+RANGES = {"energy_price": (0, 1e9), "investment": (0, 1e15), "target_kwp": (0.001, 1e6), "tilt_deg": (0, 90), "azimuth_deg": (0, 360), "latitude_deg": (-90, 90), "longitude_deg": (-180, 180), "utc_offset_h": (-14, 14),
           **{f"roof{n}_{k}": r for n in EXTRA_PLANES for k, r in (("tilt_deg", (0, 90)), ("azimuth_deg", (0, 360)), ("width_m", (0.001, 1e4)), ("slope_m", (0.001, 1e4)))}}
 
 
@@ -36,10 +39,10 @@ def form():
     num = lambda p, req=True: {"path": f"pv.{p}", "kind": "number", "required": req}      # noqa: E731
     sel = lambda p, options, req=True: {"path": f"pv.{p}", "kind": "select", "required": req, "options": options}      # noqa: E731
     out = {"id": "pv", "status": "available", "fields": [
-        sel("mode", list(MODES)), sel("roof_type", list(ROOF_TYPES), False), num("latitude_deg"), num("longitude_deg"), num("utc_offset_h"),
-        sel("module", sorted(modules)), sel("inverter", sorted(inverters)), num("isc_max_input_a", False),
+        sel("mode", list(MODES)), sel("roof_type", list(ROOF_TYPES), False), num("latitude_deg"), num("longitude_deg"), num("energy_price", False), {"path": "pv.currency", "kind": "text", "required": False}, num("investment", False), num("utc_offset_h", False),
+        sel("module", ["auto"] + sorted(modules), False), sel("inverter", ["auto"] + sorted(inverters), False), num("isc_max_input_a", False),
         num("aux_load_kw", False), sel("aux_phases", ["1", "3"], False), num("aux_length_m", False), num("board_fp", False),
-        num("target_kwp"), num("tilt_deg", False), num("azimuth_deg", False), num("dc_ac_ratio"), num("albedo", False), num("design_t_min_c", False),
+        num("target_kwp", False), num("tilt_deg", False), num("azimuth_deg", False), num("dc_ac_ratio", False), num("albedo", False), num("design_t_min_c", False),
         num("roof_width_m", False), num("roof_slope_m", False), num("roof_setback_m", False),
         *[num(f"roof{n}_{k}", False) for n in EXTRA_PLANES for k in PLANE_FIELDS],
         num("site_width_m", False), num("site_length_m", False), num("setback_m", False), num("table_rows", False), num("table_modules_per_row", False),
@@ -47,6 +50,7 @@ def form():
     for f in out["fields"]:
         if f["path"] in proposals():
             f["value"] = proposals()[f["path"]]
+        f["advanced"] = f["path"][3:] in ADVANCED
     return out
 
 
@@ -55,7 +59,7 @@ def proposals():
     d, lay = DEFAULTS, DEFAULTS["layout"]
     keys = ("setback_m", "table_rows", "table_modules_per_row", "table_orientation", "module_gap_m", "table_gap_m", "road_width_m")
     import house
-    return {"pv.board_fp": house.DEFAULTS["board"]["fp_default"], "pv.utc_offset_h": d["utc_offset_h"], "pv.albedo": d["albedo"], "pv.dc_ac_ratio": d["dc_ac_ratio"], "pv.roof_type": d["roof_type"], "pv.roof_setback_m": d["roof_setback_m"], **{f"pv.{k}": lay[k] for k in keys}}
+    return {"pv.aux_load_kw": d["aux"]["load_kw"], "pv.aux_phases": str(d["aux"]["phases"]), "pv.aux_length_m": d["aux"]["length_m"], "pv.module": d["module"], "pv.inverter": d["inverter"], "pv.board_fp": house.DEFAULTS["board"]["fp_default"], "pv.albedo": d["albedo"], "pv.dc_ac_ratio": d["dc_ac_ratio"], "pv.roof_type": d["roof_type"], "pv.roof_setback_m": d["roof_setback_m"], **{f"pv.{k}": lay[k] for k in keys}}
 
 
 def values_of(flat):
@@ -72,13 +76,30 @@ def values_of(flat):
     return out, None
 
 
+def _equipment(v):
+    """(module id, inverter id or `auto`): what the person chose or the proposal of the harness. With `auto` the module id is the placeholder whose data the stage replaces after trying them all."""
+    module = v.get("module", DEFAULTS["module"])
+    return (DEFAULTS["module_placeholder"] if module == DEFAULTS["module"] else module), v.get("inverter", DEFAULTS["inverter"])
+
+
+def _module_auto(v):
+    return v.get("module", DEFAULTS["module"]) == DEFAULTS["module"]
+
+
+def utc_offset(v):
+    """The UTC offset of the form: the typed one, or the standard offset of the place (`epc_pv.timezone`); None when the place has no zone."""
+    if "utc_offset_h" in v:
+        return v["utc_offset_h"]
+    import epc_pv.timezone as tz
+    return tz.standard_utc_offset_h(v["latitude_deg"], v["longitude_deg"])
+
+
 def _catalog_problem(v):
-    """The first problem with the equipment chosen (unknown ids, or a data sheet gap the person must fill), or None."""
+    """The first problem with the equipment chosen (unknown ids), or None. A data sheet gap (no Isc) is not a problem: the stage assumes the maximum input current and says so."""
     modules, inverters = catalogs()
-    if v["module"] not in modules or v["inverter"] not in inverters:
+    module, inverter = _equipment(v)
+    if module not in modules or (inverter != DEFAULTS["inverter"] and inverter not in inverters):
         return {"code": "pv_range", "detail": "module / inverter"}
-    if inverters[v["inverter"]]["inverter"].get("isc_max_input_a") is None and "isc_max_input_a" not in v:
-        return {"code": "pv_isc", "detail": inverters[v["inverter"]]["model"]}
     return None
 
 
@@ -88,8 +109,8 @@ def _plane_groups(v):
 
 
 def _missing(v, building):
-    """The first group of answers that is still missing (the auxiliaries of a plant-only run, the site of a ground plant or the plane of a roof), or None."""
-    groups = [] if building else [("aux_load_kw", "aux_phases", "aux_length_m", "board_fp")]
+    """The first group of answers that is still missing (the site of a ground plant or the plane of a roof), or None."""
+    groups = []      # the auxiliaries have a proposal (a project needs at least one load), so none is asked
     groups.append(("site_width_m", "site_length_m") if v["mode"] == "ground" else ("roof_width_m", "roof_slope_m"))
     gap = next((g for g in groups + _plane_groups(v) if not all(k in v for k in g)), None)
     return {"code": "pv_missing", "detail": ", ".join(gap)} if gap else None
@@ -106,35 +127,53 @@ def check(flat, building=False):
     out = next(({"code": "pv_range", "detail": f"{n} {lo}..{hi}"} for n, (lo, hi) in RANGES.items() if n in v and not lo <= v[n] <= hi), None)
     if v["mode"] not in MODES:
         out = {"code": "pv_range", "detail": "mode"}
+    if not out and utc_offset(v) is None:
+        out = {"code": "pv_missing", "detail": "utc_offset_h"}      # no zone for this point (open sea or no database): the person types it
     return out or _catalog_problem(v) or _missing(v, building)
 
 
 def _template(v, modules, inverters):
-    """The module and inverter of the plant and the DC/AC ratio: what every array shares."""
-    inverter = dict(inverters[v["inverter"]]["inverter"])
-    if inverter.get("isc_max_input_a") is None:
-        inverter["isc_max_input_a"] = v["isc_max_input_a"]
-    return {"module": dict(modules[v["module"]]["module"]), "inverter": inverter, "dc_ac_ratio": v["dc_ac_ratio"]}
+    """The module and inverter of the plant and the DC/AC ratio: what every array shares. `auto` leaves the inverter to the stage (it needs the modules that fit); a data sheet gap in Isc is
+    filled only by what the person typed, otherwise the stage assumes and states it."""
+    module_id, inverter_id = _equipment(v)
+    ratio = v.get("dc_ac_ratio", DEFAULTS["dc_ac_ratio"])
+    if inverter_id == DEFAULTS["inverter"]:
+        inverter = DEFAULTS["inverter"]
+    else:
+        inverter = dict(inverters[inverter_id]["inverter"], id=inverter_id, model=inverters[inverter_id]["model"])
+        if inverter.get("isc_max_input_a") is None and "isc_max_input_a" in v:
+            inverter["isc_max_input_a"] = v["isc_max_input_a"]
+    return {"module": dict(modules[module_id]["module"], **({"auto": True} if _module_auto(v) else {})), "inverter": inverter, "dc_ac_ratio": ratio}
 
 
 def _n_modules(v, modules):
+    """The modules of the power cap, or None when no power was asked (the structure is filled)."""
+    if "target_kwp" not in v:
+        return None
     import epc_pv.orient
-    return epc_pv.orient.modules_for_kwp(v["target_kwp"], modules[v["module"]]["module"]["pmax_w"])
+    return epc_pv.orient.modules_for_kwp(v["target_kwp"], modules[_equipment(v)[0]]["module"]["pmax_w"])
 
 
 def _array(v, modules, inverters):
-    """The array of a ground plant; tilt and azimuth only when the person gave them (otherwise the engine chooses them)."""
+    """The array of a ground plant; tilt and azimuth only when the person gave them (otherwise the engine chooses them). Without a power or a tilt the site is filled (`layout.fill`): the one module here is a placeholder."""
     given = {k: v[k] for k in ("tilt_deg", "azimuth_deg") if k in v}
-    return {"id": "A1", "name": "A1", "n_modules": _n_modules(v, modules), **given, **_template(v, modules, inverters)}
+    return {"id": "A1", "name": "A1", "n_modules": _n_modules(v, modules) or 1, **given, **_template(v, modules, inverters)}
 
 
 def _flat_roof(v, modules, inverters):
     """Nothing is known about the roof (no pitch typed): it is assumed flat and the engine proposes the frames (`epc_pv.flatroof`)."""
     flat, lay = DEFAULTS["flat_roof"], DEFAULTS["layout"]
     return {"width_m": v["roof_width_m"], "length_m": v["roof_slope_m"], "setback_m": v.get("roof_setback_m", DEFAULTS["roof_setback_m"]), "walkway_m": flat["walkway_m"],
-            "module_dimensions_mm": list(modules[v["module"]]["dimensions_mm"][:2]), "module_gap_m": v.get("module_gap_m", lay["module_gap_m"]), "table": dict(flat["table"]),
+            "module_dimensions_mm": list(modules[_equipment(v)[0]]["dimensions_mm"][:2]), "module_gap_m": v.get("module_gap_m", lay["module_gap_m"]), "table": dict(flat["table"]),
             "table_gap_m": flat["table_gap_m"], "front_clearance_m": flat["front_clearance_m"], "station": dict(flat["station"]), "inverter_pad": dict(lay["inverter_pad"]),
-            "array": _template(v, modules, inverters), "target_modules": _n_modules(v, modules)}
+            "array": _template(v, modules, inverters), **_cap(v, modules)}
+
+
+def _cap(v, modules):
+    """The power cap only when typed (otherwise the structure is filled): `target_modules` for a fixed module, `target_kwp` when the stage still chooses the module."""
+    if "target_kwp" not in v:
+        return {}
+    return {"target_kwp": v["target_kwp"]} if _module_auto(v) else {"target_modules": _n_modules(v, modules)}
 
 
 def _more_planes(v):
@@ -152,8 +191,8 @@ def _roof(v, modules, inverters):
     """One roof plane typed in the form; the modules are placed by `epc_pv.plan_roof` and the orientation is the roof's or, when not given, the engine's."""
     plane = {"id": "R1", "width_m": v["roof_width_m"], "slope_m": v["roof_slope_m"], "setback_m": v.get("roof_setback_m", DEFAULTS["roof_setback_m"])}
     plane.update({k: v[k] for k in ("tilt_deg", "azimuth_deg") if k in v})
-    return {"planes": [plane] + _more_planes(v), "module_dimensions_mm": list(modules[v["module"]]["dimensions_mm"][:2]), "module_gap_m": v.get("module_gap_m", DEFAULTS["layout"]["module_gap_m"]),
-            "array": _template(v, modules, inverters), "target_modules": _n_modules(v, modules)}
+    return {"planes": [plane] + _more_planes(v), "module_dimensions_mm": list(modules[_equipment(v)[0]]["dimensions_mm"][:2]), "module_gap_m": v.get("module_gap_m", DEFAULTS["layout"]["module_gap_m"]),
+            "array": _template(v, modules, inverters), **_cap(v, modules)}
 
 
 def _layout(v, module):
@@ -164,6 +203,19 @@ def _layout(v, module):
             "table_gap_m": pick("table_gap_m"), "road_width_m": pick("road_width_m"), "station": dict(lay["station"]), "inverter_pad": dict(lay["inverter_pad"])}
 
 
+def _ground_layout(v, modules):
+    """The plant layout of a ground site; with no power cap and no tilt asked, `fill` tells the stage to fill the site with tables (a typed tilt fixes the fill's tilt too, see the stage)."""
+    out = _layout(v, modules[_equipment(v)[0]])
+    return dict(out, fill=True, front_clearance_m=DEFAULTS["layout"]["front_clearance_m"], **_cap(v, modules))
+
+
+def economics(v):
+    """The client's own price (and cost) as the `economics` key of the section, or {} when no price was typed."""
+    if "energy_price" not in v:
+        return {}
+    return {"economics": {"energy_price": v["energy_price"], "currency": v.get("currency", ""), **({"investment": v["investment"]} if "investment" in v else {})}}
+
+
 def section(flat):
     """The `pv` section of `engine_inputs` from checked answers: the document without weather (it comes from the PVGIS file) and, for a ground plant, its layout."""
     v, _ = values_of(flat)
@@ -171,23 +223,30 @@ def section(flat):
     site = {"latitude_deg": v["latitude_deg"], "longitude_deg": v["longitude_deg"], "albedo": v.get("albedo", DEFAULTS["albedo"])}
     if "design_t_min_c" in v:
         site["design_t_min_c"] = v["design_t_min_c"]
+    return {**_plant(v, modules, inverters, site), **economics(v)}
+
+
+def _plant(v, modules, inverters, site):
+    """The plant part of the section (roof, flat roof or ground layout)."""
     if v["mode"] == "rooftop" and (v.get("roof_type", DEFAULTS["roof_type"]) == "pitched" or _more_planes(v)):      # more planes typed: the roof is not flat
         return {"document": {"site": site}, "weather_file": WEATHER_FILE, "roof": _roof(v, modules, inverters)}
     if v["mode"] == "rooftop":
         return {"document": {"site": site}, "weather_file": WEATHER_FILE, "flat_roof": _flat_roof(v, modules, inverters)}
-    return {"document": {"site": site, "arrays": [_array(v, modules, inverters)]}, "weather_file": WEATHER_FILE, "layout": _layout(v, modules[v["module"]])}
+    return {"document": {"site": site, "arrays": [_array(v, modules, inverters)]}, "weather_file": WEATHER_FILE, "layout": _ground_layout(v, modules)}
 
 
 def board_of(flat):
-    """The `board` section of `engine_inputs` of a plant-only project: its name (the harness proposal) and the power factor the person confirmed."""
+    """The `board` section of `engine_inputs` of a plant-only project: its name and the power factor (the person's or the harness proposal, pending review)."""
     import house
     v, _ = values_of(flat)
-    return {"name": house.DEFAULTS["board"]["name"], "fp_default": v["board_fp"]}
+    return {"name": house.DEFAULTS["board"]["name"], "fp_default": v.get("board_fp", house.DEFAULTS["board"]["fp_default"])}
 
 
 def aux_loads(flat):
     """(areas, loads) of the load list of a plant-only project: the auxiliary services the person typed (monitoring, security, trackers). The plant generates; the load list only holds consumption (BACKLOG G5)."""
     v, _ = values_of(flat)
+    aux = DEFAULTS["aux"]
+    v = {"aux_load_kw": aux["load_kw"], "aux_phases": aux["phases"], "aux_length_m": aux["length_m"], **v}      # typical placeholder (pending review) unless typed
     load = {"id": "AUX-01", "description": "Plant auxiliary services / Servicios auxiliares de la planta", "area": "PV", "kind": "special",
             "power": {"value": v["aux_load_kw"], "unit": "kW"}, "phases": int(v["aux_phases"])}
     load["length"] = {"value": v["aux_length_m"], "unit": "m"}
@@ -198,4 +257,4 @@ def fetch_weather(flat):
     """The PVGIS file text for the site of the form (one call, the only network use of a PV project); raises `epc_pv.PvError` (English in `str`, Spanish in `.es`)."""
     import epc_pv.weather as W
     v, _ = values_of(flat)
-    return json.dumps(W.fetch_tmy(v["latitude_deg"], v["longitude_deg"], v["utc_offset_h"]), ensure_ascii=False, indent=1)
+    return json.dumps(W.fetch_tmy(v["latitude_deg"], v["longitude_deg"], utc_offset(v)), ensure_ascii=False, indent=1)
