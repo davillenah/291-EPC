@@ -46,6 +46,9 @@ MESSAGES: Dict[str, Dict[str, str]] = {
         "en": "weather.{name} has {n} values and the file has {expected} hours",
         "es": "weather.{name} tiene {n} valores y el archivo tiene {expected} horas",
     },
+    "err_pvgis_http": {"en": "PVGIS did not answer: {detail}", "es": "PVGIS no respondió: {detail}"},
+    "err_pvgis_payload": {"en": "the PVGIS answer is not the expected one: {detail}", "es": "la respuesta de PVGIS no es la esperada: {detail}"},
+    "err_pvgis_shape": {"en": "the PVGIS typical year has {n} hours and {expected} consecutive hours are needed", "es": "el año típico de PVGIS tiene {n} horas y se necesitan {expected} horas consecutivas"},
     "err_choice": {"en": "{name} must be one of {choices} (got {value!r})", "es": "{name} debe ser uno de {choices} (se recibió {value!r})"},
 }
 

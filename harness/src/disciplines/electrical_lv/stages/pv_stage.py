@@ -8,18 +8,23 @@ counterpart of the `lighting` section: the generation side cannot come from the 
   no `pv` section   the slice is not available and the stage goes on without it (`optional`, see `grouped.py`)
   invalid section   `blocked` with the engine's message in English and Spanish (or the unknown key); the grouped stage adds the `pv:` prefix
   valid section     `ok`: the engine result as it is, one engine call, and one `note` finding per engine warning (draft, D21: the engine's typical values are not confirmed)
+  `weather_file`  path inside the project `inputs/` of the PVGIS file written by the data step `epc_pv.weather` (`{"weather", "source"}`); its `weather` replaces the one of `document` and its `source` is stated by one
+                    `note` finding (typical year, pending review). The stage never reads the network: PVGIS is asked before the run (landing page or `python -m epc_pv.weather`).
   with `layout`     the plant layout (`epc_pv.plan_layout`: tables, inverters, station, strings on each table) is added as `outputs["layout"]`, one more engine call, a `major` finding when the
                     tables do not fit the site, and stage 10 draws the layout, stringing and cabling plans and the single-line diagram of the plant from it (`pv_drawings.py`)
 
 The result does not change the load list: the plant generates, the load list consumes. The auxiliary services of the plant are loads as any other.
 """
+import json
+from pathlib import Path
+
 from disciplines.electrical_lv.stages import engine_calls as EC
 from disciplines.electrical_lv.stages.base import Stage, StageInputError
 
 ENGINE = "calculation/pv"
 FUNCTION = "epc_pv.run"
 LAYOUT_FUNCTION = "epc_pv.plan_layout"
-KEYS = ("document", "options", "layout")
+KEYS = ("document", "options", "layout", "weather_file")
 NOT_PROVIDED = "pv inputs not provided"
 
 
@@ -61,9 +66,32 @@ def _layout(section, document, result):
 
 
 def _document_of(section):
-    import json
     doc = section["document"]
     return json.loads(doc) if isinstance(doc, (str, bytes)) else doc
+
+
+def source_finding(n, run_id, slug, source):
+    """A note finding that states where the weather of the run comes from (origin, edition, date, status)."""
+    value = f"{source.get('provider')} {source.get('radiation_db')}/{source.get('meteo_db')} {source.get('year_min')}-{source.get('year_max')}, retrieved {source.get('retrieved')}, {source.get('status')}"
+    return {"id": f"F-{n:04d}", "run_id": run_id, "verifier": "calc-check", "severity": "note", "document": slug, "field": "weather/source", "value": value, "expected": "weather confirmed by the engineer of record",
+            "clause": "data source", "action": "Review the typical year (not a measured year) before relying on the yield.", "evidence": [f"{source.get('citation')}"], "status": "open"}
+
+
+def _with_weather_file(section, inputs_dir):
+    """(section with the weather of the PVGIS file in its document, source) or raises StageInputError; `section` without `weather_file` comes back as it is."""
+    name = section.get("weather_file")
+    if name is None:
+        return section, None
+    base = Path(inputs_dir).resolve() if inputs_dir else None
+    target = (base / name).resolve() if base else None
+    if target is None or base not in target.parents or not target.is_file():
+        raise StageInputError([f"weather_file: `{name}` is not a file inside the project inputs / no es un archivo dentro de las entradas del proyecto"])
+    try:
+        data = json.loads(target.read_text(encoding="utf-8"))
+        document = dict(_document_of(section), weather=data["weather"])
+    except (ValueError, KeyError, TypeError) as exc:
+        raise StageInputError([f"weather_file: `{name}` is not a PVGIS weather file ({exc}) / no es un archivo de clima de PVGIS"]) from exc
+    return dict(section, document=document), data.get("source") or {}
 
 
 def _run(section):
@@ -86,6 +114,7 @@ class PvStage(Stage):
         section = _section(context)
         if section is None:
             return self.result("not_available", message=NOT_PROVIDED, reason="no_pv_inputs")
+        section, source = _with_weather_file(section, context.inputs_dir)
         result = _run(section)
         warnings = list(result["warnings"])
         calls = [EC.record_for(ENGINE, FUNCTION)]
@@ -96,6 +125,7 @@ class PvStage(Stage):
             warnings += geometry["warnings"]
             calls.append(EC.record_for(ENGINE, LAYOUT_FUNCTION))
             findings += [layout_finding(1, context.pipeline_run_id, self.spec.slug, geometry)] if not geometry["fits"] else []
+        findings += [source_finding(len(findings) + 1, context.pipeline_run_id, self.spec.slug, source)] if source else []
         findings += [warning_finding(len(findings) + n, context.pipeline_run_id, self.spec.slug, w) for n, w in enumerate(warnings, start=1)]
         totals, counts = result["totals"], result["counts"]
         return self.result("ok", outputs=result, findings=findings, engine_calls=calls,
