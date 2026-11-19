@@ -1233,6 +1233,76 @@
         "en": "Module tables (PV plant)"
       }
     },
+    "pv.ROOF": {
+      "name": "PV-CUBIERTA",
+      "color": 8,
+      "lineweight": null,
+      "linetype": "CONTINUOUS",
+      "on": true,
+      "frozen": false,
+      "locked": false,
+      "plot": true,
+      "description": {
+        "es": "Faldones de cubierta (planta fotovoltaica)",
+        "en": "Roof planes (PV plant)"
+      }
+    },
+    "pv.ROOF_OBSTACLE": {
+      "name": "PV-CUBIERTA-OBST",
+      "color": 8,
+      "lineweight": null,
+      "linetype": "CONTINUOUS",
+      "on": true,
+      "frozen": false,
+      "locked": false,
+      "plot": true,
+      "description": {
+        "es": "Obstáculos de cubierta: chimeneas, tanques, claraboyas (planta fotovoltaica)",
+        "en": "Roof obstacles: chimneys, tanks, skylights (PV plant)"
+      }
+    },
+    "pv.ROOF_DATA": {
+      "name": "PV-CUBIERTA-DATOS",
+      "color": 7,
+      "lineweight": null,
+      "linetype": "CONTINUOUS",
+      "on": true,
+      "frozen": false,
+      "locked": false,
+      "plot": true,
+      "description": {
+        "es": "Inclinación y azimut de cada faldón, como texto dentro del faldón (planta fotovoltaica)",
+        "en": "Tilt and azimuth of each roof plane, as text inside the plane (PV plant)"
+      }
+    },
+    "pv.MODULE": {
+      "name": "PV-MODULOS",
+      "color": 5,
+      "lineweight": null,
+      "linetype": "CONTINUOUS",
+      "on": true,
+      "frozen": false,
+      "locked": false,
+      "plot": true,
+      "description": {
+        "es": "Módulos sobre la cubierta (planta fotovoltaica)",
+        "en": "Modules on the roof (PV plant)"
+      }
+    },
+    "pv.CONDUIT": {
+      "name": "PV-CANALIZACION",
+      "color": 4,
+      "lineweight": null,
+      "linetype": "DASHED",
+      "on": true,
+      "frozen": false,
+      "locked": false,
+      "plot": true,
+      "description": {
+        "es": "Canalizaciones de los strings en cubierta, referenciales (planta fotovoltaica)",
+        "en": "String raceways on the roof, reference (PV plant)"
+      }
+    },
     "pv.INVERTER": {
       "name": "PV-INVERSORES",
       "color": 30,

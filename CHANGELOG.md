@@ -5,6 +5,7 @@ All notable changes. Format: Keep a Changelog; versions follow `harness/docs/BRA
 ## [Unreleased]
 
 ### Added
+- PV-10, roof drawings and planes: `epc_drawing.pv_roof` draws the roof layout, roof stringing and roof DC cabling plans (stage 10, folder `08_PV`); `epc_pv.roofdxf` reads the roof planes from a DXF (`roof_dxf` in the `pv` section); the landing form takes up to four planes, each its own array (no MPPT mixes orientations); five new PV layers (`PV-CUBIERTA`, `-OBST`, `-DATOS`, `PV-MODULOS`, `PV-CANALIZACION`). Wind uplift and ballast stay not calculated (no wind value in the norm register) and every roof result says so.
 - Photovoltaic project, end to end: PVGIS typical-year weather step (`epc_pv.weather`), `weather_file`, `roof` and `flat_roof` in the `pv` section of stage 3, the engine chooses tilt and azimuth (`epc_pv.orient`), places modules on roof planes (`epc_pv.plan_roof`) and proposes the frames of an assumed flat roof (`epc_pv.flatroof`); the landing has a photovoltaic project (latitude and longitude go to PVGIS before the project is created); the PV yield study carries the roof structure. Pending: roof drawings, several planes, wind and ballast.
 - FreeCAD: repository `.mcp.json` (server `freecad`), skill `freecad` and agent `freecad-modeler` (`harness/.claude/agents/specialists/`).
 - Rule "Before closing a thread" (`harness/CLAUDE.md`): full gate, GitHub CI green, `dev` and `main` in sync, report.

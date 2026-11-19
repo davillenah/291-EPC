@@ -2,7 +2,7 @@
 
 Nothing here calculates. The form values become the `pv` section of `engine_inputs` that stage 3 hands to `epc_pv` (see `stages/pv_stage.py`); the typical year comes from PVGIS
 (`epc_pv.weather`, one call before the project is created) and is stored in the project as `inputs/weather/weather_pvgis.json`, so the run itself never touches the network.
-Proposals (`pv_defaults.json`) are pending review. Two kinds of plant: `ground` (tables in a site, the layout and its four drawings) and `rooftop` (yield and strings only: roof geometry is a gap, see BACKLOG).
+Proposals (`pv_defaults.json`) are pending review. Two kinds of plant: `ground` (tables in a site, the layout and its four drawings) and `rooftop` (roof planes, yield, strings and the roof drawings; up to four planes in the form, more from a roof DXF).
 """
 import json
 from pathlib import Path
@@ -12,11 +12,14 @@ WEATHER_FILE = "weather/weather_pvgis.json"
 MODES = ("ground", "rooftop")
 ORIENTATIONS = ("portrait", "landscape")
 ROOF_TYPES = ("flat", "pitched")
+EXTRA_PLANES = (2, 3, 4)      # a pitched roof can have up to four planes: the first one is the `roof_*` fields, the others `roof2_*` to `roof4_*`
+PLANE_FIELDS = ("width_m", "slope_m", "tilt_deg", "azimuth_deg")
 NUMBERS = ("latitude_deg", "longitude_deg", "utc_offset_h", "target_kwp", "tilt_deg", "azimuth_deg", "dc_ac_ratio", "albedo", "design_t_min_c", "isc_max_input_a",
-           "aux_load_kw", "aux_phases", "aux_length_m", "board_fp", "roof_width_m", "roof_slope_m", "roof_setback_m", "site_width_m", "site_length_m", "setback_m", "table_rows", "table_modules_per_row", "module_gap_m", "table_gap_m", "road_width_m")
+           "aux_load_kw", "aux_phases", "aux_length_m", "board_fp", "roof_width_m", "roof_slope_m", "roof_setback_m", "site_width_m", "site_length_m", "setback_m", "table_rows", "table_modules_per_row", "module_gap_m", "table_gap_m", "road_width_m") + tuple(f"roof{n}_{k}" for n in EXTRA_PLANES for k in PLANE_FIELDS)
 GROUND_ONLY = ("site_width_m", "site_length_m", "setback_m", "table_rows", "table_modules_per_row", "table_orientation", "module_gap_m", "table_gap_m", "road_width_m")
 REQUIRED = ("mode", "latitude_deg", "longitude_deg", "utc_offset_h", "module", "inverter", "target_kwp", "dc_ac_ratio")
-RANGES = {"target_kwp": (0.001, 1e6), "tilt_deg": (0, 90), "azimuth_deg": (0, 360), "latitude_deg": (-90, 90), "longitude_deg": (-180, 180), "utc_offset_h": (-14, 14)}
+RANGES = {"target_kwp": (0.001, 1e6), "tilt_deg": (0, 90), "azimuth_deg": (0, 360), "latitude_deg": (-90, 90), "longitude_deg": (-180, 180), "utc_offset_h": (-14, 14),
+          **{f"roof{n}_{k}": r for n in EXTRA_PLANES for k, r in (("tilt_deg", (0, 90)), ("azimuth_deg", (0, 360)), ("width_m", (0.001, 1e4)), ("slope_m", (0.001, 1e4)))}}
 
 
 def catalogs():
@@ -38,6 +41,7 @@ def form():
         num("aux_load_kw", False), sel("aux_phases", ["1", "3"], False), num("aux_length_m", False), num("board_fp", False),
         num("target_kwp"), num("tilt_deg", False), num("azimuth_deg", False), num("dc_ac_ratio"), num("albedo", False), num("design_t_min_c", False),
         num("roof_width_m", False), num("roof_slope_m", False), num("roof_setback_m", False),
+        *[num(f"roof{n}_{k}", False) for n in EXTRA_PLANES for k in PLANE_FIELDS],
         num("site_width_m", False), num("site_length_m", False), num("setback_m", False), num("table_rows", False), num("table_modules_per_row", False),
         sel("table_orientation", list(ORIENTATIONS), False), num("module_gap_m", False), num("table_gap_m", False), num("road_width_m", False)]}
     for f in out["fields"]:
@@ -78,11 +82,16 @@ def _catalog_problem(v):
     return None
 
 
+def _plane_groups(v):
+    """The answers each roof plane typed needs: width and length of the planes 2 to 4 that have any answer."""
+    return [tuple(f"roof{n}_{k}" for k in ("width_m", "slope_m")) for n in EXTRA_PLANES if any(f"roof{n}_{k}" in v for k in PLANE_FIELDS)]
+
+
 def _missing(v, building):
     """The first group of answers that is still missing (the auxiliaries of a plant-only run, the site of a ground plant or the plane of a roof), or None."""
     groups = [] if building else [("aux_load_kw", "aux_phases", "aux_length_m", "board_fp")]
     groups.append(("site_width_m", "site_length_m") if v["mode"] == "ground" else ("roof_width_m", "roof_slope_m"))
-    gap = next((g for g in groups if not all(k in v for k in g)), None)
+    gap = next((g for g in groups + _plane_groups(v) if not all(k in v for k in g)), None)
     return {"code": "pv_missing", "detail": ", ".join(gap)} if gap else None
 
 
@@ -128,11 +137,22 @@ def _flat_roof(v, modules, inverters):
             "array": _template(v, modules, inverters), "target_modules": _n_modules(v, modules)}
 
 
+def _more_planes(v):
+    """The planes 2 to 4 typed in the form (each with its own orientation, never mixed with another on one MPPT: one plane is one array)."""
+    out = []
+    for n in EXTRA_PLANES:
+        if f"roof{n}_width_m" in v:
+            plane = {"id": f"R{n}", "width_m": v[f"roof{n}_width_m"], "slope_m": v[f"roof{n}_slope_m"], "setback_m": v.get("roof_setback_m", DEFAULTS["roof_setback_m"])}
+            plane.update({k: v[f"roof{n}_{k}"] for k in ("tilt_deg", "azimuth_deg") if f"roof{n}_{k}" in v})
+            out.append(plane)
+    return out
+
+
 def _roof(v, modules, inverters):
     """One roof plane typed in the form; the modules are placed by `epc_pv.plan_roof` and the orientation is the roof's or, when not given, the engine's."""
     plane = {"id": "R1", "width_m": v["roof_width_m"], "slope_m": v["roof_slope_m"], "setback_m": v.get("roof_setback_m", DEFAULTS["roof_setback_m"])}
     plane.update({k: v[k] for k in ("tilt_deg", "azimuth_deg") if k in v})
-    return {"planes": [plane], "module_dimensions_mm": list(modules[v["module"]]["dimensions_mm"][:2]), "module_gap_m": v.get("module_gap_m", DEFAULTS["layout"]["module_gap_m"]),
+    return {"planes": [plane] + _more_planes(v), "module_dimensions_mm": list(modules[v["module"]]["dimensions_mm"][:2]), "module_gap_m": v.get("module_gap_m", DEFAULTS["layout"]["module_gap_m"]),
             "array": _template(v, modules, inverters), "target_modules": _n_modules(v, modules)}
 
 
@@ -151,7 +171,7 @@ def section(flat):
     site = {"latitude_deg": v["latitude_deg"], "longitude_deg": v["longitude_deg"], "albedo": v.get("albedo", DEFAULTS["albedo"])}
     if "design_t_min_c" in v:
         site["design_t_min_c"] = v["design_t_min_c"]
-    if v["mode"] == "rooftop" and v.get("roof_type", DEFAULTS["roof_type"]) == "pitched":
+    if v["mode"] == "rooftop" and (v.get("roof_type", DEFAULTS["roof_type"]) == "pitched" or _more_planes(v)):      # more planes typed: the roof is not flat
         return {"document": {"site": site}, "weather_file": WEATHER_FILE, "roof": _roof(v, modules, inverters)}
     if v["mode"] == "rooftop":
         return {"document": {"site": site}, "weather_file": WEATHER_FILE, "flat_roof": _flat_roof(v, modules, inverters)}

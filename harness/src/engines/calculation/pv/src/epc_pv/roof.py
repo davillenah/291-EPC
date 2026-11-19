@@ -7,6 +7,8 @@ on the plane; a margin (`setback_m`) is kept free along every edge. Modules are 
   plan(roof)       placement of every plane + the arrays for `epc_pv.run` (one array per plane: orientations are never mixed on one MPPT)
   `target_modules`  when given, only that many modules are placed (row by row from the eave); the result says if the roof is too small
 
+Several planes are several arrays (one orientation per array, so one MPPT never mixes orientations). The planes can come from a DXF of the roof (`epc_pv.roofdxf`).
+Wind uplift and ballast are NOT calculated (no wind value in the norm register): every result says so in a `roof_wind_pending` warning.
 Every datum is given (module size, gap, planes): nothing is defaulted here. Flat roofs with tilted frames and sloped shading between obstacles and modules are not covered (see the README).
 """
 from typing import Any, Dict, List, Optional, Tuple
@@ -111,4 +113,4 @@ def plan(roof: Dict[str, Any]) -> Dict[str, Any]:
     short = (target - total) if target is not None else 0
     return {"schema_version": SCHEMA_VERSION, "planes": planes, "arrays": _arrays(planes, roof["array"]),
             "counts": {"planes": len(planes), "modules": total, "capacity": capacity, "short": short}, "fits": short == 0,
-            "warnings": [item("roof_short", n=short, capacity=capacity)] if short else []}
+            "warnings": ([item("roof_short", n=short, capacity=capacity)] if short else []) + [item("roof_wind_pending")]}

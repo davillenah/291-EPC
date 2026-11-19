@@ -143,6 +143,31 @@ class PvOrientationAndRoofTests(unittest.TestCase):
         json.dumps(res.to_dict())
         self.assertEqual(STAGES[2].run(ctx_with({"document": document, "flat_roof": {"width_m": 1}})).status, "blocked")
 
+    def _roof_template(self):
+        document = PV.doc()
+        template = {k: document["arrays"][0][k] for k in ("module", "inverter", "dc_ac_ratio")}
+        document["arrays"] = []
+        return document, {"module_dimensions_mm": [2278, 1134], "module_gap_m": 0.02, "array": template, "target_modules": 12}
+
+    def test_the_planes_of_a_roof_dxf_become_one_array_each_and_wind_is_said_pending(self):
+        import test_roofdxf as TD
+        content = TD.dxf([TD.rect("PV-CUBIERTA", 0, 0, 10, 5), TD.text("PV-CUBIERTA-DATOS", 1, 1, "tilt=25 az=0"), TD.rect("PV-CUBIERTA", 12, 0, 20, 5), TD.text("PV-CUBIERTA-DATOS", 13, 1, "tilt=20 az=90")])
+        document, roof = self._roof_template()
+        with tempfile.TemporaryDirectory() as tmp:
+            (Path(tmp) / "plans").mkdir()
+            (Path(tmp) / "plans" / "roof.dxf").write_text(content, encoding="utf-8")
+            ctx = ctx_with()
+            ctx.inputs_dir = tmp
+            ctx.engine_inputs = dict(ctx.engine_inputs, pv={"document": document, "roof": roof, "roof_dxf": {"file": "plans/roof.dxf", "setback_m": 0.5}})
+            res = STAGES[2].run(ctx)
+            self.assertEqual(res.status, "ok")
+            self.assertEqual(res.outputs["pv"]["counts"]["arrays"], 2)
+            self.assertIn("roof_wind_pending", [f["field"].split("/")[-1] for f in res.findings])
+            ctx.engine_inputs["pv"]["roof_dxf"] = {"file": "../x.dxf", "setback_m": 0.5}
+            self.assertEqual(STAGES[2].run(ctx).status, "blocked")
+            ctx.engine_inputs["pv"]["roof_dxf"] = {"file": "plans/roof.dxf"}
+            self.assertEqual(STAGES[2].run(ctx).status, "blocked")
+
     def test_a_wrong_roof_blocks(self):
         res = STAGES[2].run(ctx_with({"document": PV.doc(), "roof": {"planes": []}}))
         self.assertEqual(res.status, "blocked")
@@ -161,6 +186,21 @@ class PvDrawingsTests(unittest.TestCase):
                 self.assertEqual(set(paths), {f"PVT_{k}" for k in ("layout", "stringing", "cabling", "sld")})
                 for path in paths.values():
                     self.assertTrue(Path(path).stat().st_size > 0)
+
+    def test_a_roof_run_reaches_stage_10_and_writes_the_three_roof_sheets(self):
+        document = PV.doc()
+        template = {k: document["arrays"][0][k] for k in ("module", "inverter", "dc_ac_ratio")}
+        document["arrays"] = []
+        planes = [{"id": "R1", "width_m": 12.0, "slope_m": 6.0, "setback_m": 0.5, "tilt_deg": 25, "azimuth_deg": 0}, {"id": "R2", "width_m": 8.0, "slope_m": 5.0, "setback_m": 0.5, "tilt_deg": 20, "azimuth_deg": 90}]
+        roof = {"planes": planes, "module_dimensions_mm": [2278, 1134], "module_gap_m": 0.02, "array": template, "target_modules": 28}
+        inputs = W.inputs_doc()
+        inputs["pv"] = {"document": document, "roof": roof}
+        with tempfile.TemporaryDirectory() as tmp:
+            ctx = W.context(engine_inputs=inputs, work_dir=tmp)
+            run(ctx, stop_after=10, run_id="r1")
+            res = ctx.results[10]
+        self.assertEqual(res.status, "ok")
+        self.assertEqual({k.rsplit("_pv_", 1)[1] for k in res.outputs["pv_sheets"]}, {"roof_layout_sheet", "roof_stringing_sheet", "roof_cabling_sheet"})
 
 
 if __name__ == "__main__":
