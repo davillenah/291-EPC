@@ -11,6 +11,7 @@ DEFAULTS = json.loads(Path(__file__).with_name("pv_defaults.json").read_text(enc
 WEATHER_FILE = "weather/weather_pvgis.json"
 MODES = ("ground", "rooftop")
 ORIENTATIONS = ("portrait", "landscape")
+ROOF_TYPES = ("flat", "pitched")
 NUMBERS = ("latitude_deg", "longitude_deg", "utc_offset_h", "target_kwp", "tilt_deg", "azimuth_deg", "dc_ac_ratio", "albedo", "design_t_min_c", "isc_max_input_a",
            "aux_load_kw", "aux_phases", "aux_length_m", "board_fp", "roof_width_m", "roof_slope_m", "roof_setback_m", "site_width_m", "site_length_m", "setback_m", "table_rows", "table_modules_per_row", "module_gap_m", "table_gap_m", "road_width_m")
 GROUND_ONLY = ("site_width_m", "site_length_m", "setback_m", "table_rows", "table_modules_per_row", "table_orientation", "module_gap_m", "table_gap_m", "road_width_m")
@@ -32,7 +33,7 @@ def form():
     num = lambda p, req=True: {"path": f"pv.{p}", "kind": "number", "required": req}      # noqa: E731
     sel = lambda p, options, req=True: {"path": f"pv.{p}", "kind": "select", "required": req, "options": options}      # noqa: E731
     out = {"id": "pv", "status": "available", "fields": [
-        sel("mode", list(MODES)), num("latitude_deg"), num("longitude_deg"), num("utc_offset_h"),
+        sel("mode", list(MODES)), sel("roof_type", list(ROOF_TYPES), False), num("latitude_deg"), num("longitude_deg"), num("utc_offset_h"),
         sel("module", sorted(modules)), sel("inverter", sorted(inverters)), num("isc_max_input_a", False),
         num("aux_load_kw", False), sel("aux_phases", ["1", "3"], False), num("aux_length_m", False), num("board_fp", False),
         num("target_kwp"), num("tilt_deg", False), num("azimuth_deg", False), num("dc_ac_ratio"), num("albedo", False), num("design_t_min_c", False),
@@ -50,7 +51,7 @@ def proposals():
     d, lay = DEFAULTS, DEFAULTS["layout"]
     keys = ("setback_m", "table_rows", "table_modules_per_row", "table_orientation", "module_gap_m", "table_gap_m", "road_width_m")
     import house
-    return {"pv.board_fp": house.DEFAULTS["board"]["fp_default"], "pv.utc_offset_h": d["utc_offset_h"], "pv.albedo": d["albedo"], "pv.dc_ac_ratio": d["dc_ac_ratio"], "pv.roof_setback_m": d["roof_setback_m"], **{f"pv.{k}": lay[k] for k in keys}}
+    return {"pv.board_fp": house.DEFAULTS["board"]["fp_default"], "pv.utc_offset_h": d["utc_offset_h"], "pv.albedo": d["albedo"], "pv.dc_ac_ratio": d["dc_ac_ratio"], "pv.roof_type": d["roof_type"], "pv.roof_setback_m": d["roof_setback_m"], **{f"pv.{k}": lay[k] for k in keys}}
 
 
 def values_of(flat):
@@ -118,6 +119,15 @@ def _array(v, modules, inverters):
     return {"id": "A1", "name": "A1", "n_modules": _n_modules(v, modules), **given, **_template(v, modules, inverters)}
 
 
+def _flat_roof(v, modules, inverters):
+    """Nothing is known about the roof (no pitch typed): it is assumed flat and the engine proposes the frames (`epc_pv.flatroof`)."""
+    flat, lay = DEFAULTS["flat_roof"], DEFAULTS["layout"]
+    return {"width_m": v["roof_width_m"], "length_m": v["roof_slope_m"], "setback_m": v.get("roof_setback_m", DEFAULTS["roof_setback_m"]), "walkway_m": flat["walkway_m"],
+            "module_dimensions_mm": list(modules[v["module"]]["dimensions_mm"][:2]), "module_gap_m": v.get("module_gap_m", lay["module_gap_m"]), "table": dict(flat["table"]),
+            "table_gap_m": flat["table_gap_m"], "front_clearance_m": flat["front_clearance_m"], "station": dict(flat["station"]), "inverter_pad": dict(lay["inverter_pad"]),
+            "array": _template(v, modules, inverters), "target_modules": _n_modules(v, modules)}
+
+
 def _roof(v, modules, inverters):
     """One roof plane typed in the form; the modules are placed by `epc_pv.plan_roof` and the orientation is the roof's or, when not given, the engine's."""
     plane = {"id": "R1", "width_m": v["roof_width_m"], "slope_m": v["roof_slope_m"], "setback_m": v.get("roof_setback_m", DEFAULTS["roof_setback_m"])}
@@ -141,8 +151,10 @@ def section(flat):
     site = {"latitude_deg": v["latitude_deg"], "longitude_deg": v["longitude_deg"], "albedo": v.get("albedo", DEFAULTS["albedo"])}
     if "design_t_min_c" in v:
         site["design_t_min_c"] = v["design_t_min_c"]
-    if v["mode"] == "rooftop":
+    if v["mode"] == "rooftop" and v.get("roof_type", DEFAULTS["roof_type"]) == "pitched":
         return {"document": {"site": site}, "weather_file": WEATHER_FILE, "roof": _roof(v, modules, inverters)}
+    if v["mode"] == "rooftop":
+        return {"document": {"site": site}, "weather_file": WEATHER_FILE, "flat_roof": _flat_roof(v, modules, inverters)}
     return {"document": {"site": site, "arrays": [_array(v, modules, inverters)]}, "weather_file": WEATHER_FILE, "layout": _layout(v, modules[v["module"]])}
 
 

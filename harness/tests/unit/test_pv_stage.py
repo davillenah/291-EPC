@@ -126,6 +126,23 @@ class PvOrientationAndRoofTests(unittest.TestCase):
         res = STAGES[2].run(ctx_with({"document": document, "roof": small}))
         self.assertIn("roof_short", [f["field"].split("/")[-1] for f in res.findings])
 
+    def test_an_unknown_roof_is_assumed_flat_and_the_harness_proposes_the_structure_and_the_drawings(self):
+        document = PV.doc()
+        template = {k: document["arrays"][0][k] for k in ("module", "inverter", "dc_ac_ratio")}
+        document["arrays"] = []
+        flat = {"width_m": 14.0, "length_m": 8.0, "setback_m": 0.6, "walkway_m": 0.8, "module_dimensions_mm": [2278, 1134], "module_gap_m": 0.02, "table": {"rows": 1, "modules_per_row": 4, "orientation": "landscape"},
+                "table_gap_m": 0.3, "front_clearance_m": 0.3, "station": {"width_m": 1.0, "depth_m": 1.0}, "inverter_pad": {"width_m": 0.7, "depth_m": 0.4}, "array": template, "target_modules": 12}
+        res = STAGES[2].run(ctx_with({"document": document, "flat_roof": flat}))
+        self.assertEqual(res.status, "ok")
+        proposal = res.outputs["pv"]["flat_roof"]
+        self.assertEqual(proposal["assumption"], "flat roof, tilted frames facing the equator")
+        self.assertGreaterEqual(proposal["capacity_modules"], 12)
+        self.assertIn("layout", res.outputs["pv"])
+        self.assertEqual(len([f for f in res.findings if f["field"] == "roof/assumed_flat"]), 1)
+        self.assertIn("not calculated", [f for f in res.findings if f["field"] == "roof/assumed_flat"][0]["value"])
+        json.dumps(res.to_dict())
+        self.assertEqual(STAGES[2].run(ctx_with({"document": document, "flat_roof": {"width_m": 1}})).status, "blocked")
+
     def test_a_wrong_roof_blocks(self):
         res = STAGES[2].run(ctx_with({"document": PV.doc(), "roof": {"planes": []}}))
         self.assertEqual(res.status, "blocked")

@@ -11,6 +11,8 @@ counterpart of the `lighting` section: the generation side cannot come from the 
   `weather_file`  path inside the project `inputs/` of the PVGIS file written by the data step `epc_pv.weather` (`{"weather", "source"}`); its `weather` replaces the one of `document` and its `source` is stated by one
                     `note` finding (typical year, pending review). The stage never reads the network: PVGIS is asked before the run (landing page or `python -m epc_pv.weather`).
   `roof`          the roof planes (`epc_pv.plan_roof`): the modules are placed on each plane and the arrays of the run are the result (one per plane); the plane's tilt and azimuth are optional.
+  `flat_roof`     nothing is known about the roof: it is assumed flat and the harness proposes the structure (`epc_pv.flatroof`): the tilt that gives the most energy from the roof, the frames that fit,
+                    their heights, the layout (so stage 10 draws the plans) and a `note` finding that states the assumption. Wind, ballast and fixings are not calculated.
   without tilt or azimuth   the harness chooses them (`epc_pv.orient.optimal`: facing the equator, tilt searched on the weather year) and says so in one `note` finding.
   with `layout`     the plant layout (`epc_pv.plan_layout`: tables, inverters, station, strings on each table) is added as `outputs["layout"]`, one more engine call, a `major` finding when the
                     tables do not fit the site, and stage 10 draws the layout, stringing and cabling plans and the single-line diagram of the plant from it (`pv_drawings.py`)
@@ -26,7 +28,7 @@ from disciplines.electrical_lv.stages.base import Stage, StageInputError
 ENGINE = "calculation/pv"
 FUNCTION = "epc_pv.run"
 LAYOUT_FUNCTION = "epc_pv.plan_layout"
-KEYS = ("document", "options", "layout", "weather_file", "roof")
+KEYS = ("document", "options", "layout", "weather_file", "roof", "flat_roof")
 NOT_PROVIDED = "pv inputs not provided"
 
 
@@ -127,6 +129,32 @@ def _fill_planes(roof, document):
     return chosen
 
 
+def flat_roof_finding(n, run_id, slug, proposal):
+    s = proposal["structure"]
+    value = (f"{proposal['assumption']}: {s['frames']} frame(s) of {s['modules_per_frame']} module(s) at {proposal['tilt_deg']:g} deg, azimuth {proposal['azimuth_deg']:g} deg, "
+             f"heights {s['front_height_m']:g} to {s['rear_height_m']:g} m; not calculated: {s['not_calculated']['en']}")
+    return {"id": f"F-{n:04d}", "run_id": run_id, "verifier": "calc-check", "severity": "note", "document": slug, "field": "roof/assumed_flat", "value": value, "expected": "roof data confirmed by the engineer of record",
+            "clause": "engine proposal", "action": "Confirm the roof type and give its structure data; the wind and ballast study is pending.", "evidence": ["engine epc_pv.flatroof.propose"], "status": "open"}
+
+
+def _with_flat_roof(section):
+    """(section with the arrays and layout of the proposed structure, proposal or None)."""
+    if section.get("flat_roof") is None:
+        return section, None
+    import copy
+    import epc_pv
+    import epc_pv.flatroof as flatroof
+    spec, document = copy.deepcopy(section["flat_roof"]), _document_of(section)
+    try:
+        proposal = flatroof.propose(document, spec)
+    except epc_pv.PvError as exc:
+        raise StageInputError([f"flat_roof: {exc} / {exc.es}"]) from exc
+    if proposal["modules"] < 1:
+        raise StageInputError(["flat_roof: the roof holds no frame (smaller than one frame plus margins) / el techo no admite ningún bastidor (menor que un bastidor más los retiros)"])
+    array = dict(spec["array"], id="A1", name="A1", tilt_deg=proposal["tilt_deg"], azimuth_deg=proposal["azimuth_deg"], n_modules=proposal["modules"])
+    return dict(section, document=dict(document, arrays=[array]), layout=proposal["layout"]), proposal
+
+
 def _with_roof(section):
     """(section, roof result or None, orientation chosen or None): the arrays come from the roof planes; tilt and azimuth missing are chosen by the engine."""
     if section.get("roof") is None:
@@ -172,29 +200,38 @@ class PvStage(Stage):
     wiring_task = "PV-1"
     optional = True      # without its inputs the grouped stage skips it instead of ending as not_available
 
-    def execute(self, context):
-        section = _section(context)
-        if section is None:
-            return self.result("not_available", message=NOT_PROVIDED, reason="no_pv_inputs")
-        section, source = _with_weather_file(section, context.inputs_dir)
+    def _prepare(self, context):
+        """(section ready for the engine, source, flat roof proposal, roof result, orientation chosen): every step that completes the section before the run."""
+        section, source = _with_weather_file(_section(context), context.inputs_dir)
+        section, flat = _with_flat_roof(section)
         section, roof, chosen = _with_roof(section)
-        if roof is None:
+        if roof is None and flat is None:
             section, chosen = _with_orientation(section)
+        return section, source, flat, roof, chosen
+
+    def _notes(self, context, found, first):
+        """The note findings of the steps above, numbered after `first` findings."""
+        _, source, flat, _, chosen = found
+        make = [(flat, flat_roof_finding), (chosen, orientation_finding), (source, source_finding)]
+        out = []
+        for value, fn in make:
+            out += [fn(first + len(out) + 1, context.pipeline_run_id, self.spec.slug, value)] if value else []
+        return out
+
+    def execute(self, context):
+        if _section(context) is None:
+            return self.result("not_available", message=NOT_PROVIDED, reason="no_pv_inputs")
+        found = self._prepare(context)
+        section, _, flat, roof, _ = found
         result = _run(section)
-        if roof is not None:
-            result = dict(result, roof=roof)
-        warnings = list(result["warnings"])
-        calls = [EC.record_for(ENGINE, FUNCTION)]
-        findings = []
+        result = dict(result, **({"roof": roof} if roof is not None else {}), **({"flat_roof": flat} if flat is not None else {}))
+        warnings, calls, findings = list(result["warnings"]) + (roof or flat or {"warnings": []})["warnings"], [EC.record_for(ENGINE, FUNCTION)], []
         if section.get("layout") is not None:
             geometry = _layout(section, _document_of(section), result)
-            result = dict(result, layout=geometry)
-            warnings += geometry["warnings"]
+            result, warnings = dict(result, layout=geometry), warnings + geometry["warnings"]
             calls.append(EC.record_for(ENGINE, LAYOUT_FUNCTION))
             findings += [layout_finding(1, context.pipeline_run_id, self.spec.slug, geometry)] if not geometry["fits"] else []
-        warnings += roof["warnings"] if roof is not None else []
-        findings += [orientation_finding(len(findings) + 1, context.pipeline_run_id, self.spec.slug, chosen)] if chosen else []
-        findings += [source_finding(len(findings) + 1, context.pipeline_run_id, self.spec.slug, source)] if source else []
+        findings += self._notes(context, found, len(findings))
         findings += [warning_finding(len(findings) + n, context.pipeline_run_id, self.spec.slug, w) for n, w in enumerate(warnings, start=1)]
         totals, counts = result["totals"], result["counts"]
         return self.result("ok", outputs=result, findings=findings, engine_calls=calls,

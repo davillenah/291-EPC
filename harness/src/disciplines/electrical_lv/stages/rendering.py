@@ -133,6 +133,15 @@ def _pv_report(d, project):
         blocks += [{"type": "h", "text": "Plant layout"},
                    {"type": "p", "text": f"Tables: {plan['counts']['tables']} in {plan['counts']['rows']} row(s); row pitch {', '.join(str(p) for p in plan['pitch_m'])} m; solar altitude at the design hour {plan['solar_altitude_deg']} deg; "
                                          f"site {plan['site']['width_m']} x {plan['site']['length_m']} m; all tables inside the site: {'yes' if plan['fits'] else 'no'}."}]
+    flat = result.get("flat_roof")
+    if flat:
+        st = flat["structure"]
+        blocks += [{"type": "h", "text": "Roof structure (assumed flat roof)"},
+                   {"type": "p", "text": f"No roof information was given: the roof is assumed flat and the modules go on tilted frames facing the equator. Tilt {flat['tilt_deg']:g} deg, azimuth {flat['azimuth_deg']:g} deg "
+                                         f"(from north), chosen as the most energy from the roof. {st['frames']} frame(s) of {st['modules_per_frame']} module(s), frame {st['frame_width_m']} x {st['frame_slope_m']} m, "
+                                         f"front height {st['front_height_m']} m, rear height {st['rear_height_m']} m, row pitch {st['row_pitch_m']} m. "
+                                         f"Not calculated: {st['not_calculated']['en']}. / No calculado: {st['not_calculated']['es']}."},
+                   _table(["tilt_deg", "modules", "kwh_per_kwp"], [[o["tilt_deg"], o["modules"], o["specific_yield_kwh_kwp"]] for o in flat["options"]])]
     return {"title": "PV yield study", "subtitle": project, "footer": f"PV yield study - {project}", "page_label": PAGE_LABEL, "blocks": blocks + _notes({"issues": warnings})}
 
 

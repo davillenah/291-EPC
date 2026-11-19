@@ -246,7 +246,9 @@ class PvProjectTests(unittest.TestCase):
         self.assertEqual(inputs["board"]["fp_default"], 0.9)
 
     def test_a_rooftop_plant_has_no_layout_and_a_pvgis_failure_creates_nothing(self):
-        roof = pv.section(dict(PV_ANSWERS, **{"pv.mode": "rooftop", "pv.roof_width_m": "12", "pv.roof_slope_m": "6"}))
+        flat = pv.section(dict(PV_ANSWERS, **{"pv.mode": "rooftop", "pv.roof_width_m": "12", "pv.roof_slope_m": "6"}))
+        self.assertEqual((sorted(k for k in flat if k in ("roof", "flat_roof", "layout")), flat["flat_roof"]["target_modules"], flat["flat_roof"]["width_m"]), (["flat_roof"], 1000, 12.0))
+        roof = pv.section(dict(PV_ANSWERS, **{"pv.mode": "rooftop", "pv.roof_type": "pitched", "pv.roof_width_m": "12", "pv.roof_slope_m": "6"}))
         self.assertNotIn("layout", roof)
         self.assertEqual((roof["roof"]["target_modules"], roof["roof"]["planes"][0]["width_m"], "tilt_deg" in roof["roof"]["planes"][0]), (1000, 12.0, False))
         self.assertEqual(pv.check(dict(PV_ANSWERS, **{"pv.mode": "rooftop"}))["detail"], "roof_width_m, roof_slope_m")

@@ -20,29 +20,39 @@ PLANE_KEYS = ("id", "width_m", "slope_m", "tilt_deg", "azimuth_deg", "setback_m"
 OBSTACLE_KEYS = ("x", "y", "width_m", "depth_m")
 
 
-def check(roof: Any) -> None:
-    """Refuse an incomplete or wrong roof input, in English and Spanish."""
-    _need(roof, ("planes", "module_dimensions_mm", "module_gap_m", "array"), "roof")
-    if not isinstance(roof["planes"], list) or not roof["planes"]:
-        raise PvError("err_type", name="roof.planes", kind=bi("a non-empty list", "una lista no vacía"))
+def _check_module(roof: Dict[str, Any]) -> None:
     dims = roof["module_dimensions_mm"]
     if not (isinstance(dims, list) and len(dims) == 2 and all(isinstance(d, (int, float)) and not isinstance(d, bool) and d > 0 for d in dims)):
         raise PvError("err_type", name="roof.module_dimensions_mm", kind=bi("[long side, short side] in mm", "[lado largo, lado corto] en mm"))
     _number(roof, "module_gap_m", "roof", positive=False)
     _need(roof["array"], ("module", "inverter"), "roof.array")
+
+
+def _check_plane(plane: Dict[str, Any], where: str) -> None:
+    _need(plane, PLANE_KEYS, where)
+    for key in ("width_m", "slope_m"):
+        _number(plane, key, where)
+    _number(plane, "setback_m", where, positive=False)
+    for key, hi in (("tilt_deg", 90), ("azimuth_deg", 360)):
+        if isinstance(plane[key], bool) or not isinstance(plane[key], (int, float)) or not 0 <= plane[key] <= hi:
+            raise PvError("err_range", name=f"{where}.{key}", rule=f"0 to {hi}", value=plane[key])
+    for j, ob in enumerate(plane.get("obstacles", [])):
+        _need(ob, OBSTACLE_KEYS, f"{where}.obstacles[{j}]")
+        for key in OBSTACLE_KEYS:
+            _number(ob, key, f"{where}.obstacles[{j}]", positive=key in ("width_m", "depth_m"))
+
+
+def check(roof: Any) -> None:
+    """Refuse an incomplete or wrong roof input, in English and Spanish."""
+    _need(roof, ("planes", "module_dimensions_mm", "module_gap_m", "array"), "roof")
+    if not isinstance(roof["planes"], list) or not roof["planes"]:
+        raise PvError("err_type", name="roof.planes", kind=bi("a non-empty list", "una lista no vacía"))
+    _check_module(roof)
     for k, plane in enumerate(roof["planes"]):
-        where = f"roof.planes[{k}]"
-        _need(plane, PLANE_KEYS, where)
-        for key in ("width_m", "slope_m"):
-            _number(plane, key, where)
-        _number(plane, "setback_m", where, positive=False)
-        for key, hi in (("tilt_deg", 90), ("azimuth_deg", 360)):
-            if isinstance(plane[key], bool) or not isinstance(plane[key], (int, float)) or not 0 <= plane[key] <= hi:
-                raise PvError("err_range", name=f"{where}.{key}", rule=f"0 to {hi}", value=plane[key])
-        for j, ob in enumerate(plane.get("obstacles", [])):
-            _need(ob, OBSTACLE_KEYS, f"{where}.obstacles[{j}]")
-            for key in OBSTACLE_KEYS:
-                _number(ob, key, f"{where}.obstacles[{j}]", positive=key in ("width_m", "depth_m"))
+        _check_plane(plane, f"roof.planes[{k}]")
+    target = roof.get("target_modules")
+    if target is not None and (isinstance(target, bool) or not isinstance(target, int) or target < 1):
+        raise PvError("err_range", name="roof.target_modules", rule=">=1 (integer)", value=target)
 
 
 def _hits(cell: Tuple[float, float, float, float], obstacles: List[Dict[str, Any]]) -> bool:
@@ -92,8 +102,6 @@ def plan(roof: Dict[str, Any]) -> Dict[str, Any]:
     """The roof layout: placement per plane, the arrays for `epc_pv.run` and warnings (a target the roof cannot hold)."""
     check(roof)
     target = roof.get("target_modules")
-    if target is not None and (isinstance(target, bool) or not isinstance(target, int) or target < 1):
-        raise PvError("err_range", name="roof.target_modules", rule=">=1 (integer)", value=target)
     planes, left = [], target
     for plane in roof["planes"]:
         done = _plane(plane, roof, left)
