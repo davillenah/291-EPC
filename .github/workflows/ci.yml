@@ -2,9 +2,9 @@ name: ci
 
 on:
   push:
-    branches: [main, "feat/**", "fix/**", "docs/**", "chore/**"]
+    branches: [main, dev, "feat/**", "fix/**", "docs/**", "chore/**"]
   pull_request:
-    branches: [main]
+    branches: [main, dev]
 
 jobs:
   gate:
