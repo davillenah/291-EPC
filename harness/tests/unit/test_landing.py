@@ -252,6 +252,13 @@ class PvProjectTests(unittest.TestCase):
         self.assertNotIn("layout", roof)
         self.assertEqual((roof["roof"]["target_modules"], roof["roof"]["planes"][0]["width_m"], "tilt_deg" in roof["roof"]["planes"][0]), (1000, 12.0, False))
         self.assertEqual(pv.check(dict(PV_ANSWERS, **{"pv.mode": "rooftop"}))["detail"], "roof_width_m, roof_slope_m")
+        two = dict(PV_ANSWERS, **{"pv.mode": "rooftop", "pv.roof_type": "pitched", "pv.roof_width_m": "12", "pv.roof_slope_m": "6", "pv.tilt_deg": "25", "pv.azimuth_deg": "0",
+                                  "pv.roof2_width_m": "8", "pv.roof2_slope_m": "5", "pv.roof2_azimuth_deg": "90"})
+        self.assertIsNone(pv.check(two))
+        planes = pv.section(two)["roof"]["planes"]
+        self.assertEqual([(p["id"], p["width_m"], p.get("azimuth_deg"), "tilt_deg" in p) for p in planes], [("R1", 12.0, 0.0, True), ("R2", 8.0, 90.0, False)])
+        self.assertIn("roof", pv.section(dict(two, **{"pv.roof_type": "flat"})))      # a second plane means the roof is not flat
+        self.assertEqual(pv.check(dict(two, **{"pv.roof2_slope_m": ""}))["detail"], "roof2_width_m, roof2_slope_m")
 
         def down(flat):
             raise OSError("no route")

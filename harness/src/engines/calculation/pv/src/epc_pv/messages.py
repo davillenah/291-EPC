@@ -42,6 +42,23 @@ MESSAGES: Dict[str, Dict[str, str]] = {
         "en": "{n} inverter(s) do not fit in the gap between rows (pad deeper than the gap): move them to the end of the row.",
         "es": "{n} inversor(es) no entran en el espacio entre filas (la base es más profunda que el espacio): moverlos al extremo de la fila.",
     },
+    "roof_dxf_azimuth": {
+        "en": "Roof plane {plane}: the drawing gives no azimuth; the harness chooses it (the plane is only a placement area).",
+        "es": "Faldón {plane}: el dibujo no indica el azimut; lo elige el harness (el faldón es solo un área de colocación).",
+    },
+    "roof_dxf_tilt": {
+        "en": "Roof plane {plane}: the drawing gives no tilt; the harness chooses it and the plan extent is used as the slope length.",
+        "es": "Faldón {plane}: el dibujo no indica la inclinación; la elige el harness y la extensión en planta se usa como largo del faldón.",
+    },
+    "roof_dxf_obstacles": {
+        "en": "{n} obstacle(s) of the roof drawing are not inside any roof plane and were ignored.",
+        "es": "{n} obstáculo(s) del dibujo de cubierta no están dentro de ningún faldón y se ignoraron.",
+    },
+    "roof_wind_pending": {
+        "en": "Wind uplift, ballast, roof loads and fixings are not calculated: they need the structure data of the roof and the wind code, and no wind value is recorded in the norm register.",
+        "es": "No se calculan la succión del viento, el lastre, las cargas del techo ni las fijaciones: requieren los datos de la estructura del techo y la norma de viento, y no hay ningún valor de viento en el registro de normas.",
+    },
+    "err_dxf": {"en": "roof DXF: {detail}", "es": "DXF de cubierta: {detail}"},
     "err_json": {"en": "the input is not valid JSON: {detail}", "es": "la entrada no es un JSON válido: {detail}"},
     "err_missing": {"en": "{where} is missing: {names}", "es": "falta en {where}: {names}"},
     "err_type": {"en": "{name} must be {kind}", "es": "{name} debe ser {kind}"},
