@@ -105,6 +105,19 @@ def _cell_segments(xs: Sequence[float], ys: Sequence[float], z: Sequence[Sequenc
     return out
 
 
+def _extend(line, end, at, used, segments, key):
+    """The line grown at one end (1: the last point, 0: the first) with every unused piece that starts where it stops."""
+    while True:
+        tip = line[-1] if end else line[0]
+        nxt = next((m for m in at.get(key(tip), []) if m not in used), None)
+        if nxt is None:
+            return line
+        used.add(nxt)
+        a, b = segments[nxt]
+        other = b if key(a) == key(tip) else a
+        line = line + [other] if end else [other] + line
+
+
 def _chain(segments: Sequence[Tuple[Tuple[float, float], Tuple[float, float]]]) -> List[List[Tuple[float, float]]]:
     """The pieces joined end to end into polylines (a closed line comes back with its first point at the end)."""
     key = lambda p: (round(p[0], 6), round(p[1], 6))                                       # noqa: E731
@@ -119,15 +132,7 @@ def _chain(segments: Sequence[Tuple[Tuple[float, float], Tuple[float, float]]]) 
         used.add(n)
         line = [p, q]
         for end in (1, 0):
-            while True:
-                tip = line[-1] if end else line[0]
-                nxt = next((m for m in at.get(key(tip), []) if m not in used), None)
-                if nxt is None:
-                    break
-                used.add(nxt)
-                a, b = segments[nxt]
-                other = b if key(a) == key(tip) else a
-                line = line + [other] if end else [other] + line
+            line = _extend(line, end, at, used, segments, key)
         lines.append(line)
     return lines
 
@@ -148,6 +153,20 @@ def _grid_of(item: Dict[str, Any]) -> Optional[Dict[str, Any]]:
     return (item.get("points") or {}).get("grid") or None
 
 
+def _cells(fine, width, length, target, cfg):
+    """The coloured cells of the refined grid, in the frame of the room."""
+    nx, ny, lux = fine["nx"], fine["ny"], fine["maintained_lux"]
+    dx, dy = length / nx, width / ny
+    return [{"rect": [round(i * dx, 4), round(j * dy, 4), round((i + 1) * dx, 4), round((j + 1) * dy, 4)], "lux": lux[j * nx + i], "color": colour_at(lux[j * nx + i] / target, cfg["scale"])}
+            for j in range(ny) for i in range(nx)]
+
+
+def _curves(fine, width, length, target, cfg):
+    """The lines of equal level of the configuration, with their colour and weight."""
+    return [{"ratio": c["ratio"], "level_lux": round(c["ratio"] * target, 1), "color": c["color"], "weight": c.get("weight", 0.5),
+             "points": [[round(x, 4), round(y, 4)] for x, y in line]} for c in cfg["contours"] for line in contours(fine, width, length, c["ratio"] * target)]
+
+
 def room_map(item: Dict[str, Any], cfg: Optional[Dict[str, Any]] = None, smooth: int = 1) -> Optional[Dict[str, Any]]:
     """The map of one room of the lighting result in the frame of the room, or None when it has no grid or no required level (no photometry, or the points were not asked for).
     `smooth`: parts per side each cell of the engine grid is split into (interpolated). {id, name, width_m, length_m, target_lux, average_lux, complies, stats, cells: [{rect, lux, color}],
@@ -159,16 +178,11 @@ def room_map(item: Dict[str, Any], cfg: Optional[Dict[str, Any]] = None, smooth:
     geo = item["geometry"]
     width, length = geo["width_m"], geo["length_m"]
     fine = refine(grid, smooth)
-    nx, ny, lux = fine["nx"], fine["ny"], fine["maintained_lux"]
-    dx, dy = length / nx, width / ny
-    cells = [{"rect": [round(i * dx, 4), round(j * dy, 4), round((i + 1) * dx, 4), round((j + 1) * dy, 4)], "lux": lux[j * nx + i], "color": colour_at(lux[j * nx + i] / target, cfg["scale"])}
-             for j in range(ny) for i in range(nx)]
-    curves = [{"ratio": c["ratio"], "level_lux": round(c["ratio"] * target, 1), "color": c["color"], "weight": c.get("weight", 0.5),
-               "points": [[round(x, 4), round(y, 4)] for x, y in line]} for c in cfg["contours"] for line in contours(fine, width, length, c["ratio"] * target)]
-    points = item["points"]
+    points, check = item["points"], item.get("verification") or {}
     return {"id": item["id"], "name": item.get("name"), "width_m": width, "length_m": length, "target_lux": target,
-            "average_lux": (item.get("verification") or {}).get("average_lux"), "complies": (item.get("verification") or {}).get("complies"),
-            "stats": {k: points.get(k) for k in ("min_lux", "avg_lux", "max_lux", "min_over_avg")}, "cells": cells, "curves": curves,
+            "average_lux": check.get("average_lux"), "complies": check.get("complies"),
+            "stats": {k: points.get(k) for k in ("min_lux", "avg_lux", "max_lux", "min_over_avg")},
+            "cells": _cells(fine, width, length, target, cfg), "curves": _curves(fine, width, length, target, cfg),
             "luminaires": [[p["x_m"], p["y_m"]] for p in (item.get("layout") or {}).get("positions", [])]}
 
 
