@@ -27,12 +27,13 @@ SERVICES = {
 }
 # discipline -> words; `architectural` and `electrical` have a pipeline, the others are only recorded
 DISCIPLINES = {
-    "architectural": r"casa|vivienda|departamento|duplex|house|home|dwelling|apartment|planta|plano|arquitect",
+    "architectural": r"casa|vivienda|departamento|duplex|house|home|dwelling|apartment|planta(?! fotovolt| solar)|plano|arquitect",
     "electrical": r"electric|instalacion electrica|iluminaci|tomacorriente|enchufe|lighting|receptacle|outlet",
     "hvac": r"aire acondicionado|climatiza|calefaccion|hvac|air conditioning|heating",
     "piping": r"canerias|plomeria|gas natural|cloacas|sanitaria|plumbing|piping",
     "fire": r"incendio|matafuego|fire",
     "telecom": r"wifi|datos|telefon|cctv|camaras|telecom",
+    "pv": r"fotovolt|paneles solares|panel solar|solar fotovolt|photovolt|solar panel|\bpv\b",
     "civil": r"estructura|fundacion|hormigon|structural|foundation|concrete",
 }
 FLOORS = r"(?:planta alta|segundo piso|dos plantas|2 plantas|dos pisos|2 pisos|two floors|two storeys|two stories|second floor|upper floor|two-story)"
@@ -63,7 +64,7 @@ def _disciplines(text, named, services):
     """The disciplines the words name, plus architecture when rooms were named and electrical when a service was."""
     asked = {d for d, words in DISCIPLINES.items() if re.search(words, text)}
     asked |= {"architectural"} if named else set()
-    asked |= {"electrical"} if services else set()
+    asked |= {"electrical"} if services or "pv" in asked else set()
     return sorted(asked, key=list(DISCIPLINES).index)
 
 

@@ -28,13 +28,14 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import brief  # noqa: E402
 import build  # noqa: E402
 import house  # noqa: E402
+import pv  # noqa: E402
 import runner  # noqa: E402
 from disciplines.electrical_lv.intake.form import validate_answers  # noqa: E402
 from disciplines.electrical_lv.intake.schema_check import load_schema  # noqa: E402
 
 # Every discipline of the harness (harness/src/disciplines) plus architecture (the `epc_arch` engine). Status as in each README.
-DISCIPLINES = ("architectural", "civil", "electrical", "electrical_mv", "mechanical", "hvac", "piping", "fire", "instrumentation", "telecom")
-STATUS = {"electrical": "available", "architectural": "partial"}      # every other one: planned, no engine or intake yet
+DISCIPLINES = ("architectural", "civil", "electrical", "electrical_mv", "pv", "mechanical", "hvac", "piping", "fire", "instrumentation", "telecom")
+STATUS = {"electrical": "available", "architectural": "partial", "pv": "available"}      # every other one: planned, no engine or intake yet
 
 
 def _scalar(path, spec, required):
@@ -112,7 +113,7 @@ def selected_of(discipline):
 
 
 def form_of(discipline):
-    makers = {"electrical": electrical_form, "architectural": architectural_form}
+    makers = {"electrical": electrical_form, "architectural": architectural_form, "pv": pv.form}
     chosen = selected_of(discipline)
     forms = [makers[d]() if d in makers else planned_form(d) for d in chosen]
     if {"electrical", "architectural"} <= set(chosen):
@@ -147,7 +148,9 @@ def interpret(payload):
     rows, added = house.propose(said["rooms"], lang, said["floors"]) if named else ([], [])
     values = _floor_values(said, rows, lang) if rows else {}
     values.update(_proposals(said))
-    return {"brief": said, "added": added, "values": values, "assumed": [k for k in values if k.startswith("house.") or k == "floor.wall_thickness_m"]}
+    if "pv" in said["disciplines"]:
+        values.update(pv.proposals())
+    return {"brief": said, "added": added, "values": values, "assumed": [k for k in values if k.startswith(("house.", "pv.")) or k == "floor.wall_thickness_m"]}
 
 
 def set_path(target, path, value):
@@ -237,7 +240,7 @@ def _pending(where, d, payload, flat):
 
 def _others(selected):
     """The disciplines without a pipeline of their own: architecture is drawn with the electrical run (`_architecture`) when both are ticked."""
-    return [x for x in selected if x != "electrical" and not (x == "architectural" and "electrical" in selected)]
+    return [x for x in selected if x != "electrical" and not (x in ("architectural", "pv") and "electrical" in selected)]
 
 
 def _run_disciplines(selected, root, code, flat, payload, submit):
@@ -264,6 +267,33 @@ def _architecture(selected, flat, submit):
     return {"state": "created" if submit else "valid", "errors": []}, {"plans": plans, "loads": loads, "inputs": inputs}
 
 
+def _pv(selected, flat, submit):
+    """The photovoltaic project: (result, data or None). It needs the electrical discipline (the project is created by `epc init`). On submit PVGIS is asked once for the typical year (before anything is written)."""
+    if "pv" not in selected:
+        return None, None
+    if "electrical" not in selected:
+        return {"state": "invalid", "errors": [], "problem": {"code": "pv_needs_electrical", "detail": ""}}, None
+    problem = pv.check(flat, building="architectural" in selected)
+    if problem:
+        return {"state": "invalid", "errors": [], "problem": problem}, None
+    if not submit:
+        return {"state": "valid", "errors": []}, None
+    try:
+        weather = pv.fetch_weather(flat)
+    except Exception as exc:      # PvError (English and Spanish) or anything the network raises: the project is not created
+        return {"state": "invalid", "errors": [], "problem": {"code": "pvgis", "detail": f"{exc} / {getattr(exc, 'es', '')}"[:300]}}, None
+    return {"state": "created", "errors": []}, {"section": pv.section(flat), "files": {pv.WEATHER_FILE: weather}, "aux": None if "architectural" in selected else (pv.aux_loads(flat), pv.board_of(flat))}
+
+
+def _merge_pv(data, pv_data):
+    """The run data with the PV section: a building run keeps its plans and loads; a PV-only run has no plans and an empty load list (the plant generates, it does not consume)."""
+    if not pv_data:
+        return data
+    (areas, loads), board = pv_data["aux"] or (([], []), None)
+    data = data or {"plans": {}, "loads": {"schema_version": "1.0", "areas": areas, "loads": loads}, "inputs": {"board": board, "documents": {"formats": ["pdf", "docx", "xlsx"]}}}
+    return dict(data, inputs=dict(data["inputs"], pv=pv_data["section"]), files=pv_data["files"])
+
+
 def _launch(root, folder, code, data, created):
     """Writes the plans as intake inputs (before the run freezes them) and starts the run; the job id, or None when the project was not created."""
     if not (data and created):
@@ -272,7 +302,24 @@ def _launch(root, folder, code, data, created):
     store = ProjectStore(folder)
     for name, text in data["plans"].items():
         store.write_input(f"plans/{name}", text)
+    for name, text in data.get("files", {}).items():
+        store.write_input(name, text)
     return runner.start(run_epc, root, code, data["loads"], data["inputs"])
+
+
+def _building_and_plant(selected, flat, submit):
+    """(architecture result, PV result, run data) of the building and the photovoltaic plant, merged into one run."""
+    arch, data = _architecture(selected, flat, submit)
+    pv_result, pv_data = _pv(selected, flat, submit)
+    return arch, pv_result, _merge_pv(data, pv_data)
+
+
+def _validated(default_root, payload, submit):
+    """The result of the checks that must pass before anything is written, or None when they do; `check` mode never fails here."""
+    if not submit:
+        return None
+    checked = handle(default_root, payload, False)
+    return checked if any(x["state"] == "invalid" for x in checked["results"].values()) else None
 
 
 def handle(default_root, payload, submit):
@@ -283,14 +330,14 @@ def handle(default_root, payload, submit):
     flat = dict(payload.get("answers", {}))
     if code:
         flat["project_code"] = flat.get("project_code") or code
-    if submit:      # nothing is written unless every check passes
-        checked = handle(default_root, payload, False)
-        if any(x["state"] == "invalid" for x in checked["results"].values()):
-            return checked
-    arch, data = _architecture(selected, flat, submit)
+    refused = _validated(default_root, payload, submit)
+    if refused:
+        return refused
+    arch, pv_result, data = _building_and_plant(selected, flat, submit)
+    if (pv_result or {}).get("state") == "invalid":
+        return {"results": {"pv": pv_result}}
     results, folder, created = _run_disciplines(selected, root, code, flat, payload, submit)
-    if arch:
-        results["architectural"] = arch
+    results.update({k: v for k, v in (("architectural", arch), ("pv", pv_result)) if v})
     report = {"results": results}
     if submit:
         report["saved_docs"] = save_docs(folder or root, created, payload)

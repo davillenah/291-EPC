@@ -35,7 +35,7 @@ DRAWINGS, DOCUMENTS, LAST_PRODUCER = 10, 11, 11
 DRAWING_SUFFIXES = (".dxf",)
 # Folders of a transmittal, numbered in reading order (UPPER_CASE, as in the naming proposal): the first level of `deliverables/TR-NNN/`.
 FOLDER_SLD, FOLDER_MLD, FOLDER_ARCHITECTURE = "01_SLD", "02_MLD", "03_ARCHITECTURE"
-FOLDER_PLANS, FOLDER_3D, FOLDER_DOCUMENTS, FOLDER_TABLES = "04_PLANS", "05_3D", "06_DOCUMENTS", "07_TABLES"
+FOLDER_PLANS, FOLDER_3D, FOLDER_DOCUMENTS, FOLDER_TABLES, FOLDER_PV = "04_PLANS", "05_3D", "06_DOCUMENTS", "07_TABLES", "08_PV"
 TRANSMITTAL = re.compile(r"TR-([0-9]{3,4})")
 
 
@@ -78,6 +78,8 @@ def drawing_folder(stem):
             return folder
     if any(mark in stem for mark in ("_model_3d", "_section_", "_elevation_")):
         return FOLDER_3D
+    if "_pv_" in stem:
+        return FOLDER_PV
     return FOLDER_PLANS
 
 

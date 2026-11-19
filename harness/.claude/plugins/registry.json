@@ -31,7 +31,8 @@
         "sld": "^0.1.4"
       },
       "skills": [
-        "design-board"
+        "design-board",
+        "freecad"
       ],
       "engine": [
         "aea90364",
@@ -44,6 +45,7 @@
         "load_balance",
         "mld",
         "plan",
+        "pv",
         "selectivity",
         "short_circuit",
         "sld",
@@ -51,7 +53,7 @@
         "titleblock",
         "voltage_drop"
       ],
-      "hash": "d01698d667af5d01"
+      "hash": "90664557bbf18741"
     },
     "doc-quality": {
       "version": "0.1.0",
@@ -76,7 +78,7 @@
         "plan",
         "titleblock"
       ],
-      "hash": "d567d7488150ab8b"
+      "hash": "d613c28e862e92d4"
     },
     "equipment-catalog": {
       "version": "0.1.0",
@@ -123,7 +125,7 @@
         "plan",
         "titleblock"
       ],
-      "hash": "1219b5d600a166c2"
+      "hash": "cfcfd26dc255e595"
     },
     "mld": {
       "version": "0.2.2",
@@ -152,7 +154,7 @@
         "titleblock",
         "voltage_drop"
       ],
-      "hash": "7fcc9314104f4dd8"
+      "hash": "1b6d1bab6e589b70"
     },
     "plan-drawing": {
       "version": "0.1.0",
@@ -168,7 +170,7 @@
         "plan",
         "titleblock"
       ],
-      "hash": "a0b0b77370b86eae"
+      "hash": "4434ad394beed0f6"
     },
     "pm2-docs": {
       "version": "0.1.0",
@@ -225,7 +227,7 @@
         "titleblock",
         "voltage_drop"
       ],
-      "hash": "2c54797d521fa198"
+      "hash": "38f9b59b1537cc8f"
     },
     "spec-writer": {
       "version": "0.1.0",
@@ -265,6 +267,9 @@
       "owner": "pm2-docs"
     },
     "design-board": {
+      "owner": "board-design"
+    },
+    "freecad": {
       "owner": "board-design"
     },
     "generate-specification": {

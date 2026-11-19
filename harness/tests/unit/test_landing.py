@@ -10,6 +10,7 @@ sys.path.insert(0, str(LANDING))
 import brief  # noqa: E402
 import build  # noqa: E402
 import house  # noqa: E402
+import pv  # noqa: E402
 import runner  # noqa: E402
 import server  # noqa: E402
 
@@ -153,6 +154,110 @@ class ServerTests(unittest.TestCase):
         p["answers"]["floor.rooms"] = [{"code": "PB-01", "name": "Sala", "west": "0", "south": "0", "east": "", "north": "3"}]
         r = server.handle(self.root, p, True)
         self.assertEqual(r["results"]["architectural"]["problem"]["code"], "rooms")
+        self.assertFalse(self.folder.exists())
+
+
+PV_ANSWERS = {"client.name": "Cliente Ficticio", "site.address": "Calle Ficticia 1", "site.installation_type": "Planta fotovoltaica", "supply.voltage.value": "400", "supply.earthing_system": "TT",
+              "supply.short_circuit_level.value": "6", "supply.short_circuit_level.origin": "dato ficticio", "pv.mode": "ground", "pv.latitude_deg": "-34.6", "pv.longitude_deg": "-58.4",
+              "pv.utc_offset_h": "-3", "pv.module": "longi.lr5-72hgd-560m", "pv.inverter": "sma.stp25000tl-30", "pv.isc_max_input_a": "49.5", "pv.target_kwp": "560", "pv.dc_ac_ratio": "1.2", "pv.aux_load_kw": "5", "pv.aux_phases": "3", "pv.aux_length_m": "60", "pv.board_fp": "0.9", "pv.site_width_m": "200", "pv.site_length_m": "120"}
+
+
+class PvProjectTests(unittest.TestCase):
+    """The photovoltaic project: latitude and longitude go to PVGIS before the project exists; the answer is stored as an input and named by the `pv` section."""
+
+    def setUp(self):
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        self.root = Path(tmp.name) / "projects"
+        self.root.mkdir()
+        self.folder = self.root / "PV-T1"
+        self.asked = []
+
+        def fetch(flat):
+            self.asked.append((flat["pv.latitude_deg"], flat["pv.longitude_deg"]))
+            return '{"weather": {}, "source": {"status": "pending review"}}'
+        real, pv.fetch_weather = pv.fetch_weather, fetch
+        self.addCleanup(setattr, pv, "fetch_weather", real)
+
+    def payload(self, **changes):
+        answers = dict(PV_ANSWERS, **changes)
+        return {"discipline": ["electrical", "pv"], "request": "planta fotovoltaica", "folder": str(self.folder), "docs": [], "answers": answers}
+
+    def test_the_request_names_the_discipline_and_proposes_what_is_pending_review(self):
+        it = server.interpret({"request": "Una planta fotovoltaica de 1 MWp", "lang": "es"})
+        self.assertEqual(it["brief"]["disciplines"], ["electrical", "pv"])
+        self.assertEqual((it["values"]["pv.utc_offset_h"], it["values"]["pv.dc_ac_ratio"]), (-3, 1.2))
+        self.assertNotIn("pv.azimuth_deg", it["values"])
+        self.assertNotIn("pv.tilt_deg", it["values"])
+        self.assertIn("pv.utc_offset_h", it["assumed"])
+        self.assertNotIn("pv.latitude_deg", it["values"])
+
+    def test_the_form_comes_from_the_catalogs_and_asks_for_latitude_and_longitude(self):
+        form = server.form_of("electrical,pv")["forms"]
+        self.assertEqual([f["id"] for f in form], ["electrical", "pv"])
+        fields = {f["path"]: f for f in form[1]["fields"]}
+        self.assertTrue(fields["pv.latitude_deg"]["required"] and fields["pv.longitude_deg"]["required"])
+        self.assertIn("longi.lr5-72hgd-560m", fields["pv.module"]["options"])
+        self.assertIn("sma.stp25000tl-30", fields["pv.inverter"]["options"])
+
+    def test_check_asks_and_never_fills_what_the_catalog_lacks(self):
+        self.assertEqual(server.handle(self.root, self.payload(), False)["results"]["pv"]["state"], "valid")
+        self.assertEqual(self.asked, [])
+        for name, code in (("pv.latitude_deg", "pv_missing"), ("pv.isc_max_input_a", "pv_isc"), ("pv.aux_load_kw", "pv_missing"), ("pv.site_width_m", "pv_missing")):
+            answers = dict(PV_ANSWERS)
+            del answers[name]
+            r = server.handle(self.root, {**self.payload(), "answers": answers}, False)
+            self.assertEqual(r["results"]["pv"]["problem"]["code"], code, name)
+        self.assertEqual(server.handle(self.root, self.payload(**{"pv.latitude_deg": "-95"}), False)["results"]["pv"]["problem"]["code"], "pv_range")
+        self.assertEqual(server.handle(self.root, self.payload(**{"pv.latitude_deg": "sur"}), False)["results"]["pv"]["problem"]["code"], "pv_number")
+
+    def test_pv_needs_the_electrical_discipline(self):
+        r = server.handle(self.root, {**self.payload(), "discipline": ["pv"]}, False)
+        self.assertEqual(r["results"]["pv"]["problem"]["code"], "pv_needs_electrical")
+
+    def test_submit_asks_pvgis_stores_the_file_and_runs_with_the_section(self):
+        calls = []
+
+        def fake(root, args, timeout=120):
+            calls.append(args)
+            if args[2] == "init":
+                return real(root, args, timeout)
+            return {"ok": True, "data": {"mode": "edit", "run": {"summary": {"ok": True}, "results": []}}}
+        real, server.run_epc = server.run_epc, fake
+        self.addCleanup(setattr, server, "run_epc", real)
+        r = server.handle(self.root, self.payload(), True)
+        self.assertEqual(r["results"]["pv"]["state"], "created")
+        self.assertEqual(self.asked, [("-34.6", "-58.4")])
+        for _ in range(50):
+            if runner.status(r["job"])["state"] != "running":
+                break
+            time.sleep(0.1)
+        self.assertTrue((self.folder / "inputs" / "weather" / "weather_pvgis.json").is_file())
+        import json
+        inputs = json.loads(Path(next(a[a.index("--engine-inputs") + 1] for a in calls if "run" in a)).read_text(encoding="utf-8"))
+        self.assertEqual(inputs["pv"]["weather_file"], "weather/weather_pvgis.json")
+        self.assertNotIn("weather", inputs["pv"]["document"])
+        self.assertEqual(inputs["pv"]["document"]["site"]["latitude_deg"], -34.6)
+        array = inputs["pv"]["document"]["arrays"][0]
+        self.assertEqual((array["inverter"]["isc_max_input_a"], array["n_modules"]), (49.5, 1000))
+        self.assertNotIn("tilt_deg", array)
+        self.assertNotIn("azimuth_deg", array)
+        self.assertEqual(inputs["pv"]["layout"]["site"]["width_m"], 200.0)
+        self.assertEqual(inputs["board"]["fp_default"], 0.9)
+
+    def test_a_rooftop_plant_has_no_layout_and_a_pvgis_failure_creates_nothing(self):
+        flat = pv.section(dict(PV_ANSWERS, **{"pv.mode": "rooftop", "pv.roof_width_m": "12", "pv.roof_slope_m": "6"}))
+        self.assertEqual((sorted(k for k in flat if k in ("roof", "flat_roof", "layout")), flat["flat_roof"]["target_modules"], flat["flat_roof"]["width_m"]), (["flat_roof"], 1000, 12.0))
+        roof = pv.section(dict(PV_ANSWERS, **{"pv.mode": "rooftop", "pv.roof_type": "pitched", "pv.roof_width_m": "12", "pv.roof_slope_m": "6"}))
+        self.assertNotIn("layout", roof)
+        self.assertEqual((roof["roof"]["target_modules"], roof["roof"]["planes"][0]["width_m"], "tilt_deg" in roof["roof"]["planes"][0]), (1000, 12.0, False))
+        self.assertEqual(pv.check(dict(PV_ANSWERS, **{"pv.mode": "rooftop"}))["detail"], "roof_width_m, roof_slope_m")
+
+        def down(flat):
+            raise OSError("no route")
+        pv.fetch_weather = down
+        r = server.handle(self.root, self.payload(), True)
+        self.assertEqual(r["results"]["pv"]["problem"]["code"], "pvgis")
         self.assertFalse(self.folder.exists())
 
 

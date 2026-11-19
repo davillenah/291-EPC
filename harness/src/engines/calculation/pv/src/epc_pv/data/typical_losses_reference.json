@@ -1,0 +1,27 @@
+{
+ "schema_version": "1.0",
+ "engine": "pv",
+ "topic": "typical_losses_reference",
+ "_note": {
+  "en": "Reference (example) loss factors of the performance-ratio method PR = (1 - A - Ptemp) * B * C * D * E * F, as given in an Argentine PV design course (UTN Buenos Aires e-learning, module 2 unit 3, figure 'reference losses'). They are illustrative typical values, not values of a standard. Fractions, not percent. Not wired into params.json; the owner decides if and how they replace the typical values there. Not verified (status pending review).",
+  "es": "Factores de perdida de referencia (ejemplo) del metodo de performance ratio PR = (1 - A - Ptemp) * B * C * D * E * F, segun un curso argentino de diseno FV (UTN Buenos Aires e-learning, modulo 2 unidad 3, figura 'perdidas de referencia'). Son valores tipicos ilustrativos, no de una norma. Fracciones, no porcentaje. No conectados a params.json; el dueno decide si reemplazan alli los valores tipicos. No verificado (status pending review)."
+ },
+ "source": {
+  "title": "Factibilidad tecnica y economica, performance ratio (course material)",
+  "publisher": "UTN Buenos Aires, Centro de e-Learning SCEU"
+ },
+ "losses_fraction": {
+  "module_mismatch_A1": 0.015,
+  "soiling_A2": 0.02,
+  "angular_spectral_A3": 0.02,
+  "shading_A4": 0.04,
+  "A_sum": 0.095,
+  "dc_cabling": 0.015,
+  "ac_cabling": 0.02,
+  "availability": 0.02,
+  "mppt_tracking": 0.015
+ },
+ "inverter_efficiency_E_example": 0.98,
+ "temperature_loss_note": "Ptemp = |alpha| * (Tc - 25), Tc = Tamb + (NOCT - 20) * G / 800; the course states about 0.4 %/C for a typical module and notes that some regulations use a fixed G between 500 and 850 W/m2.",
+ "status": "pending review"
+}

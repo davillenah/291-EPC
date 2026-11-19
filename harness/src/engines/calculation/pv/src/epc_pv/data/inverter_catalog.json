@@ -1,0 +1,119 @@
+{
+ "schema_version": "1.0",
+ "engine": "pv",
+ "topic": "inverter_catalog",
+ "_note": {
+  "en": "Inverter data extracted as numbers from a manufacturer data sheet. The 'inverter' block has the keys the engine expects in arrays[].inverter. Not verified (status pending review).",
+  "es": "Datos de inversores extraidos como numeros de una ficha de fabricante. El bloque 'inverter' tiene las claves que el motor espera en arrays[].inverter. No verificado (status pending review)."
+ },
+ "inverters": [
+  {
+   "id": "sma.stp15000tl-30",
+   "manufacturer": "SMA",
+   "series": "Sunny Tripower",
+   "model": "STP 15000TL-30",
+   "inverter": {
+    "pac0_w": 15000,
+    "mppt_v_min": 240,
+    "mppt_v_max": 800,
+    "vdc_max_v": 1000,
+    "n_mppt": 2,
+    "i_max_input_a": 33,
+    "isc_max_input_a": null
+   },
+   "dc_rated_power_w": 15330,
+   "max_pv_power_wp": 27000,
+   "dc_start_voltage_v": 188,
+   "dc_min_voltage_v": 150,
+   "dc_rated_voltage_v": 600,
+   "strings_per_mppt": 3,
+   "max_apparent_ac_va": 15000,
+   "ac_voltage_nominal_v": 400,
+   "ac_max_current_a": 29,
+   "efficiency_max_pct": 98.4,
+   "efficiency_euro_pct": 98.0,
+   "operating_temp_c": [
+    -25,
+    60
+   ],
+   "topology": "transformerless",
+   "ip_rating": "IP65",
+   "source": "SMA Sunny Tripower 15000TL/20000TL/25000TL data sheet (STP25000TL-30-DES1742-V31, October 2017)",
+   "note": "isc_max_input_a is not printed on the data sheet: left null, to be confirmed with the manufacturer; the engine requires a number there. Efficiency vs load is only a graph in the sheet and is not extracted.",
+   "status": "pending review",
+   "verified_by": null
+  },
+  {
+   "id": "sma.stp20000tl-30",
+   "manufacturer": "SMA",
+   "series": "Sunny Tripower",
+   "model": "STP 20000TL-30",
+   "inverter": {
+    "pac0_w": 20000,
+    "mppt_v_min": 320,
+    "mppt_v_max": 800,
+    "vdc_max_v": 1000,
+    "n_mppt": 2,
+    "i_max_input_a": 33,
+    "isc_max_input_a": null
+   },
+   "dc_rated_power_w": 20440,
+   "max_pv_power_wp": 36000,
+   "dc_start_voltage_v": 188,
+   "dc_min_voltage_v": 150,
+   "dc_rated_voltage_v": 600,
+   "strings_per_mppt": 3,
+   "max_apparent_ac_va": 20000,
+   "ac_voltage_nominal_v": 400,
+   "ac_max_current_a": 29,
+   "efficiency_max_pct": 98.4,
+   "efficiency_euro_pct": 98.0,
+   "operating_temp_c": [
+    -25,
+    60
+   ],
+   "topology": "transformerless",
+   "ip_rating": "IP65",
+   "source": "SMA Sunny Tripower 15000TL/20000TL/25000TL data sheet (STP25000TL-30-DES1742-V31, October 2017)",
+   "note": "isc_max_input_a is not printed on the data sheet: left null, to be confirmed with the manufacturer; the engine requires a number there. Efficiency vs load is only a graph in the sheet and is not extracted.",
+   "status": "pending review",
+   "verified_by": null
+  },
+  {
+   "id": "sma.stp25000tl-30",
+   "manufacturer": "SMA",
+   "series": "Sunny Tripower",
+   "model": "STP 25000TL-30",
+   "inverter": {
+    "pac0_w": 25000,
+    "mppt_v_min": 390,
+    "mppt_v_max": 800,
+    "vdc_max_v": 1000,
+    "n_mppt": 2,
+    "i_max_input_a": 33,
+    "isc_max_input_a": null
+   },
+   "dc_rated_power_w": 25550,
+   "max_pv_power_wp": 45000,
+   "dc_start_voltage_v": 188,
+   "dc_min_voltage_v": 150,
+   "dc_rated_voltage_v": 600,
+   "strings_per_mppt": 3,
+   "max_apparent_ac_va": 25000,
+   "ac_voltage_nominal_v": 400,
+   "ac_max_current_a": 36.2,
+   "efficiency_max_pct": 98.3,
+   "efficiency_euro_pct": 98.1,
+   "operating_temp_c": [
+    -25,
+    60
+   ],
+   "topology": "transformerless",
+   "ip_rating": "IP65",
+   "source": "SMA Sunny Tripower 15000TL/20000TL/25000TL data sheet (STP25000TL-30-DES1742-V31, October 2017)",
+   "note": "isc_max_input_a is not printed on the data sheet: left null, to be confirmed with the manufacturer; the engine requires a number there. Efficiency vs load is only a graph in the sheet and is not extracted.",
+   "status": "pending review",
+   "verified_by": null
+  }
+ ]
+}
