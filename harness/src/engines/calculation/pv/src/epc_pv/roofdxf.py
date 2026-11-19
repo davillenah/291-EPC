@@ -55,23 +55,43 @@ def _entities(pairs: List[Tuple[int, str]]) -> List[Dict[str, Any]]:
             _field(cur, code, value)
         elif value == "ENDSEC":
             break
-        elif value == "VERTEX" and cur["type"] == "POLYLINE":
-            cur["_vertex"] = {}
-            cur["vertices"].append(cur["_vertex"])
-        elif value == "SEQEND":
-            cur["_vertex"] = None
         else:
-            cur = _entity(value)
-            out.append(cur)
+            cur = _marker(cur, value, out)
     return out
+
+
+def _marker(cur: Dict[str, Any], kind: str, out: List[Dict[str, Any]]) -> Dict[str, Any]:
+    """The entity that follows a `0` pair: a vertex joins the open POLYLINE, SEQEND closes it, anything else starts a new entity."""
+    if kind == "VERTEX" and cur["type"] == "POLYLINE":
+        cur["_vertex"] = {}
+        cur["vertices"].append(cur["_vertex"])
+    elif kind == "SEQEND":
+        cur["_vertex"] = None
+    else:
+        cur = _entity(kind)
+        out.append(cur)
+    return cur
 
 
 def _entity(kind: str) -> Dict[str, Any]:
     return {"type": kind, "layer": "", "closed": False, "vertices": [], "text": "", "x": None, "y": None, "ax": None, "ay": None, "_vertex": None}
 
 
+def _point(ent: Dict[str, Any], code: int, value: str) -> None:
+    """Group 10 or 20: a vertex coordinate of a polyline or the insertion point of a text."""
+    axis, number = ("x" if code == 10 else "y"), float(value)
+    if ent["type"] == "LWPOLYLINE":
+        if axis == "x":
+            ent["vertices"].append({"x": number})
+        else:
+            ent["vertices"][-1]["y"] = number
+    elif ent["type"] == "POLYLINE" and ent["_vertex"] is not None:
+        ent["_vertex"][axis] = number
+    elif ent["type"] in ("TEXT", "MTEXT"):
+        ent[axis] = number
+
+
 def _field(ent: Dict[str, Any], code: int, value: str) -> None:
-    vertex = ent["_vertex"]
     if code == 8:
         ent["layer"] = value
     elif code == 70 and ent["type"] in ("LWPOLYLINE", "POLYLINE"):
@@ -81,25 +101,22 @@ def _field(ent: Dict[str, Any], code: int, value: str) -> None:
     elif code in (11, 21) and ent["type"] == "TEXT":
         ent["a" + ("x" if code == 11 else "y")] = float(value)      # the alignment point replaces the insertion point of a centred text
     elif code in (10, 20):
-        axis = "x" if code == 10 else "y"
-        if ent["type"] == "LWPOLYLINE":
-            if axis == "x":
-                ent["vertices"].append({"x": float(value)})
-            else:
-                ent["vertices"][-1]["y"] = float(value)
-        elif ent["type"] == "POLYLINE" and vertex is not None:
-            vertex[axis] = float(value)
-        elif ent["type"] in ("TEXT", "MTEXT"):
-            ent[axis] = float(value)
+        _point(ent, code, value)
+
+
+def _corners(ent: Dict[str, Any], scale: float) -> List[Tuple[float, float]]:
+    """The corners of a polyline in metres (a closing vertex equal to the first one is dropped)."""
+    pts = [(v["x"] * scale, v["y"] * scale) for v in ent["vertices"] if "x" in v and "y" in v]
+    if len(pts) == 5 and abs(pts[0][0] - pts[-1][0]) < TOL and abs(pts[0][1] - pts[-1][1]) < TOL:
+        pts = pts[:-1]
+    return pts
 
 
 def _box(ent: Dict[str, Any], scale: float, what: str) -> Dict[str, float]:
     """The axis-aligned rectangle of a closed polyline (x0, y0, x1, y1 in metres); anything else is refused."""
-    pts = [(v["x"] * scale, v["y"] * scale) for v in ent["vertices"] if "x" in v and "y" in v]
-    if len(pts) == 5 and abs(pts[0][0] - pts[-1][0]) < TOL and abs(pts[0][1] - pts[-1][1]) < TOL:
-        pts = pts[:-1]
+    pts = _corners(ent, scale)
     xs, ys = sorted({round(p[0], 6) for p in pts}), sorted({round(p[1], 6) for p in pts})
-    if not ent["closed"] or len(pts) != 4 or len(xs) != 2 or len(ys) != 2:
+    if not (ent["closed"] and len(pts) == 4 and len(xs) == 2 and len(ys) == 2):
         raise PvError("err_dxf", detail=bi(f"{what} on layer {ent['layer']} is not a closed axis-aligned rectangle", f"{what} en la capa {ent['layer']} no es un rectángulo cerrado alineado con los ejes"))
     return {"x0": xs[0], "y0": ys[0], "x1": xs[1], "y1": ys[1]}
 
@@ -148,36 +165,55 @@ def _plane(n: int, box: Dict[str, float], data: Dict[str, float], obstacles: Lis
     return out
 
 
-def read(content: str, setback_m: float) -> Dict[str, Any]:
-    """{planes, warnings, source} of the DXF text `content`; `setback_m` (the margin kept free along every edge) is given by the caller."""
-    if isinstance(content, bytes):
-        content = content.decode("utf-8", errors="replace")
+def _scale_of(content: str):
+    """(pairs, units code, metres per unit) of the file text; a binary file or one without units is refused."""
     if content.startswith("AutoCAD Binary DXF"):
         raise PvError("err_dxf", detail=bi("binary DXF is not read: save the roof as ASCII DXF", "no se lee DXF binario: guardar la cubierta como DXF ASCII"))
     pairs = _pairs(content)
     code = _units(pairs)
     if code not in UNITS_M:
         raise PvError("err_dxf", detail=bi("the file does not declare its drawing units ($INSUNITS): set them to metres or millimetres", "el archivo no declara sus unidades de dibujo ($INSUNITS): fijarlas en metros o milímetros"))
-    scale = UNITS_M[code]
+    return pairs, code, UNITS_M[code]
+
+
+def _on(ents: List[Dict[str, Any]], layer: str) -> List[Dict[str, Any]]:
+    return [e for e in ents if e["layer"].upper() == layer and e["type"] in ("LWPOLYLINE", "POLYLINE")]
+
+
+def _texts(ents: List[Dict[str, Any]], scale: float) -> List[Tuple[float, float, str]]:
+    """(x, y, text) in metres of the texts of the data layer; a centred text is placed by its alignment point."""
+    out = []
+    for e in ents:
+        if e["layer"].upper() == LAYER_DATA and e["type"] in ("TEXT", "MTEXT") and e["x"] is not None:
+            x, y = (e["x"] if e["ax"] is None else e["ax"]), (e["y"] if e["ay"] is None else e["ay"])
+            out.append((x * scale, y * scale, e["text"]))
+    return out
+
+
+def _plane_of(n: int, box: Dict[str, float], texts, obstacles, setback_m: float):
+    """(plane, warnings) of one rectangle: its texts give tilt and azimuth, its obstacles are those fully inside."""
+    data = _text_data([t for x, y, t in texts if _inside(box, x, y)])
+    inside = [o for o in obstacles if _inside(box, o["x0"], o["y0"]) and _inside(box, o["x1"], o["y1"])]
+    missing = [item(code, plane=f"R{n}") for key, code in (("azimuth_deg", "roof_dxf_azimuth"), ("tilt_deg", "roof_dxf_tilt")) if key not in data]
+    return _plane(n, box, data, inside, setback_m), missing
+
+
+def read(content: str, setback_m: float) -> Dict[str, Any]:
+    """{planes, warnings, source} of the DXF text `content`; `setback_m` (the margin kept free along every edge) is given by the caller."""
+    if isinstance(content, bytes):
+        content = content.decode("utf-8", errors="replace")
+    pairs, code, scale = _scale_of(content)
     ents = _entities(pairs)
-    on = lambda name: [e for e in ents if e["layer"].upper() == name and e["type"] in ("LWPOLYLINE", "POLYLINE")]      # noqa: E731
-    boxes = [_box(e, scale, "a roof plane") for e in on(LAYER_PLANE)]
+    boxes = [_box(e, scale, "a roof plane") for e in _on(ents, LAYER_PLANE)]
     if not boxes:
         raise PvError("err_dxf", detail=bi(f"no closed rectangle on layer {LAYER_PLANE}", f"no hay un rectángulo cerrado en la capa {LAYER_PLANE}"))
-    order = sorted(range(len(boxes)), key=lambda i: (-boxes[i]["y1"], boxes[i]["x0"]))
-    obstacles = [_box(e, scale, "an obstacle") for e in on(LAYER_OBSTACLE)]
-    texts = [((e["ax"] if e["ax"] is not None else e["x"]) * scale, (e["ay"] if e["ay"] is not None else e["y"]) * scale, e["text"]) for e in ents if e["layer"].upper() == LAYER_DATA and e["type"] in ("TEXT", "MTEXT") and e["x"] is not None]
+    boxes.sort(key=lambda b: (-b["y1"], b["x0"]))
+    obstacles, texts = [_box(e, scale, "an obstacle") for e in _on(ents, LAYER_OBSTACLE)], _texts(ents, scale)
     planes, warnings = [], []
-    for n, i in enumerate(order, start=1):
-        box = boxes[i]
-        here = [t for x, y, t in texts if _inside(box, x, y)]
-        data = _text_data(here)
-        inside = [o for o in obstacles if _inside(box, o["x0"], o["y0"]) and _inside(box, o["x1"], o["y1"])]
-        planes.append(_plane(n, box, data, inside, setback_m))
-        if "azimuth_deg" not in data:
-            warnings.append(item("roof_dxf_azimuth", plane=f"R{n}"))
-        if "tilt_deg" not in data:
-            warnings.append(item("roof_dxf_tilt", plane=f"R{n}"))
+    for n, box in enumerate(boxes, start=1):
+        plane, missing = _plane_of(n, box, texts, obstacles, setback_m)
+        planes.append(plane)
+        warnings += missing
     lost = len(obstacles) - sum(len(p["obstacles"]) for p in planes)
     warnings += [item("roof_dxf_obstacles", n=lost)] if lost else []
     return {"schema_version": SCHEMA_VERSION, "planes": planes, "warnings": warnings, "source": {"units_code": code, "to_metres": scale, "layers": [LAYER_PLANE, LAYER_OBSTACLE, LAYER_DATA]}}
