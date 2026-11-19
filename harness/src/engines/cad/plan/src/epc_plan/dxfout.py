@@ -172,6 +172,52 @@ def _add_backdrop(doc, msp, backdrop: Dict[str, Any], cfg, scale: float, height:
     return count
 
 
+def _rgb(color: str) -> int:
+    return ezdxf.colors.rgb2int(tuple(int(color[k:k + 2], 16) for k in (1, 3, 5)))
+
+
+def _solid(msp, rect, scale: float, color: str, layer: str) -> None:
+    x0, y0, x1, y1 = (v * scale for v in rect)
+    msp.add_solid([(x0, -y0), (x1, -y0), (x0, -y1), (x1, -y1)], dxfattribs={"layer": layer, "true_color": _rgb(color)})
+
+
+def _add_luxbar(msp, bar: Dict[str, Any], scale: float, height: float, cells_layer: str, text_layer: str, style: str) -> int:
+    """The colour bar of the lux map: its cells, the text of each tick and the caption; returns how many entities were added."""
+    left = ezdxf.enums.TextEntityAlignment.MIDDLE_LEFT
+    for c in bar["cells"]:
+        _solid(msp, c["rect"], scale, c["color"], cells_layer)
+    for t in bar["ticks"]:
+        msp.add_text(t["text"], height=height, dxfattribs={"layer": text_layer, "style": style}).set_placement(((t["at"][0] + 0.15) * scale, -t["at"][1] * scale), align=left)
+    caption = bar["caption"]["en"] if isinstance(bar["caption"], dict) else bar["caption"]
+    msp.add_text(caption, height=height, dxfattribs={"layer": text_layer, "style": style}).set_placement((bar["at"][0] * scale, -bar["at"][1] * scale), align=left)
+    return len(bar["cells"]) + len(bar["ticks"]) + 1
+
+
+def _add_luxmap(doc, msp, luxmap: Dict[str, Any], scale: float, height: float, layer, style: str = "Standard") -> int:
+    """The lux map under the luminaires, from the map the discipline gives in metres (y down, like the nodes): `rooms` with `cells` ({rect, color}) as a smooth colour field, `curves` (lines of equal level,
+    {points, level_lux, color, weight}) with their value in lux, a reading of each room and a colour bar (`bar`: cells, ticks, caption, at). Returns how many entities were added."""
+    count = 0
+    cells_layer, curves_layer, text_layer = layer("ELEC-LUX-MAPA"), layer("ELEC-LUX-CURVAS"), layer("ELEC-LUX-TEXTO")
+    for name in (cells_layer, curves_layer, text_layer):
+        if name not in doc.layers:
+            doc.layers.add(name)
+    middle = ezdxf.enums.TextEntityAlignment.MIDDLE_CENTER
+    for room in luxmap["rooms"]:
+        for c in room["cells"]:
+            _solid(msp, c["rect"], scale, c["color"], cells_layer)
+            count += 1
+        for curve in room["curves"]:
+            msp.add_lwpolyline([(x * scale, -y * scale) for x, y in curve["points"]], dxfattribs={"layer": curves_layer, "true_color": _rgb(curve["color"]), "lineweight": int(curve["weight"] * 100)})
+            mid = curve["points"][len(curve["points"]) // 2]
+            msp.add_text(f"{curve['level_lux']:g}", height=height, dxfattribs={"layer": text_layer, "style": style, "true_color": _rgb(curve["color"])}).set_placement((mid[0] * scale, -mid[1] * scale), align=middle)
+            count += 2
+        x0, y0, x1, y1 = room["box"]
+        msp.add_text(f"{room['target_lux']:g} lx / {room['stats']['avg_lux']:g}", height=height, dxfattribs={"layer": text_layer, "style": style}).set_placement(((x0 + x1) / 2 * scale, -(y1 - 0.3) * scale), align=middle)
+        count += 1
+    count += _add_luxbar(msp, luxmap["bar"], scale, height, cells_layer, text_layer, style) if luxmap.get("bar") else 0
+    return count
+
+
 def _dxf_version(cfg, version):
     """The DXF version asked for (the default when empty); refuses one the configuration does not list."""
     version = version or cfg["default_version"]
@@ -189,9 +235,9 @@ def _sizes(look: Dict[str, Any], cfg: Dict[str, Any], scale: float, paper_scale:
     return float(look["heights"]["plan_text_m"]) * scale, cfg["node_symbol_size_m"]
 
 
-def write_dxf(result: Dict[str, Any], path: Path, version: str = "", params: Dict[str, Any] = core.PARAMS, layers_file=None, backdrop: Optional[Dict[str, Any]] = None, paper_scale: Optional[int] = None) -> List[str]:
+def write_dxf(result: Dict[str, Any], path: Path, version: str = "", params: Dict[str, Any] = core.PARAMS, layers_file=None, backdrop: Optional[Dict[str, Any]] = None, paper_scale: Optional[int] = None, luxmap: Optional[Dict[str, Any]] = None) -> List[str]:
     """Write the DXF of a result to `path`; returns the warnings (audit findings, read-back differences). `backdrop`: the walls and room names of the building under the services (see `_add_backdrop`).
-    `paper_scale`: the scale of the sheet it will be placed on, so that text and symbols are sized for it (see `_sizes`)."""
+    `paper_scale`: the scale of the sheet it will be placed on, so that text and symbols are sized for it (see `_sizes`). `luxmap`: the lux map of the floor (see `_add_luxmap`), drawn under the services."""
     cfg = params["dxf"]
     version = _dxf_version(cfg, version)
     profile = core.load_profile(result["discipline"])
@@ -208,7 +254,8 @@ def write_dxf(result: Dict[str, Any], path: Path, version: str = "", params: Dic
     textstyle.add_styles(doc)
     style = look["font"]["style"]
     height, symbol = _sizes(look, cfg, scale, paper_scale)
-    expected = _add_nodes(doc, msp, result, node_kinds, dict(cfg, node_symbol_size_m=symbol), scale, height, layer, style) + _add_stretches(msp, result, line_kinds, cfg, scale, height, layer, doc, style, look["trays"])
+    expected = _add_luxmap(doc, msp, luxmap, scale, height, layer, style) if luxmap else 0
+    expected += _add_nodes(doc, msp, result, node_kinds, dict(cfg, node_symbol_size_m=symbol), scale, height, layer, style) + _add_stretches(msp, result, line_kinds, cfg, scale, height, layer, doc, style, look["trays"])
     if backdrop:
         expected += _add_backdrop(doc, msp, backdrop, cfg, scale, height, layer, style)
 

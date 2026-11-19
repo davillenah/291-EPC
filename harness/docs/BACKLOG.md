@@ -645,7 +645,7 @@ Van después de la disciplina eléctrica, salvo que una tarea eléctrica las nec
 - [ ] **ILU-19** Las luminarias del grupo `emergency` no se ofrecen al comparar ni al elegir sola; hoy el grupo solo lo trae la de fábrica (las del catálogo propio que sean de emergencia deben llevar ese grupo).
 
 *Mejoras › Pantalla*
-- [ ] **ILU-20** Exportar el mapa a DXF. **En espera** (2026-11-01): todo lo que sea optimizar el DXF queda para después. → `ESP-01`.
+- [x] **ILU-20** (2026-11-18) Mapa de lux en DXF: lámina `<tablero>_luxmap_<planta>.dxf` en `04_PLANS` y figuras en el PDF y el Word del estudio luminotécnico (celdas de color según el nivel exigido y curvas con su valor). Falta el mapa de tomacorrientes → `ESP-01`.
 - [ ] **ILU-21** Arrastrar las luminarias de la vista previa antes de aplicar (hoy se arrastran después, ya como nodos).
 
 *Mejoras › Entregables*

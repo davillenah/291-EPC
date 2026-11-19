@@ -14,6 +14,7 @@ The result does NOT change the load list: the power of the lighting circuits is 
 `loads` ({load id: [room ids]}) and `tolerance_pct` (required with `loads`, never defaulted): the installed power of those rooms is compared with the power of
 the load (units W or kW only) and `outputs["load_check"]` lists each pair; a pair that differs by more than the tolerance is a `major` finding.
 """
+from disciplines.electrical_lv import lux_map
 from disciplines.electrical_lv.stages import engine_calls as EC
 from disciplines.electrical_lv.stages.base import Stage, StageInputError, engine_finding
 
@@ -96,7 +97,7 @@ def load_check(section, result, loads):
 def _run(section):
     import epc_lighting
     try:
-        options = epc_lighting.Options(**(section.get("options") or {}))
+        options = epc_lighting.Options(**{**lux_map.RETURN_GRID, **(section.get("options") or {})})
         return epc_lighting.run(section["document"], options).as_dict()
     except (epc_lighting.LightingError, TypeError) as exc:  # TypeError: an option the engine does not have
         raise StageInputError([str(exc)]) from exc

@@ -14,6 +14,8 @@ The plan is drawn in metres (scale 1 unit = 1 m) in the frame of the architectur
 """
 import copy
 
+from disciplines.electrical_lv import lux_map
+
 KINDS = {"general": "TG", "special": "TE"}                # kind of receptacle (epc_receptacles) -> node kind of the plan profile
 FAMILIES = {"IUG": "lighting", "IUE": "lighting", "TUG": "receptacles", "TUE": "receptacles"}
 SCALE = {"p1": [0, 0], "p2": [1, 0], "distance_m": 1}
@@ -112,7 +114,8 @@ def design_floor(floor, rooms, boxes, lighting, outlets, catalogue, taken=()):
                 "nodes": [{"id": BOARD_ID, "kind": "TB", "x": board["x_m"], "y": board["y_m"]}] + _nodes(rooms, boxes, lighting, outlets, kinds)}
     runs, wiring = _propose(design, document, floor, boxes, taken)
     _refuse_unrouted(floor, wiring)
-    return {"document": document, "runs": runs, "wiring": wiring, "circuits": _circuits(wiring), "riser_m": _risers(floor), "backdrop": backdrop_of(floor["architecture"]), "warnings": [f"floor {floor['id']}: {w}" for w in runs["warnings"] + wiring["warnings"]]}
+    return {"document": document, "runs": runs, "wiring": wiring, "circuits": _circuits(wiring), "riser_m": _risers(floor), "backdrop": backdrop_of(floor["architecture"]),
+            "luxmap": lux_map.floor_map(lighting["rooms"], boxes, {r["id"]: r for r in rooms}, to_plan), "warnings": [f"floor {floor['id']}: {w}" for w in runs["warnings"] + wiring["warnings"]]}
 
 
 def _corner(points):

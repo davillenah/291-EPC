@@ -10,6 +10,8 @@ Language: with a project in Spanish the descriptive report is the Spanish text o
 import hashlib
 from pathlib import Path
 
+from disciplines.electrical_lv import lux_map
+
 from disciplines.electrical_lv.stages import engine_calls as EC
 
 FORMATS = ("pdf", "docx", "xlsx")
@@ -91,13 +93,23 @@ def _terminal_block_report(d, project):
                        {"type": "p", "text": f"Terminals in total: {d['totals']['terminals']}."}, _table(["section (mm2)", "terminals"], totals)] + _notes(d)}
 
 
-def _lighting_report(d, project):
+def _readings(result, language):
+    """The table of the lux readings of the rooms that have a map: required, lumen-method average, direct-light minimum / average / maximum, uniformity and whether it complies."""
+    maps = [m for m in (lux_map.room_map(x) for x in result["rooms"]) if m]
+    return [[m["name"] or m["id"], m["target_lux"], m["average_lux"], f"{m['stats']['min_lux']:g} / {m['stats']['avg_lux']:g} / {m['stats']['max_lux']:g}", m["stats"]["min_over_avg"],
+             lux_map.say("yes" if m["complies"] else "no", language)] for m in maps]
+
+
+def _lighting_report(d, project, language="en"):
     rows = [[r["id"], r.get("name"), (r.get("luminaire") or {}).get("name"), (r.get("target") or {}).get("value"), (r.get("flux") or {}).get("luminaires_required"), (r.get("layout") or {}).get("installed")]
             for r in d["result"]["rooms"]]
     counts = d["result"]["counts"]
+    blocks = [{"type": "p", "text": f"Rooms: {counts['rooms']}; luminaires: {counts['luminaires']}; warnings: {counts['warnings']}. Engine {d['engine']['name']} {d['engine']['version']}."},
+              _table(["room", "name", "luminaire", "target (lx)", "required", "installed"], rows)]
+    readings = _readings(d["result"], language)
+    blocks += [_table(lux_map.TEXT["columns"]["es" if language == "es" else "en"], readings)] if readings else []
     return {"title": "Lighting study", "subtitle": project, "footer": f"Lighting study - {project}", "page_label": PAGE_LABEL,
-            "blocks": [{"type": "p", "text": f"Rooms: {counts['rooms']}; luminaires: {counts['luminaires']}; warnings: {counts['warnings']}. Engine {d['engine']['name']} {d['engine']['version']}."},
-                       _table(["room", "name", "luminaire", "target (lx)", "required", "installed"], rows)] + _notes({"issues": d["result"].get("warnings")})}
+            "blocks": blocks + lux_map.study_blocks(d["result"], language) + _notes({"issues": d["result"].get("warnings")})}
 
 
 def _boq_report(d, project):
@@ -185,7 +197,7 @@ def to_report(name, document, project, language="en"):
     """The report structure of a document, or None when its structure is its own (not rendered). `language` is the one of the project (`es` writes the platform's own words in Spanish)."""
     if name == "descriptive_report" and language == "es" and isinstance(document.get("sections"), list):
         return _descriptive_report_es(document, project)
-    report = _to_report(name, document, project)
+    report = _lighting_report(document, project, language) if name == "lighting_study" else _to_report(name, document, project)
     return _in_spanish(report) if report is not None and language == "es" else report
 
 
