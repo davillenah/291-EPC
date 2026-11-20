@@ -1,0 +1,279 @@
+{
+  "schema_version": "1.0",
+  "id": "m10_54_108_1800x1134x30",
+  "name": {
+    "en": "M10 54-cell class, 108 cells 6x18, 1800 x 1134 x 30 mm (LR7-54HVH)",
+    "es": "Clase M10 54 celdas, 108 celdas 6x18, 1800 x 1134 x 30 mm (LR7-54HVH)"
+  },
+  "kind": "format",
+  "description": {
+    "en": "LONGi LR7-54HVH module, 1800 x 1134 x 30 mm, 108 cells in a 6x18 layout, 21.6 kg, junction box IP68 with three diodes, single 3.2 mm coated tempered front glass. Listed here as the 1800 mm M10 variant; the 1722 mm format is a separate entry.",
+    "es": "Modulo LONGi LR7-54HVH, 1800 x 1134 x 30 mm, 108 celdas en disposicion 6x18, 21,6 kg, caja IP68 con tres diodos, vidrio frontal templado recubierto de 3,2 mm. Variante de 1800 mm, distinta del formato de 1722 mm."
+  },
+  "typical_use": "M10-class 54-cell module with 1800 mm length (LONGi), when the project needs this size.",
+  "layers": [
+    {
+      "id": "front_glass",
+      "name": "Front glass",
+      "material": "coated tempered glass",
+      "thickness_mm": 3.2,
+      "status": "unverified",
+      "source_ids": [
+        "S4"
+      ]
+    },
+    {
+      "id": "encapsulant_front",
+      "name": "Encapsulant front",
+      "material": "not stated",
+      "status": "not_found",
+      "source_ids": []
+    },
+    {
+      "id": "cell_layer",
+      "name": "Cell layer",
+      "material": "silicon cells: 108 (6x18 layout) per datasheet",
+      "status": "unverified",
+      "source_ids": [
+        "S4"
+      ]
+    },
+    {
+      "id": "encapsulant_back",
+      "name": "Encapsulant back",
+      "material": "not stated",
+      "status": "not_found",
+      "source_ids": []
+    },
+    {
+      "id": "rear_layer",
+      "name": "Rear layer",
+      "material": "not stated",
+      "status": "not_found",
+      "source_ids": [
+        "S4"
+      ]
+    }
+  ],
+  "parts": [
+    {
+      "id": "module_body",
+      "name": "Laminate outline (outline for 2D/3D)",
+      "type": "other",
+      "status": "unverified",
+      "dimensions_mm": {
+        "length": 1800,
+        "width": 1134,
+        "thickness": 30
+      },
+      "source_ids": [
+        "S4"
+      ]
+    },
+    {
+      "id": "frame_profile",
+      "name": "Frame: anodized aluminium alloy (section not stated)",
+      "type": "frame_profile",
+      "status": "unverified",
+      "material": "anodized aluminium alloy",
+      "geometry_hint": "section dimensions not stated; see frame_profile_anodized_aluminium family",
+      "quantity_per_module": 4,
+      "source_ids": [
+        "S4"
+      ]
+    },
+    {
+      "id": "junction_box",
+      "name": "Junction box: IP68, three diodes",
+      "type": "junction_box",
+      "status": "unverified",
+      "ratings": {
+        "ip": "IP68",
+        "bypass_diodes": 3,
+        "diode_rating": "not_found"
+      },
+      "quantity_per_module": 1,
+      "source_ids": [
+        "S4"
+      ]
+    },
+    {
+      "id": "pv_cable",
+      "name": "PV output cable: 4 mm2",
+      "type": "cable",
+      "status": "unverified",
+      "ratings": {
+        "cross_section_mm2": 4,
+        "length_note": "+400 mm / -200 mm; +-1200 mm; customizable"
+      },
+      "quantity_per_module": 2,
+      "source_ids": [
+        "S4"
+      ]
+    },
+    {
+      "id": "cell_string",
+      "name": "Cells: 108 (6x18 layout) per datasheet",
+      "type": "cell_string",
+      "status": "unverified",
+      "quantity_per_module": 108,
+      "source_ids": [
+        "S4"
+      ]
+    },
+    {
+      "id": "glass_front",
+      "name": "Front glass: single 3.2 mm coated tempered glass",
+      "type": "glass",
+      "status": "unverified",
+      "source_ids": [
+        "S4"
+      ]
+    },
+    {
+      "id": "mounting_holes",
+      "name": "Mounting holes",
+      "type": "mounting_hole",
+      "status": "not_found",
+      "geometry_hint": "positions, slot sizes and edge distances not stated in the datasheet extract",
+      "source_ids": [
+        "S4"
+      ]
+    },
+    {
+      "id": "grounding_holes",
+      "name": "Grounding holes",
+      "type": "grounding_hole",
+      "status": "not_found",
+      "source_ids": [
+        "S4"
+      ]
+    },
+    {
+      "id": "drain_holes",
+      "name": "Drainage holes",
+      "type": "drain_hole",
+      "status": "not_found",
+      "source_ids": [
+        "S4"
+      ]
+    },
+    {
+      "id": "connector",
+      "name": "PV connector (type not stated)",
+      "type": "connector",
+      "status": "not_found",
+      "source_ids": []
+    },
+    {
+      "id": "encapsulant",
+      "name": "Encapsulant",
+      "type": "encapsulant",
+      "status": "not_found",
+      "geometry_hint": "material and thickness not stated",
+      "source_ids": []
+    },
+    {
+      "id": "rear_layer",
+      "name": "Rear layer: not stated",
+      "type": "backsheet",
+      "status": "not_found",
+      "source_ids": [
+        "S4"
+      ]
+    },
+    {
+      "id": "busbar_ribbon",
+      "name": "Busbars / ribbons (count, material not stated)",
+      "type": "busbar_ribbon",
+      "status": "not_found",
+      "source_ids": []
+    },
+    {
+      "id": "sealant_edge",
+      "name": "Edge sealant",
+      "type": "sealant",
+      "status": "not_found",
+      "source_ids": []
+    },
+    {
+      "id": "label_nameplate",
+      "name": "Nameplate label",
+      "type": "label",
+      "status": "not_found",
+      "source_ids": []
+    }
+  ],
+  "geometry": {
+    "description": "Outline from datasheet dimensions. Hole positions and clamp zones are not stated in the source, so they are not positioned (status not_found).",
+    "module_dimensions_mm": [
+      1800,
+      1134,
+      30
+    ],
+    "clamping_zones_mm": [
+      {
+        "edge": "long",
+        "status": "not_found",
+        "note": "clamp zones not stated in the datasheet extract"
+      },
+      {
+        "edge": "short",
+        "status": "not_found",
+        "note": "clamp zones not stated in the datasheet extract"
+      }
+    ],
+    "elements": [
+      {
+        "id": "outline",
+        "kind": "laminate_outline",
+        "part_id": "module_body",
+        "position_mm": [
+          0,
+          0,
+          0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          1800,
+          1134,
+          30
+        ],
+        "status": "unverified"
+      }
+    ]
+  },
+  "mechanical_ratings": {
+    "weight_kg": 21.6,
+    "static_load_front_pa": 5400,
+    "static_load_rear_pa": 2400,
+    "junction_box_ip": "IP68",
+    "standards": [
+      "IEC 61215",
+      "IEC 61730",
+      "UL 61730",
+      "IEC 62941"
+    ],
+    "standards_source": "S4 cites them; not fetched"
+  },
+  "status": "unverified",
+  "unverified_items": [
+    "Source is a third-party copy of the LONGi datasheet; confirm against the manufacturer.",
+    "Cable length string to be confirmed.",
+    "Frame section and holes not stated.",
+    "Cell size not stated; the 1800 mm length is not the common 1722 mm M10 length."
+  ],
+  "sources": [
+    {
+      "id": "S4",
+      "title": "LONGi LR7-54HVH 485M product datasheet (1800 x 1134 x 30 mm)",
+      "publisher": "LONGi (copy hosted by a third-party site)",
+      "url": "https://usercontent.one/wp/www.gingroup.it/wp-content/uploads/2025/03/Longi-LR7-54HVH-485M-Datasheet-EN.pdf",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

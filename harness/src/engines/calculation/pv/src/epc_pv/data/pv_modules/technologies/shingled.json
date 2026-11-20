@@ -1,0 +1,482 @@
+{
+  "schema_version": "1.0",
+  "id": "shingled",
+  "name": {
+    "en": "Shingled (overlapping cells, bifacial N-type TOPCon matrix)",
+    "es": "Celdas tejadas / shingled (solapadas, TOPCon tipo N bifacial)"
+  },
+  "kind": "technology",
+  "description": {
+    "en": "Cells cut into strips and laid in overlapping rows with conductive adhesive (matrix layout) instead of busbar ribbons, which raises active area. Reference: Heckert APOLLON 2.0 (390 shingle cells, 1762 x 1134 x 30 mm, bifacial N-type TOPCon, preliminary datasheet 03/2026). The TCL MI590 page remains mostly unreadable; it is kept only for the cell-layout and standards lines.",
+    "es": "Celdas cortadas en tiras y dispuestas en filas solapadas con adhesivo conductor (disposicion matricial) en lugar de cintas de barra, lo que aumenta el area activa. Referencia: Heckert APOLLON 2.0 (390 celdas shingle, 1762 x 1134 x 30 mm, TOPCon tipo N bifacial, ficha preliminar 03/2026). La ficha TCL MI590 sigue casi ilegible; solo se usa para la disposicion de celdas y las normas."
+  },
+  "typical_use": "High-density bifacial modules with reduced cell-gap and shading losses; reference is a 450-460 Wp module.",
+  "cell": {
+    "type": "N-type TOPCon, shingled matrix, bifacial",
+    "n_cells_typical": [
+      390
+    ],
+    "status": "unverified",
+    "source_ids": [
+      "heckert_apollon2",
+      "tcl_mi590"
+    ],
+    "note": "Heckert datasheet: '390 Shingle cells, matrix-technology'. Individual cell size and busbar count are not stated; the 390 count is for this module, not a general shingled count."
+  },
+  "layers": [
+    {
+      "id": "glass_front",
+      "name": "Front glass",
+      "material": "semi-tempered AR glass",
+      "status": "unverified",
+      "source_ids": [
+        "heckert_apollon2"
+      ],
+      "thickness_mm": 2.0
+    },
+    {
+      "id": "encapsulant_front",
+      "name": "Front encapsulant",
+      "material": "EVA or POE (thickness from Fraunhofer ISE lab-module reference; product material not stated)",
+      "status": "unverified",
+      "source_ids": [
+        "fraunhofer_pfreundt_2019"
+      ],
+      "thickness_mm": 0.45
+    },
+    {
+      "id": "cell_layer",
+      "name": "Cell layer",
+      "material": "shingled N-type TOPCon cell strips (thickness from Fraunhofer ISE lab-module reference)",
+      "status": "unverified",
+      "source_ids": [
+        "heckert_apollon2",
+        "fraunhofer_pfreundt_2019"
+      ],
+      "thickness_mm": 0.18
+    },
+    {
+      "id": "encapsulant_rear",
+      "name": "Rear encapsulant",
+      "material": "EVA or POE (thickness from Fraunhofer ISE lab-module reference; product material not stated)",
+      "status": "unverified",
+      "source_ids": [
+        "fraunhofer_pfreundt_2019"
+      ],
+      "thickness_mm": 0.45
+    },
+    {
+      "id": "rear_layer",
+      "name": "Rear layer",
+      "material": "semi-tempered rear glass",
+      "status": "unverified",
+      "source_ids": [
+        "heckert_apollon2"
+      ],
+      "thickness_mm": 2.0
+    }
+  ],
+  "parts": [
+    {
+      "id": "glass_front",
+      "name": "Front glass",
+      "type": "glass",
+      "status": "unverified",
+      "source_ids": [
+        "heckert_apollon2"
+      ],
+      "material": "semi-tempered AR glass",
+      "dimensions_mm": {
+        "thickness": 2.0
+      }
+    },
+    {
+      "id": "encapsulant_front",
+      "name": "Front encapsulant",
+      "type": "encapsulant",
+      "status": "unverified",
+      "source_ids": [
+        "fraunhofer_pfreundt_2019"
+      ],
+      "material": "EVA or POE (Fraunhofer ISE lab-module reference)"
+    },
+    {
+      "id": "cells",
+      "name": "Shingled cell strings (390 cells)",
+      "type": "cell_string",
+      "status": "unverified",
+      "source_ids": [
+        "heckert_apollon2"
+      ],
+      "material": "N-type TOPCon, matrix shingled"
+    },
+    {
+      "id": "encapsulant_rear",
+      "name": "Rear encapsulant",
+      "type": "encapsulant",
+      "status": "unverified",
+      "source_ids": [
+        "fraunhofer_pfreundt_2019"
+      ],
+      "material": "EVA or POE (Fraunhofer ISE lab-module reference)"
+    },
+    {
+      "id": "rear",
+      "name": "Rear layer",
+      "type": "glass",
+      "status": "unverified",
+      "source_ids": [
+        "heckert_apollon2"
+      ],
+      "material": "semi-tempered rear glass",
+      "dimensions_mm": {
+        "thickness": 2.0
+      }
+    },
+    {
+      "id": "frame",
+      "name": "Frame",
+      "type": "frame_profile",
+      "status": "unverified",
+      "source_ids": [
+        "heckert_apollon2"
+      ],
+      "material": "black anodized aluminium",
+      "dimensions_mm": {
+        "height": 30
+      },
+      "note": "Height 30 mm from datasheet; footprint width not stated (typical in geometry)."
+    },
+    {
+      "id": "junction_box",
+      "name": "Junction box",
+      "type": "junction_box",
+      "status": "unverified",
+      "source_ids": [
+        "heckert_apollon2"
+      ],
+      "standard": "IEC 62790",
+      "ratings": {
+        "ip": "IP68",
+        "bypass_diodes": 3
+      },
+      "quantity_per_module": 1
+    },
+    {
+      "id": "connector",
+      "name": "Connector",
+      "type": "connector",
+      "status": "unverified",
+      "source_ids": [
+        "heckert_apollon2"
+      ],
+      "ratings": {
+        "type": "Stäubli MC4-EVO 2"
+      },
+      "quantity_per_module": 2
+    },
+    {
+      "id": "cable",
+      "name": "PV cable",
+      "type": "cable",
+      "status": "unverified",
+      "source_ids": [
+        "heckert_apollon2"
+      ],
+      "ratings": {
+        "cross_section_mm2": 4,
+        "length_mm": 1200
+      },
+      "quantity_per_module": 2
+    }
+  ],
+  "geometry": {
+    "description": "Framed bifacial module 1762 x 1134 x 30 mm (Heckert datasheet). Glass 2.0 mm front and rear; encapsulant and cell thicknesses are Fraunhofer ISE lab-module references. Frame height 30 mm from datasheet, footprint width typical. Junction box placement and size typical.",
+    "coordinate_system": "x along module long side, y along short side, z up through thickness; origin at module front-left corner; mm. Here z=0 is the front glass face and z grows toward the rear through thickness.",
+    "elements": [
+      {
+        "id": "glass_front",
+        "kind": "glass",
+        "part_id": "glass_front",
+        "position_mm": [
+          30.0,
+          30.0,
+          0.0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          1702.0,
+          1074.0,
+          2.0
+        ],
+        "status": "unverified"
+      },
+      {
+        "id": "encapsulant_front",
+        "kind": "encapsulant",
+        "part_id": "encapsulant_front",
+        "position_mm": [
+          30.0,
+          30.0,
+          2.0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          1702.0,
+          1074.0,
+          0.45
+        ],
+        "status": "unverified"
+      },
+      {
+        "id": "cell_layer",
+        "kind": "cell_string",
+        "part_id": "cells",
+        "position_mm": [
+          30.0,
+          30.0,
+          2.45
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          1702.0,
+          1074.0,
+          0.18
+        ],
+        "status": "unverified"
+      },
+      {
+        "id": "encapsulant_rear",
+        "kind": "encapsulant",
+        "part_id": "encapsulant_rear",
+        "position_mm": [
+          30.0,
+          30.0,
+          2.63
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          1702.0,
+          1074.0,
+          0.45
+        ],
+        "status": "unverified"
+      },
+      {
+        "id": "rear_layer",
+        "kind": "glass",
+        "part_id": "rear",
+        "position_mm": [
+          30.0,
+          30.0,
+          3.08
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          1702.0,
+          1074.0,
+          2.0
+        ],
+        "status": "unverified"
+      },
+      {
+        "id": "frame_long_front",
+        "kind": "frame_profile",
+        "part_id": "frame",
+        "position_mm": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          1762.0,
+          30.0,
+          30.0
+        ],
+        "status": "unverified",
+        "note": "footprint width typical, height from datasheet"
+      },
+      {
+        "id": "frame_long_back",
+        "kind": "frame_profile",
+        "part_id": "frame",
+        "position_mm": [
+          0.0,
+          1104.0,
+          0.0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          1762.0,
+          30.0,
+          30.0
+        ],
+        "status": "unverified",
+        "note": "footprint width typical, height from datasheet"
+      },
+      {
+        "id": "frame_short_left",
+        "kind": "frame_profile",
+        "part_id": "frame",
+        "position_mm": [
+          0.0,
+          30.0,
+          0.0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          30.0,
+          1074.0,
+          30.0
+        ],
+        "status": "unverified",
+        "note": "footprint width typical, height from datasheet"
+      },
+      {
+        "id": "frame_short_right",
+        "kind": "frame_profile",
+        "part_id": "frame",
+        "position_mm": [
+          1732.0,
+          30.0,
+          0.0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          30.0,
+          1074.0,
+          30.0
+        ],
+        "status": "unverified",
+        "note": "footprint width typical, height from datasheet"
+      },
+      {
+        "id": "junction_box",
+        "kind": "junction_box",
+        "part_id": "junction_box",
+        "position_mm": [
+          806.0,
+          517.0,
+          5.08
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          150.0,
+          100.0,
+          20.0
+        ],
+        "status": "typical",
+        "note": "placement and size typical, not from datasheet"
+      }
+    ],
+    "module_dimensions_mm": [
+      1762,
+      1134,
+      30
+    ]
+  },
+  "mechanical_ratings": {
+    "weight_kg": 23.5,
+    "module_efficiency_pct_range": [
+      22.5,
+      23.0
+    ],
+    "power_w_range": [
+      450,
+      460
+    ],
+    "junction_box_ip": "IP68",
+    "standards_listed_in_source": [
+      "IEC 61215",
+      "IEC 61730",
+      "IEC 62790 (junction box)"
+    ],
+    "standards_under_certification_in_source": [
+      "IEC 62716 (ammonia)",
+      "IEC 61701 (salt mist)"
+    ],
+    "max_system_voltage_v": null,
+    "status_note": "values from the Heckert APOLLON 2.0 preliminary datasheet (03/2026); status unverified"
+  },
+  "status": "unverified",
+  "unverified_items": [
+    "Heckert datasheet is preliminary (03/2026) and says values may change.",
+    "Cell size, busbar count and single-cell efficiency not stated.",
+    "Frame footprint width (30 mm in geometry) and junction box size/placement are typical.",
+    "Encapsulant (0.45 mm) and cell layer (0.18 mm) are Fraunhofer ISE lab-module references, not values of the Heckert product.",
+    "Product encapsulant and rear material not stated.",
+    "TaiyangNews article gives the same dimensions (1762 x 1134 x 30 mm) and 390 cell strips; cross-check only.",
+    "TCL MI590 table values (dimensions, weight, efficiency, cable, connector) remain unreadable and are not used."
+  ],
+  "sources": [
+    {
+      "id": "heckert_apollon2",
+      "title": "APOLLON 2.0 bifacial shingle matrix module, preliminary datasheet 03/2026",
+      "publisher": "Heckert Solar",
+      "url": "https://www.heckertsolar.com/media/b8/83/80/1781609715/202603_Datasheet_Apollon2.0.pdf",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "taiyang_heckert",
+      "title": "Heckert Solar's 'Made-In-Germany' shingled module (article, cross-check)",
+      "publisher": "TaiyangNews",
+      "url": "https://taiyangnews.info/technology/heckert-solar-shingled-matrix-technology-germany",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "fraunhofer_pfreundt_2019",
+      "title": "Pfreundt et al., EU PVSEC 2019, paper 4CO43 (module layer thicknesses, lab modules)",
+      "publisher": "Fraunhofer ISE",
+      "url": "https://www.ise.fraunhofer.de/content/dam/ise/de/documents/publications/conference-paper/36-eupvsec-2019/Pfreundt_4CO43.pdf",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "tcl_mi590",
+      "title": "TCL MI590 product datasheet (text partly unreadable)",
+      "publisher": "TCL",
+      "url": "https://tcl.com/content/dam/brandsite/global/photovoltaic/product-pages/pv-module/download/tcl-mi590.pdf",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

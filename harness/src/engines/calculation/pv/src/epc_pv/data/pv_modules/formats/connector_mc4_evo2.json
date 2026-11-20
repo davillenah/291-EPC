@@ -1,0 +1,236 @@
+{
+  "schema_version": "1.0",
+  "id": "connector_mc4_evo2",
+  "name": {
+    "en": "MC4-Evo 2 PV connector (plug and panel receptacle)",
+    "es": "Conector fotovoltaico MC4-Evo 2 (clavija y receptaculo de panel)"
+  },
+  "kind": "format",
+  "description": {
+    "en": "Staubli MC4-Evo 2 inline plug and panel receptacle: 1500 V DC, IP65/IP68 mated, cable 2.5, 4 and 10 mm2 (IEC) and AWG equivalents, -40 to +85 C ambient, IEC 62852 and UL 6703 cited.",
+    "es": "Conector de linea MC4-Evo 2 de Staubli (clavija y receptaculo de panel): 1500 V CC, IP65/IP68 acoplado, cable de 2,5, 4 y 10 mm2 (IEC) con equivalentes AWG, -40 a +85 C ambiente, IEC 62852 y UL 6703 citadas."
+  },
+  "typical_use": "Standard module-to-string connector.",
+  "layers": [],
+  "parts": [
+    {
+      "id": "connector_plug_inline",
+      "name": "Inline plug, MC4-Evo 2",
+      "type": "connector",
+      "status": "unverified",
+      "ratings": {
+        "voltage_v_dc": 1500,
+        "current_a_iec": {
+          "2.5mm2": 39,
+          "4mm2": 45,
+          "10mm2": 69
+        },
+        "current_a_ul": {
+          "14AWG": 30,
+          "6AWG": 53,
+          "12AWG": 39,
+          "10AWG": 50,
+          "8AWG": 70
+        },
+        "ip_mated": "IP65 / IP68 (1 m, 168 h)",
+        "ip_unmated": "IP2X",
+        "ambient_c": "-40 to +85",
+        "upper_limiting_c": 115,
+        "cable_od_mm": [
+          "4.7-6.4",
+          "5.9-7.3",
+          "6.4-8.4"
+        ],
+        "crimp_opening_mm": {
+          "2.5mm2": 4.0,
+          "4mm2": 5.8,
+          "10mm2": 6.5
+        },
+        "note": "cable OD mapped to cross-section by the variant names (S25 table); the plug's 4.7-6.4 range fits 2.5 and 4 mm2 variants",
+        "cable_variants": [
+          {
+            "variant": "2A/2.5I",
+            "cable_od_mm": "4.7-6.4",
+            "cross_section_mm2": 2.5,
+            "crimp_opening_b_mm": 4.0,
+            "iec_a": 39,
+            "ul": "14 AWG / 30 A"
+          },
+          {
+            "variant": "2A/2.5X",
+            "cable_od_mm": "6.1-7.3",
+            "cross_section_mm2": 2.5,
+            "crimp_opening_b_mm": 4.0,
+            "iec_a": 39,
+            "ul": "14 AWG / 30 A"
+          },
+          {
+            "variant": "2A/2.5II",
+            "cable_od_mm": "6.4-8.4",
+            "cross_section_mm2": 2.5,
+            "crimp_opening_b_mm": 4.0,
+            "iec_a": 39,
+            "ul": "14 AWG / 30 A"
+          },
+          {
+            "variant": "2A/6I",
+            "cable_od_mm": "4.7-6.4",
+            "cross_section_mm2": 4,
+            "crimp_opening_b_mm": 5.8,
+            "iec_a": 45,
+            "ul": "6 AWG / 53 A; 12 AWG / 35 A; 10 AWG / 50 A"
+          },
+          {
+            "variant": "2A/6X",
+            "cable_od_mm": "6.1-7.3",
+            "cross_section_mm2": 4,
+            "crimp_opening_b_mm": 5.8,
+            "iec_a": 45,
+            "ul": "6 AWG / 53 A; 12 AWG / 35 A; 10 AWG / 50 A"
+          },
+          {
+            "variant": "2A/6II",
+            "cable_od_mm": "6.4-8.4",
+            "cross_section_mm2": 4,
+            "crimp_opening_b_mm": 5.8,
+            "iec_a": 45,
+            "ul": "6 AWG / 53 A; 12 AWG / 35 A; 10 AWG / 50 A"
+          },
+          {
+            "variant": "2A/10X",
+            "cable_od_mm": "6.1-7.3",
+            "cross_section_mm2": 10,
+            "crimp_opening_b_mm": 6.5,
+            "iec_a": 69,
+            "ul": "8 AWG / 70 A"
+          },
+          {
+            "variant": "2A/10II",
+            "cable_od_mm": "6.4-8.4",
+            "cross_section_mm2": 10,
+            "crimp_opening_b_mm": 6.5,
+            "iec_a": 69,
+            "ul": "8 AWG / 70 A"
+          }
+        ],
+        "conflict_12awg_current": "12 AWG at 4 mm2: 39 A in S6 (staubli.com copy); 35 A in S25 (Segen copy). Both kept as printed; confirm against the current Staubli release."
+      },
+      "source_ids": [
+        "S6",
+        "S25"
+      ]
+    },
+    {
+      "id": "connector_panel_receptacle",
+      "name": "Panel receptacle, MC4-Evo 2",
+      "type": "connector",
+      "status": "unverified",
+      "ratings": {
+        "voltage_v_dc": 1500,
+        "current_a_iec": {
+          "2.5mm2": 32,
+          "4mm2": 42,
+          "10mm2": 62
+        },
+        "current_a_ul": {
+          "14AWG": 30,
+          "6AWG": 47,
+          "12AWG": 39,
+          "10AWG": 50,
+          "8AWG": 70
+        },
+        "ip_mated": "IP65 / IP68 (1 m, 1 h)",
+        "ip_unmated": "IP2X",
+        "ambient_c": "-40 to +85",
+        "upper_limiting_c": 115,
+        "panel_wall_mm": {
+          "metal": "1 to 4",
+          "plastic": "1 to 6"
+        },
+        "listed_dimensions_mm_no_reference": [
+          11.3,
+          12.15,
+          12.3
+        ],
+        "outline_values_printed_unassigned_mm": [
+          11.3,
+          12.15,
+          12.3
+        ],
+        "outline_note": "drawing values printed without axis or reference point (S25); not used as length, width or height",
+        "conflict_12awg_current": "12 AWG at 4 mm2: 39 A in the earlier S6 extract; 35 A in S25. Both kept as printed; confirm."
+      },
+      "geometry_hint": "dimension drawing not in extracted text; reference points unknown",
+      "source_ids": [
+        "S6",
+        "S25"
+      ]
+    },
+    {
+      "id": "connector_dimensions_full",
+      "name": "Full connector outline dimensions",
+      "type": "connector",
+      "status": "not_found",
+      "geometry_hint": "drawing in the datasheet, not in extracted text",
+      "source_ids": []
+    }
+  ],
+  "geometry": {
+    "description": "Component family; no module elements. Full outline drawing needed for 3D.",
+    "elements": []
+  },
+  "mechanical_ratings": {
+    "standards": [
+      "IEC 62852:2014+Amd.1:2020 (TUV Rheinland certified)",
+      "UL 6703 (UL recognized, E343181)",
+      "CSA C22.2 No. 182.5",
+      "IEC TS 63126 Temperature Level 2",
+      "UL94-V0 flame class (printed)",
+      "TUV ammonia resistance 2 PfG 1911/03.2011 (printed)"
+    ],
+    "rated_voltage_v_dc": 1500,
+    "polarity_color_note": "not_found",
+    "source_ids": [
+      "S6",
+      "S25"
+    ]
+  },
+  "status": "unverified",
+  "unverified_items": [
+    "Full outline dimensions not extracted (the three printed drawing values are not assigned to an axis).",
+    "Cable OD to cross-section mapping now taken from the variant table (S25); the plug variant names are printed by the manufacturer.",
+    "Standards are cited by the manufacturer, not verified against IEC 62852 or UL 6703.",
+    "Panel receptacle does not print cable OD values.",
+    "12 AWG current at 4 mm2 differs between the two Staubli copies (39 A in S6, 35 A in S25); not resolved."
+  ],
+  "sources": [
+    {
+      "id": "S6",
+      "title": "Staubli SOL MC4-Evo 2 connector technical data (11014101)",
+      "publisher": "Staubli Electrical Connectors",
+      "url": "https://www.staubli.com/content/dam/spot/SOL-MC4-Evo-2-11014101-en.pdf",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "S12",
+      "title": "IEC 62852, DC connectors for photovoltaic systems (standard reference, title only, not fetched)",
+      "publisher": "IEC",
+      "url": "https://webstore.iec.ch/",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "S16",
+      "title": "UL 6703, connectors for use in photovoltaic systems (standard reference, title only, not fetched)",
+      "publisher": "UL",
+      "url": "https://www.ul.com/",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "S25",
+      "title": "Staubli SOL MC4-Evo 2 technical data 11014101 (copy)",
+      "publisher": "Staubli Electrical Connectors (copy hosted on Segen portal)",
+      "url": "https://portal.segen.co.uk/reseller/docs/SOL-MC4-Evo-2-11014101-en.pdf",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

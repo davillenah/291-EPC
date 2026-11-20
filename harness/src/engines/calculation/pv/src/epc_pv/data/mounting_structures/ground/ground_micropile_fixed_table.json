@@ -1,0 +1,205 @@
+{
+  "schema_version": "1.0",
+  "id": "ground_micropile_fixed_table",
+  "name": {
+    "en": "Micropile-supported fixed-tilt table (3P-7 kit, pile section not stated)",
+    "es": "Mesa fija de tilt sobre micropilotes (kit 3P-7, sección del pilote no indicada)"
+  },
+  "family": "ground",
+  "category": "micropile_fixed_table",
+  "description": {
+    "en": "Fixed-tilt ground table supported by two poles on micropiles (ProSolar 3P-7 micropile kit). The datasheet gives 21 modules per structure in portrait, three columns, tilt options and class 8.8 bolts. The micropile diameter, length, grout and steel section are not stated.",
+    "es": "Mesa fija de tilt en suelo sobre dos postes apoyados en micropilotes (kit de micropilotes ProSolar 3P-7). La ficha indica 21 módulos por estructura en vertical, tres columnas, opciones de tilt y tornillería de clase 8.8. El diámetro, la longitud, la lechada y la sección del micropilote no se indican."
+  },
+  "typical_use": "Ground-mount tables on sites where ramming or driving is not feasible and a micropile foundation is specified.",
+  "applicable_standards": [
+    "ISO 898-1 (reference for bolt class 8.8, not cited by the source)"
+  ],
+  "materials": [
+    {
+      "component": "Superstructure (poles, beams, purlins)",
+      "material": "Steel, grade not stated",
+      "finish": "Hot-dip galvanized (coating specification not stated)",
+      "status": "unverified",
+      "source_ids": [
+        "src_prosolar_3p7"
+      ]
+    },
+    {
+      "component": "Micropile",
+      "material": "Steel, section and grade not stated",
+      "finish": "Not stated",
+      "status": "not_found",
+      "source_ids": [
+        "src_prosolar_3p7"
+      ]
+    },
+    {
+      "component": "Bolts",
+      "material": "Steel, property class 8.8, galvanized",
+      "finish": "Galvanized",
+      "status": "unverified",
+      "source_ids": [
+        "src_prosolar_3p7"
+      ]
+    }
+  ],
+  "profiles": [
+    {
+      "id": "micropile",
+      "name": "Micropile section and diameter (not stated)",
+      "section_type": "other",
+      "dimensions_mm": {},
+      "material": "Steel, grade not stated",
+      "status": "not_found",
+      "source_ids": [
+        "src_prosolar_3p7"
+      ]
+    }
+  ],
+  "geometry": {
+    "description": "Two poles per structure (ProSolar). Pole spacing, micropile length and beam lengths are not stated; no lengths are modelled.",
+    "coordinate_system": "x along module row, y up-slope/north-south horizontal, z up; origin at ground/roof contact of first support; mm and degrees",
+    "tilt_range_deg": [
+      10,
+      30
+    ],
+    "elements": [
+      {
+        "id": "micropile_element",
+        "kind": "foot",
+        "profile_or_accessory_id": "micropile",
+        "position_mm": [
+          0,
+          0,
+          0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "length_mm": 0,
+        "count": 2,
+        "note": "Two micropile foundations per structure (ProSolar 3P-7). Length and diameter not stated; length_mm 0 is a placeholder.",
+        "status": "not_found"
+      }
+    ],
+    "reference_layout": {
+      "modules_per_unit": 21,
+      "module_dimensions_mm": [
+        2278,
+        1134,
+        30
+      ],
+      "orientation": "portrait",
+      "note": "21 modules per structure in three columns (ProSolar 3P-7). Module dimensions are those listed on the same datasheet for its panel."
+    }
+  },
+  "accessories": [
+    {
+      "id": "bolt_class_8_8",
+      "name": "Structural bolts, galvanized, class 8.8",
+      "type": "bolt",
+      "material": "Steel",
+      "grade": "8.8",
+      "standard": "not_found",
+      "thread": "not_found",
+      "quantity": {
+        "value": 0,
+        "per": "support",
+        "note": "NOT SOURCED: placeholder, do not use"
+      },
+      "purpose": "Structural connections",
+      "status": "unverified",
+      "source_ids": [
+        "src_prosolar_3p7"
+      ]
+    },
+    {
+      "id": "clamp_mid_module",
+      "name": "Mid module clamp",
+      "type": "clamp_mid",
+      "material": "not_found",
+      "grade": "not_found",
+      "standard": "not_found",
+      "thread": "not_found",
+      "quantity": {
+        "value": 0,
+        "per": "module",
+        "note": "NOT SOURCED: placeholder"
+      },
+      "purpose": "Holds adjacent modules",
+      "status": "not_found"
+    },
+    {
+      "id": "clamp_end_module",
+      "name": "End module clamp",
+      "type": "clamp_end",
+      "material": "not_found",
+      "grade": "not_found",
+      "standard": "not_found",
+      "thread": "not_found",
+      "quantity": {
+        "value": 0,
+        "per": "module",
+        "note": "NOT SOURCED: placeholder"
+      },
+      "purpose": "Holds outer module edges",
+      "status": "not_found"
+    },
+    {
+      "id": "pile_cap_micropile",
+      "name": "Micropile head cap or plate",
+      "type": "pile_cap",
+      "material": "not_found",
+      "grade": "not_found",
+      "standard": "not_found",
+      "thread": "not_found",
+      "quantity": {
+        "value": 0,
+        "per": "post",
+        "note": "NOT SOURCED: placeholder"
+      },
+      "purpose": "Connects the superstructure to the micropile",
+      "status": "not_found"
+    },
+    {
+      "id": "grounding_bonding",
+      "name": "Bonding and earth connection",
+      "type": "grounding",
+      "material": "not_found",
+      "grade": "not_found",
+      "standard": "not_found",
+      "thread": "not_found",
+      "quantity": {
+        "value": 0,
+        "per": "table",
+        "note": "NOT SOURCED: placeholder"
+      },
+      "purpose": "Bonding to earth system",
+      "status": "not_found"
+    }
+  ],
+  "grounding_bonding": "Not stated in the source reviewed.",
+  "installation_notes": [
+    "ProSolar 3P-7 datasheet lists tilt options of 10, 15, 20, 25 and 30 degrees (discrete options, not a continuous range)."
+  ],
+  "status": "unverified",
+  "unverified_items": [
+    "Micropile diameter, length, grout and section (not stated)",
+    "Steel grades and bolt sizes, nut and washer standards, torques (not stated)",
+    "Pole spacing, beam and purlin lengths (not stated)",
+    "Clamp and bonding quantities (not stated)",
+    "Wind and snow ratings (not stated)"
+  ],
+  "sources": [
+    {
+      "id": "src_prosolar_3p7",
+      "title": "Ground mounted solar panel kits 3P-7 micropiles",
+      "publisher": "ProSolar Structures",
+      "url": "https://prosolarstructures.com/ground-mounted-solar-panel-kits-3p-7-micropiles",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

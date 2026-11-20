@@ -1,0 +1,310 @@
+{
+  "schema_version": "1.0",
+  "id": "frame_profile_anodized_aluminium",
+  "name": {
+    "en": "Aluminium frame family (anodized alloy), mounting, grounding and drainage features",
+    "es": "Familia de marco de aluminio (aleado anodizado), fijacion, puesta a tierra y drenaje"
+  },
+  "kind": "format",
+  "description": {
+    "en": "Frame features used in the module datasheets: anodized aluminium alloy frame, 4 mm grounding holes, drainage holes, mounting holes M6 and M8, and clamp contact requirements from the JinkoSolar manual. Section dimensions, wall thickness, groove and alloy temper are not stated in any source reached.",
+    "es": "Caracteristicas del marco en las fichas: marco de aleacion de aluminio anodizado, orificios de puesta a tierra de 4 mm, orificios de drenaje, orificios de fijacion M6 y M8 y requisitos de contacto de abrazadera segun el manual JinkoSolar. Ninguna fuente consultada indica dimensiones de seccion, espesor de pared, ranura ni temple de la aleacion."
+  },
+  "typical_use": "Frame of the G12 and M10 module formats; section data to be added from a manufacturer drawing.",
+  "layers": [],
+  "parts": [
+    {
+      "id": "frame_section",
+      "name": "Frame section (height, width, wall, groove)",
+      "type": "frame_profile",
+      "status": "not_found",
+      "material": "anodized aluminium alloy; temper 6063-T5 not stated in sources; 15 micron anodizing printed (S22)",
+      "geometry_hint": "Section polygon not stated; 'double webbed' profile printed by Heliene (S22). Needed for 2D/3D.",
+      "source_ids": [
+        "S3",
+        "S22"
+      ]
+    },
+    {
+      "id": "grounding_hole",
+      "name": "Grounding hole, bolted grounding only",
+      "type": "grounding_hole",
+      "status": "unverified",
+      "dimensions_mm": {
+        "diameter": 4.0,
+        "diameter_alt_printed_mm": 4.2
+      },
+      "ratings": {
+        "bolt": "stainless steel, matched to hole",
+        "note": "cannot be used for module installation"
+      },
+      "geometry_hint": "Long side of back frame near the edge (S8). Diameter printed as 4.0 (S8, S21, S22) and 4.2 (S3, S24); both kept as printed. Renew prints 2 holes, Heliene 4 holes.",
+      "source_ids": [
+        "S8",
+        "S3",
+        "S21",
+        "S22",
+        "S24"
+      ]
+    },
+    {
+      "id": "drain_holes",
+      "name": "Drainage holes (as printed)",
+      "type": "drain_hole",
+      "status": "unverified",
+      "dimensions_mm": {
+        "count": 8,
+        "diameter": 3.0,
+        "length": 8.0
+      },
+      "geometry_hint": "8-phi3*8 printed in S3 (AIKO); not stated in S8",
+      "source_ids": [
+        "S3"
+      ]
+    },
+    {
+      "id": "mounting_hole_m8",
+      "name": "Mounting hole for M8 bolt",
+      "type": "mounting_hole",
+      "status": "unverified",
+      "dimensions_mm": {
+        "width": 14.0,
+        "height": 9.0
+      },
+      "ratings": {
+        "bolt": "M8",
+        "torque_nm": "16-20",
+        "torque_nm_alt_printed": "12-16 (LONGi, S24)"
+      },
+      "geometry_hint": "4 inner holes (8-hole) or 4 outer holes (12-hole) per family (S8 Table 2). Printed size 14 x 9 (S8, S21); Trina prints 9 x 14 (S23). Positions not stated.",
+      "source_ids": [
+        "S8",
+        "S21",
+        "S23",
+        "S24"
+      ]
+    },
+    {
+      "id": "mounting_hole_m6",
+      "name": "Mounting hole for M6 bolt",
+      "type": "mounting_hole",
+      "status": "unverified",
+      "dimensions_mm": {
+        "width": 10.0,
+        "height": 7.0
+      },
+      "ratings": {
+        "bolt": "M6",
+        "torque_nm": "9-12 (S8); 8-12 (S23, S24)"
+      },
+      "geometry_hint": "Printed size 10 x 7 (S8, S21); Trina prints 7 x 10 (S23). Positions not stated.",
+      "source_ids": [
+        "S8",
+        "S21",
+        "S23",
+        "S24"
+      ]
+    },
+    {
+      "id": "clamp_contact",
+      "name": "Clamp contact on frame",
+      "type": "other",
+      "status": "unverified",
+      "dimensions_mm": {
+        "min_length": 50.0,
+        "min_length_large_modules_gt_2200x1300": 60.0,
+        "min_thickness": 3.0,
+        "frame_overlap_min": 10.0,
+        "frame_overlap_max": 11.0
+      },
+      "ratings": {
+        "torque_m8_nm_by_source": {
+          "S8 Jinko": "16-20",
+          "S23 Trina": "10-14",
+          "S24 LONGi": "14-18"
+        },
+        "frame_overlap_by_source_mm": {
+          "S8 Jinko": "10-11",
+          "S23 Trina": "8-12",
+          "S24 LONGi": "8-11"
+        },
+        "min_thickness_by_source_mm": {
+          "S8 Jinko": 3,
+          "S23 Trina": 4
+        },
+        "recommended_clamp_alloy": "6005-T5/T6 (S23)"
+      },
+      "source_ids": [
+        "S8",
+        "S23",
+        "S24"
+      ]
+    },
+    {
+      "id": "corner_key",
+      "name": "Corner keys",
+      "type": "corner_key",
+      "status": "not_found",
+      "source_ids": [],
+      "geometry_hint": "No source printed corner keys. LONGi clamp rules for corner clamping (length >= 60 mm, overlap >= 9 mm) are clamp data, not corner keys (S24)."
+    }
+  ],
+  "geometry": {
+    "description": "No positioned elements: the section, hole positions and clamp reference edges need a manufacturer drawing before placement in 2D/3D. Clamp zone numbers are kept as printed with their source.",
+    "elements": [],
+    "clamping_zones_mm": [
+      {
+        "family": "Trina Vertex DE09 series",
+        "rails": "perpendicular",
+        "edge": "long",
+        "dimension": "A",
+        "range_mm": [
+          250,
+          350
+        ],
+        "status": "unverified",
+        "source_ids": [
+          "S23"
+        ],
+        "note": "printed as A = (250-350) mm, p.23; reference edge for A not stated"
+      },
+      {
+        "family": "Trina Vertex NEG20C.20 series",
+        "rails": "perpendicular",
+        "edge": "long",
+        "dimension": "A",
+        "range_mm": [
+          360,
+          430
+        ],
+        "status": "unverified",
+        "source_ids": [
+          "S23"
+        ],
+        "note": "printed as A = (360-430) mm, p.22; reference edge not stated"
+      },
+      {
+        "family": "Trina Vertex NDG05R.78",
+        "dimension": "A",
+        "range_mm": [
+          210,
+          310
+        ],
+        "status": "unverified",
+        "source_ids": [
+          "S23"
+        ],
+        "note": "printed as A = (210-310) mm, pp.28-29; reference edge not stated"
+      },
+      {
+        "family": "LONGi LR5/LR6 families",
+        "dimension": "D",
+        "formula": "1/4 L - 50 <= D <= 1/4 L + 50",
+        "status": "unverified",
+        "source_ids": [
+          "S24"
+        ],
+        "note": "reference edge and L definition not stated in the extract"
+      },
+      {
+        "family": "JinkoSolar 8-hole / 12-hole families",
+        "dimension": "L",
+        "formula": "A/4 +- 50 mm",
+        "status": "not_found",
+        "source_ids": [
+          "S8"
+        ],
+        "note": "A not defined in the extract; not converted to a value"
+      }
+    ]
+  },
+  "mechanical_ratings": {
+    "alloy_grade": "not_found",
+    "anodizing_thickness_um": {
+      "value": 15,
+      "status": "unverified",
+      "source_ids": [
+        "S22"
+      ],
+      "note": "printed as '15-Micron Anodized Aluminum Alloy' for Heliene HSPE 132HC G12R; not confirmed for other families"
+    },
+    "clamp_zone_formula": "JinkoSolar manual gives L = A/4 +-50 mm and similar, with A undefined in the text (S8). Not used as a value.",
+    "installation_load_pa_examples": {
+      "8_hole_4_inner_holes_48HL4M_51QL6_54HL4M-BDV_1.6mm_glass": {
+        "plus_pa": 5400,
+        "minus_pa": -2400
+      },
+      "note": "from S8 Table 2 bolt mounting; test load = 1.5 x design load",
+      "12_hole_4_outer_holes_66QL6-BDV_66HL4M-BDV_66HL4M-(V)_66HL5-BDV": {
+        "plus_pa": 5400,
+        "minus_pa": -2400
+      }
+    },
+    "clamp_zone_formula_longi": "1/4 L - 50 <= D <= 1/4 L + 50 mm, L as printed; reference edge not stated (S24 p.14)",
+    "grounding_conductor": {
+      "conductor_mm2": "4-16",
+      "conductor_awg": "12-6",
+      "screw_torque_nm": "3-7",
+      "note": "grounding screw penetrates the anodized coating; Trina recommends < 1 ohm (S23)",
+      "status": "unverified",
+      "source_ids": [
+        "S23"
+      ]
+    }
+  },
+  "status": "unverified",
+  "unverified_items": [
+    "Section dimensions, wall thickness and groove size not stated in any source reached.",
+    "Alloy temper 6063-T5 not stated in any source; Trina gives 6005-T5/T6 for clamps only.",
+    "Anodizing thickness 15 micron printed by Heliene only; not confirmed for other families.",
+    "Grounding hole diameter 4.0 (S8, S21, S22) vs 4.2 (S3, S24): both kept as printed.",
+    "Mounting hole positions not stated; Trina prints M8 hole as 9 x 14 vs 14 x 9 elsewhere.",
+    "Clamp reference edge (A, B, D) not stated in Trina or LONGi extracts, so no clamp zone is positioned.",
+    "Drainage hole size and positions not stated (except 8 x phi3 x 8 printed by AIKO in S3).",
+    "Corner key data not found."
+  ],
+  "sources": [
+    {
+      "id": "S3",
+      "title": "AIKO Stellar MCH72Dw 635-660 W product datasheet (2382 x 1134 x 30 mm)",
+      "publisher": "AIKO (copy hosted on Segen portal)",
+      "url": "https://portal.segen.co.uk/reseller/docs/Stellar-1N_Plus_Customized_Stellar_192.5-AIKO-G-MCH72Dw-635-660W_2382x1134x30mm_DSDr_EN_2405_V1.5.pdf",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "S8",
+      "title": "JinkoSolar Global Installation Manual A1.8 (2026-05)",
+      "publisher": "JinkoSolar",
+      "url": "https://www.jinkosolar.com/uploads/%5BFINAL%5D%20JinkoSolar%20Global%20Installation%20Manual_202605_A1.8-EN.pdf",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "S21",
+      "title": "Renew G12R TOPCon datasheet RPS3MH66BD (2382 x 1134 x 30 mm), Jan 2026",
+      "publisher": "Renew",
+      "url": "https://solarpv.renew.com/assets/pdf/Renew%20Datasheet-G12R%20TOPCon_003_Jan26.pdf",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "S22",
+      "title": "Heliene HSPE 132HC G12R N-type SL bifacial datasheet Rev.01 (2382 x 1134 x 35 mm)",
+      "publisher": "Heliene",
+      "url": "https://heliene.com/wp-content/uploads/HSPE_132HC_G12R_NTYP_SL_Bifacial_Rev.01.pdf",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "S23",
+      "title": "Trina Solar Vertex Series User Manual UM-M-0002-PP7",
+      "publisher": "Trina Solar",
+      "url": "https://www-cdn.trinasolar.com/wwwstorage/sites/5/UM-M-0002-PP7-Trina-Solar-Vertex-Series-User-Manual_EN.pdf",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "S24",
+      "title": "LONGi Photovoltaic Module Installation Manual (LR5-54/66/72 HTH/HTB, LR6, LR4 families)",
+      "publisher": "LONGi (copy hosted on Shopify CDN)",
+      "url": "https://cdn.shopify.com/s/files/1/0510/6148/9855/files/LONGI_IM.pdf",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "schema_version": "1.0",
+  "id": "datalogger_solar_log_1200",
+  "name": {
+    "en": "Solar-Log 1200 datalogger (partial data)",
+    "es": "Datalogger Solar-Log 1200 (datos parciales)"
+  },
+  "kind": "accessory",
+  "description": {
+    "en": "Monitoring datalogger for up to 100 inverters (one manufacturer per bus), Ethernet, RS485/422, RS485 and S0 interfaces. Dimensions, power and IP not found.",
+    "es": "Datalogger de monitorización para hasta 100 inversores (un fabricante por bus), Ethernet, RS485/422, RS485 y S0. Dimensiones, potencia e IP no encontradas."
+  },
+  "typical_use": "Plant monitoring datalogger (partial data).",
+  "status": "unverified",
+  "parts": [
+    {
+      "id": "enc",
+      "name": "Housing",
+      "name_es": "Carcasa",
+      "type": "enclosure",
+      "status": "not_found",
+      "quantity_per_module": 1,
+      "geometry_hint": "Dimensions not found",
+      "source_ids": [
+        "S19"
+      ]
+    },
+    {
+      "id": "comm",
+      "name": "Ethernet, RS485/422, RS485, S0 interfaces",
+      "name_es": "Interfaces Ethernet, RS485/422, RS485, S0",
+      "type": "comm_port",
+      "status": "unverified",
+      "ratings": {
+        "inverters_max": 100
+      },
+      "source_ids": [
+        "S19"
+      ]
+    }
+  ],
+  "geometry": {
+    "description": "No envelope found. Geometry omitted.",
+    "coordinate_system": "x along module long side, y along short side, z up through thickness; origin at module front-left corner; mm",
+    "elements": []
+  },
+  "mechanical_ratings": {
+    "note": "not_found"
+  },
+  "unverified_items": [
+    "Power supply, power consumption, dimensions, weight, IP, temperature and mounting not found in source",
+    "Source page covers Solar-Log 300 and 2000 too"
+  ],
+  "sources": [
+    {
+      "id": "S19",
+      "title": "Solar-Log 1200 datasheet (EN)",
+      "publisher": "Solar-Log GmbH (distributor copy)",
+      "url": "https://www.vpsolar.com/download/catalog/Monitoraggio/Solar-Log/Solar-Log-1200/SolarLog_Datasheet_Solar-Log_1200_EN.pdf",
+      "accessed": "2026-11-20"
+    }
+  ],
+  "electrical_ratings": {
+    "inverters_max": 100,
+    "interfaces": [
+      "Ethernet",
+      "RS485/422",
+      "RS485",
+      "S0-in",
+      "S0-out"
+    ],
+    "power_supply": "not_found",
+    "power_w": "not_found"
+  },
+  "mechanical": {
+    "dimensions_mm": "not_found",
+    "weight_kg": "not_found",
+    "ip": "not_found",
+    "operating_temp_c": "not_found",
+    "mounting": "not_found"
+  }
+}

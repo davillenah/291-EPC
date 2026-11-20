@@ -1,0 +1,425 @@
+{
+  "schema_version": "1.0",
+  "id": "sungrow.sh10rt",
+  "name": {
+    "en": "Sungrow SH10RT (hybrid, PV + battery)",
+    "es": "Sungrow SH10RT (hibrido, FV + bateria)"
+  },
+  "kind": "inverter_type",
+  "description": {
+    "en": "Three-phase hybrid inverter with 2 PV MPPT and battery port (150-600 V), 10 kW, backup output, IP65, natural convection.",
+    "es": "Inversor hibrido trifasico con 2 MPPT FV y puerto de bateria (150-600 V), 10 kW, salida de respaldo, IP65, conveccion natural."
+  },
+  "typical_use": "Hybrid PV + battery inverter with backup, 3/N/PE 220/380 or 230/400 V at 50 Hz",
+  "layers": [],
+  "parts": [
+    {
+      "id": "enclosure",
+      "name": "Housing",
+      "type": "enclosure",
+      "status": "unverified",
+      "source_ids": [
+        "sungrow_sh10rt_fs"
+      ],
+      "dimensions_mm": {
+        "w": 460,
+        "h": 540,
+        "d": 170
+      },
+      "geometry_hint": "Family values (SH5.0RT to SH10RT)"
+    },
+    {
+      "id": "heatsink",
+      "name": "Natural convection heat dissipation",
+      "type": "heatsink",
+      "status": "typical",
+      "source_ids": [
+        "sungrow_sh10rt_fs"
+      ],
+      "geometry_hint": "Fin layout not sourced"
+    },
+    {
+      "id": "mppt_1",
+      "name": "PV input MPPT 1 (MC4)",
+      "type": "mppt_input",
+      "status": "unverified",
+      "source_ids": [
+        "sungrow_sh10rt_fs"
+      ],
+      "quantity_per_module": 1,
+      "ratings": {
+        "connector": "MC4",
+        "max_current_a": 12.5
+      }
+    },
+    {
+      "id": "mppt_2",
+      "name": "PV input MPPT 2 (MC4)",
+      "type": "mppt_input",
+      "status": "unverified",
+      "source_ids": [
+        "sungrow_sh10rt_fs"
+      ],
+      "quantity_per_module": 1,
+      "ratings": {
+        "connector": "MC4",
+        "max_current_a": 25
+      }
+    },
+    {
+      "id": "battery_dc",
+      "name": "Battery DC input (Evo2 compatible)",
+      "type": "dc_input",
+      "status": "unverified",
+      "source_ids": [
+        "sungrow_sh10rt_fs"
+      ],
+      "ratings": {
+        "voltage_v": "150-600",
+        "max_current_a": 30,
+        "connector": "Evo2 compatible"
+      }
+    },
+    {
+      "id": "dc_switch",
+      "name": "Solar DC switch",
+      "type": "dc_switch",
+      "status": "unverified",
+      "source_ids": [
+        "sungrow_sh10rt_fs"
+      ]
+    },
+    {
+      "id": "ac_connector",
+      "name": "AC plug-and-play connector",
+      "type": "ac_terminal",
+      "status": "unverified",
+      "source_ids": [
+        "sungrow_sh10rt_fs"
+      ],
+      "ratings": {
+        "type": "plug and play"
+      }
+    },
+    {
+      "id": "backup_output",
+      "name": "Backup output 3/N/PE 220/230/240 V",
+      "type": "ac_output",
+      "status": "unverified",
+      "source_ids": [
+        "sungrow_sh10rt_fs"
+      ],
+      "ratings": {
+        "switch_time_ms": "<20",
+        "peak_kw": 12
+      }
+    },
+    {
+      "id": "led",
+      "name": "LED indicator",
+      "type": "led_indicator",
+      "status": "unverified",
+      "source_ids": [
+        "sungrow_sh10rt_fs"
+      ]
+    },
+    {
+      "id": "comm_rs485",
+      "name": "RS485",
+      "type": "comm_port",
+      "status": "unverified",
+      "source_ids": [
+        "sungrow_sh10rt_fs"
+      ]
+    },
+    {
+      "id": "comm_eth",
+      "name": "Ethernet",
+      "type": "comm_port",
+      "status": "unverified",
+      "source_ids": [
+        "sungrow_sh10rt_fs"
+      ]
+    },
+    {
+      "id": "comm_can",
+      "name": "CAN",
+      "type": "comm_port",
+      "status": "unverified",
+      "source_ids": [
+        "sungrow_sh10rt_fs"
+      ]
+    },
+    {
+      "id": "io_di_do",
+      "name": "4 digital inputs and 1 digital output",
+      "type": "comm_port",
+      "status": "unverified",
+      "source_ids": [
+        "sungrow_sh10rt_fs"
+      ]
+    },
+    {
+      "id": "wlan",
+      "name": "WLAN antenna",
+      "type": "antenna",
+      "status": "unverified",
+      "source_ids": [
+        "sungrow_sh10rt_fs"
+      ]
+    },
+    {
+      "id": "bluetooth",
+      "name": "Bluetooth",
+      "type": "antenna",
+      "status": "not_found"
+    },
+    {
+      "id": "spd",
+      "name": "DC and AC Type II surge protection",
+      "type": "spd",
+      "status": "unverified",
+      "source_ids": [
+        "sungrow_sh10rt_fs"
+      ]
+    },
+    {
+      "id": "mounting_bracket",
+      "name": "Wall-mounting bracket",
+      "type": "mounting_bracket",
+      "status": "unverified",
+      "source_ids": [
+        "sungrow_sh10rt_fs"
+      ],
+      "geometry_hint": "Mounting listed; hole spacing not_found"
+    },
+    {
+      "id": "grounding_terminal",
+      "name": "Grounding terminal",
+      "type": "grounding_terminal",
+      "status": "not_found"
+    }
+  ],
+  "geometry": {
+    "description": "Wall-mounted inverter envelope from datasheet W x H x D. Elements are generic placements (status typical) unless noted. Mounting hole positions omitted: spacing not sourced.",
+    "coordinate_system": "x = width (left to right seen from front), y = height (bottom 0 to top), z = depth (wall at z=0, front cover at z=D); origin bottom-left-wall corner; mm",
+    "module_dimensions_mm": [
+      460,
+      540,
+      170
+    ],
+    "clamping_zones_mm": [],
+    "elements": [
+      {
+        "id": "el_enclosure",
+        "kind": "enclosure",
+        "part_id": "enclosure",
+        "position_mm": [
+          0,
+          0,
+          0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          460,
+          540,
+          170
+        ],
+        "status": "unverified",
+        "note": "Overall envelope from datasheet W x H x D; origin at bottom-left-back when wall-mounted."
+      },
+      {
+        "id": "el_mppt_1",
+        "kind": "mppt_input",
+        "part_id": "mppt_1",
+        "position_mm": [
+          115.0,
+          32.4,
+          85.0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          92.0,
+          27.0,
+          6.8
+        ],
+        "status": "typical",
+        "note": "Generic placement, no sourced coordinates."
+      },
+      {
+        "id": "el_mppt_2",
+        "kind": "mppt_input",
+        "part_id": "mppt_2",
+        "position_mm": [
+          184.0,
+          32.4,
+          85.0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          92.0,
+          27.0,
+          6.8
+        ],
+        "status": "typical",
+        "note": "Generic placement, no sourced coordinates."
+      },
+      {
+        "id": "el_battery",
+        "kind": "dc_input",
+        "part_id": "battery_dc",
+        "position_mm": [
+          285.2,
+          32.4,
+          85.0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          92.0,
+          27.0,
+          6.8
+        ],
+        "status": "typical",
+        "note": "Generic placement, no sourced coordinates."
+      },
+      {
+        "id": "el_ac",
+        "kind": "ac_terminal",
+        "part_id": "ac_connector",
+        "position_mm": [
+          404.8,
+          32.4,
+          85.0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          92.0,
+          27.0,
+          6.8
+        ],
+        "status": "typical",
+        "note": "Generic placement, no sourced coordinates."
+      },
+      {
+        "id": "el_led",
+        "kind": "led_indicator",
+        "part_id": "led",
+        "position_mm": [
+          230.0,
+          486.0,
+          170.0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          92.0,
+          16.2,
+          0.0
+        ],
+        "status": "typical",
+        "note": "Generic placement, no sourced coordinates."
+      }
+    ]
+  },
+  "mechanical_ratings": {
+    "ip_rating": "IP65",
+    "fire_class": "not_found"
+  },
+  "status": "unverified",
+  "unverified_items": [
+    "Bluetooth not found",
+    "wall bracket hole spacing and screw sizes",
+    "grounding terminal",
+    "dimensions and weight are family values (SH5.0RT-SH10RT), not SH10RT-specific",
+    "source is a third-party brochure mirror; official URL redirected"
+  ],
+  "sources": [
+    {
+      "id": "sungrow_sh10rt_fs",
+      "title": "SH5.0RT-SH10RT fact sheet (brochure mirror)",
+      "publisher": "Sungrow Power Supply Co. (mirror on third-party host)",
+      "url": "https://www.sparkydirect.com.au/assets/brochures/SH10RT.pdf",
+      "accessed": "2026-11-20"
+    }
+  ],
+  "electrical_ratings": {
+    "topology": "hybrid (battery DC port)",
+    "phases": 3,
+    "rated_ac_power_kw": 10,
+    "ac_voltage_v": "3/N/PE 220/380, 230/400, 240/415",
+    "ac_frequency_hz": 50,
+    "n_mppt": 2,
+    "mppt_voltage_range_v": "200-950 (family SH6.0RT to SH10RT)",
+    "max_dc_voltage_v": 1000,
+    "max_dc_current_per_mppt_a": "12.5 and 25 (total 37.5)",
+    "battery_voltage_v": "150-600",
+    "battery_max_current_a": 30,
+    "efficiency_max_pct": "98-98.4 (model-dependent)",
+    "ip_rating": "IP65",
+    "cooling": "natural convection",
+    "display": "LED",
+    "backup_output": {
+      "voltage_v": "220/230/240 (3/N/PE)",
+      "frequency_hz": "50/60",
+      "switch_time_ms": "<20",
+      "peak_kw_5min": 12
+    },
+    "certifications": [
+      "IEC/EN 62109",
+      "IEC/EN 61000-6",
+      "EN 62477-1",
+      "IEC 61727",
+      "IEC 62116",
+      "AS/NZS 4777.2:2020",
+      "EN 50549-1"
+    ],
+    "protections": [
+      "grid monitoring",
+      "DC reverse polarity protection",
+      "AC short-circuit protection",
+      "solar DC switch",
+      "battery DC overcurrent protection",
+      "DC Type II and AC Type II surge protection",
+      "battery reverse polarity protection"
+    ],
+    "source_ids": [
+      "sungrow_sh10rt_fs"
+    ],
+    "electrical_status": "unverified"
+  },
+  "mechanical": {
+    "external_dimensions_wxhxd_mm": [
+      460,
+      540,
+      170
+    ],
+    "weight_kg": 27,
+    "mounting": "wall bracket (hole spacing not_found)",
+    "cooling": "natural convection",
+    "clearances_mm": "not_found",
+    "mechanical_status": "unverified"
+  }
+}

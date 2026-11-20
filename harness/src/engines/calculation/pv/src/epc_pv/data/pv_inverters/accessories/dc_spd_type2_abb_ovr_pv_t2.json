@@ -1,0 +1,118 @@
+{
+  "schema_version": "1.0",
+  "id": "dc_spd_type2_abb_ovr_pv_t2",
+  "name": {
+    "en": "DC SPD Type 2, 1000/1500 V (ABB OVR PV T2)",
+    "es": "SPD CC tipo 2, 1000/1500 V (ABB OVR PV T2)"
+  },
+  "kind": "accessory",
+  "description": {
+    "en": "DC surge protective device, Type 2 (IEC 61643-31), 1000 V and 1500 V DC variants, 3 DIN-rail modules wide.",
+    "es": "Protector contra sobretensiones CC tipo 2 (IEC 61643-31), variantes 1000 V y 1500 V CC, 3 módulos de carril DIN."
+  },
+  "typical_use": "DC surge protection in string combiner or inverter DC side.",
+  "status": "unverified",
+  "parts": [
+    {
+      "id": "body",
+      "name": "SPD module housing (DIN rail)",
+      "name_es": "Cuerpo del SPD (carril DIN)",
+      "type": "spd",
+      "status": "unverified",
+      "dimensions_mm": {
+        "width_mm": 54
+      },
+      "quantity_per_module": 1,
+      "ratings": {
+        "modules": 3,
+        "poles": "not stated (L+/L- protection)",
+        "uc_v": [
+          1000,
+          1500
+        ],
+        "in_ka": {
+          "1000V": 20,
+          "1500V": 15
+        },
+        "up_kv_iec": {
+          "1000V": 4,
+          "1500V": 5
+        },
+        "up_ul_kv": {
+          "1000V": 3,
+          "1500V": 4
+        }
+      },
+      "source_ids": [
+        "S11"
+      ]
+    },
+    {
+      "id": "din",
+      "name": "DIN rail mounting",
+      "name_es": "Montaje en carril DIN",
+      "type": "other",
+      "status": "unverified",
+      "geometry_hint": "Mounting per product category",
+      "source_ids": [
+        "S11"
+      ]
+    }
+  ],
+  "geometry": {
+    "description": "Width 54 mm (3 modules). Height and depth not found. Envelope omitted for 3D until sourced. Element sized only in width.",
+    "coordinate_system": "x along module long side, y along short side, z up through thickness; origin at module front-left corner; mm",
+    "elements": []
+  },
+  "mechanical_ratings": {
+    "standard": "IEC 61643-31"
+  },
+  "unverified_items": [
+    "Product order number not found",
+    "Imax not found",
+    "Height and depth not found",
+    "IP rating not found",
+    "Number of poles not stated",
+    "Mounting-hole layout not applicable"
+  ],
+  "sources": [
+    {
+      "id": "S11",
+      "title": "OVR PV T2 surge protective device (product page)",
+      "publisher": "ABB",
+      "url": "https://new.abb.com/low-voltage/products/system-pro-m/surge-protective-devices-ovr-old/ovr-pv-t2",
+      "accessed": "2026-11-20"
+    }
+  ],
+  "electrical_ratings": {
+    "type": "T2",
+    "standard": "IEC 61643-31",
+    "uc_dc_v": [
+      1000,
+      1500
+    ],
+    "in_ka": {
+      "1000V": 20,
+      "1500V": 15
+    },
+    "up_kv_iec": {
+      "1000V": 4,
+      "1500V": 5
+    },
+    "up_v_ul": {
+      "1000V": 3000,
+      "1500V": 4000
+    },
+    "imax_ka": "not found",
+    "modules": 3
+  },
+  "mechanical": {
+    "dimensions_mm": {
+      "width": 54,
+      "height": "not found",
+      "depth": "not found"
+    },
+    "ip": "not found",
+    "mounting": "DIN rail"
+  }
+}

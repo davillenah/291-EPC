@@ -1,0 +1,330 @@
+{
+  "schema_version": "1.0",
+  "id": "longi_lr5_54htb_1722x1134x30",
+  "name": {
+    "en": "LONGi Hi-MO 6 LR5-54HTB class, 1722 x 1134 x 30 mm, aluminium frame, 108 cells",
+    "es": "Clase LONGi Hi-MO 6 LR5-54HTB, 1722 x 1134 x 30 mm, marco de aluminio, 108 celdas"
+  },
+  "kind": "format",
+  "description": {
+    "en": "LONGi Hi-MO 6 LR5-54HTB 410-430M datasheet (AU version): 1722 x 1134 x 30 mm, 20.8 kg, 108 cells (6 x 18), 3.2 mm coated tempered front glass, single-glass construction, anodized aluminium alloy frame, IP68 junction box with three diodes, static load +5400 / -2400 Pa. Installation manual (LONGi family LR5-54/66/72 HTH/HTB): 8 mounting holes for M8, grounding holes 4.2 mm, clamp overlap 8-11 mm.",
+    "es": "Ficha LONGi Hi-MO 6 LR5-54HTB 410-430M (version AU): 1722 x 1134 x 30 mm, 20,8 kg, 108 celdas (6 x 18), vidrio frontal templado recubierto de 3,2 mm, construccion de vidrio simple, marco de aleacion de aluminio anodizado, caja IP68 con tres diodos, carga estatica +5400 / -2400 Pa. Manual de instalacion (familia LONGi LR5-54/66/72 HTH/HTB): 8 orificios de fijacion M8, puesta a tierra de 4,2 mm, solape de abrazadera 8-11 mm."
+  },
+  "typical_use": "54-cell (108 half-cell) aluminium-framed format at 1722 mm; alternative to the steel-framed Maysun 1722 entry.",
+  "cell": {
+    "type": "monocrystalline (Hi-MO 6)",
+    "n_cells_typical": [
+      108
+    ],
+    "status": "unverified",
+    "source_ids": [
+      "S20"
+    ]
+  },
+  "layers": [
+    {
+      "id": "front_glass",
+      "name": "Front glass",
+      "material": "3.2 mm coated tempered glass",
+      "thickness_mm": 3.2,
+      "status": "unverified",
+      "source_ids": [
+        "S20"
+      ]
+    },
+    {
+      "id": "encapsulant_front",
+      "name": "Encapsulant front",
+      "material": "not stated",
+      "status": "not_found",
+      "source_ids": []
+    },
+    {
+      "id": "cell_layer",
+      "name": "Cell layer",
+      "material": "108 cells printed as 6 x 18",
+      "status": "unverified",
+      "source_ids": [
+        "S20"
+      ]
+    },
+    {
+      "id": "encapsulant_back",
+      "name": "Encapsulant back",
+      "material": "not stated",
+      "status": "not_found",
+      "source_ids": []
+    },
+    {
+      "id": "rear_layer",
+      "name": "Rear layer",
+      "material": "single-glass construction printed; rear material not stated",
+      "status": "not_found",
+      "source_ids": [
+        "S20"
+      ]
+    }
+  ],
+  "parts": [
+    {
+      "id": "module_body",
+      "name": "Laminate outline (outline for 2D/3D)",
+      "type": "other",
+      "status": "unverified",
+      "dimensions_mm": {
+        "length": 1722,
+        "width": 1134,
+        "thickness": 30
+      },
+      "source_ids": [
+        "S20"
+      ]
+    },
+    {
+      "id": "frame_profile",
+      "name": "Frame: anodized aluminium alloy (section not stated)",
+      "type": "frame_profile",
+      "status": "unverified",
+      "material": "anodized aluminium alloy",
+      "geometry_hint": "section not stated; see frame_profile_anodized_aluminium family",
+      "source_ids": [
+        "S20",
+        "S24"
+      ]
+    },
+    {
+      "id": "junction_box",
+      "name": "Junction box: IP68, three diodes",
+      "type": "junction_box",
+      "status": "unverified",
+      "ratings": {
+        "ip": "IP68",
+        "bypass_diodes": 3,
+        "diode_rating": "not_found"
+      },
+      "quantity_per_module": 1,
+      "source_ids": [
+        "S20"
+      ]
+    },
+    {
+      "id": "bypass_diode_x3",
+      "name": "Bypass diodes, three",
+      "type": "bypass_diode",
+      "status": "unverified",
+      "quantity_per_module": 3,
+      "ratings": {
+        "current_a": "not_found",
+        "voltage_v": "not_found",
+        "type": "not_found"
+      },
+      "source_ids": [
+        "S20"
+      ]
+    },
+    {
+      "id": "pv_cable",
+      "name": "PV output cable: 4 mm2 as printed (text garbled in extract)",
+      "type": "cable",
+      "status": "unverified",
+      "ratings": {
+        "cross_section_mm2": 4,
+        "cross_section_note": "printed as '4mm''; read as 4 mm2, to be confirmed",
+        "length_plus_minus_mm": 1200,
+        "length_note": "+-1200 mm, customizable"
+      },
+      "quantity_per_module": 2,
+      "source_ids": [
+        "S20"
+      ]
+    },
+    {
+      "id": "cell_string",
+      "name": "Cells: 108 printed as 6 x 18",
+      "type": "cell_string",
+      "status": "unverified",
+      "quantity_per_module": 108,
+      "source_ids": [
+        "S20"
+      ]
+    },
+    {
+      "id": "glass_front",
+      "name": "Front glass 3.2 mm coated tempered",
+      "type": "glass",
+      "status": "unverified",
+      "dimensions_mm": {
+        "thickness": 3.2
+      },
+      "source_ids": [
+        "S20"
+      ]
+    },
+    {
+      "id": "mounting_holes",
+      "name": "Mounting holes: 8 for M8 (4 inner, 4 outer), back-side frame",
+      "type": "mounting_hole",
+      "status": "unverified",
+      "quantity_per_module": 8,
+      "ratings": {
+        "bolt": "M8",
+        "torque_nm": "12-16",
+        "clamp_bolt_m8_torque_nm": "14-18"
+      },
+      "geometry_hint": "hole diameter, slot shape and centre distances not stated (S24)",
+      "source_ids": [
+        "S24"
+      ]
+    },
+    {
+      "id": "grounding_holes",
+      "name": "Grounding holes, diameter 4.2 mm",
+      "type": "grounding_hole",
+      "status": "unverified",
+      "dimensions_mm": {
+        "diameter": 4.2
+      },
+      "geometry_hint": "at the edge of the back-side frame, marked with the IEC 61730-1 grounding symbol; not for mounting",
+      "source_ids": [
+        "S24"
+      ]
+    },
+    {
+      "id": "drain_holes",
+      "name": "Drainage holes",
+      "type": "drain_hole",
+      "status": "not_found",
+      "source_ids": [
+        "S24"
+      ],
+      "geometry_hint": "size and position not stated; clamps must not block drain holes"
+    },
+    {
+      "id": "connector",
+      "name": "PV connector: not stated in the datasheet",
+      "type": "connector",
+      "status": "not_found",
+      "source_ids": []
+    },
+    {
+      "id": "busbar_ribbon",
+      "name": "Busbars / ribbons",
+      "type": "busbar_ribbon",
+      "status": "not_found",
+      "source_ids": []
+    },
+    {
+      "id": "sealant_edge",
+      "name": "Edge sealant",
+      "type": "sealant",
+      "status": "not_found",
+      "source_ids": []
+    },
+    {
+      "id": "label_nameplate",
+      "name": "Nameplate label",
+      "type": "label",
+      "status": "not_found",
+      "source_ids": []
+    },
+    {
+      "id": "corner_key",
+      "name": "Corner keys",
+      "type": "corner_key",
+      "status": "not_found",
+      "source_ids": []
+    }
+  ],
+  "geometry": {
+    "description": "Outline from datasheet dimensions. Clamp overlap is printed; clamp distances use a reference edge that the manual does not state, so no clamp zone is positioned.",
+    "module_dimensions_mm": [
+      1722,
+      1134,
+      30
+    ],
+    "clamping_zones_mm": [
+      {
+        "edge": "not stated",
+        "dimension": "D",
+        "formula": "1/4 L - 50 <= D <= 1/4 L + 50 (L as printed; reference edge not stated)",
+        "status": "unverified",
+        "source_ids": [
+          "S24"
+        ],
+        "note": "load-table clamp placement formula, LONGi manual p.14"
+      },
+      {
+        "edge": "frame overlap",
+        "dimension": "overlap",
+        "range_mm": [
+          8,
+          11
+        ],
+        "status": "unverified",
+        "source_ids": [
+          "S24"
+        ],
+        "note": "framed module: clamp overlap 8-11 mm with the frame (p.14); corner clamps: length >= 60 mm, overlap >= 9 mm (p.15)"
+      }
+    ],
+    "elements": [
+      {
+        "id": "outline",
+        "kind": "laminate_outline",
+        "part_id": "module_body",
+        "position_mm": [
+          0,
+          0,
+          0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          1722,
+          1134,
+          30
+        ],
+        "status": "unverified"
+      }
+    ]
+  },
+  "mechanical_ratings": {
+    "weight_kg": 20.8,
+    "static_load_front_pa": 5400,
+    "static_load_rear_pa": 2400,
+    "junction_box_ip": "IP68",
+    "source_ids": [
+      "S20",
+      "S24"
+    ]
+  },
+  "status": "unverified",
+  "unverified_items": [
+    "Cell size, busbar count and cell edge length not stated.",
+    "Front-glass-only construction; rear material not stated.",
+    "Bypass diode current, voltage and type not stated.",
+    "Cable cross-section '4mm''' is garbled in the extract; read as 4 mm2, to be confirmed.",
+    "Mounting hole diameter, slot shape and centre distances not stated.",
+    "Connector type not stated.",
+    "Installation manual covers the LR5-54/66/72 HTH/HTB family; the 54HTB model is in that family, not confirmed row by row."
+  ],
+  "sources": [
+    {
+      "id": "S20",
+      "title": "LONGi Hi-MO 6 LR5-54HTB 410-430M datasheet (1722 x 1134 x 30 mm), AU version",
+      "publisher": "LONGi (copy hosted by Solarproof)",
+      "url": "https://solarproof.com.au/datasheets/panel_datasheet_LR5-54HTB430-AU.pdf",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "S24",
+      "title": "LONGi Photovoltaic Module Installation Manual (LR5-54/66/72 HTH/HTB, LR6, LR4 families)",
+      "publisher": "LONGi (copy hosted on Shopify CDN)",
+      "url": "https://cdn.shopify.com/s/files/1/0510/6148/9855/files/LONGI_IM.pdf",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

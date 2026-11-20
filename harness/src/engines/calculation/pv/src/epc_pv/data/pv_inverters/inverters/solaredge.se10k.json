@@ -1,0 +1,359 @@
+{
+  "schema_version": "1.0",
+  "id": "solaredge.se10k",
+  "name": {
+    "en": "SolarEdge SE10K (three-phase inverter for power optimizers)",
+    "es": "SolarEdge SE10K (inversor trifasico para optimizadores de potencia)"
+  },
+  "kind": "inverter_type",
+  "description": {
+    "en": "Three-phase inverter, 3 to 10 kW family (SE3K-SE10K), IP65, for use with module-level power optimizers; Ethernet, RS485, optional WLAN/cellular.",
+    "es": "Inversor trifasico, familia 3 a 10 kW (SE3K-SE10K), IP65, para uso con optimizadores de potencia a nivel de modulo; Ethernet, RS485, WLAN/celular opcionales."
+  },
+  "typical_use": "Three-phase inverter with module-level power optimizers (3/N/PE 380/220 or 400/230 WYE)",
+  "layers": [],
+  "parts": [
+    {
+      "id": "enclosure",
+      "name": "Housing",
+      "type": "enclosure",
+      "status": "unverified",
+      "source_ids": [
+        "solaredge_se10k_ds"
+      ],
+      "dimensions_mm": {
+        "w": 315,
+        "h": 540,
+        "d": 191
+      },
+      "geometry_hint": "Source lists 540 x 315 x 191 HxWxD"
+    },
+    {
+      "id": "fan",
+      "name": "Internal fan",
+      "type": "fan",
+      "status": "unverified",
+      "source_ids": [
+        "solaredge_se10k_ds"
+      ],
+      "ratings": {
+        "conflict": "front page says no external fan; installation spec says internal fan"
+      }
+    },
+    {
+      "id": "dc_input",
+      "name": "DC MC4 inputs (2 pairs)",
+      "type": "dc_input",
+      "status": "unverified",
+      "source_ids": [
+        "solaredge_se10k_ds"
+      ],
+      "quantity_per_module": 2,
+      "ratings": {
+        "connector": "MC4",
+        "max_dc_voltage_v": 900,
+        "max_dc_current_a": "5-16.5"
+      }
+    },
+    {
+      "id": "dc_switch",
+      "name": "DC disconnect",
+      "type": "dc_switch",
+      "status": "not_found"
+    },
+    {
+      "id": "ac_gland",
+      "name": "AC output cable gland (15-21 mm)",
+      "type": "gland",
+      "status": "unverified",
+      "source_ids": [
+        "solaredge_se10k_ds"
+      ],
+      "ratings": {
+        "cable_diameter_mm": "15-21"
+      }
+    },
+    {
+      "id": "ac_terminal",
+      "name": "AC terminal block (3/N/PE)",
+      "type": "ac_terminal",
+      "status": "not_found"
+    },
+    {
+      "id": "comm_rs485",
+      "name": "RS485",
+      "type": "comm_port",
+      "status": "unverified",
+      "source_ids": [
+        "solaredge_se10k_ds"
+      ]
+    },
+    {
+      "id": "comm_eth",
+      "name": "Ethernet",
+      "type": "comm_port",
+      "status": "unverified",
+      "source_ids": [
+        "solaredge_se10k_ds"
+      ]
+    },
+    {
+      "id": "wlan",
+      "name": "WLAN (optional)",
+      "type": "antenna",
+      "status": "unverified",
+      "source_ids": [
+        "solaredge_se10k_ds"
+      ],
+      "ratings": {
+        "availability": "optional"
+      }
+    },
+    {
+      "id": "cellular",
+      "name": "Cellular (optional)",
+      "type": "antenna",
+      "status": "unverified",
+      "source_ids": [
+        "solaredge_se10k_ds"
+      ],
+      "ratings": {
+        "availability": "optional"
+      }
+    },
+    {
+      "id": "zigbee",
+      "name": "ZigBee (optional)",
+      "type": "antenna",
+      "status": "unverified",
+      "source_ids": [
+        "solaredge_se10k_ds"
+      ],
+      "ratings": {
+        "availability": "optional"
+      }
+    },
+    {
+      "id": "display",
+      "name": "Display / LED",
+      "type": "display",
+      "status": "not_found"
+    },
+    {
+      "id": "mounting_bracket",
+      "name": "Mounting bracket (provided)",
+      "type": "mounting_bracket",
+      "status": "unverified",
+      "source_ids": [
+        "solaredge_se10k_ds"
+      ],
+      "geometry_hint": "Provided; hole spacing not_found"
+    },
+    {
+      "id": "mounting_holes",
+      "name": "Mounting holes",
+      "type": "mounting_hole",
+      "status": "not_found"
+    },
+    {
+      "id": "grounding_terminal",
+      "name": "Grounding terminal",
+      "type": "grounding_terminal",
+      "status": "not_found"
+    }
+  ],
+  "geometry": {
+    "description": "Wall-mounted inverter envelope from datasheet W x H x D. Elements are generic placements (status typical) unless noted. Mounting hole positions omitted: spacing not sourced.",
+    "coordinate_system": "x = width (left to right seen from front), y = height (bottom 0 to top), z = depth (wall at z=0, front cover at z=D); origin bottom-left-wall corner; mm",
+    "module_dimensions_mm": [
+      315,
+      540,
+      191
+    ],
+    "clamping_zones_mm": [],
+    "elements": [
+      {
+        "id": "el_enclosure",
+        "kind": "enclosure",
+        "part_id": "enclosure",
+        "position_mm": [
+          0,
+          0,
+          0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          315,
+          540,
+          191
+        ],
+        "status": "unverified",
+        "note": "Overall envelope from datasheet W x H x D; origin at bottom-left-back when wall-mounted."
+      },
+      {
+        "id": "el_dc",
+        "kind": "dc_input",
+        "part_id": "dc_input",
+        "position_mm": [
+          94.5,
+          27.0,
+          95.5
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          110.2,
+          27.0,
+          7.6
+        ],
+        "status": "typical",
+        "note": "Generic placement, no sourced coordinates."
+      },
+      {
+        "id": "el_ac",
+        "kind": "gland",
+        "part_id": "ac_gland",
+        "position_mm": [
+          236.2,
+          27.0,
+          95.5
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          63.0,
+          27.0,
+          7.6
+        ],
+        "status": "typical",
+        "note": "Generic placement, no sourced coordinates."
+      },
+      {
+        "id": "el_comm",
+        "kind": "comm_port",
+        "part_id": "comm_rs485",
+        "position_mm": [
+          47.2,
+          108.0,
+          191.0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          47.2,
+          21.6,
+          0.0
+        ],
+        "status": "typical",
+        "note": "Generic placement, no sourced coordinates."
+      },
+      {
+        "id": "el_fan",
+        "kind": "fan",
+        "part_id": "fan",
+        "position_mm": [
+          157.5,
+          529.2,
+          95.5
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          220.5,
+          10.8,
+          95.5
+        ],
+        "status": "typical",
+        "note": "Generic placement, no sourced coordinates. Assumed location; internal fan"
+      }
+    ]
+  },
+  "mechanical_ratings": {
+    "ip_rating": "IP65",
+    "fire_class": "not_found"
+  },
+  "status": "unverified",
+  "unverified_items": [
+    "Fan: internal fan vs no external fan (source conflict)",
+    "DC disconnect not found",
+    "display/LED not found",
+    "wall bracket hole spacing not found",
+    "dataset is a Home Wave-type family datasheet (EU), not an Argentina-specific model",
+    "optimizer P505 data not in this datasheet"
+  ],
+  "sources": [
+    {
+      "id": "solaredge_se10k_ds",
+      "title": "SE3K-SE10K three-phase inverter data sheet (mirror copy)",
+      "publisher": "SolarEdge Technologies (mirror on third-party shop host)",
+      "url": "https://cdn.shopify.com/s/files/1/0017/8847/7489/files/SE3K_-SE10K-datasheet.pdf",
+      "accessed": "2026-11-20"
+    }
+  ],
+  "electrical_ratings": {
+    "topology": "transformerless (not stated; to verify)",
+    "phases": 3,
+    "rated_ac_power_kw": "3-10 (model-dependent)",
+    "ac_voltage_v": "380/220 or 400/230 WYE (3/N/PE)",
+    "ac_frequency_hz": "not_found",
+    "n_dc_inputs": 2,
+    "max_dc_voltage_v": 900,
+    "max_dc_current_a": "5-16.5 (model-dependent)",
+    "efficiency_max_pct": 98,
+    "ip_rating": "IP65",
+    "cooling": "internal fan (conflict in source)",
+    "display": "not_found",
+    "ground_fault_detection_kohm": 700,
+    "certifications": [
+      "IEC 62103 (EN 50178)",
+      "IEC 62109-1/-2",
+      "VDE 0126-1-1",
+      "VDE-AR-N 4105",
+      "AS 4777",
+      "G83/G59",
+      "EN/IEC 61000 series",
+      "EN 55011",
+      "FCC Part 15",
+      "RoHS"
+    ],
+    "protections": [
+      "reverse polarity protection",
+      "ground-fault isolation detection (700 kOhm)",
+      "utility monitoring",
+      "islanding protection",
+      "configurable power factor"
+    ],
+    "source_ids": [
+      "solaredge_se10k_ds"
+    ],
+    "electrical_status": "unverified"
+  },
+  "mechanical": {
+    "external_dimensions_wxhxd_mm": [
+      315,
+      540,
+      191
+    ],
+    "weight_kg": 16.4,
+    "mounting": "bracket provided (spacing not_found)",
+    "cooling": "internal fan (conflict in source)",
+    "clearances_mm": "not_found",
+    "mechanical_status": "unverified"
+  }
+}

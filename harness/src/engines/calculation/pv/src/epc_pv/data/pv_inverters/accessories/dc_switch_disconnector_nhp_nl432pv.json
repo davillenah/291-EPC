@@ -1,0 +1,143 @@
+{
+  "schema_version": "1.0",
+  "id": "dc_switch_disconnector_nhp_nl432pv",
+  "name": {
+    "en": "DC switch-disconnector, 1500 V, 32 A, 4-pole, IP66 (NHP NL432PV)",
+    "es": "Seccionador CC, 1500 V, 32 A, 4 polos, IP66 (NHP NL432PV)"
+  },
+  "kind": "accessory",
+  "description": {
+    "en": "4-pole DC switch-disconnector, 1500 V DC, 32 A, IP66 front, plastic enclosure. Padlock and standard not confirmed on the product page.",
+    "es": "Seccionador CC de 4 polos, 1500 V CC, 32 A, IP66 en frente, envolvente de plástico. Candado y norma no confirmados en la página de producto."
+  },
+  "typical_use": "DC isolation at the combiner or inverter input.",
+  "status": "unverified",
+  "parts": [
+    {
+      "id": "enc",
+      "name": "Plastic enclosure (IP66 front)",
+      "name_es": "Envolvente de plástico (IP66 en frente)",
+      "type": "enclosure",
+      "status": "unverified",
+      "material": "plastic",
+      "dimensions_mm": {
+        "W": 99,
+        "H": 180,
+        "D": 107
+      },
+      "quantity_per_module": 1,
+      "ratings": {
+        "ip": "IP66 front"
+      },
+      "source_ids": [
+        "S12"
+      ]
+    },
+    {
+      "id": "pole",
+      "name": "4 DC poles",
+      "name_es": "4 polos CC",
+      "type": "dc_switch",
+      "status": "unverified",
+      "quantity_per_module": 4,
+      "ratings": {
+        "ue_dc_v": 1500,
+        "in_a": 32
+      },
+      "source_ids": [
+        "S12"
+      ]
+    },
+    {
+      "id": "handle",
+      "name": "Operating handle",
+      "name_es": "Maneta de maniobra",
+      "type": "other",
+      "status": "typical",
+      "quantity_per_module": 1,
+      "geometry_hint": "Padlockable status not found on this page"
+    },
+    {
+      "id": "label",
+      "name": "Rating label",
+      "name_es": "Placa de características",
+      "type": "label",
+      "status": "typical",
+      "geometry_hint": "Generic"
+    }
+  ],
+  "geometry": {
+    "description": "Envelope 99 x 180 x 107 mm (W x H x D) mapped to x=99, y=107, z=180. Mounting holes not found.",
+    "coordinate_system": "x along module long side, y along short side, z up through thickness; origin at module front-left corner; mm",
+    "elements": [
+      {
+        "id": "E-enc",
+        "kind": "enclosure_body",
+        "part_id": "enc",
+        "position_mm": [
+          0,
+          0,
+          0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          99,
+          107,
+          180
+        ],
+        "status": "unverified"
+      }
+    ],
+    "module_dimensions_mm": [
+      99,
+      107,
+      180
+    ]
+  },
+  "mechanical_ratings": {
+    "standard": "not found on this page (IEC 60947-3 cited in alternative datasheet ERS01324DC)"
+  },
+  "unverified_items": [
+    "Weight not found",
+    "IEC 60947-3 not confirmed for NL432PV",
+    "Padlock option not confirmed",
+    "Mounting hole spacing not found",
+    "Alternative source ERS01324DC (1500 V, 32 A, 4P, IP66, 180 x 98 x 115.5 mm, IEC 60947-3 DC-PV2 DC-21B, padlockable) is not used here"
+  ],
+  "sources": [
+    {
+      "id": "S12",
+      "title": "NL432PV DC isolator (product page)",
+      "publisher": "NHP Electrical Engineering Products",
+      "url": "https://www.nhp.com.au/product/NL432PV",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "S24",
+      "title": "ERS01324DC DC switch-disconnector datasheet",
+      "publisher": "Document host: yesss.co.uk (manufacturer unconfirmed)",
+      "url": "https://cdn.yesss.co.uk/documents/2395600_03_ERS01324DC_Datasheet_ca72413a4f24ed57e235ecb6e947033b.pdf",
+      "accessed": "2026-11-20"
+    }
+  ],
+  "electrical_ratings": {
+    "ue_dc_v": 1500,
+    "in_a": 32,
+    "poles": 4,
+    "ip_front": "IP66"
+  },
+  "mechanical": {
+    "external_dimensions_mm_WxHxD": [
+      99,
+      180,
+      107
+    ],
+    "weight_kg": "not found",
+    "enclosure_material": "plastic",
+    "mounting": "not found"
+  }
+}

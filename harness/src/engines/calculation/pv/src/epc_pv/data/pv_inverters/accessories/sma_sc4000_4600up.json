@@ -1,0 +1,254 @@
+{
+  "schema_version": "1.0",
+  "id": "sma_sc4000_4600up",
+  "name": {
+    "en": "SMA Sunny Central 4000-4600 UP",
+    "es": "SMA Sunny Central 4000-4600 UP"
+  },
+  "kind": "inverter_type",
+  "description": {
+    "en": "Central utility inverter, 4.0-4.6 MVA class, 1500 V DC input, 600/630/660/690 V AC output, 50/60 Hz, single cabinet.",
+    "es": "Inversor central de servicio público, clase 4,0-4,6 MVA, entrada CC 1500 V, salida CA 600/630/660/690 V, 50/60 Hz, armario único."
+  },
+  "typical_use": "Utility-scale PV plant central inverter with DC combiner inputs on the cabinet.",
+  "status": "unverified",
+  "parts": [
+    {
+      "id": "cab",
+      "name": "Inverter cabinet (overall envelope)",
+      "name_es": "Armario del inversor (envolvente)",
+      "type": "enclosure",
+      "status": "unverified",
+      "material": "not stated in source",
+      "dimensions_mm": {
+        "W": 2815,
+        "H": 2318,
+        "D": 1588
+      },
+      "quantity_per_module": 1,
+      "ratings": {
+        "ip": "IP54 electronics; IP34 air duct and connection area"
+      },
+      "geometry_hint": "Envelope only; no door, panel or hole layout in source",
+      "source_ids": [
+        "S01"
+      ]
+    },
+    {
+      "id": "dcin",
+      "name": "DC input fuse-holder bank (double-pole or single-pole)",
+      "name_es": "Banco de portafusibles de entrada CC",
+      "type": "dc_input",
+      "status": "unverified",
+      "quantity_per_module": 24,
+      "ratings": {
+        "inputs": "24 double-pole fused or 32 single-pole fused",
+        "max_dc_voltage_v": 1500
+      },
+      "source_ids": [
+        "S01"
+      ]
+    },
+    {
+      "id": "acout",
+      "name": "AC output terminals",
+      "name_es": "Terminales de salida CA",
+      "type": "ac_output",
+      "status": "unverified",
+      "ratings": {
+        "ac_voltage_v": [
+          600,
+          630,
+          660,
+          690
+        ],
+        "frequency_hz": [
+          50,
+          60
+        ]
+      },
+      "geometry_hint": "Nominal AC voltage depends on model: SC4000 600 V, SC4200 630 V, SC4400 660 V, SC4600 690 V",
+      "source_ids": [
+        "S01"
+      ]
+    },
+    {
+      "id": "fan",
+      "name": "OptiCool intelligent air-cooling fan group",
+      "name_es": "Grupo de ventiladores OptiCool",
+      "type": "fan",
+      "status": "unverified",
+      "ratings": {
+        "fresh_air_m3_h": 6500
+      },
+      "source_ids": [
+        "S01"
+      ]
+    },
+    {
+      "id": "airduct",
+      "name": "Air duct and intake opening (IP34)",
+      "name_es": "Conducto y entrada de aire (IP34)",
+      "type": "vent",
+      "status": "unverified",
+      "ratings": {
+        "ip": "IP34"
+      },
+      "source_ids": [
+        "S01"
+      ]
+    },
+    {
+      "id": "silencer",
+      "name": "Silencer kit (optional)",
+      "name_es": "Kit silenciador (opcional)",
+      "type": "other",
+      "status": "unverified",
+      "ratings": {
+        "noise_reduction_dB": 6
+      },
+      "geometry_hint": "Optional; source gives 93 dB(A) with inverter, 87 dB(A) with silencer kit",
+      "source_ids": [
+        "S01"
+      ]
+    },
+    {
+      "id": "ground",
+      "name": "Grounding terminal",
+      "name_es": "Terminal de puesta a tierra",
+      "type": "grounding_terminal",
+      "status": "typical",
+      "geometry_hint": "Generic cabinet item, no sourced value"
+    },
+    {
+      "id": "label",
+      "name": "Nameplate and hazard labels",
+      "name_es": "Placas de características y etiquetas",
+      "type": "label",
+      "status": "typical",
+      "geometry_hint": "Generic, no sourced value"
+    }
+  ],
+  "geometry": {
+    "description": "Single cabinet. Overall envelope W x D x H mapped to x (2815), y (1588), z (2318) from the datasheet W x H x D = 2815 x 2318 x 1588. Only the envelope is sourced; internal layout and mounting holes are not_found.",
+    "coordinate_system": "x along module long side, y along short side, z up through thickness; origin at module front-left corner; mm",
+    "elements": [
+      {
+        "id": "E-cab",
+        "kind": "enclosure_body",
+        "part_id": "cab",
+        "position_mm": [
+          0,
+          0,
+          0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          2815,
+          1588,
+          2318
+        ],
+        "status": "unverified"
+      }
+    ],
+    "module_dimensions_mm": [
+      2815,
+      1588,
+      2318
+    ]
+  },
+  "mechanical_ratings": {
+    "certifications": [
+      "AR-N 4110/20/30",
+      "CE",
+      "IEC/EN 62109-1/-2",
+      "IEEE 1547",
+      "UL 840 Cat. IV",
+      "CEI 0-16",
+      "EN 50549-2",
+      "NTS 2.1",
+      "IEC/EN 55011",
+      "IEC 61000-6-2/-4",
+      "FCC Part 15 Subpart B",
+      "IEC 62920",
+      "ISO 9001"
+    ]
+  },
+  "unverified_items": [
+    "Internal layout, mounting-hole positions and door details not in source",
+    "Cabinet material not stated",
+    "Fan count and internal volumes not stated",
+    "Noise source in dB(A) given; reference distance not stated"
+  ],
+  "sources": [
+    {
+      "id": "S01",
+      "title": "SC4xxxUP datasheet (SC 4000-4600 UP)",
+      "publisher": "SMA Solar Technology AG",
+      "url": "https://files.sma.de/downloads/SC4xxxUP-DS-en-33.pdf",
+      "accessed": "2026-11-20"
+    }
+  ],
+  "electrical_ratings": {
+    "topology": "central inverter, DC input from PV combiners",
+    "rated_ac_power_kva_35C": [
+      4000,
+      4200,
+      4400,
+      4600
+    ],
+    "max_dc_voltage_v": 1500,
+    "mppt_dc_voltage_range_v_25C": {
+      "SC4000UP": [
+        880,
+        1325
+      ],
+      "SC4200UP": [
+        921,
+        1325
+      ],
+      "SC4400UP": [
+        962,
+        1325
+      ],
+      "SC4600UP": [
+        1003,
+        1325
+      ]
+    },
+    "dc_inputs": "24 double-pole fused or 32 single-pole fused",
+    "ac_voltage_v_nominal": [
+      600,
+      630,
+      660,
+      690
+    ],
+    "frequency_hz": [
+      50,
+      60
+    ],
+    "max_efficiency_pct": {
+      "SC4000-4400UP": 98.8,
+      "SC4600UP": 98.9
+    }
+  },
+  "mechanical": {
+    "external_dimensions_mm_WxHxD": [
+      2815,
+      2318,
+      1588
+    ],
+    "weight_kg_max": 3700,
+    "cooling": "intelligent air cooling (OptiCool), 6500 m3/h fresh air",
+    "noise_dB_A": {
+      "with_inverter": 93,
+      "with_silencer_kit": 87
+    },
+    "operating_temp_c": "-25 to 60 (optional -40)",
+    "ip": "IP54 electronics, IP34 air duct/connection"
+  }
+}

@@ -1,0 +1,275 @@
+{
+  "schema_version": "1.0",
+  "id": "ramming_c_pile_fixed_table",
+  "name": {
+    "en": "Ramming single-post fixed-tilt table (C-pile, section not stated)",
+    "es": "Mesa fija con pilote de hincado de un poste (pilote C, sección no indicada)"
+  },
+  "family": "ground",
+  "category": "ramming_c_pile_fixed_table",
+  "description": {
+    "en": "Fixed-tilt ground table on a single galvanized post rammed into the soil, with a galvanized table frame and aluminium module clamps. The ArcelorMittal source describes a single-post ramming system and does not state the post section. A generic C-pile reference size (approximate, from an industry article) is recorded for orientation only; it is not confirmed for this product.",
+    "es": "Mesa fija de tilt en suelo sobre un poste galvanizado hincado, con bastidor galvanizado y mordazas de aluminio para módulos. La fuente de ArcelorMittal describe un sistema de poste único hincado y no indica la sección del poste. Se registra una dimensión de referencia genérica de pilote C (aproximada, de un artículo del sector) solo como orientación; no está confirmada para este producto."
+  },
+  "typical_use": "Fixed-tilt ground arrays on soils suitable for ramming, with tilt 0-30 degrees.",
+  "applicable_standards": [
+    "EN 1090-1",
+    "ISO 1461",
+    "EN 10346"
+  ],
+  "materials": [
+    {
+      "component": "Post (ramming pile)",
+      "material": "Steel, grade not stated",
+      "finish": "Hot-dip galvanized (EN ISO 1461)",
+      "status": "unverified",
+      "source_ids": [
+        "src_arcelormittal_fixed"
+      ]
+    },
+    {
+      "component": "Table parts (frame)",
+      "material": "Steel, grade not stated",
+      "finish": "Pre-galvanized",
+      "status": "unverified",
+      "source_ids": [
+        "src_arcelormittal_fixed"
+      ]
+    },
+    {
+      "component": "Module clamps",
+      "material": "Aluminium AL 5754",
+      "finish": "Not stated",
+      "status": "unverified",
+      "source_ids": [
+        "src_arcelormittal_fixed"
+      ]
+    },
+    {
+      "component": "Fasteners",
+      "material": "Steel, grade not stated",
+      "finish": "Not stated",
+      "status": "not_found",
+      "source_ids": [
+        "src_arcelormittal_fixed"
+      ]
+    }
+  ],
+  "profiles": [
+    {
+      "id": "c_pile_post",
+      "name": "Generic C-pile reference section (approximate; not confirmed for this product)",
+      "section_type": "C",
+      "dimensions_mm": {
+        "width": 114.3,
+        "height": 193.7,
+        "lip": 25.4,
+        "thickness_min": 2.54,
+        "thickness_max": 3.81
+      },
+      "material": "Galvanized steel, grade not stated",
+      "status": "unverified",
+      "source_ids": [
+        "src_nacle_w_vs_c"
+      ]
+    },
+    {
+      "id": "table_frame_profile",
+      "name": "Table frame profile (not stated)",
+      "section_type": "other",
+      "dimensions_mm": {},
+      "material": "Pre-galvanized steel",
+      "status": "not_found",
+      "source_ids": [
+        "src_arcelormittal_fixed"
+      ]
+    }
+  ],
+  "geometry": {
+    "description": "Only sourced values are modelled: ground clearance 500 mm and one post per table (ArcelorMittal). The post section is a generic C reference (approximate, unverified); post length and embedment are not stated.",
+    "coordinate_system": "x along module row, y up-slope/north-south horizontal, z up; origin at ground/roof contact of first support; mm and degrees",
+    "tilt_range_deg": [
+      0,
+      30
+    ],
+    "elements": [
+      {
+        "id": "ground_clearance",
+        "kind": "other",
+        "profile_or_accessory_id": "table_frame_profile",
+        "position_mm": [
+          0,
+          0,
+          0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "length_mm": 500,
+        "note": "Ground clearance of the table stated in the source (module lower edge height above ground), not a post length.",
+        "status": "unverified"
+      },
+      {
+        "id": "c_pile_post_element",
+        "kind": "post",
+        "profile_or_accessory_id": "c_pile_post",
+        "position_mm": [
+          0,
+          0,
+          0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "length_mm": 0,
+        "count": 1,
+        "note": "One post per table (ArcelorMittal: single post). Length and embedment not stated; length_mm 0 is a placeholder, not a value. Section is the generic C reference above.",
+        "status": "not_found"
+      }
+    ],
+    "reference_layout": {
+      "note": "Source: 2 modules in portrait or 4 modules in landscape per table; table length customizable. Module dimensions not stated."
+    }
+  },
+  "accessories": [
+    {
+      "id": "bolt_structural",
+      "name": "Structural bolts (steel)",
+      "type": "bolt",
+      "material": "Steel",
+      "grade": "not_found",
+      "standard": "not_found",
+      "thread": "not_found",
+      "quantity": {
+        "value": 0,
+        "per": "post",
+        "note": "NOT SOURCED: placeholder"
+      },
+      "purpose": "Connections of table frame to post",
+      "status": "not_found",
+      "source_ids": [
+        "src_arcelormittal_fixed"
+      ]
+    },
+    {
+      "id": "clamp_mid_al_5754",
+      "name": "Mid clamp, aluminium AL 5754",
+      "type": "clamp_mid",
+      "material": "Aluminium AL 5754",
+      "grade": "not_found",
+      "standard": "not_found",
+      "thread": "not_found",
+      "quantity": {
+        "value": 0,
+        "per": "module",
+        "note": "NOT SOURCED: placeholder"
+      },
+      "purpose": "Holds adjacent modules",
+      "status": "unverified",
+      "source_ids": [
+        "src_arcelormittal_fixed"
+      ]
+    },
+    {
+      "id": "clamp_end_al_5754",
+      "name": "End clamp, aluminium AL 5754",
+      "type": "clamp_end",
+      "material": "Aluminium AL 5754",
+      "grade": "not_found",
+      "standard": "not_found",
+      "thread": "not_found",
+      "quantity": {
+        "value": 0,
+        "per": "module",
+        "note": "NOT SOURCED: placeholder"
+      },
+      "purpose": "Holds outer module edges",
+      "status": "unverified",
+      "source_ids": [
+        "src_arcelormittal_fixed"
+      ]
+    },
+    {
+      "id": "base_plate_post",
+      "name": "Post base or fastening plate (embedded or ramming head)",
+      "type": "base_plate",
+      "material": "not_found",
+      "grade": "not_found",
+      "standard": "not_found",
+      "thread": "not_found",
+      "quantity": {
+        "value": 0,
+        "per": "post",
+        "note": "NOT SOURCED: placeholder"
+      },
+      "purpose": "Transfers table loads to the post",
+      "status": "not_found"
+    },
+    {
+      "id": "grounding_bonding",
+      "name": "Bonding and earth connection",
+      "type": "grounding",
+      "material": "not_found",
+      "grade": "not_found",
+      "standard": "not_found",
+      "thread": "not_found",
+      "quantity": {
+        "value": 0,
+        "per": "table",
+        "note": "NOT SOURCED: placeholder"
+      },
+      "purpose": "Bonding of table to earth system",
+      "status": "not_found"
+    },
+    {
+      "id": "sealant_post",
+      "name": "Sealant or coating at ground line",
+      "type": "sealant",
+      "material": "not_found",
+      "grade": "not_found",
+      "standard": "not_found",
+      "thread": "not_found",
+      "quantity": {
+        "value": 0,
+        "per": "post",
+        "note": "NOT SOURCED: placeholder"
+      },
+      "purpose": "Ground-line protection",
+      "status": "not_found"
+    }
+  ],
+  "grounding_bonding": "Not stated in the source reviewed.",
+  "installation_notes": [
+    "Ramming installation rate of more than 250 piles per day per machine is stated for rammed piles in the Sadef brochure (Sadef states this for its rammed pile range generally)."
+  ],
+  "status": "unverified",
+  "unverified_items": [
+    "Post section of the actual ArcelorMittal product (not stated); generic C dimensions from an article are approximate",
+    "Post length and embedment depth (not stated)",
+    "Steel grades for post and frame (not stated)",
+    "All bolt, nut and washer sizes, grades and torques (not stated)",
+    "Clamp and bracket quantities per module or table (not stated)",
+    "Bonding, sealant and cable-management hardware (not stated)",
+    "Design wind and snow loads (only a 40 m/s design wind speed is stated, without load basis)"
+  ],
+  "sources": [
+    {
+      "id": "src_arcelormittal_fixed",
+      "title": "Technical datasheet - Ground mounted fixed structure v2",
+      "publisher": "ArcelorMittal",
+      "url": "https://projects.arcelormittal.com/cca/repo/Solar/Technical%20datasheet-Ground%20mounted%20fixed%20Structure%20v2.pdf",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "src_nacle_w_vs_c",
+      "title": "Driven Foundations for Trackers and Fixed Racks - W vs. C (article)",
+      "publisher": "NA Clean Energy (nacleanenergy.com)",
+      "url": "https://www.nacleanenergy.com/solar/driven-foundations-for-trackers-and-fixed-racks-w-vs-c",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

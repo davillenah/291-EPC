@@ -1,0 +1,258 @@
+{
+  "schema_version": "1.0",
+  "id": "flexible_lightweight",
+  "name": {
+    "en": "Flexible lightweight CIGS film (Miasole FLEX-03NS series)",
+    "es": "Flexible y ligero, pelicula CIGS (serie Miasole FLEX-03NS)"
+  },
+  "kind": "technology",
+  "description": {
+    "en": "Thin flexible CIGS laminate, glass-free, for curved or weight-limited roofs. Reference: Miasole FLEX-03NS (1709 x 348 mm, 75-90 W, datasheet 2019). The organic (OPV) film is a separate entry (opv_flexible). A glass-free mono-Si flexible module (Sunman eArc) is kept as a second reference in mechanical_ratings.",
+    "es": "Laminado CIGS delgado y flexible, sin vidrio, para cubiertas curvas o con limite de peso. Referencia: Miasole FLEX-03NS (1709 x 348 mm, 75-90 W, ficha de 2019). La pelicula organica (OPV) es una entrada aparte (opv_flexible). Un modulo flexible de silicio monocristalino sin vidrio (Sunman eArc) se conserva como segunda referencia en mechanical_ratings."
+  },
+  "typical_use": "Lightweight roofs, curved surfaces and roof membranes where framed glass modules are not suitable; adhesive-backed version listed.",
+  "cell": {
+    "type": "CIGS thin film on flexible substrate",
+    "status": "unverified",
+    "source_ids": [
+      "miasole_flex03ns"
+    ],
+    "note": "Datasheet: 'CIGS flexible module'. Substrate, cell count and cell size not stated."
+  },
+  "layers": [
+    {
+      "id": "laminate",
+      "name": "Flexible CIGS laminate",
+      "material": "CIGS flexible laminate, layers not stated individually",
+      "status": "unverified",
+      "source_ids": [
+        "miasole_flex03ns"
+      ],
+      "thickness_mm": 1.6,
+      "note": "1.6 mm without adhesive (datasheet)."
+    },
+    {
+      "id": "adhesive",
+      "name": "Adhesive backing",
+      "material": "adhesive (not stated)",
+      "status": "unverified",
+      "source_ids": [
+        "miasole_flex03ns"
+      ],
+      "thickness_mm": 0.9,
+      "note": "Derived: 2.5 mm with adhesive minus 1.6 mm without adhesive (both datasheet values). Not a stated layer thickness."
+    }
+  ],
+  "parts": [
+    {
+      "id": "laminate",
+      "name": "CIGS flexible laminate",
+      "type": "other",
+      "status": "unverified",
+      "source_ids": [
+        "miasole_flex03ns"
+      ],
+      "material": "CIGS flexible laminate",
+      "dimensions_mm": {
+        "length": 1709,
+        "width": 348,
+        "thickness": 1.6
+      }
+    },
+    {
+      "id": "adhesive",
+      "name": "Adhesive backing",
+      "type": "other",
+      "status": "unverified",
+      "source_ids": [
+        "miasole_flex03ns"
+      ],
+      "material": "adhesive",
+      "dimensions_mm": {
+        "thickness": 0.9
+      },
+      "note": "Derived thickness."
+    },
+    {
+      "id": "frame",
+      "name": "Frame",
+      "type": "frame_profile",
+      "status": "not_found",
+      "source_ids": [],
+      "material": "not applicable (frameless) or not stated"
+    },
+    {
+      "id": "junction_box",
+      "name": "Junction box",
+      "type": "junction_box",
+      "status": "unverified",
+      "source_ids": [
+        "miasole_flex03ns"
+      ],
+      "ratings": {
+        "ip": "IP68"
+      },
+      "dimensions_mm": {
+        "height_max": 17
+      },
+      "note": "Length and width not stated; height max 17 mm (datasheet)."
+    },
+    {
+      "id": "connector",
+      "name": "Connector",
+      "type": "connector",
+      "status": "unverified",
+      "source_ids": [
+        "miasole_flex03ns"
+      ],
+      "ratings": {
+        "type": "Amphenol H4"
+      }
+    },
+    {
+      "id": "cable",
+      "name": "PV cable",
+      "type": "cable",
+      "status": "not_found",
+      "source_ids": [],
+      "ratings": {}
+    }
+  ],
+  "geometry": {
+    "description": "Single flexible element 1709 x 348 mm. Thickness 1.6 mm without adhesive and 2.5 mm with adhesive (datasheet); the 0.9 mm adhesive layer is derived. Junction box size not stated beyond 17 mm maximum height; not modelled.",
+    "coordinate_system": "x along module long side, y along short side, z up through thickness; origin at module front-left corner; mm. Here z=0 is the top of the laminate face and z grows toward the mounting surface.",
+    "elements": [
+      {
+        "id": "laminate",
+        "kind": "film",
+        "part_id": "laminate",
+        "position_mm": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          1709.0,
+          348.0,
+          1.6
+        ],
+        "status": "unverified"
+      },
+      {
+        "id": "adhesive",
+        "kind": "film",
+        "part_id": "adhesive",
+        "position_mm": [
+          0.0,
+          0.0,
+          1.6
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          1709.0,
+          348.0,
+          0.9
+        ],
+        "status": "unverified",
+        "note": "derived thickness"
+      }
+    ],
+    "module_dimensions_mm": [
+      1709,
+      348,
+      2.5
+    ]
+  },
+  "mechanical_ratings": {
+    "weight_kg_range": [
+      1.1,
+      1.3
+    ],
+    "weight_note": "1.1 kg without adhesive, 1.3 kg with adhesive (datasheet)",
+    "module_efficiency_pct_range": [
+      15.3,
+      18.3
+    ],
+    "efficiency_note": "aperture area, datasheet",
+    "power_w_range": [
+      75,
+      90
+    ],
+    "max_system_voltage_v": 1000,
+    "junction_box_ip": "IP68",
+    "frameless": true,
+    "standards_listed_in_source": [
+      "IEC 61646",
+      "IEC 61730",
+      "IEC 62716",
+      "IEC 61701 (salt spray)",
+      "UL 1703",
+      "cUL 1703"
+    ],
+    "bend_radius_mm": null,
+    "bend_radius_note": "not stated in datasheet",
+    "reference_sunman_earc_mono_si_glass_free": {
+      "model_text": "SMD160M-4X09 / SMD155M-4X09 (brochure file eASMD160M4x9)",
+      "cell": "monocrystalline silicon",
+      "glass_replaced": "yes, by a laminate (glass replaced per brochure)",
+      "dimensions_mm": [
+        1503,
+        689,
+        5.6
+      ],
+      "weight_kg": 3.9,
+      "module_efficiency_pct_range": [
+        15.0,
+        15.5
+      ],
+      "power_w_range": [
+        155,
+        160
+      ],
+      "max_system_voltage_v": 600,
+      "junction_box_ip": "IP68",
+      "cable": "4.0 mm2, (+) 150 mm / (-) 450 mm",
+      "connector": "TL-CABLE01",
+      "source_ids": [
+        "sunman_earc"
+      ],
+      "status": "unverified"
+    },
+    "status_note": "values transcribed from the Miasole datasheet; status unverified unless marked"
+  },
+  "status": "unverified",
+  "unverified_items": [
+    "Substrate and laminate layer stack not stated; only total thickness is sourced.",
+    "Adhesive backing thickness (0.9 mm) is derived from two datasheet values, not stated.",
+    "Bend radius not stated.",
+    "Junction box length and width not stated (height max 17 mm).",
+    "Cable cross-section and length not stated.",
+    "Datasheet is a 2019 Japanese-language sheet for the FLEX-03NS series (variants 75-90 W); the current product line may differ.",
+    "Sunman eArc values belong to a different (mono-Si) product and are a reference only."
+  ],
+  "sources": [
+    {
+      "id": "miasole_flex03ns",
+      "title": "FLEX-03NS series CIGS flexible module datasheet (Japanese, 2019)",
+      "publisher": "Miasole",
+      "url": "https://miasole.com/wp-content/uploads/2022/07/flex-03n-1.7m_datasheet_jp-2019.pdf",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "sunman_earc",
+      "title": "Sunman eArc eASMD160M-4X09 brochure (distributor copy)",
+      "publisher": "Sunman (copy, Solar4RVs)",
+      "url": "https://www.solar4rvs.com.au/assets/brochures/eASMD160M4x9.pdf",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

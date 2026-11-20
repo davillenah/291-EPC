@@ -1,0 +1,331 @@
+{
+  "schema_version": "1.0",
+  "id": "g12r_66_132hc_2382x1134x30_renew",
+  "name": {
+    "en": "G12R 132 half-cut cells, 2382 x 1134 x 30 mm (Renew RPS3MH66BD)",
+    "es": "G12R 132 celdas partidas, 2382 x 1134 x 30 mm (Renew RPS3MH66BD)"
+  },
+  "kind": "format",
+  "description": {
+    "en": "Renew G12R TOPCon datasheet, model RPS3MH66BD: 2382 x 1134 x 30 mm, 33.5 kg, 132 half-cut G12R cells, 2 mm + 2 mm high-transmission glass, anodized aluminium frame, 4 mm2 cable 300 mm (+/-), Staubli-type MC4 connector (PV-CO02-xy / PV-ZH202B printed, to be confirmed), 5400 Pa snow and 2400 Pa wind. IP68/IP67 junction box; bypass diode count not stated in this datasheet.",
+    "es": "Ficha Renew G12R TOPCon, modelo RPS3MH66BD: 2382 x 1134 x 30 mm, 33,5 kg, 132 celdas G12R partidas, vidrio de alta transmision de 2 mm + 2 mm, marco de aluminio anodizado, cable de 4 mm2 de 300 mm (+/-), conector tipo MC4 (PV-CO02-xy / PV-ZH202B impresos, a confirmar), 5400 Pa nieve y 2400 Pa viento. Caja IP68/IP67; el numero de diodos de bypass no figura en esta ficha."
+  },
+  "typical_use": "G12R 2382 mm format, 30 mm thickness (the Heliene 35 mm variant is a separate entry to add).",
+  "cell": {
+    "type": "G12R TOPCon, half-cut",
+    "n_cells_typical": [
+      132
+    ],
+    "half_cut": true,
+    "status": "unverified",
+    "source_ids": [
+      "S21"
+    ]
+  },
+  "layers": [
+    {
+      "id": "front_glass",
+      "name": "Front glass",
+      "material": "2 mm high-transmission glass",
+      "thickness_mm": 2.0,
+      "status": "unverified",
+      "source_ids": [
+        "S21"
+      ]
+    },
+    {
+      "id": "encapsulant_front",
+      "name": "Encapsulant front",
+      "material": "not stated",
+      "status": "not_found",
+      "source_ids": []
+    },
+    {
+      "id": "cell_layer",
+      "name": "Cell layer",
+      "material": "132 half-cut G12R cells",
+      "status": "unverified",
+      "source_ids": [
+        "S21"
+      ]
+    },
+    {
+      "id": "encapsulant_back",
+      "name": "Encapsulant back",
+      "material": "not stated",
+      "status": "not_found",
+      "source_ids": []
+    },
+    {
+      "id": "rear_layer",
+      "name": "Rear glass",
+      "material": "2 mm high-transmission glass",
+      "thickness_mm": 2.0,
+      "status": "unverified",
+      "source_ids": [
+        "S21"
+      ]
+    }
+  ],
+  "parts": [
+    {
+      "id": "module_body",
+      "name": "Laminate outline (outline for 2D/3D)",
+      "type": "other",
+      "status": "unverified",
+      "dimensions_mm": {
+        "length": 2382,
+        "width": 1134,
+        "thickness": 30
+      },
+      "source_ids": [
+        "S21"
+      ]
+    },
+    {
+      "id": "frame_profile",
+      "name": "Frame: anodized aluminium, 30 mm",
+      "type": "frame_profile",
+      "status": "unverified",
+      "material": "anodized aluminium",
+      "dimensions_mm": {
+        "height": 30
+      },
+      "geometry_hint": "section not stated; see frame_profile_anodized_aluminium family",
+      "source_ids": [
+        "S21"
+      ]
+    },
+    {
+      "id": "junction_box",
+      "name": "Junction box: IP68 / IP67",
+      "type": "junction_box",
+      "status": "unverified",
+      "ratings": {
+        "ip": "IP68 / IP67",
+        "bypass_diodes": "not_found",
+        "diode_rating": "not_found"
+      },
+      "source_ids": [
+        "S21"
+      ]
+    },
+    {
+      "id": "bypass_diode_x3",
+      "name": "Bypass diodes: count and ratings not stated",
+      "type": "bypass_diode",
+      "status": "not_found",
+      "ratings": {
+        "current_a": "not_found",
+        "voltage_v": "not_found",
+        "type": "not_found"
+      },
+      "source_ids": []
+    },
+    {
+      "id": "pv_cable",
+      "name": "PV output cable: 4 mm2 (12 AWG), symmetrical",
+      "type": "cable",
+      "status": "unverified",
+      "ratings": {
+        "cross_section_mm2": 4,
+        "length_plus_minus_mm": 300,
+        "length_note": "300 mm positive and negative; other lengths optional"
+      },
+      "quantity_per_module": 2,
+      "source_ids": [
+        "S21"
+      ]
+    },
+    {
+      "id": "cell_string",
+      "name": "Cells: 132 half-cut G12R",
+      "type": "cell_string",
+      "status": "unverified",
+      "quantity_per_module": 132,
+      "source_ids": [
+        "S21"
+      ]
+    },
+    {
+      "id": "glass_front",
+      "name": "Front glass 2 mm high-transmission",
+      "type": "glass",
+      "status": "unverified",
+      "dimensions_mm": {
+        "thickness": 2.0
+      },
+      "source_ids": [
+        "S21"
+      ]
+    },
+    {
+      "id": "glass_rear",
+      "name": "Rear glass 2 mm high-transmission",
+      "type": "glass",
+      "status": "unverified",
+      "dimensions_mm": {
+        "thickness": 2.0
+      },
+      "source_ids": [
+        "S21"
+      ]
+    },
+    {
+      "id": "mounting_holes_m8",
+      "name": "Mounting slots 14 x 9 mm (x4)",
+      "type": "mounting_hole",
+      "status": "unverified",
+      "dimensions_mm": {
+        "width": 14,
+        "height": 9
+      },
+      "quantity_per_module": 4,
+      "geometry_hint": "printed as '4Nos-14x9 Mounting Slot'; positions not stated",
+      "source_ids": [
+        "S21"
+      ]
+    },
+    {
+      "id": "mounting_holes_m6",
+      "name": "Mounting slots 10 x 7 mm (x8)",
+      "type": "mounting_hole",
+      "status": "unverified",
+      "dimensions_mm": {
+        "width": 10,
+        "height": 7
+      },
+      "quantity_per_module": 8,
+      "geometry_hint": "printed as '8Nos-10x7 Mounting Slot'; positions not stated",
+      "source_ids": [
+        "S21"
+      ]
+    },
+    {
+      "id": "grounding_holes",
+      "name": "Grounding holes, diameter 4 mm (x2)",
+      "type": "grounding_hole",
+      "status": "unverified",
+      "dimensions_mm": {
+        "diameter": 4.0
+      },
+      "quantity_per_module": 2,
+      "source_ids": [
+        "S21"
+      ]
+    },
+    {
+      "id": "drain_holes",
+      "name": "Drainage holes: size not stated",
+      "type": "drain_hole",
+      "status": "not_found",
+      "source_ids": []
+    },
+    {
+      "id": "connector",
+      "name": "PV connector: PV-CO02-xy / PV-ZH202B (to confirm)",
+      "type": "connector",
+      "status": "unverified",
+      "ratings": {
+        "printed": "PV-CO02-xy, PV-ZH202B; datasheet asks to confirm final connector with sales"
+      },
+      "source_ids": [
+        "S21"
+      ]
+    },
+    {
+      "id": "busbar_ribbon",
+      "name": "Busbars / ribbons",
+      "type": "busbar_ribbon",
+      "status": "not_found",
+      "source_ids": []
+    },
+    {
+      "id": "sealant_edge",
+      "name": "Edge sealant",
+      "type": "sealant",
+      "status": "not_found",
+      "source_ids": []
+    },
+    {
+      "id": "label_nameplate",
+      "name": "Nameplate label",
+      "type": "label",
+      "status": "not_found",
+      "source_ids": []
+    },
+    {
+      "id": "corner_key",
+      "name": "Corner keys",
+      "type": "corner_key",
+      "status": "not_found",
+      "source_ids": []
+    }
+  ],
+  "geometry": {
+    "description": "Outline from datasheet dimensions. Hole positions and clamp zones are not stated, so they are not positioned.",
+    "module_dimensions_mm": [
+      2382,
+      1134,
+      30
+    ],
+    "clamping_zones_mm": [
+      {
+        "edge": "not stated",
+        "status": "not_found",
+        "note": "clamp zones not stated in the Renew datasheet"
+      }
+    ],
+    "elements": [
+      {
+        "id": "outline",
+        "kind": "laminate_outline",
+        "part_id": "module_body",
+        "position_mm": [
+          0,
+          0,
+          0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          2382,
+          1134,
+          30
+        ],
+        "status": "unverified"
+      }
+    ]
+  },
+  "mechanical_ratings": {
+    "weight_kg": 33.5,
+    "static_load_snow_pa": 5400,
+    "static_load_wind_pa": 2400,
+    "static_load_note": "printed as wind 2400 Pa and snow 5400 Pa without front/rear split",
+    "junction_box_ip": "IP68 / IP67",
+    "source_ids": [
+      "S21"
+    ]
+  },
+  "status": "unverified",
+  "unverified_items": [
+    "Bypass diode count and ratings not stated in this datasheet (the Heliene 35 mm variant prints 3 diodes, S22).",
+    "Cell size and layout not stated (132 half-cut only).",
+    "Drainage hole size and count not stated.",
+    "Mounting slot positions not stated.",
+    "Connector type to confirm with the manufacturer (datasheet note).",
+    "Heliene HSPE 132HC G12R (S22) is 2382 x 1134 x 35 mm with 33 kg vs 30 mm here; not merged."
+  ],
+  "sources": [
+    {
+      "id": "S21",
+      "title": "Renew G12R TOPCon datasheet RPS3MH66BD (2382 x 1134 x 30 mm), Jan 2026",
+      "publisher": "Renew",
+      "url": "https://solarpv.renew.com/assets/pdf/Renew%20Datasheet-G12R%20TOPCon_003_Jan26.pdf",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

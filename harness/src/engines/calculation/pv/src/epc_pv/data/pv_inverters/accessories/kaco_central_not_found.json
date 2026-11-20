@@ -1,0 +1,43 @@
+{
+  "schema_version": "1.0",
+  "id": "kaco_central_not_found",
+  "name": {
+    "en": "KACO new energy central inverter (not found)",
+    "es": "Inversor central KACO new energy (no encontrado)"
+  },
+  "kind": "inverter_type",
+  "description": {
+    "en": "Placeholder for a KACO utility central inverter. The fetched KACO datasheet (blueplanet 50.0 TL3) is a 50 kW string inverter, not a central unit, so it is not used as a central type.",
+    "es": "Marcador para un inversor central de servicio público de KACO. La hoja KACO consultada (blueplanet 50.0 TL3) es un inversor de string de 50 kW, no un central, por lo que no se usa como tipo central."
+  },
+  "typical_use": "None until a KACO central datasheet is sourced.",
+  "status": "not_found",
+  "parts": [],
+  "geometry": {
+    "description": "No central KACO datasheet found. Geometry omitted.",
+    "coordinate_system": "x along module long side, y along short side, z up through thickness; origin at module front-left corner; mm",
+    "elements": []
+  },
+  "mechanical_ratings": {
+    "note": "not_found"
+  },
+  "unverified_items": [
+    "No KACO utility central inverter datasheet found in search",
+    "Reference only: blueplanet 50.0 TL3 string inverter (50 kW, 1100 V max DC, 580-900 V MPP, IP65, 760 x 500 x 425 mm, 70-73 kg)"
+  ],
+  "sources": [
+    {
+      "id": "S25",
+      "title": "blueplanet 50.0 TL3 datasheet (KACO new energy; string inverter, reference only)",
+      "publisher": "KACO new energy GmbH (mirror: krannich-solar.com)",
+      "url": "https://krannich-solar.com/fileadmin/user_upload/GR/Products/Inverter/Kaco/DTS_BP-50TL3-en_M___XL.pdf",
+      "accessed": "2026-11-20"
+    }
+  ],
+  "electrical_ratings": {
+    "note": "not_found"
+  },
+  "mechanical": {
+    "note": "not_found"
+  }
+}

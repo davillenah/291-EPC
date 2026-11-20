@@ -1,0 +1,274 @@
+{
+  "schema_version": "1.0",
+  "id": "m10_54_108_1722x1134x30",
+  "name": {
+    "en": "M10 54-cell class, 108 cells 6x18, 1722 x 1134 x 30 mm",
+    "es": "Clase M10 54 celdas, 108 celdas 6x18, 1722 x 1134 x 30 mm"
+  },
+  "kind": "format",
+  "description": {
+    "en": "Glass-glass TOPCon module, 1722 x 1134 x 30 mm, 108 cells in a 6x18 layout, 25.0 kg, IP68 junction box with three bypass diodes, 2.0 mm glass front and rear (Maysun datasheet). Frame is galvanized or powder-coated steel, not aluminium.",
+    "es": "Modulo vidrio-vidrio TOPCon, 1722 x 1134 x 30 mm, 108 celdas en disposicion 6x18, 25,0 kg, caja IP68 con tres diodos de bypass, vidrio de 2,0 mm delantero y trasero (ficha Maysun). Marco de acero galvanizado o con recubrimiento en polvo, no aluminio."
+  },
+  "typical_use": "M10-class 54-cell (108 half-cut format) module, glass-glass with steel frame variant.",
+  "layers": [
+    {
+      "id": "front_glass",
+      "name": "Front glass",
+      "material": "low-iron AR heat-strengthened glass",
+      "thickness_mm": 2.0,
+      "status": "unverified",
+      "source_ids": [
+        "S5"
+      ]
+    },
+    {
+      "id": "encapsulant_front",
+      "name": "Encapsulant front",
+      "material": "POE",
+      "status": "not_found",
+      "source_ids": []
+    },
+    {
+      "id": "cell_layer",
+      "name": "Cell layer",
+      "material": "silicon cells: 108 N-TOPCon (6x18 layout) per datasheet",
+      "status": "unverified",
+      "source_ids": [
+        "S5"
+      ]
+    },
+    {
+      "id": "encapsulant_back",
+      "name": "Encapsulant back",
+      "material": "POE",
+      "status": "not_found",
+      "source_ids": []
+    },
+    {
+      "id": "rear_layer",
+      "name": "Rear layer",
+      "material": "2.0 mm low-iron AR heat-strengthened glass (glass-glass)",
+      "status": "unverified",
+      "source_ids": [
+        "S5"
+      ]
+    }
+  ],
+  "parts": [
+    {
+      "id": "module_body",
+      "name": "Laminate outline (outline for 2D/3D)",
+      "type": "other",
+      "status": "unverified",
+      "dimensions_mm": {
+        "length": 1722,
+        "width": 1134,
+        "thickness": 30
+      },
+      "source_ids": [
+        "S5"
+      ]
+    },
+    {
+      "id": "frame_profile",
+      "name": "Frame: galvanized or powder-coated steel (section not stated)",
+      "type": "frame_profile",
+      "status": "unverified",
+      "material": "steel (galvanized or powder-coated)",
+      "geometry_hint": "section dimensions not stated; see frame_profile_anodized_aluminium family",
+      "quantity_per_module": 4,
+      "source_ids": [
+        "S5"
+      ]
+    },
+    {
+      "id": "junction_box",
+      "name": "Junction box: IP68, three bypass diodes",
+      "type": "junction_box",
+      "status": "unverified",
+      "ratings": {
+        "ip": "IP68",
+        "bypass_diodes": 3,
+        "diode_rating": "not_found"
+      },
+      "quantity_per_module": 1,
+      "source_ids": [
+        "S5"
+      ]
+    },
+    {
+      "id": "pv_cable",
+      "name": "PV output cable: photovoltaic technology cable 4.0 mm2",
+      "type": "cable",
+      "status": "unverified",
+      "ratings": {
+        "cross_section_mm2": 4,
+        "length_note": "portrait N 1000 mm / P 1000 mm; customizable"
+      },
+      "quantity_per_module": 2,
+      "source_ids": [
+        "S5"
+      ]
+    },
+    {
+      "id": "cell_string",
+      "name": "Cells: 108 N-TOPCon (6x18 layout) per datasheet",
+      "type": "cell_string",
+      "status": "unverified",
+      "quantity_per_module": 108,
+      "source_ids": [
+        "S5"
+      ]
+    },
+    {
+      "id": "glass_front",
+      "name": "Front glass: 2.0 mm low-iron AR heat-strengthened",
+      "type": "glass",
+      "status": "unverified",
+      "source_ids": [
+        "S5"
+      ]
+    },
+    {
+      "id": "mounting_holes",
+      "name": "Mounting holes",
+      "type": "mounting_hole",
+      "status": "not_found",
+      "geometry_hint": "positions, slot sizes and edge distances not stated in the datasheet extract",
+      "source_ids": [
+        "S5"
+      ]
+    },
+    {
+      "id": "grounding_holes",
+      "name": "Grounding holes",
+      "type": "grounding_hole",
+      "status": "not_found",
+      "source_ids": [
+        "S5"
+      ]
+    },
+    {
+      "id": "drain_holes",
+      "name": "Drainage holes",
+      "type": "drain_hole",
+      "status": "not_found",
+      "source_ids": [
+        "S5"
+      ]
+    },
+    {
+      "id": "connector",
+      "name": "PV connector (type not stated)",
+      "type": "connector",
+      "status": "not_found",
+      "source_ids": []
+    },
+    {
+      "id": "encapsulant",
+      "name": "Encapsulant",
+      "type": "encapsulant",
+      "status": "not_found",
+      "geometry_hint": "material and thickness not stated",
+      "source_ids": []
+    },
+    {
+      "id": "rear_layer",
+      "name": "Rear layer: 2.0 mm low-iron AR heat-strengthened glass (glass-glass)",
+      "type": "backsheet",
+      "status": "unverified",
+      "source_ids": [
+        "S5"
+      ]
+    },
+    {
+      "id": "busbar_ribbon",
+      "name": "Busbars / ribbons (count, material not stated)",
+      "type": "busbar_ribbon",
+      "status": "not_found",
+      "source_ids": []
+    },
+    {
+      "id": "sealant_edge",
+      "name": "Edge sealant",
+      "type": "sealant",
+      "status": "not_found",
+      "source_ids": []
+    },
+    {
+      "id": "label_nameplate",
+      "name": "Nameplate label",
+      "type": "label",
+      "status": "not_found",
+      "source_ids": []
+    }
+  ],
+  "geometry": {
+    "description": "Outline from datasheet dimensions. Hole positions and clamp zones are not stated in the source, so they are not positioned (status not_found).",
+    "module_dimensions_mm": [
+      1722,
+      1134,
+      30
+    ],
+    "clamping_zones_mm": [
+      {
+        "edge": "long",
+        "status": "not_found",
+        "note": "clamp zones not stated in the datasheet extract"
+      },
+      {
+        "edge": "short",
+        "status": "not_found",
+        "note": "clamp zones not stated in the datasheet extract"
+      }
+    ],
+    "elements": [
+      {
+        "id": "outline",
+        "kind": "laminate_outline",
+        "part_id": "module_body",
+        "position_mm": [
+          0,
+          0,
+          0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          1722,
+          1134,
+          30
+        ],
+        "status": "unverified"
+      }
+    ]
+  },
+  "mechanical_ratings": {
+    "weight_kg": 25.0,
+    "static_load_front_pa": 5400,
+    "static_load_rear_pa": 2400,
+    "junction_box_ip": "IP68",
+    "connector": "MC4 compatible",
+    "fire_or_standards": "not stated"
+  },
+  "status": "unverified",
+  "unverified_items": [
+    "Frame is steel per datasheet, not aluminium; check frame family before reuse.",
+    "Mounting, drainage and grounding holes not stated.",
+    "Standards not stated.",
+    "Front and back glass thickness and cell size to be confirmed."
+  ],
+  "sources": [
+    {
+      "id": "S5",
+      "title": "Maysun Solar 1722 x 1134 x 30 mm 108-cell TOPCon datasheet",
+      "publisher": "Maysun Solar",
+      "url": "https://www.maysunsolar.com/wp-content/uploads/2026/01/Maysun-Solar-182mm-Glass-Glass-TOPCon-108-cells-425W-445W-1722mm-x-1134mm-x-30mm.pdf",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

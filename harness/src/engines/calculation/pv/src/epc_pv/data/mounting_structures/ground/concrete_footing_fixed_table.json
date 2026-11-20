@@ -1,0 +1,56 @@
+{
+  "schema_version": "1.0",
+  "id": "concrete_footing_fixed_table",
+  "name": {"en": "Concrete footing (zapata) fixed-tilt table", "es": "Mesa fija de tilt sobre zapata de hormigón"},
+  "family": "ground",
+  "category": "concrete_footing_fixed_table",
+  "description": {
+    "en": "Fixed-tilt ground table whose posts sit on cast-in-place or precast concrete footings. Suppliers mention concrete footings or precast blocks as an alternative to ramming. The footing dimensions, concrete class, reinforcement and anchor bolts are not stated in any source reviewed, so this entry is mostly not_found.",
+    "es": "Mesa fija de tilt cuyos postes se apoyan en zapatas de hormigón hormigonadas in situ o prefabricadas. Los proveedores mencionan zapatas o bloques prefabricados como alternativa al hincado. Las dimensiones, la clase de hormigón, la armadura y los pernos de anclaje no se indican en ninguna fuente revisada; por eso la entrada es casi toda not_found."
+  },
+  "typical_use": "Ground arrays on soils unsuitable for driving or screwing, or where a concrete foundation is preferred.",
+  "applicable_standards": ["EN 1992 (concrete design, typical reference, not cited by sources)", "EN 1090-1", "ISO 1461"],
+  "materials": [
+    {"component": "Concrete footing", "material": "Concrete, class and strength not stated", "finish": "Not applicable", "status": "not_found", "source_ids": ["src_arcelormittal_fixed", "src_sadef_2023"]},
+    {"component": "Reinforcement", "material": "Not stated", "finish": "Not applicable", "status": "not_found"},
+    {"component": "Post base and anchor bolts", "material": "Steel, galvanized (suppliers state galvanized posts; anchor grade not stated)", "finish": "Hot-dip galvanized (EN ISO 1461)", "status": "unverified", "source_ids": ["src_arcelormittal_fixed"]}
+  ],
+  "profiles": [
+    {"id": "footing_geometry", "name": "Footing geometry (not stated)", "section_type": "other", "dimensions_mm": {}, "material": "Concrete", "status": "not_found", "source_ids": ["src_sadef_2023"]}
+  ],
+  "geometry": {
+    "description": "No footing or post dimensions are sourced. No geometry elements are modelled.",
+    "coordinate_system": "x along module row, y up-slope/north-south horizontal, z up; origin at ground/roof contact of first support; mm and degrees",
+    "elements": [],
+    "reference_layout": {
+      "note": "Not stated in the sources reviewed."
+    }
+  },
+  "accessories": [
+    {"id": "anchor_bolt_footing", "name": "Anchor bolts embedded in footing", "type": "anchor", "material": "Steel, not stated", "grade": "not_found", "standard": "not_found", "thread": "not_found", "quantity": {"value": 0, "per": "post", "note": "NOT SOURCED: placeholder"}, "purpose": "Fixes post base plate to footing", "status": "not_found"},
+    {"id": "base_plate_post", "name": "Post base plate (embedded in footing)", "type": "base_plate", "material": "Steel, galvanized (assumed galvanized posts, not sourced for the plate)", "grade": "not_found", "standard": "not_found", "thread": "not_found", "quantity": {"value": 0, "per": "post", "note": "NOT SOURCED: placeholder"}, "purpose": "Transfers post loads to footing", "status": "not_found"},
+    {"id": "nut_anchor", "name": "Nuts for anchor bolts", "type": "nut", "material": "Steel, not stated", "grade": "not_found", "standard": "not_found", "thread": "not_found", "quantity": {"value": 0, "per": "post", "note": "NOT SOURCED: placeholder"}, "purpose": "Clamps base plate to anchor", "status": "not_found"},
+    {"id": "washer_anchor", "name": "Washers for anchor bolts", "type": "washer", "material": "Steel, not stated", "grade": "not_found", "standard": "not_found", "thread": "not_found", "quantity": {"value": 0, "per": "post", "note": "NOT SOURCED: placeholder"}, "purpose": "Load distribution", "status": "not_found"},
+    {"id": "grounding_bonding", "name": "Bonding and earth connection", "type": "grounding", "material": "not_found", "grade": "not_found", "standard": "not_found", "thread": "not_found", "quantity": {"value": 0, "per": "table", "note": "NOT SOURCED: placeholder"}, "purpose": "Bonding of table to earth system", "status": "not_found"},
+    {"id": "sealant_footing_joint", "name": "Sealant at footing and post joint", "type": "sealant", "material": "not_found", "grade": "not_found", "standard": "not_found", "thread": "not_found", "quantity": {"value": 0, "per": "post", "note": "NOT SOURCED: placeholder"}, "purpose": "Moisture protection of joint", "status": "not_found"}
+  ],
+  "grounding_bonding": "Not stated in the sources reviewed.",
+  "installation_notes": [
+    "Suppliers offer concrete footings as an alternative to rammed posts; Sadef states concrete foundations are poured on site or supplied as pre-fabricated blocks (dimensions not stated).",
+    "ArcelorMittal lists post ramming or concrete footings as foundation options (dimensions not stated).",
+    "Excavation, concrete curing and anchor installation are not covered by the sources and need a civil design."
+  ],
+  "status": "not_found",
+  "unverified_items": [
+    "Footing dimensions, depth and concrete class (not stated)",
+    "Reinforcement layout (not stated)",
+    "Anchor bolt diameter, length, grade and standard (not stated)",
+    "Base plate dimensions and steel grade (not stated)",
+    "Grounding and sealant hardware (not stated)",
+    "Foundation design loads and soil bearing requirements (not stated)"
+  ],
+  "sources": [
+    {"id": "src_arcelormittal_fixed", "title": "Technical datasheet - Ground mounted fixed structure v2", "publisher": "ArcelorMittal", "url": "https://projects.arcelormittal.com/cca/repo/Solar/Technical%20datasheet-Ground%20mounted%20fixed%20Structure%20v2.pdf", "accessed": "2026-11-20"},
+    {"id": "src_sadef_2023", "title": "SOLAR 2023 brochure (concrete foundations, precast blocks)", "publisher": "voestalpine Sadef", "url": "https://www.voestalpine.com/sadef/en/content/download/24414/file/SOLAR-2023-BROCHURE-v7+cover.pdf", "accessed": "2026-11-20"}
+  ]
+}

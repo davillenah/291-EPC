@@ -1,0 +1,177 @@
+{
+  "schema_version": "1.0",
+  "id": "ramming_h_pile_fixed_table",
+  "name": {
+    "en": "Ramming H-pile fixed-tilt table (section not confirmed)",
+    "es": "Mesa fija con pilote H de hincado (sección no confirmada)"
+  },
+  "family": "ground",
+  "category": "ramming_h_pile_fixed_table",
+  "description": {
+    "en": "Fixed-tilt ground table supported by steel piles rammed into the soil. The H-pile reference is a W6x9 wide-flange section offered for solar posts by Gerdau (dimensions converted from inches, unverified). The pile length, embedment, steel grade and galvanizing are not stated in any source reviewed, so the element length is a placeholder. Confirm with a supplier datasheet before modelling.",
+    "es": "Mesa fija de tilt en suelo sobre pilotes de acero hincados en el terreno. La referencia de pilote H es una sección de ala ancha W6x9 que Gerdau ofrece para postes solares (dimensiones convertidas de pulgadas, sin verificar). La longitud del pilote, el empotramiento, la calidad del acero y el galvanizado no constan en las fuentes revisadas, por lo que la longitud del elemento es un marcador. Confirmar con la ficha de un proveedor antes de modelar."
+  },
+  "typical_use": "Ground-mount tables where ramming is feasible and an H section is specified by the supplier.",
+  "applicable_standards": [
+    "EN 1090-1",
+    "ISO 1461"
+  ],
+  "materials": [
+    {
+      "component": "H-pile",
+      "material": "Structural steel, grade not stated (Gerdau: all standard structural grades)",
+      "finish": "Not stated (galvanizing not sourced)",
+      "status": "not_found",
+      "source_ids": [
+        "src_gerdau_solar_posts"
+      ]
+    },
+    {
+      "component": "Table frame",
+      "material": "Steel, grade not stated",
+      "finish": "Not stated",
+      "status": "not_found"
+    }
+  ],
+  "profiles": [
+    {
+      "id": "h_pile",
+      "name": "W6x9 wide-flange section (H-pile reference; Gerdau solar posts list)",
+      "section_type": "H_beam",
+      "dimensions_mm": {
+        "height": 149.9,
+        "width": 100.1,
+        "flange_thickness": 5.46,
+        "web_thickness": 4.32
+      },
+      "material": "Structural steel, grade not stated",
+      "status": "unverified",
+      "source_ids": [
+        "src_gerdau_solar_posts"
+      ]
+    }
+  ],
+  "geometry": {
+    "description": "W6x9 section for the pile is sourced (unverified). Length, embedment, spacing and table layout are not stated; no table geometry is modelled.",
+    "coordinate_system": "x along module row, y up-slope/north-south horizontal, z up; origin at ground/roof contact of first support; mm and degrees",
+    "elements": [
+      {
+        "id": "h_pile_element",
+        "kind": "post",
+        "profile_or_accessory_id": "h_pile",
+        "position_mm": [
+          0,
+          0,
+          0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "length_mm": 0,
+        "count": 1,
+        "note": "One pile per support position (per table count not stated). Length and embedment not stated; length_mm 0 is a placeholder. Section is W6x9 (Gerdau).",
+        "status": "not_found"
+      }
+    ],
+    "reference_layout": {
+      "note": "Not stated in the sources reviewed."
+    }
+  },
+  "accessories": [
+    {
+      "id": "pile_head_plate",
+      "name": "Pile head or connection plate",
+      "type": "base_plate",
+      "material": "not_found",
+      "grade": "not_found",
+      "standard": "not_found",
+      "thread": "not_found",
+      "quantity": {
+        "value": 0,
+        "per": "post",
+        "note": "NOT SOURCED: placeholder"
+      },
+      "purpose": "Connects the table frame to the H-pile",
+      "status": "not_found"
+    },
+    {
+      "id": "bolt_frame",
+      "name": "Frame bolts",
+      "type": "bolt",
+      "material": "not_found",
+      "grade": "not_found",
+      "standard": "not_found",
+      "thread": "not_found",
+      "quantity": {
+        "value": 0,
+        "per": "post",
+        "note": "NOT SOURCED: placeholder"
+      },
+      "purpose": "Connects frame to pile head",
+      "status": "not_found"
+    },
+    {
+      "id": "clamp_module",
+      "name": "Module clamps (mid and end)",
+      "type": "clamp_mid",
+      "material": "not_found",
+      "grade": "not_found",
+      "standard": "not_found",
+      "thread": "not_found",
+      "quantity": {
+        "value": 0,
+        "per": "module",
+        "note": "NOT SOURCED: placeholder"
+      },
+      "purpose": "Module fixing",
+      "status": "not_found"
+    },
+    {
+      "id": "grounding_bonding",
+      "name": "Bonding and earth connection",
+      "type": "grounding",
+      "material": "not_found",
+      "grade": "not_found",
+      "standard": "not_found",
+      "thread": "not_found",
+      "quantity": {
+        "value": 0,
+        "per": "table",
+        "note": "NOT SOURCED: placeholder"
+      },
+      "purpose": "Bonding to earth system",
+      "status": "not_found"
+    }
+  ],
+  "grounding_bonding": "Not stated in the sources reviewed.",
+  "installation_notes": [
+    "Sadef states an installation rate of more than 250 rammed piles per day per machine and recommends rammed piles for stable soil (section and dimensions not stated).",
+    "Ramming versus driven and pull-out resistance require a soil study by the engineer; not covered by the sources."
+  ],
+  "status": "unverified",
+  "unverified_items": [
+    "W6x9 dimensions are converted from the Gerdau sheet (inch values) and are not confirmed for a rammed application",
+    "Steel grade and galvanizing of the H-pile (not stated)",
+    "Pile length, embedment and spacing (not stated)",
+    "Frame profiles, clamps, bolts, caps and bonding (not stated)",
+    "Design loads and installation tolerances (not stated)"
+  ],
+  "sources": [
+    {
+      "id": "src_sadef_2023",
+      "title": "SOLAR 2023 brochure (rammed piles, installation rate, soil recommendation)",
+      "publisher": "voestalpine Sadef",
+      "url": "https://www.voestalpine.com/sadef/en/content/download/24414/file/SOLAR-2023-BROCHURE-v7+cover.pdf",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "src_gerdau_solar_posts",
+      "title": "Gerdau Solar Posts Data Sheet (W-shape list)",
+      "publisher": "Gerdau",
+      "url": "https://gsn.gerdau.com/sites/gsn_gerdau/files/downloadable_files/Gerdau-Solar-Posts-Data-Sheet.pdf",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

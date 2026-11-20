@@ -1,0 +1,286 @@
+{
+  "schema_version": "1.0",
+  "id": "roof_flat_slab_anchored",
+  "name": {
+    "en": "Flat concrete slab, anchored base plates and bolted tilted frame",
+    "es": "Losa de hormigón plana, placas base ancladas y estructura inclinada atornillada"
+  },
+  "family": "roof",
+  "category": "flat_slab_anchored_base_plate",
+  "description": {
+    "en": "Tilted PV frame bolted to base plates that are fixed to a concrete flat roof slab with chemical (HIT-HY 200, HIT-RE 500) or mechanical (HSL-3, HSA) anchors. Anchor data from Hilti documentation; base plate, frame and slab data not found.",
+    "es": "Estructura fotovoltaica inclinada atornillada a placas base fijadas a una losa de hormigón de cubierta plana con anclajes químicos (HIT-HY 200, HIT-RE 500) o mecánicos (HSL-3, HSA). Datos de anclaje de la documentación Hilti; datos de placa base, estructura y losa no encontrados."
+  },
+  "typical_use": "Flat concrete roofs where ballast or membrane penetration is not allowed and the slab can take anchor loads. Slab capacity and anchor design are the designer's responsibility.",
+  "applicable_standards": [],
+  "materials": [
+    {
+      "component": "Concrete roof slab",
+      "material": "Reinforced concrete (class not stated)",
+      "status": "not_found"
+    },
+    {
+      "component": "Base plate and tilted frame connection",
+      "material": "Steel (grade and finish not stated)",
+      "status": "not_found"
+    },
+    {
+      "component": "Chemical anchor rod HIT-Z",
+      "material": "Steel rod (grade and coating not stated)",
+      "status": "unverified",
+      "source_ids": [
+        "hilti_anchor_doc"
+      ]
+    },
+    {
+      "component": "Injection mortar HIT-HY 200 / HIT-RE 500",
+      "material": "Injection mortar (composition not stated)",
+      "status": "unverified",
+      "source_ids": [
+        "hilti_anchor_doc"
+      ]
+    },
+    {
+      "component": "Mechanical anchors HSL-3 / HSA",
+      "material": "Steel (grade and coating not stated)",
+      "status": "not_found"
+    }
+  ],
+  "profiles": [],
+  "geometry": {
+    "description": "No sourced anchor pattern, base plate size or frame dimensions. No elements placed.",
+    "elements": []
+  },
+  "accessories": [
+    {
+      "id": "anchor_hit_z_m8",
+      "name": "HIT-Z anchor rod M8 with HIT-HY 200 mortar",
+      "type": "anchor",
+      "quantity": {
+        "value": 0,
+        "per": "support",
+        "note": "Count not stated in sources. 0 means unknown, not zero."
+      },
+      "status": "unverified",
+      "thread": "M8",
+      "torque_nm": 10,
+      "dimensions_mm": {
+        "clearance_pre_fastening": 9,
+        "clearance_through_fastening": 11,
+        "length_min": 80,
+        "length_max": 250
+      },
+      "purpose": "Chemical anchor fixing a base plate in concrete",
+      "geometry_hint": "cylinder d=8 l=80-250",
+      "note": "Clearance = base plate hole for pre-fastening and through-fastening (Hilti table, HIT-Z rods). Anchor length 80 to 250 mm (HIT-Z range). Torque from Hilti HIT-Z rod table, p. 240.",
+      "source_ids": [
+        "hilti_anchor_doc"
+      ]
+    },
+    {
+      "id": "anchor_hit_z_m10",
+      "name": "HIT-Z anchor rod M10 with HIT-HY 200 mortar",
+      "type": "anchor",
+      "quantity": {
+        "value": 0,
+        "per": "support",
+        "note": "Count not stated in sources. 0 means unknown, not zero."
+      },
+      "status": "unverified",
+      "thread": "M10",
+      "torque_nm": 25,
+      "dimensions_mm": {
+        "clearance_pre_fastening": 12,
+        "clearance_through_fastening": 14
+      },
+      "purpose": "Chemical anchor fixing a base plate in concrete",
+      "geometry_hint": "cylinder d=10 l=80-250",
+      "note": "Base plate clearance and torque from Hilti HIT-Z table (p. 240). Anchor length 80 to 250 mm.",
+      "source_ids": [
+        "hilti_anchor_doc"
+      ]
+    },
+    {
+      "id": "anchor_hit_z_m12",
+      "name": "HIT-Z anchor rod M12 with HIT-HY 200 mortar",
+      "type": "anchor",
+      "quantity": {
+        "value": 0,
+        "per": "support",
+        "note": "Count not stated in sources. 0 means unknown, not zero."
+      },
+      "status": "unverified",
+      "thread": "M12",
+      "torque_nm": 40,
+      "dimensions_mm": {
+        "clearance_pre_fastening": 14,
+        "clearance_through_fastening": 16
+      },
+      "purpose": "Chemical anchor fixing a base plate in concrete",
+      "geometry_hint": "cylinder d=12 l=80-250",
+      "note": "Base plate clearance and torque from Hilti HIT-Z table (p. 240). Anchor length 80 to 250 mm.",
+      "source_ids": [
+        "hilti_anchor_doc"
+      ]
+    },
+    {
+      "id": "anchor_hit_z_m16",
+      "name": "HIT-Z anchor rod M16 with HIT-HY 200 mortar",
+      "type": "anchor",
+      "quantity": {
+        "value": 0,
+        "per": "support",
+        "note": "Count not stated in sources. 0 means unknown, not zero."
+      },
+      "status": "unverified",
+      "thread": "M16",
+      "torque_nm": 80,
+      "dimensions_mm": {
+        "clearance_pre_fastening": 18,
+        "clearance_through_fastening": 20
+      },
+      "purpose": "Chemical anchor fixing a base plate in concrete",
+      "geometry_hint": "cylinder d=16 l=80-250",
+      "note": "Base plate clearance and torque from Hilti HIT-Z table (p. 240). Anchor length 80 to 250 mm.",
+      "source_ids": [
+        "hilti_anchor_doc"
+      ]
+    },
+    {
+      "id": "anchor_hit_z_m20",
+      "name": "HIT-Z anchor rod M20 with HIT-HY 200 mortar",
+      "type": "anchor",
+      "quantity": {
+        "value": 0,
+        "per": "support",
+        "note": "Count not stated in sources. 0 means unknown, not zero."
+      },
+      "status": "unverified",
+      "thread": "M20",
+      "torque_nm": 150,
+      "dimensions_mm": {
+        "clearance_pre_fastening": 22,
+        "clearance_through_fastening": 24
+      },
+      "purpose": "Chemical anchor fixing a base plate in concrete",
+      "geometry_hint": "cylinder d=20 l=80-250",
+      "note": "Base plate clearance and torque from Hilti HIT-Z table (p. 240). Anchor length 80 to 250 mm.",
+      "source_ids": [
+        "hilti_anchor_doc"
+      ]
+    },
+    {
+      "id": "anchor_hit_re500_mortar",
+      "name": "HIT-RE 500 injection mortar anchor system",
+      "type": "anchor",
+      "quantity": {
+        "value": 0,
+        "per": "support",
+        "note": "Count not stated in sources. 0 means unknown, not zero."
+      },
+      "status": "unverified",
+      "thread": "M8 to M39",
+      "purpose": "Chemical anchor, diamond-drilled holes allowed",
+      "note": "Sizes M8 to M39 and approvals ETA 04/0027, ETA 07/0260, ETA 09/0295 (cited in document). Drill hole, embedment and torque NOT stated in the document.",
+      "source_ids": [
+        "hilti_anchor_doc"
+      ]
+    },
+    {
+      "id": "anchor_hsl3",
+      "name": "HSL-3 mechanical anchor",
+      "type": "anchor",
+      "quantity": {
+        "value": 0,
+        "per": "support",
+        "note": "Count not stated in sources. 0 means unknown, not zero."
+      },
+      "status": "unverified",
+      "thread": "M8 to M24",
+      "purpose": "Mechanical anchor in concrete",
+      "note": "Sizes only (M8 to M24). Drill hole, embedment, torque, concrete class and approval numbers NOT stated in the extracted pages.",
+      "source_ids": [
+        "hilti_anchor_doc"
+      ]
+    },
+    {
+      "id": "anchor_hsa",
+      "name": "HSA mechanical anchor",
+      "type": "anchor",
+      "quantity": {
+        "value": 0,
+        "per": "support",
+        "note": "Count not stated in sources. 0 means unknown, not zero."
+      },
+      "status": "unverified",
+      "thread": "M6 to M20",
+      "purpose": "Mechanical anchor in concrete, diamond-drilled holes allowed",
+      "note": "Sizes only (M6 to M20). Drill hole, embedment, torque and approval numbers NOT stated in the extracted pages.",
+      "source_ids": [
+        "hilti_anchor_doc"
+      ]
+    },
+    {
+      "id": "base_plate_slab_frame",
+      "name": "Base plate for anchored tilted frame",
+      "type": "base_plate",
+      "quantity": {
+        "value": 0,
+        "per": "support",
+        "note": "Count not stated in sources. 0 means unknown, not zero."
+      },
+      "status": "not_found",
+      "purpose": "Carries the frame to the anchors",
+      "note": "Not found in any source. Size and hole pattern unknown."
+    },
+    {
+      "id": "frame_bolt_connection_slab",
+      "name": "Tilted frame to base plate bolt connection",
+      "type": "bolt",
+      "quantity": {
+        "value": 0,
+        "per": "support",
+        "note": "Count not stated in sources. 0 means unknown, not zero."
+      },
+      "status": "not_found",
+      "purpose": "Connects tilted frame to base plate",
+      "note": "Not found. Bolt size, grade and torque unknown."
+    },
+    {
+      "id": "grounding_slab_frame",
+      "name": "Equipotential bonding for anchored frame",
+      "type": "grounding",
+      "quantity": {
+        "value": 0,
+        "per": "unit",
+        "note": "Count not stated in sources. 0 means unknown, not zero."
+      },
+      "status": "not_found",
+      "purpose": "Bonding of frame and base plates",
+      "note": "Not found in any source reviewed."
+    }
+  ],
+  "grounding_bonding": "Not found for anchored flat-slab systems.",
+  "installation_notes": [
+    "Drill hole and base plate clearance values are for pre-fastening and through-fastening (Hilti table, HIT-Z rods). Check the approval for the exact anchor and mortar combination."
+  ],
+  "status": "unverified",
+  "unverified_items": [
+    "Embedment depth for HIT-HY 200 and HIT-RE 500 (not stated in the extracted pages).",
+    "Drill hole diameter, embedment, torque, concrete class and approval numbers for HIT-RE 500 (not stated in the document).",
+    "HSL-3 and HSA drill hole, embedment, torque, concrete class and approval numbers (index points to pages not in the extract).",
+    "Anchor count per base plate and per frame (not found).",
+    "Base plate and tilted frame geometry, tilt range and bolt connection (not found).",
+    "Concrete class and minimum slab thickness (not found).",
+    "Grounding and bonding for anchored frames (not found)."
+  ],
+  "sources": [
+    {
+      "id": "hilti_anchor_doc",
+      "title": "Hilti anchor technical document covering HIT-HY 200, HIT-RE 500, HSL-3 and HSA (PDF, title not extracted)",
+      "publisher": "Hilti",
+      "url": "https://hilti.com/medias/sys_master/h7c/h06/9167662088222.pdf",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

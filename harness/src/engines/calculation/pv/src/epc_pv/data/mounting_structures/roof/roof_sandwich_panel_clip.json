@@ -1,0 +1,256 @@
+{
+  "schema_version": "1.0",
+  "id": "roof_sandwich_panel_clip",
+  "name": {
+    "en": "Aluminium rail and quick clamps on insulated sandwich-panel roofs (Indexfix PSA type)",
+    "es": "Perfil de aluminio y garras rápidas sobre cubiertas de panel sándwich aislado (tipo Indexfix PSA)"
+  },
+  "family": "roof",
+  "category": "sandwich_panel_clip_rail",
+  "description": {
+    "en": "Aluminium winged profiles (PSA-A) are fixed across the rib high points of an insulated sandwich panel with self-drilling stainless steel screws and sealing elements (EPDM, butyl tape, watertight rivet). Joints are rigid (two screws per side) or expansion joints. Quick pre-assembled clamps with a gauge for the module frame height carry the modules. Reference family: Indexfix FTA PSA system.",
+    "es": "Perfiles de aluminio con aletas (PSA-A) se fijan sobre los puntos altos de las nervaduras del panel sándwich aislado con tornillos autoperforantes de acero inoxidable y elementos de sellado (EPDM, cinta de butilo, remache estanco). Las uniones pueden ser rígidas (dos tornillos por lado) o de dilatación. Garras rápidas preensambladas con galga de altura de marco sujetan los módulos. Familia de referencia: sistema PSA de Indexfix (FTA)."
+  },
+  "typical_use": "Insulated sandwich-panel roofs (metal faces with insulation core), non-penetrating apart from the screw and rivet fixings to the panel ribs.",
+  "applicable_standards": [
+    "EN 1991-1-3 (snow loads, designer)",
+    "EN 1991-1-4 (wind actions, designer)",
+    "EN 1999-1-1 (aluminium design, designer; not verified in this research)",
+    "ISO 3506-1:2020 (stainless steel fasteners, reference)",
+    "Sandwich-panel manufacturer fixing approval (to be obtained per panel; not found)"
+  ],
+  "materials": [
+    {"component": "Winged aluminium profile (PSA-A) and aluminium PSA joint (PSA-UN)", "material": "Aluminium", "finish": "Not stated", "status": "unverified", "source_ids": ["indexfix_psa_manual"]},
+    {"component": "Self-drilling screw ABEI5519 (joint fixing)", "material": "Stainless steel", "finish": "Not stated", "status": "unverified", "source_ids": ["indexfix_psa_manual"]},
+    {"component": "Thin-sheet screws TAC-N / TAC-B and ARENI / AUENI", "material": "Atlantis or bimetal thin-sheet (per source naming; size and grade not stated)", "finish": "Not stated", "status": "not_found", "source_ids": ["indexfix_psa_manual"]},
+    {"component": "Clamps (KFR-SC quick clamp, sample clamp)", "material": "Aluminium, stainless steel, EPDM (system materials per source)", "finish": "Not stated", "status": "unverified", "source_ids": ["indexfix_psa_manual"]},
+    {"component": "Sealing: EPDM and butyl tape under PSA-A", "material": "EPDM; butyl tape on rib high points", "finish": "", "status": "unverified", "source_ids": ["indexfix_psa_manual"]},
+    {"component": "Watertight trefoil rivet (RE-TE)", "material": "Not stated", "finish": "", "status": "not_found", "source_ids": ["indexfix_psa_manual"]},
+    {"component": "Grounding parts", "material": "Not stated", "finish": "", "status": "not_found", "source_ids": []}
+  ],
+  "profiles": [
+    {
+      "id": "psa_a_winged_profile",
+      "name": "PSA-A winged aluminium profile",
+      "section_type": "rail_custom",
+      "dimensions_mm": {},
+      "material": "Aluminium",
+      "status": "unverified",
+      "source_ids": ["indexfix_psa_manual"]
+    },
+    {
+      "id": "psa_un_joint",
+      "name": "PSA-UN aluminium joint (profile connector)",
+      "section_type": "other",
+      "dimensions_mm": {},
+      "material": "Aluminium",
+      "status": "unverified",
+      "source_ids": ["indexfix_psa_manual"]
+    }
+  ],
+  "geometry": {
+    "description": "Winged profile runs across the panel ribs, fixed at rib high points. Expansion joint every 12 m (max 300 mm to nearest fixing). Schematic only: fixing pitch along the profile not stated.",
+    "coordinate_system": "x along module row, y up-slope/north-south horizontal, z up; origin at ground/roof contact of first support; mm and degrees",
+    "elements": [],
+    "reference_layout": {
+      "note": "Joint screws at 50 to 70 mm from profile end (per source). Expansion joint gap 4 to 6 mm with no screws. Module frame height 30 to 40 mm for the gauge GM-A."
+    }
+  },
+  "accessories": [
+    {
+      "id": "clamp_quick_kfr_sc",
+      "name": "Quick pre-assembled clamp KFR-SC (KFRSC3050 at row ends)",
+      "type": "clamp_mid",
+      "material": "Aluminium, stainless steel, EPDM (system materials)",
+      "grade": "",
+      "standard": "",
+      "thread": "",
+      "dimensions_mm": {"frame_height_min": 30, "frame_height_max": 40},
+      "torque_nm": 14,
+      "quantity": {"value": 0, "per": "module", "note": "Count per module not stated. Torque 14 Nm for intermediate and lateral clamp screws."},
+      "purpose": "Holds module frame on the winged profile. The KFRSC3050 variant is used at row ends.",
+      "status": "unverified",
+      "source_ids": ["indexfix_psa_manual"]
+    },
+    {
+      "id": "clamp_sample_indexfix",
+      "name": "Sample clamp (module clamp variant, per Indexfix manual)",
+      "type": "clamp_end",
+      "material": "Aluminium, stainless steel (system materials)",
+      "grade": "",
+      "standard": "",
+      "thread": "",
+      "dimensions_mm": {},
+      "torque_nm": 14,
+      "quantity": {"value": 0, "per": "module", "note": "Count not stated. Torque 14 Nm for lateral clamp screw per manual."},
+      "purpose": "Module clamp referenced in installation steps; function (mid or end) not stated.",
+      "status": "unverified",
+      "source_ids": ["indexfix_psa_manual"]
+    },
+    {
+      "id": "gauge_gm_a",
+      "name": "Gauge for solar frame (GM-A)",
+      "type": "other",
+      "material": "Not stated",
+      "grade": "",
+      "standard": "",
+      "thread": "",
+      "dimensions_mm": {"frame_height_min": 30, "frame_height_max": 40},
+      "torque_nm": 0,
+      "quantity": {"value": 0, "per": "unit", "note": "Tool: one gauge set per installation. Gauge must equal module frame height."},
+      "purpose": "Setting tool that sets clamp height to the module frame height (30 to 40 mm).",
+      "status": "unverified",
+      "source_ids": ["indexfix_psa_manual"]
+    },
+    {
+      "id": "connector_psa_un_joint",
+      "name": "Aluminium PSA joint (PSA-UN) and lower connection (mounting connector TU-RXA2)",
+      "type": "connector_splice",
+      "material": "Aluminium",
+      "grade": "",
+      "standard": "",
+      "thread": "",
+      "dimensions_mm": {},
+      "torque_nm": 0,
+      "quantity": {"value": 0, "per": "row", "note": "Count per joint not stated. Rigid joint 2 screws per side; expansion joint has no screws."},
+      "purpose": "Joins two winged profiles, rigid or expansion type.",
+      "status": "unverified",
+      "source_ids": ["indexfix_psa_manual"]
+    },
+    {
+      "id": "screw_self_drilling_abei5519",
+      "name": "Self-drilling screw ABEI5519 (stainless steel)",
+      "type": "screw",
+      "material": "Stainless steel",
+      "grade": "Not stated",
+      "standard": "",
+      "thread": "",
+      "dimensions_mm": {},
+      "torque_nm": 0,
+      "quantity": {"value": 2, "per": "support", "note": "2 per joint side for rigid joints (source). Torque not stated. Drive hex socket SW 8, 1800 rpm."},
+      "purpose": "Joint fixing on the winged profile; driven at 1800 rpm recommended.",
+      "status": "unverified",
+      "source_ids": ["indexfix_psa_manual"]
+    },
+    {
+      "id": "screw_thin_sheet_tac_areni",
+      "name": "Thin-sheet screws TAC-N / TAC-B and self-drilling ARENI / AUENI (size not stated)",
+      "type": "screw",
+      "material": "Not stated",
+      "grade": "Not stated",
+      "standard": "",
+      "thread": "",
+      "dimensions_mm": {},
+      "torque_nm": 0,
+      "quantity": {"value": 0, "per": "support", "note": "Count not stated; sizes not stated."},
+      "purpose": "Fixes profiles to the panel. Sizes not found; do not use until verified.",
+      "status": "not_found",
+      "source_ids": ["indexfix_psa_manual"]
+    },
+    {
+      "id": "clamp_nut_sw13",
+      "name": "Clamp nut SW13 (INDEXTRUT quick nut)",
+      "type": "nut",
+      "material": "Not stated",
+      "grade": "",
+      "standard": "",
+      "thread": "",
+      "dimensions_mm": {"across_flats": 13},
+      "torque_nm": 0,
+      "quantity": {"value": 0, "per": "module", "note": "Count not stated. Nut torque not stated; the 14 Nm value in the manual is for the clamp screws."},
+      "purpose": "Clamp fixing nut in the quick-clamp system.",
+      "status": "unverified",
+      "source_ids": ["indexfix_psa_manual"]
+    },
+    {
+      "id": "gasket_epdm_system",
+      "name": "EPDM sealing (system material, location per manual)",
+      "type": "gasket",
+      "material": "EPDM",
+      "grade": "",
+      "standard": "",
+      "thread": "",
+      "dimensions_mm": {},
+      "torque_nm": 0,
+      "quantity": {"value": 0, "per": "support", "note": "Count not stated."},
+      "purpose": "Seals fixing points on the sandwich panel.",
+      "status": "unverified",
+      "source_ids": ["indexfix_psa_manual"]
+    },
+    {
+      "id": "tape_butyl_rib_high_points",
+      "name": "Butyl tape on rib high points under PSA-A profiles",
+      "type": "sealant",
+      "material": "Butyl",
+      "grade": "",
+      "standard": "",
+      "thread": "",
+      "dimensions_mm": {},
+      "torque_nm": 0,
+      "quantity": {"value": 0, "per": "support", "note": "Length per profile not stated."},
+      "purpose": "Seals the profile against the panel rib high points.",
+      "status": "unverified",
+      "source_ids": ["indexfix_psa_manual"]
+    },
+    {
+      "id": "rivet_re_te_trefoil",
+      "name": "RE-TE watertight trefoil rivet (sandwich panel fixing)",
+      "type": "other",
+      "material": "Not stated",
+      "grade": "",
+      "standard": "",
+      "thread": "",
+      "dimensions_mm": {},
+      "torque_nm": 0,
+      "quantity": {"value": 0, "per": "support", "note": "Count not stated."},
+      "purpose": "Watertight fixing rivet for the sandwich panel.",
+      "status": "not_found",
+      "source_ids": ["indexfix_psa_manual"]
+    },
+    {
+      "id": "grounding_sandwich_not_found",
+      "name": "Grounding and bonding for sandwich panel PSA system",
+      "type": "grounding",
+      "material": "",
+      "grade": "",
+      "standard": "",
+      "thread": "",
+      "dimensions_mm": {},
+      "torque_nm": 0,
+      "quantity": {"value": 0, "per": "module", "note": "Not found in sources reviewed."},
+      "purpose": "Placeholder: grounding hardware not stated in the manual. Do not use the value.",
+      "status": "not_found",
+      "source_ids": []
+    }
+  ],
+  "grounding_bonding": "Grounding and bonding were not stated in the Indexfix PSA installation manual reviewed. Bonding must be obtained from the manufacturer or designed per the local standard.",
+  "installation_notes": [
+    "Thermal expansion: joint every 12 m; expansion joint gap 4 to 6 mm with no screws, maximum 300 mm to the nearest fixing point.",
+    "Rigid joint: 2 screws per side; joint screw position 50 to 70 mm from profile end.",
+    "Gauge GM-A must equal module frame height (30 to 40 mm).",
+    "Clamp screws 14 Nm (intermediate and lateral clamp) per manual.",
+    "Predrill diameters not stated in the manual; sandwich panel thickness not stated."
+  ],
+  "status": "unverified",
+  "unverified_items": [
+    "Sandwich panel thickness range and rib geometry (not stated).",
+    "Sizes and grades of TAC-N, TAC-B, ARENI and AUENI screws (not stated).",
+    "Torque for ABEI5519 self-drilling screws (not stated).",
+    "Rivet RE-TE size and material (not stated).",
+    "Predrill diameters (not stated).",
+    "Finishes of profiles and clamps (not stated).",
+    "Module clamp mid/end function of the sample clamp (not stated).",
+    "Quantities per module, per row and per roof for all parts (set to 0 as unknown, except 2 ABEI5519 screws per rigid-joint side).",
+    "Grounding and bonding (not found).",
+    "Panel manufacturer fixing approval and wind uplift test results for the chosen panel (not found)."
+  ],
+  "sources": [
+    {
+      "id": "indexfix_psa_manual",
+      "title": "Indexfix FTA GS M SC-PSA installation guide (EN, rev1)",
+      "publisher": "Indexfix",
+      "url": "https://www.indexfix.com/wp-content/uploads/CMP6735/files/FTA_GS_M_SC-PSA_en_rev1.pdf",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

@@ -1,0 +1,353 @@
+{
+  "schema_version": "1.0",
+  "id": "victron.multiplus-ii-48-5000-70-50-230v",
+  "name": {
+    "en": "Victron MultiPlus-II 48/5000/70-50 230V",
+    "es": "Victron MultiPlus-II 48/5000/70-50 230V"
+  },
+  "kind": "inverter_type",
+  "description": {
+    "en": "Battery-side inverter/charger, 48 V DC, 5 kVA, 230 V AC 50 Hz output, 70 A charger, fan-cooled, IP21. No PV input in this datasheet.",
+    "es": "Inversor/cargador del lado de bateria, 48 V CC, 5 kVA, salida 230 V CA 50 Hz, cargador 70 A, refrigeracion por ventilador, IP21. Sin entrada FV en esta ficha."
+  },
+  "typical_use": "Off-grid or backup battery inverter-charger (not a PV string inverter)",
+  "layers": [],
+  "parts": [
+    {
+      "id": "enclosure",
+      "name": "Enclosure",
+      "type": "enclosure",
+      "status": "unverified",
+      "source_ids": [
+        "victron_mp2_ds"
+      ],
+      "dimensions_mm": {
+        "w": 320,
+        "h": 565,
+        "d": 148
+      }
+    },
+    {
+      "id": "fan",
+      "name": "Fan (fan-assisted cooling)",
+      "type": "fan",
+      "status": "unverified",
+      "source_ids": [
+        "victron_mp2_ds"
+      ],
+      "ratings": {
+        "count": "not_found"
+      }
+    },
+    {
+      "id": "battery_dc",
+      "name": "Battery DC terminals (M8 bolts)",
+      "type": "dc_input",
+      "status": "unverified",
+      "source_ids": [
+        "victron_mp2_ds"
+      ],
+      "ratings": {
+        "connector": "M8 bolt",
+        "dc_input_range_v": "38-66",
+        "max_charge_a": 70
+      }
+    },
+    {
+      "id": "dc_switch",
+      "name": "DC switch / fuse",
+      "type": "dc_switch",
+      "status": "not_found"
+    },
+    {
+      "id": "ac_terminal",
+      "name": "AC input/output screw terminals (up to 13 mm2)",
+      "type": "ac_terminal",
+      "status": "unverified",
+      "source_ids": [
+        "victron_mp2_ds"
+      ],
+      "ratings": {
+        "max_mm2": 13,
+        "max_ac_input_a": 50
+      }
+    },
+    {
+      "id": "display_gx",
+      "name": "2x16 character display (GX model)",
+      "type": "display",
+      "status": "unverified",
+      "source_ids": [
+        "victron_mp2_ds"
+      ],
+      "ratings": {
+        "availability": "GX model only"
+      }
+    },
+    {
+      "id": "led_nongx",
+      "name": "LED indicators (non-GX)",
+      "type": "led_indicator",
+      "status": "not_found"
+    },
+    {
+      "id": "comm_vebus",
+      "name": "VE.Bus",
+      "type": "comm_port",
+      "status": "unverified",
+      "source_ids": [
+        "victron_mp2_ds"
+      ]
+    },
+    {
+      "id": "comm_vedirect",
+      "name": "VE.Direct (GX only)",
+      "type": "comm_port",
+      "status": "unverified",
+      "source_ids": [
+        "victron_mp2_ds"
+      ],
+      "ratings": {
+        "availability": "GX only"
+      }
+    },
+    {
+      "id": "comm_eth",
+      "name": "Ethernet (GX only)",
+      "type": "comm_port",
+      "status": "unverified",
+      "source_ids": [
+        "victron_mp2_ds"
+      ],
+      "ratings": {
+        "availability": "GX only"
+      }
+    },
+    {
+      "id": "wlan",
+      "name": "WLAN",
+      "type": "antenna",
+      "status": "not_found"
+    },
+    {
+      "id": "bluetooth",
+      "name": "Bluetooth via optional VE.Bus Smart dongle",
+      "type": "antenna",
+      "status": "unverified",
+      "source_ids": [
+        "victron_mp2_ds"
+      ],
+      "ratings": {
+        "availability": "optional dongle"
+      }
+    },
+    {
+      "id": "mounting_holes",
+      "name": "Wall mounting holes / bracket",
+      "type": "mounting_hole",
+      "status": "not_found"
+    },
+    {
+      "id": "grounding_terminal",
+      "name": "Grounding terminal",
+      "type": "grounding_terminal",
+      "status": "not_found"
+    }
+  ],
+  "geometry": {
+    "description": "Wall-mounted inverter envelope from datasheet W x H x D. Elements are generic placements (status typical) unless noted. Mounting hole positions omitted: spacing not sourced.",
+    "coordinate_system": "x = width (left to right seen from front), y = height (bottom 0 to top), z = depth (wall at z=0, front cover at z=D); origin bottom-left-wall corner; mm",
+    "module_dimensions_mm": [
+      320,
+      565,
+      148
+    ],
+    "clamping_zones_mm": [],
+    "elements": [
+      {
+        "id": "el_enclosure",
+        "kind": "enclosure",
+        "part_id": "enclosure",
+        "position_mm": [
+          0,
+          0,
+          0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          320,
+          565,
+          148
+        ],
+        "status": "unverified",
+        "note": "Overall envelope from datasheet W x H x D; origin at bottom-left-back when wall-mounted."
+      },
+      {
+        "id": "el_battery",
+        "kind": "dc_input",
+        "part_id": "battery_dc",
+        "position_mm": [
+          160.0,
+          33.9,
+          74.0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          192.0,
+          28.2,
+          5.9
+        ],
+        "status": "typical",
+        "note": "Generic placement, no sourced coordinates."
+      },
+      {
+        "id": "el_ac",
+        "kind": "ac_terminal",
+        "part_id": "ac_terminal",
+        "position_mm": [
+          160.0,
+          84.8,
+          74.0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          192.0,
+          28.2,
+          5.9
+        ],
+        "status": "typical",
+        "note": "Generic placement, no sourced coordinates."
+      },
+      {
+        "id": "el_display",
+        "kind": "display",
+        "part_id": "display_gx",
+        "position_mm": [
+          160.0,
+          452.0,
+          148.0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          224.0,
+          56.5,
+          0.0
+        ],
+        "status": "typical",
+        "note": "Generic placement, no sourced coordinates. GX display"
+      },
+      {
+        "id": "el_fan",
+        "kind": "fan",
+        "part_id": "fan",
+        "position_mm": [
+          160.0,
+          553.7,
+          74.0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          224.0,
+          11.3,
+          74.0
+        ],
+        "status": "typical",
+        "note": "Generic placement, no sourced coordinates. Assumed location"
+      }
+    ]
+  },
+  "mechanical_ratings": {
+    "ip_rating": "IP21",
+    "fire_class": "not_found"
+  },
+  "status": "unverified",
+  "unverified_items": [
+    "Not a PV string inverter: no PV input in this datasheet",
+    "wall mounting holes and grounding not found",
+    "non-GX LED not found",
+    "WLAN not found",
+    "phase configuration for a single unit not found",
+    "source says absorption 5.6 V, judged a formatting error and not used"
+  ],
+  "sources": [
+    {
+      "id": "victron_mp2_ds",
+      "title": "MultiPlus-II inverter/charger datasheet, 3K/5K off-grid (EN AUS)",
+      "publisher": "Victron Energy B.V.",
+      "url": "https://www.victronenergy.com/upload/documents/Datasheet-MultiPlus-II-inverter-charger-3K-3K-GX-5K-5K-GX-off-grid-EN-AUS-.pdf",
+      "accessed": "2026-11-20"
+    }
+  ],
+  "electrical_ratings": {
+    "topology": "inverter/charger (battery side)",
+    "phases": 1,
+    "rated_ac_power_va": 5000,
+    "rated_power_note": "5000 VA cont. at 25 C; 4000 W at 25 C; 3700 W at 40 C",
+    "ac_voltage_v": "230 (+/-2%)",
+    "ac_frequency_hz": "50 (adjustable to 60)",
+    "ac_input_range_v": "187-265 (45-65 Hz)",
+    "ac_input_max_a": 50,
+    "n_mppt": "not_applicable (no PV input in this datasheet)",
+    "dc_voltage_v": "48 nominal, 38-66 input range",
+    "max_charge_current_a": 70,
+    "efficiency_max_pct": 96,
+    "ip_rating": "IP21",
+    "cooling": "fan-assisted",
+    "display": "GX model 2x16 char; non-GX not_found",
+    "certifications": [
+      "EN-IEC 60335-1",
+      "EN-IEC 60335-2-29",
+      "EN-IEC 62109-1",
+      "EN-IEC 62109-2",
+      "EN 55014-1",
+      "EN 55014-2",
+      "EN-IEC 61000-3-2",
+      "EN-IEC 61000-3-3",
+      "IEC 61000-6-1/-2/-3"
+    ],
+    "protections": [
+      "output short circuit",
+      "overload",
+      "battery voltage too high or too low",
+      "temperature too high",
+      "230 V AC on inverter output",
+      "input voltage ripple too high"
+    ],
+    "source_ids": [
+      "victron_mp2_ds"
+    ],
+    "electrical_status": "unverified"
+  },
+  "mechanical": {
+    "external_dimensions_wxhxd_mm": [
+      320,
+      565,
+      148
+    ],
+    "weight_kg": 29,
+    "mounting": "not_found",
+    "cooling": "fan-assisted",
+    "clearances_mm": "not_found",
+    "mechanical_status": "unverified"
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "schema_version": "1.0",
+  "id": "ground_screw_fixed_table",
+  "name": {"en": "Ground screw (helical pile) fixed-tilt table", "es": "Mesa fija de tilt sobre tornillo de tierra (pilote helicoidal)"},
+  "family": "ground",
+  "category": "ground_screw_fixed_table",
+  "description": {
+    "en": "Fixed-tilt ground table on hot-dip galvanized steel helical ground screws, screwed into the soil and fitted with a top connection (nut cage with set screws). Three manufacturers list 3-inch (76 mm) round shafts in 1.4 to 2.9 m lengths; the table frame and module clamps sit on top of the screws.",
+    "es": "Mesa fija de tilt sobre tornillos de tierra helicoidales de acero galvanizado en caliente, atornillados en el terreno y con conexión superior (jaula de tuerca con tornillos de fijación). Tres fabricantes listan ejes redondos de 3 pulgadas (76 mm) de 1,4 a 2,9 m; el bastidor y las mordazas de módulo se apoyan sobre los tornillos."
+  },
+  "typical_use": "Ground arrays on soils suitable for screw installation, and where ramming is restricted or access is limited.",
+  "applicable_standards": ["ASTM A500 Grade C (Terrasmart screw)", "ASTM A123", "ISO 1461", "ASTM A153 (friction bolts, as stated by one supplier)", "DIN 933 (friction bolt, as stated by one supplier)", "ISO 898-1 (bolt property classes)"],
+  "materials": [
+    {"component": "Ground screw shaft and flight", "material": "ASTM A500 Grade C structural steel (Terrasmart); A500C 50 ksi yield (BDI); GB/T 700 Q235B (American Ground Screw)", "finish": "Hot-dip galvanized, ASTM A123 and ISO 1461 (Terrasmart); ASTM A123 (BDI, American Ground Screw)", "status": "unverified", "source_ids": ["src_terrasmart_screw", "src_bdi_screw", "src_americanground_screw"]},
+    {"component": "Set screws (top connection)", "material": "Steel, grade not stated", "finish": "Not stated", "status": "not_found", "source_ids": ["src_terrasmart_screw"]},
+    {"component": "Friction bolts", "material": "Steel, property class 4.8", "finish": "Hot-dip galvanized to ASTM A153", "status": "unverified", "source_ids": ["src_americanground_screw"]},
+    {"component": "Table frame and module clamps", "material": "Not stated for ground screw projects (see table structure families)", "finish": "Not stated", "status": "not_found"}
+  ],
+  "profiles": [
+    {"id": "screw_shaft_3in", "name": "Round shaft, 3 in (76.2 mm) OD, Terrasmart / American Ground Screw", "section_type": "round_tube", "dimensions_mm": {"outer_diameter": 76.2, "wall_min": 3.61, "wall_min_alt_american": 3.75}, "material": "ASTM A500 Grade C / Q235B", "typical_length_mm": 1600, "status": "unverified", "source_ids": ["src_terrasmart_screw", "src_americanground_screw"]},
+    {"id": "screw_shaft_bdi_3in", "name": "Round shaft, 3 in (76 mm) OD x 4 mm wall, BDI", "section_type": "round_tube", "dimensions_mm": {"outer_diameter": 76.2, "wall": 4.0}, "material": "A500C, 50 ksi min yield", "typical_length_mm": 1524, "status": "unverified", "source_ids": ["src_bdi_screw"]},
+    {"id": "helical_flight_bdi", "name": "Helical flight, BDI (0.118 in thick x 0.500 in wide, 1.625 in pitch)", "section_type": "flat_bar", "dimensions_mm": {"thickness": 3.0, "width": 12.7, "pitch": 41.3}, "material": "Steel, A500C (as per BDI)", "status": "unverified", "source_ids": ["src_bdi_screw"]},
+    {"id": "screw_shaft_american_4_5in", "name": "Round shaft, 4.5 in (114 mm) OD, American Ground Screw", "section_type": "round_tube", "dimensions_mm": {"outer_diameter": 114.3}, "material": "Q235B", "status": "unverified", "source_ids": ["src_americanground_screw"]}
+  ],
+  "geometry": {
+    "description": "Ground screw modelled as a vertical post of 1600 mm overall length, the length stated by two manufacturers. Thread (flighted) length, installed depth and top connection geometry are not modelled beyond the values sourced. Table frame position is not sourced.",
+    "coordinate_system": "x along module row, y up-slope/north-south horizontal, z up; origin at ground/roof contact of first support; mm and degrees",
+    "elements": [
+      {"id": "ground_screw_1600", "kind": "post", "profile_or_accessory_id": "screw_shaft_3in", "position_mm": [0, 0, 0], "rotation_deg": [0, 0, 0], "length_mm": 1600, "count": 1, "note": "Overall length 1600 mm, thread length 600 mm (Terrasmart). Vertical orientation is a convention for modelling.", "status": "unverified"}
+    ],
+    "reference_layout": {
+      "note": "Screw lengths stated by Terrasmart: 1425, 1600, 2100, 2380, 2600 and 2900 mm (thread length 600 mm; one 2900 mm model with 1400 mm thread). BDI product listings titled 60 in (1.5 m), 78 in (2.0 m) and 98 in (2.5 m); the reviewer did not verify the exact overall lengths of the BDI models beyond the 60 in listing."
+    }
+  },
+  "accessories": [
+    {"id": "set_screw_top", "name": "Set screws for nut cage (top connection)", "type": "bolt", "material": "Steel", "grade": "not_found", "standard": "not_found", "thread": "5/8-11", "dimensions_mm": {}, "quantity": {"value": 3, "per": "post", "note": "3 set screws 5/8-11 per screw (Terrasmart); BDI uses a 3-bolt nut cage at 120 deg"}, "purpose": "Secures the top cap, plate or insert to the screw", "status": "unverified", "source_ids": ["src_terrasmart_screw", "src_bdi_screw"]},
+    {"id": "nut_cage_3_bolt", "name": "Nut cage (3-bolt, 120 deg spacing) on screw head", "type": "other", "material": "Steel, galvanized", "grade": "not_found", "standard": "not_found", "thread": "not_found", "quantity": {"value": 1, "per": "post", "note": "One cage per screw"}, "purpose": "Anchors set screws at the top of the screw", "status": "typical", "source_ids": ["src_bdi_screw"]},
+    {"id": "friction_bolt_hex", "name": "Friction bolt hex head (for connections)", "type": "bolt", "material": "Steel", "grade": "4.8", "standard": "DIN 933", "thread": "M16", "dimensions_mm": {"diameter": 16, "length": 30}, "quantity": {"value": 0, "per": "post", "note": "Count not stated; placeholder"}, "purpose": "Connection of supported structure (snug-tight plus quarter turn)", "status": "unverified", "source_ids": ["src_americanground_screw"]},
+    {"id": "nut_friction", "name": "Nut for friction bolt", "type": "nut", "material": "Steel, galvanized", "grade": "not_found", "standard": "not_found", "thread": "M16", "quantity": {"value": 0, "per": "post", "note": "NOT SOURCED: placeholder"}, "purpose": "Clamping friction bolt", "status": "not_found"},
+    {"id": "washer_friction", "name": "Washer for friction bolt", "type": "washer", "material": "Steel, galvanized", "grade": "not_found", "standard": "not_found", "thread": "M16", "quantity": {"value": 0, "per": "post", "note": "NOT SOURCED: placeholder"}, "purpose": "Load distribution", "status": "not_found"},
+    {"id": "pile_cap_top", "name": "Top cap or connection plate on screw head", "type": "pile_cap", "material": "Steel, galvanized (assumed, not sourced)", "grade": "not_found", "standard": "not_found", "thread": "not_found", "quantity": {"value": 0, "per": "post", "note": "NOT SOURCED: placeholder"}, "purpose": "Carries the table frame connection", "status": "not_found"},
+    {"id": "grounding_bonding", "name": "Bonding and earth connection to screw", "type": "grounding", "material": "not_found", "grade": "not_found", "standard": "not_found", "thread": "not_found", "quantity": {"value": 0, "per": "table", "note": "NOT SOURCED: placeholder"}, "purpose": "Bonding of table to earth system", "status": "not_found"},
+    {"id": "sealant_screw_top", "name": "Sealant or coating at the top connection", "type": "sealant", "material": "not_found", "grade": "not_found", "standard": "not_found", "thread": "not_found", "quantity": {"value": 0, "per": "post", "note": "NOT SOURCED: placeholder"}, "purpose": "Moisture protection of connection", "status": "not_found"}
+  ],
+  "grounding_bonding": "Not stated in the sources reviewed for the screw itself; the screw is galvanized steel and can be bonded through its top connection (placeholder accessory).",
+  "installation_notes": [
+    "Maximum installation torque: 6547 N m for 3 in (76 mm) screws and 9066 N m for 4.5 in (114 mm) screws (American Ground Screw specification, using a calibrated torque motor).",
+    "BDI recommends a maximum installation torque of 5000 ft-lb (about 6779 N m, converted by the reviewer).",
+    "Downward installation force must not exceed 5 % of the allowable axial compression load of the shaft or threads, whichever is lower (American Ground Screw specification).",
+    "Friction bolts are tightened snug-tight plus a quarter turn (American Ground Screw specification).",
+    "Terrasmart notes approximately 20 in (508 mm) of shank exposed in its bending-moment calculation; this is a source assumption, not a design value.",
+    "Screws are installed by machine and suitable for soils that allow screw installation; soil and pull-out testing is an engineering task and is not covered by the sources."
+  ],
+  "status": "unverified",
+  "unverified_items": [
+    "Steel yield and tensile values for Terrasmart screw (A500 Grade C; yield not stated)",
+    "Coating mass of galvanizing (Terrasmart: minimum 2.8 mil; American Ground Screw: stated as 785 microns; not converted to g/m2)",
+    "Set screw grade and standard (not stated)",
+    "Number of friction bolts and nut/washer sizes per connection (not stated)",
+    "Top cap and plate geometry, dimensions and steel (not stated)",
+    "Bonding and sealant hardware (not stated)",
+    "Table frame and clamp accessories (out of scope for this screw entry; see table family files)",
+    "Pull-out and compression capacities (not stated in the sources; the American Ground Screw specification refers to a site geotechnical report)"
+  ],
+  "sources": [
+    {"id": "src_terrasmart_screw", "title": "Ground Screw Spec Sheet", "publisher": "Terrasmart", "url": "https://www.terrasmart.com/wp-content/uploads/2026/04/Ground-Screw-Spec-Sheet.pdf", "accessed": "2026-11-20"},
+    {"id": "src_bdi_screw", "title": "BDI BD-01-1001 60 in Ground Screw (product listing)", "publisher": "Solar-Electric (reseller listing of BDI product)", "url": "https://www.solar-electric.com/bid-bd-01-1001-60inch-ground-screw.html", "accessed": "2026-11-20"},
+    {"id": "src_americanground_screw", "title": "Special Foundations - Steel Ground Screw Systems Specification (CSI format)", "publisher": "American Ground Screw, Inc. (via ARCAT)", "url": "https://www.arcat.com/specification/american-ground-screw-inc-52607/31_66_00cgs", "accessed": "2026-11-20"}
+  ]
+}

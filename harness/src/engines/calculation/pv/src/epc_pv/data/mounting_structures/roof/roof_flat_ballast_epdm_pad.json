@@ -1,0 +1,270 @@
+{
+  "schema_version": "1.0",
+  "id": "roof_flat_ballast_epdm_pad",
+  "name": {
+    "en": "Ballasted rail frame on membrane roof with EPDM pad under base rail (KSENG type)",
+    "es": "Estructura de rieles lastrada sobre cubierta de membrana con almohadilla de EPDM bajo el perfil base (tipo KSENG)"
+  },
+  "family": "roof",
+  "category": "membrane_roof_ballast_rail_pad",
+  "description": {
+    "en": "Base rails rest on the roof membrane through EPDM rubber pads inserted at the bottom of the base rail, which protect the membrane. Front and rear legs form the tilt, ballast pallets hold concrete blocks (9.4 kg each per design standard) as dead weight. Bottom, inter and end clamps hold the modules, connected with M8 x 25 bolts. Reference family: KSENG ballast roof mounting system (design basis wind 25 m/s and snow 1 kN/m2 per manual).",
+    "es": "Los perfiles base apoyan sobre la membrana de cubierta a través de almohadillas de caucho EPDM insertadas en la parte inferior del perfil base, que protegen la membrana. Patas delantera y trasera definen la inclinación; las bandejas de lastre sostienen bloques de hormigón (9,4 kg por pieza según la norma de diseño) como peso muerto. Garras inferior, intermedia y de extremo sujetan los módulos con tornillos M8 x 25. Familia de referencia: sistema de lastre KSENG (base de diseño viento 25 m/s y nieve 1 kN/m2 según manual)."
+  },
+  "typical_use": "Flat or low-pitch membrane roofs where penetration is not allowed; ballast gives uplift resistance.",
+  "applicable_standards": [
+    "EN 1991-1-3 (snow loads, designer)",
+    "EN 1991-1-4 (wind actions, designer; the manual uses a 25 m/s design basis, to be checked per project)",
+    "EN 1999-1-1 (aluminium design, designer; not verified in this research)",
+    "ISO 898-1:2013 (carbon steel fasteners, reference; grade of M8 x 25 bolt not stated)",
+    "ISO 3506-1:2020 (stainless steel fasteners, reference)"
+  ],
+  "materials": [
+    {"component": "Base rail", "material": "Not stated", "finish": "Not stated", "status": "not_found", "source_ids": ["kseng_ballast_manual"]},
+    {"component": "Rail connector, front leg, rear leg", "material": "Not stated", "finish": "Not stated", "status": "not_found", "source_ids": ["kseng_ballast_manual"]},
+    {"component": "Ballast pallet (200 x 205 mm)", "material": "Not stated", "finish": "Not stated", "status": "not_found", "source_ids": ["kseng_ballast_manual"]},
+    {"component": "Concrete block (9.4 kg per piece, design standard)", "material": "Concrete", "finish": "", "status": "unverified", "source_ids": ["kseng_ballast_manual"]},
+    {"component": "Clamps (bottom, inter, end)", "material": "Not stated", "finish": "Not stated", "status": "not_found", "source_ids": ["kseng_ballast_manual"]},
+    {"component": "Membrane protection pad (EPDM rubber)", "material": "EPDM rubber", "finish": "", "status": "unverified", "source_ids": ["kseng_ballast_manual"]},
+    {"component": "Bolts M8 x 25 with nuts", "material": "Not stated", "finish": "Not stated", "status": "not_found", "source_ids": ["kseng_ballast_manual"]}
+  ],
+  "profiles": [
+    {
+      "id": "kseng_base_rail",
+      "name": "KSENG base rail (profile section not stated)",
+      "section_type": "rail_custom",
+      "dimensions_mm": {},
+      "material": "Not stated",
+      "status": "not_found",
+      "source_ids": ["kseng_ballast_manual"]
+    },
+    {
+      "id": "kseng_ballast_pallet",
+      "name": "KSENG ballast pallet",
+      "section_type": "other",
+      "dimensions_mm": {"length": 200, "width": 205},
+      "material": "Not stated",
+      "status": "unverified",
+      "source_ids": ["kseng_ballast_manual"]
+    }
+  ],
+  "geometry": {
+    "description": "Base rails run along the row on the membrane, pallets carry concrete blocks under the front and rear legs. Schematic only: tilt, leg spacing and block count per pallet not stated.",
+    "coordinate_system": "x along module row, y up-slope/north-south horizontal, z up; origin at ground/roof contact of first support; mm and degrees",
+    "elements": [],
+    "reference_layout": {
+      "note": "Tilt angle not stated in the manual. Ballast blocks per module not stated."
+    }
+  },
+  "accessories": [
+    {
+      "id": "epdm_pad_base_rail",
+      "name": "EPDM rubber membrane protection pad (inserted through the bottom of the base rail)",
+      "type": "gasket",
+      "material": "EPDM rubber",
+      "grade": "",
+      "standard": "",
+      "thread": "",
+      "dimensions_mm": {},
+      "torque_nm": 0,
+      "quantity": {"value": 0, "per": "support", "note": "One per base rail support (structural); count not stated."},
+      "purpose": "Protects the roof membrane from the base rail and ballast load.",
+      "status": "unverified",
+      "source_ids": ["kseng_ballast_manual"]
+    },
+    {
+      "id": "ballast_pallet_kseng",
+      "name": "Ballast pallet (L 200 mm, W 205 mm)",
+      "type": "ballast",
+      "material": "Not stated",
+      "grade": "",
+      "standard": "",
+      "thread": "",
+      "dimensions_mm": {"length": 200, "width": 205},
+      "torque_nm": 0,
+      "quantity": {"value": 0, "per": "support", "note": "Count per support not stated."},
+      "purpose": "Holds concrete block(s) under the leg.",
+      "status": "unverified",
+      "source_ids": ["kseng_ballast_manual"]
+    },
+    {
+      "id": "ballast_block_concrete_9_4kg",
+      "name": "Concrete block (9.4 kg per piece, design standard)",
+      "type": "ballast",
+      "material": "Concrete",
+      "grade": "",
+      "standard": "",
+      "thread": "",
+      "dimensions_mm": {},
+      "torque_nm": 0,
+      "quantity": {"value": 0, "per": "support", "note": "Count per pallet not stated; ballast per module not stated."},
+      "purpose": "Dead weight for uplift resistance.",
+      "status": "unverified",
+      "source_ids": ["kseng_ballast_manual"]
+    },
+    {
+      "id": "leg_front_kseng",
+      "name": "Front leg",
+      "type": "foot",
+      "material": "Not stated",
+      "grade": "",
+      "standard": "",
+      "thread": "",
+      "dimensions_mm": {},
+      "torque_nm": 0,
+      "quantity": {"value": 0, "per": "support", "note": "One per support (structural)."},
+      "purpose": "Sets the front height of the tilted frame.",
+      "status": "not_found",
+      "source_ids": ["kseng_ballast_manual"]
+    },
+    {
+      "id": "leg_rear_kseng",
+      "name": "Rear leg",
+      "type": "foot",
+      "material": "Not stated",
+      "grade": "",
+      "standard": "",
+      "thread": "",
+      "dimensions_mm": {},
+      "torque_nm": 0,
+      "quantity": {"value": 0, "per": "support", "note": "One per support (structural)."},
+      "purpose": "Sets the rear height of the tilted frame.",
+      "status": "not_found",
+      "source_ids": ["kseng_ballast_manual"]
+    },
+    {
+      "id": "connector_rail_kseng",
+      "name": "Rail connector (base rail joint)",
+      "type": "connector_splice",
+      "material": "Not stated",
+      "grade": "",
+      "standard": "",
+      "thread": "",
+      "dimensions_mm": {},
+      "torque_nm": 0,
+      "quantity": {"value": 0, "per": "rail", "note": "One per base rail joint; count not stated."},
+      "purpose": "Joins base rails.",
+      "status": "unverified",
+      "source_ids": ["kseng_ballast_manual"]
+    },
+    {
+      "id": "clamp_bottom_kseng",
+      "name": "Bottom clamp",
+      "type": "clamp_end",
+      "material": "Not stated",
+      "grade": "",
+      "standard": "",
+      "thread": "",
+      "dimensions_mm": {},
+      "torque_nm": 0,
+      "quantity": {"value": 0, "per": "module", "note": "Count not stated; torque not stated."},
+      "purpose": "Holds the lower module frame edge.",
+      "status": "unverified",
+      "source_ids": ["kseng_ballast_manual"]
+    },
+    {
+      "id": "clamp_inter_kseng",
+      "name": "Inter clamp (mid clamp)",
+      "type": "clamp_mid",
+      "material": "Not stated",
+      "grade": "",
+      "standard": "",
+      "thread": "",
+      "dimensions_mm": {},
+      "torque_nm": 0,
+      "quantity": {"value": 0, "per": "module", "note": "Count per module not stated; torque not stated."},
+      "purpose": "Holds two adjacent module frames.",
+      "status": "unverified",
+      "source_ids": ["kseng_ballast_manual"]
+    },
+    {
+      "id": "clamp_end_kseng",
+      "name": "End clamp",
+      "type": "clamp_end",
+      "material": "Not stated",
+      "grade": "",
+      "standard": "",
+      "thread": "",
+      "dimensions_mm": {},
+      "torque_nm": 0,
+      "quantity": {"value": 0, "per": "row", "note": "Count per row end not stated; torque not stated."},
+      "purpose": "Holds the outer module frame at the row end.",
+      "status": "unverified",
+      "source_ids": ["kseng_ballast_manual"]
+    },
+    {
+      "id": "bolt_m8_x25_kseng",
+      "name": "Bolt M8 x 25 with nut",
+      "type": "bolt",
+      "material": "Not stated",
+      "grade": "Not stated",
+      "standard": "",
+      "thread": "M8",
+      "dimensions_mm": {"length": 25},
+      "torque_nm": 0,
+      "quantity": {"value": 0, "per": "support", "note": "Count not stated. Torque not stated."},
+      "purpose": "Main bolt for clamp and leg connections.",
+      "geometry_hint": "cylinder d=8 l=25 hex head",
+      "status": "unverified",
+      "source_ids": ["kseng_ballast_manual"]
+    },
+    {
+      "id": "nut_m8_kseng",
+      "name": "Nut M8 (with M8 x 25 bolt)",
+      "type": "nut",
+      "material": "Not stated",
+      "grade": "Not stated",
+      "standard": "",
+      "thread": "M8",
+      "dimensions_mm": {},
+      "torque_nm": 0,
+      "quantity": {"value": 0, "per": "support", "note": "One per M8 x 25 bolt; count not stated."},
+      "purpose": "Pairs with M8 x 25 bolt.",
+      "status": "unverified",
+      "source_ids": ["kseng_ballast_manual"]
+    },
+    {
+      "id": "grounding_kseng_not_found",
+      "name": "Grounding and bonding for KSENG ballast system",
+      "type": "grounding",
+      "material": "",
+      "grade": "",
+      "standard": "",
+      "thread": "",
+      "dimensions_mm": {},
+      "torque_nm": 0,
+      "quantity": {"value": 0, "per": "module", "note": "Not found in the manual reviewed."},
+      "purpose": "Placeholder: grounding not stated in the manual. Do not use the value.",
+      "status": "not_found",
+      "source_ids": []
+    }
+  ],
+  "grounding_bonding": "Grounding and bonding parts were not stated in the KSENG manual reviewed. Bonding must be obtained from the manufacturer or designed per the local standard.",
+  "installation_notes": [
+    "EPDM pad is inserted through the bottom of the base rail to protect the membrane (manual).",
+    "Design basis in the manual: wind 25 m/s and snow 1 kN/m2. The project loads must be checked against EN 1991-1-3 and EN 1991-1-4 by the designer.",
+    "Ballast block design weight 9.4 kg per piece; pallet 200 x 205 mm."
+  ],
+  "status": "unverified",
+  "unverified_items": [
+    "Materials and finishes of all base rail, leg, clamp and connector parts (not stated).",
+    "Tilt angle options (not stated).",
+    "Ballast blocks per module, per pallet and per row (not stated).",
+    "Bolt grade and standard for M8 x 25 bolts (not stated).",
+    "Torque values for all bolts and clamps (not stated).",
+    "Base rail profile dimensions and section (not stated).",
+    "EPDM pad dimensions, hardness and membrane compatibility (not stated).",
+    "Grounding and bonding parts (not stated).",
+    "Quantities per module, per rail and per row (set to 0 as unknown).",
+    "Wind and snow ratings for other design bases (not stated)."
+  ],
+  "sources": [
+    {
+      "id": "kseng_ballast_manual",
+      "title": "KSENG ballast roof mounting system installation manual (version 8)",
+      "publisher": "KSENG (hosted by a reseller)",
+      "url": "https://cdn.shopify.com/s/files/1/0567/8022/6625/files/Installation_Manual_-KSENG_Ballast_roof_mounting_system_8.pdf",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

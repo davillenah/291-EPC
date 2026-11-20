@@ -1,0 +1,107 @@
+{
+  "schema_version": "1.0",
+  "id": "ac_distribution_box_generic_not_found",
+  "name": {
+    "en": "AC combiner / distribution box for inverter outputs (not found)",
+    "es": "Caja de distribución / combinadora CA de salidas de inversores (no encontrada)"
+  },
+  "kind": "accessory",
+  "description": {
+    "en": "No sourced AC combiner or distribution box datasheet was found in search. Only an IP66 polycarbonate enclosure reference (DC MCB page) was fetched; it is not an AC combiner and is not used for dimensions.",
+    "es": "No se encontró hoja técnica sourced de caja combinadora o de distribución CA. Solo se consultó una referencia de envolvente de policarbonato IP66 (página de MCB CC), que no es una caja CA y no se usa para dimensiones."
+  },
+  "typical_use": "None until a datasheet is sourced.",
+  "status": "not_found",
+  "parts": [
+    {
+      "id": "enc",
+      "name": "Enclosure (not found)",
+      "name_es": "Envolvente (no encontrada)",
+      "type": "enclosure",
+      "status": "not_found",
+      "material": "polycarbonate (reference only)",
+      "ratings": {
+        "reference_ip": "IP66",
+        "reference_dims_mm": [
+          107,
+          212,
+          92
+        ]
+      },
+      "geometry_hint": "Reference only; not an AC box",
+      "source_ids": [
+        "S23"
+      ]
+    },
+    {
+      "id": "mccb",
+      "name": "AC molded-case breakers",
+      "name_es": "Interruptores de caja moldeada CA",
+      "type": "breaker",
+      "status": "typical",
+      "geometry_hint": "Generic, count not sourced"
+    },
+    {
+      "id": "din",
+      "name": "DIN rail",
+      "name_es": "Carril DIN",
+      "type": "other",
+      "status": "typical",
+      "geometry_hint": "Generic"
+    },
+    {
+      "id": "gland",
+      "name": "Cable glands",
+      "name_es": "Prensaestopas",
+      "type": "gland",
+      "status": "typical",
+      "geometry_hint": "Generic"
+    },
+    {
+      "id": "lock",
+      "name": "Door lock",
+      "name_es": "Cerradura de puerta",
+      "type": "other",
+      "status": "typical",
+      "quantity_per_module": 1,
+      "geometry_hint": "Generic"
+    },
+    {
+      "id": "gasket",
+      "name": "Door gasket",
+      "name_es": "Junta de puerta",
+      "type": "gasket",
+      "status": "typical",
+      "quantity_per_module": 1,
+      "geometry_hint": "Generic"
+    }
+  ],
+  "geometry": {
+    "description": "No envelope found. Geometry omitted.",
+    "coordinate_system": "x along module long side, y along short side, z up through thickness; origin at module front-left corner; mm",
+    "elements": []
+  },
+  "mechanical_ratings": {
+    "note": "not_found"
+  },
+  "unverified_items": [
+    "No AC combiner datasheet found",
+    "Breaker count, ratings and dimensions not found",
+    "Reference enclosure (PEBS-L style, 107 x 212 x 92 mm) is a DC MCB enclosure, not used here"
+  ],
+  "sources": [
+    {
+      "id": "S23",
+      "title": "PEBS-L weatherproof enclosure datasheet (PC, IP66; DC MCB page)",
+      "publisher": "Segen (reseller copy)",
+      "url": "https://portal.segen.co.uk/reseller/docs/Datasheet_PEBS-L%20Weatherproof%20Enclosure.pdf",
+      "accessed": "2026-11-20"
+    }
+  ],
+  "electrical_ratings": {
+    "note": "not_found"
+  },
+  "mechanical": {
+    "note": "not_found"
+  }
+}

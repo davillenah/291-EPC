@@ -1,0 +1,480 @@
+{
+  "schema_version": "1.0",
+  "id": "hjt",
+  "name": {
+    "en": "HJT heterojunction (a-Si/c-Si)",
+    "es": "HJT heterounion (a-Si/c-Si)"
+  },
+  "kind": "technology",
+  "description": {
+    "en": "Silicon heterojunction cell with thin amorphous silicon layers on both faces of an n-type wafer, usually bifacial. Reference: REC Alpha Pure-R (80 half-cut cells). Meyer Burger WHITE (120 half cells, SmartWire) is a second sourced HJT product (see cell note and md file).",
+    "es": "Celda de heterounion de silicio con capas finas de silicio amorfo en ambas caras de una oblea tipo n, normalmente bifacial. Referencia: REC Alpha Pure-R (80 celulas partidas). Meyer Burger WHITE (120 medias celulas, SmartWire) es un segundo producto HJT documentado (ver nota de celda y el archivo md)."
+  },
+  "typical_use": "Premium utility and residential modules with low temperature coefficient and bifacial output.",
+  "cell": {
+    "type": "heterojunction (HJT), bifacial",
+    "n_cells_typical": [
+      80,
+      120
+    ],
+    "half_cut": true,
+    "bifacial": true,
+    "status": "unverified",
+    "source_ids": [
+      "rec_alpha_pure_r",
+      "mb_white"
+    ],
+    "note": "REC: 80 half-cut bifacial heterojunction cells. Meyer Burger WHITE: 120 half cells, 'mono n-Si, HJT met SWCTT' (SmartWire, no conventional busbars). Busbar count not stated for either."
+  },
+  "layers": [
+    {
+      "id": "glass_front",
+      "name": "Front glass",
+      "material": "tempered solar glass (anti-reflective coated)",
+      "status": "unverified",
+      "source_ids": [
+        "rec_alpha_pure_r",
+        "mb_white"
+      ],
+      "thickness_mm": 3.2
+    },
+    {
+      "id": "encapsulant_front",
+      "name": "Front encapsulant",
+      "material": "EVA or POE (thickness from Fraunhofer ISE lab-module reference; product material not stated)",
+      "status": "unverified",
+      "source_ids": [
+        "fraunhofer_pfreundt_2019"
+      ],
+      "thickness_mm": 0.45
+    },
+    {
+      "id": "cell_layer",
+      "name": "Cell layer",
+      "material": "HJT cells (a-Si/c-Si)",
+      "status": "unverified",
+      "source_ids": [
+        "fraunhofer_pfreundt_2019",
+        "rec_alpha_pure_r"
+      ],
+      "thickness_mm": 0.18,
+      "note": "Thickness 0.18 mm from Fraunhofer ISE lab-module reference (replaces typical 0.2 mm)."
+    },
+    {
+      "id": "encapsulant_rear",
+      "name": "Rear encapsulant",
+      "material": "EVA or POE (thickness from Fraunhofer ISE lab-module reference; product material not stated)",
+      "status": "unverified",
+      "source_ids": [
+        "fraunhofer_pfreundt_2019"
+      ],
+      "thickness_mm": 0.45
+    },
+    {
+      "id": "rear_layer",
+      "name": "Rear layer",
+      "material": "polymer backsheet, black (REC); white waterproof film (Meyer Burger)",
+      "status": "unverified",
+      "source_ids": [
+        "fraunhofer_pfreundt_2019",
+        "mb_white",
+        "rec_alpha_pure_r"
+      ],
+      "thickness_mm": 0.35,
+      "note": "Backsheet 0.35 mm from Fraunhofer ISE lab-module reference."
+    }
+  ],
+  "parts": [
+    {
+      "id": "glass_front",
+      "name": "Front glass",
+      "type": "glass",
+      "status": "unverified",
+      "source_ids": [
+        "rec_alpha_pure_r",
+        "mb_white"
+      ],
+      "material": "tempered solar glass (anti-reflective coated)",
+      "dimensions_mm": {
+        "thickness": 3.2
+      }
+    },
+    {
+      "id": "encapsulant_front",
+      "name": "Front encapsulant",
+      "type": "encapsulant",
+      "status": "unverified",
+      "source_ids": [
+        "fraunhofer_pfreundt_2019"
+      ],
+      "material": "EVA or POE (thickness from Fraunhofer ISE lab-module reference; product material not stated)"
+    },
+    {
+      "id": "encapsulant_rear",
+      "name": "Rear encapsulant",
+      "type": "encapsulant",
+      "status": "unverified",
+      "source_ids": [
+        "fraunhofer_pfreundt_2019"
+      ],
+      "material": "EVA or POE (thickness from Fraunhofer ISE lab-module reference; product material not stated)"
+    },
+    {
+      "id": "cells",
+      "name": "HJT cell string (80 half-cut cells)",
+      "type": "cell_string",
+      "status": "unverified",
+      "source_ids": [
+        "rec_alpha_pure_r"
+      ],
+      "material": "n-type silicon, a-Si layers"
+    },
+    {
+      "id": "rear",
+      "name": "Rear layer",
+      "type": "backsheet",
+      "status": "unverified",
+      "source_ids": [
+        "rec_alpha_pure_r",
+        "mb_white"
+      ],
+      "material": "polymer backsheet, black (REC); white waterproof film (Meyer Burger)"
+    },
+    {
+      "id": "frame",
+      "name": "Frame profile",
+      "type": "frame_profile",
+      "status": "unverified",
+      "source_ids": [
+        "rec_alpha_pure_r"
+      ],
+      "material": "aluminium alloy, anodized",
+      "quantity_per_module": 4,
+      "dimensions_mm": {
+        "height": 30,
+        "width": 30
+      },
+      "geometry_hint": "rectangular perimeter profile; section polygon not stated (footprint width typical)"
+    },
+    {
+      "id": "junction_box",
+      "name": "Junction box",
+      "type": "junction_box",
+      "status": "unverified",
+      "source_ids": [
+        "rec_alpha_pure_r",
+        "mb_white"
+      ],
+      "ratings": {
+        "ip": "IP68"
+      }
+    },
+    {
+      "id": "connector",
+      "name": "Connector",
+      "type": "connector",
+      "status": "unverified",
+      "source_ids": [
+        "rec_alpha_pure_r"
+      ],
+      "ratings": {
+        "type": "Stäubli MC4 PV-KBT4/KST4 (4 mm2)"
+      },
+      "quantity_per_module": 2
+    },
+    {
+      "id": "cable",
+      "name": "PV cable",
+      "type": "cable",
+      "status": "unverified",
+      "source_ids": [
+        "rec_alpha_pure_r"
+      ],
+      "ratings": {
+        "cross_section_mm2": 4,
+        "length_mm": "1400 + 1400"
+      },
+      "quantity_per_module": 2
+    }
+  ],
+  "geometry": {
+    "description": "Framed module 1730 x 1118 x 30 mm (REC). Anodized black aluminium frame; footprint width typical. Rear is a polymer backsheet; junction box placement and size typical.",
+    "coordinate_system": "x along module long side, y along short side, z up through thickness; origin at module front-left corner; mm. Here z=0 is the front glass face and z grows toward the rear through thickness.",
+    "elements": [
+      {
+        "id": "glass_front",
+        "kind": "glass",
+        "part_id": "glass_front",
+        "position_mm": [
+          30,
+          30,
+          0.0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          1670,
+          1058,
+          3.2
+        ],
+        "status": "unverified"
+      },
+      {
+        "id": "encapsulant_front",
+        "kind": "encapsulant",
+        "part_id": "encapsulant_front",
+        "position_mm": [
+          30,
+          30,
+          3.2
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          1670,
+          1058,
+          0.45
+        ],
+        "status": "unverified"
+      },
+      {
+        "id": "cell_layer",
+        "kind": "cell_string",
+        "part_id": "cells",
+        "position_mm": [
+          30,
+          30,
+          3.65
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          1670,
+          1058,
+          0.18
+        ],
+        "status": "unverified"
+      },
+      {
+        "id": "encapsulant_rear",
+        "kind": "encapsulant",
+        "part_id": "encapsulant_rear",
+        "position_mm": [
+          30,
+          30,
+          3.83
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          1670,
+          1058,
+          0.45
+        ],
+        "status": "unverified"
+      },
+      {
+        "id": "rear_layer",
+        "kind": "backsheet",
+        "part_id": "rear",
+        "position_mm": [
+          30,
+          30,
+          4.28
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          1670,
+          1058,
+          0.35
+        ],
+        "status": "unverified"
+      },
+      {
+        "id": "frame_long_front",
+        "kind": "frame_profile",
+        "part_id": "frame",
+        "position_mm": [
+          0,
+          0,
+          0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          1730,
+          30,
+          30
+        ],
+        "status": "unverified",
+        "note": "footprint width typical, see frame part"
+      },
+      {
+        "id": "frame_long_back",
+        "kind": "frame_profile",
+        "part_id": "frame",
+        "position_mm": [
+          0,
+          1088,
+          0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          1730,
+          30,
+          30
+        ],
+        "status": "unverified",
+        "note": "footprint width typical, see frame part"
+      },
+      {
+        "id": "frame_short_left",
+        "kind": "frame_profile",
+        "part_id": "frame",
+        "position_mm": [
+          0,
+          30,
+          0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          30,
+          1058,
+          30
+        ],
+        "status": "unverified",
+        "note": "footprint width typical, see frame part"
+      },
+      {
+        "id": "frame_short_right",
+        "kind": "frame_profile",
+        "part_id": "frame",
+        "position_mm": [
+          1700,
+          30,
+          0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          30,
+          1058,
+          30
+        ],
+        "status": "unverified",
+        "note": "footprint width typical, see frame part"
+      },
+      {
+        "id": "junction_box",
+        "kind": "junction_box",
+        "part_id": "junction_box",
+        "position_mm": [
+          790.0,
+          509.0,
+          4.63
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          150,
+          100,
+          20
+        ],
+        "status": "typical",
+        "note": "placement and size typical, not from datasheet"
+      }
+    ],
+    "module_dimensions_mm": [
+      1730,
+      1118,
+      30
+    ]
+  },
+  "mechanical_ratings": {
+    "weight_kg": 21.5,
+    "module_efficiency_pct_range": [
+      20.7,
+      22.3
+    ],
+    "junction_box_ip": "IP68",
+    "standards_listed_in_source": [
+      "IEC 61215:2021",
+      "IEC 61730:2023",
+      "IEC 61701 SM6",
+      "IEC 62804 PID (Meyer Burger)"
+    ],
+    "max_system_voltage_v": 1000,
+    "bifacial": true,
+    "status_note": "values transcribed from cited datasheets only; status unverified unless marked"
+  },
+  "status": "unverified",
+  "unverified_items": [
+    "REC busbar count, cell size and rear backsheet thickness not stated.",
+    "Frame section profile not stated (footprint width typical).",
+    "Meyer Burger WHITE 1767 x 1041 x 35 mm, 19.7 kg, 20.7-21.7 % is a second product; its IEC 61701 is 'requested', not certified.",
+    "Encapsulant 0.45 mm, cell layer 0.18 mm and backsheet 0.35 mm (where a backsheet is stated) are Fraunhofer ISE lab-module references, not values from this product's datasheet."
+  ],
+  "sources": [
+    {
+      "id": "rec_alpha_pure_r",
+      "title": "REC Alpha Pure-R product datasheet (PRINT DS, 2025-02)",
+      "publisher": "REC Group",
+      "url": "https://www.recgroup.com/sites/default/files/2025-02/PRINT_DS_Alpha_Pure-R_ENa.pdf",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "mb_white",
+      "title": "Meyer Burger WHITE datasheet (EN/NL copy)",
+      "publisher": "Meyer Burger (copy hosted by SolarMagazine)",
+      "url": "https://solarmagazine.nl/u/webshop/datasheetmeyerburgerwhite-1.pdf",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "iec_61701",
+      "title": "IEC 61701:2020 publication page (salt mist corrosion testing)",
+      "publisher": "IEC",
+      "url": "https://webstore.iec.ch/publication/59588",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "fraunhofer_pfreundt_2019",
+      "title": "Pfreundt et al., EU PVSEC 2019, paper 4CO43 (module layer thicknesses, lab modules)",
+      "publisher": "Fraunhofer ISE",
+      "url": "https://www.ise.fraunhofer.de/content/dam/ise/de/documents/publications/conference-paper/36-eupvsec-2019/Pfreundt_4CO43.pdf",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

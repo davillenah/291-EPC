@@ -1,0 +1,66 @@
+{
+  "schema_version": "1.0",
+  "id": "ballasted_ground_fixed_table",
+  "name": {"en": "Ballasted ground fixed-tilt table (concrete ballast, no penetration)", "es": "Mesa fija de tilt lastrada en suelo (lastre de hormigón, sin penetración)"},
+  "family": "ground",
+  "category": "ballasted_ground_fixed_table",
+  "description": {
+    "en": "Fixed-tilt ground table that rests on precast concrete ballast blocks instead of driven or screwed foundations. Posts and anchor rods are preassembled in the ballast; a raised purlin or composite rail carries the modules. Block size, mass and concrete strength are not stated in the sources reviewed.",
+    "es": "Mesa fija de tilt en suelo que apoya sobre bloques de lastre de hormigón prefabricados en lugar de cimentaciones hincadas o atornilladas. Postes y varillas de anclaje vienen preensamblados en el lastre; una correa elevada o un carril compuesto soporta los módulos. Tamaño, masa y resistencia del hormigón no se indican en las fuentes revisadas."
+  },
+  "typical_use": "Sites where penetrating the ground is restricted (contaminated soil, shallow rock, buried services, landfill caps).",
+  "applicable_standards": ["UL 2703 (listing cited by source)", "ASTM C1884 (concrete ballast block specification; listed by search, not reviewed, reference only)"],
+  "materials": [
+    {"component": "Concrete ballast block", "material": "Concrete with fibre mesh instead of rebar (per source); class not stated", "finish": "Not applicable", "status": "unverified", "source_ids": ["src_terrasmart_ss33"]},
+    {"component": "Raised purlin / rail (ballast system)", "material": "Steel, grade not stated", "finish": "Not stated", "status": "not_found", "source_ids": ["src_terrasmart_ss33"]},
+    {"component": "Composite rail (Schletter ballast system)", "material": "Composite (material not stated)", "finish": "Not stated", "status": "not_found", "source_ids": ["src_schletter_2023"]},
+    {"component": "Posts and anchor rods", "material": "Steel, grade not stated", "finish": "Not stated", "status": "not_found", "source_ids": ["src_terrasmart_ss33"]},
+    {"component": "Fasteners", "material": "Not stated", "finish": "Not stated", "status": "not_found", "source_ids": ["src_terrasmart_ss33"]}
+  ],
+  "profiles": [
+    {"id": "raised_purlin", "name": "Raised purlin (Terrasmart), dimensions not stated", "section_type": "other", "dimensions_mm": {}, "material": "Not stated", "status": "not_found", "source_ids": ["src_terrasmart_ss33"]},
+    {"id": "schletter_pro_ballast_rail", "name": "Pro ballast + composite rail (Schletter), section not stated", "section_type": "rail_custom", "dimensions_mm": {}, "material": "Composite", "typical_length_mm": 2700, "status": "unverified", "source_ids": ["src_schletter_2023"]},
+    {"id": "schletter_flatgrid_base", "name": "FlatGrid base profile (Schletter), section not stated", "section_type": "rail_custom", "dimensions_mm": {}, "material": "Not stated", "typical_length_mm": 4200, "status": "unverified", "source_ids": ["src_schletter_2023"]}
+  ],
+  "geometry": {
+    "description": "Only sourced lengths of rails are recorded; no ballast block dimensions or positions are sourced, so no geometry elements are modelled.",
+    "coordinate_system": "x along module row, y up-slope/north-south horizontal, z up; origin at ground/roof contact of first support; mm and degrees",
+    "tilt_range_deg": [5, 40],
+    "elements": [],
+    "reference_layout": {
+      "note": "Terrasmart SS33 GLIDE: portrait or landscape supported for all module frame types; block size and count per table not stated. Schletter listed base profiles 2150, 4200, 6000 and 6300 mm and ballast rails 1600, 2000, 2350, 2700 and 6000 mm (lengths only)."
+    }
+  },
+  "accessories": [
+    {"id": "ballast_block", "name": "Precast concrete ballast block", "type": "ballast", "material": "Concrete (fibre reinforced)", "grade": "not_found", "standard": "not_found", "thread": "not_found", "dimensions_mm": {}, "quantity": {"value": 0, "per": "support", "note": "NOT SOURCED: block count per support not stated; placeholder"}, "purpose": "Provides dead-weight resistance against wind uplift and sliding", "status": "unverified", "source_ids": ["src_terrasmart_ss33"]},
+    {"id": "schletter_concrete_block_set", "name": "Concrete block weighing set (Schletter catalogue item)", "type": "ballast", "material": "Concrete", "grade": "not_found", "standard": "not_found", "thread": "not_found", "quantity": {"value": 0, "per": "unit", "note": "Quantity and mass not stated; placeholder"}, "purpose": "Ballast weight set for Schletter ballast systems", "status": "not_found", "source_ids": ["src_schletter_2023"]},
+    {"id": "anchor_rod_ballast", "name": "Anchor rods preassembled in ballast", "type": "anchor", "material": "Steel, grade not stated", "grade": "not_found", "standard": "not_found", "thread": "not_found", "quantity": {"value": 0, "per": "post", "note": "Count per post not stated; placeholder"}, "purpose": "Fixes posts to the ballast block", "status": "unverified", "source_ids": ["src_terrasmart_ss33"]},
+    {"id": "post_ballast", "name": "Post preassembled in ballast", "type": "foot", "material": "Steel, grade not stated", "grade": "not_found", "standard": "not_found", "thread": "not_found", "quantity": {"value": 0, "per": "support", "note": "Count not stated; placeholder"}, "purpose": "Carries the table frame", "status": "unverified", "source_ids": ["src_terrasmart_ss33"]},
+    {"id": "bolt_frame", "name": "Frame bolts", "type": "bolt", "material": "not_found", "grade": "not_found", "standard": "not_found", "thread": "not_found", "quantity": {"value": 0, "per": "support", "note": "NOT SOURCED: placeholder"}, "purpose": "Connects frame to ballast posts", "status": "not_found"},
+    {"id": "clamp_module", "name": "Module clamps (mid and end)", "type": "clamp_mid", "material": "not_found", "grade": "not_found", "standard": "not_found", "thread": "not_found", "quantity": {"value": 0, "per": "module", "note": "NOT SOURCED: placeholder"}, "purpose": "Module fixing to purlin or rail", "status": "not_found"},
+    {"id": "grounding_bonding_purlin", "name": "Integrated bonding through raised purlin", "type": "grounding", "material": "Steel (raised purlin)", "grade": "not_found", "standard": "not_found", "thread": "not_found", "quantity": {"value": 0, "per": "table", "note": "Bonding route stated; hardware count not stated; placeholder"}, "purpose": "Bonding of modules and structure through the purlin", "status": "unverified", "source_ids": ["src_terrasmart_ss33"]},
+    {"id": "fibre_mesh_concrete", "name": "Fibre mesh in concrete (replaces rebar)", "type": "other", "material": "Synthetic fibre (type not stated)", "grade": "not_found", "standard": "not_found", "thread": "not_found", "quantity": {"value": 0, "per": "unit", "note": "Dosage not stated; placeholder"}, "purpose": "Reinforces concrete block instead of rebar", "status": "unverified", "source_ids": ["src_terrasmart_ss33"]},
+    {"id": "sealant_ballast", "name": "Sealant or coating at post base in ballast", "type": "sealant", "material": "not_found", "grade": "not_found", "standard": "not_found", "thread": "not_found", "quantity": {"value": 0, "per": "support", "note": "NOT SOURCED: placeholder"}, "purpose": "Protection at post base", "status": "not_found"},
+    {"id": "cable_clip_ballast", "name": "Cable clips for DC cables", "type": "cable_clip", "material": "not_found", "grade": "not_found", "standard": "not_found", "thread": "not_found", "quantity": {"value": 0, "per": "table", "note": "NOT SOURCED: placeholder"}, "purpose": "Fixes DC cables to the structure", "status": "not_found"}
+  ],
+  "grounding_bonding": "Terrasmart states integrated bonding and grounding through the raised purlin; hardware sizes not stated.",
+  "installation_notes": [
+    "Terrasmart states the ballast system is engineered for site-specific loading; ballast mass must be calculated per site wind and snow loads by the engineer.",
+    "Terrasmart states fibre mesh replaces rebar so the concrete cures faster and stronger (source claim, not verified)."
+  ],
+  "status": "unverified",
+  "unverified_items": [
+    "Ballast block dimensions, mass and concrete strength (not stated)",
+    "Raised purlin and composite rail cross-sections and steel grades (not stated)",
+    "Post, anchor rod and frame bolt sizes and grades (not stated)",
+    "Number of ballast blocks per support or table (not stated)",
+    "Bonding and sealant hardware (not stated beyond integrated bonding)",
+    "Module clamp types and quantities (not stated)",
+    "Wind and snow design basis for ballast mass (only the ratings 170 mph+ and 90 psf+ are stated, without load basis)",
+    "UL 2703 listing is stated but its test basis is not reviewed"
+  ],
+  "sources": [
+    {"id": "src_terrasmart_ss33", "title": "SS33 GLIDE Ballast (product datasheet)", "publisher": "Terrasmart", "url": "https://www.terrasmart.com/wp-content/uploads/2021/12/SS33-GLIDE-Ballast.pdf", "accessed": "2026-11-20"},
+    {"id": "src_schletter_2023", "title": "Component overview 2023 (mirror of Schletter catalogue, ballast and base profile lengths)", "publisher": "Schletter (mirror on bimblesolar.com)", "url": "https://www.bimblesolar.com/docs/schletter-component-overview-2023-2.pdf", "accessed": "2026-11-20"}
+  ]
+}

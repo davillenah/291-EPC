@@ -1,0 +1,188 @@
+{
+  "schema_version": "1.0",
+  "id": "junction_box_ip68_3diode",
+  "name": {
+    "en": "Junction box family, IP68, three bypass diodes (split and single-diode reference)",
+    "es": "Familia de caja de conexiones, IP68, tres diodos de bypass (referencia partida y de un diodo)"
+  },
+  "kind": "format",
+  "description": {
+    "en": "Junction box as printed in the module datasheets: IP68 with three bypass diodes (LONGi LR8-66HVD, LR5-54HTB; AIKO; Canadian Solar CS6.2-54TM; Heliene G12R 35 mm). Renew (S21) and JinkoSolar (S18) print IP68 without diode count. Split 3-part construction, box dimensions and diode ratings were not found in any source reached; a single-diode box from Hirschmann is included as a reference only.",
+    "es": "Caja de conexiones segun las fichas de modulos: IP68 con tres diodos de bypass (LONGi LR8-66HVD y LR5-54HTB; AIKO; Canadian Solar CS6.2-54TM; Heliene G12R de 35 mm). Renew (S21) y JinkoSolar (S18) imprimen IP68 sin numero de diodos. No se hallaron en ninguna fuente consultada la construccion partida en tres partes, las dimensiones de la caja ni las caracteristicas de los diodos; se incluye una caja de un solo diodo de Hirschmann solo como referencia."
+  },
+  "typical_use": "Module junction box for G12 and M10 formats.",
+  "layers": [],
+  "parts": [
+    {
+      "id": "junction_box_split_3part",
+      "name": "Split junction box, 3 parts (not found)",
+      "type": "junction_box",
+      "status": "not_found",
+      "geometry_hint": "3-part split (base, cover, lid) not confirmed by any reached source; dimensions not stated",
+      "source_ids": []
+    },
+    {
+      "id": "junction_box_module_ip68",
+      "name": "Module junction box, IP68, three bypass diodes",
+      "type": "junction_box",
+      "status": "unverified",
+      "ratings": {
+        "ip": "IP68",
+        "bypass_diodes": 3
+      },
+      "source_ids": [
+        "S1",
+        "S2",
+        "S3",
+        "S4",
+        "S5",
+        "S17",
+        "S19",
+        "S20",
+        "S22"
+      ],
+      "geometry_hint": "Three-diode IP68 box printed in these sources; S18 and S21 print IP68 without a diode count and are not counted."
+    },
+    {
+      "id": "bypass_diode_x3",
+      "name": "Bypass diodes, three per module box",
+      "type": "bypass_diode",
+      "status": "unverified",
+      "quantity_per_module": 3,
+      "ratings": {
+        "current_a": "not_found",
+        "voltage_v": "not_found",
+        "type": "not_found"
+      },
+      "source_ids": [
+        "S1",
+        "S3",
+        "S5",
+        "S17",
+        "S19",
+        "S20"
+      ],
+      "note": "Current, voltage and type are not printed in any reached datasheet. Component datasheets (for example Schottky 15-30 A parts) are not this product's diode and are not used as values."
+    },
+    {
+      "id": "junction_box_single_diode_reference",
+      "name": "Single-diode junction box, reference only (not split)",
+      "type": "junction_box",
+      "status": "unverified",
+      "dimensions_mm": {
+        "length": 68.0,
+        "width": 74.0,
+        "height": 18.0
+      },
+      "quantity_per_module": 0,
+      "ratings": {
+        "current_a_max": 12,
+        "voltage_v_dc": 1000,
+        "ip": "IP66, IP67, IPX9K (closed)",
+        "cable_max_mm2": 4,
+        "temp_c_min": -40,
+        "temp_c_max": 85,
+        "diodes": 1
+      },
+      "source_ids": [
+        "S9"
+      ],
+      "note": "not a split box and not for three-diode modules; reference only"
+    }
+  ],
+  "geometry": {
+    "description": "No positioned elements: the split box dimensions are not stated, so placement on the back face is not possible yet.",
+    "elements": []
+  },
+  "mechanical_ratings": {
+    "ip_module_box": "IP68",
+    "bypass_diodes_per_module": 3,
+    "box_temp_c_range_single_diode_ref": "-40 to +85"
+  },
+  "status": "unverified",
+  "unverified_items": [
+    "Split 3-part construction, dimensions, and diode ratings (current, voltage, type) are not_found.",
+    "Renhe, Amphenol, Zhejiang Qunli and Staubli junction box datasheets were searched; no product datasheet with dimensions was reached.",
+    "Diode count printed as 3 in S1, S3, S5, S17, S19, S20 and S22; not printed in S2, S18 and S21.",
+    "Single-diode reference box is not a module box for three-diode modules."
+  ],
+  "sources": [
+    {
+      "id": "S1",
+      "title": "LONGi LR8-66HVD product datasheet (2382 x 1134 x 30 mm)",
+      "publisher": "LONGi (copy hosted on EnergySage/enfsolar CDN)",
+      "url": "https://cdn.enfsolar.com/z/pp/2026/4/71uvt57p0ct63xch/lr8-66hvd-1.pdf",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "S2",
+      "title": "LONGi LR5-72HTH 590-600M product datasheet (2278 x 1134 x 30 mm)",
+      "publisher": "LONGi (copy hosted on Shopify CDN)",
+      "url": "https://cdn.shopify.com/s/files/1/0882/5641/4023/files/Datasheet_Longi_LR5-72HTH_590_600M.pdf",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "S3",
+      "title": "AIKO Stellar MCH72Dw 635-660 W product datasheet (2382 x 1134 x 30 mm)",
+      "publisher": "AIKO (copy hosted on Segen portal)",
+      "url": "https://portal.segen.co.uk/reseller/docs/Stellar-1N_Plus_Customized_Stellar_192.5-AIKO-G-MCH72Dw-635-660W_2382x1134x30mm_DSDr_EN_2405_V1.5.pdf",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "S4",
+      "title": "LONGi LR7-54HVH 485M product datasheet (1800 x 1134 x 30 mm)",
+      "publisher": "LONGi (copy hosted by a third-party site)",
+      "url": "https://usercontent.one/wp/www.gingroup.it/wp-content/uploads/2025/03/Longi-LR7-54HVH-485M-Datasheet-EN.pdf",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "S5",
+      "title": "Maysun Solar 1722 x 1134 x 30 mm 108-cell TOPCon datasheet",
+      "publisher": "Maysun Solar",
+      "url": "https://www.maysunsolar.com/wp-content/uploads/2026/01/Maysun-Solar-182mm-Glass-Glass-TOPCon-108-cells-425W-445W-1722mm-x-1134mm-x-30mm.pdf",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "S9",
+      "title": "Hirschmann Multiple Fresh Box product flyer (single-diode PV junction box)",
+      "publisher": "Hirschmann Automotive",
+      "url": "https://www.hirschmann-automotive.com/media/user_upload/Products/Renewable_Energy/Hirschmann_Automotive_Renewable_Energy_Product_Flyer_Multiple_Fresh_Box_EN.pdf",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "S14",
+      "title": "IEC 62790, junction boxes for PV modules, safety requirements and tests (standard reference, title only, not fetched)",
+      "publisher": "IEC",
+      "url": "https://webstore.iec.ch/",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "S17",
+      "title": "Canadian Solar CS6.2-54TM PV module datasheet V1.2 (1961 x 1134 x 30 mm)",
+      "publisher": "Canadian Solar (copy hosted by Solarproof)",
+      "url": "https://solarproof.com.au/datasheets/panel_datasheet_CS-Datasheet-TOPHiKu6_CS6.2-54TM_v1.2_EN.pdf",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "S19",
+      "title": "AIKO Neostar 3P+60 AIKO-A-MCE60Dw dual glass datasheet (1954 x 1134 x 30 mm)",
+      "publisher": "AIKO (copy hosted by EnergyMatters)",
+      "url": "https://www.energymatters.com.au/wp-content/uploads/2026/10/aiko-neostar-3pplus60-dual-glass-datasheet.pdf",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "S20",
+      "title": "LONGi Hi-MO 6 LR5-54HTB 410-430M datasheet (1722 x 1134 x 30 mm), AU version",
+      "publisher": "LONGi (copy hosted by Solarproof)",
+      "url": "https://solarproof.com.au/datasheets/panel_datasheet_LR5-54HTB430-AU.pdf",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "S22",
+      "title": "Heliene HSPE 132HC G12R N-type SL bifacial datasheet Rev.01 (2382 x 1134 x 35 mm)",
+      "publisher": "Heliene",
+      "url": "https://heliene.com/wp-content/uploads/HSPE_132HC_G12R_NTYP_SL_Bifacial_Rev.01.pdf",
+      "accessed": "2026-11-20"
+    }
+  ]
+}
