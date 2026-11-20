@@ -6,9 +6,11 @@ dimension is used and the part goes to the fallback layer, so the person can tel
   find_record(data_dir, record_id) -> dict | None     the JSON record whose `id` is `record_id`, searched under `data_dir`
   layer_for(status) -> str                            `PV-3D-REF-UNVERIFIED`, `PV-3D-REF-TYPICAL` or `PV-3D-REF-FALLBACK`
   module_detail(record, length_m, width_m, thick_m, level) -> dict      parts of one module in its own frame (u along the short side, s along the long, w normal)
+  post_section(record) -> dict | None                                   the section of the post of a mounting structure record, as polygons in metres, with its layer
   inverter_detail(record, level) -> dict                                parts of one inverter in metres (x width, y height, z depth; wall at z=0)
 """
 import json
+import math
 import re
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
@@ -67,12 +69,27 @@ def cell_grid(record: Optional[Dict[str, Any]]) -> Optional[Tuple[int, int]]:
     return (min(a, b), max(a, b) * halves)
 
 
-def _frame(record, length_m: float, width_m: float, thick_m: float) -> Tuple[str, List[Quad], float]:
-    """(layer, faces, face width) of the module frame: the section of the record when it gives one, else the reference width."""
+def frame_width(record) -> Tuple[float, str]:
+    """(face width in metres, layer) of the module frame: the section of the record when it gives one, else the reference width on the fallback layer."""
     frame = _part(record or {}, "frame_profile")
     sec = (frame or {}).get("dimensions_mm") or {}
-    fw = float(sec["width"]) / 1000.0 if sec.get("width") else FRAME_WIDTH_M
-    layer = layer_for(frame.get("status")) if frame and sec.get("width") else FALLBACK_LAYER
+    if sec.get("width"):
+        return float(sec["width"]) / 1000.0, layer_for(frame.get("status"))
+    return FRAME_WIDTH_M, FALLBACK_LAYER
+
+
+def junction_size(record) -> Tuple[Tuple[float, float, float], str]:
+    """((along the long side, across, depth) in metres, layer) of the junction box: the record's when it gives all three, else the reference box on the fallback layer."""
+    jb = _part(record or {}, "junction_box")
+    jd = (jb or {}).get("dimensions_mm") or {}
+    if all(k in jd for k in ("length", "width", "thickness")):
+        return tuple(float(jd[k]) / 1000.0 for k in ("length", "width", "thickness")), layer_for(jb.get("status"))
+    return JBOX_M, FALLBACK_LAYER
+
+
+def _frame(record, length_m: float, width_m: float, thick_m: float) -> Tuple[str, List[Quad], float]:
+    """(layer, faces, face width) of the module frame (see `frame_width`)."""
+    fw, layer = frame_width(record)
     e, h = 0.002, thick_m + 0.004   # the frame stands 2 mm proud of the laminate faces so the two do not coincide
     faces = (_box(0, 0, -e, width_m, fw, h) + _box(0, length_m - fw, -e, width_m, fw, h)
              + _box(0, fw, -e, fw, length_m - 2 * fw, h) + _box(width_m - fw, fw, -e, fw, length_m - 2 * fw, h))
@@ -80,11 +97,7 @@ def _frame(record, length_m: float, width_m: float, thick_m: float) -> Tuple[str
 
 
 def _junction_box(record, length_m: float, width_m: float, fw: float) -> Tuple[str, List[Quad]]:
-    jb = _part(record or {}, "junction_box")
-    jd = (jb or {}).get("dimensions_mm") or {}
-    sourced = all(k in jd for k in ("length", "width", "thickness"))
-    jl, jw, jt = (float(jd[k]) / 1000.0 for k in ("length", "width", "thickness")) if sourced else JBOX_M
-    layer = layer_for(jb.get("status")) if jb and sourced else FALLBACK_LAYER
+    (jl, jw, jt), layer = junction_size(record)
     return layer, _box(width_m / 2 - jw / 2, length_m - fw - jl - 0.05, -0.002 - jt, jw, jl, jt)
 
 
@@ -153,3 +166,64 @@ def inverter_detail(record: Optional[Dict[str, Any]], level: str = "standard") -
         return None
     w, h, d = (float(v) / 1000.0 for v in el["size_mm"])
     return {"size": (w, h, d), "status": el.get("status"), "parts": [] if level == "low" else _inverter_parts(elements, d, level)}
+
+
+SIDES_ROUND = 12
+
+
+def _rect(x: float, y: float, w: float, h: float) -> List[Tuple[float, float]]:
+    return [(x, y), (x + w, y), (x + w, y + h), (x, y + h)]
+
+
+def _round(m: Dict[str, float]) -> List[List[Tuple[float, float]]]:
+    r = m["outer_diameter"] / 2
+    return [[(r * math.cos(2 * math.pi * i / SIDES_ROUND), r * math.sin(2 * math.pi * i / SIDES_ROUND)) for i in range(SIDES_ROUND)]]
+
+
+def _h_beam(m: Dict[str, float]) -> List[List[Tuple[float, float]]]:
+    w, h, tf, tw = m["width"], m["height"], m["flange_thickness"], m["web_thickness"]
+    return [_rect(-w / 2, -h / 2, w, tf), _rect(-w / 2, h / 2 - tf, w, tf), _rect(-tw / 2, -h / 2 + tf, tw, h - 2 * tf)]
+
+
+def _c_section(m: Dict[str, float]) -> List[List[Tuple[float, float]]]:
+    w, h, t, lip = m["width"], m["height"], m["thickness_max"], m.get("lip", 0.0)
+    lips = [_rect(w / 2 - t, -h / 2, t, lip), _rect(w / 2 - t, h / 2 - lip, t, lip)] if lip else []
+    return [_rect(-w / 2, -h / 2, t, h), _rect(-w / 2, -h / 2, w, t), _rect(-w / 2, h / 2 - t, w, t)] + lips
+
+
+# profile type -> (dimensions it needs, builder of its section polygons)
+SECTIONS = {"rect_tube": (("width", "height"), lambda m: [_rect(-m["width"] / 2, -m["height"] / 2, m["width"], m["height"])]),
+            "round_tube": (("outer_diameter",), _round),
+            "H_beam": (("width", "height", "flange_thickness", "web_thickness"), _h_beam),
+            "C": (("width", "height", "thickness_max"), _c_section)}
+
+
+def _section_polygons(kind: str, d: Dict[str, float]) -> List[List[Tuple[float, float]]]:
+    """The section polygons (metres, centred on the origin, x along the table row, y across it) of a profile of a given type, from its dimensions in mm; [] for a type or dimensions the record does not give."""
+    needs, build = SECTIONS.get(kind, ((), None))
+    m = {k: float(v) / 1000.0 for k, v in d.items() if isinstance(v, (int, float))}
+    return build(m) if build and set(needs) <= m.keys() else []
+
+
+def post_section(record: Optional[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
+    """{'polygons': [...], 'layer': ..., 'profile': id} of the first post of a mounting structure record whose profile gives its dimensions (rectangular or round tube, H beam, C section); None when
+    the record has no such post, and the caller keeps the reference square post."""
+    profiles = {p["id"]: p for p in (record or {}).get("profiles", [])}
+    for e in (record or {}).get("geometry", {}).get("elements", []):
+        p = profiles.get(e.get("profile_or_accessory_id"))
+        polys = _section_polygons(p["section_type"], p.get("dimensions_mm") or {}) if p and e.get("kind") == "post" else []
+        if polys:
+            return {"polygons": polys, "layer": layer_for(p.get("status")), "profile": p["id"]}
+    return None
+
+
+def prism(polygon: List[Tuple[float, float]], cx: float, cy: float, z0: float, height: float) -> List[Quad]:
+    """The faces of a polygon extruded up from z0 by height, centred on (cx, cy); the caps are fans of quads (a triangle repeats a vertex)."""
+    pts = [(cx + x, cy + y) for x, y in polygon]
+    n, faces = len(pts), []
+    for i in range(n):
+        a, b = pts[i], pts[(i + 1) % n]
+        faces.append(((a[0], a[1], z0), (b[0], b[1], z0), (b[0], b[1], z0 + height), (a[0], a[1], z0 + height)))
+    for z in (z0, z0 + height):
+        faces += [((pts[0][0], pts[0][1], z), (pts[i][0], pts[i][1], z), (pts[i + 1][0], pts[i + 1][1], z), (pts[i + 1][0], pts[i + 1][1], z)) for i in range(1, n - 1)]
+    return faces
