@@ -27,10 +27,8 @@ RANGES = {"energy_price": (0, 1e9), "investment": (0, 1e15), "target_kwp": (0.00
 
 def catalogs():
     """({id: module record}, {id: inverter record}) of the extracted catalogs of the engine (pending review)."""
-    import epc_pv
-    data = Path(epc_pv.__file__).parent / "data"
-    read = lambda name, key: {r["id"]: r for r in json.loads((data / name).read_text(encoding="utf-8"))[key]}      # noqa: E731
-    return read("module_catalog.json", "modules"), read("inverter_catalog.json", "inverters")
+    from epc_pv import catalog
+    return {r["id"]: r for r in catalog.module_records()}, {r["id"]: r for r in catalog.inverters()}
 
 
 def form():

@@ -22,6 +22,8 @@ or `from epc_pv import run; run(document).as_dict()`. Input and output follow `s
 
 The weather is an input: hourly `ghi`, `dni`, `dhi` (W/m2), `temp_air_c` and `wind_ms` from a typical-year file (PVGIS TMY or a measured year). The engine never reads the network. Azimuth is measured from north, clockwise: in the southern hemisphere a plane facing the sun has azimuth 0.
 
+**Equipment data (`epc_pv.equipment`):** inverters (derived from `data/pv_inverters/inverters`, one record per model; a model without a plain number for a needed value is a gap, see `inverter_gaps()`), mounting structures (`structures()`, `foundation(id)`: the embedment depth is the record's, never assumed), module formats and technologies, inverter accessories and the feasibility references. Give `structure_id` in the `layout` (or `flat_roof`, a roof structure) to carry the foundation into the layout and the 3D model (buried parts on layer `PV-3D-CIMENTACION`). All values are pending review.
+
 ## Depends on
 Nothing (standard library). `pvlib` is used only by the developer tool `tests/validation/make_reference.py` to write the reference of the validation; it is never installed with the product.
 
