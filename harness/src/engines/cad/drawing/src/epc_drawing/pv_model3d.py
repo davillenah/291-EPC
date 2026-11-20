@@ -61,20 +61,28 @@ def embedment_m(geometry: Dict[str, Any]) -> float:
     return float((geometry.get("foundation") or {}).get("embedment_m") or 0.0)
 
 
-def _supports(table: Dict[str, Any], slope: float, tilt: float, rear_h: float, embed: float = 0.0) -> Tuple[List[Any], List[Any], List[Any]]:
-    """(rails, posts, buried parts) of a table: two rails along x at a quarter and three quarters of the slope, posts every `SPACING_M` under each rail; the part of each post below the surface (`embed`) is separate."""
+def _post(section: Optional[Dict[str, Any]], x: float, y: float, z0: float, height: float) -> List[Any]:
+    """One post from its section (centred on x, y) or, without a section, the reference square post."""
+    if section is None:
+        return box(x - POST_M / 2, y - POST_M / 2, z0, POST_M, POST_M, height)
+    return [f for poly in section["polygons"] for f in pv_parts.prism(poly, x, y, z0, height)]
+
+
+def _supports(table: Dict[str, Any], slope: float, tilt: float, rear_h: float, embed: float = 0.0, section: Optional[Dict[str, Any]] = None) -> Tuple[List[Any], List[Any], List[Any]]:
+    """(rails, posts, buried parts) of a table: two rails along x at a quarter and three quarters of the slope, posts every `SPACING_M` under each rail; the part of each post below the surface (`embed`) is separate.
+    With a `section` (from the structure record) the posts have that profile; the caller puts them on the layer of its status."""
     rails, posts, buried = [], [], []
     n = max(int(math.ceil(table["width_m"] / SPACING_M)) + 1, 2)
     for f in (0.25, 0.75):
         s = slope * f
         rails += tilted_box((table["x"], table["y"], rear_h), tilt, 0.0, s - RAIL_M / 2, -RAIL_DEPTH_M - MODULE_M, table["width_m"], RAIL_M, RAIL_DEPTH_M)
         top = rear_h - s * math.sin(tilt) - RAIL_DEPTH_M - MODULE_M
-        y = table["y"] + s * math.cos(tilt) - POST_M / 2
+        y = table["y"] + s * math.cos(tilt)
         for k in range(n):
-            x = table["x"] + k * (table["width_m"] - POST_M) / (n - 1)
-            posts += box(x, y, 0.0, POST_M, POST_M, max(top, 0.0))
+            x = table["x"] + POST_M / 2 + k * (table["width_m"] - POST_M) / (n - 1)
+            posts += _post(section, x, y, 0.0, max(top, 0.0))
             if embed > 0:
-                buried += box(x, y, -embed, POST_M, POST_M, embed)
+                buried += _post(section, x, y, -embed, embed)
     return rails, posts, buried
 
 
@@ -144,8 +152,11 @@ def build(geometry: Dict[str, Any], result: Dict[str, Any], parts: Optional[Dict
         if parts.get("module") is not None:
             for layer, faces in _module_details(geometry, table, tilt, rear_h, parts["module"], level).items():
                 _add(msp, layer, faces)
-        rails, posts, buried = _supports(table, slope, tilt, rear_h, embedment_m(geometry))
-        _add(msp, "PV-3D-ESTRUCTURA", rails + posts)
+        section = pv_parts.post_section(parts.get("structure"))
+        rails, posts, buried = _supports(table, slope, tilt, rear_h, embedment_m(geometry), section)
+        _add(msp, "PV-3D-ESTRUCTURA", rails + ([] if section else posts))
+        if section:
+            _add(msp, section["layer"], posts)
         _add(msp, "PV-3D-CIMENTACION", buried)
     _inverters(msp, geometry, parts.get("inverters") or {}, level)
     st = geometry["station"]

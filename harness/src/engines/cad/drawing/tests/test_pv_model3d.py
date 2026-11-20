@@ -101,3 +101,24 @@ class TestFoundation(unittest.TestCase):
         self.assertGreaterEqual(min(self.zs(g, "PV-3D-ESTRUCTURA")), 0.0)
         g["foundation"] = {"structure_id": "roof_flat_slab_anchored", "embedment_m": None}
         self.assertEqual(self.zs(g, "PV-3D-CIMENTACION"), [])
+
+
+class TestPvModel3dStructure(unittest.TestCase):
+    def test_a_post_section_comes_from_the_profile_dimensions_of_the_record(self):
+        from epc_drawing import pv_parts
+        for ident, folder, sides in (("carport_steel_s355", "ground", 1), ("ground_screw_fixed_table", "ground", 1), ("ramming_h_pile_fixed_table", "ground", 3), ("ramming_c_pile_fixed_table", "ground", 5)):
+            rec = pv_parts.find_record(DATA / "mounting_structures" / folder, ident)
+            section = pv_parts.post_section(rec)
+            self.assertEqual(len(section["polygons"]), sides, ident)
+            self.assertEqual(section["layer"], "PV-3D-REF-UNVERIFIED")
+        self.assertIsNone(pv_parts.post_section(pv_parts.find_record(DATA / "mounting_structures" / "ground", "driven_pile_fixed_table")))   # section not given: reference post
+
+    def test_posts_take_the_profile_and_go_to_the_layer_of_its_status(self):
+        from epc_drawing import pv_parts
+        g = geometry()
+        parts = {"structure": pv_parts.find_record(DATA / "mounting_structures" / "ground", "carport_steel_s355")}
+        doc = pv_model3d.build(g, PLANT["result"], parts)
+        xs = sorted({round(v[0], 3) for e in doc.modelspace() if e.dxf.layer == "PV-3D-REF-UNVERIFIED" for v in e.wcs_vertices()})
+        self.assertAlmostEqual(xs[1] - xs[0], 0.08, places=3)          # width of the 80 x 160 x 5 rectangular tube
+        plain = Counter(e.dxf.layer for e in pv_model3d.build(g, PLANT["result"]).modelspace())
+        self.assertGreater(plain["PV-3D-ESTRUCTURA"], Counter(e.dxf.layer for e in doc.modelspace())["PV-3D-ESTRUCTURA"])

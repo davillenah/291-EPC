@@ -72,7 +72,8 @@ def equipment_parts(geometry):
     modules = {r["id"]: r for r in equipment.module_formats()}
     records = {r["id"]: r for r in equipment.inverter_records()}
     per_array = ids.get("inverter_records") or {}
-    return {"module": modules.get(ids.get("module_format")),
+    structure = (geometry.get("foundation") or {}).get("structure_id")
+    return {"module": modules.get(ids.get("module_format")), "structure": next((r for r in equipment.structures() if r["id"] == structure), None),
             "inverters": {i["id"]: records.get(per_array.get(i.get("array"))) for i in geometry.get("inverters", [])}}
 
 
