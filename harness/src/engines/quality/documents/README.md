@@ -11,3 +11,6 @@
 Run with `PYTHONPATH=harness/src/engines/quality/documents/src`, for example `python -m epc_documents.document_verifier <project_dir>`.
 Tests: `python -m unittest discover -s tests` from this folder with `PYTHONPATH=src`. Environment-dependent tests are skipped explicitly: 5 `input_converter` tests on Windows (their fake soffice is a shell script) and the PDF-stamp test (needs poppler and the Playwright chromium).
 Templates: `src/epc_documents/templates/`. Examples: `src/epc_documents/example_*.json`.
+
+## Status in the pipeline
+No stage of `electrical_lv` calls this engine yet; it is a separate toolset (package closure check, specification checks, CCPM, charter export). Wiring its `document_verifier` into stage 12 is AUD-02 in `docs/BACKLOG.md`.

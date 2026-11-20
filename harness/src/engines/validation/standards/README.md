@@ -14,3 +14,6 @@ Run with `PYTHONPATH=harness/src/engines/validation/standards/src` (or `pip inst
 `python -m epc_standards.extract_standard AR/AEA-90364-7-771`.
 Tests: `python -m unittest discover -s tests` from this folder with `PYTHONPATH=src`.
 Rule format: `harness/schemas/rules.schema.json`. Engine that uses the rules: `harness/src/engines/validation/rules`.
+
+## Status in the pipeline
+Development tool (standards ingestion): never part of a project run. Nothing is promoted yet (`epc_aea90364/standards/` is empty); see AUD-01 in `docs/BACKLOG.md`.
