@@ -304,5 +304,28 @@ class PvDrawingsTests(unittest.TestCase):
         self.assertEqual({k.rsplit("_pv_", 1)[1] for k in res.outputs["pv_sheets"]}, {"roof_layout_sheet", "roof_stringing_sheet", "roof_cabling_sheet"})
 
 
+
+    def test_the_layout_names_the_equipment_records_and_the_3d_model_takes_their_detail(self):
+        from disciplines.electrical_lv.stages import pv_drawings
+        document = PV.doc()
+        inputs = W.inputs_doc()
+        inputs["pv"] = {"document": document, "layout": dict(copy.deepcopy(LAYOUT), front_clearance_m=0.5)}
+        with tempfile.TemporaryDirectory() as tmp:
+            ctx = W.context(engine_inputs=inputs, work_dir=tmp)
+            run(ctx, stop_after=10, run_id="r1")
+            geometry = ctx.results[3].outputs["pv"]["layout"]
+            ids = geometry["equipment"]
+            self.assertEqual(set(ids), {"module_format", "inverter_records"})
+            self.assertEqual(set(ids["inverter_records"]), {a["id"] for a in document["arrays"]})
+            parts = pv_drawings.equipment_parts(geometry)
+            self.assertEqual(set(parts["inverters"]), {i["id"] for i in geometry["inverters"]})
+            self.assertEqual(pv_drawings.equipment_parts({}), {})
+            self.assertEqual(parts["module"]["id"], ids["module_format"])                    # the fixture module has a format record with its outline
+            known = dict(geometry, equipment={"module_format": None, "inverter_records": {"A1": "sma.stp25000tl-30"}})
+            parts = pv_drawings.equipment_parts(known)
+            self.assertIsNone(parts["module"])
+            self.assertEqual(parts["inverters"]["INV-01"]["id"], "sma.stp25000tl-30")
+
+
 if __name__ == "__main__":
     unittest.main()
