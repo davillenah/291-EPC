@@ -13,6 +13,7 @@ from disciplines.electrical_lv.stages.plan_drawings import sheet_options
 ENGINE = "cad/drawing"
 WRITE = "epc_drawing.pv_diagrams.write_all"
 WRITE_ROOF = "epc_drawing.pv_roof.write_all"
+WRITE_DETAIL = "epc_drawing.pv_details.write"
 COMPOSE = "epc_drawing.export.plan_sheet.compose"
 
 
@@ -39,11 +40,23 @@ def _drafts(context, target, name, stamp_date, language, calls):
         from epc_drawing import pv_diagrams
         drafts.update(pv_diagrams.write_all(copy.deepcopy(found[0]), found[1], Path(target) / "pv_drafts", f"{name}_pv", language, stamp_date))
         calls.append(EC.record_for("cad/drawing", WRITE))
+        drafts.update(_detail(found[0], target, name, language, stamp_date, calls))
     if roof is not None:
         from epc_drawing import pv_roof
         drafts.update(pv_roof.write_all(copy.deepcopy(roof[0]), roof[1], Path(target) / "pv_drafts", f"{name}_pv", language, stamp_date))
         calls.append(EC.record_for("cad/drawing", WRITE_ROOF))
     return drafts
+
+
+def _detail(geometry, target, name, language, stamp_date, calls):
+    """The equipment detail draft (module, inverter and post views from the records the layout names); {} when no record is found."""
+    from disciplines.electrical_lv.stages import engine_calls as EC
+    from epc_drawing import pv_details
+    path = pv_details.write(equipment_parts(geometry), Path(target) / "pv_drafts", f"{name}_pv", language, stamp_date)
+    if path is None:
+        return {}
+    calls.append(EC.record_for("cad/drawing", WRITE_DETAIL))
+    return {f"{name}_pv_equipment_detail": path}
 
 
 def write(context, target, name, stamp_date, language, calls):

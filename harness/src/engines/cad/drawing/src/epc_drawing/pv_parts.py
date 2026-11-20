@@ -69,12 +69,27 @@ def cell_grid(record: Optional[Dict[str, Any]]) -> Optional[Tuple[int, int]]:
     return (min(a, b), max(a, b) * halves)
 
 
-def _frame(record, length_m: float, width_m: float, thick_m: float) -> Tuple[str, List[Quad], float]:
-    """(layer, faces, face width) of the module frame: the section of the record when it gives one, else the reference width."""
+def frame_width(record) -> Tuple[float, str]:
+    """(face width in metres, layer) of the module frame: the section of the record when it gives one, else the reference width on the fallback layer."""
     frame = _part(record or {}, "frame_profile")
     sec = (frame or {}).get("dimensions_mm") or {}
-    fw = float(sec["width"]) / 1000.0 if sec.get("width") else FRAME_WIDTH_M
-    layer = layer_for(frame.get("status")) if frame and sec.get("width") else FALLBACK_LAYER
+    if sec.get("width"):
+        return float(sec["width"]) / 1000.0, layer_for(frame.get("status"))
+    return FRAME_WIDTH_M, FALLBACK_LAYER
+
+
+def junction_size(record) -> Tuple[Tuple[float, float, float], str]:
+    """((along the long side, across, depth) in metres, layer) of the junction box: the record's when it gives all three, else the reference box on the fallback layer."""
+    jb = _part(record or {}, "junction_box")
+    jd = (jb or {}).get("dimensions_mm") or {}
+    if all(k in jd for k in ("length", "width", "thickness")):
+        return tuple(float(jd[k]) / 1000.0 for k in ("length", "width", "thickness")), layer_for(jb.get("status"))
+    return JBOX_M, FALLBACK_LAYER
+
+
+def _frame(record, length_m: float, width_m: float, thick_m: float) -> Tuple[str, List[Quad], float]:
+    """(layer, faces, face width) of the module frame (see `frame_width`)."""
+    fw, layer = frame_width(record)
     e, h = 0.002, thick_m + 0.004   # the frame stands 2 mm proud of the laminate faces so the two do not coincide
     faces = (_box(0, 0, -e, width_m, fw, h) + _box(0, length_m - fw, -e, width_m, fw, h)
              + _box(0, fw, -e, fw, length_m - 2 * fw, h) + _box(width_m - fw, fw, -e, fw, length_m - 2 * fw, h))
@@ -82,11 +97,7 @@ def _frame(record, length_m: float, width_m: float, thick_m: float) -> Tuple[str
 
 
 def _junction_box(record, length_m: float, width_m: float, fw: float) -> Tuple[str, List[Quad]]:
-    jb = _part(record or {}, "junction_box")
-    jd = (jb or {}).get("dimensions_mm") or {}
-    sourced = all(k in jd for k in ("length", "width", "thickness"))
-    jl, jw, jt = (float(jd[k]) / 1000.0 for k in ("length", "width", "thickness")) if sourced else JBOX_M
-    layer = layer_for(jb.get("status")) if jb and sourced else FALLBACK_LAYER
+    (jl, jw, jt), layer = junction_size(record)
     return layer, _box(width_m / 2 - jw / 2, length_m - fw - jl - 0.05, -0.002 - jt, jw, jl, jt)
 
 

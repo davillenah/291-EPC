@@ -273,6 +273,7 @@ class PvDrawingsTests(unittest.TestCase):
             res = ctx.results[10]
             self.assertEqual(res.status, "ok")
             self.assertTrue(res.outputs["pv_model_3d"].endswith("_pv_model_3d.dxf"))
+            self.assertTrue(any(k.endswith("_pv_equipment_detail_sheet") for k in res.outputs["pv_sheets"]))      # the module format of the fixture has a record, so its detail sheet is drawn
             self.assertTrue(any(str(f.get("path", f.get("name", ""))).endswith("_pv_model_3d.dxf") for f in res.outputs["files"]))
 
     def test_the_four_drafts_are_written_from_the_engine_geometry(self):
