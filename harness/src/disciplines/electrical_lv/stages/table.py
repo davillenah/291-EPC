@@ -20,7 +20,7 @@ STAGE_TABLE = (
     _spec(3, "loads_demand", "Load schedule, phase balance, demand and simultaneity (771.9)", "calculation/load_balance",
           [("calculation", "load_balance")], "implemented"),
     _spec(4, "supply_transformer", "Supply and transformer sizing", "calculation/transformer_sizing",
-          [("calculation", "transformer_sizing")], "planned"),
+          [("calculation", "transformer_sizing")], "implemented"),
     _spec(5, "board_structure", "Board structure and circuit assignment", "calculation, validation",
           [("calculation", None), ("validation", None)], "implemented"),
     _spec(6, "cable_sizing", "Cable and protection sizing: feeder and circuit section (Ib ≤ In ≤ Iz, I2 ≤ 1.45 Iz, installation method), accumulated voltage drop (D17), "
@@ -35,7 +35,7 @@ STAGE_TABLE = (
     _spec(10, "drawings", "Drawings: SLD, board layouts", "cad", [("cad", None)], "implemented (SLD)"),
     _spec(11, "documents", "Documents and lists: calculation report, specification, cable list, terminal-block list, BOQ, datasheets, RFQ, descriptive report",
           "quality, procurement", [("quality", None), ("procurement", None)], "in part"),
-    _spec(12, "package_issue", "Package issue: manifests, review status, transmittal", "platform", [("platform", None)], "planned"),
+    _spec(12, "package_issue", "Package issue: manifests, review status, transmittal", "platform", [("platform", None)], "implemented"),
 )
 
 # The slices that a grouped stage runs (the stage output holds one section per slice, named by its slug). A slice keeps its number of the former
