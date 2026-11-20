@@ -1387,6 +1387,48 @@
         "en": "Symbols and lines of the single-line (PV plant)"
       }
     },
+    "pv.DETAIL": {
+      "name": "PV-DETALLE",
+      "color": 5,
+      "lineweight": null,
+      "linetype": "CONTINUOUS",
+      "on": true,
+      "frozen": false,
+      "locked": false,
+      "plot": true,
+      "description": {
+        "es": "Contorno del equipo en las vistas de detalle (módulo, inversor, perfil del poste)",
+        "en": "Equipment outline in the detail views (module, inverter, post profile)"
+      }
+    },
+    "pv.DETAIL_REF": {
+      "name": "PV-DETALLE-REF",
+      "color": 6,
+      "lineweight": null,
+      "linetype": "CONTINUOUS",
+      "on": true,
+      "frozen": false,
+      "locked": false,
+      "plot": true,
+      "description": {
+        "es": "Geometría de referencia en los detalles: el dato no está en el registro, se dibuja un valor de referencia",
+        "en": "Reference geometry in the details: the record gives no value, a reference one is drawn"
+      }
+    },
+    "pv.DETAIL_DIM": {
+      "name": "PV-DETALLE-COTAS",
+      "color": 3,
+      "lineweight": null,
+      "linetype": "CONTINUOUS",
+      "on": true,
+      "frozen": false,
+      "locked": false,
+      "plot": true,
+      "description": {
+        "es": "Cotas y rótulos de las vistas de detalle",
+        "en": "Dimensions and labels of the detail views"
+      }
+    },
     "plan.ELEC-LUX-MAPA": {
       "name": "ELEC-LUX-MAPA",
       "color": 3,
