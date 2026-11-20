@@ -50,6 +50,43 @@ class TestPvModel3d(unittest.TestCase):
             pv_model3d.build(g, PLANT["result"])
 
 
+DATA = Path(__file__).resolve().parents[3] / "calculation" / "pv" / "src" / "epc_pv" / "data"
+
+
+def records():
+    from epc_drawing import pv_parts
+    return {"module": pv_parts.find_record(DATA / "pv_modules", "cs6_2_54tm_1961x1134x30"),
+            "inverters": {"INV-01": pv_parts.find_record(DATA / "pv_inverters", "sma.stp25000tl-30")}}
+
+
+class TestPvModel3dDetail(unittest.TestCase):
+    def test_without_records_the_model_is_the_plain_one(self):
+        g = geometry()
+        used = Counter(e.dxf.layer for e in pv_model3d.build(g, PLANT["result"]).modelspace())
+        self.assertFalse([k for k in used if k.startswith("PV-3D-REF")])
+
+    def test_the_module_record_adds_frame_junction_box_and_cells_on_reference_layers(self):
+        g = geometry()
+        n = sum(t["modules"] for t in g["tables"])
+        std = Counter(e.dxf.layer for e in pv_model3d.build(g, PLANT["result"], records()).modelspace())
+        full = Counter(e.dxf.layer for e in pv_model3d.build(g, PLANT["result"], records(), "full").modelspace())
+        self.assertEqual(std["PV-3D-MODULOS"], 6 * n)
+        self.assertEqual(std["PV-3D-REF-FALLBACK"] >= 2 * 6 * n, True)       # the section and the box are not in the record: reference dimensions
+        self.assertEqual(full["PV-3D-REF-UNVERIFIED"], 108 * n)              # 2 x (9 x 6) cells as printed in the record
+        self.assertNotIn("PV-3D-REF-UNVERIFIED", std)
+        low = Counter(e.dxf.layer for e in pv_model3d.build(g, PLANT["result"], records(), "low").modelspace())
+        self.assertFalse([k for k in low if k == "PV-3D-REF-FALLBACK" and low[k] > 6])
+
+    def test_the_inverter_record_sets_the_enclosure_size_and_hangs_the_terminals(self):
+        g = geometry()
+        doc = pv_model3d.build(g, PLANT["result"], records())
+        inv = [v for e in doc.modelspace() if e.dxf.layer == "PV-3D-INVERSORES" for v in e.wcs_vertices()]
+        self.assertAlmostEqual(max(v[0] for v in inv) - min(v[0] for v in inv), 0.661, places=3)
+        self.assertAlmostEqual(max(v[2] for v in inv) - min(v[2] for v in inv), 0.682, places=3)
+        used = Counter(e.dxf.layer for e in doc.modelspace())
+        self.assertGreater(used["PV-3D-REF-TYPICAL"], 0)
+
+
 class TestFoundation(unittest.TestCase):
     def zs(self, g, layer):
         doc = pv_model3d.build(g, PLANT["result"])
@@ -64,3 +101,24 @@ class TestFoundation(unittest.TestCase):
         self.assertGreaterEqual(min(self.zs(g, "PV-3D-ESTRUCTURA")), 0.0)
         g["foundation"] = {"structure_id": "roof_flat_slab_anchored", "embedment_m": None}
         self.assertEqual(self.zs(g, "PV-3D-CIMENTACION"), [])
+
+
+class TestPvModel3dStructure(unittest.TestCase):
+    def test_a_post_section_comes_from_the_profile_dimensions_of_the_record(self):
+        from epc_drawing import pv_parts
+        for ident, folder, sides in (("carport_steel_s355", "ground", 1), ("ground_screw_fixed_table", "ground", 1), ("ramming_h_pile_fixed_table", "ground", 3), ("ramming_c_pile_fixed_table", "ground", 5)):
+            rec = pv_parts.find_record(DATA / "mounting_structures" / folder, ident)
+            section = pv_parts.post_section(rec)
+            self.assertEqual(len(section["polygons"]), sides, ident)
+            self.assertEqual(section["layer"], "PV-3D-REF-UNVERIFIED")
+        self.assertIsNone(pv_parts.post_section(pv_parts.find_record(DATA / "mounting_structures" / "ground", "driven_pile_fixed_table")))   # section not given: reference post
+
+    def test_posts_take_the_profile_and_go_to_the_layer_of_its_status(self):
+        from epc_drawing import pv_parts
+        g = geometry()
+        parts = {"structure": pv_parts.find_record(DATA / "mounting_structures" / "ground", "carport_steel_s355")}
+        doc = pv_model3d.build(g, PLANT["result"], parts)
+        xs = sorted({round(v[0], 3) for e in doc.modelspace() if e.dxf.layer == "PV-3D-REF-UNVERIFIED" for v in e.wcs_vertices()})
+        self.assertAlmostEqual(xs[1] - xs[0], 0.08, places=3)          # width of the 80 x 160 x 5 rectangular tube
+        plain = Counter(e.dxf.layer for e in pv_model3d.build(g, PLANT["result"]).modelspace())
+        self.assertGreater(plain["PV-3D-ESTRUCTURA"], Counter(e.dxf.layer for e in doc.modelspace())["PV-3D-ESTRUCTURA"])

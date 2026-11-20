@@ -13,6 +13,7 @@ from disciplines.electrical_lv.stages.plan_drawings import sheet_options
 ENGINE = "cad/drawing"
 WRITE = "epc_drawing.pv_diagrams.write_all"
 WRITE_ROOF = "epc_drawing.pv_roof.write_all"
+WRITE_DETAIL = "epc_drawing.pv_details.write"
 COMPOSE = "epc_drawing.export.plan_sheet.compose"
 
 
@@ -39,11 +40,23 @@ def _drafts(context, target, name, stamp_date, language, calls):
         from epc_drawing import pv_diagrams
         drafts.update(pv_diagrams.write_all(copy.deepcopy(found[0]), found[1], Path(target) / "pv_drafts", f"{name}_pv", language, stamp_date))
         calls.append(EC.record_for("cad/drawing", WRITE))
+        drafts.update(_detail(found[0], target, name, language, stamp_date, calls))
     if roof is not None:
         from epc_drawing import pv_roof
         drafts.update(pv_roof.write_all(copy.deepcopy(roof[0]), roof[1], Path(target) / "pv_drafts", f"{name}_pv", language, stamp_date))
         calls.append(EC.record_for("cad/drawing", WRITE_ROOF))
     return drafts
+
+
+def _detail(geometry, target, name, language, stamp_date, calls):
+    """The equipment detail draft (module, inverter and post views from the records the layout names); {} when no record is found."""
+    from disciplines.electrical_lv.stages import engine_calls as EC
+    from epc_drawing import pv_details
+    path = pv_details.write(equipment_parts(geometry), Path(target) / "pv_drafts", f"{name}_pv", language, stamp_date)
+    if path is None:
+        return {}
+    calls.append(EC.record_for("cad/drawing", WRITE_DETAIL))
+    return {f"{name}_pv_equipment_detail": path}
 
 
 def write(context, target, name, stamp_date, language, calls):
@@ -63,6 +76,20 @@ def write(context, target, name, stamp_date, language, calls):
     return dict({"pv_sheets": sheets}, **_model3d(context, target, name, stamp_date, calls))
 
 
+def equipment_parts(geometry):
+    """The equipment records for the 3D detail, `{"module": record, "inverters": {inverter id: record}}`, from the ids the layout carries (`geometry["equipment"]`); {} without them. A missing record means the plain box."""
+    ids = geometry.get("equipment")
+    if not ids:
+        return {}
+    from epc_pv import equipment
+    modules = {r["id"]: r for r in equipment.module_formats()}
+    records = {r["id"]: r for r in equipment.inverter_records()}
+    per_array = ids.get("inverter_records") or {}
+    structure = (geometry.get("foundation") or {}).get("structure_id")
+    return {"module": modules.get(ids.get("module_format")), "structure": next((r for r in equipment.structures() if r["id"] == structure), None),
+            "inverters": {i["id"]: records.get(per_array.get(i.get("array"))) for i in geometry.get("inverters", [])}}
+
+
 def _model3d(context, target, name, stamp_date, calls):
     """The 3D model of the plant (`epc_drawing.pv_model3d`, one DXF with solid faces) when stage 3 placed tables; it lands in the 3D folder of the transmittal."""
     found = layout_of(context)
@@ -70,6 +97,6 @@ def _model3d(context, target, name, stamp_date, calls):
         return {}
     from disciplines.electrical_lv.stages import engine_calls as EC
     from epc_drawing import pv_model3d
-    path = pv_model3d.write(copy.deepcopy(found[0]), found[1], Path(target) / "out", f"{name}", stamp_date)
+    path = pv_model3d.write(copy.deepcopy(found[0]), found[1], Path(target) / "out", f"{name}", stamp_date, parts=equipment_parts(found[0]))
     calls.append(EC.record_for("cad/drawing", "epc_drawing.pv_model3d.write"))
     return {"pv_model_3d": path.name}
