@@ -217,7 +217,7 @@ The dot hides `.epc/` on macOS and Linux; on Windows `ProjectStore.init_from_tem
 | 1 | Intake: profile, inputs, hashes | platform | in development |
 | 2 | Requirements and design basis (criteria, profile, assumptions) and input verification (plans vs loads vs requirements) | quality (design basis), cad/plan, validation | in development |
 | 3 | Load schedule, phase balance, demand and simultaneity (771.9) | calculation/load_balance | implemented |
-| 4 | Supply and transformer sizing | calculation/transformer_sizing | planned |
+| 4 | Supply and transformer sizing | calculation/transformer_sizing | implemented |
 | 5 | Board structure and circuit assignment | calculation, validation | implemented |
 | 6 | Cable and protection sizing: feeder and circuit section (Ib ≤ In ≤ Iz, I2 ≤ 1.45 Iz, installation method), accumulated voltage drop (D17), short-circuit currents (max/min), protection device | calculation/feeder_sizing, voltage_drop, short_circuit | implemented |
 | 7 | Protection selectivity and coordination study | calculation/selectivity | implemented |
@@ -225,7 +225,7 @@ The dot hides `.epc/` on macOS and Linux; on Windows `ProjectStore.init_from_tem
 | 9 | Deterministic verification (`calc_check`): recalculation, format, cross-document consistency | validation | in development |
 | 10 | Drawings: SLD, board layouts | cad | implemented (SLD) |
 | 11 | Documents and lists: calculation report, specification, cable list, terminal-block list, BOQ, datasheets, RFQ, descriptive report | quality, procurement | in part |
-| 12 | Package issue: manifests, review status, transmittal | platform | planned |
+| 12 | Package issue: manifests, review status, transmittal | platform | implemented |
 
 A stage without an engine returns an explicit "not available in Phase 1" result, never a placeholder value.
 

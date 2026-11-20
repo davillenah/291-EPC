@@ -13,6 +13,7 @@ All notable changes. Format: Keep a Changelog; versions follow `harness/docs/BRA
 
 ### Fixed
 - PV 3D model: the posts were drawn 1.0 m below the ground (a fixed number in the code) for every plant, including flat roofs where nothing goes below the slab. The depth now comes from the record of the chosen mounting structure (`structure_id` in the `layout`, e.g. driven pile 1.5 m, unverified) and the buried part has its own layer `PV-3D-CIMENTACION`; with no structure, or a record that states no depth, nothing is drawn below the surface and the layout says so (`foundation_depth_not_found`).
+- Stage table and PRD: stages 4 and 12 are marked `implemented` (both were wired but still said `planned`). The `rules`, `standards` and `documents` READMEs state that no stage calls them yet (audit AUD-01, AUD-02).
 - PV flat roof: the frame is reduced (and the module turned) until it fits a small or narrow roof, with a `table_shrunk` warning; when no module fits, the error gives the roof size and the minimum size needed; the string-longer-than-site error gives both numbers.
 
 ### Added
