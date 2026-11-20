@@ -1,0 +1,66 @@
+{
+  "schema_version": "1.0",
+  "id": "inverter_mounting_bracket_and_shade_cover_not_found",
+  "name": {
+    "en": "Inverter wall, post or ground mounting bracket and shade cover (not found)",
+    "es": "Soporte de montaje mural, poste o suelo del inversor y cubierta contra sol (no encontrado)"
+  },
+  "kind": "accessory",
+  "description": {
+    "en": "No sourced datasheet for an inverter mounting bracket or shade cover was found. The fetched SMA page is installation requirements only and gives no dimensions, hole spacing or loads.",
+    "es": "No se encontró hoja técnica sourced de soporte de inversor ni de cubierta contra sol. La página SMA consultada solo contiene requisitos de montaje, sin dimensiones, separación de agujeros ni cargas."
+  },
+  "typical_use": "None until sourced.",
+  "status": "not_found",
+  "parts": [
+    {
+      "id": "bracket",
+      "name": "Mounting bracket (wall/post/ground)",
+      "name_es": "Soporte de montaje (pared/poste/suelo)",
+      "type": "mounting_bracket",
+      "status": "not_found",
+      "geometry_hint": "Dimensions and hole spacing not found",
+      "source_ids": [
+        "S26"
+      ]
+    },
+    {
+      "id": "cover",
+      "name": "Shade cover",
+      "name_es": "Cubierta contra sol",
+      "type": "other",
+      "status": "not_found",
+      "geometry_hint": "Not found",
+      "source_ids": [
+        "S26"
+      ]
+    }
+  ],
+  "geometry": {
+    "description": "No envelope or hole pattern found. Geometry omitted.",
+    "coordinate_system": "x along module long side, y along short side, z up through thickness; origin at module front-left corner; mm",
+    "elements": []
+  },
+  "mechanical_ratings": {
+    "note": "not_found"
+  },
+  "unverified_items": [
+    "No bracket or shade cover datasheet found",
+    "Mounting requirements page gives no dimensions, hole pattern or loads"
+  ],
+  "sources": [
+    {
+      "id": "S26",
+      "title": "Requirements for mounting (SMA manual, STP TL-30)",
+      "publisher": "SMA Solar Technology AG",
+      "url": "https://manuals.sma.de/STPTL-30/en-US/391431051.html",
+      "accessed": "2026-11-20"
+    }
+  ],
+  "electrical_ratings": {
+    "note": "not_found"
+  },
+  "mechanical": {
+    "note": "not_found"
+  }
+}

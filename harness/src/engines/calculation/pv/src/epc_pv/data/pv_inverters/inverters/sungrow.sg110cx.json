@@ -1,0 +1,365 @@
+{
+  "schema_version": "1.0",
+  "id": "sungrow.sg110cx",
+  "name": {
+    "en": "Sungrow SG110CX",
+    "es": "Sungrow SG110CX"
+  },
+  "kind": "inverter_type",
+  "description": {
+    "en": "Three-phase string inverter, 110 kVA, 9 MPPT, smart forced air cooling, IP66.",
+    "es": "Inversor de cadena trifasico, 110 kVA, 9 MPPT, refrigeracion forzada por aire inteligente, IP66."
+  },
+  "typical_use": "Utility/C&I string inverter, 400 V AC",
+  "layers": [],
+  "parts": [
+    {
+      "id": "enclosure",
+      "name": "Housing",
+      "type": "enclosure",
+      "status": "unverified",
+      "source_ids": [
+        "sungrow_sg110cx_ds"
+      ],
+      "dimensions_mm": {
+        "w": 1051,
+        "h": 660,
+        "d": 362.5
+      }
+    },
+    {
+      "id": "fan",
+      "name": "Smart forced air cooling fans",
+      "type": "fan",
+      "status": "unverified",
+      "source_ids": [
+        "sungrow_sg110cx_ds"
+      ],
+      "ratings": {
+        "count": "not_found"
+      },
+      "geometry_hint": "Forced air cooling; count and layout not stated"
+    },
+    {
+      "id": "mppt_input",
+      "name": "MPPT DC inputs (9 MPPT, MC4 up to 6 mm2)",
+      "type": "mppt_input",
+      "status": "unverified",
+      "source_ids": [
+        "sungrow_sg110cx_ds"
+      ],
+      "quantity_per_module": 9,
+      "ratings": {
+        "connector": "MC4",
+        "max_cable_mm2": 6,
+        "count_of_connectors": "not_found",
+        "max_current_a": 26,
+        "max_sc_current_a": 40
+      }
+    },
+    {
+      "id": "dc_switch",
+      "name": "DC switch",
+      "type": "dc_switch",
+      "status": "unverified",
+      "source_ids": [
+        "sungrow_sg110cx_ds"
+      ],
+      "ratings": {
+        "listed": "DC/AC switch"
+      }
+    },
+    {
+      "id": "ac_terminal",
+      "name": "AC OT terminal (max 240 mm2)",
+      "type": "ac_terminal",
+      "status": "unverified",
+      "source_ids": [
+        "sungrow_sg110cx_ds"
+      ],
+      "ratings": {
+        "connector": "OT terminal",
+        "max_mm2": 240
+      }
+    },
+    {
+      "id": "display_led",
+      "name": "LED indicators",
+      "type": "led_indicator",
+      "status": "unverified",
+      "source_ids": [
+        "sungrow_sg110cx_ds"
+      ]
+    },
+    {
+      "id": "bt_antenna",
+      "name": "Bluetooth antenna (Bluetooth + APP)",
+      "type": "antenna",
+      "status": "unverified",
+      "source_ids": [
+        "sungrow_sg110cx_ds"
+      ]
+    },
+    {
+      "id": "comm_rs485",
+      "name": "RS485",
+      "type": "comm_port",
+      "status": "unverified",
+      "source_ids": [
+        "sungrow_sg110cx_ds"
+      ]
+    },
+    {
+      "id": "comm_eth",
+      "name": "Ethernet (optional)",
+      "type": "comm_port",
+      "status": "unverified",
+      "source_ids": [
+        "sungrow_sg110cx_ds"
+      ],
+      "ratings": {
+        "availability": "optional"
+      }
+    },
+    {
+      "id": "wlan",
+      "name": "WLAN (optional)",
+      "type": "antenna",
+      "status": "unverified",
+      "source_ids": [
+        "sungrow_sg110cx_ds"
+      ],
+      "ratings": {
+        "availability": "optional"
+      }
+    },
+    {
+      "id": "spd",
+      "name": "DC and AC Type II surge protection",
+      "type": "spd",
+      "status": "unverified",
+      "source_ids": [
+        "sungrow_sg110cx_ds"
+      ]
+    },
+    {
+      "id": "mounting_bracket",
+      "name": "Wall-mounting bracket",
+      "type": "mounting_bracket",
+      "status": "not_found",
+      "geometry_hint": "Details not stated"
+    },
+    {
+      "id": "grounding_terminal",
+      "name": "Grounding terminal",
+      "type": "grounding_terminal",
+      "status": "not_found"
+    }
+  ],
+  "geometry": {
+    "description": "Wall-mounted inverter envelope from datasheet W x H x D. Elements are generic placements (status typical) unless noted. Mounting hole positions omitted: spacing not sourced.",
+    "coordinate_system": "x = width (left to right seen from front), y = height (bottom 0 to top), z = depth (wall at z=0, front cover at z=D); origin bottom-left-wall corner; mm",
+    "module_dimensions_mm": [
+      1051,
+      660,
+      362.5
+    ],
+    "clamping_zones_mm": [],
+    "elements": [
+      {
+        "id": "el_enclosure",
+        "kind": "enclosure",
+        "part_id": "enclosure",
+        "position_mm": [
+          0,
+          0,
+          0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          1051,
+          660,
+          362.5
+        ],
+        "status": "unverified",
+        "note": "Overall envelope from datasheet W x H x D; origin at bottom-left-back when wall-mounted."
+      },
+      {
+        "id": "el_mppt",
+        "kind": "mppt_input",
+        "part_id": "mppt_input",
+        "position_mm": [
+          525.5,
+          39.6,
+          181.2
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          893.4,
+          33.0,
+          14.5
+        ],
+        "status": "typical",
+        "note": "Generic placement, no sourced coordinates. 9 MPPT grouped; spacing illustrative"
+      },
+      {
+        "id": "el_ac_terminal",
+        "kind": "ac_terminal",
+        "part_id": "ac_terminal",
+        "position_mm": [
+          893.4,
+          39.6,
+          181.2
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          157.7,
+          33.0,
+          14.5
+        ],
+        "status": "typical",
+        "note": "Generic placement, no sourced coordinates."
+      },
+      {
+        "id": "el_fan",
+        "kind": "fan",
+        "part_id": "fan",
+        "position_mm": [
+          525.5,
+          640.2,
+          181.2
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          840.8,
+          13.2,
+          145.0
+        ],
+        "status": "typical",
+        "note": "Generic placement, no sourced coordinates. Assumed location"
+      },
+      {
+        "id": "el_led",
+        "kind": "led_indicator",
+        "part_id": "display_led",
+        "position_mm": [
+          525.5,
+          594.0,
+          362.5
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          105.1,
+          19.8,
+          0.0
+        ],
+        "status": "typical",
+        "note": "Generic placement, no sourced coordinates."
+      }
+    ]
+  },
+  "mechanical_ratings": {
+    "ip_rating": "IP66",
+    "fire_class": "not_found"
+  },
+  "status": "unverified",
+  "unverified_items": [
+    "MPPT per-input current reading (\"26 A * 9\" layout)",
+    "MC4 connector count",
+    "fan count",
+    "wall bracket details",
+    "AC frequency not stated",
+    "source is a mirror copy; official URL redirected"
+  ],
+  "sources": [
+    {
+      "id": "sungrow_sg110cx_ds",
+      "title": "SG110CX data sheet (V14 file, mirror copy)",
+      "publisher": "Sungrow Power Supply Co. (mirror on third-party shop host)",
+      "url": "https://cdn.shopify.com/s/files/1/0017/8847/7489/files/sungrow_SG110CX-Datasheet.pdf",
+      "accessed": "2026-11-20"
+    }
+  ],
+  "electrical_ratings": {
+    "topology": "transformerless (not stated)",
+    "phases": 3,
+    "rated_ac_power_kva": 110,
+    "rated_power_note": "110 kVA at 45 C; 100 kVA at 50 C",
+    "ac_voltage_v": "400 (3P+N+PE)",
+    "ac_frequency_hz": "not_found",
+    "n_mppt": 9,
+    "mppt_voltage_range_v": "200-1000 full; 550-850 nominal",
+    "max_dc_voltage_v": 1100,
+    "max_dc_current_per_mppt_a": 26,
+    "max_sc_current_per_mppt_a": 40,
+    "efficiency_max_pct": 98.7,
+    "ip_rating": "IP66",
+    "cooling": "smart forced air",
+    "display": "LED, Bluetooth + APP",
+    "certifications": [
+      "IEC 62109",
+      "IEC 61727",
+      "IEC 62116",
+      "IEC 60068",
+      "IEC 61683",
+      "VDE-AR-N 4110:2018",
+      "VDE-AR-N 4120:2018",
+      "IEC 61000-6-3",
+      "EN 50438",
+      "AS/NZS 4777.2:2015",
+      "CEI 0-21",
+      "VDE 0126-1-1/A1",
+      "VFR 2014",
+      "UTE C15-712-1:2013",
+      "DEWA"
+    ],
+    "protections": [
+      "DC reverse connection",
+      "AC short circuit",
+      "leakage current",
+      "grid monitoring",
+      "ground fault monitoring",
+      "DC/AC switch",
+      "PV string current monitoring",
+      "overvoltage protection",
+      "PID recovery (optional)",
+      "DC and AC Type II SPD"
+    ],
+    "source_ids": [
+      "sungrow_sg110cx_ds"
+    ],
+    "electrical_status": "unverified"
+  },
+  "mechanical": {
+    "external_dimensions_wxhxd_mm": [
+      1051,
+      660,
+      362.5
+    ],
+    "weight_kg": 85,
+    "mounting": "wall bracket (details not_found)",
+    "cooling": "smart forced air",
+    "clearances_mm": "not_found",
+    "mechanical_status": "unverified"
+  }
+}

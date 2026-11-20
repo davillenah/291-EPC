@@ -1,0 +1,137 @@
+{
+  "schema_version": "1.0",
+  "id": "rapid_shutdown_jms_f_reference",
+  "name": {
+    "en": "Module-level rapid shutdown device, NEC 690.12 (document lists JMS-F)",
+    "es": "Dispositivo de apagado rápido a nivel de módulo, NEC 690.12 (el documento indica JMS-F)"
+  },
+  "kind": "accessory",
+  "description": {
+    "en": "Rapid shutdown device for NEC 690.12, 60 V Voc input, 15 A max current, Type 4X enclosure, screwless mounting, 89 x 95.5 x 16.5 mm. The document file is named as an SMA SunSpec RSD datasheet but its content identifies the model as JMS-F; the publisher is not confirmed.",
+    "es": "Dispositivo de apagado rápido para NEC 690.12, entrada Voc 60 V, corriente máxima 15 A, envolvente tipo 4X, montaje sin tornillos, 89 x 95,5 x 16,5 mm. El archivo se llama como una hoja SMA SunSpec RSD, pero su contenido identifica el modelo como JMS-F; el editor no está confirmado."
+  },
+  "typical_use": "Module-level rapid shutdown (NEC 690.12).",
+  "status": "unverified",
+  "parts": [
+    {
+      "id": "enc",
+      "name": "Rapid shutdown device enclosure (Type 4X)",
+      "name_es": "Envolvente del dispositivo (tipo 4X)",
+      "type": "enclosure",
+      "status": "unverified",
+      "material": "not stated",
+      "dimensions_mm": {
+        "L": 89,
+        "W": 95.5,
+        "H": 16.5
+      },
+      "quantity_per_module": 1,
+      "ratings": {
+        "type": "UL 50E Type 4X",
+        "weight_kg": 0.439
+      },
+      "source_ids": [
+        "S14"
+      ]
+    },
+    {
+      "id": "cable",
+      "name": "Input and output cables (integrated)",
+      "name_es": "Cables de entrada y salida (integrados)",
+      "type": "cable",
+      "status": "unverified",
+      "quantity_per_module": 2,
+      "geometry_hint": "Included cables per source",
+      "source_ids": [
+        "S14"
+      ]
+    },
+    {
+      "id": "mount",
+      "name": "Screwless mounting feature",
+      "name_es": "Elemento de montaje sin tornillos",
+      "type": "mounting_bracket",
+      "status": "unverified",
+      "geometry_hint": "Screwless quick mount per source",
+      "source_ids": [
+        "S14"
+      ]
+    }
+  ],
+  "geometry": {
+    "description": "Envelope 89 x 95.5 x 16.5 mm (L x W x H as stated) mapped to x=89, y=95.5, z=16.5.",
+    "coordinate_system": "x along module long side, y along short side, z up through thickness; origin at module front-left corner; mm",
+    "elements": [
+      {
+        "id": "E-enc",
+        "kind": "enclosure_body",
+        "part_id": "enc",
+        "position_mm": [
+          0,
+          0,
+          0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          89,
+          95.5,
+          16.5
+        ],
+        "status": "unverified"
+      }
+    ],
+    "module_dimensions_mm": [
+      89,
+      95.5,
+      16.5
+    ]
+  },
+  "mechanical_ratings": {
+    "standards": [
+      "NEC 690.12",
+      "UL 1741"
+    ]
+  },
+  "unverified_items": [
+    "Document file name says SMA SunSpec RSD but content says JMS-F; identity and publisher unconfirmed",
+    "IP rating not found (Type 4X)",
+    "Number of input/output channels not found",
+    "Max output current not found",
+    "IEC 62109 not found",
+    "Source is a single datasheet fetch"
+  ],
+  "sources": [
+    {
+      "id": "S14",
+      "title": "Rapid shutdown device datasheet (file named SMA SunSpec RSD; content identifies model JMS-F)",
+      "publisher": "Document host: files.sma.de (publisher unconfirmed)",
+      "url": "https://files.sma.de/downloads/SMASunSpecRSD-DS-en-23.pdf",
+      "accessed": "2026-11-20"
+    }
+  ],
+  "electrical_ratings": {
+    "max_input_voc_v": 60,
+    "max_input_current_a": 15,
+    "standards": [
+      "NEC 2023/2020/2017 690.12(B)(2)",
+      "UL 1741 PVRSS",
+      "IEC 62109 not found"
+    ],
+    "max_system_voltage_v": 1500
+  },
+  "mechanical": {
+    "external_dimensions_mm_LxWxH": [
+      89,
+      95.5,
+      16.5
+    ],
+    "weight_kg": 0.439,
+    "ip": "Type 4X (UL 50E); IP not found",
+    "operating_temp_c": "-40 to +75",
+    "mounting": "screwless"
+  }
+}

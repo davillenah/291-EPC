@@ -1,0 +1,352 @@
+{
+  "schema_version": "1.0",
+  "id": "huawei.sun2000-100ktl-h1",
+  "name": {
+    "en": "Huawei SUN2000-100KTL-H1",
+    "es": "Huawei SUN2000-100KTL-H1"
+  },
+  "kind": "inverter_type",
+  "description": {
+    "en": "Three-phase string inverter, 100 kW, 6 MPPT, fanless natural convection, IP65, 800 Vac output (not a 380 V grid model).",
+    "es": "Inversor de cadena trifasico, 100 kW, 6 MPPT, sin ventilador con conveccion natural, IP65, salida 800 Vca (no es un modelo para red de 380 V)."
+  },
+  "typical_use": "Utility/C&I string inverter, 800 V AC grid (not suited to 380/220 V without a different model)",
+  "layers": [],
+  "parts": [
+    {
+      "id": "enclosure",
+      "name": "Housing (fanless)",
+      "type": "enclosure",
+      "status": "unverified",
+      "source_ids": [
+        "huawei_sun2000_h1_ds"
+      ],
+      "dimensions_mm": {
+        "w": 1075,
+        "h": 605,
+        "d": 310
+      },
+      "geometry_hint": "Fanless natural convection"
+    },
+    {
+      "id": "heatsink",
+      "name": "Heatsink / convection surfaces",
+      "type": "heatsink",
+      "status": "typical",
+      "source_ids": [
+        "huawei_sun2000_h1_ds"
+      ],
+      "geometry_hint": "Fanless; fin layout not sourced"
+    },
+    {
+      "id": "dc_switch_input",
+      "name": "Input-side disconnect switch",
+      "type": "dc_switch",
+      "status": "unverified",
+      "source_ids": [
+        "huawei_sun2000_h1_ds"
+      ]
+    },
+    {
+      "id": "dc_switch_dc",
+      "name": "DC-side disconnect device",
+      "type": "dc_switch",
+      "status": "unverified",
+      "source_ids": [
+        "huawei_sun2000_h1_ds"
+      ]
+    },
+    {
+      "id": "mppt_input",
+      "name": "MPPT input connectors (Amphenol UTX), 6 MPPT",
+      "type": "mppt_input",
+      "status": "unverified",
+      "source_ids": [
+        "huawei_sun2000_h1_ds"
+      ],
+      "quantity_per_module": 6,
+      "ratings": {
+        "connector": "Amphenol UTX",
+        "max_current_per_mppt_a": 22,
+        "max_sc_current_a": 33
+      }
+    },
+    {
+      "id": "ac_gland",
+      "name": "AC cable gland",
+      "type": "gland",
+      "status": "unverified",
+      "source_ids": [
+        "huawei_sun2000_h1_ds"
+      ],
+      "ratings": {
+        "type": "cable gland"
+      }
+    },
+    {
+      "id": "ac_terminal",
+      "name": "AC screw terminal (3W+PE)",
+      "type": "ac_terminal",
+      "status": "unverified",
+      "source_ids": [
+        "huawei_sun2000_h1_ds"
+      ],
+      "ratings": {
+        "voltage_v": 800
+      }
+    },
+    {
+      "id": "led",
+      "name": "LED indicators",
+      "type": "led_indicator",
+      "status": "unverified",
+      "source_ids": [
+        "huawei_sun2000_h1_ds"
+      ]
+    },
+    {
+      "id": "bt_antenna",
+      "name": "Bluetooth antenna (USB/Bluetooth + App)",
+      "type": "antenna",
+      "status": "unverified",
+      "source_ids": [
+        "huawei_sun2000_h1_ds"
+      ]
+    },
+    {
+      "id": "comm_rs485",
+      "name": "RS485",
+      "type": "comm_port",
+      "status": "unverified",
+      "source_ids": [
+        "huawei_sun2000_h1_ds"
+      ]
+    },
+    {
+      "id": "comm_plc",
+      "name": "PLC",
+      "type": "comm_port",
+      "status": "unverified",
+      "source_ids": [
+        "huawei_sun2000_h1_ds"
+      ]
+    },
+    {
+      "id": "eth",
+      "name": "Ethernet",
+      "type": "comm_port",
+      "status": "not_found"
+    },
+    {
+      "id": "wlan",
+      "name": "WLAN",
+      "type": "comm_port",
+      "status": "not_found"
+    },
+    {
+      "id": "spd",
+      "name": "Type II DC and AC surge protection",
+      "type": "spd",
+      "status": "unverified",
+      "source_ids": [
+        "huawei_sun2000_h1_ds"
+      ]
+    },
+    {
+      "id": "mounting_bracket",
+      "name": "Mounting bracket (included in 77 kg)",
+      "type": "mounting_bracket",
+      "status": "not_found",
+      "geometry_hint": "Bracket dimensions not stated"
+    },
+    {
+      "id": "grounding_terminal",
+      "name": "Grounding terminal",
+      "type": "grounding_terminal",
+      "status": "not_found"
+    }
+  ],
+  "geometry": {
+    "description": "Wall-mounted inverter envelope from datasheet W x H x D. Elements are generic placements (status typical) unless noted. Mounting hole positions omitted: spacing not sourced.",
+    "coordinate_system": "x = width (left to right seen from front), y = height (bottom 0 to top), z = depth (wall at z=0, front cover at z=D); origin bottom-left-wall corner; mm",
+    "module_dimensions_mm": [
+      1075,
+      605,
+      310
+    ],
+    "clamping_zones_mm": [],
+    "elements": [
+      {
+        "id": "el_enclosure",
+        "kind": "enclosure",
+        "part_id": "enclosure",
+        "position_mm": [
+          0,
+          0,
+          0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          1075,
+          605,
+          310
+        ],
+        "status": "unverified",
+        "note": "Overall envelope from datasheet W x H x D; origin at bottom-left-back when wall-mounted."
+      },
+      {
+        "id": "el_mppt",
+        "kind": "mppt_input",
+        "part_id": "mppt_input",
+        "position_mm": [
+          537.5,
+          30.2,
+          155.0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          752.5,
+          30.2,
+          12.4
+        ],
+        "status": "typical",
+        "note": "Generic placement, no sourced coordinates. 6 MPPT inputs grouped; spacing illustrative"
+      },
+      {
+        "id": "el_ac_terminal",
+        "kind": "ac_terminal",
+        "part_id": "ac_terminal",
+        "position_mm": [
+          215.0,
+          30.2,
+          155.0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          161.2,
+          30.2,
+          12.4
+        ],
+        "status": "typical",
+        "note": "Generic placement, no sourced coordinates."
+      },
+      {
+        "id": "el_led",
+        "kind": "led_indicator",
+        "part_id": "led",
+        "position_mm": [
+          537.5,
+          556.6,
+          310.0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          107.5,
+          18.1,
+          0.0
+        ],
+        "status": "typical",
+        "note": "Generic placement, no sourced coordinates."
+      }
+    ]
+  },
+  "mechanical_ratings": {
+    "ip_rating": "IP65",
+    "fire_class": "not_found"
+  },
+  "status": "unverified",
+  "unverified_items": [
+    "800 V AC output: not a 380/220 V grid model; a 380 V variant needs its own datasheet",
+    "Ethernet and WLAN not found",
+    "wall bracket and grounding terminal not found",
+    "transformer topology not stated"
+  ],
+  "sources": [
+    {
+      "id": "huawei_sun2000_h1_ds",
+      "title": "SUN2000-100KTL-H1 data sheet (de)",
+      "publisher": "Huawei Digital Power",
+      "url": "https://solar.huawei.com/~/media/Solar/attachment/pdf/de/datasheet/SUN2000-100KTL-H1.pdf",
+      "accessed": "2026-11-20"
+    }
+  ],
+  "electrical_ratings": {
+    "topology": "transformerless (not stated; to verify)",
+    "phases": 3,
+    "rated_ac_power_kw": 100,
+    "ac_voltage_v": "800 (3W+PE)",
+    "ac_frequency_hz": "not_found",
+    "n_mppt": 6,
+    "mppt_voltage_range_v": "600-1500",
+    "max_dc_voltage_v": 1500,
+    "max_dc_current_per_mppt_a": 22,
+    "max_sc_current_per_mppt_a": 33,
+    "efficiency_max_pct": 99.0,
+    "ip_rating": "IP65",
+    "cooling": "natural convection (fanless)",
+    "display": "LED indicators, Bluetooth + app",
+    "certifications": [
+      "EN 62109-1/-2",
+      "IEC 62109-1/-2",
+      "IEC 62116",
+      "EN 50530",
+      "IEC 61683",
+      "IEC 61727",
+      "UTE C15-712-1",
+      "RD 413",
+      "RD 1699",
+      "RD 661",
+      "RD 1565",
+      "P.O. 12.3",
+      "UNE 206007-1 IN",
+      "UNE 206006 IN",
+      "G59/3",
+      "CEI 0-16",
+      "VDE 4120"
+    ],
+    "protections": [
+      "input-side disconnect switch",
+      "DC-side disconnect device",
+      "DC reverse polarity protection",
+      "AC overcurrent protection",
+      "PV string monitoring",
+      "insulation monitoring",
+      "residual current monitoring",
+      "island detection",
+      "Type II DC and AC surge protection"
+    ],
+    "source_ids": [
+      "huawei_sun2000_h1_ds"
+    ],
+    "electrical_status": "unverified"
+  },
+  "mechanical": {
+    "external_dimensions_wxhxd_mm": [
+      1075,
+      605,
+      310
+    ],
+    "weight_kg": 77,
+    "weight_note": "including mounting bracket",
+    "mounting": "wall bracket (details not_found)",
+    "cooling": "natural convection, fanless",
+    "clearances_mm": "not_found",
+    "mechanical_status": "unverified"
+  }
+}

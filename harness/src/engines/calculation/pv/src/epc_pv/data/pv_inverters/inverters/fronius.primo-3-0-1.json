@@ -1,0 +1,363 @@
+{
+  "schema_version": "1.0",
+  "id": "fronius.primo-3-0-1",
+  "name": {
+    "en": "Fronius Primo 3.0-1 (single-phase, SnapINverter)",
+    "es": "Fronius Primo 3.0-1 (monofasico, SnapINverter)"
+  },
+  "kind": "inverter_type",
+  "description": {
+    "en": "Single-phase transformerless string inverter, 2 MPPT, fan-cooled, wall-mounted with SnapINverter mounting system, IP65.",
+    "es": "Inversor de cadena monofasico sin transformador, 2 MPPT, refrigeracion por ventilador, montaje en pared con sistema SnapINverter, IP65."
+  },
+  "typical_use": "Residential single-phase grid-tied string inverter",
+  "layers": [],
+  "parts": [
+    {
+      "id": "enclosure",
+      "name": "Housing / power stage set",
+      "type": "enclosure",
+      "status": "unverified",
+      "source_ids": [
+        "fronius_primo_tech"
+      ],
+      "dimensions_mm": {
+        "w": 432.5,
+        "h": 642.5,
+        "d": 205.5
+      },
+      "geometry_hint": "SnapINverter: connection area on wall, power stage set attached"
+    },
+    {
+      "id": "fan",
+      "name": "Regulated fan(s)",
+      "type": "fan",
+      "status": "unverified",
+      "source_ids": [
+        "fronius_primo_tech"
+      ],
+      "ratings": {
+        "count": "not_found"
+      },
+      "geometry_hint": "Fan count, position and airflow not in datasheet."
+    },
+    {
+      "id": "dc_input",
+      "name": "DC screw terminals (2.5-16 mm2)",
+      "type": "dc_input",
+      "status": "unverified",
+      "source_ids": [
+        "fronius_primo_tech"
+      ],
+      "quantity_per_module": 2,
+      "ratings": {
+        "connector": "screw terminal",
+        "count_conflict": "source lists both 4 DC+/4 DC- and 2+2"
+      }
+    },
+    {
+      "id": "dc_switch",
+      "name": "DC disconnector",
+      "type": "dc_switch",
+      "status": "unverified",
+      "source_ids": [
+        "fronius_primo_tech"
+      ],
+      "ratings": {
+        "integrated": true
+      }
+    },
+    {
+      "id": "ac_terminal",
+      "name": "AC 3-pin screw terminals (2.5-16 mm2)",
+      "type": "ac_terminal",
+      "status": "unverified",
+      "source_ids": [
+        "fronius_primo_tech"
+      ],
+      "ratings": {
+        "connector": "3-pin screw terminal"
+      }
+    },
+    {
+      "id": "comm_rs485",
+      "name": "RS485 (Modbus RTU / meter)",
+      "type": "comm_port",
+      "status": "unverified",
+      "source_ids": [
+        "fronius_primo_tech"
+      ]
+    },
+    {
+      "id": "comm_eth",
+      "name": "Ethernet LAN",
+      "type": "comm_port",
+      "status": "unverified",
+      "source_ids": [
+        "fronius_primo_tech"
+      ]
+    },
+    {
+      "id": "comm_usb",
+      "name": "USB",
+      "type": "comm_port",
+      "status": "unverified",
+      "source_ids": [
+        "fronius_primo_tech"
+      ]
+    },
+    {
+      "id": "comm_rs422",
+      "name": "2x RS422",
+      "type": "comm_port",
+      "status": "unverified",
+      "source_ids": [
+        "fronius_primo_tech"
+      ],
+      "quantity_per_module": 2
+    },
+    {
+      "id": "antenna_wlan",
+      "name": "WLAN antenna",
+      "type": "antenna",
+      "status": "unverified",
+      "source_ids": [
+        "fronius_primo_tech"
+      ]
+    },
+    {
+      "id": "io_di_do",
+      "name": "Digital inputs/outputs",
+      "type": "comm_port",
+      "status": "unverified",
+      "source_ids": [
+        "fronius_primo_tech"
+      ],
+      "ratings": {
+        "note": "count not stated"
+      }
+    },
+    {
+      "id": "display",
+      "name": "Display / LED",
+      "type": "display",
+      "status": "not_found",
+      "geometry_hint": "No display or LED listed in the source page"
+    },
+    {
+      "id": "mounting_bracket",
+      "name": "SnapINverter connection area (wall mount)",
+      "type": "mounting_bracket",
+      "status": "unverified",
+      "source_ids": [
+        "fronius_primo_tech"
+      ],
+      "geometry_hint": "Hole spacing not stated"
+    },
+    {
+      "id": "mounting_holes",
+      "name": "Wall mounting holes",
+      "type": "mounting_hole",
+      "status": "not_found"
+    },
+    {
+      "id": "grounding_terminal",
+      "name": "Grounding terminal",
+      "type": "grounding_terminal",
+      "status": "not_found"
+    }
+  ],
+  "geometry": {
+    "description": "Wall-mounted inverter envelope from datasheet W x H x D. Elements are generic placements (status typical) unless noted. Mounting hole positions omitted: spacing not sourced.",
+    "coordinate_system": "x = width (left to right seen from front), y = height (bottom 0 to top), z = depth (wall at z=0, front cover at z=D); origin bottom-left-wall corner; mm",
+    "module_dimensions_mm": [
+      432.5,
+      642.5,
+      205.5
+    ],
+    "clamping_zones_mm": [],
+    "elements": [
+      {
+        "id": "el_enclosure",
+        "kind": "enclosure",
+        "part_id": "enclosure",
+        "position_mm": [
+          0,
+          0,
+          0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          432.5,
+          642.5,
+          205.5
+        ],
+        "status": "unverified",
+        "note": "Overall envelope from datasheet W x H x D; origin at bottom-left-back when wall-mounted."
+      },
+      {
+        "id": "el_dc_input",
+        "kind": "dc_input",
+        "part_id": "dc_input",
+        "position_mm": [
+          108.1,
+          51.4,
+          102.8
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          129.8,
+          32.1,
+          8.2
+        ],
+        "status": "typical",
+        "note": "Generic placement, no sourced coordinates. DC screw terminals"
+      },
+      {
+        "id": "el_dc_switch",
+        "kind": "dc_switch",
+        "part_id": "dc_switch",
+        "position_mm": [
+          51.9,
+          51.4,
+          102.8
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          43.2,
+          32.1,
+          8.2
+        ],
+        "status": "typical",
+        "note": "Generic placement, no sourced coordinates."
+      },
+      {
+        "id": "el_ac_terminal",
+        "kind": "ac_terminal",
+        "part_id": "ac_terminal",
+        "position_mm": [
+          311.4,
+          51.4,
+          102.8
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          86.5,
+          32.1,
+          8.2
+        ],
+        "status": "typical",
+        "note": "Generic placement, no sourced coordinates."
+      },
+      {
+        "id": "el_fan",
+        "kind": "fan",
+        "part_id": "fan",
+        "position_mm": [
+          216.2,
+          629.6,
+          102.8
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          259.5,
+          12.8,
+          102.8
+        ],
+        "status": "typical",
+        "note": "Generic placement, no sourced coordinates. Intake/outlet location assumed; not sourced"
+      }
+    ]
+  },
+  "mechanical_ratings": {
+    "ip_rating": "IP65",
+    "fire_class": "not_found"
+  },
+  "status": "unverified",
+  "unverified_items": [
+    "DC terminal count: source says both 4 DC+/4 DC- and 2+2",
+    "fan count and location",
+    "display/LED",
+    "bracket hole spacing",
+    "AC frequency not stated in the fetched text"
+  ],
+  "sources": [
+    {
+      "id": "fronius_primo_tech",
+      "title": "Fronius Primo 3.0-1 technical data (installers page, en-au)",
+      "publisher": "Fronius International GmbH",
+      "url": "https://www.fronius.com/en-au/australia/solar-energy/installers-partners/technical-data/all-products/inverters/fronius-primo/fronius-primo-3-0-1",
+      "accessed": "2026-11-20"
+    }
+  ],
+  "electrical_ratings": {
+    "topology": "transformerless",
+    "phases": 1,
+    "rated_ac_power_w": 3000,
+    "ac_voltage_v": "220/230 (range 180-270)",
+    "ac_frequency_hz": "not_found",
+    "n_mppt": 2,
+    "mppt_voltage_range_v": "200-800 (usable MPP 80-800)",
+    "max_dc_voltage_v": 1000,
+    "max_dc_current_per_mppt_a": 12,
+    "efficiency_max_pct": 98.0,
+    "ip_rating": "IP65",
+    "cooling": "regulated air cooling (fans)",
+    "display": "not_found",
+    "certifications": [
+      "DIN V VDE 0126-1-1/A1",
+      "IEC 62109-1/-2",
+      "IEC 62116",
+      "IEC 61727",
+      "AS 4777-2",
+      "AS 4777-3",
+      "G98/1",
+      "G99/1",
+      "CEI 0-21",
+      "VDE AR N 4105"
+    ],
+    "protections": [
+      "DC insulation measurement",
+      "DC disconnector",
+      "DC reverse polarity protection",
+      "overload handling (operating point shift, power limitation)"
+    ],
+    "source_ids": [
+      "fronius_primo_tech"
+    ],
+    "electrical_status": "unverified"
+  },
+  "mechanical": {
+    "external_dimensions_wxhxd_mm": [
+      432.5,
+      642.5,
+      205.5
+    ],
+    "weight_kg": 19.25,
+    "packaged_weight_kg": 25.8,
+    "mounting": "SnapINverter wall mount",
+    "cooling": "fan",
+    "clearances_mm": "not_found",
+    "mechanical_status": "unverified"
+  }
+}

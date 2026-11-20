@@ -1,0 +1,173 @@
+{
+  "schema_version": "1.0",
+  "id": "sungrow_mvs3200_us",
+  "name": {
+    "en": "Sungrow MVS3200-US power station (LV skid with MV transformer)",
+    "es": "Estación de potencia Sungrow MVS3200-US (skid BT con transformador de MT)"
+  },
+  "kind": "inverter_type",
+  "description": {
+    "en": "Skid power station, 3200 kVA at 40 C, 0.8 kV LV side and 12.47-34.5 kV MV side, 60 Hz, oil-immersed transformer, Type 3R enclosure.",
+    "es": "Estación de potencia en skid, 3200 kVA a 40 C, lado BT 0,8 kV y lado MT 12,47-34,5 kV, 60 Hz, transformador en aceite, envolvente tipo 3R."
+  },
+  "typical_use": "Medium-size skid station for US utility blocks.",
+  "status": "unverified",
+  "parts": [
+    {
+      "id": "skid",
+      "name": "Skid enclosure (Type 3R)",
+      "name_es": "Envolvente del skid (tipo 3R)",
+      "type": "enclosure",
+      "status": "unverified",
+      "dimensions_mm": {
+        "W": 6058,
+        "H": 2896,
+        "D": 2438
+      },
+      "quantity_per_module": 1,
+      "ratings": {
+        "weight_kg": 14000
+      },
+      "source_ids": [
+        "S08"
+      ]
+    },
+    {
+      "id": "xfmr",
+      "name": "MV transformer 3200 kVA, oil-immersed (KNAN/ONAN)",
+      "name_es": "Transformador de MT 3200 kVA en aceite (KNAN/ONAN)",
+      "type": "transformer",
+      "status": "unverified",
+      "material": "oil",
+      "quantity_per_module": 1,
+      "ratings": {
+        "mv_kv": [
+          12.47,
+          34.5
+        ],
+        "standards": [
+          "IEEE C57.12.00",
+          "C57.12.90",
+          "C57.12.28"
+        ]
+      },
+      "source_ids": [
+        "S08"
+      ]
+    },
+    {
+      "id": "lvpanel",
+      "name": "LV switchboard (disconnectors and fuses), UL 891",
+      "name_es": "Cuadro BT (seccionadores y fusibles), UL 891",
+      "type": "ac_terminal",
+      "status": "unverified",
+      "ratings": {
+        "ac_lv_kv": 0.8
+      },
+      "geometry_hint": "Source describes disconnectors and fuses in LV panel",
+      "source_ids": [
+        "S08"
+      ]
+    },
+    {
+      "id": "aux",
+      "name": "Auxiliary power cabinet (UL 508)",
+      "name_es": "Armario de auxiliares (UL 508)",
+      "type": "other",
+      "status": "unverified",
+      "source_ids": [
+        "S08"
+      ]
+    },
+    {
+      "id": "ground",
+      "name": "Grounding terminal",
+      "name_es": "Terminal de puesta a tierra",
+      "type": "grounding_terminal",
+      "status": "typical",
+      "geometry_hint": "Generic"
+    }
+  ],
+  "geometry": {
+    "description": "Skid envelope 6058 x 2896 x 2438 mm (W x H x D) mapped to x=6058, y=2438, z=2896.",
+    "coordinate_system": "x along module long side, y along short side, z up through thickness; origin at module front-left corner; mm",
+    "elements": [
+      {
+        "id": "E-skid",
+        "kind": "enclosure_body",
+        "part_id": "skid",
+        "position_mm": [
+          0,
+          0,
+          0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          6058,
+          2438,
+          2896
+        ],
+        "status": "unverified"
+      }
+    ],
+    "module_dimensions_mm": [
+      6058,
+      2438,
+      2896
+    ]
+  },
+  "mechanical_ratings": {
+    "certifications": [
+      "IEEE C57.12.00",
+      "IEEE C57.12.90",
+      "IEEE C57.12.28",
+      "UL 891",
+      "UL 508",
+      "UL-listed transformer and LV switchboard",
+      "NEC compliance"
+    ]
+  },
+  "unverified_items": [
+    "Max DC voltage and MPPT count not found (source titled 1500 V string inverter, no DC specs in sheet)",
+    "IP not found (Type 3R)",
+    "Noise not found",
+    "RMU model not found"
+  ],
+  "sources": [
+    {
+      "id": "S08",
+      "title": "MVS3200-US datasheet V19",
+      "publisher": "Sungrow Power Supply Co., Ltd.",
+      "url": "https://info-support.sungrowpower.com/application/pdf/2025/01/14/DS_20250107_MVS3200-US_Datasheet_V19_EN(NA).pdf",
+      "accessed": "2026-11-20"
+    }
+  ],
+  "electrical_ratings": {
+    "topology": "skid power station with MV transformer",
+    "rated_ac_kva_40C": 3200,
+    "rated_ac_kva_30C": 3520,
+    "ac_voltage_kv": {
+      "lv": 0.8,
+      "mv": [
+        12.47,
+        34.5
+      ]
+    },
+    "frequency_hz": 60
+  },
+  "mechanical": {
+    "external_dimensions_mm_WxHxD": [
+      6058,
+      2896,
+      2438
+    ],
+    "weight_kg": 14000,
+    "cooling": "KNAN / ONAN (oil)",
+    "operating_temp_c": "-30 to 60",
+    "ip_type": "Type 3R (IP not found)"
+  }
+}

@@ -1,0 +1,206 @@
+{
+  "schema_version": "1.0",
+  "id": "sungrow_sg3125hv_mv",
+  "name": {
+    "en": "Sungrow SG3125HV-MV (SG3125HV-31 / -32)",
+    "es": "Sungrow SG3125HV-MV (SG3125HV-31 / -32)"
+  },
+  "kind": "inverter_type",
+  "description": {
+    "en": "Central PV inverter, 3125 kVA class at 50 C, 1500 V DC input, 630/660 V AC, 50/60 Hz, IP65 cabinet with forced air cooling.",
+    "es": "Inversor central fotovoltaico, clase 3125 kVA a 50 C, entrada CC 1500 V, salida CA 630/660 V, 50/60 Hz, armario IP65 con refrigeración forzada por aire."
+  },
+  "typical_use": "Utility central inverter for MV skid or station integration.",
+  "status": "unverified",
+  "parts": [
+    {
+      "id": "cab",
+      "name": "Inverter cabinet (overall envelope)",
+      "name_es": "Armario del inversor (envolvente)",
+      "type": "enclosure",
+      "status": "unverified",
+      "material": "not stated",
+      "dimensions_mm": {
+        "W": 2280,
+        "H": 2280,
+        "D": 1600
+      },
+      "quantity_per_module": 1,
+      "ratings": {
+        "ip": "IP65"
+      },
+      "geometry_hint": "Envelope as sourced; flagged for drawing check",
+      "source_ids": [
+        "S02"
+      ]
+    },
+    {
+      "id": "dcin",
+      "name": "DC input fuse and combiner bank",
+      "name_es": "Banco de fusibles y combinadores de entrada CC",
+      "type": "dc_input",
+      "status": "unverified",
+      "quantity_per_module": 18,
+      "ratings": {
+        "dc_inputs_standard": 18,
+        "optional_inputs": [
+          22,
+          24,
+          28
+        ],
+        "max_dc_voltage_v": 1500
+      },
+      "geometry_hint": "Standard 18 inputs; 22 or 24 optional; 28 for negative grounding only",
+      "source_ids": [
+        "S02"
+      ]
+    },
+    {
+      "id": "acout",
+      "name": "AC output terminal busbar",
+      "name_es": "Barra de salida CA",
+      "type": "ac_output",
+      "status": "unverified",
+      "ratings": {
+        "ac_voltage_v": [
+          630,
+          660
+        ],
+        "frequency_hz": [
+          50,
+          60
+        ]
+      },
+      "geometry_hint": "630 V for SG3125HV-31, 660 V for -32",
+      "source_ids": [
+        "S02"
+      ]
+    },
+    {
+      "id": "fan",
+      "name": "Forced-air cooling fan group (temperature-controlled)",
+      "name_es": "Grupo de ventiladores de refrigeración forzada",
+      "type": "fan",
+      "status": "unverified",
+      "source_ids": [
+        "S02"
+      ]
+    },
+    {
+      "id": "ground",
+      "name": "Grounding terminal",
+      "name_es": "Terminal de puesta a tierra",
+      "type": "grounding_terminal",
+      "status": "typical",
+      "geometry_hint": "Generic"
+    },
+    {
+      "id": "label",
+      "name": "Nameplate and warning labels",
+      "name_es": "Placas y etiquetas",
+      "type": "label",
+      "status": "typical",
+      "geometry_hint": "Generic"
+    }
+  ],
+  "geometry": {
+    "description": "Single cabinet. Sourced envelope W x H x D = 2280 x 2280 x 1600 mm mapped to x=2280, y=1600, z=2280. The source value is unusual for this class and must be checked against the physical drawing before use.",
+    "coordinate_system": "x along module long side, y along short side, z up through thickness; origin at module front-left corner; mm",
+    "elements": [
+      {
+        "id": "E-cab",
+        "kind": "enclosure_body",
+        "part_id": "cab",
+        "position_mm": [
+          0,
+          0,
+          0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          2280,
+          1600,
+          2280
+        ],
+        "status": "unverified",
+        "note": "Dimension to be checked"
+      }
+    ],
+    "module_dimensions_mm": [
+      2280,
+      1600,
+      2280
+    ]
+  },
+  "mechanical_ratings": {
+    "certifications": [
+      "CE",
+      "IEC 62109",
+      "IEC 61727",
+      "IEC 62116"
+    ]
+  },
+  "unverified_items": [
+    "Envelope 2280 x 2280 x 1600 mm needs drawing check (height and width look large for class)",
+    "Per-input DC current not stated",
+    "Noise not stated",
+    "No container or MV transformer dimensions in source"
+  ],
+  "sources": [
+    {
+      "id": "S02",
+      "title": "SG3125HV-31/-32 datasheet V19",
+      "publisher": "Sungrow Power Supply Co., Ltd.",
+      "url": "https://info-support.sungrowpower.com/application/pdf/2024/12/28/DS_20241224_SG3125HV-31_SG3125HV-32_Datasheet_V19_EN.pdf",
+      "accessed": "2026-11-20"
+    }
+  ],
+  "electrical_ratings": {
+    "topology": "central inverter, 1500 V DC",
+    "rated_ac_power_kva_50C": 3125,
+    "rated_ac_power_kva_30C": {
+      "-31": 3610,
+      "-32": 3781
+    },
+    "max_dc_voltage_v": 1500,
+    "mppt_dc_voltage_range_v": {
+      "-31": [
+        915,
+        1300
+      ],
+      "-32": [
+        960,
+        1300
+      ]
+    },
+    "mppt_inputs": 2,
+    "max_dc_total_current_a": 3997,
+    "ac_voltage_v_nominal": {
+      "-31": 630,
+      "-32": 660
+    },
+    "frequency_hz": [
+      50,
+      60
+    ],
+    "max_efficiency_pct": {
+      "-31": 99.0,
+      "-32": 98.7
+    }
+  },
+  "mechanical": {
+    "external_dimensions_mm_WxHxD": [
+      2280,
+      2280,
+      1600
+    ],
+    "weight_kg": 3200,
+    "cooling": "temperature-controlled forced air",
+    "ip": "IP65",
+    "operating_temp_c": "-35 to 60 (derating above 50)"
+  }
+}

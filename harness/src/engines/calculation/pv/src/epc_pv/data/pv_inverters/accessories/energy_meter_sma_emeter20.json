@@ -1,0 +1,147 @@
+{
+  "schema_version": "1.0",
+  "id": "energy_meter_sma_emeter20",
+  "name": {
+    "en": "SMA EMETER-20 energy meter (direct up to 63 A)",
+    "es": "Contador de energía SMA EMETER-20 (conexión directa hasta 63 A)"
+  },
+  "kind": "accessory",
+  "description": {
+    "en": "Energy meter for grid feed-in and export control, 230/400 V, direct connection up to 63 A, 1 % accuracy, Ethernet, top-hat rail, 70 x 88 x 65 mm, 0.3 kg, IP2X.",
+    "es": "Contador de energía para inyección a red y control de exportación, 230/400 V, conexión directa hasta 63 A, precisión 1 %, Ethernet, carril DIN, 70 x 88 x 65 mm, 0,3 kg, IP2X."
+  },
+  "typical_use": "Grid meter for export limit control on a PV plant.",
+  "status": "unverified",
+  "parts": [
+    {
+      "id": "enc",
+      "name": "Meter housing (top-hat rail)",
+      "name_es": "Carcasa del contador (carril DIN)",
+      "type": "enclosure",
+      "status": "unverified",
+      "dimensions_mm": {
+        "W": 70,
+        "H": 88,
+        "D": 65
+      },
+      "quantity_per_module": 1,
+      "ratings": {
+        "ip": "IP2X",
+        "weight_kg": 0.3
+      },
+      "source_ids": [
+        "S20"
+      ]
+    },
+    {
+      "id": "eth",
+      "name": "Ethernet RJ45",
+      "name_es": "Ethernet RJ45",
+      "type": "comm_port",
+      "status": "unverified",
+      "quantity_per_module": 1,
+      "ratings": {
+        "speed": "10/100 Mbit/s"
+      },
+      "source_ids": [
+        "S20"
+      ]
+    },
+    {
+      "id": "ct",
+      "name": "External current transformer connection (above 63 A)",
+      "name_es": "Conexión a transformadores de corriente externos (por encima de 63 A)",
+      "type": "other",
+      "status": "unverified",
+      "ratings": {
+        "above_a": 63
+      },
+      "geometry_hint": "CT model not sourced",
+      "source_ids": [
+        "S20"
+      ]
+    },
+    {
+      "id": "cable",
+      "name": "Voltage and current terminals (direct)",
+      "name_es": "Bornes de tensión e intensidad (directo)",
+      "type": "ac_terminal",
+      "status": "typical",
+      "geometry_hint": "Generic"
+    }
+  ],
+  "geometry": {
+    "description": "Envelope W x H x D = 70 x 88 x 65 mm mapped to x=70, y=65, z=88.",
+    "coordinate_system": "x along module long side, y along short side, z up through thickness; origin at module front-left corner; mm",
+    "elements": [
+      {
+        "id": "E-enc",
+        "kind": "enclosure_body",
+        "part_id": "enc",
+        "position_mm": [
+          0,
+          0,
+          0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          70,
+          65,
+          88
+        ],
+        "status": "unverified"
+      }
+    ],
+    "module_dimensions_mm": [
+      70,
+      65,
+      88
+    ]
+  },
+  "mechanical_ratings": {
+    "note": "Measurement class not stated (1 % accuracy given)"
+  },
+  "unverified_items": [
+    "Measurement class (1 %) as given; formal class not stated",
+    "Number of ports listed as one RJ45",
+    "Terminal count and connector sizes not found"
+  ],
+  "sources": [
+    {
+      "id": "S20",
+      "title": "EMETER-20 datasheet (EMETER-20-DS-en-30)",
+      "publisher": "SMA Solar Technology AG",
+      "url": "https://files.sma.de/downloads/EMETER-20-DS-en-30.pdf",
+      "accessed": "2026-11-20"
+    }
+  ],
+  "electrical_ratings": {
+    "supply_v": [
+      230,
+      400
+    ],
+    "freq_hz": [
+      50,
+      60
+    ],
+    "self_consumption_w_under": 3,
+    "accuracy_pct": 1,
+    "direct_max_a": 63,
+    "ct_above_a": 63
+  },
+  "mechanical": {
+    "dimensions_mm_WxHxD": [
+      70,
+      88,
+      65
+    ],
+    "weight_kg": 0.3,
+    "ip": "IP2X",
+    "operating_temp_c": "-25 to 40",
+    "mounting": "top-hat rail in switch or meter cabinet"
+  }
+}

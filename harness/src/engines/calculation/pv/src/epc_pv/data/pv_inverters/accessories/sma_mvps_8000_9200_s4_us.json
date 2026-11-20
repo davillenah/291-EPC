@@ -1,0 +1,187 @@
+{
+  "schema_version": "1.0",
+  "id": "sma_mvps_8000_9200_s4_us",
+  "name": {
+    "en": "SMA MVPS 8000-9200-S4-US medium-voltage power station (40 ft container)",
+    "es": "Estación de potencia de media tensión SMA MVPS 8000-9200-S4-US (contenedor de 40 ft)"
+  },
+  "kind": "inverter_type",
+  "description": {
+    "en": "Skid/container MV power station, 6.7-9.2 MVA class by mode, 1500 V DC, 34.5 kV AC, 60 Hz, KNAN transformer, 3-panel MV switchgear.",
+    "es": "Estación de potencia de media tensión en contenedor, clase 6,7-9,2 MVA según modo, 1500 V CC, 34,5 kV CA, 60 Hz, transformador KNAN, aparamenta de MT de 3 celdas."
+  },
+  "typical_use": "Larger US MV skid for utility PV blocks.",
+  "status": "unverified",
+  "parts": [
+    {
+      "id": "cont",
+      "name": "40 ft high-cube container envelope",
+      "name_es": "Envolvente de contenedor 40 ft high-cube",
+      "type": "enclosure",
+      "status": "unverified",
+      "material": "steel container (not stated)",
+      "dimensions_mm": {
+        "W": 12192,
+        "H": 2896,
+        "D": 2438
+      },
+      "quantity_per_module": 1,
+      "ratings": {
+        "weight_t_max": 32
+      },
+      "source_ids": [
+        "S07"
+      ]
+    },
+    {
+      "id": "xfmr",
+      "name": "MV oil transformer (KNAN)",
+      "name_es": "Transformador de MT en aceite (KNAN)",
+      "type": "transformer",
+      "status": "unverified",
+      "material": "natural ester",
+      "quantity_per_module": 1,
+      "ratings": {
+        "vector_groups": [
+          "Dy11",
+          "YNd11",
+          "YNy0"
+        ]
+      },
+      "geometry_hint": "kVA per unit and kV ratings not found",
+      "source_ids": [
+        "S07"
+      ]
+    },
+    {
+      "id": "mvsw",
+      "name": "MV switchgear, 3 panels (2 cable with load-break switch, 1 transformer with breaker)",
+      "name_es": "Aparamenta de MT, 3 celdas",
+      "type": "breaker",
+      "status": "unverified",
+      "quantity_per_module": 3,
+      "ratings": {
+        "arc_resistance": "IAC A FL 20 kA 1 s (IEC 62271-200)",
+        "internal_arc_note": "source also cites IAC A 25 kA 1 s"
+      },
+      "geometry_hint": "Named RMU model not found",
+      "source_ids": [
+        "S07"
+      ]
+    },
+    {
+      "id": "inv",
+      "name": "Central inverter module(s)",
+      "name_es": "Módulo(s) de inversor central",
+      "type": "other",
+      "status": "typical",
+      "geometry_hint": "Inverter type not named in source"
+    },
+    {
+      "id": "ground",
+      "name": "Grounding terminal",
+      "name_es": "Terminal de puesta a tierra",
+      "type": "grounding_terminal",
+      "status": "typical",
+      "geometry_hint": "Generic"
+    }
+  ],
+  "geometry": {
+    "description": "40-foot high-cube container envelope 12192 x 2896 x 2438 mm mapped to x=12192, y=2438, z=2896.",
+    "coordinate_system": "x along module long side, y along short side, z up through thickness; origin at module front-left corner; mm",
+    "elements": [
+      {
+        "id": "E-cont",
+        "kind": "enclosure_body",
+        "part_id": "cont",
+        "position_mm": [
+          0,
+          0,
+          0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          12192,
+          2438,
+          2896
+        ],
+        "status": "unverified"
+      }
+    ],
+    "module_dimensions_mm": [
+      12192,
+      2438,
+      2896
+    ]
+  },
+  "mechanical_ratings": {
+    "certifications": [
+      "IEEE 1547-2018",
+      "IEEE C57.12.00",
+      "IEEE C57.12.36",
+      "IEEE C57.154",
+      "IEEE C37.20.7",
+      "IEEE C37.20.9",
+      "UL 1741",
+      "CSC",
+      "IEC 62271-202 IAC A 25 kA 1 s"
+    ]
+  },
+  "unverified_items": [
+    "Transformer kVA per unit and kV ratings not found",
+    "DC input voltage window not found",
+    "Number of DC inputs not fixed in source",
+    "IP not found (NEMA 3R given)",
+    "Noise not found",
+    "RMU model not named"
+  ],
+  "sources": [
+    {
+      "id": "S07",
+      "title": "MVPS 8000-9200-S4-US datasheet",
+      "publisher": "SMA America / SMA Solar Technology AG",
+      "url": "https://files.sma.de/downloads/MVPS8.0-9.2-US-DS-en_us-21.pdf",
+      "accessed": "2026-11-20"
+    }
+  ],
+  "electrical_ratings": {
+    "topology": "MV power station, 60 Hz US",
+    "rated_ac_kva_nominal": {
+      "8000": 6900,
+      "8400": 7240,
+      "8800": 7600,
+      "9200": 7920
+    },
+    "rated_ac_kva_discharging": {
+      "8000": 8000,
+      "8400": 8400,
+      "8800": 8800,
+      "9200": 9200
+    },
+    "ac_voltage_kv_nominal": 34.5,
+    "frequency_hz": 60,
+    "max_dc_voltage_v": 1500
+  },
+  "mechanical": {
+    "external_dimensions_mm_WxHxD": [
+      12192,
+      2896,
+      2438
+    ],
+    "weight_t_max": 32,
+    "cooling": "KNAN",
+    "ip_type": "NEMA 3R (IP not found)",
+    "operating_temp_c": {
+      "standard": "-25 to +45",
+      "options": [
+        "-25 to +55",
+        "-35 to +55",
+        "-40 to +45"
+      ]
+    }
+  }
+}

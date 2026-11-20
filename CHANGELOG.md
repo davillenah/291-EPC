@@ -5,7 +5,7 @@ All notable changes. Format: Keep a Changelog; versions follow `harness/docs/BRA
 ## [Unreleased]
 
 ### Added
-- PV mounting structures and module types as research data for later 2D/3D modelling: 23 support types (10 ground, 13 roof) in `epc_pv/data/mounting_structures/` and 27 module technologies, formats and components in `epc_pv/data/pv_modules/`, each with its JSON schema and a bilingual (en/es) description; reports in `harness/docs/pv/`. Every value cites its source and is `unverified`, `typical` or `not_found` (pending review; nothing is marked verified, and missing values are never guessed). No engine reads them yet.
+- PV mounting structures and module types as research data for later 2D/3D modelling: 23 support types (10 ground, 13 roof) in `epc_pv/data/mounting_structures/` and 27 module technologies, formats and components in `epc_pv/data/pv_modules/`, each with its JSON schema and a bilingual (en/es) description; reports in `harness/docs/pv/`. Every value cites its source and is `unverified`, `typical` or `not_found` (pending review; nothing is marked verified, and missing values are never guessed). Also 35 inverter and inverter-side equipment types (string, hybrid, micro, central, power stations, combiner boxes, disconnects, SPD, monitoring) in `epc_pv/data/pv_inverters/`. No engine reads them yet.
 
 ### Fixed
 - PV flat roof: the frame is reduced (and the module turned) until it fits a small or narrow roof, with a `table_shrunk` warning; when no module fits, the error gives the roof size and the minimum size needed; the string-longer-than-site error gives both numbers.

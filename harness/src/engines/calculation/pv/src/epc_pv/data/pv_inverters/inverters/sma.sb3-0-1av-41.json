@@ -1,0 +1,418 @@
+{
+  "schema_version": "1.0",
+  "id": "sma.sb3-0-1av-41",
+  "name": {
+    "en": "SMA Sunny Boy 3.0 (SB3.0-1AV-41, family SB3.0 to SB6.0)",
+    "es": "SMA Sunny Boy 3.0 (SB3.0-1AV-41, familia SB3.0 a SB6.0)"
+  },
+  "kind": "inverter_type",
+  "description": {
+    "en": "Single-phase transformerless string inverter, 2 MPP inputs, wall-mounted, convection cooled, IP65. Dimensions and weight are the datasheet values for the whole family.",
+    "es": "Inversor de cadena monofasico sin transformador, 2 entradas MPP, montaje en pared, refrigeracion por conveccion, IP65. Dimensiones y peso son los valores de la ficha para toda la familia."
+  },
+  "typical_use": "Residential single-phase grid-tied string inverter",
+  "layers": [],
+  "parts": [
+    {
+      "id": "enclosure",
+      "name": "Housing (die-cast/enclosure, material not stated)",
+      "type": "enclosure",
+      "status": "unverified",
+      "source_ids": [
+        "sma_sb30_ds"
+      ],
+      "dimensions_mm": {
+        "w": 435,
+        "h": 470,
+        "d": 176
+      },
+      "geometry_hint": "Wall-mounted housing; envelope from datasheet"
+    },
+    {
+      "id": "heatsink",
+      "name": "Convection heatsink / housing cooling surfaces",
+      "type": "heatsink",
+      "status": "typical",
+      "source_ids": [
+        "sma_sb30_ds"
+      ],
+      "geometry_hint": "Convection cooled; fin layout not sourced"
+    },
+    {
+      "id": "dc_switch",
+      "name": "Input-side disconnection point",
+      "type": "dc_switch",
+      "status": "unverified",
+      "source_ids": [
+        "sma_sb30_ds"
+      ],
+      "ratings": {
+        "integrated_switch": "not_found"
+      },
+      "geometry_hint": "Listed as input-side disconnection point; type not stated"
+    },
+    {
+      "id": "dc_input_a",
+      "name": "DC input A (SUNCLIX)",
+      "type": "dc_input",
+      "status": "unverified",
+      "source_ids": [
+        "sma_sb30_ds"
+      ],
+      "quantity_per_module": 1,
+      "ratings": {
+        "connector": "SUNCLIX",
+        "connector_count": "not_found",
+        "usable_current_a": 15,
+        "max_sc_current_a": 20
+      },
+      "geometry_hint": "DC input A, 2 strings"
+    },
+    {
+      "id": "dc_input_b",
+      "name": "DC input B (SUNCLIX)",
+      "type": "dc_input",
+      "status": "unverified",
+      "source_ids": [
+        "sma_sb30_ds"
+      ],
+      "quantity_per_module": 1,
+      "ratings": {
+        "connector": "SUNCLIX",
+        "connector_count": "not_found",
+        "usable_current_a": 15,
+        "max_sc_current_a": 20
+      },
+      "geometry_hint": "DC input B, 2 strings"
+    },
+    {
+      "id": "ac_connector",
+      "name": "AC connector (type not stated)",
+      "type": "ac_terminal",
+      "status": "unverified",
+      "source_ids": [
+        "sma_sb30_ds"
+      ],
+      "ratings": {
+        "type": "AC connector",
+        "gland": "not_found"
+      },
+      "geometry_hint": "AC connection listed as AC connector"
+    },
+    {
+      "id": "comm_rs485",
+      "name": "RS485 interface",
+      "type": "comm_port",
+      "status": "unverified",
+      "source_ids": [
+        "sma_sb30_ds"
+      ],
+      "ratings": {
+        "standard": true
+      }
+    },
+    {
+      "id": "comm_eth",
+      "name": "Ethernet interface",
+      "type": "comm_port",
+      "status": "unverified",
+      "source_ids": [
+        "sma_sb30_ds"
+      ],
+      "ratings": {
+        "standard": true
+      }
+    },
+    {
+      "id": "antenna_wlan",
+      "name": "WLAN antenna (depends on availability)",
+      "type": "antenna",
+      "status": "unverified",
+      "source_ids": [
+        "sma_sb30_ds"
+      ],
+      "ratings": {
+        "wlan": "depending on availability"
+      }
+    },
+    {
+      "id": "grounding_terminal",
+      "name": "Grounding terminal",
+      "type": "grounding_terminal",
+      "status": "not_found",
+      "geometry_hint": "Not stated in datasheet"
+    },
+    {
+      "id": "mounting_bracket",
+      "name": "Wall-mounting bracket",
+      "type": "mounting_bracket",
+      "status": "not_found",
+      "geometry_hint": "Hole spacing and screw sizes not stated"
+    },
+    {
+      "id": "mounting_holes",
+      "name": "Wall-bracket mounting holes",
+      "type": "mounting_hole",
+      "status": "not_found",
+      "geometry_hint": "Spacing not stated"
+    },
+    {
+      "id": "label",
+      "name": "Type label",
+      "type": "label",
+      "status": "typical",
+      "geometry_hint": "Generic type label on housing"
+    }
+  ],
+  "geometry": {
+    "description": "Wall-mounted inverter envelope from datasheet W x H x D. Elements are generic placements (status typical) unless noted. Mounting hole positions omitted: spacing not sourced.",
+    "coordinate_system": "x = width (left to right seen from front), y = height (bottom 0 to top), z = depth (wall at z=0, front cover at z=D); origin bottom-left-wall corner; mm",
+    "module_dimensions_mm": [
+      435,
+      470,
+      176
+    ],
+    "clamping_zones_mm": [],
+    "elements": [
+      {
+        "id": "el_enclosure",
+        "kind": "enclosure",
+        "part_id": "enclosure",
+        "position_mm": [
+          0,
+          0,
+          0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          435,
+          470,
+          176
+        ],
+        "status": "unverified",
+        "note": "Overall envelope from datasheet W x H x D; origin at bottom-left-back when wall-mounted."
+      },
+      {
+        "id": "el_dc_switch",
+        "kind": "dc_switch",
+        "part_id": "dc_switch",
+        "position_mm": [
+          65.2,
+          28.2,
+          88.0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          87.0,
+          23.5,
+          7.0
+        ],
+        "status": "typical",
+        "note": "Generic placement, no sourced coordinates. Input-side disconnection point"
+      },
+      {
+        "id": "el_dc_input_a",
+        "kind": "dc_input",
+        "part_id": "dc_input_a",
+        "position_mm": [
+          139.2,
+          28.2,
+          88.0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          52.2,
+          23.5,
+          7.0
+        ],
+        "status": "typical",
+        "note": "Generic placement, no sourced coordinates."
+      },
+      {
+        "id": "el_dc_input_b",
+        "kind": "dc_input",
+        "part_id": "dc_input_b",
+        "position_mm": [
+          217.5,
+          28.2,
+          88.0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          52.2,
+          23.5,
+          7.0
+        ],
+        "status": "typical",
+        "note": "Generic placement, no sourced coordinates."
+      },
+      {
+        "id": "el_ac_connector",
+        "kind": "ac_terminal",
+        "part_id": "ac_connector",
+        "position_mm": [
+          326.2,
+          28.2,
+          88.0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          78.3,
+          23.5,
+          7.0
+        ],
+        "status": "typical",
+        "note": "Generic placement, no sourced coordinates."
+      },
+      {
+        "id": "el_comm_rs485",
+        "kind": "comm_port",
+        "part_id": "comm_rs485",
+        "position_mm": [
+          52.2,
+          94.0,
+          176.0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          43.5,
+          14.1,
+          0.0
+        ],
+        "status": "typical",
+        "note": "Generic placement, no sourced coordinates."
+      },
+      {
+        "id": "el_comm_eth",
+        "kind": "comm_port",
+        "part_id": "comm_eth",
+        "position_mm": [
+          108.8,
+          94.0,
+          176.0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          43.5,
+          14.1,
+          0.0
+        ],
+        "status": "typical",
+        "note": "Generic placement, no sourced coordinates."
+      }
+    ]
+  },
+  "mechanical_ratings": {
+    "ip_rating": "IP65",
+    "standard_ip": "IEC 60529",
+    "fire_class": "not_found"
+  },
+  "status": "unverified",
+  "unverified_items": [
+    "DC connector count per input (SUNCLIX count not stated)",
+    "wall bracket hole spacing and screw sizes",
+    "grounding terminal position",
+    "display: none listed"
+  ],
+  "sources": [
+    {
+      "id": "sma_sb30_ds",
+      "title": "SMA Sunny Boy 3.0/3.6/4.0/5.0/6.0 data sheet (SB30-60-DS-en-61)",
+      "publisher": "SMA Solar Technology AG",
+      "url": "https://files.sma.de/assets/278585.pdf",
+      "accessed": "2026-11-20"
+    }
+  ],
+  "electrical_ratings": {
+    "topology": "transformerless (galvanic isolation listed as not available)",
+    "phases": 1,
+    "rated_ac_power_w": 3000,
+    "rated_ac_power_by_model_w": {
+      "SB3.0": 3000,
+      "SB3.6": 3680,
+      "SB4.0": 4000,
+      "SB5.0": 5000,
+      "SB6.0": 6000
+    },
+    "ac_voltage_v": "220/230/240 (range 180-280)",
+    "ac_frequency_hz": "50/60",
+    "n_mppt": 2,
+    "mppt_voltage_range_v": {
+      "SB3.0": "110-500",
+      "SB3.6": "130-500",
+      "SB4.0": "140-500",
+      "SB5.0": "175-500",
+      "SB6.0": "210-500"
+    },
+    "max_dc_voltage_v": 600,
+    "max_dc_current_per_mppt_a": 15,
+    "max_sc_current_per_input_a": 20,
+    "efficiency_max_pct": 97.0,
+    "ip_rating": "IP65",
+    "cooling": "convection",
+    "display": "none (smartphone/tablet/laptop app)",
+    "certifications": [
+      "AS 4777.2",
+      "CE",
+      "IEC/DIN EN 62109",
+      "EN 50549-1",
+      "G99/1",
+      "VDE-AR-N 4105"
+    ],
+    "protections": [
+      "input-side disconnection point",
+      "ground fault monitoring",
+      "grid monitoring",
+      "DC reverse polarity protection",
+      "AC short-circuit current capability",
+      "residual-current monitoring (all-pole sensitive)",
+      "arc-fault circuit interrupter (AFCI)",
+      "I-V and P-V diagnostics"
+    ],
+    "source_ids": [
+      "sma_sb30_ds"
+    ],
+    "electrical_status": "unverified"
+  },
+  "mechanical": {
+    "external_dimensions_wxhxd_mm": [
+      435,
+      470,
+      176
+    ],
+    "weight_kg": 17.5,
+    "mounting": "wall bracket (hole spacing not_found)",
+    "cooling": "convection",
+    "clearances_mm": "not_found",
+    "noise": "not_found",
+    "mechanical_status": "unverified"
+  }
+}

@@ -1,0 +1,93 @@
+{
+  "schema_version": "1.0",
+  "id": "pv_cable_h1z2z2k_gland_set",
+  "name": {
+    "en": "PV cable H1Z2Z2-K (Tecsun PV, 1x6 mm2) and gland set",
+    "es": "Cable FV H1Z2Z2-K (Tecsun PV, 1x6 mm2) y juego de prensaestopas"
+  },
+  "kind": "accessory",
+  "description": {
+    "en": "Single-core PV cable, tinned copper class 5, 1.0/1.0 kV AC and 1.5/1.5 kV DC, EN 50618, 90 C operating. The 6 mm2 overall diameter and weight per km were not captured from the source (only ranges). Gland set is generic.",
+    "es": "Cable FV unipolar, cobre estañado clase 5, 1,0/1,0 kV CA y 1,5/1,5 kV CC, EN 50618, 90 C en servicio. El diámetro exterior de 6 mm2 y el peso por km no se obtuvieron de la fuente (solo rangos). El juego de prensaestopas es genérico."
+  },
+  "typical_use": "DC string cable in PV arrays.",
+  "status": "unverified",
+  "parts": [
+    {
+      "id": "cable",
+      "name": "Single-core PV cable 1x6 mm2 (tinned copper, class 5)",
+      "name_es": "Cable FV unipolar 1x6 mm2 (cobre estañado, clase 5)",
+      "type": "cable",
+      "status": "unverified",
+      "material": "tinned copper, XLPE-type (not stated)",
+      "ratings": {
+        "cross_section_mm2": 6,
+        "u0_u_kv_ac": 1.0,
+        "uDC_kv": 1.5,
+        "max_temp_c_op": 90,
+        "max_temp_c_short_circuit": 250,
+        "test_voltage_ac_kv": 6.5,
+        "standard": "EN 50618"
+      },
+      "geometry_hint": "Outer diameter for 6 mm2 not captured",
+      "standard": "EN 50618",
+      "source_ids": [
+        "S22"
+      ]
+    },
+    {
+      "id": "gland",
+      "name": "Cable gland set (size and IP not sourced)",
+      "name_es": "Juego de prensaestopas (medida e IP no obtenidos)",
+      "type": "gland",
+      "status": "typical",
+      "geometry_hint": "Generic; no sourced value"
+    },
+    {
+      "id": "seal",
+      "name": "Gland seal and grommet",
+      "name_es": "Junta y pasacables del prensaestopas",
+      "type": "gasket",
+      "status": "typical",
+      "geometry_hint": "Generic"
+    }
+  ],
+  "geometry": {
+    "description": "Cable only; no envelope. Diameter for 1x6 mm2 not captured (source gives range per section). Geometry omitted.",
+    "coordinate_system": "x along module long side, y along short side, z up through thickness; origin at module front-left corner; mm",
+    "elements": []
+  },
+  "mechanical_ratings": {
+    "standard": "EN 50618",
+    "iec_cable_standard": "not found"
+  },
+  "unverified_items": [
+    "6 mm2 outer diameter, weight per km and bending radius not captured",
+    "Gland size, IP and material not sourced",
+    "IEC cable standard not found"
+  ],
+  "sources": [
+    {
+      "id": "S22",
+      "title": "TECSUN(PV) H1Z2Z2-K 1/1 kV datasheet",
+      "publisher": "Prysmian Group",
+      "url": "https://www.prysmian.com/sites/www.prysmian.com/files/media/documents/Tecsun-PV-_H1Z2Z2-K.pdf",
+      "accessed": "2026-11-20"
+    }
+  ],
+  "electrical_ratings": {
+    "cross_section_mm2_6": true,
+    "u0_u_kv_ac": 1.0,
+    "udc_kv": 1.5,
+    "conductor": "electrolytic tinned copper, class 5 (IEC 60228)",
+    "max_temp_c": 90,
+    "short_circuit_temp_c": 250,
+    "test_voltage_ac_kv": 6.5,
+    "test_voltage_dc_kv": 15
+  },
+  "mechanical": {
+    "outer_diameter_mm": "not_found for 6 mm2 (range 4.4-33 across sizes)",
+    "weight_kg_per_km": "not_found for 6 mm2 (range 35-3000 across sizes)",
+    "bending_radius_mm": "not_found for 6 mm2 (range 15-132)"
+  }
+}

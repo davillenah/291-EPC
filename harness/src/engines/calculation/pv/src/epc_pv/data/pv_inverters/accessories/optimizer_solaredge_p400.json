@@ -1,0 +1,139 @@
+{
+  "schema_version": "1.0",
+  "id": "optimizer_solaredge_p400",
+  "name": {
+    "en": "SolarEdge P400 module-level power optimizer",
+    "es": "Optimizador de potencia a nivel de módulo SolarEdge P400"
+  },
+  "kind": "accessory",
+  "description": {
+    "en": "Module-level DC optimizer, 80 V input, 15 A output, 99.5% max efficiency, IP68, -40 to 85 C ambient, 129 x 153 x 33.5 mm, 0.75 kg.",
+    "es": "Optimizador CC a nivel de módulo, entrada 80 V, salida 15 A, eficiencia máxima 99,5 %, IP68, -40 a 85 C, 129 x 153 x 33,5 mm, 0,75 kg."
+  },
+  "typical_use": "Module-level MPPT on a PV module (one per module).",
+  "status": "unverified",
+  "parts": [
+    {
+      "id": "enc",
+      "name": "Optimizer housing",
+      "name_es": "Carcasa del optimizador",
+      "type": "enclosure",
+      "status": "unverified",
+      "material": "not stated",
+      "dimensions_mm": {
+        "L": 153,
+        "W": 129,
+        "H": 33.5
+      },
+      "quantity_per_module": 1,
+      "ratings": {
+        "ip": "IP68 / NEMA 6P",
+        "weight_kg": 0.75
+      },
+      "source_ids": [
+        "S15"
+      ]
+    },
+    {
+      "id": "cable",
+      "name": "Input and output leads with connectors (MC4 type not confirmed)",
+      "name_es": "Cables de entrada y salida con conectores (tipo MC4 no confirmado)",
+      "type": "cable",
+      "status": "typical",
+      "quantity_per_module": 2,
+      "geometry_hint": "Source says cables are included in weight; connector type not confirmed"
+    },
+    {
+      "id": "mount",
+      "name": "Single-bolt mounting feature",
+      "name_es": "Elemento de fijación con un perno",
+      "type": "mounting_hole",
+      "status": "unverified",
+      "quantity_per_module": 1,
+      "geometry_hint": "Single bolt per fetched text; hole spacing not found",
+      "source_ids": [
+        "S15"
+      ]
+    }
+  ],
+  "geometry": {
+    "description": "Envelope from source W x L x H = 129 x 153 x 33.5 mapped to x=153 (L), y=129 (W), z=33.5.",
+    "coordinate_system": "x along module long side, y along short side, z up through thickness; origin at module front-left corner; mm",
+    "elements": [
+      {
+        "id": "E-enc",
+        "kind": "enclosure_body",
+        "part_id": "enc",
+        "position_mm": [
+          0,
+          0,
+          0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          153,
+          129,
+          33.5
+        ],
+        "status": "unverified"
+      }
+    ],
+    "module_dimensions_mm": [
+      153,
+      129,
+      33.5
+    ]
+  },
+  "mechanical_ratings": {
+    "standards": [
+      "UL 1741",
+      "IEC 62109-1 Class II"
+    ]
+  },
+  "unverified_items": [
+    "Max output voltage column ambiguous in source (60 / 80)",
+    "Mounting hole spacing not found",
+    "Connector type not confirmed",
+    "Source file mirror (vanmeterinc), not manufacturer URL"
+  ],
+  "sources": [
+    {
+      "id": "S15",
+      "title": "P400/P401/P485/P505 power optimizer datasheet",
+      "publisher": "SolarEdge Technologies",
+      "url": "https://media.vanmeterinc.com/image/upload/v1715561357/marketing/solar/inverters/SolarEdge/SolarEdge%20P%20Series/P400-P401-P485-P505.pdf",
+      "accessed": "2026-11-20"
+    }
+  ],
+  "electrical_ratings": {
+    "max_input_dc_v": 80,
+    "max_input_current_isc_a": 10.1,
+    "max_output_current_a": 15,
+    "max_output_voltage_v": "60 (source label ambiguous)",
+    "max_efficiency_pct": 99.5,
+    "standards": [
+      "FCC Part 15 B",
+      "IEC 61000-6-2",
+      "IEC 61000-6-3",
+      "IEC 62109-1",
+      "UL 1741",
+      "NEC PVRSS",
+      "UL 94 V-0",
+      "RoHS"
+    ]
+  },
+  "mechanical": {
+    "dimensions_mm_WxLxH": [
+      129,
+      153,
+      33.5
+    ],
+    "weight_kg": 0.75,
+    "ip": "IP68 / NEMA 6P",
+    "operating_temp_c": "-40 to +85"
+  }
+}

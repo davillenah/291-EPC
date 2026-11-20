@@ -1,0 +1,160 @@
+{
+  "schema_version": "1.0",
+  "id": "datalogger_huawei_smartlogger3000a",
+  "name": {
+    "en": "Huawei SmartLogger3000A datalogger",
+    "es": "Datalogger Huawei SmartLogger3000A"
+  },
+  "kind": "accessory",
+  "description": {
+    "en": "Plant datalogger, 3 RS485, 2 Ethernet (WAN and LAN), AC 100-240 V or DC 12/24 V supply, 8 W typical, IP20, 225 x 160 x 43.6 mm, 2 kg.",
+    "es": "Datalogger de planta, 3 RS485, 2 Ethernet (WAN y LAN), alimentación CA 100-240 V o CC 12/24 V, 8 W típicos, IP20, 225 x 160 x 43,6 mm, 2 kg."
+  },
+  "typical_use": "Plant datalogger for Huawei inverter fleets.",
+  "status": "unverified",
+  "parts": [
+    {
+      "id": "enc",
+      "name": "Housing (wall, DIN rail or tabletop)",
+      "name_es": "Carcasa (pared, carril DIN o sobremesa)",
+      "type": "enclosure",
+      "status": "unverified",
+      "dimensions_mm": {
+        "W": 225,
+        "H": 160,
+        "D": 43.6
+      },
+      "quantity_per_module": 1,
+      "ratings": {
+        "ip": "IP20",
+        "weight_kg": 2
+      },
+      "geometry_hint": "Dimensions exclude mounting ears and antenna",
+      "source_ids": [
+        "S18"
+      ]
+    },
+    {
+      "id": "rs485",
+      "name": "RS485 ports",
+      "name_es": "Puertos RS485",
+      "type": "comm_port",
+      "status": "unverified",
+      "quantity_per_module": 3,
+      "source_ids": [
+        "S18"
+      ]
+    },
+    {
+      "id": "eth",
+      "name": "Ethernet ports (1 WAN, 1 LAN)",
+      "name_es": "Puertos Ethernet (1 WAN, 1 LAN)",
+      "type": "comm_port",
+      "status": "unverified",
+      "quantity_per_module": 2,
+      "source_ids": [
+        "S18"
+      ]
+    },
+    {
+      "id": "psu",
+      "name": "Power input AC 100-240 V / DC 12 V or 24 V",
+      "name_es": "Entrada de alimentación CA 100-240 V / CC 12 V o 24 V",
+      "type": "other",
+      "status": "unverified",
+      "quantity_per_module": 1,
+      "ratings": {
+        "typical_w": 8,
+        "max_w": 15
+      },
+      "source_ids": [
+        "S18"
+      ]
+    },
+    {
+      "id": "ant",
+      "name": "Antenna (optional, excluded from dimensions)",
+      "name_es": "Antena (opcional, no incluida en dimensiones)",
+      "type": "antenna",
+      "status": "not_found",
+      "geometry_hint": "Antenna dimensions not found",
+      "source_ids": [
+        "S18"
+      ]
+    }
+  ],
+  "geometry": {
+    "description": "Envelope W x H x D = 225 x 160 x 43.6 mm (without ears and antenna) mapped to x=225, y=43.6, z=160.",
+    "coordinate_system": "x along module long side, y along short side, z up through thickness; origin at module front-left corner; mm",
+    "elements": [
+      {
+        "id": "E-enc",
+        "kind": "enclosure_body",
+        "part_id": "enc",
+        "position_mm": [
+          0,
+          0,
+          0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          225,
+          43.6,
+          160
+        ],
+        "status": "unverified"
+      }
+    ],
+    "module_dimensions_mm": [
+      225,
+      43.6,
+      160
+    ]
+  },
+  "mechanical_ratings": {
+    "note": "Certifications not captured"
+  },
+  "unverified_items": [
+    "Antenna dimensions not found",
+    "Mounting-hole spacing not found",
+    "Certifications not captured"
+  ],
+  "sources": [
+    {
+      "id": "S18",
+      "title": "SmartLogger3000A Europe datasheet (08-000429)",
+      "publisher": "Huawei Technologies Co., Ltd. (distributor copy)",
+      "url": "https://solar-distribution.baywa-re.pl/out/media/08-000429_SmartLogger3000A-Europe.pdf",
+      "accessed": "2026-11-20"
+    }
+  ],
+  "electrical_ratings": {
+    "supply_ac_v": [
+      100,
+      240
+    ],
+    "supply_dc_v": [
+      12,
+      24
+    ],
+    "power_w_typ": 8,
+    "power_w_max": 15,
+    "rs485_ports": 3,
+    "ethernet_ports": 2
+  },
+  "mechanical": {
+    "dimensions_mm_WxHxD": [
+      225,
+      160,
+      43.6
+    ],
+    "weight_kg": 2,
+    "ip": "IP20",
+    "operating_temp_c": "-40 to 60",
+    "mounting": "wall, DIN rail, tabletop"
+  }
+}

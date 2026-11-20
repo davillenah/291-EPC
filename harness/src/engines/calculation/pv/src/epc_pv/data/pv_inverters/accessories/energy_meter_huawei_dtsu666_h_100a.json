@@ -1,0 +1,157 @@
+{
+  "schema_version": "1.0",
+  "id": "energy_meter_huawei_dtsu666_h_100a",
+  "name": {
+    "en": "Huawei DTSU666-H Smart Power Sensor, 100 A CT set",
+    "es": "Sensor de potencia Huawei DTSU666-H, juego de TC 100 A"
+  },
+  "kind": "accessory",
+  "description": {
+    "en": "Three-phase power sensor with 100 A / 40 mA CTs, RS485 Modbus-RTU 9600 bps, DIN35 rail, 100 x 72 x 65.5 mm (H x W x D), 1.5 kg incl. cables.",
+    "es": "Sensor de potencia trifásico con TC 100 A / 40 mA, RS485 Modbus-RTU 9600 bps, carril DIN35, 100 x 72 x 65,5 mm (A x An x P), 1,5 kg con cables."
+  },
+  "typical_use": "Grid export meter with CTs for export limit control.",
+  "status": "unverified",
+  "parts": [
+    {
+      "id": "enc",
+      "name": "Meter housing (DIN35 rail)",
+      "name_es": "Carcasa del medidor (carril DIN35)",
+      "type": "enclosure",
+      "status": "unverified",
+      "dimensions_mm": {
+        "W": 72,
+        "H": 100,
+        "D": 65.5
+      },
+      "quantity_per_module": 1,
+      "ratings": {
+        "weight_kg": 1.5
+      },
+      "source_ids": [
+        "S21"
+      ]
+    },
+    {
+      "id": "ct",
+      "name": "Current transformer set 100 A / 40 mA",
+      "name_es": "Juego de transformadores de corriente 100 A / 40 mA",
+      "type": "other",
+      "status": "unverified",
+      "quantity_per_module": 3,
+      "ratings": {
+        "ct_rating": "100 A / 40 mA"
+      },
+      "geometry_hint": "Quantity 3 inferred from three-phase set; source says included CTs",
+      "source_ids": [
+        "S21"
+      ]
+    },
+    {
+      "id": "rs485",
+      "name": "RS485 Modbus-RTU",
+      "name_es": "RS485 Modbus-RTU",
+      "type": "comm_port",
+      "status": "unverified",
+      "quantity_per_module": 1,
+      "ratings": {
+        "baud": 9600
+      },
+      "source_ids": [
+        "S21"
+      ]
+    },
+    {
+      "id": "cable",
+      "name": "Voltage and CT cables",
+      "name_es": "Cables de tensión y de TC",
+      "type": "cable",
+      "status": "unverified",
+      "geometry_hint": "Included in weight",
+      "source_ids": [
+        "S21"
+      ]
+    }
+  ],
+  "geometry": {
+    "description": "Envelope H x W x D = 100 x 72 x 65.5 mm mapped to x=72, y=65.5, z=100.",
+    "coordinate_system": "x along module long side, y along short side, z up through thickness; origin at module front-left corner; mm",
+    "elements": [
+      {
+        "id": "E-enc",
+        "kind": "enclosure_body",
+        "part_id": "enc",
+        "position_mm": [
+          0,
+          0,
+          0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          72,
+          65.5,
+          100
+        ],
+        "status": "unverified"
+      }
+    ],
+    "module_dimensions_mm": [
+      72,
+      65.5,
+      100
+    ]
+  },
+  "mechanical_ratings": {
+    "communication": "RS485, Modbus-RTU, 9600 bps"
+  },
+  "unverified_items": [
+    "Measurement accuracy class not stated (percentages given)",
+    "IP rating not found",
+    "CT count and CT dimensions not confirmed",
+    "Rated voltage not stated (input range given)"
+  ],
+  "sources": [
+    {
+      "id": "S21",
+      "title": "Smart Power Sensor DTSU666-H 100A specifications",
+      "publisher": "Huawei Technologies Co., Ltd.",
+      "url": "https://solar.huawei.com/en/products/DTSU666-H-100A/specs",
+      "accessed": "2026-11-20"
+    }
+  ],
+  "electrical_ratings": {
+    "input_phase_v": [
+      176,
+      288
+    ],
+    "line_v": [
+      304,
+      499
+    ],
+    "current_range_a": [
+      0,
+      100
+    ],
+    "ct_rating": "100 A / 40 mA",
+    "accuracy": {
+      "current_voltage_pct": 0.5,
+      "power_energy_pct": 1,
+      "frequency_hz": 0.01
+    }
+  },
+  "mechanical": {
+    "dimensions_mm_HxWxD": [
+      100,
+      72,
+      65.5
+    ],
+    "weight_kg": 1.5,
+    "ip": "not found",
+    "operating_temp_c": "-25 to 60",
+    "mounting": "DIN35 rail"
+  }
+}
