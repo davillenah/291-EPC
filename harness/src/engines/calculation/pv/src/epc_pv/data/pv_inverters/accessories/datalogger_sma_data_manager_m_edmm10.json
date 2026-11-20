@@ -1,0 +1,169 @@
+{
+  "schema_version": "1.0",
+  "id": "datalogger_sma_data_manager_m_edmm10",
+  "name": {
+    "en": "SMA Data Manager M (EDMM-10) monitoring and control",
+    "es": "SMA Data Manager M (EDMM-10) de monitorización y control"
+  },
+  "kind": "accessory",
+  "description": {
+    "en": "Monitoring and control datalogger, 10-30 V DC supply, 4 W, 2 RJ45 Ethernet, RS485, USB, IP20, 161.1 x 89.7 x 67.2 mm, 0.22 kg, top-hat or wall mount.",
+    "es": "Datalogger de monitorización y control, alimentación 10-30 V CC, 4 W, 2 RJ45 Ethernet, RS485, USB, IP20, 161,1 x 89,7 x 67,2 mm, 0,22 kg, montaje en carril DIN o pared."
+  },
+  "typical_use": "Plant-level datalogger for SMA inverters.",
+  "status": "unverified",
+  "parts": [
+    {
+      "id": "enc",
+      "name": "Housing (DIN rail or wall)",
+      "name_es": "Carcasa (carril DIN o pared)",
+      "type": "enclosure",
+      "status": "unverified",
+      "dimensions_mm": {
+        "W": 161.1,
+        "H": 89.7,
+        "D": 67.2
+      },
+      "quantity_per_module": 1,
+      "ratings": {
+        "ip": "IP20 (NEMA 1)",
+        "weight_kg": 0.22
+      },
+      "source_ids": [
+        "S17"
+      ]
+    },
+    {
+      "id": "eth",
+      "name": "Ethernet RJ45 ports",
+      "name_es": "Puertos Ethernet RJ45",
+      "type": "comm_port",
+      "status": "unverified",
+      "quantity_per_module": 2,
+      "ratings": {
+        "speed": "10/100 Mbit/s"
+      },
+      "source_ids": [
+        "S17"
+      ]
+    },
+    {
+      "id": "rs485",
+      "name": "RS485 port (6-pin connection)",
+      "name_es": "Puerto RS485 (conexión de 6 pines)",
+      "type": "comm_port",
+      "status": "unverified",
+      "ratings": {
+        "port_count": "not_found"
+      },
+      "geometry_hint": "Port count not stated",
+      "source_ids": [
+        "S17"
+      ]
+    },
+    {
+      "id": "usb",
+      "name": "USB 2.0 Type A (updates)",
+      "name_es": "USB 2.0 tipo A (actualizaciones)",
+      "type": "comm_port",
+      "status": "unverified",
+      "quantity_per_module": 1,
+      "source_ids": [
+        "S17"
+      ]
+    },
+    {
+      "id": "psu",
+      "name": "DC supply input 10-30 V DC",
+      "name_es": "Entrada de alimentación 10-30 V CC",
+      "type": "other",
+      "status": "unverified",
+      "quantity_per_module": 1,
+      "ratings": {
+        "typical_power_w": 4
+      },
+      "source_ids": [
+        "S17"
+      ]
+    },
+    {
+      "id": "label",
+      "name": "Label",
+      "name_es": "Etiqueta",
+      "type": "label",
+      "status": "typical",
+      "geometry_hint": "Generic"
+    }
+  ],
+  "geometry": {
+    "description": "Envelope W x H x D = 161.1 x 89.7 x 67.2 mm mapped to x=161.1, y=67.2, z=89.7.",
+    "coordinate_system": "x along module long side, y along short side, z up through thickness; origin at module front-left corner; mm",
+    "elements": [
+      {
+        "id": "E-enc",
+        "kind": "enclosure_body",
+        "part_id": "enc",
+        "position_mm": [
+          0,
+          0,
+          0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          161.1,
+          67.2,
+          89.7
+        ],
+        "status": "unverified"
+      }
+    ],
+    "module_dimensions_mm": [
+      161.1,
+      67.2,
+      89.7
+    ]
+  },
+  "mechanical_ratings": {
+    "certifications": "not found on page (available on request per source)"
+  },
+  "unverified_items": [
+    "RS485 port count not stated",
+    "Certifications not found",
+    "Gland or cable entry provisions not stated"
+  ],
+  "sources": [
+    {
+      "id": "S17",
+      "title": "Data Manager M EDMM-10 datasheet (EDMM-10-DS-en-42)",
+      "publisher": "SMA Solar Technology AG",
+      "url": "https://files.sma.de/downloads/EDMM-10-DS-en-42.pdf",
+      "accessed": "2026-11-20"
+    }
+  ],
+  "electrical_ratings": {
+    "supply_v_dc": [
+      10,
+      30
+    ],
+    "power_w_typ": 4,
+    "ethernet_ports": 2,
+    "rs485": true,
+    "usb": true,
+    "wifi": "not available"
+  },
+  "mechanical": {
+    "dimensions_mm_WxHxD": [
+      161.1,
+      89.7,
+      67.2
+    ],
+    "weight_kg": 0.22,
+    "ip": "IP20 (NEMA 1)",
+    "operating_temp_c": "-20 to 60",
+    "mounting": "top-hat rail or wall"
+  }
+}

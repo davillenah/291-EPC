@@ -1,0 +1,145 @@
+{
+  "schema_version": "1.0",
+  "id": "optimizer_tigo_ts4_a_o_725w",
+  "name": {
+    "en": "Tigo TS4-A-O 725 W module-level optimizer",
+    "es": "Optimizador a nivel de módulo Tigo TS4-A-O 725 W"
+  },
+  "kind": "accessory",
+  "description": {
+    "en": "Module-level optimizer, 80 V input, 22 A Isc, 16 A Imp, 99.6% efficiency, IP68, -40 to 70 C, 139.7 x 138.4 x 22.9 mm, 0.52 kg.",
+    "es": "Optimizador a nivel de módulo, entrada 80 V, Isc 22 A, Imp 16 A, eficiencia 99,6 %, IP68, -40 a 70 C, 139,7 x 138,4 x 22,9 mm, 0,52 kg."
+  },
+  "typical_use": "Module-level optimizer on a PV module.",
+  "status": "unverified",
+  "parts": [
+    {
+      "id": "enc",
+      "name": "Optimizer housing",
+      "name_es": "Carcasa del optimizador",
+      "type": "enclosure",
+      "status": "unverified",
+      "material": "not stated",
+      "dimensions_mm": {
+        "L": 139.7,
+        "W": 138.4,
+        "H": 22.9
+      },
+      "quantity_per_module": 1,
+      "ratings": {
+        "ip": "IP68",
+        "weight_kg": 0.52
+      },
+      "source_ids": [
+        "S16"
+      ]
+    },
+    {
+      "id": "cable",
+      "name": "Input and output leads",
+      "name_es": "Cables de entrada y salida",
+      "type": "cable",
+      "status": "typical",
+      "quantity_per_module": 2,
+      "geometry_hint": "Connector type not stated"
+    },
+    {
+      "id": "mount",
+      "name": "Mounting feature",
+      "name_es": "Elemento de montaje",
+      "type": "mounting_hole",
+      "status": "not_found",
+      "geometry_hint": "Mounting not found",
+      "source_ids": [
+        "S16"
+      ]
+    }
+  ],
+  "geometry": {
+    "description": "Envelope 139.7 x 138.4 x 22.9 mm (L x W x H as stated) mapped to x=139.7, y=138.4, z=22.9.",
+    "coordinate_system": "x along module long side, y along short side, z up through thickness; origin at module front-left corner; mm",
+    "elements": [
+      {
+        "id": "E-enc",
+        "kind": "enclosure_body",
+        "part_id": "enc",
+        "position_mm": [
+          0,
+          0,
+          0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          139.7,
+          138.4,
+          22.9
+        ],
+        "status": "unverified"
+      }
+    ],
+    "module_dimensions_mm": [
+      139.7,
+      138.4,
+      22.9
+    ]
+  },
+  "mechanical_ratings": {
+    "standards": [
+      "IEC 62109",
+      "UL 1741",
+      "NEC 690.12"
+    ]
+  },
+  "unverified_items": [
+    "Max output current not found",
+    "Mounting not found",
+    "Connector type not stated",
+    "Source is the 725 W reseller copy of the Tigo datasheet"
+  ],
+  "sources": [
+    {
+      "id": "S16",
+      "title": "TS4-A-O (725 W) data sheet",
+      "publisher": "Tigo Energy",
+      "url": "https://ressupply.com/documents/tigo/TS4-A-O_(725W)_Data_Sheet.pdf",
+      "accessed": "2026-11-20"
+    }
+  ],
+  "electrical_ratings": {
+    "max_input_voltage_v": 80,
+    "vmp_range_v": [
+      12,
+      80
+    ],
+    "isc_a": 22,
+    "imp_a": 16,
+    "efficiency_pct": 99.6,
+    "max_system_voltage_v": [
+      1000,
+      1500
+    ],
+    "standards": [
+      "FCC 15B",
+      "ETSI EN 301 489",
+      "CISPR 31",
+      "CSA 22.2",
+      "IEC 62109",
+      "NEC 690.12",
+      "UL 1741 PVRSE/PVRSS"
+    ]
+  },
+  "mechanical": {
+    "dimensions_mm_LxWxH": [
+      139.7,
+      138.4,
+      22.9
+    ],
+    "weight_kg": 0.52,
+    "ip": "IP68",
+    "operating_temp_c": "-40 to 70"
+  }
+}

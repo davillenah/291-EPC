@@ -1,0 +1,501 @@
+{
+  "schema_version": "1.0",
+  "id": "ibc",
+  "name": {
+    "en": "IBC / back contact (LONGi HPBC, Maxeon IBC)",
+    "es": "IBC / contacto posterior (LONGi HPBC, Maxeon IBC)"
+  },
+  "kind": "technology",
+  "description": {
+    "en": "Back-contact cell: both polarities on the rear, no front busbar shading. Reference: LONGi Hi-MO 6 HPBC (108 cells, 6x18) and Maxeon IBC MAX7 (120 cells).",
+    "es": "Celda de contacto posterior: ambas polaridades en la cara trasera, sin sombreado de barras en la cara frontal. Referencia: LONGi Hi-MO 6 HPBC (108 celdas, 6x18) y Maxeon IBC MAX7 (120 celdas)."
+  },
+  "typical_use": "High-efficiency residential and commercial rooftop modules with premium appearance (all-black).",
+  "cell": {
+    "type": "IBC back contact (LONGi: HPBC; Maxeon: 'IBC', 'back contact' not expanded in datasheet)",
+    "n_cells_typical": [
+      108,
+      120
+    ],
+    "status": "unverified",
+    "source_ids": [
+      "longi_hpbc_ds",
+      "longi_hi_mo6_page",
+      "maxeon_max7"
+    ],
+    "note": "LONGi: 108 cells (6x18); cell efficiency 'higher than 25%' per LONGi page (no range given). Maxeon: 120 cells. Busbar count and cell size not stated."
+  },
+  "layers": [
+    {
+      "id": "glass_front",
+      "name": "Front glass",
+      "material": "tempered anti-reflective glass",
+      "status": "unverified",
+      "source_ids": [
+        "longi_hpbc_ds",
+        "maxeon_max7"
+      ],
+      "thickness_mm": 3.2
+    },
+    {
+      "id": "encapsulant_front",
+      "name": "Front encapsulant",
+      "material": "EVA or POE (thickness from Fraunhofer ISE lab-module reference; product material not stated)",
+      "status": "unverified",
+      "source_ids": [
+        "fraunhofer_pfreundt_2019"
+      ],
+      "thickness_mm": 0.45
+    },
+    {
+      "id": "cell_layer",
+      "name": "Cell layer",
+      "material": "back-contact cells",
+      "status": "unverified",
+      "source_ids": [
+        "fraunhofer_pfreundt_2019",
+        "longi_hpbc_ds"
+      ],
+      "thickness_mm": 0.18,
+      "note": "Thickness 0.18 mm from Fraunhofer ISE lab-module reference (replaces typical 0.2 mm)."
+    },
+    {
+      "id": "encapsulant_rear",
+      "name": "Rear encapsulant",
+      "material": "EVA or POE (thickness from Fraunhofer ISE lab-module reference; product material not stated)",
+      "status": "unverified",
+      "source_ids": [
+        "fraunhofer_pfreundt_2019"
+      ],
+      "thickness_mm": 0.45
+    },
+    {
+      "id": "rear_layer",
+      "name": "Rear layer",
+      "material": "backsheet (white in Maxeon; material not stated for LONGi)",
+      "status": "unverified",
+      "source_ids": [
+        "fraunhofer_pfreundt_2019",
+        "maxeon_max7"
+      ],
+      "thickness_mm": 0.35,
+      "note": "Backsheet 0.35 mm from Fraunhofer ISE lab-module reference."
+    }
+  ],
+  "parts": [
+    {
+      "id": "glass_front",
+      "name": "Front glass",
+      "type": "glass",
+      "status": "unverified",
+      "source_ids": [
+        "longi_hpbc_ds",
+        "maxeon_max7"
+      ],
+      "material": "tempered anti-reflective glass",
+      "dimensions_mm": {
+        "thickness": 3.2
+      }
+    },
+    {
+      "id": "encapsulant_front",
+      "name": "Front encapsulant",
+      "type": "encapsulant",
+      "status": "unverified",
+      "source_ids": [
+        "fraunhofer_pfreundt_2019"
+      ],
+      "material": "EVA or POE (thickness from Fraunhofer ISE lab-module reference; product material not stated)"
+    },
+    {
+      "id": "encapsulant_rear",
+      "name": "Rear encapsulant",
+      "type": "encapsulant",
+      "status": "unverified",
+      "source_ids": [
+        "fraunhofer_pfreundt_2019"
+      ],
+      "material": "EVA or POE (thickness from Fraunhofer ISE lab-module reference; product material not stated)"
+    },
+    {
+      "id": "cells",
+      "name": "IBC cell string (108 cells, 6x18)",
+      "type": "cell_string",
+      "status": "unverified",
+      "source_ids": [
+        "longi_hpbc_ds"
+      ],
+      "material": "n-type silicon, rear contacts"
+    },
+    {
+      "id": "rear",
+      "name": "Rear layer",
+      "type": "backsheet",
+      "status": "unverified",
+      "source_ids": [
+        "maxeon_max7"
+      ],
+      "material": "backsheet (white in Maxeon; material not stated for LONGi)"
+    },
+    {
+      "id": "frame",
+      "name": "Frame profile",
+      "type": "frame_profile",
+      "status": "unverified",
+      "source_ids": [
+        "longi_hpbc_ds"
+      ],
+      "material": "aluminium alloy, anodized",
+      "quantity_per_module": 4,
+      "dimensions_mm": {
+        "height": 30,
+        "width": 30
+      },
+      "geometry_hint": "rectangular perimeter profile; section polygon not stated (footprint width typical)"
+    },
+    {
+      "id": "junction_box",
+      "name": "Junction box",
+      "type": "junction_box",
+      "status": "unverified",
+      "source_ids": [
+        "longi_hpbc_ds",
+        "maxeon_max7"
+      ],
+      "ratings": {
+        "ip": "IP68"
+      }
+    },
+    {
+      "id": "bypass_diodes",
+      "name": "Bypass diodes",
+      "type": "bypass_diode",
+      "status": "unverified",
+      "source_ids": [
+        "longi_hpbc_ds",
+        "maxeon_max7"
+      ],
+      "quantity_per_module": 3
+    },
+    {
+      "id": "connector",
+      "name": "Connector",
+      "type": "connector",
+      "status": "unverified",
+      "source_ids": [
+        "longi_hpbc_ds",
+        "maxeon_max7"
+      ],
+      "ratings": {
+        "type": "MC4 compatible (LONGi); Stäubli (Maxeon)"
+      },
+      "quantity_per_module": 2
+    },
+    {
+      "id": "cable",
+      "name": "PV cable",
+      "type": "cable",
+      "status": "unverified",
+      "source_ids": [
+        "longi_hpbc_ds",
+        "maxeon_max7"
+      ],
+      "ratings": {
+        "cross_section_mm2": 4,
+        "length_mm": 1200
+      },
+      "quantity_per_module": 2
+    }
+  ],
+  "geometry": {
+    "description": "Framed module 1722 x 1134 x 30 mm (LONGi Hi-MO 6 HPBC, 108 cells). Maxeon MAX7 (120 cells) is 1913 x 1035 mm with a 35 mm frame profile; not modelled here. Frame footprint width typical; junction box placement and size typical.",
+    "coordinate_system": "x along module long side, y along short side, z up through thickness; origin at module front-left corner; mm. Here z=0 is the front glass face and z grows toward the rear through thickness.",
+    "elements": [
+      {
+        "id": "glass_front",
+        "kind": "glass",
+        "part_id": "glass_front",
+        "position_mm": [
+          30,
+          30,
+          0.0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          1662,
+          1074,
+          3.2
+        ],
+        "status": "unverified"
+      },
+      {
+        "id": "encapsulant_front",
+        "kind": "encapsulant",
+        "part_id": "encapsulant_front",
+        "position_mm": [
+          30,
+          30,
+          3.2
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          1662,
+          1074,
+          0.45
+        ],
+        "status": "unverified"
+      },
+      {
+        "id": "cell_layer",
+        "kind": "cell_string",
+        "part_id": "cells",
+        "position_mm": [
+          30,
+          30,
+          3.65
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          1662,
+          1074,
+          0.18
+        ],
+        "status": "unverified"
+      },
+      {
+        "id": "encapsulant_rear",
+        "kind": "encapsulant",
+        "part_id": "encapsulant_rear",
+        "position_mm": [
+          30,
+          30,
+          3.83
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          1662,
+          1074,
+          0.45
+        ],
+        "status": "unverified"
+      },
+      {
+        "id": "rear_layer",
+        "kind": "backsheet",
+        "part_id": "rear",
+        "position_mm": [
+          30,
+          30,
+          4.28
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          1662,
+          1074,
+          0.35
+        ],
+        "status": "unverified"
+      },
+      {
+        "id": "frame_long_front",
+        "kind": "frame_profile",
+        "part_id": "frame",
+        "position_mm": [
+          0,
+          0,
+          0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          1722,
+          30,
+          30
+        ],
+        "status": "unverified",
+        "note": "footprint width typical, see frame part"
+      },
+      {
+        "id": "frame_long_back",
+        "kind": "frame_profile",
+        "part_id": "frame",
+        "position_mm": [
+          0,
+          1104,
+          0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          1722,
+          30,
+          30
+        ],
+        "status": "unverified",
+        "note": "footprint width typical, see frame part"
+      },
+      {
+        "id": "frame_short_left",
+        "kind": "frame_profile",
+        "part_id": "frame",
+        "position_mm": [
+          0,
+          30,
+          0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          30,
+          1074,
+          30
+        ],
+        "status": "unverified",
+        "note": "footprint width typical, see frame part"
+      },
+      {
+        "id": "frame_short_right",
+        "kind": "frame_profile",
+        "part_id": "frame",
+        "position_mm": [
+          1692,
+          30,
+          0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          30,
+          1074,
+          30
+        ],
+        "status": "unverified",
+        "note": "footprint width typical, see frame part"
+      },
+      {
+        "id": "junction_box",
+        "kind": "junction_box",
+        "part_id": "junction_box",
+        "position_mm": [
+          786.0,
+          517.0,
+          4.63
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          150,
+          100,
+          20
+        ],
+        "status": "typical",
+        "note": "placement and size typical, not from datasheet"
+      }
+    ],
+    "module_dimensions_mm": [
+      1722,
+      1134,
+      30
+    ]
+  },
+  "mechanical_ratings": {
+    "weight_kg": 20.8,
+    "module_efficiency_pct_range": [
+      21.3,
+      22.3
+    ],
+    "max_system_voltage_v": 1500,
+    "junction_box_ip": "IP68",
+    "standards_listed_in_source": [
+      "IEC 61215",
+      "IEC 61730",
+      "UL 61730"
+    ],
+    "maxeon_reference": {
+      "size_mm": [
+        1913,
+        1035
+      ],
+      "weight_kg": 21.1,
+      "efficiency_pct_max": 23.0,
+      "max_system_voltage_v": 1000,
+      "cable_length_mm": 1225,
+      "source": "maxeon_max7"
+    },
+    "status_note": "values transcribed from cited datasheets only; status unverified unless marked"
+  },
+  "status": "unverified",
+  "unverified_items": [
+    "LONGi module datasheet is shown as a distributor copy; cell efficiency only from LONGi product page.",
+    "LONGi cell count '54-cell class' wording unexplained in source.",
+    "Maxeon: back contact not expanded in datasheet; cable cross-section and connector not stated.",
+    "LONGi back-sheet material and frame width not stated (footprint width typical).",
+    "Cell busbar count not stated.",
+    "Encapsulant 0.45 mm, cell layer 0.18 mm and backsheet 0.35 mm (where a backsheet is stated) are Fraunhofer ISE lab-module references, not values from this product's datasheet."
+  ],
+  "sources": [
+    {
+      "id": "longi_hpbc_ds",
+      "title": "Hi-MO 6 Explorer LR5-54HTH 415-435 M datasheet (distributor copy)",
+      "publisher": "LONGi (copy hosted by Krannich Solar)",
+      "url": "https://krannich-solar.com/fileadmin/user_upload/JP/Blog/PV_EXPO2023_2023-04-18/230418_LR_5_54_HTH_415_435_M_Explorer_20230123cp_ab3059a951.pdf",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "longi_hi_mo6_page",
+      "title": "LONGi Hi-MO 6 Explorer product page",
+      "publisher": "LONGi",
+      "url": "https://longi.com/au/products/modules/hi-mo-6-explorer",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "maxeon_max7",
+      "title": "SunPower / Maxeon MAX7 120-cell 455 W datasheet",
+      "publisher": "Maxeon (SunPower)",
+      "url": "https://sunpowerglobal.com/us/sites/default/files/2025-02/sp_max7_120c_455_ds_en_a4_mc4_553945.pdf",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "fraunhofer_pfreundt_2019",
+      "title": "Pfreundt et al., EU PVSEC 2019, paper 4CO43 (module layer thicknesses, lab modules)",
+      "publisher": "Fraunhofer ISE",
+      "url": "https://www.ise.fraunhofer.de/content/dam/ise/de/documents/publications/conference-paper/36-eupvsec-2019/Pfreundt_4CO43.pdf",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

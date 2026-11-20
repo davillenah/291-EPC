@@ -1,0 +1,280 @@
+{
+  "schema_version": "1.0",
+  "id": "g12_72_144_2278x1134x30",
+  "name": {
+    "en": "72-cell class, 144 half cells 6x24, 2278 x 1134 x 30 mm",
+    "es": "Clase 72 celdas, 144 medias celdas 6x24, 2278 x 1134 x 30 mm"
+  },
+  "kind": "format",
+  "description": {
+    "en": "G12 module, 2278 x 1134 x 30 mm, 144 cells in a 6x24 layout, 27.2 kg, single 3.2 mm coated tempered glass, IP68 junction box (LONGi LR5-72HTH datasheet). Cell size not stated, so the G12 class is not confirmed by the source.",
+    "es": "Modulo G12, 2278 x 1134 x 30 mm, 144 celdas en disposicion 6x24, 27,2 kg, vidrio frontal templado recubierto de 3,2 mm, caja IP68 (ficha LONGi LR5-72HTH). Tamano de celda no indicado, por lo que la clase G12 no esta confirmada por la fuente."
+  },
+  "typical_use": "72-cell class module, 2278 mm long; size class to be confirmed.",
+  "layers": [
+    {
+      "id": "front_glass",
+      "name": "Front glass",
+      "material": "coated tempered glass",
+      "thickness_mm": 3.2,
+      "status": "unverified",
+      "source_ids": [
+        "S2"
+      ]
+    },
+    {
+      "id": "encapsulant_front",
+      "name": "Encapsulant front",
+      "material": "not stated",
+      "status": "not_found",
+      "source_ids": []
+    },
+    {
+      "id": "cell_layer",
+      "name": "Cell layer",
+      "material": "silicon cells: 144 (6x24 layout) per datasheet",
+      "status": "unverified",
+      "source_ids": [
+        "S2"
+      ]
+    },
+    {
+      "id": "encapsulant_back",
+      "name": "Encapsulant back",
+      "material": "not stated",
+      "status": "not_found",
+      "source_ids": []
+    },
+    {
+      "id": "rear_layer",
+      "name": "Rear layer",
+      "material": "not stated",
+      "status": "not_found",
+      "source_ids": [
+        "S2"
+      ]
+    }
+  ],
+  "parts": [
+    {
+      "id": "module_body",
+      "name": "Laminate outline (outline for 2D/3D)",
+      "type": "other",
+      "status": "unverified",
+      "dimensions_mm": {
+        "length": 2278,
+        "width": 1134,
+        "thickness": 30
+      },
+      "source_ids": [
+        "S2"
+      ]
+    },
+    {
+      "id": "frame_profile",
+      "name": "Frame: anodized aluminium alloy (section not stated)",
+      "type": "frame_profile",
+      "status": "unverified",
+      "material": "anodized aluminium alloy",
+      "geometry_hint": "section dimensions not stated; see frame_profile_anodized_aluminium family",
+      "quantity_per_module": 4,
+      "source_ids": [
+        "S2"
+      ]
+    },
+    {
+      "id": "junction_box",
+      "name": "Junction box: IP68, diode count not stated",
+      "type": "junction_box",
+      "status": "unverified",
+      "ratings": {
+        "ip": "IP68",
+        "bypass_diodes": "not_found",
+        "diode_rating": "not_found"
+      },
+      "quantity_per_module": 1,
+      "source_ids": [
+        "S2"
+      ]
+    },
+    {
+      "id": "pv_cable",
+      "name": "PV output cable: 4 mm2",
+      "type": "cable",
+      "status": "unverified",
+      "ratings": {
+        "cross_section_mm2": 4,
+        "length_note": "+400 mm / -200 mm; +-1400 mm; customizable"
+      },
+      "quantity_per_module": 2,
+      "source_ids": [
+        "S2"
+      ]
+    },
+    {
+      "id": "cell_string",
+      "name": "Cells: 144 (6x24 layout) per datasheet",
+      "type": "cell_string",
+      "status": "unverified",
+      "quantity_per_module": 144,
+      "source_ids": [
+        "S2"
+      ]
+    },
+    {
+      "id": "glass_front",
+      "name": "Front glass: single 3.2 mm coated tempered glass",
+      "type": "glass",
+      "status": "unverified",
+      "source_ids": [
+        "S2"
+      ]
+    },
+    {
+      "id": "mounting_holes",
+      "name": "Mounting holes",
+      "type": "mounting_hole",
+      "status": "not_found",
+      "geometry_hint": "positions, slot sizes and edge distances not stated in the datasheet extract",
+      "source_ids": [
+        "S2"
+      ]
+    },
+    {
+      "id": "grounding_holes",
+      "name": "Grounding holes",
+      "type": "grounding_hole",
+      "status": "not_found",
+      "source_ids": [
+        "S2"
+      ]
+    },
+    {
+      "id": "drain_holes",
+      "name": "Drainage holes",
+      "type": "drain_hole",
+      "status": "not_found",
+      "source_ids": [
+        "S2"
+      ]
+    },
+    {
+      "id": "connector",
+      "name": "PV connector (type not stated)",
+      "type": "connector",
+      "status": "not_found",
+      "source_ids": []
+    },
+    {
+      "id": "encapsulant",
+      "name": "Encapsulant",
+      "type": "encapsulant",
+      "status": "not_found",
+      "geometry_hint": "material and thickness not stated",
+      "source_ids": []
+    },
+    {
+      "id": "rear_layer",
+      "name": "Rear layer: not stated",
+      "type": "backsheet",
+      "status": "not_found",
+      "source_ids": [
+        "S2"
+      ]
+    },
+    {
+      "id": "busbar_ribbon",
+      "name": "Busbars / ribbons (count, material not stated)",
+      "type": "busbar_ribbon",
+      "status": "not_found",
+      "source_ids": []
+    },
+    {
+      "id": "sealant_edge",
+      "name": "Edge sealant",
+      "type": "sealant",
+      "status": "not_found",
+      "source_ids": []
+    },
+    {
+      "id": "label_nameplate",
+      "name": "Nameplate label",
+      "type": "label",
+      "status": "not_found",
+      "source_ids": []
+    }
+  ],
+  "geometry": {
+    "description": "Outline from datasheet dimensions. Hole positions and clamp zones are not stated in the source, so they are not positioned (status not_found).",
+    "module_dimensions_mm": [
+      2278,
+      1134,
+      30
+    ],
+    "clamping_zones_mm": [
+      {
+        "edge": "long",
+        "status": "not_found",
+        "note": "clamp zones not stated in the datasheet extract"
+      },
+      {
+        "edge": "short",
+        "status": "not_found",
+        "note": "clamp zones not stated in the datasheet extract"
+      }
+    ],
+    "elements": [
+      {
+        "id": "outline",
+        "kind": "laminate_outline",
+        "part_id": "module_body",
+        "position_mm": [
+          0,
+          0,
+          0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          2278,
+          1134,
+          30
+        ],
+        "status": "unverified"
+      }
+    ]
+  },
+  "mechanical_ratings": {
+    "weight_kg": 27.2,
+    "static_load_front_pa": 5400,
+    "static_load_rear_pa": 2400,
+    "junction_box_ip": "IP68",
+    "standards": [
+      "IEC 61215",
+      "IEC 61730",
+      "UL 61730",
+      "IEC 62941"
+    ],
+    "standards_source": "S2 cites them; not fetched"
+  },
+  "status": "unverified",
+  "unverified_items": [
+    "Diode count not stated (cell-to-diode arrangement unknown).",
+    "Frame section and holes not stated.",
+    "Cable length string to be confirmed.",
+    "Standards are cited in the datasheet but not verified against the standards.",
+    "Cell size not stated: G12 (210 mm) class not confirmed."
+  ],
+  "sources": [
+    {
+      "id": "S2",
+      "title": "LONGi LR5-72HTH 590-600M product datasheet (2278 x 1134 x 30 mm)",
+      "publisher": "LONGi (copy hosted on Shopify CDN)",
+      "url": "https://cdn.shopify.com/s/files/1/0882/5641/4023/files/Datasheet_Longi_LR5-72HTH_590_600M.pdf",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

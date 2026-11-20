@@ -1,0 +1,490 @@
+{
+  "schema_version": "1.0",
+  "id": "driven_pile_fixed_table",
+  "name": {
+    "en": "Driven/rammed post fixed-tilt table (2P, multi-post)",
+    "es": "Mesa fija de tilt con hincado (2P, multiposte)"
+  },
+  "family": "ground",
+  "category": "driven_pile_fixed_table",
+  "description": {
+    "en": "Fixed-tilt ground array on several galvanized steel posts rammed (hincado) into the soil. Main beams run along the row and cross purlins carry the modules, which are fixed with anodized aluminium mid and end clamps. Reference configuration: 2P10 table, 20 modules, 12 posts, tilt 20-30 degrees, post embedment 1500 mm.",
+    "es": "Estructura fija de tilt en suelo sobre varios postes de acero galvanizado hincados en el terreno. Vigas principales a lo largo de la fila y correas transversales que soportan los módulos, fijados con mordazas intermedias y finales de aluminio anodizado. Configuración de referencia: mesa 2P10, 20 módulos, 12 postes, tilt 20-30 grados, empotramiento de poste 1500 mm."
+  },
+  "typical_use": "Utility and commercial fixed-tilt ground arrays on soils where driving or ramming is feasible.",
+  "applicable_standards": [
+    "EN 1090-1",
+    "ISO 1461",
+    "EN 10346",
+    "ISO 12944-2",
+    "EN 1991-1-3 (reference only, not cited by the sources)",
+    "EN 1991-1-4 (reference only, not cited by the sources)",
+    "ISO 898-1 (reference for bolt class 8.8, not cited by the sources)"
+  ],
+  "materials": [
+    {
+      "component": "Posts",
+      "material": "Structural steel, grade not stated",
+      "finish": "Hot-dip galvanized (EN ISO 1461)",
+      "status": "unverified",
+      "source_ids": [
+        "src_prosolar_2p10",
+        "src_sadef_2023"
+      ]
+    },
+    {
+      "component": "Main beams (longitudinal)",
+      "material": "Galvanized steel, grade not stated",
+      "finish": "Hot-dip galvanized",
+      "status": "unverified",
+      "source_ids": [
+        "src_prosolar_2p10"
+      ]
+    },
+    {
+      "component": "Cross purlins (transverse)",
+      "material": "Steel, grade not stated",
+      "finish": "Not stated",
+      "status": "not_found",
+      "source_ids": [
+        "src_prosolar_2p10"
+      ]
+    },
+    {
+      "component": "Module clamps (mid and end)",
+      "material": "Aluminium, alloy not stated in this source (other suppliers use AL 5754)",
+      "finish": "Anodized",
+      "status": "unverified",
+      "source_ids": [
+        "src_prosolar_2p10"
+      ]
+    },
+    {
+      "component": "Bolts, nuts and washers",
+      "material": "Steel, property class 8.8",
+      "finish": "Galvanized",
+      "status": "unverified",
+      "source_ids": [
+        "src_prosolar_2p10"
+      ]
+    },
+    {
+      "component": "Diagonal bracing",
+      "material": "Steel, grade not stated",
+      "finish": "Not stated",
+      "status": "not_found",
+      "source_ids": [
+        "src_prosolar_2p10"
+      ]
+    },
+    {
+      "component": "Corrosion protection system (optional)",
+      "material": "Pre-galvanized or zinc-magnesium coil (EN 10346) and duplex coating options",
+      "finish": "Z275 / ZM310 / ZM430 or powder coat over galvanizing",
+      "status": "typical",
+      "source_ids": [
+        "src_sadef_2023"
+      ]
+    }
+  ],
+  "profiles": [
+    {
+      "id": "post_profile",
+      "name": "Post cross-section (not stated)",
+      "section_type": "other",
+      "dimensions_mm": {},
+      "material": "Galvanized steel",
+      "status": "not_found",
+      "source_ids": [
+        "src_prosolar_2p10"
+      ]
+    },
+    {
+      "id": "main_beam_profile",
+      "name": "Main beam cross-section (not stated)",
+      "section_type": "other",
+      "dimensions_mm": {},
+      "material": "Galvanized steel",
+      "status": "not_found",
+      "source_ids": [
+        "src_prosolar_2p10"
+      ]
+    },
+    {
+      "id": "purlin_profile",
+      "name": "Cross purlin cross-section (not stated)",
+      "section_type": "other",
+      "dimensions_mm": {},
+      "material": "Steel",
+      "status": "not_found",
+      "source_ids": [
+        "src_prosolar_2p10"
+      ]
+    }
+  ],
+  "geometry": {
+    "description": "Only sourced values are modelled. Post embedment 1500 mm is given; post overall length, spacing, main-beam and purlin lengths, and clamp positions are not stated and are not modelled. The origin and vertical rotation are a coordinate convention, not a sourced layout.",
+    "coordinate_system": "x along module row, y up-slope/north-south horizontal, z up; origin at ground/roof contact of first support; mm and degrees",
+    "tilt_range_deg": [
+      20,
+      30
+    ],
+    "elements": [
+      {
+        "id": "post_embedment",
+        "kind": "post",
+        "profile_or_accessory_id": "post_profile",
+        "position_mm": [
+          0,
+          0,
+          0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "length_mm": 1500,
+        "count": 12,
+        "note": "Embedment depth 1500 mm for the 2P10 reference table (12 posts). Overall post length not stated.",
+        "status": "unverified"
+      },
+      {
+        "id": "main_beam_element",
+        "kind": "beam",
+        "profile_or_accessory_id": "main_beam_profile",
+        "position_mm": [
+          0,
+          0,
+          0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "length_mm": 0,
+        "count": 6,
+        "note": "6 main beams per 2P10 table (ProSolar). Length not stated; length_mm 0 is a placeholder.",
+        "status": "not_found"
+      },
+      {
+        "id": "purlin_element",
+        "kind": "purlin",
+        "profile_or_accessory_id": "purlin_profile",
+        "position_mm": [
+          0,
+          0,
+          0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "length_mm": 0,
+        "count": 8,
+        "note": "8 cross purlins per 2P10 table (ProSolar). Length not stated; length_mm 0 is a placeholder.",
+        "status": "not_found"
+      },
+      {
+        "id": "brace_element",
+        "kind": "brace",
+        "profile_or_accessory_id": "brace_diagonal",
+        "position_mm": [
+          0,
+          0,
+          0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "length_mm": 0,
+        "count": 2,
+        "note": "2 diagonal bracing members per 2P10 table (ProSolar). Length and section not stated; length_mm 0 is a placeholder.",
+        "status": "not_found"
+      }
+    ],
+    "reference_layout": {
+      "modules_per_unit": 20,
+      "module_dimensions_mm": [
+        2278,
+        1134,
+        30
+      ],
+      "note": "2P10 reference: 20 modules of 2278 x 1134 x 30 mm, 12 posts, 6 main beams, 8 cross purlins, 2 diagonal bracing members. Module orientation (portrait or landscape) not stated in the source."
+    }
+  },
+  "accessories": [
+    {
+      "id": "bolt_structural_8_8",
+      "name": "Structural bolts, galvanized",
+      "type": "bolt",
+      "material": "Steel",
+      "grade": "8.8",
+      "standard": "not_found",
+      "thread": "not_found",
+      "quantity": {
+        "value": 0,
+        "per": "post",
+        "note": "NOT SOURCED: value 0 is a placeholder, do not use"
+      },
+      "purpose": "Connection of posts to main beams and purlins to beams",
+      "status": "unverified",
+      "source_ids": [
+        "src_prosolar_2p10"
+      ]
+    },
+    {
+      "id": "nut_structural",
+      "name": "Nuts for structural bolts (galvanized)",
+      "type": "nut",
+      "material": "Steel",
+      "grade": "not_found",
+      "standard": "not_found",
+      "thread": "not_found",
+      "quantity": {
+        "value": 0,
+        "per": "post",
+        "note": "NOT SOURCED: placeholder"
+      },
+      "purpose": "Clamping of structural bolts",
+      "status": "not_found"
+    },
+    {
+      "id": "washer_structural",
+      "name": "Washers for structural bolts (galvanized)",
+      "type": "washer",
+      "material": "Steel",
+      "grade": "not_found",
+      "standard": "not_found",
+      "thread": "not_found",
+      "quantity": {
+        "value": 0,
+        "per": "post",
+        "note": "NOT SOURCED: placeholder"
+      },
+      "purpose": "Load distribution under nuts",
+      "status": "not_found"
+    },
+    {
+      "id": "clamp_mid_aluminium",
+      "name": "Mid clamp, anodized aluminium",
+      "type": "clamp_mid",
+      "material": "Aluminium, anodized",
+      "grade": "not_found",
+      "standard": "not_found",
+      "thread": "not_found",
+      "quantity": {
+        "value": 0,
+        "per": "module",
+        "note": "NOT SOURCED: mid clamps per module not stated; placeholder"
+      },
+      "purpose": "Holds adjacent modules on the purlin",
+      "status": "unverified",
+      "source_ids": [
+        "src_prosolar_2p10"
+      ]
+    },
+    {
+      "id": "clamp_end_aluminium",
+      "name": "End clamp, anodized aluminium",
+      "type": "clamp_end",
+      "material": "Aluminium, anodized",
+      "grade": "not_found",
+      "standard": "not_found",
+      "thread": "not_found",
+      "quantity": {
+        "value": 0,
+        "per": "module",
+        "note": "NOT SOURCED: end clamps per module not stated; placeholder"
+      },
+      "purpose": "Holds the outer module edges",
+      "status": "unverified",
+      "source_ids": [
+        "src_prosolar_2p10"
+      ]
+    },
+    {
+      "id": "brace_diagonal",
+      "name": "Diagonal bracing member",
+      "type": "brace",
+      "material": "Steel, grade not stated",
+      "grade": "not_found",
+      "standard": "not_found",
+      "thread": "not_found",
+      "quantity": {
+        "value": 2,
+        "per": "table",
+        "note": "2 diagonal bracing members per 2P10 table"
+      },
+      "purpose": "Lateral stability of the table",
+      "status": "unverified",
+      "source_ids": [
+        "src_prosolar_2p10"
+      ]
+    },
+    {
+      "id": "connector_beam_purlin",
+      "name": "Main beam to purlin connection (brackets and bolts)",
+      "type": "connector_splice",
+      "material": "Steel, galvanized, not stated",
+      "grade": "not_found",
+      "standard": "not_found",
+      "thread": "not_found",
+      "quantity": {
+        "value": 0,
+        "per": "table",
+        "note": "NOT SOURCED: placeholder"
+      },
+      "purpose": "Connects purlins to the factory-drilled main beams",
+      "status": "not_found"
+    },
+    {
+      "id": "connector_post_beam",
+      "name": "Post to main beam connection (brackets and bolts)",
+      "type": "connector_splice",
+      "material": "Steel, galvanized, not stated",
+      "grade": "not_found",
+      "standard": "not_found",
+      "thread": "not_found",
+      "quantity": {
+        "value": 0,
+        "per": "post",
+        "note": "NOT SOURCED: placeholder"
+      },
+      "purpose": "Connects posts to main beams",
+      "status": "not_found"
+    },
+    {
+      "id": "post_cap",
+      "name": "Post head cap or plate",
+      "type": "pile_cap",
+      "material": "not_found",
+      "grade": "not_found",
+      "standard": "not_found",
+      "thread": "not_found",
+      "quantity": {
+        "value": 0,
+        "per": "post",
+        "note": "NOT SOURCED: placeholder"
+      },
+      "purpose": "Closes the top of the post and seats the beam connection",
+      "status": "not_found"
+    },
+    {
+      "id": "rail_end_cap",
+      "name": "Beam end caps",
+      "type": "rail_end_cap",
+      "material": "not_found",
+      "grade": "not_found",
+      "standard": "not_found",
+      "thread": "not_found",
+      "quantity": {
+        "value": 0,
+        "per": "row",
+        "note": "NOT SOURCED: placeholder"
+      },
+      "purpose": "Closes open profile ends",
+      "status": "not_found"
+    },
+    {
+      "id": "grounding_bonding",
+      "name": "Equipotential bonding and earth connection (per table)",
+      "type": "grounding",
+      "material": "not_found",
+      "grade": "not_found",
+      "standard": "not_found",
+      "thread": "not_found",
+      "quantity": {
+        "value": 0,
+        "per": "table",
+        "note": "NOT SOURCED: placeholder"
+      },
+      "purpose": "Bonding of posts and modules to the earth system",
+      "status": "not_found"
+    },
+    {
+      "id": "sealant_post_base",
+      "name": "Sealant or bitumen coating at post base",
+      "type": "sealant",
+      "material": "not_found",
+      "grade": "not_found",
+      "standard": "not_found",
+      "thread": "not_found",
+      "quantity": {
+        "value": 0,
+        "per": "post",
+        "note": "NOT SOURCED: placeholder"
+      },
+      "purpose": "Protection of the post at the ground line",
+      "status": "not_found"
+    },
+    {
+      "id": "gasket_clamp",
+      "name": "Gasket or pad under clamps",
+      "type": "gasket",
+      "material": "not_found",
+      "grade": "not_found",
+      "standard": "not_found",
+      "thread": "not_found",
+      "quantity": {
+        "value": 0,
+        "per": "module",
+        "note": "NOT SOURCED: placeholder"
+      },
+      "purpose": "Protects module frame from metal contact",
+      "status": "not_found"
+    },
+    {
+      "id": "cable_clip",
+      "name": "Cable clips for DC cable routing",
+      "type": "cable_clip",
+      "material": "not_found",
+      "grade": "not_found",
+      "standard": "not_found",
+      "thread": "not_found",
+      "quantity": {
+        "value": 0,
+        "per": "table",
+        "note": "NOT SOURCED: placeholder"
+      },
+      "purpose": "Fixes DC cables to the structure",
+      "status": "not_found"
+    }
+  ],
+  "grounding_bonding": "Not stated in the sources reviewed. Equipotential bonding hardware, earth-cable clamps and bonding path are listed as not_found accessories.",
+  "installation_notes": [
+    "Posts are rammed or driven; the 2P10 reference uses 1500 mm embedment. Soil testing (pull-out and driving resistance) is not covered by the sources and must be defined by the engineer.",
+    "Fastener grade for structural connections is 8.8 per the source; bolt torque values were not stated and are not provided here.",
+    "ProSolar 2P10 datasheet lists tilt options of 20, 23, 25, 28 and 30 degrees (other variants on request)."
+  ],
+  "status": "unverified",
+  "unverified_items": [
+    "Post, beam and purlin cross-sections and dimensions (not stated)",
+    "Steel grades for posts, beams, purlins and bracing (not stated)",
+    "Bolt diameters, lengths, nut and washer standards and torques (not stated)",
+    "Quantities of clamps, brackets, connectors, caps and bonding parts per module, table or post (not stated; placeholders are value 0 with status not_found)",
+    "Post spacing, row pitch and table length (not stated)",
+    "Grounding and bonding hardware (not stated)",
+    "Design wind and snow loads for this structure (not stated)"
+  ],
+  "sources": [
+    {
+      "id": "src_prosolar_2p10",
+      "title": "Technical Data Sheet 2P10 Rammed (ground mount PV, 2P-10)",
+      "publisher": "ProSolar Structures",
+      "url": "https://prosolarstructures.com/wp-content/uploads/Technical_Data_Sheet_2P10_Rammed.pdf",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "src_sadef_2023",
+      "title": "SOLAR 2023 brochure (ground mounting, corrosion protection, rammed piles, standards)",
+      "publisher": "voestalpine Sadef",
+      "url": "https://www.voestalpine.com/sadef/en/content/download/24414/file/SOLAR-2023-BROCHURE-v7+cover.pdf",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

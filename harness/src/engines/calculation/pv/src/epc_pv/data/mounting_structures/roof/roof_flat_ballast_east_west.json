@@ -1,0 +1,341 @@
+{
+  "schema_version": "1.0",
+  "id": "roof_flat_ballast_east_west",
+  "name": {
+    "en": "East-west ballasted flat-roof frame with base troughs and ballast trough (BayWa r.e. novotegra type)",
+    "es": "Estructura lastrada este-oeste para cubierta plana con bandejas base y bandeja de lastre (tipo BayWa r.e. novotegra)"
+  },
+  "family": "roof",
+  "category": "flat_roof_ballast_east_west",
+  "description": {
+    "en": "Base elements (troughs) lie on the flat roof without penetration and are ballasted with a ballast trough. Connector sets and crossbars join the base elements into a frame; module supports at 10 degrees elevation carry the modules in landscape in an east-west layout. Middle and end clamp sets, cable channel and edge closure complete the system. Reference family: BayWa r.e. Flachdach III / novotegra 'The shortcut' flat-roof system.",
+    "es": "Elementos base (bandejas) se apoyan sobre la cubierta plana sin perforarla y se lastran con una bandeja de lastre. Juegos de conexión y travesaños unen los elementos base en un bastidor; soportes de módulo a 10 grados de elevación sujetan los módulos en apaisado en disposición este-oeste. Garras intermedias y de extremo, canal de cables y cierre de borde completan el sistema. Familia de referencia: BayWa r.e. Flachdach III / novotegra 'The shortcut'."
+  },
+  "typical_use": "Flat roofs (0 to 5 degree pitch) with ballast, east-west orientation, no roof penetration; may be anchored to a parapet against creep.",
+  "applicable_standards": [
+    "EN 1991-1-3 (snow loads, designer)",
+    "EN 1991-1-4 (wind actions, designer; ballast derived per project by the supplier according to the manual)",
+    "EN 1999-1-1 (aluminium design, designer; not verified in this research)",
+    "ISO 898-1:2013 (carbon steel fasteners, reference)",
+    "ISO 3506-1:2020 (stainless steel fasteners, reference)"
+  ],
+  "materials": [
+    {"component": "Base element e/w (troughs), connector set, edge closure set", "material": "Not stated", "finish": "Not stated", "status": "not_found", "source_ids": ["baywa_flachdach_iii_manual"]},
+    {"component": "Support brace and crossbar (20 x 20 x 1.5 mm profile for support brace)", "material": "Not stated (profile section 20 x 20 x 1.5 mm)", "finish": "Not stated", "status": "unverified", "source_ids": ["baywa_flachdach_iii_manual"]},
+    {"component": "Module support 10 degrees, clamps, contact latch", "material": "Not stated", "finish": "Not stated", "status": "not_found", "source_ids": ["baywa_flachdach_iii_manual"]},
+    {"component": "Ballast trough and ballast", "material": "Ballast material not stated (concrete typical; confirm)", "finish": "", "status": "not_found", "source_ids": ["baywa_flachdach_iii_manual"]},
+    {"component": "Cable channel base element and cover", "material": "Not stated", "finish": "", "status": "not_found", "source_ids": ["baywa_flachdach_iii_manual"]},
+    {"component": "Grounding connector set and C-rail", "material": "Not stated", "finish": "", "status": "not_found", "source_ids": ["baywa_flachdach_iii_manual"]},
+    {"component": "Surface extension (180 x 150 mm)", "material": "Not stated", "finish": "", "status": "not_found", "source_ids": ["baywa_flachdach_iii_manual"]}
+  ],
+  "profiles": [
+    {
+      "id": "support_brace_20x20x1_5",
+      "name": "Support brace (20 x 20 x 1.5 mm), lengths 2000 and 2400 mm",
+      "section_type": "other",
+      "dimensions_mm": {"width": 20, "height": 20, "thickness": 1.5},
+      "material": "Not stated",
+      "typical_length_mm": 2400,
+      "status": "unverified",
+      "source_ids": ["baywa_flachdach_iii_manual"]
+    },
+    {
+      "id": "crossbar_2000_2400",
+      "name": "Crossbar (lengths 2000 and 2400 mm)",
+      "section_type": "other",
+      "dimensions_mm": {},
+      "material": "Not stated",
+      "typical_length_mm": 2400,
+      "status": "unverified",
+      "source_ids": ["baywa_flachdach_iii_manual"]
+    },
+    {
+      "id": "cable_channel_base_1250",
+      "name": "Cable channel base element (1250 mm)",
+      "section_type": "other",
+      "dimensions_mm": {},
+      "material": "Not stated",
+      "typical_length_mm": 1250,
+      "status": "unverified",
+      "source_ids": ["baywa_flachdach_iii_manual"]
+    }
+  ],
+  "geometry": {
+    "description": "East-west rows, modules in landscape on 10 degree module supports, base troughs spaced 50 mm apart (coupled fields), ballast cantilever 650 or 1150 mm. Schematic only; no coordinates are given.",
+    "coordinate_system": "x along module row, y up-slope/north-south horizontal, z up; origin at ground/roof contact of first support; mm and degrees",
+    "tilt_range_deg": [10, 10],
+    "elements": [
+      {
+        "id": "connector_set_ew_ref",
+        "kind": "beam",
+        "profile_or_accessory_id": "connector_set_ew",
+        "position_mm": [0, 0, 0],
+        "rotation_deg": [0, 0, 0],
+        "length_mm": 1940,
+        "count": 1,
+        "note": "Reference connector set length from manual. Placeholder origin, not a design layout.",
+        "status": "unverified"
+      }
+    ],
+    "reference_layout": {
+      "note": "Roof pitch 0 to 5 degrees; elevation angle 10 degrees; module width 995 to 1145 mm; module length max 2280 mm; row spacing 2230 to 2483 mm (depends on module width); max module field 40 m (rail length) x 21 m (width); edge distance 0.50 m (no parapet and to parapet inside edge)."
+    }
+  },
+  "accessories": [
+    {
+      "id": "base_element_ew",
+      "name": "Base element e/w (ballast base trough), lengths 530 mm ballast trough and 690 mm and 840 mm base element",
+      "type": "foot",
+      "material": "Not stated",
+      "grade": "",
+      "standard": "",
+      "thread": "",
+      "dimensions_mm": {"length_a": 690, "length_b": 840, "ballast_trough_length": 530},
+      "torque_nm": 0,
+      "quantity": {"value": 0, "per": "support", "note": "Count per support not stated."},
+      "purpose": "Ballast-carrying base element on the roof surface, spacing 50 mm between coupled base troughs.",
+      "status": "unverified",
+      "source_ids": ["baywa_flachdach_iii_manual"]
+    },
+    {
+      "id": "connector_set_ew",
+      "name": "Connector set e/w (length 1940 mm)",
+      "type": "connector_splice",
+      "material": "Not stated",
+      "grade": "",
+      "standard": "",
+      "thread": "",
+      "dimensions_mm": {"length": 1940},
+      "torque_nm": 0,
+      "quantity": {"value": 0, "per": "row", "note": "Count per row not stated."},
+      "purpose": "Connects base elements.",
+      "status": "unverified",
+      "source_ids": ["baywa_flachdach_iii_manual"]
+    },
+    {
+      "id": "edge_closure_set",
+      "name": "Edge closure set (length 970 mm)",
+      "type": "rail_end_cap",
+      "material": "Not stated",
+      "grade": "",
+      "standard": "",
+      "thread": "",
+      "dimensions_mm": {"length": 970},
+      "torque_nm": 0,
+      "quantity": {"value": 0, "per": "row", "note": "One per row end (structural); count not stated."},
+      "purpose": "Closes the row end of the base frame. Up to two surface extensions per edge closure or connector set.",
+      "status": "unverified",
+      "source_ids": ["baywa_flachdach_iii_manual"]
+    },
+    {
+      "id": "module_support_10deg",
+      "name": "Module support 10 degrees",
+      "type": "bracket",
+      "material": "Not stated",
+      "grade": "",
+      "standard": "",
+      "thread": "",
+      "dimensions_mm": {},
+      "torque_nm": 0,
+      "quantity": {"value": 0, "per": "module", "note": "Count per module not stated."},
+      "purpose": "Sets the 10 degree elevation of the module.",
+      "status": "unverified",
+      "source_ids": ["baywa_flachdach_iii_manual"]
+    },
+    {
+      "id": "clamp_mid_set_c",
+      "name": "Middle clamp set C",
+      "type": "clamp_mid",
+      "material": "Not stated",
+      "grade": "",
+      "standard": "",
+      "thread": "",
+      "dimensions_mm": {},
+      "torque_nm": 10,
+      "quantity": {"value": 0, "per": "module", "note": "Count per module not stated. Torque 10 Nm."},
+      "purpose": "Holds two adjacent module frames.",
+      "status": "unverified",
+      "source_ids": ["baywa_flachdach_iii_manual"]
+    },
+    {
+      "id": "clamp_end_set_c",
+      "name": "End clamp set C",
+      "type": "clamp_end",
+      "material": "Not stated",
+      "grade": "",
+      "standard": "",
+      "thread": "",
+      "dimensions_mm": {},
+      "torque_nm": 8,
+      "quantity": {"value": 0, "per": "row", "note": "Count per row end not stated. Torque 8 Nm."},
+      "purpose": "Holds the outer module frame at the row end.",
+      "status": "unverified",
+      "source_ids": ["baywa_flachdach_iii_manual"]
+    },
+    {
+      "id": "flat_roof_mounting_screw_chipless",
+      "name": "Flat roof mounting screw (chipless)",
+      "type": "screw",
+      "material": "Not stated",
+      "grade": "Not stated",
+      "standard": "",
+      "thread": "",
+      "dimensions_mm": {},
+      "torque_nm": 0,
+      "quantity": {"value": 0, "per": "support", "note": "Count not stated. Torque not stated; 'not overtightened' per manual."},
+      "purpose": "Fixes components to the base element. Chipless design (no swarf).",
+      "status": "unverified",
+      "source_ids": ["baywa_flachdach_iii_manual"]
+    },
+    {
+      "id": "crossbar_overlap_screws",
+      "name": "Crossbar overlap fixing (min. 120 mm overlap, two screws)",
+      "type": "screw",
+      "material": "Not stated",
+      "grade": "Not stated",
+      "standard": "",
+      "thread": "",
+      "dimensions_mm": {"overlap_min": 120},
+      "torque_nm": 0,
+      "quantity": {"value": 2, "per": "support", "note": "Two screws per crossbar overlap (manual). Torque not stated."},
+      "purpose": "Joins crossbars with minimum 120 mm overlap.",
+      "status": "unverified",
+      "source_ids": ["baywa_flachdach_iii_manual"]
+    },
+    {
+      "id": "contact_latch_module_clamp",
+      "name": "Contact latch (module clamp; carries equalisation and lightning protection current)",
+      "type": "grounding",
+      "material": "Not stated",
+      "grade": "",
+      "standard": "",
+      "thread": "",
+      "dimensions_mm": {},
+      "torque_nm": 0,
+      "quantity": {"value": 0, "per": "module", "note": "Count not stated."},
+      "purpose": "Carries equipotential bonding and lightning protection current through the module clamp.",
+      "status": "unverified",
+      "source_ids": ["baywa_flachdach_iii_manual"]
+    },
+    {
+      "id": "coupling_profile",
+      "name": "Coupling profile",
+      "type": "connector_splice",
+      "material": "Not stated",
+      "grade": "",
+      "standard": "",
+      "thread": "",
+      "dimensions_mm": {},
+      "torque_nm": 0,
+      "quantity": {"value": 0, "per": "row", "note": "Count not stated."},
+      "purpose": "Couples adjacent fields.",
+      "status": "unverified",
+      "source_ids": ["baywa_flachdach_iii_manual"]
+    },
+    {
+      "id": "cable_clip_d10",
+      "name": "Cable-tie clip and cable clip (diameter 10 mm)",
+      "type": "cable_clip",
+      "material": "Not stated",
+      "grade": "",
+      "standard": "",
+      "thread": "",
+      "dimensions_mm": {"diameter": 10},
+      "torque_nm": 0,
+      "quantity": {"value": 0, "per": "module", "note": "Count not stated."},
+      "purpose": "Cable management on the frame.",
+      "status": "unverified",
+      "source_ids": ["baywa_flachdach_iii_manual"]
+    },
+    {
+      "id": "cable_channel_cover_1250",
+      "name": "Cover cable channel (1250 mm) and cable channel module support (2000 or 2400 mm)",
+      "type": "other",
+      "material": "Not stated",
+      "grade": "",
+      "standard": "",
+      "thread": "",
+      "dimensions_mm": {"length_a": 1250, "length_b_option_1": 2000, "length_b_option_2": 2400},
+      "torque_nm": 0,
+      "quantity": {"value": 0, "per": "row", "note": "Count not stated."},
+      "purpose": "Cable routing channel and its module support.",
+      "status": "unverified",
+      "source_ids": ["baywa_flachdach_iii_manual"]
+    },
+    {
+      "id": "ballast_cantilever_element",
+      "name": "Ballast cantilever (650 or 1150 mm)",
+      "type": "ballast",
+      "material": "Not stated",
+      "grade": "",
+      "standard": "",
+      "thread": "",
+      "dimensions_mm": {"length_a": 650, "length_b": 1150},
+      "torque_nm": 0,
+      "quantity": {"value": 0, "per": "support", "note": "Ballast per module determined by supplier from project data; not stated in the manual."},
+      "purpose": "Extends the ballast over the base element.",
+      "status": "unverified",
+      "source_ids": ["baywa_flachdach_iii_manual"]
+    },
+    {
+      "id": "surface_extension_180x150",
+      "name": "Surface extension (180 x 150 mm)",
+      "type": "base_plate",
+      "material": "Not stated",
+      "grade": "",
+      "standard": "",
+      "thread": "",
+      "dimensions_mm": {"length": 180, "width": 150},
+      "torque_nm": 0,
+      "quantity": {"value": 0, "per": "row", "note": "Up to two per edge closure or connector set."},
+      "purpose": "Adds bearing area to the base frame.",
+      "status": "unverified",
+      "source_ids": ["baywa_flachdach_iii_manual"]
+    },
+    {
+      "id": "grounding_connector_set",
+      "name": "Grounding connector set (one per module field) and grounding connector C-rail (optional)",
+      "type": "grounding",
+      "material": "Not stated",
+      "grade": "",
+      "standard": "",
+      "thread": "",
+      "dimensions_mm": {},
+      "torque_nm": 20,
+      "quantity": {"value": 1, "per": "unit", "note": "One grounding connector set per module field (manual). Torque 20 Nm for earthing wire connection."},
+      "purpose": "Bonds the module field to the earthing system.",
+      "status": "unverified",
+      "source_ids": ["baywa_flachdach_iii_manual"]
+    }
+  ],
+  "grounding_bonding": "One grounding connector set per module field, torque 20 Nm for the earthing wire; the contact latch in the module clamp carries equipotential bonding and lightning protection current (manual). Equipotential design per local standard.",
+  "installation_notes": [
+    "No roof penetration; ballast derived by the supplier from project data (manual).",
+    "Middle clamp 10 Nm, end clamp 8 Nm, earthing wire 20 Nm; other screws not overtightened; no impact tools (manual).",
+    "Friction coefficient to be reviewed on site (manual).",
+    "Surface extension up to two per edge closure or connector set.",
+    "Cable channel base 1250 mm; cable channel module support 2000 or 2400 mm."
+  ],
+  "status": "unverified",
+  "unverified_items": [
+    "Ballast per module and ballast trough material (not stated; supplier calculation).",
+    "Materials and finishes for almost all parts (not stated, except support brace profile section).",
+    "Screw sizes and grades (not stated for flat roof mounting screw).",
+    "Anchoring to parapet and anchor sizes (not stated; anchoring listed as option only).",
+    "Wind and snow load ratings for this system (not stated).",
+    "Base plate dimensions (not stated).",
+    "Friction coefficient value for sliding check (not stated).",
+    "Quantities per module, per row and per roof (set to 0 as unknown, except fixed two screws per crossbar overlap and one grounding set per field).",
+    "Protection layer requirements for roof insulation (site determined per manual).",
+    "Layout tilt range: only 0 to 5 degree roof pitch and 10 degree module elevation are stated."
+  ],
+  "sources": [
+    {
+      "id": "baywa_flachdach_iii_manual",
+      "title": "Flat roof III (novotegra 'The shortcut') east-west mounting instructions (EN, 05-3-1)",
+      "publisher": "BayWa r.e. (novotegra)",
+      "url": "https://solar-distribution.baywa-re.de/out/media/Flachdach_III_05-3-1-EN-Flat-roof-III-Mounting-instructions.pdf",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

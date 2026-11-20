@@ -1,0 +1,172 @@
+{
+  "schema_version": "1.0",
+  "id": "huawei_sun2000_215ktl_h0",
+  "name": {
+    "en": "Huawei SUN2000-215KTL-H0 (utility string-level)",
+    "es": "Huawei SUN2000-215KTL-H0 (nivel de string de servicio público)"
+  },
+  "kind": "inverter_type",
+  "description": {
+    "en": "Utility-scale string-level inverter, 215 kW, 1500 V DC, nine MPPTs, IP66, 800 V AC output. Sourced as H0; the H3 variant was not found in fetched sources.",
+    "es": "Inversor de string de servicio público, 215 kW, 1500 V CC, nueve MPPT, IP66, salida CA 800 V. Fuente: variante H0; la variante H3 no se encontró en las fuentes consultadas."
+  },
+  "typical_use": "Utility string-level inverter on a skid or pole, not a central cabinet.",
+  "status": "unverified",
+  "parts": [
+    {
+      "id": "enc",
+      "name": "Inverter enclosure",
+      "name_es": "Envolvente del inversor",
+      "type": "enclosure",
+      "status": "unverified",
+      "dimensions_mm": {
+        "W": 1035,
+        "H": 700,
+        "D": 365
+      },
+      "quantity_per_module": 1,
+      "ratings": {
+        "ip": "IP66",
+        "weight_kg_max": 86
+      },
+      "source_ids": [
+        "S03"
+      ]
+    },
+    {
+      "id": "dcin",
+      "name": "DC input terminals (MPPT inputs)",
+      "name_es": "Terminales de entrada CC (MPPT)",
+      "type": "dc_input",
+      "status": "unverified",
+      "quantity_per_module": 18,
+      "ratings": {
+        "mppt_count": 9,
+        "max_input_current_per_mppt_a": 30,
+        "max_dc_voltage_v": 1500
+      },
+      "geometry_hint": "18 DC terminals per source",
+      "source_ids": [
+        "S03"
+      ]
+    },
+    {
+      "id": "acout",
+      "name": "AC output terminals",
+      "name_es": "Terminales de salida CA",
+      "type": "ac_output",
+      "status": "unverified",
+      "ratings": {
+        "ac_voltage_v": 800,
+        "phases": "3W+PE",
+        "frequency_hz": [
+          50,
+          60
+        ]
+      },
+      "source_ids": [
+        "S03"
+      ]
+    },
+    {
+      "id": "fan",
+      "name": "Smart Air Cooling fan group",
+      "name_es": "Grupo de ventiladores de refrigeración inteligente",
+      "type": "fan",
+      "status": "unverified",
+      "geometry_hint": "Source says Smart Air Cooling; fan count not stated",
+      "source_ids": [
+        "S03"
+      ]
+    },
+    {
+      "id": "dcsw",
+      "name": "DC switch",
+      "name_es": "Interruptor CC",
+      "type": "dc_switch",
+      "status": "typical",
+      "geometry_hint": "Generic; not confirmed in fetched source"
+    }
+  ],
+  "geometry": {
+    "description": "Wall or pole-mounted inverter cabinet. Envelope W x H x D = 1035 x 700 x 365 mm mapped to x=1035, y=365, z=700.",
+    "coordinate_system": "x along module long side, y along short side, z up through thickness; origin at module front-left corner; mm",
+    "elements": [
+      {
+        "id": "E-enc",
+        "kind": "enclosure_body",
+        "part_id": "enc",
+        "position_mm": [
+          0,
+          0,
+          0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          1035,
+          365,
+          700
+        ],
+        "status": "unverified"
+      }
+    ],
+    "module_dimensions_mm": [
+      1035,
+      365,
+      700
+    ]
+  },
+  "mechanical_ratings": {
+    "note": "Certifications not captured from the fetched source"
+  },
+  "unverified_items": [
+    "Source is the H0 variant; H3 (800 V / 1000 V AC variants) not checked",
+    "Noise level not found",
+    "Fan count and mounting-hole pattern not in source",
+    "Certifications not captured"
+  ],
+  "sources": [
+    {
+      "id": "S03",
+      "title": "SUN2000-215KTL-H0 datasheet (FusionSolar Smart String Inverter)",
+      "publisher": "Huawei Technologies Co., Ltd.",
+      "url": "https://solar.huawei.com/admin/asset/v1/pro/view/1f323ce3ca7c41a89cdb56ad7cadfd66.pdf",
+      "accessed": "2026-11-20"
+    }
+  ],
+  "electrical_ratings": {
+    "topology": "utility string-level inverter",
+    "rated_ac_power_kw": 215,
+    "max_dc_voltage_v": 1500,
+    "mppt_dc_voltage_range_v": [
+      500,
+      1500
+    ],
+    "mppt_count": 9,
+    "max_input_current_per_mppt_a": 30,
+    "dc_terminal_count": 18,
+    "ac_voltage_v": 800,
+    "phases": "3W+PE",
+    "frequency_hz": [
+      50,
+      60
+    ],
+    "max_efficiency_pct": 99.0
+  },
+  "mechanical": {
+    "external_dimensions_mm_WxHxD": [
+      1035,
+      700,
+      365
+    ],
+    "weight_kg_max": 86,
+    "cooling": "Smart Air Cooling",
+    "operating_temp_c": "-25 to 60",
+    "ip": "IP66",
+    "noise": "not_found"
+  }
+}

@@ -1,0 +1,98 @@
+{
+  "schema_version": "1.0",
+  "id": "ingeteam_powerstation_b_series",
+  "name": {
+    "en": "Ingeteam Power Station (B Series, MV skid, up to 7.2 MVA)",
+    "es": "Ingeteam Power Station (serie B, skid de MT, hasta 7,2 MVA)"
+  },
+  "kind": "inverter_type",
+  "description": {
+    "en": "Medium-voltage skid power station with B Series central inverters, up to 7.2 MVA, oil-immersed sealed transformer. Only the rated power range was found; dimensions, voltages, IP and weight not found.",
+    "es": "Estación de potencia en skid de media tensión con inversores centrales serie B, hasta 7,2 MVA, transformador sellado en aceite. Solo se encontró el rango de potencia; dimensiones, tensiones, IP y peso no encontrados."
+  },
+  "typical_use": "MV skid for utility PV blocks (dimensions unknown).",
+  "status": "not_found",
+  "parts": [
+    {
+      "id": "skid",
+      "name": "Skid power station enclosure",
+      "name_es": "Envolvente del skid",
+      "type": "enclosure",
+      "status": "not_found",
+      "geometry_hint": "Dimensions not found",
+      "source_ids": [
+        "S09"
+      ]
+    },
+    {
+      "id": "xfmr",
+      "name": "MV oil-immersed hermetically sealed transformer",
+      "name_es": "Transformador de MT sellado herméticamente en aceite",
+      "type": "transformer",
+      "status": "unverified",
+      "material": "oil",
+      "quantity_per_module": 1,
+      "ratings": {
+        "note": "sealed, oil immersed per catalog"
+      },
+      "geometry_hint": "Ratings not found",
+      "source_ids": [
+        "S09"
+      ]
+    },
+    {
+      "id": "inv",
+      "name": "B Series central inverter(s)",
+      "name_es": "Inversor(es) centrales serie B",
+      "type": "other",
+      "status": "unverified",
+      "ratings": {
+        "power_range_mva": [
+          1.17,
+          7.2
+        ]
+      },
+      "source_ids": [
+        "S09"
+      ]
+    }
+  ],
+  "geometry": {
+    "description": "No envelope found in fetched sources. Geometry elements omitted.",
+    "coordinate_system": "x along module long side, y along short side, z up through thickness; origin at module front-left corner; mm",
+    "elements": []
+  },
+  "mechanical_ratings": {
+    "certifications": "not_found"
+  },
+  "unverified_items": [
+    "Catalog excerpt only; no model number",
+    "Dimensions, weight, IP, DC/AC voltage not found",
+    "Cooling of inverter section not stated"
+  ],
+  "sources": [
+    {
+      "id": "S09",
+      "title": "Ingeteam Power Station (B Series) catalog excerpt",
+      "publisher": "Ingeteam GmbH (catalog via DirectIndustry)",
+      "url": "https://pdf.directindustry.com/pdf/ingeteam-gmbh/powerstation-fsk-b-series/4563152-1038086.html",
+      "accessed": "2026-11-20"
+    }
+  ],
+  "electrical_ratings": {
+    "rated_power_mva_range": [
+      1.17,
+      7.2
+    ],
+    "max_dc_voltage_v": "not_found",
+    "ac_voltage_v": "not_found",
+    "frequency_hz": "not_found",
+    "max_efficiency_pct": "not_found"
+  },
+  "mechanical": {
+    "external_dimensions_mm_WxHxD": "not_found",
+    "weight_kg": "not_found",
+    "cooling": "sealed oil transformer (cooling type not stated)",
+    "ip": "not_found"
+  }
+}

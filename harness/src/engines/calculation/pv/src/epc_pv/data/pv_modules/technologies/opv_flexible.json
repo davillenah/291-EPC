@@ -1,0 +1,270 @@
+{
+  "schema_version": "1.0",
+  "id": "opv_flexible",
+  "name": {
+    "en": "Flexible organic OPV film (Heliatek HeliaSol, example)",
+    "es": "Pelicula organica flexible OPV (Heliatek HeliaSol, ejemplo)"
+  },
+  "kind": "technology",
+  "description": {
+    "en": "Organic (OPV) triple-junction flexible film, NOT CIGS. Separated from the CIGS entry (flexible_lightweight). Sample label states prototype for testing only. Datasheet and label conflict on bend radius and maximum system voltage; both values are kept as unverified.",
+    "es": "Pelicula flexible organica (OPV) de triple union, NO CIGS. Se separa de la entrada CIGS (flexible_lightweight). La etiqueta de la muestra indica prototipo solo para pruebas. La ficha y la etiqueta difieren en radio de curvatura y tension maxima; ambos valores se conservan como no verificados."
+  },
+  "typical_use": "Lightweight roofs and curved surfaces; prototype sample.",
+  "cell": {
+    "type": "organic (OPV) triple-junction cells in series; not CIGS",
+    "status": "unverified",
+    "source_ids": [
+      "heliatek_heliasol"
+    ],
+    "note": "Datasheet: 'Organic triple-junction solar cells in serial connection'. Cell count not stated; module efficiency is in mechanical_ratings."
+  },
+  "layers": [
+    {
+      "id": "glass_front",
+      "name": "Front glass",
+      "material": "none (polymeric film front, UV and weather protected)",
+      "status": "unverified",
+      "source_ids": [
+        "heliatek_heliasol"
+      ]
+    },
+    {
+      "id": "encapsulant_front",
+      "name": "Front encapsulant",
+      "material": "polymeric film (front)",
+      "status": "unverified",
+      "source_ids": [
+        "heliatek_heliasol"
+      ]
+    },
+    {
+      "id": "cell_layer",
+      "name": "Cell layer",
+      "material": "organic triple-junction cell layer",
+      "status": "unverified",
+      "source_ids": [
+        "heliatek_heliasol"
+      ]
+    },
+    {
+      "id": "encapsulant_rear",
+      "name": "Rear encapsulant",
+      "material": "self-adhesive backside tape",
+      "status": "unverified",
+      "source_ids": [
+        "heliatek_heliasol"
+      ]
+    },
+    {
+      "id": "rear_layer",
+      "name": "Rear layer",
+      "material": "opaque black UV-protected film",
+      "status": "unverified",
+      "source_ids": [
+        "heliatek_heliasol"
+      ]
+    }
+  ],
+  "parts": [
+    {
+      "id": "glass_front",
+      "name": "Front glass",
+      "type": "glass",
+      "status": "unverified",
+      "source_ids": [
+        "heliatek_heliasol"
+      ],
+      "material": "none (polymeric film front, UV and weather protected)"
+    },
+    {
+      "id": "encapsulant_front",
+      "name": "Front encapsulant",
+      "type": "encapsulant",
+      "status": "unverified",
+      "source_ids": [
+        "heliatek_heliasol"
+      ],
+      "material": "polymeric film (front)"
+    },
+    {
+      "id": "encapsulant_rear",
+      "name": "Rear encapsulant",
+      "type": "encapsulant",
+      "status": "unverified",
+      "source_ids": [
+        "heliatek_heliasol"
+      ],
+      "material": "self-adhesive backside tape"
+    },
+    {
+      "id": "cells",
+      "name": "Organic cell film string",
+      "type": "cell_string",
+      "status": "unverified",
+      "source_ids": [
+        "heliatek_heliasol"
+      ],
+      "material": "organic semiconductor"
+    },
+    {
+      "id": "rear",
+      "name": "Rear layer",
+      "type": "backsheet",
+      "status": "unverified",
+      "source_ids": [
+        "heliatek_heliasol"
+      ],
+      "material": "opaque black UV-protected film"
+    },
+    {
+      "id": "frame",
+      "name": "Frame",
+      "type": "frame_profile",
+      "status": "not_found",
+      "source_ids": [],
+      "material": "not applicable (frameless) or not stated",
+      "note": "No frame: film is adhered to the surface."
+    },
+    {
+      "id": "junction_box",
+      "name": "Junction box",
+      "type": "junction_box",
+      "status": "unverified",
+      "source_ids": [
+        "heliatek_heliasol"
+      ],
+      "ratings": {
+        "ip": "IP67"
+      }
+    },
+    {
+      "id": "connector",
+      "name": "Connector",
+      "type": "connector",
+      "status": "unverified",
+      "source_ids": [
+        "heliatek_heliasol"
+      ],
+      "ratings": {
+        "type": "TE Connectivity PV4-S (46 cm cable)"
+      },
+      "quantity_per_module": 2
+    },
+    {
+      "id": "cable",
+      "name": "PV cable",
+      "type": "cable",
+      "status": "unverified",
+      "source_ids": [
+        "heliatek_heliasol"
+      ],
+      "ratings": {
+        "length_mm": 460
+      },
+      "quantity_per_module": 2
+    },
+    {
+      "id": "film",
+      "name": "Organic PV film laminate",
+      "type": "other",
+      "status": "unverified",
+      "source_ids": [
+        "heliatek_heliasol"
+      ],
+      "material": "organic film with polymeric front and black back film"
+    }
+  ],
+  "geometry": {
+    "description": "Single film element 2000 x 436 x 1.8 mm (solar film, datasheet). Junction box (IP67, front side) size not stated and not modelled. Not a framed module.",
+    "coordinate_system": "x along module long side, y along short side, z up through thickness; origin at module front-left corner; mm. Here z=0 is the front glass face and z grows toward the rear through thickness.",
+    "elements": [
+      {
+        "id": "film",
+        "kind": "film",
+        "part_id": "film",
+        "position_mm": [
+          0,
+          0,
+          0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          2000,
+          436,
+          1.8
+        ],
+        "status": "unverified"
+      }
+    ],
+    "module_dimensions_mm": [
+      2000,
+      436,
+      1.8
+    ]
+  },
+  "mechanical_ratings": {
+    "weight_kg": 1.6,
+    "weight_note": "per module; datasheet claims less than 2 kg/m2",
+    "module_efficiency_pct_range": [
+      7.2,
+      8.0
+    ],
+    "power_w_range": [
+      50,
+      55
+    ],
+    "bend_radius_mm_datasheet": 500,
+    "bend_radius_mm_label": 200,
+    "max_system_voltage_v_datasheet": 1000,
+    "max_system_voltage_note_label": "below 50 V (conflicts with datasheet)",
+    "junction_box_ip": "IP67",
+    "standards_listed_in_source": [
+      "IEC 61730:2016",
+      "CE",
+      "WEEE"
+    ],
+    "prototype_note": "Product label: prototype 'for testing purposes exclusively, no commercial use'",
+    "status_note": "values transcribed from cited datasheets only; status unverified unless marked",
+    "conflict_values": {
+      "bend_radius_mm": {
+        "datasheet": 500,
+        "label": 200,
+        "status": "unverified"
+      },
+      "max_system_voltage_v": {
+        "datasheet": 1000,
+        "label": "below 50 V",
+        "status": "unverified"
+      }
+    }
+  },
+  "status": "unverified",
+  "unverified_items": [
+    "Datasheet and product label conflict: bend radius 500 mm (datasheet) vs 200 mm (label); max system voltage 1000 V (datasheet) vs below 50 V (label). Both kept as unverified.",
+    "Sample is labelled a prototype for testing; do not treat as commercial product data.",
+    "IEC 61215 and IEC 61646 not stated.",
+    "Layer thicknesses not stated individually (only total 1.8 mm).",
+    "Not a CIGS entry; the CIGS flexible module is in flexible_lightweight."
+  ],
+  "sources": [
+    {
+      "id": "heliatek_heliasol",
+      "title": "HeliaSol 436-2000-AFA 50-55 W datasheet Rev 09",
+      "publisher": "Heliatek",
+      "url": "https://heliatek.com/fileadmin/user_upload/pdf_documents/HeliaSol_436-2000-AFA_50-55W_-_EN_-_Rev_09.pdf",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "iec_61701",
+      "title": "IEC 61701:2020 publication page (salt mist corrosion testing)",
+      "publisher": "IEC",
+      "url": "https://webstore.iec.ch/publication/59588",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

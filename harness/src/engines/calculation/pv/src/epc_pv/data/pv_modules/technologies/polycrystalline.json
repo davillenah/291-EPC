@@ -1,0 +1,452 @@
+{
+  "schema_version": "1.0",
+  "id": "polycrystalline",
+  "name": {
+    "en": "Polycrystalline (multicrystalline silicon, JA Solar JAP60S10)",
+    "es": "Policristalino (silicio multicristalino, JA Solar JAP60S10)"
+  },
+  "kind": "technology",
+  "description": {
+    "en": "Multicrystalline silicon cells, cell type 'Poly' in the JA Solar JAP60S10 275-295/SC datasheet (1689 x 996 x 35 mm). Replaces the earlier aggregator listing (EnfSolar, no maker).",
+    "es": "Celdas de silicio multicristalino, tipo 'Poly' en la ficha JA Solar JAP60S10 275-295/SC (1689 x 996 x 35 mm). Sustituye la ficha anterior de agregador (EnfSolar, sin fabricante)."
+  },
+  "typical_use": "Legacy and mid-cost multicrystalline modules.",
+  "cell": {
+    "type": "polycrystalline (multicrystalline), 'Poly' per datasheet",
+    "n_cells_typical": [
+      120
+    ],
+    "status": "unverified",
+    "source_ids": [
+      "ja_jap60s10"
+    ],
+    "note": "Datasheet states 120 cells (6x20). The earlier aggregator listed 60 cells; the datasheet value is kept and the layout is to be confirmed."
+  },
+  "layers": [
+    {
+      "id": "glass_front",
+      "name": "Front glass",
+      "material": "glass, type and thickness not stated by the datasheet",
+      "status": "typical",
+      "source_ids": [],
+      "thickness_mm": 3.2,
+      "note": "Front glass not stated in JA Solar datasheet; 3.2 mm is a typical value."
+    },
+    {
+      "id": "encapsulant_front",
+      "name": "Front encapsulant",
+      "material": "EVA or POE (thickness from Fraunhofer ISE lab-module reference; product material not stated)",
+      "status": "unverified",
+      "source_ids": [
+        "fraunhofer_pfreundt_2019"
+      ],
+      "thickness_mm": 0.45
+    },
+    {
+      "id": "cell_layer",
+      "name": "Cell layer",
+      "material": "silicon cells (thickness from Fraunhofer ISE lab-module reference)",
+      "status": "unverified",
+      "source_ids": [
+        "fraunhofer_pfreundt_2019"
+      ],
+      "thickness_mm": 0.18
+    },
+    {
+      "id": "encapsulant_rear",
+      "name": "Rear encapsulant",
+      "material": "EVA or POE (thickness from Fraunhofer ISE lab-module reference; product material not stated)",
+      "status": "unverified",
+      "source_ids": [
+        "fraunhofer_pfreundt_2019"
+      ],
+      "thickness_mm": 0.45
+    },
+    {
+      "id": "rear_layer",
+      "name": "Rear layer",
+      "material": "backsheet or rear glass (not stated by datasheet)",
+      "status": "not_found",
+      "source_ids": [],
+      "thickness_mm": 0.35,
+      "note": "Rear type not stated. Thickness 0.35 mm is the Fraunhofer ISE backsheet reference value; a rear type is not sourced."
+    }
+  ],
+  "parts": [
+    {
+      "id": "glass_front",
+      "name": "Front glass",
+      "type": "glass",
+      "status": "typical",
+      "source_ids": [],
+      "material": "glass (type not stated)",
+      "dimensions_mm": {
+        "thickness": 3.2
+      }
+    },
+    {
+      "id": "encapsulant_front",
+      "name": "Front encapsulant",
+      "type": "encapsulant",
+      "status": "unverified",
+      "source_ids": [
+        "fraunhofer_pfreundt_2019"
+      ],
+      "material": "EVA or POE (Fraunhofer ISE lab-module reference)"
+    },
+    {
+      "id": "encapsulant_rear",
+      "name": "Rear encapsulant",
+      "type": "encapsulant",
+      "status": "unverified",
+      "source_ids": [
+        "fraunhofer_pfreundt_2019"
+      ],
+      "material": "EVA or POE (Fraunhofer ISE lab-module reference)"
+    },
+    {
+      "id": "rear",
+      "name": "Rear layer",
+      "type": "backsheet",
+      "status": "not_found",
+      "source_ids": [],
+      "material": "backsheet or rear glass (not stated)",
+      "dimensions_mm": {
+        "thickness": 0.35
+      }
+    },
+    {
+      "id": "frame",
+      "name": "Frame",
+      "type": "frame_profile",
+      "status": "typical",
+      "source_ids": [],
+      "material": "anodized aluminium alloy (typical; material not stated by datasheet)",
+      "note": "height 35 mm from datasheet; footprint width typical"
+    },
+    {
+      "id": "junction_box",
+      "name": "Junction box",
+      "type": "junction_box",
+      "status": "unverified",
+      "source_ids": [
+        "ja_jap60s10"
+      ],
+      "ratings": {
+        "ip": "IP68",
+        "bypass_diodes": 3
+      },
+      "quantity_per_module": 1
+    },
+    {
+      "id": "connector",
+      "name": "Connector",
+      "type": "connector",
+      "status": "unverified",
+      "source_ids": [
+        "ja_jap60s10"
+      ],
+      "ratings": {
+        "type": "QC 4.10-35"
+      },
+      "quantity_per_module": 2
+    },
+    {
+      "id": "cable",
+      "name": "PV cable",
+      "type": "cable",
+      "status": "unverified",
+      "source_ids": [
+        "ja_jap60s10"
+      ],
+      "ratings": {
+        "cross_section_mm2": 4
+      },
+      "quantity_per_module": 2,
+      "note": "Length not stated; customized length on request."
+    },
+    {
+      "id": "cells",
+      "name": "Poly cell string",
+      "type": "cell_string",
+      "status": "unverified",
+      "source_ids": [
+        "ja_jap60s10"
+      ],
+      "material": "polycrystalline silicon"
+    }
+  ],
+  "geometry": {
+    "description": "Framed polycrystalline module 1689 x 996 x 35 mm (JA Solar datasheet). Glass 3.2 mm typical; encapsulant and cell thicknesses from Fraunhofer ISE lab-module reference; rear not stated (0.35 mm reference). Frame height 35 mm from datasheet, footprint width typical. Junction box placement and size typical.",
+    "coordinate_system": "x along module long side, y along short side, z up through thickness; origin at module front-left corner; mm. Here z=0 is the front glass face and z grows toward the rear through thickness.",
+    "elements": [
+      {
+        "id": "glass_front",
+        "kind": "glass",
+        "part_id": "glass_front",
+        "position_mm": [
+          30.0,
+          30.0,
+          0.0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          1629.0,
+          936.0,
+          3.2
+        ],
+        "status": "typical"
+      },
+      {
+        "id": "encapsulant_front",
+        "kind": "encapsulant",
+        "part_id": "encapsulant_front",
+        "position_mm": [
+          30.0,
+          30.0,
+          3.2
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          1629.0,
+          936.0,
+          0.45
+        ],
+        "status": "unverified"
+      },
+      {
+        "id": "cell_layer",
+        "kind": "cell_string",
+        "part_id": "cells",
+        "position_mm": [
+          30.0,
+          30.0,
+          3.65
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          1629.0,
+          936.0,
+          0.18
+        ],
+        "status": "unverified"
+      },
+      {
+        "id": "encapsulant_rear",
+        "kind": "encapsulant",
+        "part_id": "encapsulant_rear",
+        "position_mm": [
+          30.0,
+          30.0,
+          3.83
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          1629.0,
+          936.0,
+          0.45
+        ],
+        "status": "unverified"
+      },
+      {
+        "id": "rear_layer",
+        "kind": "backsheet",
+        "part_id": "rear",
+        "position_mm": [
+          30.0,
+          30.0,
+          4.28
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          1629.0,
+          936.0,
+          0.35
+        ],
+        "status": "not_found"
+      },
+      {
+        "id": "frame_long_front",
+        "kind": "frame_profile",
+        "part_id": "frame",
+        "position_mm": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          1689.0,
+          30.0,
+          35.0
+        ],
+        "status": "unverified",
+        "note": "footprint width typical, height from datasheet"
+      },
+      {
+        "id": "frame_long_back",
+        "kind": "frame_profile",
+        "part_id": "frame",
+        "position_mm": [
+          0.0,
+          966.0,
+          0.0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          1689.0,
+          30.0,
+          35.0
+        ],
+        "status": "unverified",
+        "note": "footprint width typical, height from datasheet"
+      },
+      {
+        "id": "frame_short_left",
+        "kind": "frame_profile",
+        "part_id": "frame",
+        "position_mm": [
+          0.0,
+          30.0,
+          0.0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          30.0,
+          936.0,
+          35.0
+        ],
+        "status": "unverified",
+        "note": "footprint width typical, height from datasheet"
+      },
+      {
+        "id": "frame_short_right",
+        "kind": "frame_profile",
+        "part_id": "frame",
+        "position_mm": [
+          1659.0,
+          30.0,
+          0.0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          30.0,
+          936.0,
+          35.0
+        ],
+        "status": "unverified",
+        "note": "footprint width typical, height from datasheet"
+      },
+      {
+        "id": "junction_box",
+        "kind": "junction_box",
+        "part_id": "junction_box",
+        "position_mm": [
+          769.5,
+          448.0,
+          4.63
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          150.0,
+          100.0,
+          20.0
+        ],
+        "status": "typical",
+        "note": "placement and size typical, not from datasheet"
+      }
+    ],
+    "module_dimensions_mm": [
+      1689,
+      996,
+      35
+    ]
+  },
+  "mechanical_ratings": {
+    "weight_kg": 18.7,
+    "weight_tolerance_pct": 3,
+    "module_efficiency_pct_range": [
+      16.3,
+      17.5
+    ],
+    "efficiency_note": "275 W to 295 W variants",
+    "power_w_range": [
+      275,
+      295
+    ],
+    "junction_box_ip": "IP68",
+    "bypass_diodes": 3,
+    "standards_listed_in_source": [
+      "IEC 61215",
+      "IEC 61730",
+      "IEC TS 62941:2016"
+    ],
+    "max_system_voltage_v": null,
+    "status_note": "values transcribed from the JA Solar datasheet copy; status unverified unless marked"
+  },
+  "status": "unverified",
+  "unverified_items": [
+    "Glass type and thickness, encapsulant and rear material not stated (3.2 mm glass typical; 0.45 mm and 0.35 mm are Fraunhofer ISE references).",
+    "Cell count conflict: datasheet 120 (6x20) vs earlier 60-cell aggregator listing; layout to be confirmed.",
+    "Cell size and busbar count not stated.",
+    "Frame material and footprint width not stated (typical).",
+    "Junction box size/placement typical. Cable length not stated.",
+    "UL standards not stated in the datasheet."
+  ],
+  "sources": [
+    {
+      "id": "ja_jap60s10",
+      "title": "JA Solar JAP60S10 275-295/SC datasheet (distributor copy)",
+      "publisher": "JA Solar (copy, SolarQuotes)",
+      "url": "https://www.solarquotes.com.au/wp-content/uploads/2019/06/ja-solar-jap60s10-datasheet.pdf",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "fraunhofer_pfreundt_2019",
+      "title": "Pfreundt et al., EU PVSEC 2019, paper 4CO43 (module layer thicknesses, lab modules)",
+      "publisher": "Fraunhofer ISE",
+      "url": "https://www.ise.fraunhofer.de/content/dam/ise/de/documents/publications/conference-paper/36-eupvsec-2019/Pfreundt_4CO43.pdf",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

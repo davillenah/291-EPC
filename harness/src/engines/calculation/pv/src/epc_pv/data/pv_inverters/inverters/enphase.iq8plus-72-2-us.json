@@ -1,0 +1,269 @@
+{
+  "schema_version": "1.0",
+  "id": "enphase.iq8plus-72-2-us",
+  "name": {
+    "en": "Enphase IQ8PLUS-72-2-US microinverter",
+    "es": "Microinversor Enphase IQ8PLUS-72-2-US"
+  },
+  "kind": "inverter_type",
+  "description": {
+    "en": "Module-level microinverter, one per module, 290 VA continuous, 240 V split-phase 60 Hz (US), natural convection, PLC communication.",
+    "es": "Microinversor a nivel de modulo, uno por modulo, 290 VA continuos, 240 V bifasico 60 Hz (US), conveccion natural, comunicacion PLC."
+  },
+  "typical_use": "Module-level microinverter (US 240 V / 60 Hz variant; not the 230 V / 50 Hz variant)",
+  "layers": [],
+  "parts": [
+    {
+      "id": "enclosure",
+      "name": "Class II double-insulated enclosure",
+      "type": "enclosure",
+      "status": "unverified",
+      "source_ids": [
+        "enphase_iq8_us_ds"
+      ],
+      "dimensions_mm": {
+        "w": 175,
+        "h": 212,
+        "d": 30.2
+      },
+      "geometry_hint": "Dimensions in H x W x D order in source; mapped to W=175, H=212, D=30.2"
+    },
+    {
+      "id": "dc_input",
+      "name": "DC input, MC4 (via Q-DCC-2 adapter)",
+      "type": "dc_input",
+      "status": "unverified",
+      "source_ids": [
+        "enphase_iq8_us_ds"
+      ],
+      "quantity_per_module": 1,
+      "ratings": {
+        "connector": "MC4 (Staubli), adapter Q-DCC-2"
+      }
+    },
+    {
+      "id": "ac_connector",
+      "name": "Enphase AC connector (IQ cabling)",
+      "type": "ac_terminal",
+      "status": "unverified",
+      "source_ids": [
+        "enphase_iq8_us_ds"
+      ],
+      "ratings": {
+        "connector": "Enphase AC connector"
+      }
+    },
+    {
+      "id": "comm_plc",
+      "name": "Power line communication (PLC)",
+      "type": "comm_port",
+      "status": "unverified",
+      "source_ids": [
+        "enphase_iq8_us_ds"
+      ],
+      "ratings": {
+        "plc": "110-120 kHz plus narrowband 200 Hz (IQ8AC source)"
+      }
+    },
+    {
+      "id": "led",
+      "name": "LED",
+      "type": "led_indicator",
+      "status": "not_found",
+      "geometry_hint": "Only a 'LED' label in drawing; details not found"
+    },
+    {
+      "id": "wireless",
+      "name": "WiFi / Bluetooth",
+      "type": "antenna",
+      "status": "not_found"
+    },
+    {
+      "id": "mounting_plate",
+      "name": "Mounting plate/bracket",
+      "type": "mounting_bracket",
+      "status": "unverified",
+      "source_ids": [
+        "enphase_iq8_ac_ds"
+      ],
+      "geometry_hint": "Mounting plate mentioned in IQ8AC source; hole spacing not_found"
+    },
+    {
+      "id": "mounting_holes",
+      "name": "Mounting holes",
+      "type": "mounting_hole",
+      "status": "not_found"
+    },
+    {
+      "id": "grounding_terminal",
+      "name": "Grounding",
+      "type": "grounding_terminal",
+      "status": "not_found",
+      "geometry_hint": "Ungrounded array per source; no ground terminal listed"
+    },
+    {
+      "id": "enclosure_ip",
+      "name": "Enclosure IP rating (IP67 for IQ8AC/HC variants only)",
+      "type": "gasket",
+      "status": "not_found",
+      "geometry_hint": "IP not stated for US model; NEMA 6 listed"
+    }
+  ],
+  "geometry": {
+    "description": "Wall-mounted inverter envelope from datasheet W x H x D. Elements are generic placements (status typical) unless noted. Mounting hole positions omitted: spacing not sourced.",
+    "coordinate_system": "x = width (left to right seen from front), y = height (bottom 0 to top), z = depth (wall at z=0, front cover at z=D); origin bottom-left-wall corner; mm",
+    "module_dimensions_mm": [
+      175,
+      212,
+      30.2
+    ],
+    "clamping_zones_mm": [],
+    "elements": [
+      {
+        "id": "el_enclosure",
+        "kind": "enclosure",
+        "part_id": "enclosure",
+        "position_mm": [
+          0,
+          0,
+          0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          175,
+          212,
+          30.2
+        ],
+        "status": "unverified",
+        "note": "Overall envelope from datasheet W x H x D; origin at bottom-left-back when wall-mounted."
+      },
+      {
+        "id": "el_dc",
+        "kind": "dc_input",
+        "part_id": "dc_input",
+        "position_mm": [
+          52.5,
+          10.6,
+          15.1
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          43.8,
+          10.6,
+          1.2
+        ],
+        "status": "typical",
+        "note": "Generic placement, no sourced coordinates."
+      },
+      {
+        "id": "el_ac",
+        "kind": "ac_terminal",
+        "part_id": "ac_connector",
+        "position_mm": [
+          122.5,
+          10.6,
+          15.1
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          43.8,
+          10.6,
+          1.2
+        ],
+        "status": "typical",
+        "note": "Generic placement, no sourced coordinates."
+      }
+    ]
+  },
+  "mechanical_ratings": {
+    "ip_rating": "not_found (IQ8AC/HC variants: IP67 per source, not this model)",
+    "fire_class": "not_found"
+  },
+  "status": "unverified",
+  "unverified_items": [
+    "IP rating for IQ8PLUS-72-2-US not found (IP67 is stated only for IQ8AC-72-M-INT / IQ8HC-72-M-INT)",
+    "LED/WiFi/Bluetooth not found",
+    "mounting hole spacing not found",
+    "DC connector: source says MC4 but needs Q-DCC-2 adapter",
+    "nominal AC current not found"
+  ],
+  "sources": [
+    {
+      "id": "enphase_iq8_us_ds",
+      "title": "IQ8+ microinverter datasheet (US 240 V, mirror copy)",
+      "publisher": "Enphase Energy (mirror on third-party host)",
+      "url": "https://krannich-solar.com/fileadmin/user_upload/US/Datasheets/Inverters/Enphase/iq8_plus_made_in_usa.pdf",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "enphase_iq8_ac_ds",
+      "title": "IQ8 series microinverter datasheet, IQ8AC/IQ8HC international (mirror copy)",
+      "publisher": "Enphase Energy (mirror on third-party host)",
+      "url": "https://www.solarquotes.com.au/wp-content/uploads/2023/06/enphase-iq8-datasheet.pdf",
+      "accessed": "2026-11-20"
+    }
+  ],
+  "electrical_ratings": {
+    "topology": "microinverter, transformerless (not stated)",
+    "phases": "split-phase (240 V L-L, 180 deg)",
+    "rated_ac_power_va": 290,
+    "ac_voltage_v": 240,
+    "ac_voltage_range_v": "211-264",
+    "ac_frequency_hz": "60 (extended 47-68)",
+    "n_mppt": 1,
+    "mppt_voltage_range_v": "27-45 (operating range 16-58)",
+    "max_dc_voltage_v": 60,
+    "max_dc_current_continuous_a": 12,
+    "max_sc_dc_current_a": 25,
+    "efficiency_max_pct": 97.7,
+    "efficiency_cec_pct": 97,
+    "ip_rating": "not_found (NEMA 6 and outdoor listed)",
+    "cooling": "natural convection, no fans",
+    "display": "LED not_found",
+    "comm": "PLC yes; WiFi not_found; Bluetooth not_found",
+    "certifications": [
+      "CA Rule 21 (UL 1741-SA)",
+      "UL 62109-1",
+      "IEEE 1547:2018 (UL 1741-SB 3rd Ed.)",
+      "FCC Part 15 Class B",
+      "ICES-0003 Class B",
+      "CAN/CSA-C22.2 NO. 107.1-01",
+      "NEC 690.12 rapid shutdown"
+    ],
+    "protections": [
+      "Class II double insulation",
+      "DC port overvoltage class II; AC port III",
+      "pollution degree PD3",
+      "DC backfeed 0 mA",
+      "AC backfeed 30 mA"
+    ],
+    "source_ids": [
+      "enphase_iq8_us_ds"
+    ],
+    "electrical_status": "unverified"
+  },
+  "mechanical": {
+    "external_dimensions_wxhxd_mm": [
+      175,
+      212,
+      30.2
+    ],
+    "weight_kg": 1.08,
+    "mounting": "mounting plate (spacing not_found)",
+    "cooling": "natural convection, no fans",
+    "clearances_mm": "not_found",
+    "mechanical_status": "unverified"
+  }
+}

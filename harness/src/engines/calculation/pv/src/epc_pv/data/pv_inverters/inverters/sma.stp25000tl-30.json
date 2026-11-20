@@ -1,0 +1,402 @@
+{
+  "schema_version": "1.0",
+  "id": "sma.stp25000tl-30",
+  "name": {
+    "en": "SMA Sunny Tripower 25000TL-30",
+    "es": "SMA Sunny Tripower 25000TL-30"
+  },
+  "kind": "inverter_type",
+  "description": {
+    "en": "Three-phase transformerless string inverter, 25 kW, 2 MPP inputs, Opticool passive cooling concept, IP65.",
+    "es": "Inversor de cadena trifasico sin transformador, 25 kW, 2 entradas MPP, concepto de refrigeracion Opticool pasivo, IP65."
+  },
+  "typical_use": "Commercial and industrial three-phase string inverter",
+  "layers": [],
+  "parts": [
+    {
+      "id": "enclosure",
+      "name": "Housing",
+      "type": "enclosure",
+      "status": "unverified",
+      "source_ids": [
+        "sma_stp25_ds"
+      ],
+      "dimensions_mm": {
+        "w": 661,
+        "h": 682,
+        "d": 264
+      }
+    },
+    {
+      "id": "heatsink",
+      "name": "Opticool passive heat dissipation surfaces",
+      "type": "heatsink",
+      "status": "typical",
+      "source_ids": [
+        "sma_stp25_ds"
+      ],
+      "geometry_hint": "Cooling concept Opticool; fin layout not sourced"
+    },
+    {
+      "id": "dc_input_a",
+      "name": "DC input A (SUNCLIX)",
+      "type": "dc_input",
+      "status": "unverified",
+      "source_ids": [
+        "sma_stp25_ds"
+      ],
+      "quantity_per_module": 1,
+      "ratings": {
+        "connector": "SUNCLIX",
+        "count": "not_found",
+        "strings": 3,
+        "max_current_a": 33
+      }
+    },
+    {
+      "id": "dc_input_b",
+      "name": "DC input B (SUNCLIX)",
+      "type": "dc_input",
+      "status": "unverified",
+      "source_ids": [
+        "sma_stp25_ds"
+      ],
+      "quantity_per_module": 1,
+      "ratings": {
+        "connector": "SUNCLIX",
+        "count": "not_found",
+        "strings": 3,
+        "max_current_a": 33
+      }
+    },
+    {
+      "id": "dc_switch",
+      "name": "DC-side disconnection device",
+      "type": "dc_switch",
+      "status": "unverified",
+      "source_ids": [
+        "sma_stp25_ds"
+      ],
+      "ratings": {
+        "integrated": "not_found"
+      }
+    },
+    {
+      "id": "ac_terminal",
+      "name": "AC spring-cage terminal",
+      "type": "ac_terminal",
+      "status": "unverified",
+      "source_ids": [
+        "sma_stp25_ds"
+      ],
+      "ratings": {
+        "connector": "spring cage"
+      }
+    },
+    {
+      "id": "display_opt",
+      "name": "Display (optional accessory)",
+      "type": "display",
+      "status": "unverified",
+      "source_ids": [
+        "sma_stp25_ds"
+      ],
+      "ratings": {
+        "availability": "optional"
+      }
+    },
+    {
+      "id": "led",
+      "name": "LED indicator",
+      "type": "led_indicator",
+      "status": "not_found"
+    },
+    {
+      "id": "comm_rs485",
+      "name": "RS485 interface (optional accessory port)",
+      "type": "comm_port",
+      "status": "unverified",
+      "source_ids": [
+        "sma_stp25_ds"
+      ],
+      "ratings": {
+        "availability": "optional"
+      }
+    },
+    {
+      "id": "comm_speedwire",
+      "name": "Speedwire / Webconnect (Ethernet based)",
+      "type": "comm_port",
+      "status": "unverified",
+      "source_ids": [
+        "sma_stp25_ds"
+      ],
+      "ratings": {
+        "ethernet": "not explicitly stated"
+      }
+    },
+    {
+      "id": "spd",
+      "name": "DC surge arrester Type II (optional)",
+      "type": "spd",
+      "status": "unverified",
+      "source_ids": [
+        "sma_stp25_ds"
+      ],
+      "ratings": {
+        "availability": "optional"
+      }
+    },
+    {
+      "id": "grounding_terminal",
+      "name": "Grounding terminal",
+      "type": "grounding_terminal",
+      "status": "not_found"
+    },
+    {
+      "id": "mounting_bracket",
+      "name": "Wall-mounting bracket",
+      "type": "mounting_bracket",
+      "status": "not_found",
+      "geometry_hint": "Hole spacing and screw sizes not stated"
+    },
+    {
+      "id": "mounting_holes",
+      "name": "Wall mounting holes",
+      "type": "mounting_hole",
+      "status": "not_found"
+    },
+    {
+      "id": "fan",
+      "name": "Fan",
+      "type": "fan",
+      "status": "not_found",
+      "geometry_hint": "Fan not found; cooling is Opticool concept"
+    }
+  ],
+  "geometry": {
+    "description": "Wall-mounted inverter envelope from datasheet W x H x D. Elements are generic placements (status typical) unless noted. Mounting hole positions omitted: spacing not sourced.",
+    "coordinate_system": "x = width (left to right seen from front), y = height (bottom 0 to top), z = depth (wall at z=0, front cover at z=D); origin bottom-left-wall corner; mm",
+    "module_dimensions_mm": [
+      661,
+      682,
+      264
+    ],
+    "clamping_zones_mm": [],
+    "elements": [
+      {
+        "id": "el_enclosure",
+        "kind": "enclosure",
+        "part_id": "enclosure",
+        "position_mm": [
+          0,
+          0,
+          0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          661,
+          682,
+          264
+        ],
+        "status": "unverified",
+        "note": "Overall envelope from datasheet W x H x D; origin at bottom-left-back when wall-mounted."
+      },
+      {
+        "id": "el_dc_input_a",
+        "kind": "dc_input",
+        "part_id": "dc_input_a",
+        "position_mm": [
+          165.2,
+          40.9,
+          132.0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          99.1,
+          34.1,
+          10.6
+        ],
+        "status": "typical",
+        "note": "Generic placement, no sourced coordinates."
+      },
+      {
+        "id": "el_dc_input_b",
+        "kind": "dc_input",
+        "part_id": "dc_input_b",
+        "position_mm": [
+          277.6,
+          40.9,
+          132.0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          99.1,
+          34.1,
+          10.6
+        ],
+        "status": "typical",
+        "note": "Generic placement, no sourced coordinates."
+      },
+      {
+        "id": "el_dc_switch",
+        "kind": "dc_switch",
+        "part_id": "dc_switch",
+        "position_mm": [
+          79.3,
+          40.9,
+          132.0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          66.1,
+          34.1,
+          10.6
+        ],
+        "status": "typical",
+        "note": "Generic placement, no sourced coordinates."
+      },
+      {
+        "id": "el_ac_terminal",
+        "kind": "ac_terminal",
+        "part_id": "ac_terminal",
+        "position_mm": [
+          495.8,
+          40.9,
+          132.0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          132.2,
+          34.1,
+          10.6
+        ],
+        "status": "typical",
+        "note": "Generic placement, no sourced coordinates."
+      },
+      {
+        "id": "el_display",
+        "kind": "display",
+        "part_id": "display_opt",
+        "position_mm": [
+          330.5,
+          559.2,
+          264.0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          264.4,
+          81.8,
+          0.0
+        ],
+        "status": "typical",
+        "note": "Generic placement, no sourced coordinates. Optional display"
+      }
+    ]
+  },
+  "mechanical_ratings": {
+    "ip_rating": "IP65",
+    "fire_class": "not_found"
+  },
+  "status": "unverified",
+  "unverified_items": [
+    "SUNCLIX connector count per input",
+    "wall bracket hole spacing and screw sizes",
+    "grounding terminal position",
+    "fan (not found)",
+    "LED (not found)",
+    "WLAN not found; Ethernet not explicit"
+  ],
+  "sources": [
+    {
+      "id": "sma_stp25_ds",
+      "title": "Sunny Tripower 15000TL/20000TL/25000TL data sheet (STP 25000TL-30, DEN1622 v30)",
+      "publisher": "SMA Solar Technology AG",
+      "url": "https://www.pv.de/media/stp25000tl-30-den1622-v30web.pdf",
+      "accessed": "2026-11-20"
+    }
+  ],
+  "electrical_ratings": {
+    "topology": "transformerless (Opticool)",
+    "phases": 3,
+    "rated_ac_power_kw": 25,
+    "rated_ac_power_by_model_kw": {
+      "STP 15000TL-30": 15,
+      "STP 20000TL-30": 20,
+      "STP 25000TL-30": 25
+    },
+    "ac_voltage_v": "3/N/PE 220/380, 230/400, 240/415 (range 180-280)",
+    "ac_frequency_hz": "not_found",
+    "n_mppt": 2,
+    "mppt_voltage_range_v": {
+      "15000TL": "240-800",
+      "20000TL": "320-800",
+      "25000TL": "390-800"
+    },
+    "rated_input_voltage_v": 600,
+    "max_dc_voltage_v": 1000,
+    "max_dc_current_per_mppt_a": 33,
+    "efficiency_max_pct": 98.3,
+    "ip_rating": "IP65",
+    "cooling": "Opticool (passive concept)",
+    "display": "optional",
+    "certifications": [
+      "CE",
+      "IEC 62109-1/-2",
+      "IEC 61727",
+      "VDE-AR-N 4105",
+      "G59/3",
+      "EN 50438 (national appendix exception)"
+    ],
+    "protections": [
+      "DC-side disconnection device",
+      "ground fault monitoring",
+      "grid monitoring",
+      "DC reverse polarity protection",
+      "AC short-circuit current capability",
+      "all-pole sensitive residual-current monitoring",
+      "Type II DC surge arrester (optional)"
+    ],
+    "source_ids": [
+      "sma_stp25_ds"
+    ],
+    "electrical_status": "unverified"
+  },
+  "mechanical": {
+    "external_dimensions_wxhxd_mm": [
+      661,
+      682,
+      264
+    ],
+    "weight_kg": 61,
+    "mounting": "wall bracket (hole spacing not_found)",
+    "cooling": "Opticool passive concept",
+    "fan": "not_found",
+    "clearances_mm": "not_found",
+    "mechanical_status": "unverified"
+  }
+}

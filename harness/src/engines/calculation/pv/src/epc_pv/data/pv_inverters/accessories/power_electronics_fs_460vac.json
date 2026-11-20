@@ -1,0 +1,198 @@
+{
+  "schema_version": "1.0",
+  "id": "power_electronics_fs_460vac",
+  "name": {
+    "en": "Power Electronics FS central inverter (HE460VAC platform, FS1162IH to FS2300IH)",
+    "es": "Inversor central Power Electronics FS (plataforma HE460VAC, FS1162IH a FS2300IH)"
+  },
+  "kind": "inverter_type",
+  "description": {
+    "en": "Central inverter family, 1160-2300 kVA at 50 C, 460 VAC output (not 600-690 V), 1000 V DC maximum, IP21 indoor cabinet. Source is a product sheet mirror; FS model dimensions by frame.",
+    "es": "Familia de inversores centrales, 1160-2300 kVA a 50 C, salida 460 VCA (no 600-690 V), 1000 V CC máximo, armario interior IP21. Fuente: copia de la hoja de producto; dimensiones por bastidor."
+  },
+  "typical_use": "Indoor central station cabinets, 460 VAC systems.",
+  "status": "unverified",
+  "parts": [
+    {
+      "id": "cab",
+      "name": "Cabinet frame 2 (representative envelope)",
+      "name_es": "Armario bastidor 2 (envolvente representativa)",
+      "type": "enclosure",
+      "status": "unverified",
+      "material": "not stated",
+      "dimensions_mm": {
+        "W": 3370,
+        "H": 2080,
+        "D": 1020
+      },
+      "quantity_per_module": 1,
+      "ratings": {
+        "ip": "IP21"
+      },
+      "geometry_hint": "Frame 2 used for envelope; frames 3 and 4 also sourced",
+      "source_ids": [
+        "S04"
+      ]
+    },
+    {
+      "id": "fans",
+      "name": "Forced-air cooling (VSD ventilation)",
+      "name_es": "Refrigeración forzada por aire (ventilación VSD)",
+      "type": "fan",
+      "status": "unverified",
+      "source_ids": [
+        "S04"
+      ]
+    },
+    {
+      "id": "dcin",
+      "name": "DC input (MPPT window 651-900 V)",
+      "name_es": "Entrada CC (ventana MPPT 651-900 V)",
+      "type": "dc_input",
+      "status": "unverified",
+      "ratings": {
+        "max_dc_voltage_v": 1000,
+        "mppt_window_v": [
+          651,
+          900
+        ]
+      },
+      "geometry_hint": "Number of DC inputs not specified in source",
+      "source_ids": [
+        "S04"
+      ]
+    },
+    {
+      "id": "acout",
+      "name": "AC output (460 VAC, 50/60 Hz)",
+      "name_es": "Salida CA (460 VCA, 50/60 Hz)",
+      "type": "ac_output",
+      "status": "unverified",
+      "ratings": {
+        "ac_voltage_v": 460,
+        "frequency_hz": [
+          50,
+          60
+        ]
+      },
+      "source_ids": [
+        "S04"
+      ]
+    },
+    {
+      "id": "ground",
+      "name": "Grounding terminal",
+      "name_es": "Terminal de puesta a tierra",
+      "type": "grounding_terminal",
+      "status": "typical",
+      "geometry_hint": "Generic"
+    }
+  ],
+  "geometry": {
+    "description": "Multi-frame cabinet line. Dimensions given per frame (W x D x H): Frame 2 3370 x 1020 x 2080; Frame 3 4400 x 1020 x 2080; Frame 4 5260 x 1020 x 2080 mm. Frame 2 mapped to x=3370, y=1020, z=2080 as the representative envelope. Mapping of each model to a frame is not stated.",
+    "coordinate_system": "x along module long side, y along short side, z up through thickness; origin at module front-left corner; mm",
+    "elements": [
+      {
+        "id": "E-cab",
+        "kind": "enclosure_body",
+        "part_id": "cab",
+        "position_mm": [
+          0,
+          0,
+          0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          3370,
+          1020,
+          2080
+        ],
+        "status": "unverified",
+        "note": "Frame 2 representative"
+      }
+    ],
+    "module_dimensions_mm": [
+      3370,
+      1020,
+      2080
+    ]
+  },
+  "mechanical_ratings": {
+    "note": "Certifications not captured"
+  },
+  "unverified_items": [
+    "Source is 460 VAC, outside the 600-690 V target of this task",
+    "DC input count not stated",
+    "Model-to-frame mapping not stated",
+    "Source is a mirror, not the manufacturer's own URL"
+  ],
+  "sources": [
+    {
+      "id": "S04",
+      "title": "Power Electronics FS central inverter (HE460VAC) product sheet, mirror on EnfSolar",
+      "publisher": "Power Electronics (mirror: enfsolar.com)",
+      "url": "https://cdn.enfsolar.com/Product/pdf/Inverter/597029e754a4d.pdf",
+      "accessed": "2026-11-20"
+    }
+  ],
+  "electrical_ratings": {
+    "topology": "central inverter, 460 VAC",
+    "rated_ac_power_kva_50C": [
+      1160,
+      1391,
+      1620,
+      1850,
+      2081,
+      2300
+    ],
+    "rated_ac_power_kva_25C": [
+      1270,
+      2550
+    ],
+    "max_dc_voltage_v": 1000,
+    "mppt_window_v": [
+      651,
+      900
+    ],
+    "ac_voltage_v": 460,
+    "frequency_hz": [
+      50,
+      60
+    ],
+    "max_efficiency_pct": 98.6,
+    "euro_eta_pct": [
+      98.3,
+      98.4
+    ]
+  },
+  "mechanical": {
+    "external_dimensions_mm_WxDxH": {
+      "frame_2": [
+        3370,
+        1020,
+        2080
+      ],
+      "frame_3": [
+        4400,
+        1020,
+        2080
+      ],
+      "frame_4": [
+        5260,
+        1020,
+        2080
+      ]
+    },
+    "weight_kg": [
+      2500,
+      4500
+    ],
+    "cooling": "forced air (VSD ventilation)",
+    "operating_temp_c": "-20 to 60",
+    "ip": "IP21 (indoor)"
+  }
+}

@@ -1,0 +1,316 @@
+{
+  "schema_version": "1.0",
+  "id": "cs6_2_54tm_1961x1134x30",
+  "name": {
+    "en": "Canadian Solar CS6.2-54TM class, 1961 x 1134 x 30 mm, 108 TOPCon cells as printed",
+    "es": "Clase Canadian Solar CS6.2-54TM, 1961 x 1134 x 30 mm, 108 celdas TOPCon segun ficha"
+  },
+  "kind": "format",
+  "description": {
+    "en": "Canadian Solar TOPHiKu6 CS6.2-54TM (495-520 W range) datasheet: 1961 x 1134 x 30 mm, 23.3 kg, 108 cells printed as 2 x (9 x 6), 3.2 mm front glass, anodized aluminium frame, IP68 junction box with 3 bypass diodes, 4 mm2 cable, MC4-EVO2 connector option. Model name '54TM' is printed as is; the cell count printed is 108.",
+    "es": "Ficha Canadian Solar TOPHiKu6 CS6.2-54TM (rango 495-520 W): 1961 x 1134 x 30 mm, 23,3 kg, 108 celdas impresas como 2 x (9 x 6), vidrio frontal de 3,2 mm, marco de aluminio anodizado, caja IP68 con 3 diodos de bypass, cable de 4 mm2, conector MC4-EVO2 como opcion. El nombre de modelo '54TM' se mantiene tal como se imprime; el numero de celdas impreso es 108."
+  },
+  "typical_use": "Long TOPCon module format, 1961 mm length (not the 1722 or 2382 mm classes).",
+  "cell": {
+    "type": "TOPCon",
+    "n_cells_typical": [
+      108
+    ],
+    "status": "unverified",
+    "source_ids": [
+      "S17"
+    ]
+  },
+  "layers": [
+    {
+      "id": "front_glass",
+      "name": "Front glass",
+      "material": "3.2 mm tempered glass with anti-reflective coating",
+      "thickness_mm": 3.2,
+      "status": "unverified",
+      "source_ids": [
+        "S17"
+      ]
+    },
+    {
+      "id": "encapsulant_front",
+      "name": "Encapsulant front",
+      "material": "not stated",
+      "status": "not_found",
+      "source_ids": []
+    },
+    {
+      "id": "cell_layer",
+      "name": "Cell layer",
+      "material": "TOPCon cells, 108 as printed (2 x (9 x 6))",
+      "status": "unverified",
+      "source_ids": [
+        "S17"
+      ]
+    },
+    {
+      "id": "encapsulant_back",
+      "name": "Encapsulant back",
+      "material": "not stated",
+      "status": "not_found",
+      "source_ids": []
+    },
+    {
+      "id": "rear_layer",
+      "name": "Rear layer",
+      "material": "back glass not stated in datasheet",
+      "status": "not_found",
+      "source_ids": []
+    }
+  ],
+  "parts": [
+    {
+      "id": "module_body",
+      "name": "Laminate outline (outline for 2D/3D)",
+      "type": "other",
+      "status": "unverified",
+      "dimensions_mm": {
+        "length": 1961,
+        "width": 1134,
+        "thickness": 30
+      },
+      "source_ids": [
+        "S17"
+      ]
+    },
+    {
+      "id": "frame_profile",
+      "name": "Frame: anodized aluminium alloy (section not stated)",
+      "type": "frame_profile",
+      "status": "unverified",
+      "material": "anodized aluminium alloy",
+      "geometry_hint": "section not stated; see frame_profile_anodized_aluminium family",
+      "source_ids": [
+        "S17"
+      ]
+    },
+    {
+      "id": "junction_box",
+      "name": "Junction box: IP68, three bypass diodes",
+      "type": "junction_box",
+      "status": "unverified",
+      "ratings": {
+        "ip": "IP68",
+        "bypass_diodes": 3,
+        "diode_rating": "not_found"
+      },
+      "quantity_per_module": 1,
+      "source_ids": [
+        "S17"
+      ]
+    },
+    {
+      "id": "bypass_diode_x3",
+      "name": "Bypass diodes, three",
+      "type": "bypass_diode",
+      "status": "unverified",
+      "quantity_per_module": 3,
+      "ratings": {
+        "current_a": "not_found",
+        "voltage_v": "not_found",
+        "type": "not_found"
+      },
+      "source_ids": [
+        "S17"
+      ]
+    },
+    {
+      "id": "pv_cable",
+      "name": "PV output cable: 4 mm2 (IEC), 12 AWG (UL)",
+      "type": "cable",
+      "status": "unverified",
+      "ratings": {
+        "cross_section_mm2": 4,
+        "length_plus_mm": 300,
+        "length_minus_mm": 200,
+        "length_note": "300 mm (+) / 200 mm (-) or customized length, as printed"
+      },
+      "quantity_per_module": 2,
+      "source_ids": [
+        "S17"
+      ]
+    },
+    {
+      "id": "cell_string",
+      "name": "Cells: 108 TOPCon as printed",
+      "type": "cell_string",
+      "status": "unverified",
+      "material": "TOPCon cells",
+      "quantity_per_module": 108,
+      "geometry_hint": "printed as 2 x (9 x 6); cell size not stated",
+      "source_ids": [
+        "S17"
+      ]
+    },
+    {
+      "id": "glass_front",
+      "name": "Front glass 3.2 mm, tempered, AR coated",
+      "type": "glass",
+      "status": "unverified",
+      "dimensions_mm": {
+        "thickness": 3.2
+      },
+      "source_ids": [
+        "S17"
+      ]
+    },
+    {
+      "id": "glass_rear",
+      "name": "Rear glass: not stated",
+      "type": "glass",
+      "status": "not_found",
+      "source_ids": []
+    },
+    {
+      "id": "mounting_holes",
+      "name": "Mounting holes, 4 x 14 x 9 mm",
+      "type": "mounting_hole",
+      "status": "unverified",
+      "dimensions_mm": {
+        "width": 14,
+        "height": 9
+      },
+      "quantity_per_module": 4,
+      "geometry_hint": "printed as '4-14x9 Mounting Hole'; positions not clearly labelled in the extract",
+      "source_ids": [
+        "S17"
+      ]
+    },
+    {
+      "id": "grounding_holes",
+      "name": "Grounding holes, 6 (diameter not stated)",
+      "type": "grounding_hole",
+      "status": "unverified",
+      "quantity_per_module": 6,
+      "dimensions_mm": {},
+      "geometry_hint": "printed as '6-Phi Grounding Hole'; diameter not stated",
+      "source_ids": [
+        "S17"
+      ]
+    },
+    {
+      "id": "drain_holes",
+      "name": "Drainage holes",
+      "type": "drain_hole",
+      "status": "not_found",
+      "source_ids": []
+    },
+    {
+      "id": "connector",
+      "name": "PV connector: T6 or MC4-EVO2 or MC4-EVO2A (as printed)",
+      "type": "connector",
+      "status": "unverified",
+      "ratings": {
+        "options_printed": [
+          "T6",
+          "MC4-EVO2",
+          "MC4-EVO2A"
+        ],
+        "connector_rating": "not_found"
+      },
+      "source_ids": [
+        "S17"
+      ]
+    },
+    {
+      "id": "busbar_ribbon",
+      "name": "Busbars / ribbons",
+      "type": "busbar_ribbon",
+      "status": "not_found",
+      "source_ids": []
+    },
+    {
+      "id": "sealant_edge",
+      "name": "Edge sealant",
+      "type": "sealant",
+      "status": "not_found",
+      "source_ids": []
+    },
+    {
+      "id": "label_nameplate",
+      "name": "Nameplate label",
+      "type": "label",
+      "status": "not_found",
+      "source_ids": []
+    },
+    {
+      "id": "corner_key",
+      "name": "Corner keys",
+      "type": "corner_key",
+      "status": "not_found",
+      "source_ids": []
+    }
+  ],
+  "geometry": {
+    "description": "Outline from datasheet dimensions. Clamp zones and hole positions are not stated in the datasheet, so they are not positioned.",
+    "module_dimensions_mm": [
+      1961,
+      1134,
+      30
+    ],
+    "clamping_zones_mm": [
+      {
+        "edge": "not stated",
+        "status": "not_found",
+        "note": "clamp zones not stated in the datasheet"
+      }
+    ],
+    "elements": [
+      {
+        "id": "outline",
+        "kind": "laminate_outline",
+        "part_id": "module_body",
+        "position_mm": [
+          0,
+          0,
+          0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          1961,
+          1134,
+          30
+        ],
+        "status": "unverified"
+      }
+    ]
+  },
+  "mechanical_ratings": {
+    "weight_kg": 23.3,
+    "static_load_snow_pa": 5400,
+    "static_load_wind_pa": 2400,
+    "static_load_note": "printed as 'heavy snow load up to 5400 Pa, wind load up to 2400 Pa' without front/rear split",
+    "junction_box_ip": "IP68",
+    "source_ids": [
+      "S17"
+    ]
+  },
+  "status": "unverified",
+  "unverified_items": [
+    "Cell size and busbar count not stated; 108 cells printed as 2 x (9 x 6) in a 54TM model name.",
+    "Rear glass, encapsulant and backsheet not stated.",
+    "Bypass diode current, voltage and type not stated.",
+    "Mounting hole positions not clearly labelled; grounding hole diameter not stated.",
+    "Static load front/rear split not stated.",
+    "Connector rating not stated (T6, MC4-EVO2 or MC4-EVO2A printed as options).",
+    "Cable length: 300/200 mm printed as (+)/(-) with customization."
+  ],
+  "sources": [
+    {
+      "id": "S17",
+      "title": "Canadian Solar CS6.2-54TM PV module datasheet V1.2 (1961 x 1134 x 30 mm)",
+      "publisher": "Canadian Solar (copy hosted by Solarproof)",
+      "url": "https://solarproof.com.au/datasheets/panel_datasheet_CS-Datasheet-TOPHiKu6_CS6.2-54TM_v1.2_EN.pdf",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

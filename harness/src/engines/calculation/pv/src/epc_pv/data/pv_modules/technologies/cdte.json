@@ -1,0 +1,253 @@
+{
+  "schema_version": "1.0",
+  "id": "cdte",
+  "name": {
+    "en": "CdTe thin film (cadmium telluride)",
+    "es": "CdTe capa delgada (teluro de cadmio)"
+  },
+  "kind": "technology",
+  "description": {
+    "en": "Thin-film module on glass with a cadmium telluride absorber, monolithically series-connected. Reference: First Solar Series 7 TR1 (frameless, glass-glass, heat-strengthened glass).",
+    "es": "Modulo de capa delgada sobre vidrio con absorbedor de teluro de cadmio, conectado en serie de forma monolitica. Referencia: First Solar Series 7 TR1 (sin marco, vidrio-vidrio, vidrio templado termicamente)."
+  },
+  "typical_use": "Utility-scale modules with good high-temperature and low-light response; frameless.",
+  "cell": {
+    "type": "CdTe thin film, monolithic series",
+    "n_cells_typical": [
+      268
+    ],
+    "status": "unverified",
+    "source_ids": [
+      "fs_s7_tr1",
+      "fs_s7_ft1"
+    ],
+    "note": "Datasheet: 'thin film CdTe semiconductor, up to 268 cells'. Individual cell size and CdTe layer thickness not stated (TR1, FT1 and NEPD)."
+  },
+  "layers": [
+    {
+      "id": "glass_front",
+      "name": "Front glass",
+      "material": "heat-strengthened glass (front)",
+      "status": "unverified",
+      "source_ids": [
+        "fs_s7_tr1"
+      ]
+    },
+    {
+      "id": "encapsulant_front",
+      "name": "Front encapsulant",
+      "material": "laminate with edge seal (FT1 description); material and thickness not stated",
+      "status": "not_found",
+      "source_ids": [
+        "fs_s7_ft1"
+      ]
+    },
+    {
+      "id": "cell_layer",
+      "name": "Cell layer",
+      "material": "CdTe absorber thin film",
+      "status": "unverified",
+      "source_ids": [
+        "fs_s7_tr1"
+      ]
+    },
+    {
+      "id": "encapsulant_rear",
+      "name": "Rear encapsulant",
+      "material": "laminate with edge seal (FT1 description); material and thickness not stated",
+      "status": "not_found",
+      "source_ids": [
+        "fs_s7_ft1"
+      ]
+    },
+    {
+      "id": "rear_layer",
+      "name": "Rear layer",
+      "material": "heat-strengthened glass (rear)",
+      "status": "unverified",
+      "source_ids": [
+        "fs_s7_tr1"
+      ]
+    }
+  ],
+  "parts": [
+    {
+      "id": "glass_front",
+      "name": "Front glass",
+      "type": "glass",
+      "status": "unverified",
+      "source_ids": [
+        "fs_s7_tr1"
+      ],
+      "material": "heat-strengthened glass (front)"
+    },
+    {
+      "id": "encapsulant_front",
+      "name": "Front encapsulant",
+      "type": "encapsulant",
+      "status": "not_found",
+      "source_ids": [
+        "fs_s7_ft1"
+      ],
+      "material": "laminate with edge seal (FT1 description); not stated"
+    },
+    {
+      "id": "encapsulant_rear",
+      "name": "Rear encapsulant",
+      "type": "encapsulant",
+      "status": "not_found",
+      "source_ids": [
+        "fs_s7_ft1"
+      ],
+      "material": "laminate with edge seal (FT1 description); not stated"
+    },
+    {
+      "id": "cells",
+      "name": "CdTe monolithic cell string (up to 268 cells)",
+      "type": "cell_string",
+      "status": "unverified",
+      "source_ids": [
+        "fs_s7_tr1"
+      ],
+      "material": "CdTe thin film"
+    },
+    {
+      "id": "rear",
+      "name": "Rear layer",
+      "type": "glass",
+      "status": "unverified",
+      "source_ids": [
+        "fs_s7_tr1"
+      ],
+      "material": "heat-strengthened glass (rear)"
+    },
+    {
+      "id": "frame",
+      "name": "Frame",
+      "type": "frame_profile",
+      "status": "not_found",
+      "source_ids": [],
+      "material": "not applicable (frameless) or not stated",
+      "note": "Frameless design; frame-to-glass bonded with silicone (see sealant part)."
+    },
+    {
+      "id": "junction_box",
+      "name": "Junction box",
+      "type": "junction_box",
+      "status": "unverified",
+      "source_ids": [
+        "fs_s7_tr1"
+      ],
+      "ratings": {
+        "ip": "IP68"
+      }
+    },
+    {
+      "id": "connector",
+      "name": "Connector",
+      "type": "connector",
+      "status": "unverified",
+      "source_ids": [
+        "fs_s7_tr1"
+      ],
+      "ratings": {
+        "type": "TE Connectivity PV4-S or alternate"
+      },
+      "quantity_per_module": 2
+    },
+    {
+      "id": "cable",
+      "name": "PV cable",
+      "type": "cable",
+      "status": "unverified",
+      "source_ids": [
+        "fs_s7_tr1"
+      ],
+      "ratings": {
+        "cross_section_mm2": 2.5,
+        "length_mm": "650 (+), bulkhead (-)"
+      },
+      "quantity_per_module": 2
+    },
+    {
+      "id": "sealant",
+      "name": "Silicone frame-to-glass adhesive",
+      "type": "sealant",
+      "status": "unverified",
+      "source_ids": [
+        "fs_s7_tr1"
+      ],
+      "material": "silicone"
+    }
+  ],
+  "geometry": {
+    "description": "Footprint 2300 x 1216 mm, area 2.80 m2 (Series 7 TR1 datasheet). Module thickness, glass thickness and CdTe layer thickness not stated in any source reached; elements left empty rather than guessed. Dual junction box, frameless.",
+    "coordinate_system": "x along module long side, y along short side, z up through thickness; origin at module front-left corner; mm. Here z=0 is the front glass face and z grows toward the rear through thickness.",
+    "elements": []
+  },
+  "mechanical_ratings": {
+    "weight_kg_range": [
+      38.46,
+      39.7
+    ],
+    "module_efficiency_pct_range": [
+      18.1,
+      19.3
+    ],
+    "power_w_range": [
+      505,
+      540
+    ],
+    "junction_box_ip": "IP68",
+    "standards_listed_in_source": [
+      "IEC 61215:2021",
+      "IEC 61730-1:2023 (Class II)",
+      "IEC 61701 salt mist (extended durability test)"
+    ],
+    "frameless": true,
+    "status_note": "values transcribed from cited datasheets only; status unverified unless marked",
+    "weight_note": "38.46 to 39.7 kg (Series 7 TR1 datasheet); 36.8 kg (Series 7 FT1 datasheet and NEPD, India/USA)",
+    "weight_kg_ft1_nepd": 36.8,
+    "module_area_m2": 2.8,
+    "frameless_source": "TR1: 'Frameless design improves soiling and snow shedding'; FT1: 'Frameless design improves soiling performance'"
+  },
+  "status": "unverified",
+  "unverified_items": [
+    "Module thickness, glass thickness, encapsulant and CdTe layer thickness not stated (TR1, FT1 and NEPD checked).",
+    "Encapsulant material and thickness not stated; FT1 says only 'laminate with edge seal'.",
+    "Cell count 'up to 268' is a datasheet upper bound, not confirmed for each bin.",
+    "Weight differs by model: 38.46-39.7 kg (TR1) vs 36.8 kg (FT1, NEPD). Both kept.",
+    "Cable length differs: 650 mm (TR1) vs 500 mm (FT1). Both kept as sourced; TR1 values in the cable part.",
+    "IEC 61701 is listed only as an extended test, not as a standalone certificate."
+  ],
+  "sources": [
+    {
+      "id": "fs_s7_tr1",
+      "title": "First Solar Series 7 TR1 datasheet",
+      "publisher": "First Solar",
+      "url": "https://firstsolar.com/-/media/First-Solar/Technical-Documents/Series-7/Series-7-TR1-Datasheet.ashx",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "fs_s7_ft1",
+      "title": "First Solar Series 7 FT1 datasheet",
+      "publisher": "First Solar",
+      "url": "https://firstsolar.com/-/media/First-Solar/Technical-Documents/Series-7/Series-7-FT1-Datasheet.ashx?la=en",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "nepd_fs_s7",
+      "title": "NEPD-5039-4377 First Solar Series 7 photovoltaic module (environmental declaration)",
+      "publisher": "NEPD (EPD Norway)",
+      "url": "https://epd-global.com/getfile.php/1345010-1695811928/EPDer/Byggevarer/NEPD-5039-4377_First-Solar-Series-7-Photovoltaic-Module.pdf",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "iec_61701",
+      "title": "IEC 61701:2020 publication page (salt mist corrosion testing)",
+      "publisher": "IEC",
+      "url": "https://webstore.iec.ch/publication/59588",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

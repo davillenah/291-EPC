@@ -1,0 +1,135 @@
+{
+  "schema_version": "1.0",
+  "id": "ground_vertical_bifacial_fence",
+  "name": {
+    "en": "Vertical bifacial fence mount (ground, portrait modules on posts)",
+    "es": "Soporte vertical bifacial tipo valla (suelo, módulos en vertical sobre postes)"
+  },
+  "family": "ground",
+  "category": "vertical_bifacial_fence",
+  "description": {
+    "en": "Vertical bifacial PV fence on galvanized posts: modules are bolted directly to the posts in independent tables of 12 modules, with three posts per 12 modules. The datasheet does not state the post section, post spacing, embedment, bolt sizes or torques, or the tilt angle; these are not_found.",
+    "es": "Valla fotovoltaica bifacial vertical sobre postes galvanizados: los módulos se atornillan directamente a los postes en mesas independientes de 12 módulos, con tres postes por cada 12 módulos. La ficha no indica sección del poste, separación, empotramiento, tornillería ni ángulo de inclinación; son not_found."
+  },
+  "typical_use": "Vertical bifacial modules as a fence on ground, agricultural or perimeter sites.",
+  "applicable_standards": [],
+  "materials": [
+    {
+      "component": "Posts",
+      "material": "Steel, grade not stated",
+      "finish": "Galvanized, standard G90",
+      "status": "unverified",
+      "source_ids": [
+        "src_enfsolar_fence_2024"
+      ]
+    },
+    {
+      "component": "Module attachment",
+      "material": "Direct bolting (fasteners not stated)",
+      "finish": "Not stated",
+      "status": "not_found",
+      "source_ids": [
+        "src_enfsolar_fence_2024"
+      ]
+    }
+  ],
+  "profiles": [
+    {
+      "id": "fence_post",
+      "name": "Fence post section (I-beam or round post option; dimensions not stated)",
+      "section_type": "other",
+      "dimensions_mm": {},
+      "material": "Galvanized steel, grade not stated",
+      "status": "not_found",
+      "source_ids": [
+        "src_enfsolar_fence_2024"
+      ]
+    }
+  ],
+  "geometry": {
+    "description": "Post count per table is sourced (3 per 12 modules); post length, spacing and module positions are not stated.",
+    "coordinate_system": "x along module row, y up-slope/north-south horizontal, z up; origin at ground/roof contact of first support; mm and degrees",
+    "elements": [
+      {
+        "id": "fence_post_element",
+        "kind": "post",
+        "profile_or_accessory_id": "fence_post",
+        "position_mm": [
+          0,
+          0,
+          0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "length_mm": 0,
+        "count": 3,
+        "note": "3 posts per table of 12 modules (datasheet). Length and embedment not stated; length_mm 0 is a placeholder.",
+        "status": "not_found"
+      }
+    ],
+    "reference_layout": {
+      "modules_per_unit": 12,
+      "note": "Independent table of 12 modules; row length unlimited (datasheet). Orientation: vertical (portrait-like fence layout); module dimensions not stated in the datasheet."
+    }
+  },
+  "accessories": [
+    {
+      "id": "bolt_module_direct",
+      "name": "Module direct-bolting fasteners",
+      "type": "bolt",
+      "material": "not_found",
+      "grade": "not_found",
+      "standard": "not_found",
+      "thread": "not_found",
+      "quantity": {
+        "value": 0,
+        "per": "module",
+        "note": "NOT SOURCED: placeholder"
+      },
+      "purpose": "Attaches modules directly to posts",
+      "status": "not_found"
+    },
+    {
+      "id": "grounding_bonding",
+      "name": "Bonding and earth connection",
+      "type": "grounding",
+      "material": "not_found",
+      "grade": "not_found",
+      "standard": "not_found",
+      "thread": "not_found",
+      "quantity": {
+        "value": 0,
+        "per": "table",
+        "note": "NOT SOURCED: placeholder"
+      },
+      "purpose": "Bonding to earth system",
+      "status": "not_found"
+    }
+  ],
+  "grounding_bonding": "Not stated in the source reviewed.",
+  "installation_notes": [
+    "Height adjustability of the leading edge: 1 ft to 4 ft (datasheet). Accommodates slopes up to 15 percent (datasheet).",
+    "Wind speed configurable up to 150 mph (240 km/h) (datasheet)."
+  ],
+  "status": "unverified",
+  "unverified_items": [
+    "Post section, dimensions, spacing, embedment and length (not stated)",
+    "Steel grade (not stated)",
+    "Bolt sizes, grades and torques (not stated)",
+    "Tilt angle (not stated; not assumed to be 90 degrees)",
+    "Snow rating (not stated)",
+    "Module dimensions for this layout (not stated)"
+  ],
+  "sources": [
+    {
+      "id": "src_enfsolar_fence_2024",
+      "title": "Fence data sheet 2024 (vertical bifacial fence)",
+      "publisher": "Publisher not named in the document (hosted on ENFSolar)",
+      "url": "https://cdn.enfsolar.com/z/pp/2025/4/pgfxjhg0az471a/fence-data-sheet-2024.pdf",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

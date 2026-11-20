@@ -1,0 +1,326 @@
+{
+  "schema_version": "1.0",
+  "id": "fronius.symo-advanced-20-0-3-m",
+  "name": {
+    "en": "Fronius Symo Advanced 20.0-3-M",
+    "es": "Fronius Symo Advanced 20.0-3-M"
+  },
+  "kind": "inverter_type",
+  "description": {
+    "en": "Three-phase transformerless string inverter, 20 kW, 2 MPPT, controlled air cooling, IP66, wall-mounted.",
+    "es": "Inversor de cadena trifasico sin transformador, 20 kW, 2 MPPT, refrigeracion por aire controlada, IP66, montaje en pared."
+  },
+  "typical_use": "Commercial three-phase string inverter (LatAm 380/220 V compatible per source)",
+  "layers": [],
+  "parts": [
+    {
+      "id": "enclosure",
+      "name": "Housing",
+      "type": "enclosure",
+      "status": "unverified",
+      "source_ids": [
+        "fronius_symo_adv_ds"
+      ],
+      "dimensions_mm": {
+        "w": 510,
+        "h": 725,
+        "d": 225
+      }
+    },
+    {
+      "id": "fan",
+      "name": "Controlled air cooling fans",
+      "type": "fan",
+      "status": "unverified",
+      "source_ids": [
+        "fronius_symo_adv_ds"
+      ],
+      "ratings": {
+        "count": "not_found"
+      },
+      "geometry_hint": "Controlled air cooling sourced; fan count not stated"
+    },
+    {
+      "id": "dc_input",
+      "name": "DC screw terminals (6 DC+ / 6 DC-)",
+      "type": "dc_input",
+      "status": "unverified",
+      "source_ids": [
+        "fronius_symo_adv_ds"
+      ],
+      "quantity_per_module": 12,
+      "ratings": {
+        "connector": "screw terminal",
+        "pairs": 6
+      }
+    },
+    {
+      "id": "dc_switch",
+      "name": "DC switch",
+      "type": "dc_switch",
+      "status": "unverified",
+      "source_ids": [
+        "fronius_symo_adv_ds"
+      ]
+    },
+    {
+      "id": "ac_terminal",
+      "name": "AC 5-pole screw terminals (2.5-16 mm2)",
+      "type": "ac_terminal",
+      "status": "unverified",
+      "source_ids": [
+        "fronius_symo_adv_ds"
+      ],
+      "ratings": {
+        "connector": "5-pole screw"
+      }
+    },
+    {
+      "id": "comm_rs485",
+      "name": "RS485 (Modbus RTU/SunSpec/meter)",
+      "type": "comm_port",
+      "status": "unverified",
+      "source_ids": [
+        "fronius_symo_adv_ds"
+      ]
+    },
+    {
+      "id": "comm_eth",
+      "name": "Ethernet LAN",
+      "type": "comm_port",
+      "status": "unverified",
+      "source_ids": [
+        "fronius_symo_adv_ds"
+      ]
+    },
+    {
+      "id": "antenna_wlan",
+      "name": "WLAN antenna",
+      "type": "antenna",
+      "status": "unverified",
+      "source_ids": [
+        "fronius_symo_adv_ds"
+      ]
+    },
+    {
+      "id": "display",
+      "name": "Display / LED",
+      "type": "display",
+      "status": "not_found"
+    },
+    {
+      "id": "spd_rail",
+      "name": "Mounting rail for optional surge protection",
+      "type": "mounting_bracket",
+      "status": "unverified",
+      "source_ids": [
+        "fronius_symo_adv_ds"
+      ],
+      "geometry_hint": "Only a mounting rail for optional SPD is mentioned; wall bracket not found"
+    },
+    {
+      "id": "mounting_holes",
+      "name": "Wall mounting holes",
+      "type": "mounting_hole",
+      "status": "not_found"
+    },
+    {
+      "id": "grounding_terminal",
+      "name": "Grounding terminal",
+      "type": "grounding_terminal",
+      "status": "not_found"
+    }
+  ],
+  "geometry": {
+    "description": "Wall-mounted inverter envelope from datasheet W x H x D. Elements are generic placements (status typical) unless noted. Mounting hole positions omitted: spacing not sourced.",
+    "coordinate_system": "x = width (left to right seen from front), y = height (bottom 0 to top), z = depth (wall at z=0, front cover at z=D); origin bottom-left-wall corner; mm",
+    "module_dimensions_mm": [
+      510,
+      725,
+      225
+    ],
+    "clamping_zones_mm": [],
+    "elements": [
+      {
+        "id": "el_enclosure",
+        "kind": "enclosure",
+        "part_id": "enclosure",
+        "position_mm": [
+          0,
+          0,
+          0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          510,
+          725,
+          225
+        ],
+        "status": "unverified",
+        "note": "Overall envelope from datasheet W x H x D; origin at bottom-left-back when wall-mounted."
+      },
+      {
+        "id": "el_dc_input",
+        "kind": "dc_input",
+        "part_id": "dc_input",
+        "position_mm": [
+          153.0,
+          43.5,
+          112.5
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          178.5,
+          36.2,
+          9.0
+        ],
+        "status": "typical",
+        "note": "Generic placement, no sourced coordinates. DC screw terminals 6+6"
+      },
+      {
+        "id": "el_dc_switch",
+        "kind": "dc_switch",
+        "part_id": "dc_switch",
+        "position_mm": [
+          61.2,
+          43.5,
+          112.5
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          51.0,
+          36.2,
+          9.0
+        ],
+        "status": "typical",
+        "note": "Generic placement, no sourced coordinates."
+      },
+      {
+        "id": "el_ac_terminal",
+        "kind": "ac_terminal",
+        "part_id": "ac_terminal",
+        "position_mm": [
+          408.0,
+          43.5,
+          112.5
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          91.8,
+          36.2,
+          9.0
+        ],
+        "status": "typical",
+        "note": "Generic placement, no sourced coordinates."
+      },
+      {
+        "id": "el_fan",
+        "kind": "fan",
+        "part_id": "fan",
+        "position_mm": [
+          255.0,
+          710.5,
+          112.5
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          357.0,
+          14.5,
+          112.5
+        ],
+        "status": "typical",
+        "note": "Generic placement, no sourced coordinates. Assumed location"
+      }
+    ]
+  },
+  "mechanical_ratings": {
+    "ip_rating": "IP66",
+    "fire_class": "not_found"
+  },
+  "status": "unverified",
+  "unverified_items": [
+    "weight: two values in source, not assigned to 20.0-3-M",
+    "max DC current per MPPT: 33.0 or 27.0 A (column layout ambiguous)",
+    "efficiency 98.1 vs 98.0 (model assignment ambiguous)",
+    "fan count",
+    "display/LED not found",
+    "wall bracket and grounding not found"
+  ],
+  "sources": [
+    {
+      "id": "fronius_symo_adv_ds",
+      "title": "Fronius Symo Advanced data sheet (SE_DS_Fronius_Symo_DA, Danish-language PDF)",
+      "publisher": "Fronius International GmbH",
+      "url": "https://fronius.com/~/downloads/Solar%20Energy/Datasheets/SE_DS_Fronius_Symo_DA.pdf",
+      "accessed": "2026-11-20"
+    }
+  ],
+  "electrical_ratings": {
+    "topology": "transformerless",
+    "phases": 3,
+    "rated_ac_power_kw": 20,
+    "ac_voltage_v": "3~NPE 400/230 or 380/220 (+20%/-30%)",
+    "ac_frequency_hz": "50/60",
+    "n_mppt": 2,
+    "mppt_voltage_range_v": "200-800",
+    "max_dc_voltage_v": 1000,
+    "max_dc_current_per_mppt_a": "33.0 or 27.0 (ambiguous column layout)",
+    "efficiency_max_pct": "98.1 (98.0 may apply to other models)",
+    "ip_rating": "IP66",
+    "cooling": "controlled air cooling",
+    "display": "not_found",
+    "certifications": [
+      "OVE/OENORM E 8001-4-712",
+      "VDE AR N 4105",
+      "IEC 62109-1/-2",
+      "IEC 62116",
+      "IEC 61727",
+      "AS 4777-2/-3",
+      "CEI 0-16",
+      "CEI 0-21",
+      "NRS 097"
+    ],
+    "protections": [
+      "DC insulation measurement",
+      "overload handling (operating point shift, power limitation)",
+      "DC switch",
+      "polarity protection"
+    ],
+    "source_ids": [
+      "fronius_symo_adv_ds"
+    ],
+    "electrical_status": "unverified"
+  },
+  "mechanical": {
+    "external_dimensions_wxhxd_mm": [
+      510,
+      725,
+      225
+    ],
+    "weight_kg": "34.8 or 43.4 (two values, model not assigned)",
+    "mounting": "wall (bracket not found)",
+    "cooling": "controlled air",
+    "clearances_mm": "not_found",
+    "mechanical_status": "unverified"
+  }
+}

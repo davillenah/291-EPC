@@ -1,0 +1,309 @@
+{
+  "schema_version": "1.0",
+  "id": "cigs",
+  "name": {
+    "en": "CIGS thin film (copper indium gallium selenide)",
+    "es": "CIGS capa delgada (seleniuro de cobre, indio y galio)"
+  },
+  "kind": "technology",
+  "description": {
+    "en": "Thin-film absorber of copper indium gallium diselenide on glass. Reference: Avancis SKALA (frameless, 3.2 mm glass). Flexible CIGS is not covered by a sourced datasheet in this entry.",
+    "es": "Absorbedor de capa delgada de seleniuro de cobre, indio y galio sobre vidrio. Referencia: Avancis SKALA (sin marco, vidrio de 3.2 mm). El CIGS flexible no esta cubierto por una ficha documentada en esta entrada."
+  },
+  "typical_use": "Frameless small-format thin-film modules, mainly for façades and special installations.",
+  "cell": {
+    "type": "CIGS thin film",
+    "status": "unverified",
+    "source_ids": [
+      "avancis_skala"
+    ],
+    "note": "Datasheet: 'Cell type CIGS'. Substrate, cell size and count not stated. Absorber thickness is a lab-cell value only (0.2 um).",
+    "research_reference": {
+      "absorber_thickness_um": 0.2,
+      "source_ids": [
+        "mdpi_cigs"
+      ],
+      "note": "Lab cell CIGS absorber, not a module value."
+    }
+  },
+  "layers": [
+    {
+      "id": "glass_front",
+      "name": "Front glass",
+      "material": "single-pane safety glass (front)",
+      "status": "unverified",
+      "source_ids": [
+        "avancis_skala"
+      ],
+      "thickness_mm": 3.2
+    },
+    {
+      "id": "encapsulant_front",
+      "name": "Front encapsulant",
+      "material": "encapsulant (material not stated)",
+      "status": "not_found",
+      "source_ids": []
+    },
+    {
+      "id": "cell_layer",
+      "name": "Cell layer",
+      "material": "CIGS absorber thin film on substrate (substrate not stated)",
+      "status": "unverified",
+      "source_ids": [
+        "avancis_skala"
+      ]
+    },
+    {
+      "id": "encapsulant_rear",
+      "name": "Rear encapsulant",
+      "material": "encapsulant (material not stated)",
+      "status": "not_found",
+      "source_ids": []
+    },
+    {
+      "id": "rear_layer",
+      "name": "Rear layer",
+      "material": "rear: weatherproof plastic film (Solar Frontier SF170-S) or back glass (Avancis SKALA); thickness not stated",
+      "status": "not_found",
+      "source_ids": [
+        "solar_frontier_sf170s"
+      ]
+    }
+  ],
+  "parts": [
+    {
+      "id": "glass_front",
+      "name": "Front glass",
+      "type": "glass",
+      "status": "unverified",
+      "source_ids": [
+        "avancis_skala"
+      ],
+      "material": "single-pane safety glass (front)",
+      "dimensions_mm": {
+        "thickness": 3.2
+      }
+    },
+    {
+      "id": "encapsulant_front",
+      "name": "Front encapsulant",
+      "type": "encapsulant",
+      "status": "not_found",
+      "source_ids": [],
+      "material": "encapsulant (material not stated)"
+    },
+    {
+      "id": "encapsulant_rear",
+      "name": "Rear encapsulant",
+      "type": "encapsulant",
+      "status": "not_found",
+      "source_ids": [],
+      "material": "encapsulant (material not stated)"
+    },
+    {
+      "id": "cells",
+      "name": "CIGS thin-film cell string",
+      "type": "cell_string",
+      "status": "unverified",
+      "source_ids": [
+        "avancis_skala"
+      ],
+      "material": "CIGS"
+    },
+    {
+      "id": "rear",
+      "name": "Rear layer",
+      "type": "backsheet",
+      "status": "not_found",
+      "source_ids": [
+        "solar_frontier_sf170s"
+      ],
+      "material": "weatherproof plastic film (Solar Frontier) or back glass (Avancis); thickness not stated"
+    },
+    {
+      "id": "frame",
+      "name": "Frame",
+      "type": "frame_profile",
+      "status": "not_found",
+      "source_ids": [],
+      "material": "not applicable (frameless) or not stated",
+      "note": "Frameless (datasheet: 'Frame none')."
+    },
+    {
+      "id": "junction_box",
+      "name": "Junction box",
+      "type": "junction_box",
+      "status": "unverified",
+      "source_ids": [
+        "avancis_skala"
+      ],
+      "ratings": {
+        "ip": "IP67"
+      },
+      "dimensions_mm": {
+        "length": 60,
+        "width": 60,
+        "height": 11.5
+      }
+    },
+    {
+      "id": "connector",
+      "name": "Connector",
+      "type": "connector",
+      "status": "unverified",
+      "source_ids": [
+        "avancis_skala"
+      ],
+      "ratings": {
+        "type": "H4"
+      },
+      "quantity_per_module": 2
+    },
+    {
+      "id": "cable",
+      "name": "PV cable",
+      "type": "cable",
+      "status": "unverified",
+      "source_ids": [
+        "avancis_skala"
+      ],
+      "ratings": {
+        "cross_section_mm2": 2.5,
+        "length_mm": "200 plug / 320 socket"
+      },
+      "quantity_per_module": 2
+    }
+  ],
+  "geometry": {
+    "description": "Frameless module 1587 x 664 x 38 mm (datasheet). Only the front glass and the 60 x 60 x 11.5 mm junction box are modelled; the thin-film stack thickness is not stated, so it is not modelled.",
+    "coordinate_system": "x along module long side, y along short side, z up through thickness; origin at module front-left corner; mm. Here z=0 is the front glass face and z grows toward the rear through thickness.",
+    "elements": [
+      {
+        "id": "glass_front",
+        "kind": "glass",
+        "part_id": "glass_front",
+        "position_mm": [
+          0,
+          0,
+          0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          1587,
+          664,
+          3.2
+        ],
+        "status": "unverified"
+      },
+      {
+        "id": "junction_box",
+        "kind": "junction_box",
+        "part_id": "junction_box",
+        "position_mm": [
+          1467,
+          302.0,
+          0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          60,
+          60,
+          11.5
+        ],
+        "status": "unverified",
+        "note": "Junction box size is from the datasheet; placement is typical, not stated."
+      }
+    ],
+    "module_dimensions_mm": [
+      1587,
+      664,
+      38
+    ]
+  },
+  "mechanical_ratings": {
+    "weight_kg": 17,
+    "module_efficiency_pct_range": [
+      11.4,
+      13.3
+    ],
+    "power_w_range": [
+      120,
+      140
+    ],
+    "junction_box_ip": "IP67",
+    "standards_listed_in_source": [
+      "IEC 61215:2016",
+      "IEC 61730:2016"
+    ],
+    "max_system_voltage_v": 1000,
+    "frameless": true,
+    "status_note": "values transcribed from cited datasheets only; status unverified unless marked",
+    "reference_solar_frontier_sf170s": {
+      "model": "SF170-S (cell type stated as CIS, cadmium-free)",
+      "dimensions_mm": [
+        1257,
+        977,
+        35
+      ],
+      "weight_kg": 20,
+      "front_glass_mm": 3.2,
+      "frame": "anodized aluminium, black (framed)",
+      "junction_box_ip": "IP67 (with bypass diode)",
+      "cable": "2.5 mm2 (AWG14)",
+      "connector": "MC4 compatible",
+      "max_system_voltage_v": "1000 DC (UL 600 DC)",
+      "standards_listed_in_source": [
+        "IEC 61646",
+        "IEC 61730",
+        "UL 1703",
+        "MCS 005-2.3"
+      ],
+      "module_efficiency": "not stated (only low-irradiance reduction 2.0 %)",
+      "source_ids": [
+        "solar_frontier_sf170s"
+      ],
+      "status": "unverified"
+    }
+  },
+  "status": "unverified",
+  "unverified_items": [
+    "Glass substrate and back glass not stated.",
+    "IEC 61646 not stated.",
+    "Cell count, cell size, layer thicknesses not stated.",
+    "Junction box placement on the module not stated.",
+    "Solar Frontier SF170-S is a framed CIS module (listed as CIS, not CIGS); it is a reference only and its values are not used in the geometry.",
+    "CIGS absorber thickness 0.2 um is from a lab cell (MDPI), not from a module datasheet.",
+    "Back glass or plastic film thickness not stated in either datasheet."
+  ],
+  "sources": [
+    {
+      "id": "avancis_skala",
+      "title": "SKALA data sheet EN (2022-07)",
+      "publisher": "Avancis",
+      "url": "https://www.avancis.de/_Resources/Persistent/c/0/8/3/c083f531a34668ad66e7642c86ae69c251bfa039/SKALA_data%20sheet_EN_220725.pdf",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "solar_frontier_sf170s",
+      "title": "Solar Frontier SF170-S S-Series data sheet (distributor copy)",
+      "publisher": "Solar Frontier (copy, Santan Solar)",
+      "url": "https://www.santansolar.com/wp-content/uploads/Data_Sheet_S-Series_SF170_ENG__DSSG1-38-PEE42_.pdf",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "mdpi_cigs",
+      "title": "CIGS research cell with 0.2 um absorber (MDPI Energies 16(7):2956)",
+      "publisher": "MDPI",
+      "url": "https://www.mdpi.com/1996-1073/16/7/2956",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

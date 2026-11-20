@@ -1,0 +1,194 @@
+{
+  "schema_version": "1.0",
+  "id": "dc_combiner_16_phoenix_scb_sol_sc16st",
+  "name": {
+    "en": "DC string combiner box, 16 inputs, 1500 V (Phoenix Contact SCB SOL SC 16ST, order 1694157)",
+    "es": "Caja combinadora de strings CC, 16 entradas, 1500 V (Phoenix Contact SCB SOL SC 16ST, pedido 1694157)"
+  },
+  "kind": "accessory",
+  "description": {
+    "en": "16-string combiner with string fuses (10.3 x 85 mm, 1500 V, 15-32 A selectable), DC switch-disconnector and Type 2 DC SPD. Dimensions and enclosure IP not found on the product page.",
+    "es": "Combinadora de 16 strings con portafusibles de string (10,3 x 85 mm, 1500 V, 15-32 A seleccionable), seccionador CC y SPD CC tipo 2. Dimensiones e IP de la envolvente no encontradas en la página de producto."
+  },
+  "typical_use": "DC string combining at the array field before the central inverter.",
+  "status": "unverified",
+  "parts": [
+    {
+      "id": "enc",
+      "name": "Combiner enclosure",
+      "name_es": "Envolvente de la combinadora",
+      "type": "enclosure",
+      "status": "not_found",
+      "material": "not found",
+      "quantity_per_module": 1,
+      "ratings": {
+        "ip": "not_found"
+      },
+      "geometry_hint": "Dimensions and IP not found",
+      "source_ids": [
+        "S10"
+      ]
+    },
+    {
+      "id": "fuse",
+      "name": "String fuse holders, 1500 V, 10.3 x 85 mm (fuses 15, 16, 20, 25, 30, 32 A)",
+      "name_es": "Portafusibles de string 1500 V, 10,3 x 85 mm (fusibles 15, 16, 20, 25, 30, 32 A)",
+      "type": "fuse",
+      "status": "unverified",
+      "quantity_per_module": 16,
+      "ratings": {
+        "fuse_size_mm": [
+          10.3,
+          85
+        ],
+        "fuse_voltage_v": 1500,
+        "fuse_rating_a": [
+          15,
+          16,
+          20,
+          25,
+          30,
+          32
+        ],
+        "fuse_type": "not stated (gPV not confirmed)"
+      },
+      "standard": "not stated",
+      "source_ids": [
+        "S10"
+      ]
+    },
+    {
+      "id": "dcsw",
+      "name": "DC switch-disconnector",
+      "name_es": "Seccionador CC",
+      "type": "dc_switch",
+      "status": "unverified",
+      "quantity_per_module": 1,
+      "ratings": {
+        "rating": "not found"
+      },
+      "geometry_hint": "Presence sourced; rating not found",
+      "source_ids": [
+        "S10"
+      ]
+    },
+    {
+      "id": "spd",
+      "name": "DC surge protective device, Type 2 (T2)",
+      "name_es": "SPD CC tipo 2 (T2)",
+      "type": "spd",
+      "status": "unverified",
+      "quantity_per_module": 1,
+      "ratings": {
+        "type": "T2",
+        "class": "not stated"
+      },
+      "standard": "IEC 61643-31 not cited on page",
+      "source_ids": [
+        "S10"
+      ]
+    },
+    {
+      "id": "term",
+      "name": "String input and output terminals (16 pairs)",
+      "name_es": "Bornes de entrada y salida de strings (16 pares)",
+      "type": "dc_input",
+      "status": "typical",
+      "quantity_per_module": 32,
+      "geometry_hint": "Count from 16 inputs; not stated in source"
+    },
+    {
+      "id": "din",
+      "name": "DIN rail",
+      "name_es": "Carril DIN",
+      "type": "other",
+      "status": "typical",
+      "material": "steel",
+      "geometry_hint": "Generic"
+    },
+    {
+      "id": "gland",
+      "name": "Cable gland set",
+      "name_es": "Juego de prensaestopas",
+      "type": "gland",
+      "status": "typical",
+      "material": "PA or metal (typical)",
+      "geometry_hint": "Generic, no sourced value"
+    },
+    {
+      "id": "lock",
+      "name": "Door lock",
+      "name_es": "Cerradura de puerta",
+      "type": "other",
+      "status": "typical",
+      "quantity_per_module": 1,
+      "geometry_hint": "Generic"
+    },
+    {
+      "id": "gasket",
+      "name": "Door gasket",
+      "name_es": "Junta de puerta",
+      "type": "gasket",
+      "status": "typical",
+      "quantity_per_module": 1,
+      "geometry_hint": "Generic"
+    },
+    {
+      "id": "label",
+      "name": "Warning and string labels",
+      "name_es": "Etiquetas de advertencia y de strings",
+      "type": "label",
+      "status": "typical",
+      "geometry_hint": "Generic"
+    }
+  ],
+  "geometry": {
+    "description": "Enclosure dimensions and mounting holes not found. Geometry elements omitted until a drawing is sourced.",
+    "coordinate_system": "x along module long side, y along short side, z up through thickness; origin at module front-left corner; mm",
+    "elements": []
+  },
+  "mechanical_ratings": {
+    "standards_on_page": [
+      "DIN EN 61439"
+    ],
+    "note": "IEC 61439, IEC 60947, IEC 61643-31 not stated on page"
+  },
+  "unverified_items": [
+    "Enclosure dimensions, weight and IP not found",
+    "Max DC voltage rating not found (MPP 1500 V only)",
+    "DC switch rating not found",
+    "SPD class not stated",
+    "Fuse type (gPV) not confirmed",
+    "Mounting-hole pattern not found",
+    "Terminal counts not found"
+  ],
+  "sources": [
+    {
+      "id": "S10",
+      "title": "SCB SOL SC 16ST string combiner box, order no. 1694157 (product page)",
+      "publisher": "Phoenix Contact",
+      "url": "https://www.phoenixcontact.com/en-gb/products/string-combiner-box-scb-sol-sc-16st-p-1-xf-00231-1694157",
+      "accessed": "2026-11-20"
+    }
+  ],
+  "electrical_ratings": {
+    "inputs": 16,
+    "max_dc_voltage_v": "not found (MPP 1500 V stated)",
+    "fuse_rating_a": [
+      15,
+      16,
+      20,
+      25,
+      30,
+      32
+    ],
+    "spd_type": "T2",
+    "dc_switch": "present (rating not found)"
+  },
+  "mechanical": {
+    "dimensions_mm": "not_found",
+    "weight_kg": "not_found",
+    "enclosure_material": "not_found",
+    "ip": "not_found"
+  }
+}

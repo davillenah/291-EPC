@@ -1,0 +1,658 @@
+{
+  "schema_version": "1.0",
+  "id": "roof_trapezoidal_sheet_rail",
+  "name": {
+    "en": "Rail system on trapezoidal / corrugated metal sheet (screwed clamps to sheet crests)",
+    "es": "Sistema de rieles sobre chapa trapezoidal / ondulada metálica (sujeción atornillada a las crestas)"
+  },
+  "family": "roof",
+  "category": "trapezoidal_sheet_rail",
+  "description": {
+    "en": "Aluminium rails run across the metal sheet profile and are fixed to the sheet crests or purlins with stainless thread-forming screws with sealing washer (calotte type) through the sheet. Modules are held by mid and end clamps on the rails. Reference product family: K2 Systems BasicRail / SolidRail on trapezoidal sheet metal.",
+    "es": "Perfiles de aluminio se disponen transversalmente sobre la perfilería de la chapa y se fijan a las crestas o a las correas con tornillos autorroscantes de acero inoxidable con arandela de estanqueidad (tipo calota). Los módulos se sujetan con garras intermedias y de extremo sobre los rieles. Familia de referencia: K2 Systems BasicRail / SolidRail sobre chapa trapezoidal."
+  },
+  "typical_use": "Trapezoidal or corrugated steel/aluminium roof sheeting over purlins, fixed without roof penetration beyond the sheet fastener.",
+  "applicable_standards": [
+    "EN 1991-1-3 (snow loads, to be applied by the designer)",
+    "EN 1991-1-4 (wind actions, to be applied by the designer)",
+    "EN 1999-1-1 (aluminium design, to be applied by the designer; not verified in this research)",
+    "ISO 3506-1:2020 (stainless steel fasteners, mechanical properties)",
+    "ISO 898-1:2013 (carbon steel fasteners, property classes; reference only)"
+  ],
+  "materials": [
+    {
+      "component": "Rail (BasicRail 22, SolidRail)",
+      "material": "Aluminium EN AW-6063 T66",
+      "finish": "Mill finish or black anodised (SolidRail Light 4.80 m black anodised listed)",
+      "status": "unverified",
+      "source_ids": [
+        "k2_catalogue_trapezoidal",
+        "k2_hanger_bolts_solar_fasteners"
+      ]
+    },
+    {
+      "component": "Clamps (mid and end, K2 Clamp 25-40)",
+      "material": "Aluminium EN AW 6063 T66, stainless steel A2, thermoplastic",
+      "finish": "Mill or black anodised",
+      "status": "unverified",
+      "source_ids": [
+        "k2_catalogue_trapezoidal"
+      ]
+    },
+    {
+      "component": "Fasteners to sheet",
+      "material": "Stainless steel A2 (1.4301) with EPDM sealing",
+      "finish": "Not stated",
+      "status": "unverified",
+      "source_ids": [
+        "k2_catalogue_trapezoidal",
+        "k2_hanger_bolts_solar_fasteners"
+      ]
+    },
+    {
+      "component": "Rail connectors and T-bolts",
+      "material": "Aluminium with stainless steel A2 (1.4301)",
+      "finish": "Not stated",
+      "status": "unverified",
+      "source_ids": [
+        "k2_catalogue_trapezoidal"
+      ]
+    },
+    {
+      "component": "End caps",
+      "material": "Glass-fibre reinforced polyamide",
+      "finish": "Not stated",
+      "status": "unverified",
+      "source_ids": [
+        "k2_catalogue_trapezoidal"
+      ]
+    },
+    {
+      "component": "Direct-mount clip (BasicClip)",
+      "material": "Glass-fibre reinforced polyamide, UV resistant",
+      "finish": "Not stated",
+      "status": "unverified",
+      "source_ids": [
+        "k2_catalogue_trapezoidal"
+      ]
+    },
+    {
+      "component": "Grounding (TerraGrif)",
+      "material": "Stainless steel 301 TA (K2SZ, K2PA 32, K2U17); material not stated for QL",
+      "finish": "Not stated",
+      "status": "unverified",
+      "source_ids": [
+        "k2_catalogue_trapezoidal"
+      ]
+    },
+    {
+      "component": "Fastener drive and grade",
+      "material": "Grade and property class not stated",
+      "finish": "Not stated",
+      "status": "not_found",
+      "source_ids": []
+    }
+  ],
+  "profiles": [
+    {
+      "id": "k2_basicrail_22",
+      "name": "K2 BasicRail 22 (rail, reference length 3.65 m)",
+      "section_type": "rail_custom",
+      "dimensions_mm": {},
+      "material": "EN AW-6063 T66",
+      "typical_length_mm": 3650,
+      "status": "unverified",
+      "source_ids": [
+        "k2_catalogue_trapezoidal"
+      ]
+    },
+    {
+      "id": "k2_solidrail_light_medium",
+      "name": "K2 SolidRail Light / Medium (rail, 4.80 m listed)",
+      "section_type": "rail_custom",
+      "dimensions_mm": {},
+      "material": "EN AW-6063 T66",
+      "typical_length_mm": 4800,
+      "status": "unverified",
+      "source_ids": [
+        "k2_catalogue_trapezoidal"
+      ]
+    },
+    {
+      "id": "k2_basicrail_profile_dimensions",
+      "name": "Rail cross section height and width",
+      "section_type": "rail_custom",
+      "dimensions_mm": {},
+      "material": "Aluminium EN AW-6063 T66",
+      "status": "not_found",
+      "source_ids": []
+    }
+  ],
+  "geometry": {
+    "description": "Rails run perpendicular to the sheet ribs, fixed to crests with solar fasteners at the sheet spacing. Schematic only: no spacing, rail count or fixing pitch was found in the sources, so no fixing coordinates are given.",
+    "coordinate_system": "x along module row, y up-slope/north-south horizontal, z up; origin at ground/roof contact of first support; mm and degrees",
+    "elements": [
+      {
+        "id": "rail_basicrail_22_ref",
+        "kind": "rail",
+        "profile_or_accessory_id": "k2_basicrail_22",
+        "position_mm": [
+          0,
+          0,
+          0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "length_mm": 3650,
+        "count": 1,
+        "note": "Reference rail length from the manufacturer catalogue. Position and rotation are a placeholder origin, not a design layout.",
+        "status": "unverified"
+      }
+    ],
+    "reference_layout": {
+      "note": "Module count per rail, rail spacing and fixing pitch not stated in the sources. Use the engine or a designer-defined layout."
+    }
+  },
+  "accessories": [
+    {
+      "id": "screw_thread_forming_6x22_calotte",
+      "name": "Thread-forming metal screw 6 x 22 with EPDM sealing (solar fastener, calotte type)",
+      "type": "screw",
+      "material": "Stainless steel A2 (1.4301), EPDM sealing",
+      "grade": "A2 (1.4301); property class not stated",
+      "standard": "Not stated",
+      "thread": "Not stated",
+      "dimensions_mm": {
+        "nominal_diameter": 6,
+        "length": 22,
+        "sheet_thickness_min": 0.4,
+        "sheet_thickness_max": 1.25
+      },
+      "torque_nm": 0,
+      "quantity": {
+        "value": 0,
+        "per": "support",
+        "note": "Count not stated in sources; set by layout. Value 0 means unknown, not zero."
+      },
+      "purpose": "Fixes the rail-clamp support to the metal sheet crest. Suitable for sheet thickness 0.4 to 1.25 mm per the catalogue.",
+      "geometry_hint": "cylinder d=6 l=22 with EPDM washer d=16",
+      "status": "unverified",
+      "source_ids": [
+        "k2_catalogue_trapezoidal"
+      ],
+      "note": "Sheet thickness 0.4 to 1.25 mm (K2). Catalogue variant code 6x25_rs conflicts with 6x22 description; confirm."
+    },
+    {
+      "id": "screw_self_tapping_6x38_discontinued",
+      "name": "Self-tapping screw 6 x 38 with EPDM (discontinued per catalogue)",
+      "type": "screw",
+      "material": "Stainless steel A2 (1.4301), EPDM",
+      "grade": "A2 (1.4301); property class not stated",
+      "standard": "Not stated",
+      "thread": "Not stated",
+      "dimensions_mm": {
+        "nominal_diameter": 6,
+        "length": 38,
+        "sheet_thickness_min": 0.4,
+        "sheet_thickness_max": 1.25
+      },
+      "torque_nm": 0,
+      "quantity": {
+        "value": 0,
+        "per": "support",
+        "note": "Count not stated in sources."
+      },
+      "purpose": "Longer variant for thicker sheet or substructure. Marked discontinued in the catalogue; included for completeness.",
+      "geometry_hint": "cylinder d=6 l=38",
+      "status": "unverified",
+      "source_ids": [
+        "k2_catalogue_trapezoidal"
+      ]
+    },
+    {
+      "id": "bolt_t_bolt_28_15_m8",
+      "name": "T-bolt 28/15 M8 (available 20 and 30 mm length)",
+      "type": "bolt",
+      "material": "Stainless steel A2 (1.4301)",
+      "grade": "1.4301 (A2)",
+      "standard": "Not stated",
+      "thread": "M8",
+      "dimensions_mm": {
+        "length": 20
+      },
+      "torque_nm": 0,
+      "quantity": {
+        "value": 0,
+        "per": "rail",
+        "note": "Count not stated in sources."
+      },
+      "purpose": "Slides in the rail channel to fix clamps and connectors.",
+      "geometry_hint": "cylinder d=8 l=20",
+      "status": "unverified",
+      "source_ids": [
+        "k2_catalogue_trapezoidal"
+      ]
+    },
+    {
+      "id": "bolt_t_bolt_28_15_m10",
+      "name": "T-bolt 28/15 M10 (available 20, 25 and 30 mm length)",
+      "type": "bolt",
+      "material": "Stainless steel A2 (1.4301)",
+      "grade": "1.4301 (A2)",
+      "standard": "Not stated",
+      "thread": "M10",
+      "dimensions_mm": {
+        "length": 25
+      },
+      "torque_nm": 0,
+      "quantity": {
+        "value": 0,
+        "per": "rail",
+        "note": "Count not stated in sources."
+      },
+      "purpose": "Rail connector and heavy clamp connection.",
+      "geometry_hint": "cylinder d=10 l=25",
+      "status": "unverified",
+      "source_ids": [
+        "k2_catalogue_trapezoidal",
+        "k2_hanger_bolts_solar_fasteners"
+      ]
+    },
+    {
+      "id": "bolt_socket_head_m8x20",
+      "name": "Hexagon socket head cap screw M8 x 20",
+      "type": "bolt",
+      "material": "Stainless steel A2",
+      "grade": "Not stated (A2-70 to be confirmed)",
+      "standard": "ISO 4762",
+      "thread": "M8",
+      "dimensions_mm": {
+        "length": 20,
+        "drive_across_flats": 6
+      },
+      "torque_nm": 0,
+      "quantity": {
+        "value": 0,
+        "per": "support",
+        "note": "Count not stated in sources."
+      },
+      "purpose": "Socket head fixing for clamp or connector assemblies.",
+      "geometry_hint": "cylinder d=8 l=20",
+      "status": "unverified",
+      "source_ids": [
+        "k2_catalogue_trapezoidal"
+      ]
+    },
+    {
+      "id": "nut_flange_serrated_m8",
+      "name": "Hexagon flange nut with serration M8 (drive A/F 13)",
+      "type": "nut",
+      "material": "Stainless steel A2",
+      "grade": "A2",
+      "standard": "DIN 6923",
+      "thread": "M8",
+      "dimensions_mm": {
+        "across_flats": 13
+      },
+      "torque_nm": 0,
+      "quantity": {
+        "value": 0,
+        "per": "rail",
+        "note": "Count not stated in sources."
+      },
+      "purpose": "Serrated flange nut for the T-bolt or socket screw in the rail channel.",
+      "geometry_hint": "hex 13 across flats",
+      "status": "unverified",
+      "source_ids": [
+        "k2_catalogue_trapezoidal"
+      ]
+    },
+    {
+      "id": "nut_flange_serrated_m10",
+      "name": "Hexagon flange nut with serration M10 (drive A/F 15)",
+      "type": "nut",
+      "material": "Stainless steel A2",
+      "grade": "A2",
+      "standard": "DIN 6923",
+      "thread": "M10",
+      "dimensions_mm": {
+        "across_flats": 15
+      },
+      "torque_nm": 0,
+      "quantity": {
+        "value": 0,
+        "per": "rail",
+        "note": "Count not stated in sources."
+      },
+      "purpose": "Serrated flange nut for M10 connections.",
+      "geometry_hint": "hex 15 across flats",
+      "status": "unverified",
+      "source_ids": [
+        "k2_catalogue_trapezoidal"
+      ]
+    },
+    {
+      "id": "washer_sealing_epdm_fastener",
+      "name": "Sealing washer (EPDM) integrated under fastener head",
+      "type": "gasket",
+      "material": "EPDM",
+      "grade": "",
+      "standard": "Not stated",
+      "thread": "",
+      "dimensions_mm": {},
+      "torque_nm": 0,
+      "quantity": {
+        "value": 0,
+        "per": "support",
+        "note": "One per sheet fastener; count of fasteners not stated."
+      },
+      "purpose": "Waterproofs the sheet penetration.",
+      "status": "unverified",
+      "source_ids": [
+        "k2_catalogue_trapezoidal",
+        "k2_hanger_bolts_solar_fasteners"
+      ]
+    },
+    {
+      "id": "connector_rail_set_basicrail",
+      "name": "Rail connector set BasicRail (joins two rails; three drill holes)",
+      "type": "connector_splice",
+      "material": "Aluminium, stainless steel A2",
+      "grade": "A2",
+      "standard": "Not stated",
+      "thread": "",
+      "dimensions_mm": {},
+      "torque_nm": 0,
+      "quantity": {
+        "value": 0,
+        "per": "rail",
+        "note": "One per rail joint; count not stated. Torque not stated for BasicRail (value 0 = unknown; a 35 Nm value in a related K2 manual is for SolidRail, not used here)."
+      },
+      "purpose": "Splices two rails of the same profile in line.",
+      "status": "unverified",
+      "source_ids": [
+        "k2_catalogue_trapezoidal",
+        "k2_hanger_bolts_solar_fasteners"
+      ]
+    },
+    {
+      "id": "connector_rail_set_solidrail_medium_alpin",
+      "name": "Rail connector set SolidRail Medium and Alpin",
+      "type": "connector_splice",
+      "material": "Aluminium EN AW-6063 T66, stainless steel A2",
+      "grade": "",
+      "standard": "Not stated",
+      "thread": "",
+      "dimensions_mm": {},
+      "torque_nm": 0,
+      "quantity": {
+        "value": 0,
+        "per": "rail",
+        "note": "One per rail joint; torque not stated for this set."
+      },
+      "purpose": "Splices SolidRail Medium or Alpin rails.",
+      "status": "unverified",
+      "source_ids": [
+        "k2_catalogue_trapezoidal"
+      ]
+    },
+    {
+      "id": "connector_basiclock_22",
+      "name": "BasicLock 22 set (thermal expansion securing for BasicRail 22)",
+      "type": "other",
+      "material": "Aluminium, stainless steel, PA",
+      "grade": "",
+      "standard": "Not stated",
+      "thread": "",
+      "dimensions_mm": {},
+      "torque_nm": 0,
+      "quantity": {
+        "value": 0,
+        "per": "rail",
+        "note": "Count not stated in sources."
+      },
+      "purpose": "Fixes one rail point so the rail can expand freely at other joints. Thermal separation spacing is in the solar fastener family file.",
+      "status": "unverified",
+      "source_ids": [
+        "k2_catalogue_trapezoidal"
+      ]
+    },
+    {
+      "id": "clamp_mid_k2_25_40",
+      "name": "K2 Clamp Middle Clamp 25-40 (universal, 25-40 mm frame height)",
+      "type": "clamp_mid",
+      "material": "Aluminium, black anodised (alloy not stated)",
+      "grade": "",
+      "standard": "Not stated",
+      "thread": "",
+      "dimensions_mm": {
+        "frame_height_min": 25,
+        "frame_height_max": 40,
+        "module_frame_min": 25,
+        "module_frame_max": 40
+      },
+      "torque_nm": 0,
+      "quantity": {
+        "value": 0,
+        "per": "module",
+        "note": "Two per module is the common arrangement but was not stated in the sources; value 0 means unknown."
+      },
+      "purpose": "Holds two adjacent module frames. Black anodised variant listed (2004540).",
+      "status": "unverified",
+      "source_ids": [
+        "k2_catalogue_trapezoidal"
+      ],
+      "note": "Module frame height 25 to 40 mm (K2 product name and catalogue). Torque not stated."
+    },
+    {
+      "id": "clamp_end_k2_25_40",
+      "name": "K2 Clamp End Clamp 25-40 (25-40 mm frame height)",
+      "type": "clamp_end",
+      "material": "Aluminium, black anodised (alloy not stated)",
+      "grade": "",
+      "standard": "Not stated",
+      "thread": "",
+      "dimensions_mm": {
+        "frame_height_min": 25,
+        "frame_height_max": 40,
+        "module_frame_min": 25,
+        "module_frame_max": 40
+      },
+      "torque_nm": 0,
+      "quantity": {
+        "value": 0,
+        "per": "module",
+        "note": "Count per row end not stated; value 0 means unknown."
+      },
+      "purpose": "Holds the outer module frame at the row end. Black anodised variant listed (2004545).",
+      "status": "unverified",
+      "source_ids": [
+        "k2_catalogue_trapezoidal"
+      ],
+      "note": "Module frame height 25 to 40 mm (K2 product name and catalogue). Torque not stated."
+    },
+    {
+      "id": "bracket_basicclip",
+      "name": "BasicClip (direct-mounting clip for BasicRail)",
+      "type": "bracket",
+      "material": "Glass-fibre reinforced polyamide (UV resistant)",
+      "grade": "",
+      "standard": "Not stated",
+      "thread": "",
+      "dimensions_mm": {},
+      "torque_nm": 0,
+      "quantity": {
+        "value": 0,
+        "per": "support",
+        "note": "Two 6x38 screws per clip per catalogue; clip count not stated."
+      },
+      "purpose": "Direct mounting of BasicRail to the roof. Requires two 6 x 38 screws per clip.",
+      "status": "unverified",
+      "source_ids": [
+        "k2_catalogue_trapezoidal"
+      ]
+    },
+    {
+      "id": "rail_end_cap_solidrail_light",
+      "name": "EndCap for SolidRail Light",
+      "type": "rail_end_cap",
+      "material": "Glass-fibre reinforced polyamide",
+      "grade": "",
+      "standard": "Not stated",
+      "thread": "",
+      "dimensions_mm": {},
+      "torque_nm": 0,
+      "quantity": {
+        "value": 0,
+        "per": "rail",
+        "note": "One per rail end (structural); not counted in sources."
+      },
+      "purpose": "Closes the open rail end. Fits SolidRail Light 37 (K2).",
+      "status": "unverified",
+      "source_ids": [
+        "k2_catalogue_trapezoidal"
+      ]
+    },
+    {
+      "id": "rail_end_cap_solidrail_medium",
+      "name": "EndCap for SolidRail Medium",
+      "type": "rail_end_cap",
+      "material": "Glass-fibre reinforced polyamide",
+      "grade": "",
+      "standard": "Not stated",
+      "thread": "",
+      "dimensions_mm": {},
+      "torque_nm": 0,
+      "quantity": {
+        "value": 0,
+        "per": "rail",
+        "note": "One per rail end (structural); not counted in sources."
+      },
+      "purpose": "Closes the open rail end. Fits SolidRail Medium 42 (K2).",
+      "status": "unverified",
+      "source_ids": [
+        "k2_catalogue_trapezoidal"
+      ]
+    },
+    {
+      "id": "grounding_terragrif_k2sz",
+      "name": "TerraGrif K2SZ (grounding clip)",
+      "type": "grounding",
+      "material": "Stainless steel 301 TA (K2 catalogue)",
+      "grade": "",
+      "standard": "Not stated",
+      "thread": "",
+      "dimensions_mm": {},
+      "torque_nm": 0,
+      "quantity": {
+        "value": 0,
+        "per": "row",
+        "note": "Count not stated; not compatible with BasicRail in landscape mounting per catalogue."
+      },
+      "purpose": "Bonds the module frame to the rail system. Check compatibility per rail type.",
+      "status": "unverified",
+      "source_ids": [
+        "k2_catalogue_trapezoidal"
+      ]
+    },
+    {
+      "id": "grounding_terragrif_k2pa32",
+      "name": "TerraGrif K2PA 32 (grounding, landscape mounting only)",
+      "type": "grounding",
+      "material": "Stainless steel 301 TA (K2 catalogue)",
+      "grade": "",
+      "standard": "Not stated",
+      "thread": "",
+      "dimensions_mm": {},
+      "torque_nm": 0,
+      "quantity": {
+        "value": 0,
+        "per": "module",
+        "note": "Count not stated."
+      },
+      "purpose": "Bonds the module frame in landscape mounting.",
+      "status": "unverified",
+      "source_ids": [
+        "k2_catalogue_trapezoidal"
+      ]
+    },
+    {
+      "id": "grounding_terragrif_ql",
+      "name": "TerraGrif QL (grounding for K2 Clamp 25-40)",
+      "type": "grounding",
+      "material": "Not stated",
+      "grade": "",
+      "standard": "Not stated",
+      "thread": "",
+      "dimensions_mm": {},
+      "torque_nm": 0,
+      "quantity": {
+        "value": 0,
+        "per": "module",
+        "note": "Count not stated."
+      },
+      "purpose": "Bonding for K2 Clamp 25-40 clamps.",
+      "status": "unverified",
+      "source_ids": [
+        "k2_catalogue_trapezoidal"
+      ]
+    },
+    {
+      "id": "cable_clip_not_found",
+      "name": "Cable clip (module cable management) for trapezoidal rail system",
+      "type": "cable_clip",
+      "material": "",
+      "grade": "",
+      "standard": "",
+      "thread": "",
+      "dimensions_mm": {},
+      "torque_nm": 0,
+      "quantity": {
+        "value": 0,
+        "per": "module",
+        "note": "Not found in sources; value 0 = unknown."
+      },
+      "purpose": "No cable clip for this rail family was found in the sources. Listed so the gap is visible; do not use the value.",
+      "status": "not_found",
+      "source_ids": []
+    }
+  ],
+  "grounding_bonding": "Module frames bonded to rails with K2 TerraGrif grounding clips (stainless steel 301 TA) or TerraGrif QL for K2 Clamp 25-40. Compatibility depends on rail type and orientation per catalogue. Equipotential path and conductor sizing not verified.",
+  "installation_notes": [
+    "Fix rails to the sheet crests with stainless thread-forming screws with EPDM sealing, suitable for 0.4 to 1.25 mm sheet (per K2 catalogue).",
+    "Hanger-bolt family manual lists solar fastener for trapezoidal sheet with calotte seal, pre-drill 8.0 mm general, 5.5 mm for identical roof and substructure (per K2 manual; verify for this sheet).",
+    "Thermal separation: at most every 17.60 m, gap at least 30 mm (K2 manual for SingleRail; verify for BasicRail).",
+    "Rail end to module frame at least 50 mm, rail cut length at least 700 mm, module block spacing at least 5 mm (K2 manual).",
+    "Torque values for the K2 clamp bolts and rail connectors were not found in the catalogue; use the manufacturer installation manual."
+  ],
+  "status": "unverified",
+  "unverified_items": [
+    "Rail cross-section dimensions in mm for BasicRail 22 and SolidRail (not found; only lengths are sourced).",
+    "Alloy temper: K2 states EN AW-6063 T66. 6005-T5 and 6063-T6 were not found in K2 sources.",
+    "Torque for clamps, rail connectors, end caps and TerraGrif grounding parts (not stated by K2 catalogue page).",
+    "Quantities per support, per rail and per row (not stated; 0 means unknown).",
+    "Fixing pitch, rail spacing and purlin requirements for trapezoidal sheet (not found).",
+    "Property class of stainless fasteners (ISO 3506-1 class such as A2-70 not confirmed; A2 = 1.4301 confirmed).",
+    "Self-tapping screw 6x38 is discontinued (K2); 6x22 variant code conflict noted.",
+    "Cable clip product for this family (not found)."
+  ],
+  "sources": [
+    {
+      "id": "k2_catalogue_trapezoidal",
+      "title": "K2 Systems catalogue: Trapezoidal Sheet Metal (pitched roofs)",
+      "publisher": "K2 Systems",
+      "url": "https://catalogue.k2-systems.com/en-uk/area-of-application/pitched-roofs/trapezoidal-sheet-metal/",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "k2_hanger_bolts_solar_fasteners",
+      "title": "K2 Systems: Hanger bolts and solar fasteners assembly instructions (EN)",
+      "publisher": "K2 Systems",
+      "url": "https://catalogue.k2-systems.com/media/fc/93/f4/Hanger-bolts-solar-fasteners-assembly-en.pdf",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

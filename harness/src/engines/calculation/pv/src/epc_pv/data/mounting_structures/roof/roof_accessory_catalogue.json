@@ -1,0 +1,195 @@
+{
+  "schema_version": "1.0",
+  "id": "roof_accessory_catalogue",
+  "name": {
+    "en": "Rails, splices, clamps and accessories (roof catalogue)",
+    "es": "Perfiles de riel, empalmes, garras y accesorios (catálogo de cubierta)"
+  },
+  "family": "roof",
+  "category": "accessory_catalogue_rail_clamp_splice",
+  "description": {
+    "en": "Shared catalogue of rail profiles, splices, clamps, gaskets and cable clips for roof mounts. Each sourced datum is held in its owning family file (ADR-0012); this file holds only the catalogue entries no family file owns and points to the owner for the rest.",
+    "es": "Catálogo común de perfiles de riel, empalmes, garras, juntas y clips de cable para soportes de cubierta. Cada dato sourced se guarda en el archivo de su familia (ADR-0012); este archivo solo contiene entradas del catálogo que no pertenecen a una familia y remite al propietario en el resto."
+  },
+  "typical_use": "Bill of materials and modelling for roof rails and accessories across families.",
+  "applicable_standards": [
+    "DIN 6923 (flange nut, cited by K2 catalogue, not read)",
+    "ISO 4762 (socket screw, cited by K2 catalogue, not read)"
+  ],
+  "materials": [
+    {
+      "component": "Aluminium rail and clamp profiles",
+      "material": "EN AW-6063 T66 (K2 rails); EN AW 6082 T6 (K2 DomeClamp middle clamp). EN AW-6005-T5 not found.",
+      "status": "unverified",
+      "source_ids": [
+        "k2_catalogue_trapezoidal"
+      ]
+    },
+    {
+      "component": "Stainless fasteners",
+      "material": "A2 (1.4301); property class not stated",
+      "status": "unverified",
+      "source_ids": [
+        "k2_catalogue_trapezoidal"
+      ]
+    },
+    {
+      "component": "Gaskets",
+      "material": "EPDM (earlier K2 research; hardness not stated)",
+      "status": "unverified",
+      "source_ids": [
+        "k2_catalogue_trapezoidal"
+      ]
+    },
+    {
+      "component": "Cable clips and sealants",
+      "material": "Not stated",
+      "status": "not_found"
+    }
+  ],
+  "profiles": [
+    {
+      "id": "k2_minirail_60",
+      "name": "K2 MiniRail 60 Set",
+      "section_type": "rail_custom",
+      "dimensions_mm": {},
+      "material": "EN AW-6063 T66",
+      "status": "unverified",
+      "source_ids": [
+        "k2_catalogue_trapezoidal"
+      ]
+    },
+    {
+      "id": "k2_multirail_family",
+      "name": "K2 MultiRail 10, 15, 25 (short rail segments of 100, 150 and 250 mm)",
+      "section_type": "rail_custom",
+      "dimensions_mm": {},
+      "material": "EN AW-6063 T66",
+      "status": "unverified",
+      "source_ids": [
+        "k2_catalogue_trapezoidal"
+      ]
+    },
+    {
+      "id": "k2_multirail_high",
+      "name": "K2 MultiRail High",
+      "section_type": "rail_custom",
+      "dimensions_mm": {
+        "length": 150,
+        "height": 100
+      },
+      "material": "EN AW-6063 T66",
+      "status": "unverified",
+      "source_ids": [
+        "k2_catalogue_trapezoidal"
+      ]
+    }
+  ],
+  "geometry": {
+    "description": "Catalogue only; no placement. Rail cross-sections not found.",
+    "elements": []
+  },
+  "accessories": [
+    {
+      "id": "clamp_mid_domeclamp_30_50",
+      "name": "K2 DomeClamp middle clamp 30-50",
+      "type": "clamp_mid",
+      "material": "EN AW 6082 T6 (clamp body); T-bolt 1.4301 listed for the product",
+      "grade": "",
+      "standard": "",
+      "thread": "",
+      "dimensions_mm": {
+        "module_frame_min": 30,
+        "module_frame_max": 50
+      },
+      "quantity": {
+        "value": 0,
+        "per": "module",
+        "note": "Count per module not stated."
+      },
+      "purpose": "Mid clamp for module frames",
+      "note": "Frame range 30 to 50 mm from the product name only, not confirmed on the page body. Torque not stated.",
+      "status": "unverified",
+      "source_ids": [
+        "k2_catalogue_trapezoidal"
+      ]
+    },
+    {
+      "id": "gasket_epdm_fastener_seal",
+      "name": "EPDM sealing gasket or washer (fastener and rail seals)",
+      "type": "gasket",
+      "material": "EPDM",
+      "grade": "",
+      "standard": "",
+      "thread": "",
+      "dimensions_mm": {},
+      "quantity": {
+        "value": 0,
+        "per": "support",
+        "note": "Count not stated."
+      },
+      "purpose": "Seals fasteners against the roof covering",
+      "note": "From earlier K2 research (roof_structures.md section 3); not re-checked in this pass.",
+      "status": "unverified",
+      "source_ids": [
+        "k2_catalogue_trapezoidal"
+      ]
+    },
+    {
+      "id": "cable_clip_generic",
+      "name": "Cable clip (generic, module and rail cables)",
+      "type": "cable_clip",
+      "material": "",
+      "grade": "",
+      "standard": "",
+      "thread": "",
+      "dimensions_mm": {},
+      "quantity": {
+        "value": 0,
+        "per": "module",
+        "note": "Not found."
+      },
+      "purpose": "Holds module cables to the rail",
+      "note": "No sourced cable clip in roof families. K2 BasicClip is a bracket (roof_trapezoidal_sheet_rail).",
+      "status": "not_found"
+    },
+    {
+      "id": "grounding_bonding_clip_generic",
+      "name": "Bonding clip (generic)",
+      "type": "grounding",
+      "material": "",
+      "grade": "",
+      "standard": "",
+      "thread": "",
+      "dimensions_mm": {},
+      "quantity": {
+        "value": 0,
+        "per": "unit",
+        "note": "Not found."
+      },
+      "purpose": "Bonds rail to module frame",
+      "note": "Sourced grounding data is held in roof_trapezoidal_sheet_rail (K2 TerraGrif) and roof_pitched_rafter_rail (IronRidge lug). This entry is a placeholder.",
+      "status": "not_found"
+    }
+  ],
+  "grounding_bonding": "See roof_trapezoidal_sheet_rail (TerraGrif) and roof_pitched_rafter_rail (IronRidge lug).",
+  "installation_notes": [],
+  "status": "unverified",
+  "unverified_items": [
+    "Rail cross-section dimensions for K2 BasicRail, SolidRail, MultiRail and MiniRail (not found).",
+    "DomeClamp frame range 30 to 50 mm: from product name only.",
+    "Cable clip product and dimensions for roof rails (not found).",
+    "Splice product for K2 SolidRail (not found; K2 splice listed in family file).",
+    "EPDM hardness and sealing standard (not found).",
+    "Quantities per module and per rail (not found; 0 means unknown)."
+  ],
+  "sources": [
+    {
+      "id": "k2_catalogue_trapezoidal",
+      "title": "K2 Systems catalogue, trapezoidal sheet metal",
+      "publisher": "K2 Systems",
+      "url": "https://catalogue.k2-systems.com/en-uk/area-of-application/pitched-roofs/trapezoidal-sheet-metal/",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

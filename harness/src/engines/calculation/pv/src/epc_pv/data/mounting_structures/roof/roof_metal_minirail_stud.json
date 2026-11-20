@@ -1,0 +1,126 @@
+{
+  "schema_version": "1.0",
+  "id": "roof_metal_minirail_stud",
+  "name": {
+    "en": "Metal roof, mini-rails on stud bolts or seam clamps (S-5 style)",
+    "es": "Cubierta metálica, mini-rieles sobre espárragos o garras de junta (tipo S-5)"
+  },
+  "family": "roof",
+  "category": "metal_roof_minirail_stud_bolt",
+  "description": {
+    "en": "Mini-rails carried by stud bolts through metal sheet or by seam clamps on standing-seam roofs. Clamp torques live in roof_standing_seam_clamp and the mini-rail profile in roof_accessory_catalogue. Stud bolt through sheet data not found.",
+    "es": "Mini-rieles sostenidos por espárragos a través de chapa metálica o por garras de junta en cubiertas de junta alzada. Los pares de las garras están en roof_standing_seam_clamp y el perfil del mini-riel en roof_accessory_catalogue. Datos del espárrago a través de la chapa no encontrados."
+  },
+  "typical_use": "Metal roofs (sheet or standing seam) where mini-rails carry modules. Fixing capacity and sheet gauge checks are the designer's responsibility.",
+  "applicable_standards": [],
+  "materials": [
+    {
+      "component": "Stud bolt through sheet",
+      "material": "Not stated",
+      "status": "not_found"
+    },
+    {
+      "component": "Seam clamp",
+      "material": "Not stated (see roof_standing_seam_clamp)",
+      "status": "not_found"
+    },
+    {
+      "component": "Mini-rail",
+      "material": "Aluminium EN AW-6063 T66 (K2 MiniRail 60 Set, see roof_accessory_catalogue)",
+      "status": "unverified",
+      "source_ids": [
+        "k2_catalogue_trapezoidal"
+      ]
+    }
+  ],
+  "profiles": [],
+  "geometry": {
+    "description": "No sourced spacing or stud pattern. No elements placed.",
+    "elements": []
+  },
+  "accessories": [
+    {
+      "id": "stud_bolt_metal_sheet",
+      "name": "Stud bolt through metal sheet",
+      "type": "bolt",
+      "material": "Not stated",
+      "grade": "",
+      "standard": "",
+      "thread": "",
+      "dimensions_mm": {},
+      "quantity": {
+        "value": 0,
+        "per": "support",
+        "note": "Not found."
+      },
+      "purpose": "Carries mini-rail through metal sheet",
+      "status": "not_found"
+    },
+    {
+      "id": "mini_rail_clamp_bolt_s5",
+      "name": "Mini-rail to S-5 style clamp connection",
+      "type": "bolt",
+      "material": "",
+      "grade": "",
+      "standard": "",
+      "thread": "",
+      "dimensions_mm": {},
+      "quantity": {
+        "value": 0,
+        "per": "support",
+        "note": "Count not stated. Bolt and torque are in roof_standing_seam_clamp (bolt_hex_flange_m8x16_s5); not duplicated here."
+      },
+      "purpose": "Connects mini-rail to seam clamp",
+      "note": "See roof_standing_seam_clamp for M8-1.25 x 16 hex flange bolt and torque (S-5 guide).",
+      "status": "unverified",
+      "source_ids": [
+        "s5_clamp_install_guide"
+      ]
+    },
+    {
+      "id": "grounding_metal_minirail",
+      "name": "Equipotential bonding for metal roof mini-rail",
+      "type": "grounding",
+      "material": "",
+      "grade": "",
+      "standard": "",
+      "thread": "",
+      "dimensions_mm": {},
+      "quantity": {
+        "value": 0,
+        "per": "unit",
+        "note": "Not found in S-5 guide."
+      },
+      "purpose": "Bonding of mini-rail and clamps",
+      "status": "not_found"
+    }
+  ],
+  "grounding_bonding": "Not found in S-5 guide for clamps or mini-rails.",
+  "installation_notes": [
+    "Clamp installation per S-5 guide: T30 Torx set screw and M8-1.25 x 16 mm hex flange bolt (see roof_standing_seam_clamp)."
+  ],
+  "status": "unverified",
+  "unverified_items": [
+    "Stud bolt size, grade and torque through sheet (not found).",
+    "Sheet gauge and purlin requirement for stud bolts (not found).",
+    "Mini-rail cross-section dimensions (not found).",
+    "Grounding and bonding (not found).",
+    "Quantities per support and per rail (not found; 0 means unknown)."
+  ],
+  "sources": [
+    {
+      "id": "s5_clamp_install_guide",
+      "title": "S-5! clamp installation guide (S-5-U, S-5-S, S-5-E, S-5-B, S-5-V)",
+      "publisher": "S-5!",
+      "url": "https://cdn.shopify.com/s/files/1/0299/1477/files/s-5-s-u-e-b-v-clamp-install-guide.pdf",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "k2_catalogue_trapezoidal",
+      "title": "K2 Systems catalogue, trapezoidal sheet metal",
+      "publisher": "K2 Systems",
+      "url": "https://catalogue.k2-systems.com/en-uk/area-of-application/pitched-roofs/trapezoidal-sheet-metal/",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

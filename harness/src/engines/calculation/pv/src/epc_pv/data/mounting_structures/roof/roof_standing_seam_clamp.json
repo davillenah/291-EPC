@@ -1,0 +1,418 @@
+{
+  "schema_version": "1.0",
+  "id": "roof_standing_seam_clamp",
+  "name": {
+    "en": "Standing-seam roof clamps (S-5! family and ClickFit EVO seam clamp) with rails",
+    "es": "Garras para cubierta de junta alzada (familia S-5! y garra de junta ClickFit EVO) con rieles"
+  },
+  "family": "roof",
+  "category": "standing_seam_clamp",
+  "description": {
+    "en": "Clamps grip the raised seam of a standing-seam metal roof without penetrating the roof panel. A set screw (self-drilling or hex flange bolt) tightens the clamp onto the seam. Rails (or direct module clamps) are bolted to the clamps. Reference families: S-5! clamps (S-5-U, S-5-S, S-5-E, S-5-B, S-5-V and Mini variants, S-5-H90) and Enstall ClickFit EVO seam clamp.",
+    "es": "Las garras abrazan la junta alzada de la cubierta metálica sin perforar el panel. Un tornillo de apriete (autoperforante o tornillo de brida hexagonal) fija la garra a la junta. Los rieles, o las garras de módulo directas, se atornillan a las garras. Familias de referencia: garras S-5! (S-5-U, S-5-S, S-5-E, S-5-B, S-5-V y variantes Mini, S-5-H90) y garra de junta ClickFit EVO de Enstall."
+  },
+  "typical_use": "Standing-seam and snap-seam metal roofs, non-penetrating attachment to the seam.",
+  "applicable_standards": [
+    "EN 1991-1-3 (snow loads, designer)",
+    "EN 1991-1-4 (wind actions, designer)",
+    "EN 1999-1-1 (aluminium design, designer; not verified in this research)",
+    "ISO 3506-1:2020 (stainless steel fasteners, mechanical properties)",
+    "ISO 898-1:2013 (carbon steel fasteners, reference)",
+    "Roof-panel manufacturer pull-out and clamp load test reports (to be obtained per project; not found here)"
+  ],
+  "materials": [
+    {
+      "component": "Seam clamp body (S-5 family)",
+      "material": "Not stated in sources (aluminium or stainless steel typical; to be confirmed)",
+      "finish": "Not stated",
+      "status": "not_found",
+      "source_ids": []
+    },
+    {
+      "component": "Set screw / bolt (S-5)",
+      "material": "Not stated (hex flange bolt M8-1.25 x 16 mm for critical applications; Torx T30 drive)",
+      "finish": "Not stated",
+      "status": "unverified",
+      "source_ids": [
+        "s5_clamp_install_guide",
+        "s5_h90_install"
+      ]
+    },
+    {
+      "component": "Seam clamp body and self-drilling screw (ClickFit EVO)",
+      "material": "Not stated",
+      "finish": "Not stated",
+      "status": "not_found",
+      "source_ids": [
+        "clickfit_evo_standing_seam"
+      ]
+    },
+    {
+      "component": "Self-drilling sheet metal screw 1003015 (ClickFit EVO)",
+      "material": "Not stated",
+      "finish": "Not stated",
+      "status": "not_found",
+      "source_ids": [
+        "clickfit_evo_standing_seam"
+      ]
+    }
+  ],
+  "profiles": [
+    {
+      "id": "seam_clamp_profile_not_found",
+      "name": "Seam clamp outline (S-5 and ClickFit EVO)",
+      "section_type": "other",
+      "dimensions_mm": {},
+      "material": "Not stated",
+      "status": "not_found",
+      "source_ids": []
+    },
+    {
+      "id": "clickfit_seam_opening",
+      "name": "ClickFit EVO seam opening sizes (mapping to clamp article not stated)",
+      "section_type": "other",
+      "dimensions_mm": {
+        "seam_opening_a": 14,
+        "seam_opening_b": 9,
+        "seam_opening_round_diameter": 23
+      },
+      "material": "",
+      "status": "unverified",
+      "source_ids": [
+        "clickfit_evo_standing_seam"
+      ]
+    }
+  ],
+  "geometry": {
+    "description": "Clamp sits on the seam crest with the rail bolted across the clamps. Schematic only: no seam pitch, rail spacing or clamp spacing values were found, so no fixing coordinates are given.",
+    "coordinate_system": "x along module row, y up-slope/north-south horizontal, z up; origin at ground/roof contact of first support; mm and degrees",
+    "elements": [],
+    "reference_layout": {
+      "note": "Clamp spacing per module and per rail not stated in sources. Module frame height accepted by ClickFit EVO module clamp: 29 to 50 mm (frame height, not thickness)."
+    }
+  },
+  "accessories": [
+    {
+      "id": "clamp_seam_s5_family",
+      "name": "S-5! seam clamp (S-5-U, S-5-S, S-5-E, S-5-B, S-5-V and Mini variants)",
+      "type": "other",
+      "material": "Not stated",
+      "grade": "",
+      "standard": "",
+      "thread": "",
+      "dimensions_mm": {},
+      "torque_nm": 18,
+      "quantity": {
+        "value": 0,
+        "per": "support",
+        "note": "Count per support not stated. torque_nm uses the lower bound of 18 Nm for 22 ga steel per S-5 guide (range 18 to 20 Nm). Value 0 for quantity = unknown."
+      },
+      "purpose": "Grips the standing-seam crest. Variants differ by seam type: S-5-U and S-5-V for vertical double folds with lip engagement (U and V Mini), S-5-S for horizontal seams 0.50 in or less, S-5-U horizontal for seams 0.65 in or greater.",
+      "status": "unverified",
+      "source_ids": [
+        "s5_clamp_install_guide"
+      ]
+    },
+    {
+      "id": "clamp_seam_s5_h90",
+      "name": "S-5-H90 clamp (and H90 Mini)",
+      "type": "other",
+      "material": "Not stated",
+      "grade": "",
+      "standard": "",
+      "thread": "",
+      "dimensions_mm": {},
+      "torque_nm": 18,
+      "quantity": {
+        "value": 0,
+        "per": "support",
+        "note": "Count not stated. torque 18 Nm lower bound for 22 ga steel; range 18 to 20 Nm."
+      },
+      "purpose": "Seam clamp variant for standing-seam roofs (S-5-H90 family per S-5 installation guide).",
+      "status": "unverified",
+      "source_ids": [
+        "s5_h90_install"
+      ]
+    },
+    {
+      "id": "clamp_seam_s5_torque_other_metals",
+      "name": "S-5 clamp setscrew torque for other metals and thinner steel",
+      "type": "other",
+      "material": "",
+      "grade": "",
+      "standard": "",
+      "thread": "",
+      "dimensions_mm": {},
+      "torque_nm": 15,
+      "quantity": {
+        "value": 0,
+        "per": "support",
+        "note": "Applies to the setscrew, not a physical part. Range 15 to 17 Nm (11 to 12.5 ft-lb)."
+      },
+      "purpose": "Torque record for setscrew on aluminium/other metals and thinner gauges of steel (S-5 installation guide).",
+      "status": "unverified",
+      "source_ids": [
+        "s5_clamp_install_guide"
+      ]
+    },
+    {
+      "id": "bolt_hex_flange_m8x16_s5",
+      "name": "Hex flange bolt M8-1.25 x 16 mm (S-5 critical applications)",
+      "type": "bolt",
+      "material": "Not stated",
+      "grade": "Not stated",
+      "standard": "Not stated",
+      "thread": "M8-1.25",
+      "dimensions_mm": {
+        "length": 16
+      },
+      "torque_nm": 18.1,
+      "quantity": {
+        "value": 0,
+        "per": "support",
+        "note": "One per clamp in critical applications (included with full-size clamps, sold separately for Mini). Source gives 160 in-lb (13 ft-lb); 18 Nm is the converted value (160 in-lb = 18.1 Nm), conversion made here, not stated in source."
+      },
+      "purpose": "Higher-capacity setscrew for critical applications.",
+      "geometry_hint": "cylinder d=8 l=16 hex flange",
+      "status": "unverified",
+      "source_ids": [
+        "s5_clamp_install_guide"
+      ],
+      "note": "Hex flange bolt M8-1.25 x 16 mm, sold separately; tightened to 160 in-lb (13 ft-lb) = 18.1 Nm (S-5 guide, step 4; converted from in-lb)."
+    },
+    {
+      "id": "setscrew_torx_t30_s5",
+      "name": "Setscrew (self-drilling or sheet-metal) with T30 Torx drive, S-5",
+      "type": "screw",
+      "material": "Not stated",
+      "grade": "Not stated",
+      "standard": "",
+      "thread": "",
+      "dimensions_mm": {},
+      "torque_nm": 15,
+      "quantity": {
+        "value": 0,
+        "per": "support",
+        "note": "One per clamp; count per clamp per guide not stated explicitly. Torque 15 to 17 Nm for non-22 ga metals (lower bound used)."
+      },
+      "purpose": "Tightens the clamp onto the seam. Driver: T30 Torx bit tip (provided).",
+      "geometry_hint": "cylinder d=6 l=20",
+      "status": "unverified",
+      "source_ids": [
+        "s5_clamp_install_guide",
+        "s5_h90_install"
+      ],
+      "note": "T30 Torx bit tip (S-5 guide, tools needed). Setscrew size and grade not stated in guide."
+    },
+    {
+      "id": "clamp_seam_clickfit_evo_seam",
+      "name": "ClickFit EVO seam clamp (1008035, 1008033, 1008031)",
+      "type": "other",
+      "material": "Not stated",
+      "grade": "",
+      "standard": "",
+      "thread": "",
+      "dimensions_mm": {},
+      "torque_nm": 15,
+      "quantity": {
+        "value": 0,
+        "per": "support",
+        "note": "Count not stated. Torque 15 to 17 Nm general, 18 to 20 Nm for steel standing-seam roofs thicker than 0.7 mm."
+      },
+      "purpose": "Seam clamp for single-folded, snap, double-folded and round standing seams (copper roofs excluded).",
+      "status": "unverified",
+      "source_ids": [
+        "clickfit_evo_standing_seam"
+      ]
+    },
+    {
+      "id": "clamp_module_clickfit_evo_universal",
+      "name": "ClickFit EVO Module Clamp universal (1008020 and -B black)",
+      "type": "clamp_mid",
+      "material": "Not stated",
+      "grade": "",
+      "standard": "",
+      "thread": "",
+      "dimensions_mm": {
+        "frame_height_min": 29,
+        "frame_height_max": 50
+      },
+      "torque_nm": 4.5,
+      "quantity": {
+        "value": 0,
+        "per": "module",
+        "note": "Count per module not stated. Torque 4.5 Nm for module clamp screws."
+      },
+      "purpose": "Holds module frame between two modules or at end position (mid/end function per manufacturer).",
+      "status": "unverified",
+      "source_ids": [
+        "clickfit_evo_standing_seam"
+      ]
+    },
+    {
+      "id": "clamp_end_support_clickfit_evo",
+      "name": "ClickFit EVO End Clamp Support (1008065, -B)",
+      "type": "clamp_end",
+      "material": "Not stated",
+      "grade": "",
+      "standard": "",
+      "thread": "",
+      "dimensions_mm": {},
+      "torque_nm": 0,
+      "quantity": {
+        "value": 0,
+        "per": "row",
+        "note": "Count not stated."
+      },
+      "purpose": "Support for end clamp at row ends.",
+      "status": "unverified",
+      "source_ids": [
+        "clickfit_evo_standing_seam"
+      ]
+    },
+    {
+      "id": "end_cap_clickfit_evo",
+      "name": "ClickFit EVO Mounting Rail End Cap (1008060, -B) and End Cap without end clamp support (1008066, -B)",
+      "type": "rail_end_cap",
+      "material": "Not stated",
+      "grade": "",
+      "standard": "",
+      "thread": "",
+      "dimensions_mm": {},
+      "torque_nm": 0,
+      "quantity": {
+        "value": 0,
+        "per": "rail",
+        "note": "One per rail end (structural)."
+      },
+      "purpose": "Closes rail end.",
+      "status": "unverified",
+      "source_ids": [
+        "clickfit_evo_standing_seam"
+      ]
+    },
+    {
+      "id": "connector_rail_coupler_clickfit_evo",
+      "name": "ClickFit EVO Mounting Rail Coupler (1008061)",
+      "type": "connector_splice",
+      "material": "Not stated",
+      "grade": "",
+      "standard": "",
+      "thread": "",
+      "dimensions_mm": {},
+      "torque_nm": 0,
+      "quantity": {
+        "value": 0,
+        "per": "rail",
+        "note": "One per rail joint; torque not stated."
+      },
+      "purpose": "Joins two ClickFit EVO rails.",
+      "status": "unverified",
+      "source_ids": [
+        "clickfit_evo_standing_seam"
+      ]
+    },
+    {
+      "id": "cable_clip_optimiser_clickfit_evo",
+      "name": "ClickFit EVO Cable Clip Optimiser Ready (1008062)",
+      "type": "cable_clip",
+      "material": "Not stated",
+      "grade": "",
+      "standard": "",
+      "thread": "",
+      "dimensions_mm": {},
+      "torque_nm": 0,
+      "quantity": {
+        "value": 0,
+        "per": "module",
+        "note": "Count not stated."
+      },
+      "purpose": "Cable management on ClickFit EVO rails.",
+      "status": "unverified",
+      "source_ids": [
+        "clickfit_evo_standing_seam"
+      ]
+    },
+    {
+      "id": "screw_self_drilling_clickfit_1003015",
+      "name": "Self-drilling sheet metal screw (ClickFit EVO article 1003015)",
+      "type": "screw",
+      "material": "Not stated",
+      "grade": "Not stated",
+      "standard": "",
+      "thread": "",
+      "dimensions_mm": {},
+      "torque_nm": 0,
+      "quantity": {
+        "value": 0,
+        "per": "support",
+        "note": "Count not stated. Driver TX 30 (article 1008069)."
+      },
+      "purpose": "Secures the ClickFit EVO clamp to the seam or module.",
+      "status": "unverified",
+      "source_ids": [
+        "clickfit_evo_standing_seam"
+      ]
+    },
+    {
+      "id": "grounding_clickfit_evo_not_found",
+      "name": "Grounding and bonding for ClickFit EVO and S-5 clamps",
+      "type": "grounding",
+      "material": "",
+      "grade": "",
+      "standard": "",
+      "thread": "",
+      "dimensions_mm": {},
+      "torque_nm": 0,
+      "quantity": {
+        "value": 0,
+        "per": "module",
+        "note": "Not found in sources."
+      },
+      "purpose": "Grounding hardware for this family was not found in the sources. Placeholder record, do not use the value.",
+      "status": "not_found",
+      "source_ids": []
+    }
+  ],
+  "grounding_bonding": "Bonding hardware for S-5 and ClickFit EVO was not stated in the sources reviewed. Bonding method, conductor size and whether the clamp itself bonds the seam must be obtained from the manufacturer and the local standard.",
+  "installation_notes": [
+    "S-5 installation guide: torque values are for the setscrew; the range depends on metal and gauge (22 ga steel 18 to 20 Nm; other metals and thinner steel 15 to 17 Nm; M8 hex flange bolt for critical applications 13 ft-lb).",
+    "S-5 compatible seam types include standing seam, machine-folded seam, snap-together seam and vertical double-fold (with lip engagement for S-5-U, S-5-V, U Mini and V Mini).",
+    "ClickFit EVO accepts single-folded, snap, double-folded and round standing seams; copper roofs excluded (manufacturer).",
+    "ClickFit EVO seam opening sizes listed as 14 mm, 9 mm and round 23 mm diameter; mapping to clamp articles not stated.",
+    "Seam clamp pull-out capacity and slip resistance are not in the sources and must come from the roof-panel manufacturer or a test report."
+  ],
+  "status": "unverified",
+  "unverified_items": [
+    "Clamp body material and finish for all S-5 and ClickFit EVO parts (not stated).",
+    "Clamp pull-out and slip-resistance values (not found).",
+    "Seam height range per clamp variant: S-5 guide gives horizontal seams 0.65 in or more for S-5-U, 0.50 in or less for S-5-S; 0.50 to 0.65 in not covered.",
+    "Setscrew size and stainless grade for S-5 set screw (not stated; hex flange bolt M8-1.25 x 16 is the only sized fastener).",
+    "Bolt grade of the M8 hex flange bolt (not stated).",
+    "Bonding and grounding for S-5 clamps (no statement in S-5 guide; not found for ClickFit).",
+    "Torque values are in-lb in the S-5 guide; Nm values are converted (x 0.11298) and kept as ranges in the notes."
+  ],
+  "sources": [
+    {
+      "id": "s5_clamp_install_guide",
+      "title": "S-5! clamp installation guide (S-5-U, S-5-S, S-5-E, S-5-B, S-5-V)",
+      "publisher": "S-5!",
+      "url": "https://cdn.shopify.com/s/files/1/0299/1477/files/s-5-s-u-e-b-v-clamp-install-guide.pdf",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "s5_h90_install",
+      "title": "S-5-H90 clamps installation guide",
+      "publisher": "S-5!",
+      "url": "https://cdn.shopify.com/s/files/1/0420/1073/8840/files/s-5-h90-clamps-installation.pdf",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "clickfit_evo_standing_seam",
+      "title": "ClickFit EVO standing seam roof mounting manual (EN)",
+      "publisher": "Enstall (distributed by Segen)",
+      "url": "https://portal.segen.co.uk/reseller/docs/Manual_ClickFitEvo_StandingSeamRoof_EN_216.pdf",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

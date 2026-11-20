@@ -1,0 +1,201 @@
+{
+  "schema_version": "1.0",
+  "id": "sma_mvps_5860_6120_s4_us",
+  "name": {
+    "en": "SMA MVPS 5860-S4-US / 6120-S4-US medium-voltage power station (40 ft container)",
+    "es": "Estación de potencia de media tensión SMA MVPS 5860-S4-US / 6120-S4-US (contenedor de 40 ft)"
+  },
+  "kind": "inverter_type",
+  "description": {
+    "en": "Skid/container MV power station: inverter, MV transformer (KNAN, 34.5 kV), 3-panel MV switchgear, LV section, 1500 V DC input. Preliminary datasheet, rev. 10/2025.",
+    "es": "Estación de potencia de media tensión en contenedor: inversor, transformador de MT (KNAN, 34,5 kV), aparamenta de MT de 3 celdas, sección BT, entrada CC 1500 V. Hoja preliminar, rev. 10/2025."
+  },
+  "typical_use": "Turnkey MV skid for utility PV blocks in US standard.",
+  "status": "unverified",
+  "parts": [
+    {
+      "id": "cont",
+      "name": "40 ft high-cube container envelope",
+      "name_es": "Envolvente de contenedor 40 ft high-cube",
+      "type": "enclosure",
+      "status": "unverified",
+      "material": "steel container (not stated)",
+      "dimensions_mm": {
+        "W": 12192,
+        "H": 2896,
+        "D": 2438
+      },
+      "quantity_per_module": 1,
+      "ratings": {
+        "weight_t_max": 32
+      },
+      "source_ids": [
+        "S06"
+      ]
+    },
+    {
+      "id": "inv",
+      "name": "Central inverter module",
+      "name_es": "Módulo de inversor central",
+      "type": "other",
+      "status": "unverified",
+      "ratings": {
+        "dc_max_v": 1500,
+        "note": "depends on selected inverter; count not fixed"
+      },
+      "source_ids": [
+        "S06"
+      ]
+    },
+    {
+      "id": "xfmr",
+      "name": "MV oil-immersed transformer (KNAN natural ester)",
+      "name_es": "Transformador de MT en aceite (KNAN éster natural)",
+      "type": "transformer",
+      "status": "unverified",
+      "material": "natural ester",
+      "quantity_per_module": 1,
+      "ratings": {
+        "kva_25C": {
+          "5860": 5866,
+          "6120": 6134
+        },
+        "kva_40C": {
+          "5860": 5280,
+          "6120": 5520
+        },
+        "vector_groups": [
+          "Dy11",
+          "YNd11",
+          "YNy0"
+        ]
+      },
+      "geometry_hint": "Rated kVA per unit to 40 C; primary/secondary kV not stated; 34.5 kV nominal AC",
+      "source_ids": [
+        "S06"
+      ]
+    },
+    {
+      "id": "mvsw",
+      "name": "MV switchgear, 3 panels (2 cable feeders with load-break, 1 transformer feeder with breaker)",
+      "name_es": "Aparamenta de MT, 3 celdas (2 salidas de cable con seccionador de carga, 1 de transformador con interruptor)",
+      "type": "breaker",
+      "status": "unverified",
+      "quantity_per_module": 3,
+      "ratings": {
+        "internal_arc": "IAC A FL 25 kA 1 s"
+      },
+      "geometry_hint": "Named RMU model not found",
+      "source_ids": [
+        "S06"
+      ]
+    },
+    {
+      "id": "lvpanel",
+      "name": "LV panel and auxiliary section",
+      "name_es": "Cuadro BT y sección auxiliar",
+      "type": "ac_terminal",
+      "status": "typical",
+      "geometry_hint": "Not dimensioned in source"
+    },
+    {
+      "id": "ground",
+      "name": "Grounding terminal",
+      "name_es": "Terminal de puesta a tierra",
+      "type": "grounding_terminal",
+      "status": "typical",
+      "geometry_hint": "Generic"
+    }
+  ],
+  "geometry": {
+    "description": "40-foot high-cube container envelope 12192 x 2896 x 2438 mm (datasheet W x H x D) mapped to x=12192, y=2438, z=2896. Internal layout (inverter, transformer, RMU, LV panel) is not dimensioned in the source.",
+    "coordinate_system": "x along module long side, y along short side, z up through thickness; origin at module front-left corner; mm",
+    "elements": [
+      {
+        "id": "E-cont",
+        "kind": "enclosure_body",
+        "part_id": "cont",
+        "position_mm": [
+          0,
+          0,
+          0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          12192,
+          2438,
+          2896
+        ],
+        "status": "unverified"
+      }
+    ],
+    "module_dimensions_mm": [
+      12192,
+      2438,
+      2896
+    ]
+  },
+  "mechanical_ratings": {
+    "certifications": [
+      "IEEE 1547-2018",
+      "IEEE C57.12.00",
+      "IEEE C57.12.36",
+      "IEEE C57.154",
+      "IEEE C37.20.7",
+      "IEEE C37.20.9",
+      "UL 1741",
+      "CSC",
+      "IEC 62271-202 internal arc IAC A 25 kA 1 s"
+    ]
+  },
+  "unverified_items": [
+    "Preliminary datasheet (rev. 10/2025)",
+    "DC input voltage window not found",
+    "Transformer primary/secondary kV and per-unit kVA not stated",
+    "IP rating not found",
+    "Noise not found",
+    "Named RMU model not found",
+    "Internal arrangement not dimensioned"
+  ],
+  "sources": [
+    {
+      "id": "S06",
+      "title": "MVPS 5860/6120-S4-US datasheet (preliminary, rev. 10/2025)",
+      "publisher": "SMA America / SMA Solar Technology AG",
+      "url": "https://files.sma.de/downloads/MVPS5.8-6.1-US-DS-en_us-18.pdf",
+      "accessed": "2026-11-20"
+    }
+  ],
+  "electrical_ratings": {
+    "topology": "MV power station, 60 Hz US",
+    "rated_ac_kva_25C": {
+      "5860": 5866,
+      "6120": 6134
+    },
+    "rated_ac_kva_40C": {
+      "5860": 5280,
+      "6120": 5520
+    },
+    "ac_voltage_kv_nominal": 34.5,
+    "frequency_hz": 60,
+    "max_dc_voltage_v": 1500
+  },
+  "mechanical": {
+    "external_dimensions_mm_WxHxD": [
+      12192,
+      2896,
+      2438
+    ],
+    "weight_t_max": 32,
+    "cooling": "KNAN (natural ester fluid, natural air) for transformer",
+    "operating_temp_c": {
+      "charging_discharging": "-25 to +25 (40 optional, 50 optional)",
+      "rated": "-25 to +35 (40 optional, 50 optional)",
+      "cold_option": -37
+    }
+  }
+}

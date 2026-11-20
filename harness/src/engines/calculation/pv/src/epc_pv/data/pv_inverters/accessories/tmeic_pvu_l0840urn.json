@@ -1,0 +1,183 @@
+{
+  "schema_version": "1.0",
+  "id": "tmeic_pvu_l0840urn",
+  "name": {
+    "en": "TMEIC Solar Ware Ninja PVU-L0840URN",
+    "es": "TMEIC Solar Ware Ninja PVU-L0840URN"
+  },
+  "kind": "inverter_type",
+  "description": {
+    "en": "Central power conditioner, 840 kW at 25 C (765 kW at 50 C), 1500 V DC, 630 V AC, NEMA 3R, heat pipes with forced air.",
+    "es": "Acondicionador de potencia central, 840 kW a 25 C (765 kW a 50 C), 1500 V CC, 630 V CA, NEMA 3R, tubos de calor y aire forzado."
+  },
+  "typical_use": "Central power conditioner for medium utility blocks.",
+  "status": "unverified",
+  "parts": [
+    {
+      "id": "cab",
+      "name": "Power conditioner cabinet (NEMA 3R)",
+      "name_es": "Armario del acondicionador (NEMA 3R)",
+      "type": "enclosure",
+      "status": "unverified",
+      "material": "not stated",
+      "dimensions_mm": {
+        "W": 1100,
+        "H": 1991,
+        "D": 1100
+      },
+      "quantity_per_module": 1,
+      "ratings": {
+        "ip_equiv": "NEMA 3R",
+        "weight_kg_max": 1000
+      },
+      "source_ids": [
+        "S05"
+      ]
+    },
+    {
+      "id": "dcin",
+      "name": "DC input (up to 6 inputs)",
+      "name_es": "Entrada CC (hasta 6)",
+      "type": "dc_input",
+      "status": "unverified",
+      "quantity_per_module": 6,
+      "ratings": {
+        "max_dc_voltage_v": 1500,
+        "mppt_window_v": [
+          915,
+          1300
+        ]
+      },
+      "source_ids": [
+        "S05"
+      ]
+    },
+    {
+      "id": "acout",
+      "name": "AC output (630 V +10%/-12%)",
+      "name_es": "Salida CA (630 V +10%/-12%)",
+      "type": "ac_output",
+      "status": "unverified",
+      "ratings": {
+        "ac_voltage_v": 630,
+        "frequency_hz": [
+          50,
+          60
+        ]
+      },
+      "source_ids": [
+        "S05"
+      ]
+    },
+    {
+      "id": "heatpipe",
+      "name": "Heat-pipe and forced-air cooling module",
+      "name_es": "Módulo de refrigeración por tubos de calor y aire forzado",
+      "type": "heatsink",
+      "status": "unverified",
+      "source_ids": [
+        "S05"
+      ]
+    },
+    {
+      "id": "ground",
+      "name": "Grounding terminal",
+      "name_es": "Terminal de puesta a tierra",
+      "type": "grounding_terminal",
+      "status": "typical",
+      "geometry_hint": "Generic"
+    }
+  ],
+  "geometry": {
+    "description": "Single cabinet. Sourced W x H x D = 1100 x 1991 x 1100 mm mapped to x=1100, y=1100, z=1991.",
+    "coordinate_system": "x along module long side, y along short side, z up through thickness; origin at module front-left corner; mm",
+    "elements": [
+      {
+        "id": "E-cab",
+        "kind": "enclosure_body",
+        "part_id": "cab",
+        "position_mm": [
+          0,
+          0,
+          0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          1100,
+          1100,
+          1991
+        ],
+        "status": "unverified"
+      }
+    ],
+    "module_dimensions_mm": [
+      1100,
+      1100,
+      1991
+    ]
+  },
+  "mechanical_ratings": {
+    "certifications": [
+      "UL 1741",
+      "UL 1741SB",
+      "IEEE 1547-2018",
+      "NEC 2020",
+      "IEC 62109-1/-2",
+      "IEC 61000-6-2/-4",
+      "IEC 61727",
+      "IEC 62116",
+      "IEC 61400",
+      "IEC 61983",
+      "IEC 60068",
+      "IEEE 2800",
+      "IEEE 519-2022"
+    ]
+  },
+  "unverified_items": [
+    "Rated AC kVA not given (kW only)",
+    "Noise not found",
+    "Mounting-hole pattern not found",
+    "Datasheet marked preliminary by source"
+  ],
+  "sources": [
+    {
+      "id": "S05",
+      "title": "Solar Ware Ninja PVU-L0840URN datasheet (0424)",
+      "publisher": "TMEIC Corporation",
+      "url": "https://www.tmeic.com/sites/default/files/assets/files/Solar%20Ware%20Ninja%20PVU-L0840URN-0424-web.pdf",
+      "accessed": "2026-11-20"
+    }
+  ],
+  "electrical_ratings": {
+    "topology": "central power conditioner",
+    "rated_power_kw": {
+      "25C": 840,
+      "50C": 765
+    },
+    "max_dc_voltage_v": 1500,
+    "mppt_window_v": [
+      915,
+      1300
+    ],
+    "dc_inputs_max": 6,
+    "ac_voltage_v": "630 +10% / -12%",
+    "frequency_hz": "50/60 (+0.5/-0.7 Hz)",
+    "max_efficiency_pct": 98.72,
+    "cec_efficiency_pct": 98.0
+  },
+  "mechanical": {
+    "external_dimensions_mm_WxHxD": [
+      1100,
+      1991,
+      1100
+    ],
+    "weight_kg_max": 1000,
+    "cooling": "heat pipes and forced air",
+    "operating_temp_c": "-25 to 50 (ambient)",
+    "ip": "NEMA 3R"
+  }
+}

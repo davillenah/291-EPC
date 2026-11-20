@@ -1,0 +1,290 @@
+{
+  "schema_version": "1.0",
+  "id": "roof_pitched_rafter_rail",
+  "name": {
+    "en": "Pitched roof, rails on L-feet fixed to rafters (mini-rail and rail)",
+    "es": "Cubierta inclinada, rieles sobre escuadras en L fijadas a cabios (mini-riel y riel)"
+  },
+  "family": "roof",
+  "category": "pitched_rafter_rail_lfoot",
+  "description": {
+    "en": "Rails or mini-rails carried by L-feet, each fixed to a rafter with a lag screw through the roof covering. Torques and pilot hole from IronRidge flush mount manual. Rail profile dimensions, lag size and material grades not found.",
+    "es": "Rieles o mini-rieles sostenidos por escuadras en L, cada una fijada a un cabio con tornillo de madera a través de la cobertura. Pares de apriete y taladro guía del manual IronRidge. Dimensiones del perfil, diámetro del tornillo y grados de material no encontrados."
+  },
+  "typical_use": "Pitched tile or shingle roofs with timber rafters. Rafter fixing capacity and lag embedment are the designer's responsibility.",
+  "applicable_standards": [],
+  "materials": [
+    {
+      "component": "Rail or mini-rail",
+      "material": "Aluminium (alloy not stated in IronRidge manual)",
+      "status": "not_found"
+    },
+    {
+      "component": "L-foot and base hardware",
+      "material": "Not stated",
+      "status": "not_found"
+    },
+    {
+      "component": "Lag screw into rafter",
+      "material": "Steel (grade and coating not stated)",
+      "status": "not_found"
+    },
+    {
+      "component": "Equipment grounding conductor",
+      "material": "Copper, minimum 10 AWG (solid or stranded)",
+      "status": "unverified",
+      "source_ids": [
+        "ironridge_flush_mount_manual"
+      ]
+    }
+  ],
+  "profiles": [],
+  "geometry": {
+    "description": "Rafter spacing, L-foot spacing and rail spacing not stated in the IronRidge manual. No elements placed.",
+    "coordinate_system": "x along module row, y up-slope/north-south horizontal, z up; origin at ground/roof contact of first support; mm and degrees",
+    "elements": [],
+    "reference_layout": {
+      "note": "Mini-rail profile: see roof_accessory_catalogue (k2_minirail_60, K2 MiniRail 60 Set). Profile cross-section not found."
+    }
+  },
+  "accessories": [
+    {
+      "id": "lag_screw_rafter",
+      "name": "Lag screw into rafter (pilot hole 1/4 in)",
+      "type": "screw",
+      "quantity": {
+        "value": 0,
+        "per": "support",
+        "note": "Count not stated in sources. 0 means unknown, not zero."
+      },
+      "status": "unverified",
+      "thread": "not stated",
+      "dimensions_mm": {
+        "pilot_hole_diameter": 6.35
+      },
+      "purpose": "Fixes L-foot to rafter through roof covering",
+      "note": "Pilot hole 1/4 in (6.35 mm) (manual p. 8). Lag diameter, length and embedment not stated. Lag bolt must be fully seated.",
+      "source_ids": [
+        "ironridge_flush_mount_manual"
+      ]
+    },
+    {
+      "id": "lfoot_base_hardware",
+      "name": "L-foot base hardware (FlashFoot2, All Tile Hook, Knockout Tile, Flush Standoff)",
+      "type": "bolt",
+      "quantity": {
+        "value": 0,
+        "per": "support",
+        "note": "Count not stated in sources. 0 means unknown, not zero."
+      },
+      "status": "unverified",
+      "torque_nm": 14.9,
+      "purpose": "Attaches L-foot to lag or base",
+      "note": "132 in-lb (11 ft-lb) converted to 14.9 Nm (manual pp. 8 to 9).",
+      "source_ids": [
+        "ironridge_flush_mount_manual"
+      ]
+    },
+    {
+      "id": "lfoot_flat_roof_hardware_3_8",
+      "name": "Flat roof attachment L-foot hardware (3/8 in)",
+      "type": "bolt",
+      "quantity": {
+        "value": 0,
+        "per": "support",
+        "note": "Count not stated in sources. 0 means unknown, not zero."
+      },
+      "status": "unverified",
+      "torque_nm": 28.2,
+      "dimensions_mm": {
+        "bolt_diameter": 9.525
+      },
+      "purpose": "L-foot hardware used on flat-roof attachment",
+      "note": "250 in-lb (21 ft-lb) converted to 28.2 Nm (manual p. 9).",
+      "source_ids": [
+        "ironridge_flush_mount_manual"
+      ]
+    },
+    {
+      "id": "rail_to_roof_attachment_bolt",
+      "name": "Rail-to-roof attachment connection",
+      "type": "bolt",
+      "quantity": {
+        "value": 0,
+        "per": "support",
+        "note": "Count not stated in sources. 0 means unknown, not zero."
+      },
+      "status": "unverified",
+      "torque_nm": 28.2,
+      "purpose": "Connects rail to roof attachment",
+      "note": "250 in-lb converted to 28.2 Nm (manual p. 4).",
+      "source_ids": [
+        "ironridge_flush_mount_manual"
+      ]
+    },
+    {
+      "id": "rail_bonded_splice_screws",
+      "name": "Rail bonded splice (splice bar with two screws)",
+      "type": "connector_splice",
+      "quantity": {
+        "value": 2,
+        "per": "rail",
+        "note": "Count not stated in sources. 0 means unknown, not zero."
+      },
+      "status": "unverified",
+      "torque_nm": 2.3,
+      "dimensions_mm": {
+        "insertion_depth": 152.4,
+        "screw_spacing": 25.4
+      },
+      "purpose": "Joins two rails with bonding",
+      "note": "Two screws per rail, about 1 in (25.4 mm) apart; splice inserted 6 in (152.4 mm) into first rail; 20 in-lb converted to 2.3 Nm (manual pp. 3, 4).",
+      "source_ids": [
+        "ironridge_flush_mount_manual"
+      ]
+    },
+    {
+      "id": "rail_expansion_joint_nut",
+      "name": "Expansion joint nuts (1 in gap between rails)",
+      "type": "connector_splice",
+      "quantity": {
+        "value": 0,
+        "per": "rail",
+        "note": "Count not stated in sources. 0 means unknown, not zero."
+      },
+      "status": "unverified",
+      "torque_nm": 9.0,
+      "dimensions_mm": {
+        "rail_gap": 25.4
+      },
+      "purpose": "Expansion joint between rails with grounding strap",
+      "note": "80 in-lb converted to 9.0 Nm; grounding strap 3/8 in (9.5 mm) from rail end (manual pp. 3, 7). Quantity not stated.",
+      "source_ids": [
+        "ironridge_flush_mount_manual"
+      ]
+    },
+    {
+      "id": "clamp_mid_ironridge_ufo",
+      "name": "Mid clamp (IronRidge UFO)",
+      "type": "clamp_mid",
+      "quantity": {
+        "value": 0,
+        "per": "module",
+        "note": "Count not stated in sources. 0 means unknown, not zero."
+      },
+      "status": "unverified",
+      "torque_nm": 9.0,
+      "purpose": "Holds module frame between rails",
+      "note": "80 in-lb converted to 9.0 Nm (manual pp. 3, 5). Clamp height range not stated; compatible frames 30 to 50 mm across makes (pp. 11 to 13).",
+      "source_ids": [
+        "ironridge_flush_mount_manual"
+      ]
+    },
+    {
+      "id": "clamp_end_ironridge_ufo",
+      "name": "End clamp (IronRidge UFO)",
+      "type": "clamp_end",
+      "quantity": {
+        "value": 0,
+        "per": "module",
+        "note": "Count not stated in sources. 0 means unknown, not zero."
+      },
+      "status": "unverified",
+      "torque_nm": 9.0,
+      "purpose": "Holds module frame at rail end",
+      "note": "80 in-lb converted to 9.0 Nm (manual pp. 3, 5). Clamp height range not stated.",
+      "source_ids": [
+        "ironridge_flush_mount_manual"
+      ]
+    },
+    {
+      "id": "grounding_lug_hex_nut",
+      "name": "Grounding lug hex nut",
+      "type": "grounding",
+      "quantity": {
+        "value": 0,
+        "per": "unit",
+        "note": "Count not stated in sources. 0 means unknown, not zero."
+      },
+      "status": "unverified",
+      "torque_nm": 9.0,
+      "purpose": "Bonds the grounding conductor to the rail",
+      "note": "80 in-lb converted to 9.0 Nm (text). Diagram on p. 5 labels 84 in-lb; the text value is used.",
+      "source_ids": [
+        "ironridge_flush_mount_manual"
+      ]
+    },
+    {
+      "id": "grounding_lug_terminal_screw",
+      "name": "Grounding lug terminal screw",
+      "type": "grounding",
+      "quantity": {
+        "value": 0,
+        "per": "unit",
+        "note": "Count not stated in sources. 0 means unknown, not zero."
+      },
+      "status": "unverified",
+      "torque_nm": 2.3,
+      "purpose": "Clamps the grounding conductor in the lug",
+      "note": "20 in-lb converted to 2.3 Nm (manual pp. 3, 5).",
+      "source_ids": [
+        "ironridge_flush_mount_manual"
+      ]
+    },
+    {
+      "id": "grounding_conductor_copper_10awg",
+      "name": "Equipment grounding conductor, copper, minimum 10 AWG",
+      "type": "grounding",
+      "quantity": {
+        "value": 0,
+        "per": "unit",
+        "note": "Count not stated in sources. 0 means unknown, not zero."
+      },
+      "status": "unverified",
+      "purpose": "Earthing conductor from lugs to earth",
+      "note": "Minimum 10 AWG solid or stranded copper (manual p. 5). Length not stated.",
+      "source_ids": [
+        "ironridge_flush_mount_manual"
+      ]
+    },
+    {
+      "id": "grounding_pitched_not_found",
+      "name": "Grounding of L-foot and lag bolt (other than lug)",
+      "type": "grounding",
+      "quantity": {
+        "value": 0,
+        "per": "unit",
+        "note": "Count not stated in sources. 0 means unknown, not zero."
+      },
+      "status": "not_found",
+      "purpose": "Bonding of lag or L-foot where no lug is used",
+      "note": "Not found in IronRidge manual reviewed."
+    }
+  ],
+  "grounding_bonding": "Grounding lug with hex nut 80 in-lb (9.0 Nm) and terminal screw 20 in-lb (2.3 Nm); copper conductor minimum 10 AWG (IronRidge manual). Bonded splice and expansion joint values listed below.",
+  "installation_notes": [
+    "Lag bolts must be fully seated (IronRidge manual). Pilot hole 1/4 in (6.35 mm) for FlashFoot2, All Tile Hook and Knockout Tile."
+  ],
+  "status": "unverified",
+  "unverified_items": [
+    "Lag screw diameter and length (not stated in IronRidge manual).",
+    "Lag embedment depth into rafter (not stated).",
+    "Rail and L-foot material, alloy and finish (not stated).",
+    "Rail cross-section dimensions (not stated; K2 MiniRail 60 Set cross-section not found).",
+    "Stainless grade or property class for L-foot hardware (not stated).",
+    "Rafter spacing, L-foot spacing and rail spacing (not stated).",
+    "Quantities per support, per module and per rail (not stated; 0 means unknown).",
+    "Torque values are in-lb in the manual; Nm values are converted (x 0.11298). The grounding lug torque is 80 in-lb in the text and 84 in-lb in a diagram; 80 in-lb used.",
+    "Module frame height compatibility: 30 to 50 mm across listed makes (pp. 11 to 13); clamp own range not stated.",
+    "Microinverter kit nut torque and other IronRidge product lines (not included)."
+  ],
+  "sources": [
+    {
+      "id": "ironridge_flush_mount_manual",
+      "title": "IronRidge Flush Mount Installation Manual v2.0",
+      "publisher": "IronRidge",
+      "url": "https://cdn.shopify.com/s/files/1/0079/6003/5417/files/IronRidge_Flush_Mount_Installation_Manual.pdf",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

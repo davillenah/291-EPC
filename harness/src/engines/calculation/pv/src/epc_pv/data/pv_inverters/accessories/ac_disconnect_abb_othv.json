@@ -1,0 +1,120 @@
+{
+  "schema_version": "1.0",
+  "id": "ac_disconnect_abb_othv",
+  "name": {
+    "en": "AC disconnect switch 800-1000 V AC, 160-2500 A (ABB OTHV family)",
+    "es": "Seccionador CA 800-1000 V, 160-2500 A (familia ABB OTHV)"
+  },
+  "kind": "accessory",
+  "description": {
+    "en": "Manual AC switch-disconnector family for 800 V and 1000 V AC, IEC 60947-3 (UL 98C also), 3 or 4 poles, padlockable in OFF position.",
+    "es": "Familia de seccionadores manuales CA para 800 V y 1000 V, IEC 60947-3 (también UL 98C), 3 o 4 polos, candadeable en posición OFF."
+  },
+  "typical_use": "Inverter-side AC isolation at the LV or MV side of a skid.",
+  "status": "unverified",
+  "parts": [
+    {
+      "id": "sw",
+      "name": "AC switch-disconnector (3P or 4P)",
+      "name_es": "Seccionador CA (3P o 4P)",
+      "type": "breaker",
+      "status": "unverified",
+      "ratings": {
+        "ue_ac_v": [
+          800,
+          1000
+        ],
+        "in_a_iec": [
+          160,
+          2500
+        ],
+        "in_a_ul98c": [
+          200,
+          800
+        ],
+        "poles": [
+          3,
+          4
+        ]
+      },
+      "standard": "IEC 60947-3; UL 98C",
+      "source_ids": [
+        "S13"
+      ]
+    },
+    {
+      "id": "lock",
+      "name": "Padlock provision in OFF",
+      "name_es": "Previsión para candado en OFF",
+      "type": "other",
+      "status": "unverified",
+      "quantity_per_module": 1,
+      "ratings": {
+        "padlockable": true
+      },
+      "source_ids": [
+        "S13"
+      ]
+    },
+    {
+      "id": "enc",
+      "name": "Enclosure (not found)",
+      "name_es": "Envolvente (no encontrada)",
+      "type": "enclosure",
+      "status": "not_found",
+      "geometry_hint": "Enclosure type not found",
+      "source_ids": [
+        "S13"
+      ]
+    }
+  ],
+  "geometry": {
+    "description": "Dimensions and IP not found; no envelope.",
+    "coordinate_system": "x along module long side, y along short side, z up through thickness; origin at module front-left corner; mm",
+    "elements": []
+  },
+  "mechanical_ratings": {
+    "standard": [
+      "IEC 60947-3",
+      "UL 98C"
+    ]
+  },
+  "unverified_items": [
+    "Specific model and rating per model not found",
+    "Dimensions, weight, IP and enclosure not found",
+    "Terminal and gland provisions not found"
+  ],
+  "sources": [
+    {
+      "id": "S13",
+      "title": "OTHV disconnectors (product page)",
+      "publisher": "ABB",
+      "url": "https://electrification.us.abb.com/products/switches-disconnects/othv-disconnects",
+      "accessed": "2026-11-20"
+    }
+  ],
+  "electrical_ratings": {
+    "ue_ac_v": [
+      800,
+      1000
+    ],
+    "in_a_iec_range": [
+      160,
+      2500
+    ],
+    "in_a_ul_range": [
+      200,
+      800
+    ],
+    "poles": [
+      3,
+      4
+    ],
+    "standard": "IEC 60947-3, UL 98C"
+  },
+  "mechanical": {
+    "external_dimensions_mm": "not_found",
+    "weight_kg": "not_found",
+    "ip": "not_found"
+  }
+}

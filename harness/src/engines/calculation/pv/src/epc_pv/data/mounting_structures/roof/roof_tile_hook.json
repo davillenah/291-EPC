@@ -1,0 +1,471 @@
+{
+  "schema_version": "1.0",
+  "id": "roof_tile_hook",
+  "name": {
+    "en": "Tile roof hooks with adjustable rail profile (Schletter ProLine / Rapid2+ type)",
+    "es": "Ganchos para cubierta de teja con perfil de riel regulable (tipo Schletter ProLine / Rapid2+)"
+  },
+  "family": "roof",
+  "category": "tile_hook_adjustable",
+  "description": {
+    "en": "Roof hooks sit under the tile courses and are screwed to the rafter through a base plate. The hook bar carries the rail profile (ECOA, Rapida or Rapida universal) whose height is adjusted to the tile surface. Sealing tape or sealing piece is placed under the base plate. Slate variant (Rapid2+ for slate) uses a slate plate instead of tile sealing. Reference family: Schletter ProLine and Rapid2+ roof hooks.",
+    "es": "Los ganchos se sitúan bajo las hileras de teja y se atornillan a la cabriada mediante una placa base. La barra del gancho sostiene el perfil de riel (ECOA, Rapida o Rapida universal), cuya altura se ajusta a la superficie de la teja. Una cinta o pieza de estanqueidad se coloca bajo la placa base. La variante para pizarra (Rapid2+ para pizarra) usa una placa de pizarra en lugar de la estanqueidad de teja. Familia de referencia: ganchos ProLine y Rapid2+ de Schletter."
+  },
+  "typical_use": "Pitched tile roofs with timber rafters; attachment through the tile, to the rafter, with the rail above the tile surface.",
+  "applicable_standards": [
+    "EN 1991-1-3 (snow loads, designer)",
+    "EN 1991-1-4 (wind actions, designer)",
+    "EN 1995-1-1 (timber design, designer; not verified in this research)",
+    "ISO 898-1:2013 (carbon steel fasteners, reference)",
+    "ISO 3506-1:2020 (stainless steel fasteners, reference)"
+  ],
+  "materials": [
+    {
+      "component": "Roof hook body and bracket",
+      "material": "Not stated",
+      "finish": "Not stated",
+      "status": "not_found",
+      "source_ids": []
+    },
+    {
+      "component": "Base plate",
+      "material": "Not stated",
+      "finish": "Not stated",
+      "status": "not_found",
+      "source_ids": []
+    },
+    {
+      "component": "Rail profiles (ECOA, Rapida, Rapida universal)",
+      "material": "Not stated in the sources reviewed (aluminium assumed for rail profile; to be confirmed)",
+      "finish": "Not stated",
+      "status": "not_found",
+      "source_ids": []
+    },
+    {
+      "component": "Rafter screws (M8 wood screw or 2 x 8 mm / 3 x 6 mm wood screws for slate)",
+      "material": "Not stated",
+      "finish": "Not stated",
+      "status": "not_found",
+      "source_ids": [
+        "schletter_proline",
+        "schletter_rapid2plus_slate"
+      ]
+    },
+    {
+      "component": "Tile sealing tape / sealing piece",
+      "material": "Not stated (EPDM or butyl not confirmed)",
+      "finish": "",
+      "status": "not_found",
+      "source_ids": [
+        "schletter_proline",
+        "schletter_rapid2plus_slate"
+      ]
+    },
+    {
+      "component": "Slate plate and protective foil (slate variant)",
+      "material": "Not stated",
+      "finish": "",
+      "status": "not_found",
+      "source_ids": [
+        "schletter_rapid2plus_slate"
+      ]
+    },
+    {
+      "component": "Grounding parts",
+      "material": "Not stated",
+      "finish": "",
+      "status": "not_found",
+      "source_ids": []
+    }
+  ],
+  "profiles": [
+    {
+      "id": "proline_ecoa",
+      "name": "ProLine rail profile ECOA",
+      "section_type": "rail_custom",
+      "dimensions_mm": {},
+      "material": "Not stated",
+      "status": "unverified",
+      "source_ids": [
+        "schletter_proline"
+      ]
+    },
+    {
+      "id": "proline_rapida",
+      "name": "ProLine rail profile Rapida",
+      "section_type": "rail_custom",
+      "dimensions_mm": {},
+      "material": "Not stated",
+      "status": "unverified",
+      "source_ids": [
+        "schletter_proline"
+      ]
+    },
+    {
+      "id": "proline_rapida_universal",
+      "name": "ProLine rail profile Rapida universal",
+      "section_type": "rail_custom",
+      "dimensions_mm": {},
+      "material": "Not stated",
+      "status": "unverified",
+      "source_ids": [
+        "schletter_proline"
+      ]
+    }
+  ],
+  "geometry": {
+    "description": "Hook under the tile course, base plate fixed to the rafter, rail above the tile. Schematic only: hook spacing per rafter and rail spacing are not stated in the sources.",
+    "coordinate_system": "x along module row, y up-slope/north-south horizontal, z up; origin at ground/roof contact of first support; mm and degrees",
+    "elements": [],
+    "reference_layout": {
+      "note": "Hook spacing not stated. Limits from ProLine guide: maximum overhang 43 mm; minimum clearance between hook bracket and tile 5 mm; minimum clearance around the hook 5 mm; base plate edge distance 4 x screw diameter."
+    }
+  },
+  "accessories": [
+    {
+      "id": "hook_roof_proline",
+      "name": "ProLine roof hook (lower bracket with front and rear nibs, pre-assembled screw)",
+      "type": "hook",
+      "material": "Not stated",
+      "grade": "Not stated",
+      "standard": "Not stated",
+      "thread": "",
+      "dimensions_mm": {
+        "min_clearance_to_tile": 5,
+        "max_overhang": 43
+      },
+      "torque_nm": 15,
+      "quantity": {
+        "value": 0,
+        "per": "support",
+        "note": "Count per module or per row not stated. torque 15 Nm for M8 screw connections (ProLine guide); value 0 for quantity = unknown."
+      },
+      "purpose": "Carries the rail profile above the tile. Minimum 5 mm clearance from hook bracket to tile below; maximum overhang 43 mm.",
+      "status": "unverified",
+      "source_ids": [
+        "schletter_proline"
+      ],
+      "note": "Torque 15 Nm for M8 screw connections (ProLine guide, tightening torque section). Max overhang 43 mm; min clearance 5 mm (ProLine guide steps 1, 3, 4)."
+    },
+    {
+      "id": "hook_roof_rapid2plus_slate",
+      "name": "Roof hook Rapid2+ for slate",
+      "type": "hook",
+      "material": "Not stated",
+      "grade": "",
+      "standard": "",
+      "thread": "",
+      "dimensions_mm": {
+        "min_clearance_to_tile": 5
+      },
+      "torque_nm": 15,
+      "quantity": {
+        "value": 0,
+        "per": "support",
+        "note": "Count not stated. Torque 15 Nm for M8 bolted connections (slate guide)."
+      },
+      "purpose": "Hook for slate roofs, minimum 5 mm clearance from the hook bar to the slate below.",
+      "status": "unverified",
+      "source_ids": [
+        "schletter_rapid2plus_slate"
+      ]
+    },
+    {
+      "id": "base_plate_proline",
+      "name": "Base plate (ProLine roof hook)",
+      "type": "base_plate",
+      "material": "Not stated",
+      "grade": "",
+      "standard": "",
+      "thread": "",
+      "dimensions_mm": {},
+      "torque_nm": 0,
+      "quantity": {
+        "value": 1,
+        "per": "support",
+        "note": "One base plate per roof hook (ProLine guide, step 3)."
+      },
+      "purpose": "Spreads the rafter fixing load under the hook.",
+      "status": "unverified",
+      "source_ids": [
+        "schletter_proline"
+      ],
+      "note": "Base plate fixed with one M8 wood screw per roof hook. Edge distance 4 x screw diameter (ProLine guide, step 3)."
+    },
+    {
+      "id": "spacer_shim_proline",
+      "name": "Spacer and shim (ProLine, used if necessary)",
+      "type": "other",
+      "material": "Not stated",
+      "grade": "",
+      "standard": "",
+      "thread": "",
+      "dimensions_mm": {},
+      "torque_nm": 0,
+      "quantity": {
+        "value": 0,
+        "per": "support",
+        "note": "Used only if required; count not stated."
+      },
+      "purpose": "Packing for tile geometry or uneven rafter level.",
+      "status": "unverified",
+      "source_ids": [
+        "schletter_proline"
+      ]
+    },
+    {
+      "id": "sealing_tape_tile_proline",
+      "name": "Sealing tape for roof tiles (ProLine)",
+      "type": "gasket",
+      "material": "Not stated (EPDM or butyl not confirmed)",
+      "grade": "",
+      "standard": "",
+      "thread": "",
+      "dimensions_mm": {},
+      "torque_nm": 0,
+      "quantity": {
+        "value": 0,
+        "per": "support",
+        "note": "One per hook (structural); count not stated."
+      },
+      "purpose": "Seals the base plate against the roof covering.",
+      "status": "unverified",
+      "source_ids": [
+        "schletter_proline"
+      ]
+    },
+    {
+      "id": "sealing_piece_rapid2plus_slate",
+      "name": "Sealing piece (cut from roll) and elastic connection apron for slate plate",
+      "type": "gasket",
+      "material": "Not stated",
+      "grade": "",
+      "standard": "",
+      "thread": "",
+      "dimensions_mm": {},
+      "torque_nm": 0,
+      "quantity": {
+        "value": 0,
+        "per": "support",
+        "note": "Count not stated."
+      },
+      "purpose": "Seals the hook fixing on slate roofs.",
+      "status": "unverified",
+      "source_ids": [
+        "schletter_rapid2plus_slate"
+      ]
+    },
+    {
+      "id": "slate_plate_rapid2plus",
+      "name": "Slate plate for Rapid2+ (with protective foil on glue strip)",
+      "type": "base_plate",
+      "material": "Not stated",
+      "grade": "",
+      "standard": "",
+      "thread": "",
+      "dimensions_mm": {},
+      "torque_nm": 0,
+      "quantity": {
+        "value": 0,
+        "per": "support",
+        "note": "One per hook on slate; count not stated."
+      },
+      "purpose": "Plate for slate roofs. Top fixing with nails (size and grade not stated).",
+      "status": "unverified",
+      "source_ids": [
+        "schletter_rapid2plus_slate"
+      ]
+    },
+    {
+      "id": "screw_wood_m8_proline",
+      "name": "M8 wood screw (fixes base plate to rafter)",
+      "type": "screw",
+      "material": "Not stated",
+      "grade": "Not stated",
+      "standard": "",
+      "thread": "M8",
+      "dimensions_mm": {
+        "nominal_diameter": 8
+      },
+      "torque_nm": 0,
+      "quantity": {
+        "value": 1,
+        "per": "support",
+        "note": "One per roof hook (ProLine guide). Length not stated; must meet local standards for rafter screw."
+      },
+      "purpose": "Fixes base plate to timber rafter. Wood-screw torque not stated (depth stop exception noted).",
+      "geometry_hint": "cylinder d=8 l=not_stated",
+      "status": "unverified",
+      "source_ids": [
+        "schletter_proline"
+      ]
+    },
+    {
+      "id": "screw_wood_slate_rapid2plus",
+      "name": "Wood screw 8 mm (2 per hook) or 6 mm (3 per hook) for Rapid2+ slate",
+      "type": "screw",
+      "material": "Not stated",
+      "grade": "Not stated",
+      "standard": "",
+      "thread": "M8 or M6",
+      "dimensions_mm": {
+        "nominal_diameter": 8,
+        "min_thread_engagement_in_rafter": 40
+      },
+      "torque_nm": 0,
+      "quantity": {
+        "value": 2,
+        "per": "support",
+        "note": "2 x 8 mm or 3 x 6 mm screws per hook (slate guide). Value shows 2 for the 8 mm option; 6 mm option is 3 per hook."
+      },
+      "purpose": "Fixes slate hook to rafter. Minimum 40 mm thread engagement in rafter (slate guide). Tight but not overtightened.",
+      "status": "unverified",
+      "source_ids": [
+        "schletter_rapid2plus_slate"
+      ]
+    },
+    {
+      "id": "screw_preassembled_proline_roofhook",
+      "name": "Pre-assembled screw on roof hook (ProLine)",
+      "type": "screw",
+      "material": "Not stated",
+      "grade": "Not stated",
+      "standard": "",
+      "thread": "",
+      "dimensions_mm": {},
+      "torque_nm": 0,
+      "quantity": {
+        "value": 0,
+        "per": "support",
+        "note": "Count per hook not stated separately. Torque not stated for this screw (15 Nm applies to general M8 screw connections in the guide)."
+      },
+      "purpose": "Factory-fitted screw on the hook.",
+      "status": "unverified",
+      "source_ids": [
+        "schletter_proline"
+      ]
+    },
+    {
+      "id": "nut_m10_ecoa",
+      "name": "M10 nut (ECOA profile connection)",
+      "type": "nut",
+      "material": "Not stated",
+      "grade": "Not stated",
+      "standard": "",
+      "thread": "M10",
+      "dimensions_mm": {},
+      "torque_nm": 0,
+      "quantity": {
+        "value": 0,
+        "per": "support",
+        "note": "Count not stated. Torque not stated."
+      },
+      "purpose": "Connection of hook to ECOA profile.",
+      "status": "unverified",
+      "source_ids": [
+        "schletter_proline"
+      ],
+      "note": "M10 nuts for profile fixing on ECOA (ProLine guide, step 6). Torque not stated for M10."
+    },
+    {
+      "id": "bolt_square_head_ecoa",
+      "name": "Square head screw (ECOA profile)",
+      "type": "bolt",
+      "material": "Not stated",
+      "grade": "Not stated",
+      "standard": "",
+      "thread": "",
+      "dimensions_mm": {},
+      "torque_nm": 0,
+      "quantity": {
+        "value": 0,
+        "per": "support",
+        "note": "Size and count not stated."
+      },
+      "purpose": "Fixes ECOA profile to hook. Size and grade not stated.",
+      "status": "not_found",
+      "source_ids": [
+        "schletter_proline"
+      ]
+    },
+    {
+      "id": "grounding_tile_hook_not_found",
+      "name": "Grounding and bonding parts for tile hook system",
+      "type": "grounding",
+      "material": "",
+      "grade": "",
+      "standard": "",
+      "thread": "",
+      "dimensions_mm": {},
+      "torque_nm": 0,
+      "quantity": {
+        "value": 0,
+        "per": "module",
+        "note": "Not found in sources."
+      },
+      "purpose": "Grounding hardware not stated in the ProLine or Rapid2+ slate guides. Placeholder, do not use the value.",
+      "status": "not_found",
+      "source_ids": []
+    },
+    {
+      "id": "screw_wood_m8_base_plate_proline",
+      "name": "M8 wood screw fixing base plate to rafter (ProLine)",
+      "type": "screw",
+      "material": "Not stated",
+      "grade": "Not stated",
+      "standard": "Not stated",
+      "thread": "M8",
+      "dimensions_mm": {
+        "nominal_diameter": 8
+      },
+      "torque_nm": 15,
+      "quantity": {
+        "value": 1,
+        "per": "support",
+        "note": "One per roof hook (ProLine guide step 3). Length to local standards (not stated in guide)."
+      },
+      "purpose": "Fixes the base plate to the rafter. Driven with a Torx T40 bit (ProLine guide, tools needed).",
+      "geometry_hint": "cylinder d=8 l=not_stated",
+      "status": "unverified",
+      "source_ids": [
+        "schletter_proline"
+      ]
+    }
+  ],
+  "grounding_bonding": "Grounding parts are not stated in the ProLine or Rapid2+ slate installation guides reviewed. Bonding must be obtained from the manufacturer or designed per the local standard.",
+  "installation_notes": [
+    "Maintain at least 5 mm clearance between hook bracket and tile below (ProLine and slate guides).",
+    "Maximum overhang of the hook 43 mm (ProLine guide).",
+    "M8 bolted connections tightened to 15 Nm (ProLine and slate guides).",
+    "For slate: 2 x 8 mm or 3 x 6 mm wood screws per hook, at least 40 mm thread in rafter.",
+    "Rafter screw length for ProLine not stated in mm; must meet local standards.",
+    "Rapid attachment height adjustment range not stated."
+  ],
+  "status": "unverified",
+  "unverified_items": [
+    "Materials and finishes of hook, base plate and rail parts (not stated in ProLine guide).",
+    "Bolt property class and stainless grade: not stated (no A2 or A4 grade in guide).",
+    "Hook spacing per rafter, rail spacing and maximum span (not stated).",
+    "Adjustment range in mm for hook height (not stated).",
+    "Rafter screw length and minimum embedment (guide refers to local standards).",
+    "Quantities per module and per row (not stated; 0 means unknown).",
+    "Grounding and bonding for tile hooks (no statement in ProLine guide).",
+    "Slate hook Rapid2+ torque: 15 Nm M8 is cited from the slate guide and not re-checked in this pass."
+  ],
+  "sources": [
+    {
+      "id": "schletter_proline",
+      "title": "ProLine roof hook mounting instructions (EN, 202102 V2)",
+      "publisher": "Schletter (distributed by Segen)",
+      "url": "https://portal.segen.co.uk/reseller/docs/ProLine_Roof_Hook_-_Mounting_instruction_EN_202102_V2.asd.pdf",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "schletter_rapid2plus_slate",
+      "title": "Roof hook Rapid2+ for slate mounting instructions (V1, I400317GB)",
+      "publisher": "Schletter (distributed by Segen)",
+      "url": "https://portal.segen.co.uk/reseller/docs/Roof_hook_Rapid22B_Slate_-_mounting_instructions_V1_I400317GB.pdf",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

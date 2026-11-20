@@ -1,0 +1,309 @@
+{
+  "schema_version": "1.0",
+  "id": "aiko_neostar_3pplus60_1954x1134x30",
+  "name": {
+    "en": "AIKO Neostar 3P+60 class (AIKO-A-MCE60Dw), 1954 x 1134 x 30 mm, 120 cells",
+    "es": "Clase AIKO Neostar 3P+60 (AIKO-A-MCE60Dw), 1954 x 1134 x 30 mm, 120 celdas"
+  },
+  "kind": "format",
+  "description": {
+    "en": "AIKO Neostar 3P+60 AIKO-A-MCE60Dw dual-glass datasheet: 1954 x 1134 x 30 mm, 27.1 kg (+-3 %), 120 cells (6 x 20), 2.0 mm + 2.0 mm coated semi-tempered glass, black anodized aluminium frame, IP68 junction box with 3 bypass diodes, 4 mm2 IEC / 12 AWG UL cable +-1200 mm, Staubli MC4 EVO2 connector.",
+    "es": "Ficha AIKO Neostar 3P+60 AIKO-A-MCE60Dw de doble vidrio: 1954 x 1134 x 30 mm, 27,1 kg (+-3 %), 120 celdas (6 x 20), vidrio 2,0 mm + 2,0 mm recubierto semitemplado, marco de aluminio anodizado negro, caja IP68 con 3 diodos de bypass, cable 4 mm2 IEC / 12 AWG UL +-1200 mm, conector Staubli MC4 EVO2."
+  },
+  "typical_use": "Dual-glass 60-cell class module at 1954 mm length.",
+  "cell": {
+    "type": "N-type (not stated)",
+    "n_cells_typical": [
+      120
+    ],
+    "status": "unverified",
+    "source_ids": [
+      "S19"
+    ]
+  },
+  "layers": [
+    {
+      "id": "front_glass",
+      "name": "Front glass",
+      "material": "2.0 mm coated semi-tempered glass",
+      "thickness_mm": 2.0,
+      "status": "unverified",
+      "source_ids": [
+        "S19"
+      ]
+    },
+    {
+      "id": "encapsulant_front",
+      "name": "Encapsulant front",
+      "material": "not stated",
+      "status": "not_found",
+      "source_ids": []
+    },
+    {
+      "id": "cell_layer",
+      "name": "Cell layer",
+      "material": "120 cells printed as 6 x 20",
+      "status": "unverified",
+      "source_ids": [
+        "S19"
+      ]
+    },
+    {
+      "id": "encapsulant_back",
+      "name": "Encapsulant back",
+      "material": "not stated",
+      "status": "not_found",
+      "source_ids": []
+    },
+    {
+      "id": "rear_layer",
+      "name": "Rear glass",
+      "material": "2.0 mm coated semi-tempered glass (dual glass)",
+      "thickness_mm": 2.0,
+      "status": "unverified",
+      "source_ids": [
+        "S19"
+      ]
+    }
+  ],
+  "parts": [
+    {
+      "id": "module_body",
+      "name": "Laminate outline (outline for 2D/3D)",
+      "type": "other",
+      "status": "unverified",
+      "dimensions_mm": {
+        "length": 1954,
+        "width": 1134,
+        "thickness": 30
+      },
+      "source_ids": [
+        "S19"
+      ]
+    },
+    {
+      "id": "frame_profile",
+      "name": "Frame: black anodized aluminium (section not stated)",
+      "type": "frame_profile",
+      "status": "unverified",
+      "material": "black anodized aluminium",
+      "geometry_hint": "section not stated; see frame_profile_anodized_aluminium family",
+      "source_ids": [
+        "S19"
+      ]
+    },
+    {
+      "id": "junction_box",
+      "name": "Junction box: IP68, three bypass diodes",
+      "type": "junction_box",
+      "status": "unverified",
+      "ratings": {
+        "ip": "IP68",
+        "bypass_diodes": 3,
+        "diode_rating": "not_found"
+      },
+      "quantity_per_module": 1,
+      "source_ids": [
+        "S19"
+      ]
+    },
+    {
+      "id": "bypass_diode_x3",
+      "name": "Bypass diodes, three",
+      "type": "bypass_diode",
+      "status": "unverified",
+      "quantity_per_module": 3,
+      "ratings": {
+        "current_a": "not_found",
+        "voltage_v": "not_found",
+        "type": "not_found"
+      },
+      "source_ids": [
+        "S19"
+      ]
+    },
+    {
+      "id": "pv_cable",
+      "name": "PV output cable: 4 mm2 (IEC), 12 AWG (UL)",
+      "type": "cable",
+      "status": "unverified",
+      "ratings": {
+        "cross_section_mm2": 4,
+        "length_plus_mm": 1200,
+        "length_minus_mm": 1200,
+        "length_note": "+-1200 mm, customizable, as printed"
+      },
+      "quantity_per_module": 2,
+      "source_ids": [
+        "S19"
+      ]
+    },
+    {
+      "id": "cell_string",
+      "name": "Cells: 120 printed as 6 x 20",
+      "type": "cell_string",
+      "status": "unverified",
+      "quantity_per_module": 120,
+      "source_ids": [
+        "S19"
+      ]
+    },
+    {
+      "id": "glass_front",
+      "name": "Front glass 2.0 mm coated semi-tempered",
+      "type": "glass",
+      "status": "unverified",
+      "dimensions_mm": {
+        "thickness": 2.0
+      },
+      "source_ids": [
+        "S19"
+      ]
+    },
+    {
+      "id": "glass_rear",
+      "name": "Rear glass 2.0 mm coated semi-tempered",
+      "type": "glass",
+      "status": "unverified",
+      "dimensions_mm": {
+        "thickness": 2.0
+      },
+      "source_ids": [
+        "S19"
+      ]
+    },
+    {
+      "id": "mounting_holes",
+      "name": "Mounting holes",
+      "type": "mounting_hole",
+      "status": "not_found",
+      "source_ids": [
+        "S19"
+      ],
+      "geometry_hint": "not stated in the datasheet"
+    },
+    {
+      "id": "grounding_holes",
+      "name": "Grounding holes",
+      "type": "grounding_hole",
+      "status": "not_found",
+      "source_ids": [
+        "S19"
+      ]
+    },
+    {
+      "id": "drain_holes",
+      "name": "Drainage holes",
+      "type": "drain_hole",
+      "status": "not_found",
+      "source_ids": [
+        "S19"
+      ]
+    },
+    {
+      "id": "connector",
+      "name": "PV connector: Staubli MC4 EVO2 series",
+      "type": "connector",
+      "status": "unverified",
+      "ratings": {
+        "type_printed": "Staubli Electrical Connectors AG - MC4 EVO2 Series"
+      },
+      "source_ids": [
+        "S19"
+      ]
+    },
+    {
+      "id": "busbar_ribbon",
+      "name": "Busbars / ribbons",
+      "type": "busbar_ribbon",
+      "status": "not_found",
+      "source_ids": []
+    },
+    {
+      "id": "sealant_edge",
+      "name": "Edge sealant",
+      "type": "sealant",
+      "status": "not_found",
+      "source_ids": []
+    },
+    {
+      "id": "label_nameplate",
+      "name": "Nameplate label",
+      "type": "label",
+      "status": "not_found",
+      "source_ids": []
+    },
+    {
+      "id": "corner_key",
+      "name": "Corner keys",
+      "type": "corner_key",
+      "status": "not_found",
+      "source_ids": []
+    }
+  ],
+  "geometry": {
+    "description": "Outline from datasheet dimensions. Clamp zones and holes are not stated in the datasheet.",
+    "module_dimensions_mm": [
+      1954,
+      1134,
+      30
+    ],
+    "clamping_zones_mm": [
+      {
+        "edge": "not stated",
+        "status": "not_found",
+        "note": "clamp zones not stated in the datasheet"
+      }
+    ],
+    "elements": [
+      {
+        "id": "outline",
+        "kind": "laminate_outline",
+        "part_id": "module_body",
+        "position_mm": [
+          0,
+          0,
+          0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          1954,
+          1134,
+          30
+        ],
+        "status": "unverified"
+      }
+    ]
+  },
+  "mechanical_ratings": {
+    "weight_kg": 27.1,
+    "weight_tolerance_pct": 3,
+    "static_load_front_pa": 5400,
+    "static_load_rear_pa": 2400,
+    "junction_box_ip": "IP68",
+    "source_ids": [
+      "S19"
+    ]
+  },
+  "status": "unverified",
+  "unverified_items": [
+    "Cell technology (N-type) not stated; only the cell layout is printed.",
+    "Bypass diode ratings not stated.",
+    "Mounting, grounding and drainage holes not stated.",
+    "Connector rating not stated.",
+    "Weight tolerance +-3 % as printed."
+  ],
+  "sources": [
+    {
+      "id": "S19",
+      "title": "AIKO Neostar 3P+60 AIKO-A-MCE60Dw dual glass datasheet (1954 x 1134 x 30 mm)",
+      "publisher": "AIKO (copy hosted by EnergyMatters)",
+      "url": "https://www.energymatters.com.au/wp-content/uploads/2026/10/aiko-neostar-3pplus60-dual-glass-datasheet.pdf",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

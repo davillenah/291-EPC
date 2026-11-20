@@ -1,0 +1,283 @@
+{
+  "schema_version": "1.0",
+  "id": "jinko_60hl4r_1955x1134x30",
+  "name": {
+    "en": "JinkoSolar 60HL4R class, 1955 x 1134 x 30 mm, 120 half cells",
+    "es": "Clase JinkoSolar 60HL4R, 1955 x 1134 x 30 mm, 120 celdas partidas"
+  },
+  "kind": "format",
+  "description": {
+    "en": "JinkoSolar JKM475-495N-60HL4R-V datasheet (AU CEC version): 1955 x 1134 x 30 mm, 24 kg, 120 cells printed as 2 x 60, N-type monocrystalline, anodized aluminium alloy frame, IP68 junction box, 4.0 mm2 cable with 400 mm (+) / 200 mm (-) or customized length, Staubli MC4-EVO2 for 1500 V.",
+    "es": "Ficha JinkoSolar JKM475-495N-60HL4R-V (version AU CEC): 1955 x 1134 x 30 mm, 24 kg, 120 celdas impresas como 2 x 60, monocristalino tipo N, marco de aleacion de aluminio anodizado, caja IP68, cable de 4,0 mm2 con 400 mm (+) / 200 mm (-) o longitud a medida, Staubli MC4-EVO2 para 1500 V."
+  },
+  "typical_use": "60-cell class module at 1955 mm length (not the 1650-1700 mm class).",
+  "cell": {
+    "type": "N-type monocrystalline",
+    "n_cells_typical": [
+      120
+    ],
+    "status": "unverified",
+    "source_ids": [
+      "S18"
+    ]
+  },
+  "layers": [
+    {
+      "id": "front_glass",
+      "name": "Front glass",
+      "material": "not stated",
+      "status": "not_found",
+      "source_ids": []
+    },
+    {
+      "id": "encapsulant_front",
+      "name": "Encapsulant front",
+      "material": "not stated",
+      "status": "not_found",
+      "source_ids": []
+    },
+    {
+      "id": "cell_layer",
+      "name": "Cell layer",
+      "material": "N-type monocrystalline, 120 cells printed as 2 x 60",
+      "status": "unverified",
+      "source_ids": [
+        "S18"
+      ]
+    },
+    {
+      "id": "encapsulant_back",
+      "name": "Encapsulant back",
+      "material": "not stated",
+      "status": "not_found",
+      "source_ids": []
+    },
+    {
+      "id": "rear_layer",
+      "name": "Rear layer",
+      "material": "not stated",
+      "status": "not_found",
+      "source_ids": []
+    }
+  ],
+  "parts": [
+    {
+      "id": "module_body",
+      "name": "Laminate outline (outline for 2D/3D)",
+      "type": "other",
+      "status": "unverified",
+      "dimensions_mm": {
+        "length": 1955,
+        "width": 1134,
+        "thickness": 30
+      },
+      "source_ids": [
+        "S18"
+      ]
+    },
+    {
+      "id": "frame_profile",
+      "name": "Frame: anodized aluminium alloy (section not stated)",
+      "type": "frame_profile",
+      "status": "unverified",
+      "material": "anodized aluminium alloy",
+      "geometry_hint": "section not stated; see frame_profile_anodized_aluminium family",
+      "source_ids": [
+        "S18"
+      ]
+    },
+    {
+      "id": "junction_box",
+      "name": "Junction box: IP68 rated",
+      "type": "junction_box",
+      "status": "unverified",
+      "ratings": {
+        "ip": "IP68",
+        "bypass_diodes": "not_found",
+        "diode_rating": "not_found"
+      },
+      "source_ids": [
+        "S18"
+      ]
+    },
+    {
+      "id": "bypass_diode_x3",
+      "name": "Bypass diodes: count not stated",
+      "type": "bypass_diode",
+      "status": "not_found",
+      "ratings": {
+        "current_a": "not_found",
+        "voltage_v": "not_found",
+        "type": "not_found"
+      },
+      "source_ids": []
+    },
+    {
+      "id": "pv_cable",
+      "name": "PV output cable: 4.0 mm2 (TUV 1 x 4.0 mm2)",
+      "type": "cable",
+      "status": "unverified",
+      "ratings": {
+        "cross_section_mm2": 4.0,
+        "length_plus_mm": 400,
+        "length_minus_mm": 200,
+        "length_note": "(+) 400 mm, (-) 200 mm or customized length, as printed"
+      },
+      "quantity_per_module": 2,
+      "source_ids": [
+        "S18"
+      ]
+    },
+    {
+      "id": "cell_string",
+      "name": "Cells: 120 printed as 2 x 60",
+      "type": "cell_string",
+      "status": "unverified",
+      "material": "N-type monocrystalline",
+      "quantity_per_module": 120,
+      "source_ids": [
+        "S18"
+      ]
+    },
+    {
+      "id": "glass_front",
+      "name": "Front glass: not stated",
+      "type": "glass",
+      "status": "not_found",
+      "source_ids": []
+    },
+    {
+      "id": "mounting_holes",
+      "name": "Mounting holes",
+      "type": "mounting_hole",
+      "status": "not_found",
+      "source_ids": [
+        "S18"
+      ],
+      "geometry_hint": "not stated in the datasheet; see installation manual"
+    },
+    {
+      "id": "grounding_holes",
+      "name": "Grounding holes",
+      "type": "grounding_hole",
+      "status": "not_found",
+      "source_ids": [
+        "S18"
+      ]
+    },
+    {
+      "id": "drain_holes",
+      "name": "Drainage holes",
+      "type": "drain_hole",
+      "status": "not_found",
+      "source_ids": [
+        "S18"
+      ]
+    },
+    {
+      "id": "connector",
+      "name": "PV connector: Staubli MC4-EVO2 (1500 V variant)",
+      "type": "connector",
+      "status": "unverified",
+      "ratings": {
+        "printed": "1000 V: Staubli MC4, JK03M/1B, JK03M2/1B; 1500 V: Staubli MC4-EVO2, JK03M/2B, JK03M2/2B"
+      },
+      "source_ids": [
+        "S18"
+      ]
+    },
+    {
+      "id": "busbar_ribbon",
+      "name": "Busbars / ribbons",
+      "type": "busbar_ribbon",
+      "status": "not_found",
+      "source_ids": []
+    },
+    {
+      "id": "sealant_edge",
+      "name": "Edge sealant",
+      "type": "sealant",
+      "status": "not_found",
+      "source_ids": []
+    },
+    {
+      "id": "label_nameplate",
+      "name": "Nameplate label",
+      "type": "label",
+      "status": "not_found",
+      "source_ids": []
+    },
+    {
+      "id": "corner_key",
+      "name": "Corner keys",
+      "type": "corner_key",
+      "status": "not_found",
+      "source_ids": []
+    }
+  ],
+  "geometry": {
+    "description": "Outline from datasheet dimensions. Clamp zones, hole positions and sizes are not stated in the datasheet.",
+    "module_dimensions_mm": [
+      1955,
+      1134,
+      30
+    ],
+    "clamping_zones_mm": [
+      {
+        "edge": "not stated",
+        "status": "not_found",
+        "note": "clamp zones not stated in the datasheet"
+      }
+    ],
+    "elements": [
+      {
+        "id": "outline",
+        "kind": "laminate_outline",
+        "part_id": "module_body",
+        "position_mm": [
+          0,
+          0,
+          0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          1955,
+          1134,
+          30
+        ],
+        "status": "unverified"
+      }
+    ]
+  },
+  "mechanical_ratings": {
+    "weight_kg": 24,
+    "static_load_wind_pa": 2400,
+    "static_load_snow_pa": 5400,
+    "static_load_note": "printed as wind load 2400 Pa and snow load 5400 Pa, without front/rear split",
+    "junction_box_ip": "IP68",
+    "source_ids": [
+      "S18"
+    ]
+  },
+  "status": "unverified",
+  "unverified_items": [
+    "Front glass, encapsulant and backsheet not stated.",
+    "Bypass diode count and ratings not stated.",
+    "Mounting, grounding and drainage holes not stated in the datasheet.",
+    "Model name taken from the datasheet file name (JKM475-495N-60HL4R-V); the printed title was not extracted.",
+    "Connector rating not stated; the 1000 V and 1500 V variants are printed separately."
+  ],
+  "sources": [
+    {
+      "id": "S18",
+      "title": "JinkoSolar JKM475-495N-60HL4R-V datasheet (1955 x 1134 x 30 mm), AU CEC version",
+      "publisher": "JinkoSolar (copy hosted by Solarproof)",
+      "url": "https://solarproof.com.au/datasheets/panel_datasheet_JKM475-495N-60HL4R-V-F1.3C2-EN-for-AU-CEC.pdf",
+      "accessed": "2026-11-20"
+    }
+  ]
+}
