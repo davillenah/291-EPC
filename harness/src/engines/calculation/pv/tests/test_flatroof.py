@@ -10,6 +10,23 @@ SPEC = {"width_m": 14.0, "length_m": 8.0, "setback_m": 0.6, "walkway_m": 0.8, "m
 
 
 class TestFlatRoof(unittest.TestCase):
+    def test_a_small_roof_shrinks_the_table_until_a_frame_fits(self):
+        spec = dict(copy.deepcopy(SPEC), width_m=4.0, length_m=4.0)
+        fitted = flatroof.fit_spec(spec)
+        self.assertLess(fitted["table"]["modules_per_row"], spec["table"]["modules_per_row"])
+        self.assertGreaterEqual(flatroof.propose(doc(), fitted)["modules"], 1)
+
+    def test_a_narrow_roof_turns_the_module_when_one_across_does_not_fit(self):
+        spec = dict(copy.deepcopy(SPEC), width_m=3.0, length_m=134.0)
+        fitted = flatroof.fit_spec(spec)
+        self.assertEqual(fitted["table"]["orientation"], "portrait")
+        self.assertGreaterEqual(flatroof.propose(doc(), fitted)["modules"], 1)
+
+    def test_the_minimum_roof_for_one_module_is_given(self):
+        need = flatroof.minimum_roof_m(SPEC)
+        self.assertEqual(need["width_m"], round(1.134 + 1.2, 2))
+        self.assertGreater(need["length_m"], 1.134)
+
     def test_a_steeper_tilt_needs_more_row_pitch_and_holds_fewer_tables(self):
         low, steep = flatroof.capacity(SPEC, 5, 30.0), flatroof.capacity(SPEC, 40, 30.0)
         self.assertGreater(steep["pitch_m"], low["pitch_m"])

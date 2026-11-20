@@ -286,19 +286,27 @@ def _with_flat_roof(section):
     import copy
     import epc_pv
     import epc_pv.flatroof as flatroof
+    from epc_pv.messages import item
     spec, document = copy.deepcopy(section["flat_roof"]), _document_of(section)
-    picked = []
+    picked, wanted = [], None
     try:
+        flatroof.check(spec)
+        wanted = spec["table"]
         if _auto_module(spec.get("array")):
-            row, rows = _pick_site_module(document, spec, spec["array"], lambda rec, o: dict(spec, module_dimensions_mm=list(rec["dimensions_mm"][:2]), table=dict(spec["table"], orientation=o)))
+            row, rows = _pick_site_module(document, flatroof.fit_spec(spec), spec["array"], lambda rec, o: flatroof.fit_spec(dict(spec, module_dimensions_mm=list(rec["dimensions_mm"][:2]), table=dict(spec["table"], orientation=o))))
             spec["table"] = dict(spec["table"], orientation=row["orientation"])
             picked = [_apply_module(spec, spec["array"], row, rows)]
+        spec = flatroof.fit_spec(spec)
         proposal = flatroof.propose(document, spec)
     except epc_pv.PvError as exc:
         raise StageInputError([f"flat_roof: {exc} / {exc.es}"]) from exc
     proposal["warnings"] += picked
+    if spec["table"] != wanted:
+        proposal["warnings"].append(item("table_shrunk", rows=wanted["rows"], per_row=wanted["modules_per_row"], rows_fit=spec["table"]["rows"], per_row_fit=spec["table"]["modules_per_row"]))
     if proposal["modules"] < 1:
-        raise StageInputError(["flat_roof: the roof holds no frame (smaller than one frame plus margins) / el techo no admite ningún bastidor (menor que un bastidor más los retiros)"])
+        need = flatroof.minimum_roof_m(spec)
+        raise StageInputError([f"flat_roof: the roof ({spec['width_m']:g} x {spec['length_m']:g} m) holds no frame; with the setback and walkway given it needs at least {need['width_m']:g} x {need['length_m']:g} m for one module "
+                               f"/ el techo ({spec['width_m']:g} x {spec['length_m']:g} m) no admite ningún bastidor; con el retiro y el pasillo dados necesita al menos {need['width_m']:g} x {need['length_m']:g} m para un módulo"])
     array = dict(spec["array"], id="A1", name="A1", tilt_deg=proposal["tilt_deg"], azimuth_deg=proposal["azimuth_deg"], n_modules=proposal["modules"])
     return dict(section, document=dict(document, arrays=[array]), layout=proposal["layout"]), proposal
 
@@ -376,7 +384,8 @@ def _trim_to_site(section, result, proposal):
         return section, result
     fitted = (capacity // array["strings"]["n_series"]) * array["strings"]["n_series"]
     if fitted < 1:
-        raise StageInputError(["site fill: one string is longer than the site holds / un string es más largo de lo que admite el predio"])
+        n = array["strings"]["n_series"]
+        raise StageInputError([f"site fill: one string is {n} module(s) long and the site or roof holds only {capacity} / un string tiene {n} módulo(s) y el predio o techo admite solo {capacity}"])
     arrays = [dict(a, n_modules=fitted) for a in section["document"]["arrays"]]
     section = dict(section, document=dict(section["document"], arrays=arrays))
     return section, _run(section)

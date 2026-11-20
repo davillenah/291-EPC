@@ -88,6 +88,23 @@ def fit_table(layout: Dict[str, Any]) -> Dict[str, Any]:
     return fitted if table != layout["table"] else layout
 
 
+def fit_spec(spec: Dict[str, Any]) -> Dict[str, Any]:
+    """The `propose` input with the table reduced until it fits the roof (`fit_table`); the same spec, untouched, when it already fits."""
+    fitted = fit_table(_layout(spec))
+    frame = lay._frame(fitted)
+    if lay.table_size(fitted)["width_m"] > frame["x1"] - frame["x0"]:      # one module across still does not fit: turn the module the other way
+        turned = dict(fitted, table=dict(fitted["table"], orientation="landscape" if fitted["table"]["orientation"] == "portrait" else "portrait"))
+        fitted = fit_table(turned)
+    return spec if fitted["table"] == spec["table"] else dict(spec, table=fitted["table"])
+
+
+def minimum_roof_m(spec: Dict[str, Any]) -> Dict[str, float]:
+    """Smallest roof (width, length in metres) that holds one module with the setback and the walkway of `spec`, the module in its best orientation at the lowest candidate tilt."""
+    short_m = min(spec["module_dimensions_mm"]) / 1000.0
+    s = float(spec["setback_m"])
+    return {"width_m": round(short_m + 2 * s, 2), "length_m": round(short_m * math.cos(math.radians(min(TILTS_DEG))) + 2 * s + float(spec["walkway_m"]), 2)}
+
+
 def spec_from_layout(layout: Dict[str, Any], array: Dict[str, Any], target_modules: Optional[int] = None) -> Dict[str, Any]:
     """The `propose` input of a ground site: the plant layout (site, tables, road, station) filled with as many tables as fit; `target_modules` caps it (None: fill the site).
     `front_clearance_m` (the lowest edge above the ground) is given in the layout: nothing is defaulted here."""

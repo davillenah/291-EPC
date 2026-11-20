@@ -219,6 +219,19 @@ class PvOrientationAndRoofTests(unittest.TestCase):
         json.dumps(res.to_dict())
         self.assertEqual(STAGES[2].run(ctx_with({"document": document, "flat_roof": {"width_m": 1}})).status, "blocked")
 
+    def test_a_small_flat_roof_shrinks_the_frame_and_a_tiny_one_says_the_minimum_size(self):
+        document = PV.doc()
+        template = {k: document["arrays"][0][k] for k in ("module", "inverter", "dc_ac_ratio")}
+        document["arrays"] = []
+        flat = {"width_m": 12.0, "length_m": 8.0, "setback_m": 0.6, "walkway_m": 0.8, "module_dimensions_mm": [2278, 1134], "module_gap_m": 0.02, "table": {"rows": 1, "modules_per_row": 8, "orientation": "landscape"},
+                "table_gap_m": 0.3, "front_clearance_m": 0.3, "station": {"width_m": 1.0, "depth_m": 1.0}, "inverter_pad": {"width_m": 0.7, "depth_m": 0.4}, "array": template}
+        res = STAGES[2].run(ctx_with({"document": document, "flat_roof": flat}))
+        self.assertEqual(res.status, "ok")
+        self.assertIn("table_shrunk", [f["field"].split("/")[-1] for f in res.findings])
+        res = STAGES[2].run(ctx_with({"document": document, "flat_roof": dict(flat, width_m=1.5, length_m=2.0)}))
+        self.assertEqual(res.status, "blocked")
+        self.assertIn("at least", str(res.to_dict()))
+
     def _roof_template(self):
         document = PV.doc()
         template = {k: document["arrays"][0][k] for k in ("module", "inverter", "dc_ac_ratio")}
