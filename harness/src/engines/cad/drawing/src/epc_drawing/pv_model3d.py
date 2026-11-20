@@ -11,8 +11,8 @@ from pathlib import Path
 from typing import Any, Dict, List, Tuple
 
 Point = Tuple[float, float, float]
-LAYERS = {"PV-3D-SUELO": 8, "PV-3D-MODULOS": 5, "PV-3D-ESTRUCTURA": 9, "PV-3D-INVERSORES": 7, "PV-3D-ESTACION": 4, "PV-3D-VALLADO": 1}
-POST_M, RAIL_M, RAIL_DEPTH_M, EMBED_M, SPACING_M = 0.1, 0.08, 0.06, 1.0, 4.0
+LAYERS = {"PV-3D-SUELO": 8, "PV-3D-MODULOS": 5, "PV-3D-ESTRUCTURA": 9, "PV-3D-CIMENTACION": 30, "PV-3D-INVERSORES": 7, "PV-3D-ESTACION": 4, "PV-3D-VALLADO": 1}
+POST_M, RAIL_M, RAIL_DEPTH_M, SPACING_M = 0.1, 0.08, 0.06, 4.0
 STATION_HEIGHT_M, PAD_HEIGHT_M, SOIL_M, MODULE_M = 2.6, 0.9, 0.15, 0.03
 
 
@@ -50,9 +50,15 @@ def _modules(geometry: Dict[str, Any], table: Dict[str, Any], tilt: float, rear_
     return faces
 
 
-def _supports(table: Dict[str, Any], slope: float, tilt: float, rear_h: float) -> Tuple[List[Any], List[Any]]:
-    """(rails, posts) of a table: two rails along x at a quarter and three quarters of the slope, posts every `SPACING_M` under each rail."""
-    rails, posts = [], []
+def embedment_m(geometry: Dict[str, Any]) -> float:
+    """The depth of the posts below the surface: the embedment the structure record states (`geometry["foundation"]["embedment_m"]`), else 0. Nothing is assumed: a roof or a structure without
+    a stated depth has no part below the surface, and a ground plant with embedded piles draws them on their own layer (`PV-3D-CIMENTACION`) so they are never mistaken for posts under the floor by error."""
+    return float((geometry.get("foundation") or {}).get("embedment_m") or 0.0)
+
+
+def _supports(table: Dict[str, Any], slope: float, tilt: float, rear_h: float, embed: float = 0.0) -> Tuple[List[Any], List[Any], List[Any]]:
+    """(rails, posts, buried parts) of a table: two rails along x at a quarter and three quarters of the slope, posts every `SPACING_M` under each rail; the part of each post below the surface (`embed`) is separate."""
+    rails, posts, buried = [], [], []
     n = max(int(math.ceil(table["width_m"] / SPACING_M)) + 1, 2)
     for f in (0.25, 0.75):
         s = slope * f
@@ -60,8 +66,11 @@ def _supports(table: Dict[str, Any], slope: float, tilt: float, rear_h: float) -
         top = rear_h - s * math.sin(tilt) - RAIL_DEPTH_M - MODULE_M
         y = table["y"] + s * math.cos(tilt) - POST_M / 2
         for k in range(n):
-            posts += box(table["x"] + k * (table["width_m"] - POST_M) / (n - 1), y, -EMBED_M, POST_M, POST_M, top + EMBED_M)
-    return rails, posts
+            x = table["x"] + k * (table["width_m"] - POST_M) / (n - 1)
+            posts += box(x, y, 0.0, POST_M, POST_M, max(top, 0.0))
+            if embed > 0:
+                buried += box(x, y, -embed, POST_M, POST_M, embed)
+    return rails, posts, buried
 
 
 def build(geometry: Dict[str, Any], result: Dict[str, Any]):
@@ -84,8 +93,9 @@ def build(geometry: Dict[str, Any], result: Dict[str, Any]):
         tilt = math.radians(float(geometry["tilts_deg"][table["array"]]))
         rear_h = front + slope * math.sin(tilt)
         _add(msp, "PV-3D-MODULOS", _modules(geometry, table, tilt, rear_h))
-        rails, posts = _supports(table, slope, tilt, rear_h)
+        rails, posts, buried = _supports(table, slope, tilt, rear_h, embedment_m(geometry))
         _add(msp, "PV-3D-ESTRUCTURA", rails + posts)
+        _add(msp, "PV-3D-CIMENTACION", buried)
     for inv in geometry["inverters"]:
         if inv.get("x") is not None:
             _add(msp, "PV-3D-INVERSORES", box(inv["x"] - inv["width_m"] / 2, inv["y"] - inv["depth_m"] / 2, 0, inv["width_m"], inv["depth_m"], PAD_HEIGHT_M))

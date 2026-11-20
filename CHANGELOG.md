@@ -4,10 +4,14 @@ All notable changes. Format: Keep a Changelog; versions follow `harness/docs/BRA
 
 ## [Unreleased]
 
+### Changed
+- `epc_pv` now reads its research data (`epc_pv.equipment`): the inverter blocks are derived from the 10 inverter data sheets in `data/pv_inverters/inverters` (the only source, ADR-0012; `inverter_catalog.json` is no longer read and a test checks that it agrees with the derived STP values), models whose sheet does not give a value as one plain number are listed as gaps and never used; `auto` picks only inverters that admit a string of the module; mounting structures, module formats and technologies, accessories and the 7 feasibility references are loaded and tested; the package data now includes the sub-folders.
+
 ### Added
 - PV mounting structures and module types as research data for later 2D/3D modelling: 23 support types (10 ground, 13 roof) in `epc_pv/data/mounting_structures/` and 27 module technologies, formats and components in `epc_pv/data/pv_modules/`, each with its JSON schema and a bilingual (en/es) description; reports in `harness/docs/pv/`. Every value cites its source and is `unverified`, `typical` or `not_found` (pending review; nothing is marked verified, and missing values are never guessed). Also 35 inverter and inverter-side equipment types (string, hybrid, micro, central, power stations, combiner boxes, disconnects, SPD, monitoring) in `epc_pv/data/pv_inverters/`. No engine reads them yet.
 
 ### Fixed
+- PV 3D model: the posts were drawn 1.0 m below the ground (a fixed number in the code) for every plant, including flat roofs where nothing goes below the slab. The depth now comes from the record of the chosen mounting structure (`structure_id` in the `layout`, e.g. driven pile 1.5 m, unverified) and the buried part has its own layer `PV-3D-CIMENTACION`; with no structure, or a record that states no depth, nothing is drawn below the surface and the layout says so (`foundation_depth_not_found`).
 - PV flat roof: the frame is reduced (and the module turned) until it fits a small or narrow roof, with a `table_shrunk` warning; when no module fits, the error gives the roof size and the minimum size needed; the string-longer-than-site error gives both numbers.
 
 ### Added
