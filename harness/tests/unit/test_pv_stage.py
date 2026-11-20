@@ -328,5 +328,41 @@ class PvDrawingsTests(unittest.TestCase):
             self.assertEqual(parts["inverters"]["INV-01"]["id"], "sma.stp25000tl-30")
 
 
+class PvInverterCountTests(unittest.TestCase):
+    """An `auto` inverter count raised for the MPPT input current is said with the count really installed (the `inverter_auto` note states the one of the ratio alone)."""
+
+    def test_the_raised_count_is_stated_with_the_real_ratio_in_both_languages(self):
+        from disciplines.electrical_lv.stages import pv_stage
+        inverter = {"auto": True, "n_mppt": 6, "pac0_w": 100000.0}
+        section = {"document": {"arrays": [{"id": "A1", "inverter": inverter, "n_modules": 100}]}}
+        first = {"arrays": [{"inverters": 90, "dc_kwp": 10800.0, "strings": {"strings": 672, "strings_per_mppt": 2, "strings_per_mppt_limit": 1}}], "warnings": []}
+        ran = {"arrays": [], "warnings": []}
+        real, pv_stage._run = pv_stage._run, lambda sec: ran
+        self.addCleanup(setattr, pv_stage, "_run", real)
+        _, out = pv_stage._add_inverters_for_current(section, first)
+        raised = [w for w in out["warnings"] if w["code"] == "inverters_raised"]
+        self.assertEqual(len(raised), 1)
+        self.assertIn("112", raised[0]["en"])
+        self.assertIn("0.96", raised[0]["en"])
+        self.assertTrue(raised[0]["es"] and "112" in raised[0]["es"])
+
+    def test_a_count_that_respects_the_current_is_left_alone(self):
+        from disciplines.electrical_lv.stages import pv_stage
+        section = {"document": {"arrays": [{"id": "A1", "inverter": {"auto": True, "n_mppt": 6, "pac0_w": 1.0}, "n_modules": 1}]}}
+        result = {"arrays": [{"inverters": 1, "dc_kwp": 1.0, "strings": {"strings": 6, "strings_per_mppt": 1, "strings_per_mppt_limit": 1}}], "warnings": []}
+        self.assertIs(pv_stage._add_inverters_for_current(section, result)[1], result)
+
+
+class PvModel3dSizeTests(unittest.TestCase):
+    """Big plants are written as parts and a master (a 307 440 module plant ran the single model out of memory); small ones stay one file."""
+
+    def test_the_way_depends_on_the_module_count(self):
+        from disciplines.electrical_lv.stages import pv_drawings as D
+        self.assertEqual(D.model3d_plan(1000), ("single", None))
+        self.assertEqual(D.model3d_plan(D.MODEL3D_SINGLE_MAX_MODULES)[0], "single")
+        self.assertEqual(D.model3d_plan(D.MODEL3D_SINGLE_MAX_MODULES + 1)[0], "assembly")
+        self.assertTrue(D.MODEL3D_PARTS["en"] and D.MODEL3D_PARTS["es"])
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -59,6 +59,10 @@ Always, before closing a thread and before the owner is told it can be closed (a
 
 Everything new is written in English. Existing Spanish names, keys, comments and files are not renamed or translated (decision M7). Explanations to the owner are in Spanish. The user never sees internal formats (JSON, YAML, Python, Markdown); `.svg` is not a deliverable.
 
+## Lessons learned (owner request, 2026-11-20)
+
+Engineering lessons and standard solutions (not code) live in `docs/lessons/` (`README.md`, `TEMPLATE.md`, `INDEX.md`). After a simulation, an exercise or a real project, write one lesson per finding; before designing something new, check the index. No norm values, no copyrighted text, no real client data in a lesson; only the owner moves a lesson to `standard`.
+
 ## Numbers
 
 No agent writes a number by hand. Every value comes from an engine (through the MCP server or the `epc` CLI) and is traceable to its inputs, engine version and norm record. Skills never contain norm values.

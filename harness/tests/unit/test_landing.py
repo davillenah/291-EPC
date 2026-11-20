@@ -220,6 +220,25 @@ class PvProjectTests(unittest.TestCase):
         self.assertTrue(section["document"]["arrays"][0]["module"]["auto"])
         self.assertNotIn("auto", fixed["document"]["arrays"][0]["module"])
 
+    def test_a_mounting_structure_is_chosen_from_the_engine_list(self):
+        minimal = {k: v for k, v in PV_ANSWERS.items() if not k.startswith("pv.")}
+        minimal.update({"pv.mode": "ground", "pv.latitude_deg": "-34.6", "pv.longitude_deg": "-58.4", "pv.site_width_m": "60", "pv.site_length_m": "40"})
+        self.assertNotIn("structure_id", pv.section(minimal)["layout"])      # automatic: no foundation is assumed
+        ground = pv.structures()
+        sid = next(k for k, family in ground.items() if family == "ground")
+        self.assertEqual(pv.section(dict(minimal, **{"pv.structure_id": sid}))["layout"]["structure_id"], sid)
+        self.assertIsNone(pv.check(dict(minimal, **{"pv.structure_id": sid})))
+        self.assertEqual(pv.check(dict(minimal, **{"pv.structure_id": "no_such_structure"}))["code"], "pv_range")
+        roof = next(k for k, family in ground.items() if family == "roof")
+        self.assertEqual(pv.check(dict(minimal, **{"pv.structure_id": roof}))["code"], "pv_range")      # a roof structure on a ground plant
+        self.assertIn(sid, {f["path"]: f for f in pv.form()["fields"]}["pv.structure_id"]["options"])
+
+    def test_the_auxiliary_service_of_a_plant_only_run_carries_its_rcbo(self):
+        minimal = {k: v for k, v in PV_ANSWERS.items() if not k.startswith("pv.")}
+        minimal.update({"pv.mode": "ground", "pv.latitude_deg": "-34.6", "pv.longitude_deg": "-58.4", "pv.site_width_m": "60", "pv.site_length_m": "40"})
+        data = server._merge_pv(None, {"section": {}, "files": {}, "aux": (pv.aux_loads(minimal), pv.board_of(minimal))})
+        self.assertEqual(data["inputs"]["circuits"], {"AUX-01": {"kind": "rcbo"}})
+
     def test_the_time_zone_comes_from_the_place_unless_typed(self):
         v = lambda **k: pv.values_of({f"pv.{a}": b for a, b in k.items()})[0]      # noqa: E731
         self.assertEqual(pv.utc_offset(v(latitude_deg="-32.89", longitude_deg="-68.84")), -3.0)

@@ -58,6 +58,10 @@ MESSAGES: Dict[str, Dict[str, str]] = {
         "en": "Array {array}: inverter {model} chosen from the catalog ({n} unit(s) for {kwp} kWp at DC/AC {ratio}); give another inverter in the advanced section to change it (pending review).",
         "es": "Arreglo {array}: inversor {model} elegido del catálogo ({n} unidad(es) para {kwp} kWp con CC/CA {ratio}); indicar otro inversor en la sección avanzada para cambiarlo (pendiente de revisión).",
     },
+    "inverters_raised": {
+        "en": "Array {array}: {before} inverter(s) would give the requested DC/AC ratio, but the input current of the MPPT inputs allows fewer strings per input, so {after} are installed (real DC/AC {ratio}). A data sheet with the short-circuit limit, or another inverter, can lower the count (pending review).",
+        "es": "Arreglo {array}: {before} inversor(es) darían la relación CC/CA pedida, pero la corriente de entrada de los MPPT admite menos strings por entrada, por lo que se instalan {after} (CC/CA real {ratio}). Una hoja de datos con el límite de cortocircuito, u otro inversor, puede bajar la cantidad (pendiente de revisión).",
+    },
     "roof_dxf_azimuth": {
         "en": "Roof plane {plane}: the drawing gives no azimuth; the harness chooses it (the plane is only a placement area).",
         "es": "Faldón {plane}: el dibujo no indica el azimut; lo elige el harness (el faldón es solo un área de colocación).",
