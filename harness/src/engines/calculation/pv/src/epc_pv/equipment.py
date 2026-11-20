@@ -51,6 +51,14 @@ def _power_w(el: Dict[str, Any]) -> Optional[float]:
     return kw * 1000.0 if kw is not None else None          # a power in kVA or VA is apparent power: the active power is not stated, so it is not used
 
 
+def _window_of(windows: Any, model: str) -> Any:
+    """The MPPT window of a model: the one entry of a dict whose key is the model (or part of its name), else the single window the record gives."""
+    if not isinstance(windows, dict):
+        return windows
+    key = next((k for k in windows if k == model or k in model), None)
+    return windows.get(key) if key else None
+
+
 def _models(rec: Dict[str, Any]) -> List[Tuple[str, Optional[float], Any]]:
     """(model, rated power W, MPPT window) of every model a record covers: one per entry of `rated_ac_power_by_model_*`, else the record itself."""
     el = rec["electrical_ratings"]
@@ -58,14 +66,7 @@ def _models(rec: Dict[str, Any]) -> List[Tuple[str, Optional[float], Any]]:
     windows = el.get("mppt_voltage_range_v")
     if not by_model:
         return [(rec["name"]["en"], _power_w(el), windows)]
-    out = []
-    for model, power in by_model.items():
-        if isinstance(windows, dict):
-            key = next((k for k in windows if k == model or k in model), None)
-            out.append((model, _number(power), windows.get(key) if key else None))
-        else:
-            out.append((model, _number(power), windows))
-    return out
+    return [(model, _number(power), _window_of(windows, model)) for model, power in by_model.items()]
 
 
 def _derive(rec: Dict[str, Any], model: str, power: Optional[float], window: Any) -> Tuple[Optional[Dict[str, Any]], List[str]]:
@@ -167,17 +168,24 @@ def structure(ident: str) -> Dict[str, Any]:
 _KINDS = (("micropile", "embedded"), ("pile", "embedded"), ("screw", "embedded"), ("concrete_footing", "concrete"), ("ballast", "ballast"))
 
 
+def _foundation_kind(rec: Dict[str, Any]) -> str:
+    if rec["family"] == "roof":
+        return "ballast" if "ballast" in rec["category"] else "roof_fixed"
+    return next((k for word, k in _KINDS if word in rec["category"]), "other")
+
+
+def _embedment_element(rec: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+    """The element of the record that states an embedment depth greater than zero, or None."""
+    return next((e for e in rec["geometry"].get("elements", []) if "embedment" in e.get("id", "") and (_number(e.get("length_mm")) or 0) > 0), None)
+
+
 def foundation(ident: str) -> Dict[str, Any]:
     """What a structure stands on, from its record: `kind` (`embedded` piles or screws, `concrete`, `ballast`, `roof_fixed`, `other`), `embedment_m` (the depth the record states, else None: never assumed),
     the `status` of that depth and the structure `family`. A depth of 0 or a missing one means nothing is drawn below the surface."""
     rec = structure(ident)
-    if rec["family"] == "roof":
-        kind = "ballast" if "ballast" in rec["category"] else "roof_fixed"
-    else:
-        kind = next((k for word, k in _KINDS if word in rec["category"]), "other")
-    element = next((e for e in rec["geometry"].get("elements", []) if "embedment" in e.get("id", "") and (_number(e.get("length_mm")) or 0) > 0), None)
-    return {"structure_id": rec["id"], "family": rec["family"], "kind": kind, "embedment_m": round(element["length_mm"] / 1000.0, 3) if element else None, "status": element["status"] if element else "not_found",
-            "record_status": rec["status"]}
+    element = _embedment_element(rec)
+    return {"structure_id": rec["id"], "family": rec["family"], "kind": _foundation_kind(rec), "embedment_m": round(element["length_mm"] / 1000.0, 3) if element else None,
+            "status": element["status"] if element else "not_found", "record_status": rec["status"]}
 
 
 def reference(name: str) -> Dict[str, Any]:
