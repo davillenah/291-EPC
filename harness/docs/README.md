@@ -10,5 +10,6 @@ Status: **implemented**
 | [BRANCHING.md](BRANCHING.md) | Branching policy: main (stable), dev (integration), feature/fix/chore branches |
 | [DEPENDENCIES.md](DEPENDENCIES.md) | Python packages, system tools, plugin graph, known runtime notes |
 | [USER_DATA_MODEL.md](USER_DATA_MODEL.md) | Files that feed the end-user app and the customer-input pipeline |
+| [lessons/](lessons/README.md) | Engineering lessons learned and standard solutions from simulations and real projects (not code): template, index and one file per lesson |
 
 Per-module documentation stays next to the code: `harness/.claude/plugins/<plugin>/README.md`, `harness/.claude/skills/README.md`, `parked/web/backend/README.md`, `parked/web/frontend/README.md`, `parked/web/database/README.md`, `parked/web/infra/README.md`, `harness/tools/README.md`.

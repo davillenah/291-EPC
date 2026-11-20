@@ -19,7 +19,7 @@ NUMBERS = ("latitude_deg", "longitude_deg", "utc_offset_h", "target_kwp", "tilt_
            "aux_load_kw", "aux_phases", "aux_length_m", "board_fp", "roof_width_m", "roof_slope_m", "roof_setback_m", "site_width_m", "site_length_m", "setback_m", "table_rows", "table_modules_per_row", "module_gap_m", "table_gap_m", "road_width_m") + tuple(f"roof{n}_{k}" for n in EXTRA_PLANES for k in PLANE_FIELDS)
 GROUND_ONLY = ("site_width_m", "site_length_m", "setback_m", "table_rows", "table_modules_per_row", "table_orientation", "module_gap_m", "table_gap_m", "road_width_m")
 REQUIRED = ("mode", "latitude_deg", "longitude_deg")
-ADVANCED = ("currency", "utc_offset_h", "module", "inverter", "isc_max_input_a", "aux_load_kw", "aux_phases", "aux_length_m", "board_fp", "target_kwp", "tilt_deg", "azimuth_deg", "dc_ac_ratio", "albedo", "design_t_min_c",
+ADVANCED = ("structure_id", "currency", "utc_offset_h", "module", "inverter", "isc_max_input_a", "aux_load_kw", "aux_phases", "aux_length_m", "board_fp", "target_kwp", "tilt_deg", "azimuth_deg", "dc_ac_ratio", "albedo", "design_t_min_c",
             "roof_setback_m", "setback_m", "table_rows", "table_modules_per_row", "table_orientation", "module_gap_m", "table_gap_m", "road_width_m")
 RANGES = {"energy_price": (0, 1e9), "investment": (0, 1e15), "target_kwp": (0.001, 1e6), "tilt_deg": (0, 90), "azimuth_deg": (0, 360), "latitude_deg": (-90, 90), "longitude_deg": (-180, 180), "utc_offset_h": (-14, 14),
           **{f"roof{n}_{k}": r for n in EXTRA_PLANES for k, r in (("tilt_deg", (0, 90)), ("azimuth_deg", (0, 360)), ("width_m", (0.001, 1e4)), ("slope_m", (0.001, 1e4)))}}
@@ -31,6 +31,12 @@ def catalogs():
     return {r["id"]: r for r in catalog.module_records()}, {r["id"]: r for r in catalog.inverters()}
 
 
+def structures():
+    """{id: family} of the mounting structures of the engine (`epc_pv.equipment.structures`, pending review): ground ones feed a ground plant, roof ones a flat roof."""
+    from epc_pv import equipment
+    return {r["id"]: r["family"] for r in equipment.structures()}
+
+
 def form():
     """The form of the photovoltaic project (the page renders it; the model and inverter lists come from the catalogs, never typed by hand)."""
     modules, inverters = catalogs()
@@ -38,6 +44,7 @@ def form():
     sel = lambda p, options, req=True: {"path": f"pv.{p}", "kind": "select", "required": req, "options": options}      # noqa: E731
     out = {"id": "pv", "status": "available", "fields": [
         sel("mode", list(MODES)), sel("roof_type", list(ROOF_TYPES), False), num("latitude_deg"), num("longitude_deg"), num("energy_price", False), {"path": "pv.currency", "kind": "text", "required": False}, num("investment", False), num("utc_offset_h", False),
+        sel("structure_id", ["auto"] + sorted(structures()), False),
         sel("module", ["auto"] + sorted(modules), False), sel("inverter", ["auto"] + sorted(inverters), False), num("isc_max_input_a", False),
         num("aux_load_kw", False), sel("aux_phases", ["1", "3"], False), num("aux_length_m", False), num("board_fp", False),
         num("target_kwp", False), num("tilt_deg", False), num("azimuth_deg", False), num("dc_ac_ratio", False), num("albedo", False), num("design_t_min_c", False),
@@ -96,6 +103,9 @@ def _catalog_problem(v):
     """The first problem with the equipment chosen (unknown ids), or None. A data sheet gap (no Isc) is not a problem: the stage assumes the maximum input current and says so."""
     modules, inverters = catalogs()
     module, inverter = _equipment(v)
+    sid = v.get("structure_id", "auto")
+    if sid != "auto" and structures().get(sid) != ("ground" if v.get("mode") == "ground" else "roof"):
+        return {"code": "pv_range", "detail": "structure_id"}      # unknown, or a ground structure on a roof (or the other way round)
     if module not in modules or (inverter != DEFAULTS["inverter"] and inverter not in inverters):
         return {"code": "pv_range", "detail": "module / inverter"}
     return None
@@ -164,7 +174,7 @@ def _flat_roof(v, modules, inverters):
     return {"width_m": v["roof_width_m"], "length_m": v["roof_slope_m"], "setback_m": v.get("roof_setback_m", DEFAULTS["roof_setback_m"]), "walkway_m": flat["walkway_m"],
             "module_dimensions_mm": list(modules[_equipment(v)[0]]["dimensions_mm"][:2]), "module_gap_m": v.get("module_gap_m", lay["module_gap_m"]), "table": dict(flat["table"]),
             "table_gap_m": flat["table_gap_m"], "front_clearance_m": flat["front_clearance_m"], "station": dict(flat["station"]), "inverter_pad": dict(lay["inverter_pad"]),
-            "array": _template(v, modules, inverters), **_cap(v, modules)}
+            "array": _template(v, modules, inverters), **_structure(v), **_cap(v, modules)}
 
 
 def _cap(v, modules):
@@ -201,10 +211,15 @@ def _layout(v, module):
             "table_gap_m": pick("table_gap_m"), "road_width_m": pick("road_width_m"), "station": dict(lay["station"]), "inverter_pad": dict(lay["inverter_pad"])}
 
 
+def _structure(v):
+    """`structure_id` of the mounting structure when the person chose one (`auto` leaves it out: no foundation is assumed)."""
+    return {"structure_id": v["structure_id"]} if v.get("structure_id", "auto") != "auto" else {}
+
+
 def _ground_layout(v, modules):
     """The plant layout of a ground site; with no power cap and no tilt asked, `fill` tells the stage to fill the site with tables (a typed tilt fixes the fill's tilt too, see the stage)."""
     out = _layout(v, modules[_equipment(v)[0]])
-    return dict(out, fill=True, front_clearance_m=DEFAULTS["layout"]["front_clearance_m"], **_cap(v, modules))
+    return dict(out, fill=True, front_clearance_m=DEFAULTS["layout"]["front_clearance_m"], **_structure(v), **_cap(v, modules))
 
 
 def economics(v):
