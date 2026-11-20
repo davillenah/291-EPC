@@ -33,7 +33,8 @@ def check(spec: Any) -> None:
 
 def _layout(spec: Dict[str, Any]) -> Dict[str, Any]:
     return {"site": {"width_m": spec["width_m"], "length_m": spec["length_m"], "setback_m": spec["setback_m"]}, "module_dimensions_mm": spec["module_dimensions_mm"], "module_gap_m": spec["module_gap_m"],
-            "table": spec["table"], "table_gap_m": spec["table_gap_m"], "road_width_m": spec["walkway_m"], "station": spec["station"], "inverter_pad": spec["inverter_pad"]}
+            "table": spec["table"], "table_gap_m": spec["table_gap_m"], "road_width_m": spec["walkway_m"], "station": spec["station"], "inverter_pad": spec["inverter_pad"],
+            "mounting": spec.get("mounting", "roof"), **({"structure_id": spec["structure_id"]} if spec.get("structure_id") is not None else {})}
 
 
 def capacity(spec: Dict[str, Any], tilt_deg: float, altitude_deg: float) -> Dict[str, Any]:
@@ -113,6 +114,9 @@ def spec_from_layout(layout: Dict[str, Any], array: Dict[str, Any], target_modul
     spec = {"width_m": site["width_m"], "length_m": site["length_m"], "setback_m": site["setback_m"], "walkway_m": layout["road_width_m"], "module_dimensions_mm": layout["module_dimensions_mm"],
             "module_gap_m": layout["module_gap_m"], "table": layout["table"], "table_gap_m": layout["table_gap_m"], "front_clearance_m": layout["front_clearance_m"], "station": layout["station"],
             "inverter_pad": layout["inverter_pad"], "array": array, "assumption": "ground plant, tables facing the equator filled to the site"}
+    spec["mounting"] = "ground"
+    if layout.get("structure_id") is not None:
+        spec["structure_id"] = layout["structure_id"]
     spec.update({k: array[k] for k in ("tilt_deg", "azimuth_deg") if k in array})
     if target_modules is not None:
         spec["target_modules"] = target_modules

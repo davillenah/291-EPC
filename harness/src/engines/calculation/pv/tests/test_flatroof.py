@@ -90,8 +90,9 @@ class TestCatalogPick(unittest.TestCase):
         rec = catalog.pick_inverter(40, 670, 1.2)
         n = max(1, round(40 * 670 / (1.2 * rec["inverter"]["pac0_w"])))
         self.assertLess(abs(40 * 670 / (n * rec["inverter"]["pac0_w"]) - 1.2), 0.3)
-        self.assertIsNone(catalog.with_isc(rec)["isc_max_input_a"])      # the data sheet gap stays a gap: nothing is invented
-        self.assertEqual(catalog.with_isc(rec, 50)["isc_max_input_a"], 50.0)
+        gap = next(r for r in catalog.inverters() if r["inverter"]["isc_max_input_a"] is None)      # a sheet that does not print Isc (the STP family)
+        self.assertIsNone(catalog.with_isc(gap)["isc_max_input_a"])      # the data sheet gap stays a gap: nothing is invented
+        self.assertEqual(catalog.with_isc(gap, 50)["isc_max_input_a"], 50.0)
 
     def test_a_ground_site_spec_fills_with_a_fixed_tilt_when_given(self):
         layout = {"site": {"width_m": 40, "length_m": 30, "setback_m": 2}, "module_dimensions_mm": [2278, 1134], "module_gap_m": 0.02, "table": {"rows": 2, "modules_per_row": 14, "orientation": "portrait"},

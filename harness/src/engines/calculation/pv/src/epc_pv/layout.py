@@ -41,9 +41,26 @@ def _number(block: Dict[str, Any], key: str, where: str, positive: bool = True) 
     return float(value)
 
 
+def _structure(layout: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+    """The foundation of the optional `structure_id` (`equipment.foundation`), or None. `mounting` (`ground`, default, or `roof`) must match the structure family."""
+    ident = layout.get("structure_id")
+    if ident is None:
+        return None
+    from epc_pv import equipment
+    try:
+        found = equipment.foundation(str(ident))
+    except KeyError:
+        raise PvError("err_range", name="layout.structure_id", rule=bi("the id of a mounting structure record", "el id de un registro de estructura de montaje"), value=ident) from None
+    mounting = layout.get("mounting", "ground")
+    if found["family"] != mounting:
+        raise PvError("err_range", name="layout.structure_id", rule=bi(f"a {mounting} structure", f"una estructura de tipo {mounting}"), value=ident)
+    return found
+
+
 def check(layout: Any) -> None:
     """Refuse an incomplete or wrong layout input, in English and Spanish."""
     _need(layout, REQUIRED, "layout")
+    _structure(layout)
     _need(layout["site"], SITE_KEYS, "layout.site")
     _need(layout["table"], TABLE_KEYS, "layout.table")
     _need(layout["station"], PAD_KEYS, "layout.station")
@@ -175,8 +192,18 @@ def plan(document: Dict[str, Any], result: Dict[str, Any], layout: Dict[str, Any
     return dict(out, tilts_deg={str(a["id"]): float(a["tilt_deg"]) for a in document["arrays"]})
 
 
+def _foundation_warnings(found: Optional[Dict[str, Any]]) -> List[Dict[str, str]]:
+    """The notes of a foundation: a depth the record does not give (piles or screws), or a depth that is still pending review."""
+    if found is None:
+        return []
+    if found["embedment_m"] is not None:
+        return [item("foundation_unverified", structure=found["structure_id"], status=found["status"])]
+    return [item("foundation_depth_not_found", structure=found["structure_id"])] if found["kind"] == "embedded" else []
+
+
 def _result(document, layout, size, frame, altitude, tables, inverters, left_out, tight) -> Dict[str, Any]:
-    warnings = []
+    found = _structure(layout)
+    warnings = _foundation_warnings(found)
     if left_out:
         warnings.append(item("layout_no_fit", n=left_out))
     if tight:
@@ -191,4 +218,4 @@ def _result(document, layout, size, frame, altitude, tables, inverters, left_out
             "module": {"dimensions_mm": [float(d) for d in layout["module_dimensions_mm"][:2]], "gap_m": float(layout["module_gap_m"]), "front_clearance_m": float(layout["front_clearance_m"]) if "front_clearance_m" in layout else None},
             "frame": {k: round(v, 3) for k, v in frame.items()}, "station": station, "tables": tables, "inverters": inverters,
             "counts": {"tables": len(tables), "tables_left_out": left_out, "inverters": len(inverters), "rows": max([t["row"] for t in tables], default=0)},
-            "fits": left_out == 0, "warnings": warnings}
+            "fits": left_out == 0, "foundation": found, "warnings": warnings}

@@ -5,8 +5,8 @@ The person gives the structure; the harness tries every module of the catalog (a
 The counting itself is the caller's (`count(record, orientation) -> modules that fit`), so the same pick serves a ground site, a flat roof and roof planes.
 Catalog values are pending review.
 """
-import json
 from pathlib import Path
+from epc_pv import catalog
 from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple
 
 AUTO = "auto"
@@ -15,7 +15,7 @@ _DATA = Path(__file__).parent / "data"
 
 def modules() -> List[Dict[str, Any]]:
     """The catalog modules that can be placed: those whose data sheet gives the size (a record without dimensions cannot be fitted on a structure, and none is made up)."""
-    return [r for r in json.loads((_DATA / "module_catalog.json").read_text(encoding="utf-8"))["modules"] if r.get("dimensions_mm")]
+    return [r for r in catalog.module_records() if r.get("dimensions_mm")]
 
 
 def block(record: Dict[str, Any]) -> Dict[str, Any]:
