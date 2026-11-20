@@ -50,6 +50,43 @@ class TestPvModel3d(unittest.TestCase):
             pv_model3d.build(g, PLANT["result"])
 
 
+DATA = Path(__file__).resolve().parents[3] / "calculation" / "pv" / "src" / "epc_pv" / "data"
+
+
+def records():
+    from epc_drawing import pv_parts
+    return {"module": pv_parts.find_record(DATA / "pv_modules", "cs6_2_54tm_1961x1134x30"),
+            "inverters": {"INV-01": pv_parts.find_record(DATA / "pv_inverters", "sma.stp25000tl-30")}}
+
+
+class TestPvModel3dDetail(unittest.TestCase):
+    def test_without_records_the_model_is_the_plain_one(self):
+        g = geometry()
+        used = Counter(e.dxf.layer for e in pv_model3d.build(g, PLANT["result"]).modelspace())
+        self.assertFalse([k for k in used if k.startswith("PV-3D-REF")])
+
+    def test_the_module_record_adds_frame_junction_box_and_cells_on_reference_layers(self):
+        g = geometry()
+        n = sum(t["modules"] for t in g["tables"])
+        std = Counter(e.dxf.layer for e in pv_model3d.build(g, PLANT["result"], records()).modelspace())
+        full = Counter(e.dxf.layer for e in pv_model3d.build(g, PLANT["result"], records(), "full").modelspace())
+        self.assertEqual(std["PV-3D-MODULOS"], 6 * n)
+        self.assertEqual(std["PV-3D-REF-FALLBACK"] >= 2 * 6 * n, True)       # the section and the box are not in the record: reference dimensions
+        self.assertEqual(full["PV-3D-REF-UNVERIFIED"], 108 * n)              # 2 x (9 x 6) cells as printed in the record
+        self.assertNotIn("PV-3D-REF-UNVERIFIED", std)
+        low = Counter(e.dxf.layer for e in pv_model3d.build(g, PLANT["result"], records(), "low").modelspace())
+        self.assertFalse([k for k in low if k == "PV-3D-REF-FALLBACK" and low[k] > 6])
+
+    def test_the_inverter_record_sets_the_enclosure_size_and_hangs_the_terminals(self):
+        g = geometry()
+        doc = pv_model3d.build(g, PLANT["result"], records())
+        inv = [v for e in doc.modelspace() if e.dxf.layer == "PV-3D-INVERSORES" for v in e.wcs_vertices()]
+        self.assertAlmostEqual(max(v[0] for v in inv) - min(v[0] for v in inv), 0.661, places=3)
+        self.assertAlmostEqual(max(v[2] for v in inv) - min(v[2] for v in inv), 0.682, places=3)
+        used = Counter(e.dxf.layer for e in doc.modelspace())
+        self.assertGreater(used["PV-3D-REF-TYPICAL"], 0)
+
+
 class TestFoundation(unittest.TestCase):
     def zs(self, g, layer):
         doc = pv_model3d.build(g, PLANT["result"])
