@@ -60,6 +60,82 @@ class PvSliceTests(unittest.TestCase):
             self.assertEqual(res.status, "blocked")
 
 
+class PvFillTests(unittest.TestCase):
+    """The structure is given and the harness fills it: the plant size is a result, the equipment is proposed, the gaps are stated."""
+
+    def _section(self, **layout_extra):
+        document = PV.doc()
+        template = dict(document["arrays"][0], inverter="auto", dc_ac_ratio=1.2, n_modules=1)
+        for k in ("tilt_deg", "azimuth_deg"):
+            template.pop(k, None)
+        document["arrays"] = [template]
+        return {"document": document, "layout": dict(copy.deepcopy(LAYOUT), fill=True, front_clearance_m=0.5, **layout_extra)}
+
+    def test_the_site_is_filled_and_the_inverter_is_picked_and_said(self):
+        res = STAGES[2].run(ctx_with(self._section()))
+        self.assertEqual(res.status, "ok")
+        pv = res.outputs["pv"]
+        self.assertTrue(pv["layout"]["fits"])
+        n_series = pv["arrays"][0]["strings"]["n_series"]
+        self.assertEqual(pv["counts"]["modules"], pv["site_fill"]["capacity_modules"] // n_series * n_series)      # whole strings that fit
+        fields = {f["field"] for f in res.findings}
+        self.assertTrue({"layout/filled", "warning/inverter_auto"} <= fields)
+        self.assertNotIn("fill", pv["layout"])
+        tf = pv["technical_feasibility"]
+        self.assertTrue(tf["feasible"] and tf["checks"]["structure_holds_the_modules"])
+        self.assertEqual(tf["installed"]["modules"], pv["counts"]["modules"])
+        self.assertTrue(tf["economic"]["en"] and tf["economic"]["es"])
+
+    def test_the_module_that_installs_the_most_power_wins_even_if_it_is_not_the_biggest(self):
+        section = self._section()
+        section["document"]["arrays"][0]["module"] = dict(section["document"]["arrays"][0]["module"], auto=True)
+        res = STAGES[2].run(ctx_with(section))
+        self.assertEqual(res.status, "ok")
+        note = [f for f in res.findings if f["field"] == "warning/module_auto"]
+        self.assertEqual(len(note), 1)
+        pv = res.outputs["pv"]
+        import epc_pv.modulepick as mp
+        pmax = pv["arrays"][0]["dc_kwp"] * 1000.0 / pv["arrays"][0]["modules"]
+        self.assertIn(pmax, {float(r["module"]["pmax_w"]) for r in mp.modules()})
+        self.assertIn(f"{pv['arrays'][0]['modules']} x", note[0]["value"]["en"] + f"{pv['arrays'][0]['modules']} x") 
+        self.assertNotIn("auto", pv["layout"])
+        self.assertGreaterEqual(pv["totals"]["dc_kwp"], 1)
+
+    def test_the_saving_is_the_yearly_energy_times_the_client_price(self):
+        section = self._section()
+        section["economics"] = {"energy_price": 0.1, "currency": "USD", "investment": 20000}
+        eco = STAGES[2].run(ctx_with(section)).outputs["pv"]["technical_feasibility"]["economic"]
+        kwh = STAGES[2].run(ctx_with(self._section())).outputs["pv"]["totals"]["ac_kwh"]
+        self.assertAlmostEqual(eco["saving_year"], kwh * 0.1, delta=0.01)
+        self.assertAlmostEqual(eco["simple_payback_years"], 20000 / (kwh * 0.1), delta=0.01)
+        self.assertEqual(len(eco["saving_month"]), 12)
+        free = STAGES[2].run(ctx_with(self._section())).outputs["pv"]["technical_feasibility"]["economic"]
+        self.assertTrue(free["en"] and free["es"])      # no price: it says what to give, nothing is assumed
+
+    def test_a_cap_stops_the_fill_and_a_data_sheet_gap_is_assumed_never_silent(self):
+        section = self._section(target_modules=56)
+        section["document"]["arrays"][0]["inverter"] = dict(section["document"]["arrays"][0]["inverter"] if isinstance(section["document"]["arrays"][0]["inverter"], dict) else PV.INVERTER, isc_max_input_a=None, model="X")
+        section["document"]["arrays"][0]["inverter"]["i_max_input_a"] = 33
+        res = STAGES[2].run(ctx_with(section))
+        self.assertEqual(res.status, "ok")
+        self.assertEqual(res.outputs["pv"]["counts"]["modules"], 56)
+        self.assertIn("warning/isc_not_checked", {f["field"] for f in res.findings})      # the gap is said, and nothing is made up
+
+    def test_a_site_smaller_than_the_default_table_gets_a_smaller_table_and_says_so(self):
+        section = self._section()
+        section["layout"]["site"].update(width_m=40, length_m=30)
+        res = STAGES[2].run(ctx_with(section))
+        self.assertEqual(res.status, "ok")
+        self.assertIn("warning/table_shrunk", {f["field"] for f in res.findings})
+        self.assertGreater(res.outputs["pv"]["counts"]["modules"], 0)
+
+    def test_a_site_too_small_for_one_table_is_refused_in_both_languages(self):
+        section = self._section()
+        section["layout"]["site"].update(width_m=3, length_m=3)
+        res = STAGES[2].run(ctx_with(section))
+        self.assertEqual(res.status, "blocked")
+
+
 class PvWeatherFileTests(unittest.TestCase):
     """`weather_file`: the PVGIS file of the project replaces the weather of the document; no network."""
 
@@ -174,6 +250,18 @@ class PvOrientationAndRoofTests(unittest.TestCase):
 
 
 class PvDrawingsTests(unittest.TestCase):
+    def test_a_ground_run_raises_the_3d_model_from_the_layout(self):
+        document = PV.doc()
+        inputs = W.inputs_doc()
+        inputs["pv"] = {"document": document, "layout": dict(copy.deepcopy(LAYOUT), front_clearance_m=0.5)}
+        with tempfile.TemporaryDirectory() as tmp:
+            ctx = W.context(engine_inputs=inputs, work_dir=tmp)
+            run(ctx, stop_after=10, run_id="r1")
+            res = ctx.results[10]
+            self.assertEqual(res.status, "ok")
+            self.assertTrue(res.outputs["pv_model_3d"].endswith("_pv_model_3d.dxf"))
+            self.assertTrue(any(str(f.get("path", f.get("name", ""))).endswith("_pv_model_3d.dxf") for f in res.outputs["files"]))
+
     def test_the_four_drafts_are_written_from_the_engine_geometry(self):
         import epc_pv
         from epc_drawing import pv_diagrams

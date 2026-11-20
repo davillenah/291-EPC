@@ -9,6 +9,9 @@ description = "EPC-291 photovoltaic engine: hourly energy yield of a grid-connec
 requires-python = ">=3.10"
 dependencies = []
 
+[project.optional-dependencies]
+timezone = ["timezonefinder"]      # offline time zone of a place (`epc_pv.timezone`); without it the person types the offset
+
 [tool.setuptools.packages.find]
 where = ["src"]
 

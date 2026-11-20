@@ -53,25 +53,53 @@ def _document(document: Dict[str, Any], spec: Dict[str, Any]) -> Dict[str, Any]:
     return dict(document, arrays=[dict(spec["array"], id="A1", tilt_deg=0, azimuth_deg=0, n_modules=1)])
 
 
+def _options(document: Dict[str, Any], spec: Dict[str, Any], altitude: float, azimuth: float) -> List[Dict[str, Any]]:
+    """Capacity and yield of every candidate tilt (a tilt the person fixed is the only candidate)."""
+    base = _document(document, spec)
+    return [dict(capacity(spec, t, altitude), specific_yield_kwh_kwp=orient._yield(base, t, azimuth)) for t in ([float(spec["tilt_deg"])] if "tilt_deg" in spec else TILTS_DEG)]
+
+
 def propose(document: Dict[str, Any], spec: Dict[str, Any]) -> Dict[str, Any]:
     """The assumed-flat roof structure: tilt, azimuth, modules, layout input and frame schedule. `document` carries the site and the weather."""
     check(spec)
     site = document["site"]
     altitude = lay.solar_altitude_deg(float(site["latitude_deg"]), float(site["longitude_deg"]))
-    azimuth = orient.equator_azimuth_deg(float(site["latitude_deg"]))
-    base = _document(document, spec)
-    options = []
-    for tilt in TILTS_DEG:
-        cap = capacity(spec, tilt, altitude)
-        options.append(dict(cap, specific_yield_kwh_kwp=orient._yield(base, tilt, azimuth)))
+    azimuth = float(spec["azimuth_deg"]) if "azimuth_deg" in spec else orient.equator_azimuth_deg(float(site["latitude_deg"]))
+    options = _options(document, spec, altitude, azimuth)
     target = spec.get("target_modules")
     pool = [o for o in options if target is None or o["modules"] >= target] or options
     best = max(pool, key=lambda o: ((min(o["modules"], target) if target else o["modules"]) * o["specific_yield_kwh_kwp"], -o["tilt_deg"]))
     modules = min(best["modules"], target) if target else best["modules"]
     short = max((target or 0) - best["modules"], 0)
-    return {"schema_version": SCHEMA_VERSION, "assumption": "flat roof, tilted frames facing the equator", "tilt_deg": best["tilt_deg"], "azimuth_deg": azimuth, "modules": modules,
+    return {"schema_version": SCHEMA_VERSION, "assumption": spec.get("assumption", "flat roof, tilted frames facing the equator"), "tilt_deg": best["tilt_deg"], "azimuth_deg": azimuth, "modules": modules,
             "capacity_modules": best["modules"], "options": options, "layout": _layout(spec), "structure": structure(spec, best), "fits": short == 0,
             "warnings": [item("roof_short", n=short, capacity=best["modules"])] if short else []}
+
+
+def fit_table(layout: Dict[str, Any]) -> Dict[str, Any]:
+    """The layout with the largest table (modules per row, then rows) that fits inside the site; the same layout, untouched, when the table already fits. The shape is the person's table reduced, never enlarged."""
+    frame, table = lay._frame(layout), dict(layout["table"])
+    smallest = math.cos(math.radians(min(TILTS_DEG)))
+    fitted = dict(layout, table=table)
+    while table["modules_per_row"] > 1 and lay.table_size(fitted)["width_m"] > frame["x1"] - frame["x0"]:
+        table["modules_per_row"] -= 1
+    while table["rows"] > 1 and lay.table_size(fitted)["slope_m"] * smallest > frame["y1"] - frame["y0"]:
+        table["rows"] -= 1
+    return fitted if table != layout["table"] else layout
+
+
+def spec_from_layout(layout: Dict[str, Any], array: Dict[str, Any], target_modules: Optional[int] = None) -> Dict[str, Any]:
+    """The `propose` input of a ground site: the plant layout (site, tables, road, station) filled with as many tables as fit; `target_modules` caps it (None: fill the site).
+    `front_clearance_m` (the lowest edge above the ground) is given in the layout: nothing is defaulted here."""
+    lay._need(layout, ("front_clearance_m",), "layout")
+    site = layout["site"]
+    spec = {"width_m": site["width_m"], "length_m": site["length_m"], "setback_m": site["setback_m"], "walkway_m": layout["road_width_m"], "module_dimensions_mm": layout["module_dimensions_mm"],
+            "module_gap_m": layout["module_gap_m"], "table": layout["table"], "table_gap_m": layout["table_gap_m"], "front_clearance_m": layout["front_clearance_m"], "station": layout["station"],
+            "inverter_pad": layout["inverter_pad"], "array": array, "assumption": "ground plant, tables facing the equator filled to the site"}
+    spec.update({k: array[k] for k in ("tilt_deg", "azimuth_deg") if k in array})
+    if target_modules is not None:
+        spec["target_modules"] = target_modules
+    return spec
 
 
 def structure(spec: Dict[str, Any], best: Dict[str, Any]) -> Dict[str, Any]:

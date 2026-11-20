@@ -1,4 +1,4 @@
-"""The drawings of the photovoltaic plant of stage 10: layout plan, stringing plan, cabling plan and single-line diagram (ground or assumed-flat roof, from the `layout`) and the roof layout, roof stringing
+"""The drawings of the photovoltaic plant of stage 10 (and its 3D model, `<name>_pv_model_3d.dxf`, raised from the same layout): layout plan, stringing plan, cabling plan and single-line diagram (ground or assumed-flat roof, from the `layout`) and the roof layout, roof stringing
 and roof cabling plans (pitched roof planes, from the `roof` result of `epc_pv.plan_roof`).
 
 The discipline draws nothing: it hands the layout of stage 3 (`outputs["pv"]["layout"]`, from `epc_pv.plan_layout`) and the yield result to `epc_drawing.pv_diagrams.write_all`, then puts every
@@ -60,4 +60,16 @@ def write(context, target, name, stamp_date, language, calls):
         done = plan_sheet.compose(path, request, Path(target) / "out" / f"{sheet_name}_sheet.dxf", fmt, scale, sheet_name)
         sheets[f"{sheet_name}_sheet"] = {"format": done["format"], "scale": done["scale"]}
     calls.append(EC.record_for("cad/drawing", COMPOSE))
-    return {"pv_sheets": sheets}
+    return dict({"pv_sheets": sheets}, **_model3d(context, target, name, stamp_date, calls))
+
+
+def _model3d(context, target, name, stamp_date, calls):
+    """The 3D model of the plant (`epc_drawing.pv_model3d`, one DXF with solid faces) when stage 3 placed tables; it lands in the 3D folder of the transmittal."""
+    found = layout_of(context)
+    if found is None:
+        return {}
+    from disciplines.electrical_lv.stages import engine_calls as EC
+    from epc_drawing import pv_model3d
+    path = pv_model3d.write(copy.deepcopy(found[0]), found[1], Path(target) / "out", f"{name}", stamp_date)
+    calls.append(EC.record_for("cad/drawing", "epc_drawing.pv_model3d.write"))
+    return {"pv_model_3d": path.name}
