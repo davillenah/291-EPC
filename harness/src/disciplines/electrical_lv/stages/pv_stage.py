@@ -436,16 +436,20 @@ def _proposals(roof, flat):
 
 def _add_inverters_for_current(section, result):
     """(section, result) where an `auto` inverter count also respects the input current of its MPPT inputs: the ratio alone can leave more strings per input than the data sheet allows, so inverters are added."""
-    arrays, changed = [], False
+    from epc_pv.messages import item
+    arrays, raised = [], []
     for spec, res in zip(section["document"]["arrays"], result["arrays"]):
         st, inv = res["strings"], spec["inverter"]
         if inv.get("auto") and st["strings_per_mppt"] > st["strings_per_mppt_limit"] and st["strings_per_mppt_limit"] > 0:
-            spec, changed = dict(spec, n_inverters=-(-st["strings"] // (int(inv["n_mppt"]) * st["strings_per_mppt_limit"]))), True
+            count = -(-st["strings"] // (int(inv["n_mppt"]) * st["strings_per_mppt_limit"]))
+            raised.append(item("inverters_raised", array=str(spec["id"]), before=res["inverters"], after=count, ratio=round(res["dc_kwp"] * 1000.0 / (count * float(inv["pac0_w"])), 2)))
+            spec = dict(spec, n_inverters=count)
         arrays.append(spec)
-    if not changed:
+    if not raised:
         return section, result
     section = dict(section, document=dict(section["document"], arrays=arrays))
-    return section, _run(section)
+    new = _run(section)
+    return section, dict(new, warnings=list(new["warnings"]) + raised)      # the `inverter_auto` note states the count of the ratio alone: this one states what is installed
 
 
 class PvStage(Stage):

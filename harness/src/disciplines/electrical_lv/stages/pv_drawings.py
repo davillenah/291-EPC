@@ -90,13 +90,32 @@ def equipment_parts(geometry):
             "inverters": {i["id"]: records.get(per_array.get(i.get("array"))) for i in geometry.get("inverters", [])}}
 
 
+# Size of the 3D model, measured on simulated plants: one face set per module took 206 MB of DXF and 2 minutes at 16 128 modules, 939 MB and 10 minutes (7 GB) at 73 680, and ran out of memory (14 GB) at
+# 307 440. Up to MODEL3D_SINGLE_MAX_MODULES the model is one DXF; above, it is written as parts (table and inverter blocks, one DXF per sector of at most `epc_drawing.pv_model3d.SECTOR_MODULES` modules,
+# and a common one) and a master DXF that attaches them, so no step holds the plant in memory. A software limit, not a norm value.
+MODEL3D_SINGLE_MAX_MODULES = 20000
+MODEL3D_PARTS = {"en": "The 3D model is written in {n} sector part(s) plus a common part (ground, fence, station, inverters) and a master file that attaches them (the plant has {modules} modules). Open the master file, keeping the parts in the same folder.",
+                 "es": "El modelo 3D se escribe en {n} parte(s) por sector más una parte común (suelo, vallado, estación, inversores) y un archivo maestro que las une (la planta tiene {modules} módulos). Abrir el archivo maestro, con las partes en la misma carpeta."}
+
+
+def model3d_plan(modules):
+    """("single" | "assembly", note or None): how the 3D model of a plant of `modules` modules is written; the note (English and Spanish) is for the assembly."""
+    return ("single", None) if modules <= MODEL3D_SINGLE_MAX_MODULES else ("assembly", None)
+
+
 def _model3d(context, target, name, stamp_date, calls):
-    """The 3D model of the plant (`epc_drawing.pv_model3d`, one DXF with solid faces) when stage 3 placed tables; it lands in the 3D folder of the transmittal."""
+    """The 3D model of the plant (`epc_drawing.pv_model3d`) when stage 3 placed tables; it lands in the 3D folder of the transmittal. Big plants are written as parts and a master (`model3d_plan`)."""
     found = layout_of(context)
     if found is None:
         return {}
     from disciplines.electrical_lv.stages import engine_calls as EC
     from epc_drawing import pv_model3d
-    path = pv_model3d.write(copy.deepcopy(found[0]), found[1], Path(target) / "out", f"{name}", stamp_date, parts=equipment_parts(found[0]))
-    calls.append(EC.record_for("cad/drawing", "epc_drawing.pv_model3d.write"))
-    return {"pv_model_3d": path.name}
+    modules = sum(int(t["modules"]) for t in found[0]["tables"])
+    parts = equipment_parts(found[0])
+    kind, _ = model3d_plan(modules)
+    calls.append(EC.record_for("cad/drawing", "epc_drawing.pv_model3d.write" if kind == "single" else "epc_drawing.pv_model3d.write_assembly"))
+    if kind == "single":
+        return {"pv_model_3d": pv_model3d.write(copy.deepcopy(found[0]), found[1], Path(target) / "out", f"{name}", stamp_date, parts=parts).name}
+    done = pv_model3d.write_assembly(copy.deepcopy(found[0]), found[1], Path(target) / "out", f"{name}", stamp_date, parts=parts)
+    note = {k: v.format(n=done["sectors"], modules=modules) for k, v in MODEL3D_PARTS.items()}
+    return {"pv_model_3d": done["master"].name, "pv_model_3d_parts": [p.name for p in done["parts"]], "pv_model_3d_note": note}

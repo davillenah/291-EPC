@@ -172,3 +172,138 @@ def write(geometry: Dict[str, Any], result: Dict[str, Any], out_dir, name: str, 
     path = out / f"{name}_pv_model_3d.dxf"
     deliverable.finish_draft(build(geometry, result, parts, level), path, None, stamp_date, f"{name}_pv_model_3d")
     return path
+
+
+# --- big plants: parts, sectors and an assembly ------------------------------------------------------------------------------------------------------------------------------------------
+# One 3DFACE set per module costs memory and file size in proportion to the modules (49 MWp: 939 MB of DXF, 307 440 modules ran the run out of memory). The parametric way is to define every
+# distinct part ONCE as a block (a table of n modules at the tilt of its array, with its rails, posts and buried parts; an inverter of a record) and to INSERT it where the layout puts it.
+# The plant is then written in sectors (one DXF per group of tables, each with its own block definitions and inserts, saved and freed one at a time) plus a common file (ground, fence, station,
+# inverters) and a master DXF that attaches all of them as external references: the project is assembled from its parts, and no step holds the whole plant in memory.
+SECTOR_MODULES = 20000
+TABLE_BLOCK = "PV-TABLE"
+INVERTER_BLOCK = "PV-INVERTER"
+
+
+def _table_block(doc, geometry: Dict[str, Any], parts: Dict[str, Any], level: str, array: str, modules: int, width: float, tilt_deg: float) -> str:
+    """Defines (once) the block of a table of `modules` modules of `array` with its origin at the table corner; returns its name. Same faces as `build`, but local to the table."""
+    name = f"{TABLE_BLOCK}-{array}-{modules}M-{width:g}W-{tilt_deg:g}D"
+    if name in doc.blocks:
+        return name
+    block = doc.blocks.new(name)
+    tilt = math.radians(tilt_deg)
+    slope = float(geometry["table"]["slope_m"])
+    rear_h = float(geometry["module"]["front_clearance_m"] or 0.0) + slope * math.sin(tilt)
+    local = {"x": 0.0, "y": 0.0, "width_m": width, "modules": modules}
+    _add(block, "PV-3D-MODULOS", _modules(geometry, local, tilt, rear_h))
+    if parts.get("module") is not None:
+        for layer, faces in _module_details(geometry, local, tilt, rear_h, parts["module"], level).items():
+            _add(block, layer, faces)
+    section = pv_parts.post_section(parts.get("structure"))
+    rails, posts, buried = _supports(local, slope, tilt, rear_h, embedment_m(geometry), section)
+    _add(block, "PV-3D-ESTRUCTURA", rails + ([] if section else posts))
+    if section:
+        _add(block, section["layer"], posts)
+    _add(block, "PV-3D-CIMENTACION", buried)
+    return name
+
+
+def _new_document():
+    import ezdxf
+    doc = ezdxf.new("R2018", setup=True)
+    doc.units = 6
+    for name, colour in LAYERS.items():
+        doc.layers.add(name, color=colour)
+    return doc
+
+
+def sectors(geometry: Dict[str, Any], sector_modules: int = SECTOR_MODULES) -> List[List[Dict[str, Any]]]:
+    """The tables in groups, in layout order (row by row), each group holding at most `sector_modules` modules (a table is never split)."""
+    out, current, count = [], [], 0
+    for table in geometry["tables"]:
+        if current and count + int(table["modules"]) > sector_modules:
+            out.append(current)
+            current, count = [], 0
+        current.append(table)
+        count += int(table["modules"])
+    return out + ([current] if current else [])
+
+
+def build_sector(geometry: Dict[str, Any], tables: List[Dict[str, Any]], parts: Optional[Dict[str, Any]] = None, level: str = "standard"):
+    """The ezdxf document of one sector: the table blocks it needs and one INSERT per table."""
+    parts = parts or {}
+    doc = _new_document()
+    msp = doc.modelspace()
+    for table in tables:
+        tilt_deg = float(geometry["tilts_deg"][table["array"]])
+        name = _table_block(doc, geometry, parts, level, str(table["array"]), int(table["modules"]), float(table["width_m"]), tilt_deg)
+        msp.add_blockref(name, (table["x"], table["y"], 0.0), dxfattribs={"layer": "PV-3D-MODULOS"})
+    return doc
+
+
+def _inverter_block(doc, det, name: str) -> None:
+    w, h, d = det["size"]
+    block = doc.blocks.new(name)
+    _add(block, "PV-3D-REF-FALLBACK", box(0, 0, 0, w, d, PLINTH_M))
+    _add(block, "PV-3D-INVERSORES", box(0, 0, PLINTH_M, w, d, h))
+    for layer, faces in det["parts"]:
+        _add(block, layer, [tuple((p[0], d - p[2], PLINTH_M + p[1]) for p in f) for f in faces])
+
+
+def build_common(geometry: Dict[str, Any], parts: Optional[Dict[str, Any]] = None, level: str = "standard"):
+    """The ezdxf document of what is not a table: the ground, the fence line, the station and the inverters (one block per equipment record, one INSERT per inverter)."""
+    parts = parts or {}
+    doc = _new_document()
+    msp = doc.modelspace()
+    site, s = geometry["site"], geometry["site"]["setback_m"]
+    _add(msp, "PV-3D-SUELO", box(0, 0, -SOIL_M, site["width_m"], site["length_m"], SOIL_M))
+    msp.add_polyline3d([(s, s, 0), (site["width_m"] - s, s, 0), (site["width_m"] - s, site["length_m"] - s, 0), (s, site["length_m"] - s, 0)], close=True, dxfattribs={"layer": "PV-3D-VALLADO"})
+    records = parts.get("inverters") or {}
+    for inv in geometry["inverters"]:
+        if inv.get("x") is None:
+            continue
+        det = pv_parts.inverter_detail(records.get(inv.get("catalog_id") or inv.get("id")), level)
+        if det is None:
+            name = f"{INVERTER_BLOCK}-PAD-{inv['width_m']:g}x{inv['depth_m']:g}"
+            if name not in doc.blocks:
+                _add(doc.blocks.new(name), "PV-3D-INVERSORES", box(0, 0, 0, inv["width_m"], inv["depth_m"], PAD_HEIGHT_M))
+            at = (inv["x"] - inv["width_m"] / 2, inv["y"] - inv["depth_m"] / 2, 0.0)
+        else:
+            w, _, d = det["size"]
+            name = f"{INVERTER_BLOCK}-{(inv.get('catalog_id') or inv.get('id'))}-{w:g}x{d:g}".replace(" ", "_")
+            if name not in doc.blocks:
+                _inverter_block(doc, det, name)
+            at = (inv["x"] - w / 2, inv["y"] - d / 2, 0.0)
+        msp.add_blockref(name, at, dxfattribs={"layer": "PV-3D-INVERSORES"})
+    st = geometry["station"]
+    _add(msp, "PV-3D-ESTACION", box(st["x"], st["y"], 0, st["width_m"], st["depth_m"], STATION_HEIGHT_M))
+    return doc
+
+
+def write_assembly(geometry: Dict[str, Any], result: Dict[str, Any], out_dir, name: str, stamp_date=None, parts: Optional[Dict[str, Any]] = None, level: str = "standard", sector_modules: int = SECTOR_MODULES) -> Dict[str, Any]:
+    """Writes the plant as parts and the assembly: `<name>_pv_model_3d_common.dxf`, `<name>_pv_model_3d_s01.dxf` ... one per sector, and the master `<name>_pv_model_3d.dxf` that attaches them as
+    external references (same folder, relative names). Each part is saved and released before the next one is built. Returns {"master": path, "parts": [paths], "sectors": n}."""
+    from epc_dxf import deliverable
+    if not geometry.get("tables"):
+        raise ValueError("the layout has no tables to raise in 3D")
+    out = Path(out_dir)
+    out.mkdir(parents=True, exist_ok=True)
+    stem = f"{name}_pv_model_3d"
+    written = []
+
+    def save(doc, suffix):
+        path = out / f"{stem}_{suffix}.dxf"
+        deliverable.finish_draft(doc, path, None, stamp_date, f"{stem}_{suffix}")
+        written.append(path)
+
+    save(build_common(geometry, parts, level), "common")
+    groups = sectors(geometry, sector_modules)
+    for k, tables in enumerate(groups, start=1):
+        save(build_sector(geometry, tables, parts, level), f"s{k:02d}")
+    master = _new_document()
+    for path in written:
+        ref = path.stem.replace(stem + "_", "PV-PART-")
+        master.add_xref_def(path.name, ref)
+        master.modelspace().add_blockref(ref, (0.0, 0.0, 0.0), dxfattribs={"layer": "PV-3D-ESTRUCTURA"})
+    master_path = out / f"{stem}.dxf"
+    deliverable.finish_draft(master, master_path, None, stamp_date, stem)
+    return {"master": master_path, "parts": written, "sectors": len(groups)}

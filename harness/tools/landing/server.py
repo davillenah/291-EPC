@@ -291,7 +291,7 @@ def _merge_pv(data, pv_data):
     if not pv_data:
         return data
     (areas, loads), board = pv_data["aux"] or (([], []), None)
-    data = data or {"plans": {}, "loads": {"schema_version": "1.0", "areas": areas, "loads": loads}, "inputs": {"board": board, "documents": {"formats": ["pdf", "docx", "xlsx"]}}}
+    data = data or {"plans": {}, "loads": {"schema_version": "1.0", "areas": areas, "loads": loads}, "inputs": {"board": board, "documents": {"formats": ["pdf", "docx", "xlsx"]}, "circuits": {"AUX-01": {"kind": "rcbo"}}}}      # the auxiliary service carries its residual-current device (TT needs it, stage 8)
     return dict(data, inputs=dict(data["inputs"], pv=pv_data["section"]), files=pv_data["files"])
 
 
