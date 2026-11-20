@@ -70,6 +70,14 @@ MESSAGES: Dict[str, Dict[str, str]] = {
         "en": "{n} obstacle(s) of the roof drawing are not inside any roof plane and were ignored.",
         "es": "{n} obstáculo(s) del dibujo de cubierta no están dentro de ningún faldón y se ignoraron.",
     },
+    "foundation_depth_not_found": {
+        "en": "Structure {structure}: its record gives no embedment depth, so nothing is drawn below the surface; the engineer of record sets the foundation (pile or screw length, footing).",
+        "es": "Estructura {structure}: su registro no da la profundidad de empotramiento, por lo que no se dibuja nada bajo la superficie; el ingeniero de registro define la fundación (largo de pilote o tornillo, zapata).",
+    },
+    "foundation_unverified": {
+        "en": "Structure {structure}: foundation data is {status} (pending review); the embedment drawn is reference geometry, not a geotechnical or structural design.",
+        "es": "Estructura {structure}: los datos de fundación están {status} (pendientes de revisión); el empotramiento dibujado es geometría de referencia, no un diseño geotécnico ni estructural.",
+    },
     "roof_wind_pending": {
         "en": "Wind uplift, ballast, roof loads and fixings are not calculated: they need the structure data of the roof and the wind code, and no wind value is recorded in the norm register.",
         "es": "No se calculan la succión del viento, el lastre, las cargas del techo ni las fijaciones: requieren los datos de la estructura del techo y la norma de viento, y no hay ningún valor de viento en el registro de normas.",

@@ -16,4 +16,4 @@ timezone = ["timezonefinder"]      # offline time zone of a place (`epc_pv.timez
 where = ["src"]
 
 [tool.setuptools.package-data]
-epc_pv = ["data/*.json", "schema/*.json"]
+epc_pv = ["data/*.json", "data/*/*.json", "data/*/*/*.json", "schema/*.json"]

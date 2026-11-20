@@ -223,7 +223,7 @@ def _pick_inverters(section, originals):
     warned, arrays = [], []
     for a in section["document"]["arrays"]:
         modules, pmax = int(a["n_modules"]), float(a["module"]["pmax_w"])
-        rec = catalog.pick_inverter(modules, pmax, float(ratio))
+        rec = catalog.pick_inverter(modules, pmax, float(ratio), module=a["module"])
         block, notes = catalog.with_isc(rec), []
         n = max(1, catalog.half_up(modules * pmax / (float(ratio) * block["pac0_w"])))
         warned += notes + [item("inverter_auto", array=a["id"], model=rec["model"], n=n, kwp=round(modules * pmax / 1000.0, 2), ratio=ratio)]

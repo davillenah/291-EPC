@@ -85,3 +85,19 @@ class TestPvModel3dDetail(unittest.TestCase):
         self.assertAlmostEqual(max(v[2] for v in inv) - min(v[2] for v in inv), 0.682, places=3)
         used = Counter(e.dxf.layer for e in doc.modelspace())
         self.assertGreater(used["PV-3D-REF-TYPICAL"], 0)
+
+
+class TestFoundation(unittest.TestCase):
+    def zs(self, g, layer):
+        doc = pv_model3d.build(g, PLANT["result"])
+        return [v[2] for e in doc.modelspace() if e.dxf.layer == layer for v in e.wcs_vertices()]
+
+    def test_nothing_goes_below_the_surface_unless_the_structure_record_states_a_depth(self):
+        g = geometry()
+        self.assertEqual(self.zs(g, "PV-3D-CIMENTACION"), [])
+        self.assertGreaterEqual(min(self.zs(g, "PV-3D-ESTRUCTURA")), 0.0)
+        g["foundation"] = {"structure_id": "driven_pile_fixed_table", "embedment_m": 1.5}
+        self.assertAlmostEqual(min(self.zs(g, "PV-3D-CIMENTACION")), -1.5)
+        self.assertGreaterEqual(min(self.zs(g, "PV-3D-ESTRUCTURA")), 0.0)
+        g["foundation"] = {"structure_id": "roof_flat_slab_anchored", "embedment_m": None}
+        self.assertEqual(self.zs(g, "PV-3D-CIMENTACION"), [])
