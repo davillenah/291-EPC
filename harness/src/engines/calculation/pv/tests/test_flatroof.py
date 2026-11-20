@@ -65,3 +65,52 @@ class TestFlatRoof(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestCatalogPick(unittest.TestCase):
+    def test_the_pick_is_the_closest_ratio_and_the_isc_gap_is_assumed_and_said(self):
+        from epc_pv import catalog
+        rec = catalog.pick_inverter(40, 670, 1.2)
+        n = max(1, round(40 * 670 / (1.2 * rec["inverter"]["pac0_w"])))
+        self.assertLess(abs(40 * 670 / (n * rec["inverter"]["pac0_w"]) - 1.2), 0.3)
+        self.assertIsNone(catalog.with_isc(rec)["isc_max_input_a"])      # the data sheet gap stays a gap: nothing is invented
+        self.assertEqual(catalog.with_isc(rec, 50)["isc_max_input_a"], 50.0)
+
+    def test_a_ground_site_spec_fills_with_a_fixed_tilt_when_given(self):
+        layout = {"site": {"width_m": 40, "length_m": 30, "setback_m": 2}, "module_dimensions_mm": [2278, 1134], "module_gap_m": 0.02, "table": {"rows": 2, "modules_per_row": 14, "orientation": "portrait"},
+                  "table_gap_m": 0.5, "road_width_m": 4, "front_clearance_m": 0.5, "station": {"width_m": 6, "depth_m": 2.5}, "inverter_pad": {"width_m": 0.7, "depth_m": 0.4}}
+        array = dict(SPEC["array"], tilt_deg=20, azimuth_deg=0)
+        p = flatroof.propose(doc(), flatroof.spec_from_layout(layout, array))
+        self.assertEqual((p["tilt_deg"], len(p["options"])), (20.0, 1))
+        self.assertTrue(p["assumption"].startswith("ground"))
+        capped = flatroof.spec_from_layout(layout, array, 10)
+        self.assertEqual(capped["target_modules"], 10)
+
+    def test_a_table_too_big_for_the_site_is_reduced_never_enlarged_and_the_clearance_is_asked(self):
+        layout = {"site": {"width_m": 40, "length_m": 30, "setback_m": 5}, "module_dimensions_mm": [2278, 1134], "module_gap_m": 0.02, "table": {"rows": 2, "modules_per_row": 28, "orientation": "portrait"},
+                  "table_gap_m": 0.5, "road_width_m": 4, "front_clearance_m": 0.5, "station": {"width_m": 6, "depth_m": 2.5}, "inverter_pad": {"width_m": 0.7, "depth_m": 0.4}}
+        fitted = flatroof.fit_table(layout)
+        self.assertLess(fitted["table"]["modules_per_row"], 28)
+        self.assertEqual(fitted["table"]["rows"], 2)
+        self.assertGreater(flatroof.propose(doc(), flatroof.spec_from_layout(fitted, dict(SPEC["array"])))["modules"], 0)
+        self.assertIs(flatroof.fit_table(fitted), fitted)      # already fits: untouched
+        tiny = dict(layout, site={"width_m": 14, "length_m": 8, "setback_m": 1}, table={"rows": 3, "modules_per_row": 4, "orientation": "portrait"})
+        self.assertLess(flatroof.fit_table(tiny)["table"]["rows"], 3)
+        del layout["front_clearance_m"]
+        with self.assertRaises(PvError):
+            flatroof.spec_from_layout(layout, dict(SPEC["array"]))
+
+
+class TestModulePick(unittest.TestCase):
+    def test_the_most_total_power_wins_not_the_biggest_module(self):
+        from epc_pv import modulepick
+        # a toy geometry: the count falls with the module area, so a small module can win on total power
+        def count(rec, _o):
+            d = rec["dimensions_mm"]
+            return int(60.0 / (d[0] * d[1] / 1e6))
+        row, rows = modulepick.best(count)
+        self.assertEqual(row["dc_kwp"], max(r["dc_kwp"] for r in rows))
+        self.assertEqual(len(rows), 5)
+        self.assertEqual(rows, sorted(rows, key=lambda r: (-r["dc_kwp"], -r["modules"])))
+        self.assertIn("kWp", modulepick.summary(rows))
+        self.assertEqual(modulepick.block(row["record"])["id"], row["record"]["id"])

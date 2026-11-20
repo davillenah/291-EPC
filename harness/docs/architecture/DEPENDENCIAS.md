@@ -69,7 +69,7 @@ Lo declarado en `pyproject.toml` frente a lo que el código importa de verdad.
 | `load_balance` | — | `epc-calc-common` | — |
 | `mld` | `lxml` | `epc-aea90364`, `epc-dxf`, `epc-symbols`, `epc-titleblock`, `lxml` | — |
 | `plan` | `ezdxf` | `epc-dxf`, `ezdxf` | — |
-| `pv` | — | — | — |
+| `pv` | `timezonefinder` | `timezonefinder` | — |
 | `receptacles` | — | — | — |
 | `rfq` | — | — | — |
 | `rules` | `engines` | — | `engines` |

@@ -1,7 +1,6 @@
 {
-  "_note": "Proposals of the landing for a photovoltaic project: every value is typical, pending review, and editable in the form. Nothing here is a value of a standard. The engine itself defaults nothing (epc_pv). Tilt and azimuth are not proposed here: the engine chooses them from the weather year (epc_pv.orient) when the form leaves them empty.",
+  "_note": "Proposals of the landing for a photovoltaic project: every value is typical, pending review, and editable in the form. Nothing here is a value of a standard. The engine itself defaults nothing (epc_pv). Tilt and azimuth are not proposed here: the engine chooses them from the weather year (epc_pv.orient) when the form leaves them empty. Advanced fields (module, inverter, ratio, power cap, auxiliaries, Isc, distances) are folded in the page; the plant size is the result of filling the structure. Auxiliary services (monitoring, security) are a typical placeholder load: a project needs at least one load (rule IV-01), so the proposal is stated and pending review; type the real one in the advanced section.",
   "status": "pending review",
-  "utc_offset_h": -3,
   "albedo": 0.2,
   "layout": {
     "setback_m": 5,
@@ -11,6 +10,7 @@
     "module_gap_m": 0.02,
     "table_gap_m": 0.5,
     "road_width_m": 4,
+    "front_clearance_m": 0.5,
     "station": {
       "width_m": 6,
       "depth_m": 2.5
@@ -36,5 +36,13 @@
       "width_m": 1,
       "depth_m": 1
     }
-  }
+  },
+  "module": "auto",
+  "inverter": "auto",
+  "aux": {
+    "load_kw": 1.0,
+    "phases": 1,
+    "length_m": 20
+  },
+  "module_placeholder": "jinko.jkm670n-66ql6-bdv"
 }

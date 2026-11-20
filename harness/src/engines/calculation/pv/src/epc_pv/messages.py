@@ -42,6 +42,22 @@ MESSAGES: Dict[str, Dict[str, str]] = {
         "en": "{n} inverter(s) do not fit in the gap between rows (pad deeper than the gap): move them to the end of the row.",
         "es": "{n} inversor(es) no entran en el espacio entre filas (la base es más profunda que el espacio): moverlos al extremo de la fila.",
     },
+    "isc_not_checked": {
+        "en": "Array {array}: the inverter data sheet gives no maximum short-circuit current per MPPT input, so only the operating input current limits the strings per input. Confirm the short-circuit limit with the manufacturer (pending review).",
+        "es": "Arreglo {array}: la hoja de datos del inversor no da la corriente de cortocircuito máxima por entrada MPPT, por lo que solo la corriente de operación limita los strings por entrada. Confirmar el límite de cortocircuito con el fabricante (pendiente de revisión).",
+    },
+    "table_shrunk": {
+        "en": "The table of {rows} x {per_row} modules does not fit the site; the harness uses {rows_fit} x {per_row_fit} (pending review). Give a table size in the advanced section to change it.",
+        "es": "La mesa de {rows} x {per_row} módulos no entra en el predio; el harness usa {rows_fit} x {per_row_fit} (pendiente de revisión). Indicar el tamaño de mesa en la sección avanzada para cambiarlo.",
+    },
+    "module_auto": {
+        "en": "Module {model} chosen from the catalog: it installs the most power on the structure ({n} modules, {kwp} kWp). Best alternatives: {table}. Give a module in the advanced section to fix it (pending review).",
+        "es": "Módulo {model} elegido del catálogo: es el que más potencia instala en la estructura ({n} módulos, {kwp} kWp). Mejores alternativas: {table}. Indicar un módulo en la sección avanzada para fijarlo (pendiente de revisión).",
+    },
+    "inverter_auto": {
+        "en": "Array {array}: inverter {model} chosen from the catalog ({n} unit(s) for {kwp} kWp at DC/AC {ratio}); give another inverter in the advanced section to change it (pending review).",
+        "es": "Arreglo {array}: inversor {model} elegido del catálogo ({n} unidad(es) para {kwp} kWp con CC/CA {ratio}); indicar otro inversor en la sección avanzada para cambiarlo (pendiente de revisión).",
+    },
     "roof_dxf_azimuth": {
         "en": "Roof plane {plane}: the drawing gives no azimuth; the harness chooses it (the plane is only a placement area).",
         "es": "Faldón {plane}: el dibujo no indica el azimut; lo elige el harness (el faldón es solo un área de colocación).",

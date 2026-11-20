@@ -2,7 +2,7 @@
 
     V_oc,cold = V_oc (1 + beta (T_min - 25))        n_series <= V_dc,max / V_oc,cold   and   n_series <= V_mppt,max / V_mp,cold
     V_mp,hot  = V_mp (1 + beta (T_cell,max - 25))    n_series >= V_mppt,min / V_mp,hot
-    strings per MPPT input <= min( I_max / I_mp , I_sc,max / (I_sc k) )                  k: short-circuit factor (data)
+    strings per MPPT input <= min( I_max / I_mp , I_sc,max / (I_sc k) )                  k: short-circuit factor (data); without I_sc,max only the first term is checked (warning `isc_not_checked`)
 beta is the temperature coefficient of the voltage (fraction per degree C). The layout is whole strings: modules = strings x n_series.
 """
 import math
@@ -61,8 +61,12 @@ def layout(spec: Dict[str, Any], t_min_c: float, t_cell_max_c: float, rules: Dic
     n_inv = inverter_count(spec, dc_w, inverter["pac0_w"], array_id)
     per_inverter = math.ceil(strings / n_inv)
     per_mppt = math.ceil(per_inverter / int(inverter["n_mppt"]))
-    limit = min(math.floor(inverter["i_max_input_a"] / module["imp_a"]), math.floor(inverter["isc_max_input_a"] / (module["isc_a"] * rules["isc_factor"])))
+    limit = math.floor(inverter["i_max_input_a"] / module["imp_a"])
     warnings: List[Dict[str, str]] = []
+    if inverter.get("isc_max_input_a") is None:
+        warnings.append(item("isc_not_checked", array=array_id))
+    else:
+        limit = min(limit, math.floor(inverter["isc_max_input_a"] / (module["isc_a"] * rules["isc_factor"])))
     if per_mppt > limit:
         warnings.append(item("warn_current", array=array_id, strings=per_mppt, limit=limit))
     return {"n_series": n_series, "series_range": rng, "strings": strings, "modules": modules, "dc_kwp": dc_w / 1000.0, "inverters": n_inv, "strings_per_inverter": per_inverter,

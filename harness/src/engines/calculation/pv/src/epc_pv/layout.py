@@ -171,7 +171,8 @@ def plan(document: Dict[str, Any], result: Dict[str, Any], layout: Dict[str, Any
         tables += placed
         inverters += invs
         first_string += arr["strings"]["strings"]
-    return _result(document, layout, size, frame, altitude, tables, inverters, left_out, tight)
+    out = _result(document, layout, size, frame, altitude, tables, inverters, left_out, tight)
+    return dict(out, tilts_deg={str(a["id"]): float(a["tilt_deg"]) for a in document["arrays"]})
 
 
 def _result(document, layout, size, frame, altitude, tables, inverters, left_out, tight) -> Dict[str, Any]:
@@ -187,6 +188,7 @@ def _result(document, layout, size, frame, altitude, tables, inverters, left_out
             "table": {"rows": layout["table"]["rows"], "modules_per_row": layout["table"]["modules_per_row"], "orientation": layout["table"]["orientation"], "width_m": round(size["width_m"], 3),
                       "slope_m": round(size["slope_m"], 3)},
             "pitch_m": sorted({round(row_pitch_m(size["slope_m"], float(a["tilt_deg"]), altitude), 3) for a in document["arrays"]}),
+            "module": {"dimensions_mm": [float(d) for d in layout["module_dimensions_mm"][:2]], "gap_m": float(layout["module_gap_m"]), "front_clearance_m": float(layout["front_clearance_m"]) if "front_clearance_m" in layout else None},
             "frame": {k: round(v, 3) for k, v in frame.items()}, "station": station, "tables": tables, "inverters": inverters,
             "counts": {"tables": len(tables), "tables_left_out": left_out, "inverters": len(inverters), "rows": max([t["row"] for t in tables], default=0)},
             "fits": left_out == 0, "warnings": warnings}

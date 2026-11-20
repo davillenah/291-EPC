@@ -186,10 +186,11 @@ class PvProjectTests(unittest.TestCase):
     def test_the_request_names_the_discipline_and_proposes_what_is_pending_review(self):
         it = server.interpret({"request": "Una planta fotovoltaica de 1 MWp", "lang": "es"})
         self.assertEqual(it["brief"]["disciplines"], ["electrical", "pv"])
-        self.assertEqual((it["values"]["pv.utc_offset_h"], it["values"]["pv.dc_ac_ratio"]), (-3, 1.2))
+        self.assertEqual(it["values"]["pv.dc_ac_ratio"], 1.2)
+        self.assertNotIn("pv.utc_offset_h", it["values"])      # the time zone comes from the place, not from a proposal
         self.assertNotIn("pv.azimuth_deg", it["values"])
         self.assertNotIn("pv.tilt_deg", it["values"])
-        self.assertIn("pv.utc_offset_h", it["assumed"])
+        self.assertIn("pv.dc_ac_ratio", it["assumed"])
         self.assertNotIn("pv.latitude_deg", it["values"])
 
     def test_the_form_comes_from_the_catalogs_and_asks_for_latitude_and_longitude(self):
@@ -200,10 +201,59 @@ class PvProjectTests(unittest.TestCase):
         self.assertIn("longi.lr5-72hgd-560m", fields["pv.module"]["options"])
         self.assertIn("sma.stp25000tl-30", fields["pv.inverter"]["options"])
 
+    def test_the_minimum_is_the_structure_and_the_place(self):
+        minimal = {k: v for k, v in PV_ANSWERS.items() if not k.startswith("pv.")}
+        minimal.update({"pv.mode": "ground", "pv.latitude_deg": "-34.6", "pv.longitude_deg": "-58.4", "pv.site_width_m": "60", "pv.site_length_m": "40"})
+        r = server.handle(self.root, {**self.payload(), "answers": minimal}, False)
+        self.assertEqual(r["results"]["pv"]["state"], "valid")
+        section = pv.section(minimal)
+        self.assertEqual(section["document"]["arrays"][0]["inverter"], "auto")
+        self.assertTrue(section["layout"]["fill"])
+        self.assertNotIn("target_modules", section["layout"])
+        self.assertEqual(pv.aux_loads(minimal)[1][0]["power"]["value"], pv.DEFAULTS["aux"]["load_kw"])      # a project needs one load: typical proposal, pending review
+        roof = pv.section(dict(minimal, **{"pv.mode": "rooftop", "pv.roof_width_m": "12", "pv.roof_slope_m": "6"}))
+        self.assertNotIn("target_modules", roof["flat_roof"])
+        capped = pv.section(dict(minimal, **{"pv.target_kwp": "10"}))
+        self.assertEqual(capped["layout"]["target_kwp"], 10.0)      # the module is still `auto`: the stage turns the cap into modules after the pick
+        fixed = pv.section(dict(minimal, **{"pv.target_kwp": "10", "pv.module": "longi.lr5-72hgd-560m"}))
+        self.assertGreater(fixed["layout"]["target_modules"], 0)
+        self.assertTrue(section["document"]["arrays"][0]["module"]["auto"])
+        self.assertNotIn("auto", fixed["document"]["arrays"][0]["module"])
+
+    def test_the_time_zone_comes_from_the_place_unless_typed(self):
+        v = lambda **k: pv.values_of({f"pv.{a}": b for a, b in k.items()})[0]      # noqa: E731
+        self.assertEqual(pv.utc_offset(v(latitude_deg="-32.89", longitude_deg="-68.84")), -3.0)
+        self.assertEqual(pv.utc_offset(v(latitude_deg="28.6", longitude_deg="77.2")), 5.5)
+        self.assertEqual(pv.utc_offset(v(latitude_deg="40.4", longitude_deg="-3.7")), 1.0)      # standard time, not summer time
+        self.assertEqual(pv.utc_offset(v(latitude_deg="-32.89", longitude_deg="-68.84", utc_offset_h="-4")), -4.0)
+
+    def test_the_client_price_becomes_the_economics_key_and_none_is_invented(self):
+        base = {k: v for k, v in PV_ANSWERS.items() if not k.startswith("pv.")}
+        base.update({"pv.mode": "ground", "pv.latitude_deg": "-34.6", "pv.longitude_deg": "-58.4", "pv.site_width_m": "60", "pv.site_length_m": "40"})
+        self.assertNotIn("economics", pv.section(base))
+        priced = pv.section(dict(base, **{"pv.energy_price": "0.12", "pv.currency": "USD", "pv.investment": "9000"}))
+        self.assertEqual(priced["economics"], {"energy_price": 0.12, "currency": "USD", "investment": 9000.0})
+        self.assertEqual(pv.check(dict(base, **{"pv.energy_price": "-1"}))["code"], "pv_range")
+
+    def test_the_simulation_folder_tmp_of_the_repository_is_accepted_and_the_rest_of_the_repository_is_not(self):
+        repo = server.HARNESS.parent
+        self.assertIsNone(server._checked_root({"folder": str(repo / "tmp" / "sim-01" / "PV-X")}, self.root)[2])
+        self.assertEqual(server._checked_root({"folder": str(repo / "projects" / "PV-X")}, self.root)[2], "inside_repo")
+
+    def test_the_advanced_fields_are_marked_and_the_data_sheet_gap_is_not_asked(self):
+        fields = {f["path"]: f for f in pv.form()["fields"]}
+        self.assertTrue(all(fields[k]["advanced"] for k in ("pv.module", "pv.inverter", "pv.dc_ac_ratio", "pv.target_kwp", "pv.aux_load_kw", "pv.utc_offset_h")))
+        self.assertFalse(any(fields[k]["advanced"] or fields[k]["required"] is False for k in ("pv.latitude_deg", "pv.longitude_deg", "pv.mode")))
+        self.assertIn("auto", fields["pv.inverter"]["options"])
+        answers = dict(PV_ANSWERS)
+        del answers["pv.isc_max_input_a"]
+        self.assertIsNone(pv.check(answers))
+        self.assertIsNone(pv.section(answers)["document"]["arrays"][0]["inverter"]["isc_max_input_a"])
+
     def test_check_asks_and_never_fills_what_the_catalog_lacks(self):
         self.assertEqual(server.handle(self.root, self.payload(), False)["results"]["pv"]["state"], "valid")
         self.assertEqual(self.asked, [])
-        for name, code in (("pv.latitude_deg", "pv_missing"), ("pv.isc_max_input_a", "pv_isc"), ("pv.aux_load_kw", "pv_missing"), ("pv.site_width_m", "pv_missing")):
+        for name, code in (("pv.latitude_deg", "pv_missing"), ("pv.site_width_m", "pv_missing")):
             answers = dict(PV_ANSWERS)
             del answers[name]
             r = server.handle(self.root, {**self.payload(), "answers": answers}, False)

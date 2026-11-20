@@ -14,7 +14,8 @@ from epc_pv.model import Options, PvError, Result
 
 WEATHER_SERIES = ("ghi", "dni", "dhi", "temp_air_c", "wind_ms")
 MODULE_KEYS = ("pmax_w", "voc_v", "vmp_v", "isc_a", "imp_a", "beta_voc_pct_c", "gamma_pmax_pct_c")
-INVERTER_KEYS = ("pac0_w", "mppt_v_min", "mppt_v_max", "vdc_max_v", "n_mppt", "i_max_input_a", "isc_max_input_a")
+INVERTER_KEYS = ("pac0_w", "mppt_v_min", "mppt_v_max", "vdc_max_v", "n_mppt", "i_max_input_a")
+OPTIONAL_INVERTER_KEYS = ("isc_max_input_a",)      # a data sheet may not give it: the string count then follows the operating current only and the result says so
 
 
 def _document(doc: Union[dict, str, bytes]) -> dict:
@@ -114,7 +115,7 @@ def _array_spec(spec: Any, index: int) -> Dict[str, Any]:
     _number(s, "n_modules", f"arrays[{index}]", positive=True)
     for k in ("pmax_w", "voc_v", "vmp_v", "isc_a", "imp_a"):
         _number(s["module"], k, f"arrays[{index}].module", positive=True)
-    for k in INVERTER_KEYS:
+    for k in INVERTER_KEYS + tuple(k for k in OPTIONAL_INVERTER_KEYS if s["inverter"].get(k) is not None):
         _number(s["inverter"], k, f"arrays[{index}].inverter", positive=True)
     return s
 
