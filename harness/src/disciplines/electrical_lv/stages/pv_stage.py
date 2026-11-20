@@ -72,12 +72,22 @@ def _section(context):
     return section
 
 
+def _equipment_ids(document, geometry):
+    """The ids of the equipment records that match what the layout drew, for the 3D detail: the module format with that outline and, per array, the inverter record of its model (None where the records have none)."""
+    from epc_pv import equipment
+    fmt = equipment.module_format(geometry["module"]["dimensions_mm"])
+    by_model = {r["model"]: r["record"] for r in equipment.inverters()}
+    models = {str(a["id"]): (a.get("inverter") or {}).get("model") for a in document.get("arrays", [])}
+    return {"module_format": fmt["id"] if fmt else None, "inverter_records": {k: by_model.get(m) for k, m in models.items()}}
+
+
 def _layout(section, document, result):
     import epc_pv
     try:
-        return epc_pv.plan_layout(document, result, section["layout"])
+        geometry = epc_pv.plan_layout(document, result, section["layout"])
     except epc_pv.PvError as exc:
         raise StageInputError([f"layout: {exc} / {exc.es}"]) from exc
+    return dict(geometry, equipment=_equipment_ids(document, geometry))
 
 
 def _document_of(section):
