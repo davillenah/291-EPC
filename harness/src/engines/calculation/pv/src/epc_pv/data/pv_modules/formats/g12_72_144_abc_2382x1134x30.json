@@ -1,0 +1,291 @@
+{
+  "schema_version": "1.0",
+  "id": "g12_72_144_abc_2382x1134x30",
+  "name": {
+    "en": "G12 72-cell class, 144 cells 6x24 N-type ABC, 2382 x 1134 x 30 mm",
+    "es": "Clase G12 72 celdas, 144 celdas 6x24 tipo N ABC, 2382 x 1134 x 30 mm"
+  },
+  "kind": "format",
+  "description": {
+    "en": "G12 module, 2382 x 1134 x 30 mm, 144 N-type ABC cells in a 6x24 layout, 33.5 kg, IP68 junction box with three bypass diodes, holes and drain holes listed (AIKO Stellar MCH72Dw datasheet).",
+    "es": "Modulo G12, 2382 x 1134 x 30 mm, 144 celdas tipo N ABC en disposicion 6x24, 33,5 kg, caja IP68 con tres diodos de bypass, con orificios de drenaje y puesta a tierra (ficha AIKO MCH72Dw)."
+  },
+  "typical_use": "G12-class 72-cell N-type ABC module, 2382 mm long.",
+  "layers": [
+    {
+      "id": "front_glass",
+      "name": "Front glass",
+      "material": "not stated",
+      "status": "not_found",
+      "source_ids": [
+        "S3"
+      ]
+    },
+    {
+      "id": "encapsulant_front",
+      "name": "Encapsulant front",
+      "material": "not stated",
+      "status": "not_found",
+      "source_ids": []
+    },
+    {
+      "id": "cell_layer",
+      "name": "Cell layer",
+      "material": "silicon cells: 144 N-type ABC (6x24 layout) per datasheet",
+      "status": "unverified",
+      "source_ids": [
+        "S3"
+      ]
+    },
+    {
+      "id": "encapsulant_back",
+      "name": "Encapsulant back",
+      "material": "not stated",
+      "status": "not_found",
+      "source_ids": []
+    },
+    {
+      "id": "rear_layer",
+      "name": "Rear layer",
+      "material": "not stated",
+      "status": "not_found",
+      "source_ids": [
+        "S3"
+      ]
+    }
+  ],
+  "parts": [
+    {
+      "id": "module_body",
+      "name": "Laminate outline (outline for 2D/3D)",
+      "type": "other",
+      "status": "unverified",
+      "dimensions_mm": {
+        "length": 2382,
+        "width": 1134,
+        "thickness": 30
+      },
+      "source_ids": [
+        "S3"
+      ]
+    },
+    {
+      "id": "frame_profile",
+      "name": "Frame: anodized aluminium",
+      "type": "frame_profile",
+      "status": "unverified",
+      "material": "anodized aluminium",
+      "geometry_hint": "section dimensions not stated; see frame_profile_anodized_aluminium family",
+      "quantity_per_module": 4,
+      "source_ids": [
+        "S3"
+      ]
+    },
+    {
+      "id": "junction_box",
+      "name": "Junction box: IP68, three bypass diodes",
+      "type": "junction_box",
+      "status": "unverified",
+      "ratings": {
+        "ip": "IP68",
+        "bypass_diodes": 3,
+        "diode_rating": "not_found"
+      },
+      "quantity_per_module": 1,
+      "source_ids": [
+        "S3"
+      ]
+    },
+    {
+      "id": "pv_cable",
+      "name": "PV output cable: 4 mm2 (IEC), 12 AWG (UL)",
+      "type": "cable",
+      "status": "unverified",
+      "ratings": {
+        "cross_section_mm2": 4,
+        "length_note": "+350 mm / -280 mm; +-1400 mm; or customized"
+      },
+      "quantity_per_module": 2,
+      "source_ids": [
+        "S3"
+      ]
+    },
+    {
+      "id": "cell_string",
+      "name": "Cells: 144 N-type ABC (6x24 layout) per datasheet",
+      "type": "cell_string",
+      "status": "unverified",
+      "quantity_per_module": 144,
+      "source_ids": [
+        "S3"
+      ]
+    },
+    {
+      "id": "glass_front",
+      "name": "Front glass: not stated",
+      "type": "glass",
+      "status": "not_found",
+      "source_ids": [
+        "S3"
+      ]
+    },
+    {
+      "id": "mounting_holes",
+      "name": "Mounting holes",
+      "type": "mounting_hole",
+      "status": "unverified",
+      "dimensions_mm": {
+        "hole_a_width": 9.0,
+        "hole_a_length": 14.0,
+        "hole_a_count": 8,
+        "hole_b_width": 7.0,
+        "hole_b_length": 10.0,
+        "hole_b_count": 4
+      },
+      "geometry_hint": "printed as 8-phi9*14 and 4-phi7*10 (S3); shape and positions not stated",
+      "source_ids": [
+        "S3"
+      ]
+    },
+    {
+      "id": "grounding_holes",
+      "name": "Grounding holes",
+      "type": "grounding_hole",
+      "status": "unverified",
+      "dimensions_mm": {
+        "count": 4,
+        "diameter_mm": 4.2
+      },
+      "source_ids": [
+        "S3"
+      ]
+    },
+    {
+      "id": "drain_holes",
+      "name": "Drainage holes",
+      "type": "drain_hole",
+      "status": "unverified",
+      "dimensions_mm": {
+        "count": 8,
+        "diameter_mm": 3,
+        "length_mm": 8
+      },
+      "source_ids": [
+        "S3"
+      ]
+    },
+    {
+      "id": "connector",
+      "name": "PV connector (type not stated)",
+      "type": "connector",
+      "status": "not_found",
+      "source_ids": []
+    },
+    {
+      "id": "encapsulant",
+      "name": "Encapsulant",
+      "type": "encapsulant",
+      "status": "not_found",
+      "geometry_hint": "material and thickness not stated",
+      "source_ids": []
+    },
+    {
+      "id": "rear_layer",
+      "name": "Rear layer: not stated",
+      "type": "backsheet",
+      "status": "not_found",
+      "source_ids": [
+        "S3"
+      ]
+    },
+    {
+      "id": "busbar_ribbon",
+      "name": "Busbars / ribbons (count, material not stated)",
+      "type": "busbar_ribbon",
+      "status": "not_found",
+      "source_ids": []
+    },
+    {
+      "id": "sealant_edge",
+      "name": "Edge sealant",
+      "type": "sealant",
+      "status": "not_found",
+      "source_ids": []
+    },
+    {
+      "id": "label_nameplate",
+      "name": "Nameplate label",
+      "type": "label",
+      "status": "not_found",
+      "source_ids": []
+    }
+  ],
+  "geometry": {
+    "description": "Outline from datasheet dimensions. Hole positions and clamp zones are not stated in the source, so they are not positioned (status not_found).",
+    "module_dimensions_mm": [
+      2382,
+      1134,
+      30
+    ],
+    "clamping_zones_mm": [
+      {
+        "edge": "long",
+        "status": "not_found",
+        "note": "clamp zones not stated in the datasheet extract"
+      },
+      {
+        "edge": "short",
+        "status": "not_found",
+        "note": "clamp zones not stated in the datasheet extract"
+      }
+    ],
+    "elements": [
+      {
+        "id": "outline",
+        "kind": "laminate_outline",
+        "part_id": "module_body",
+        "position_mm": [
+          0,
+          0,
+          0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          2382,
+          1134,
+          30
+        ],
+        "status": "unverified"
+      }
+    ]
+  },
+  "mechanical_ratings": {
+    "weight_kg": 33.5,
+    "static_load_front_pa": 5400,
+    "static_load_rear_pa": 2400,
+    "junction_box_ip": "IP68",
+    "protection_class": "II",
+    "fire_rating": "IEC class C",
+    "hail_test": "35 mm at 27.2 m/s"
+  },
+  "status": "unverified",
+  "unverified_items": [
+    "Glass thickness and encapsulant not stated.",
+    "Mounting hole positions and clamp zones not stated.",
+    "Drain hole length given as 8 (units assumed mm from the printed 3*8).",
+    "Frame section not stated."
+  ],
+  "sources": [
+    {
+      "id": "S3",
+      "title": "AIKO Stellar MCH72Dw 635-660 W product datasheet (2382 x 1134 x 30 mm)",
+      "publisher": "AIKO (copy hosted on Segen portal)",
+      "url": "https://portal.segen.co.uk/reseller/docs/Stellar-1N_Plus_Customized_Stellar_192.5-AIKO-G-MCH72Dw-635-660W_2382x1134x30mm_DSDr_EN_2405_V1.5.pdf",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

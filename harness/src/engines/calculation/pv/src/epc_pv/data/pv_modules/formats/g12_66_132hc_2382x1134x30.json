@@ -1,0 +1,273 @@
+{
+  "schema_version": "1.0",
+  "id": "g12_66_132hc_2382x1134x30",
+  "name": {
+    "en": "G12 66-cell class, 132 cells 6x22, 2382 x 1134 x 30 mm",
+    "es": "Clase G12 66 celdas, 132 celdas 6x22, 2382 x 1134 x 30 mm"
+  },
+  "kind": "format",
+  "description": {
+    "en": "Large-format G12 module, 2382 x 1134 x 30 mm, 132 cells in a 6x22 layout, 32.5 kg, junction box IP68 with three diodes (LONGi LR8-66HVD datasheet).",
+    "es": "Modulo G12 de gran formato, 2382 x 1134 x 30 mm, 132 celdas en disposicion 6x22, 32,5 kg, caja de conexiones IP68 con tres diodos (ficha LONGi LR8-66HVD)."
+  },
+  "typical_use": "Utility and commercial G12 format, 2382 mm long (66-cell class).",
+  "layers": [
+    {
+      "id": "front_glass",
+      "name": "Front glass",
+      "material": "not stated",
+      "status": "not_found",
+      "source_ids": [
+        "S1"
+      ]
+    },
+    {
+      "id": "encapsulant_front",
+      "name": "Encapsulant front",
+      "material": "not stated",
+      "status": "not_found",
+      "source_ids": []
+    },
+    {
+      "id": "cell_layer",
+      "name": "Cell layer",
+      "material": "silicon cells: 132 (6x22 layout) per datasheet",
+      "status": "unverified",
+      "source_ids": [
+        "S1"
+      ]
+    },
+    {
+      "id": "encapsulant_back",
+      "name": "Encapsulant back",
+      "material": "not stated",
+      "status": "not_found",
+      "source_ids": []
+    },
+    {
+      "id": "rear_layer",
+      "name": "Rear layer",
+      "material": "not stated",
+      "status": "not_found",
+      "source_ids": [
+        "S1"
+      ]
+    }
+  ],
+  "parts": [
+    {
+      "id": "module_body",
+      "name": "Laminate outline (outline for 2D/3D)",
+      "type": "other",
+      "status": "unverified",
+      "dimensions_mm": {
+        "length": 2382,
+        "width": 1134,
+        "thickness": 30
+      },
+      "source_ids": [
+        "S1"
+      ]
+    },
+    {
+      "id": "frame_profile",
+      "name": "Frame: anodized aluminium alloy (section not stated)",
+      "type": "frame_profile",
+      "status": "unverified",
+      "material": "anodized aluminium alloy",
+      "geometry_hint": "section dimensions not stated; see frame_profile_anodized_aluminium family",
+      "quantity_per_module": 4,
+      "source_ids": [
+        "S1"
+      ]
+    },
+    {
+      "id": "junction_box",
+      "name": "Junction box: IP68, three diodes",
+      "type": "junction_box",
+      "status": "unverified",
+      "ratings": {
+        "ip": "IP68",
+        "bypass_diodes": 3,
+        "diode_rating": "not_found"
+      },
+      "quantity_per_module": 1,
+      "source_ids": [
+        "S1"
+      ]
+    },
+    {
+      "id": "pv_cable",
+      "name": "PV output cable: 4 mm2",
+      "type": "cable",
+      "status": "unverified",
+      "ratings": {
+        "cross_section_mm2": 4,
+        "length_note": "+400 mm / -200 mm; +-1400 mm; customizable"
+      },
+      "quantity_per_module": 2,
+      "source_ids": [
+        "S1"
+      ]
+    },
+    {
+      "id": "cell_string",
+      "name": "Cells: 132 (6x22 layout) per datasheet",
+      "type": "cell_string",
+      "status": "unverified",
+      "quantity_per_module": 132,
+      "source_ids": [
+        "S1"
+      ]
+    },
+    {
+      "id": "glass_front",
+      "name": "Front glass: not stated",
+      "type": "glass",
+      "status": "not_found",
+      "source_ids": [
+        "S1"
+      ]
+    },
+    {
+      "id": "mounting_holes",
+      "name": "Mounting holes",
+      "type": "mounting_hole",
+      "status": "not_found",
+      "geometry_hint": "positions, slot sizes and edge distances not stated in the datasheet extract",
+      "source_ids": [
+        "S1"
+      ]
+    },
+    {
+      "id": "grounding_holes",
+      "name": "Grounding holes",
+      "type": "grounding_hole",
+      "status": "not_found",
+      "source_ids": [
+        "S1"
+      ]
+    },
+    {
+      "id": "drain_holes",
+      "name": "Drainage holes",
+      "type": "drain_hole",
+      "status": "not_found",
+      "source_ids": [
+        "S1"
+      ]
+    },
+    {
+      "id": "connector",
+      "name": "PV connector (type not stated)",
+      "type": "connector",
+      "status": "not_found",
+      "source_ids": []
+    },
+    {
+      "id": "encapsulant",
+      "name": "Encapsulant",
+      "type": "encapsulant",
+      "status": "not_found",
+      "geometry_hint": "material and thickness not stated",
+      "source_ids": []
+    },
+    {
+      "id": "rear_layer",
+      "name": "Rear layer: not stated",
+      "type": "backsheet",
+      "status": "not_found",
+      "source_ids": [
+        "S1"
+      ]
+    },
+    {
+      "id": "busbar_ribbon",
+      "name": "Busbars / ribbons (count, material not stated)",
+      "type": "busbar_ribbon",
+      "status": "not_found",
+      "source_ids": []
+    },
+    {
+      "id": "sealant_edge",
+      "name": "Edge sealant",
+      "type": "sealant",
+      "status": "not_found",
+      "source_ids": []
+    },
+    {
+      "id": "label_nameplate",
+      "name": "Nameplate label",
+      "type": "label",
+      "status": "not_found",
+      "source_ids": []
+    }
+  ],
+  "geometry": {
+    "description": "Outline from datasheet dimensions. Hole positions and clamp zones are not stated in the source, so they are not positioned (status not_found).",
+    "module_dimensions_mm": [
+      2382,
+      1134,
+      30
+    ],
+    "clamping_zones_mm": [
+      {
+        "edge": "long",
+        "status": "not_found",
+        "note": "clamp zones not stated in the datasheet extract"
+      },
+      {
+        "edge": "short",
+        "status": "not_found",
+        "note": "clamp zones not stated in the datasheet extract"
+      }
+    ],
+    "elements": [
+      {
+        "id": "outline",
+        "kind": "laminate_outline",
+        "part_id": "module_body",
+        "position_mm": [
+          0,
+          0,
+          0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          2382,
+          1134,
+          30
+        ],
+        "status": "unverified"
+      }
+    ]
+  },
+  "mechanical_ratings": {
+    "weight_kg": 32.5,
+    "static_load_front_pa": 5400,
+    "static_load_rear_pa": 2400,
+    "junction_box_ip": "IP68",
+    "notes": "datasheet mentions BC-CELL; cell size not stated"
+  },
+  "status": "unverified",
+  "unverified_items": [
+    "Frame section, alloy grade, anodizing spec not stated.",
+    "Mounting, drainage and grounding holes not stated.",
+    "Front glass and rear layer not stated.",
+    "Cell size and busbar count not stated; datasheet mentions BC-CELL.",
+    "Cable length string as printed, meaning of +400/-200 and +-1400 to be confirmed."
+  ],
+  "sources": [
+    {
+      "id": "S1",
+      "title": "LONGi LR8-66HVD product datasheet (2382 x 1134 x 30 mm)",
+      "publisher": "LONGi (copy hosted on EnergySage/enfsolar CDN)",
+      "url": "https://cdn.enfsolar.com/z/pp/2026/4/71uvt57p0ct63xch/lr8-66hvd-1.pdf",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

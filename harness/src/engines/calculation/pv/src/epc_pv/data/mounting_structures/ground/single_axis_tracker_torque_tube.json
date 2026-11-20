@@ -1,0 +1,365 @@
+{
+  "schema_version": "1.0",
+  "id": "single_axis_tracker_torque_tube",
+  "name": {
+    "en": "Single-axis tracker on torque tube (1P, pile-supported)",
+    "es": "Seguidor de un eje sobre tubo de torsión (1P, sobre pilotes)"
+  },
+  "family": "ground",
+  "category": "single_axis_tracker",
+  "description": {
+    "en": "Single-axis tracker: a round or rectangular torque tube, rotated by a slew drive or rotating gear drive, runs along each row on bearings supported by piles. Modules are fixed to the torque tube with single-fastener clamps that include grounding. Two manufacturers' datasheets are summarized; most dimensions, grades and torques are not stated.",
+    "es": "Seguidor de un eje: un tubo de torsión redondo o rectangular, girado por un accionamiento de tipo slew o de engranaje rotativo, recorre cada fila sobre cojinetes apoyados en pilotes. Los módulos se fijan al tubo con mordazas de un solo tornillo con puesta a tierra incluida. Se resumen las fichas de dos fabricantes; la mayoría de dimensiones, calidades y pares no se indican."
+  },
+  "typical_use": "Utility-scale single-axis tracking with 1P (portrait) or 2P module layouts along a row, with terrain-following options for some models.",
+  "applicable_standards": [
+    "IEC 62817 (design qualification of solar trackers; listed, not reviewed in full)",
+    "ASCE 7-10 (wind basis cited by Array)",
+    "UL 2703 / UL 3703 (listing; Array approval press release)"
+  ],
+  "materials": [
+    {
+      "component": "Torque tube",
+      "material": "Steel, grade not stated (Nextracker: round torque tube)",
+      "finish": "Galvanized steel (Nextracker: other coatings available)",
+      "status": "unverified",
+      "source_ids": [
+        "src_nextracker_nx_horizon"
+      ]
+    },
+    {
+      "component": "Structural members (tracker frame)",
+      "material": "Pre-galvanized steel, HDG steel and aluminium, as required",
+      "finish": "Hot-dip galvanized or pre-galvanized",
+      "status": "unverified",
+      "source_ids": [
+        "src_array_hz_v3"
+      ]
+    },
+    {
+      "component": "Module clamps",
+      "material": "Not stated",
+      "finish": "Not stated",
+      "status": "not_found",
+      "source_ids": [
+        "src_array_hz_v3"
+      ]
+    },
+    {
+      "component": "Bearings",
+      "material": "Dry slide bearings (no lubrication)",
+      "finish": "Not stated",
+      "status": "unverified",
+      "source_ids": [
+        "src_array_hz_v3"
+      ]
+    },
+    {
+      "component": "Drive gear",
+      "material": "Slew gear (Nextracker, high accuracy); rotating gear drive (Array)",
+      "finish": "Not stated",
+      "status": "unverified",
+      "source_ids": [
+        "src_nextracker_nx_horizon",
+        "src_array_hz_v3"
+      ]
+    },
+    {
+      "component": "Fasteners",
+      "material": "Engineered vibration-proof fastening system (Nextracker); grade not stated",
+      "finish": "Not stated",
+      "status": "unverified",
+      "source_ids": [
+        "src_nextracker_nx_horizon"
+      ]
+    }
+  ],
+  "profiles": [
+    {
+      "id": "torque_tube_round",
+      "name": "Round torque tube (Nextracker), diameter and wall not stated",
+      "section_type": "round_tube",
+      "dimensions_mm": {},
+      "material": "Galvanized steel",
+      "status": "not_found",
+      "source_ids": [
+        "src_nextracker_nx_horizon"
+      ]
+    },
+    {
+      "id": "torque_tube_array",
+      "name": "Torque tube (Array), section not stated",
+      "section_type": "rect_tube",
+      "dimensions_mm": {},
+      "material": "Steel, HDG or pre-galvanized",
+      "status": "not_found",
+      "source_ids": [
+        "src_array_hz_v3"
+      ]
+    }
+  ],
+  "geometry": {
+    "description": "No dimensions of the torque tube, bearings, pile spacing or tracker row length are sourced. No geometry elements are modelled.",
+    "coordinate_system": "x along module row, y up-slope/north-south horizontal, z up; origin at ground/roof contact of first support; mm and degrees",
+    "elements": [],
+    "reference_layout": {
+      "orientation": "portrait",
+      "modules_per_unit": 1,
+      "note": "Nextracker datasheet: 1x module in portrait; row size configurable per module type, string length and site. Array DuraTrack HZ v3: tilt +/-52 degrees standard, +/-62 degrees optional (tilt_range_deg uses the standard value)."
+    },
+    "tilt_range_deg": [
+      -52,
+      52
+    ]
+  },
+  "accessories": [
+    {
+      "id": "drive_motor",
+      "name": "Tracker drive motor (3-phase)",
+      "type": "other",
+      "material": "Not applicable",
+      "grade": "not_found",
+      "standard": "not_found",
+      "thread": "not_found",
+      "dimensions_mm": {},
+      "quantity": {
+        "value": 1,
+        "per": "row",
+        "note": "One drive per row is typical for this type; the Array sheet gives 2 HP, 3 phase, 480 V AC for its motor; count not stated by the source"
+      },
+      "purpose": "Rotates the torque tube",
+      "status": "typical",
+      "source_ids": [
+        "src_array_hz_v3"
+      ]
+    },
+    {
+      "id": "slew_drive_gear",
+      "name": "Slew gear (high accuracy)",
+      "type": "other",
+      "material": "Steel, not stated",
+      "grade": "not_found",
+      "standard": "not_found",
+      "thread": "not_found",
+      "quantity": {
+        "value": 1,
+        "per": "row",
+        "note": "Count per row not stated; 1 is the typical value"
+      },
+      "purpose": "Drives the tube rotation",
+      "status": "typical",
+      "source_ids": [
+        "src_nextracker_nx_horizon"
+      ]
+    },
+    {
+      "id": "bearing_dry_slide",
+      "name": "Dry slide bearing (no lubrication)",
+      "type": "other",
+      "material": "Not stated",
+      "grade": "not_found",
+      "standard": "not_found",
+      "thread": "not_found",
+      "quantity": {
+        "value": 0,
+        "per": "post",
+        "note": "Count per support not stated; placeholder"
+      },
+      "purpose": "Supports the torque tube on each post",
+      "status": "unverified",
+      "source_ids": [
+        "src_array_hz_v3"
+      ]
+    },
+    {
+      "id": "driveline_articulating",
+      "name": "Articulating driveline connector",
+      "type": "connector_splice",
+      "material": "Not stated",
+      "grade": "not_found",
+      "standard": "not_found",
+      "thread": "not_found",
+      "quantity": {
+        "value": 0,
+        "per": "row",
+        "note": "Count not stated; placeholder"
+      },
+      "purpose": "Transmits torque between sections and compensates misalignment",
+      "status": "unverified",
+      "source_ids": [
+        "src_array_hz_v3"
+      ]
+    },
+    {
+      "id": "clamp_module_single_fastener",
+      "name": "Single-fastener module clamp with integrated grounding",
+      "type": "clamp_mid",
+      "material": "Not stated",
+      "grade": "not_found",
+      "standard": "not_found",
+      "thread": "not_found",
+      "quantity": {
+        "value": 0,
+        "per": "module",
+        "note": "Clamps per module not stated; placeholder"
+      },
+      "purpose": "Fixes modules to the torque tube and bonds them",
+      "status": "unverified",
+      "source_ids": [
+        "src_array_hz_v3"
+      ]
+    },
+    {
+      "id": "clamp_end_module",
+      "name": "End clamp for module row ends",
+      "type": "clamp_end",
+      "material": "Not stated",
+      "grade": "not_found",
+      "standard": "not_found",
+      "thread": "not_found",
+      "quantity": {
+        "value": 0,
+        "per": "row",
+        "note": "Count not stated; placeholder"
+      },
+      "purpose": "Holds the outer module edges",
+      "status": "not_found"
+    },
+    {
+      "id": "torque_tube_splice",
+      "name": "Torque tube splice or joint",
+      "type": "connector_splice",
+      "material": "Not stated",
+      "grade": "not_found",
+      "standard": "not_found",
+      "thread": "not_found",
+      "quantity": {
+        "value": 0,
+        "per": "row",
+        "note": "Count not stated; placeholder"
+      },
+      "purpose": "Joins torque tube lengths",
+      "status": "not_found"
+    },
+    {
+      "id": "bolt_tracker_structural",
+      "name": "Structural bolts (engineered fastening system)",
+      "type": "bolt",
+      "material": "Steel, not stated",
+      "grade": "not_found",
+      "standard": "not_found",
+      "thread": "not_found",
+      "quantity": {
+        "value": 0,
+        "per": "support",
+        "note": "Count not stated; placeholder"
+      },
+      "purpose": "Connects tracker components; vibration-proof per source",
+      "status": "unverified",
+      "source_ids": [
+        "src_nextracker_nx_horizon"
+      ]
+    },
+    {
+      "id": "nut_tracker_structural",
+      "name": "Nuts for structural bolts",
+      "type": "nut",
+      "material": "Steel, not stated",
+      "grade": "not_found",
+      "standard": "not_found",
+      "thread": "not_found",
+      "quantity": {
+        "value": 0,
+        "per": "support",
+        "note": "Count not stated; placeholder"
+      },
+      "purpose": "Clamps structural bolts",
+      "status": "not_found"
+    },
+    {
+      "id": "washer_tracker_structural",
+      "name": "Washers for structural bolts",
+      "type": "washer",
+      "material": "Steel, not stated",
+      "grade": "not_found",
+      "standard": "not_found",
+      "thread": "not_found",
+      "quantity": {
+        "value": 0,
+        "per": "support",
+        "note": "Count not stated; placeholder"
+      },
+      "purpose": "Load distribution",
+      "status": "not_found"
+    },
+    {
+      "id": "grounding_tracker",
+      "name": "Grounding and bonding (integrated in clamps and bearings, per source)",
+      "type": "grounding",
+      "material": "Copper or steel conductor not stated",
+      "grade": "not_found",
+      "standard": "not_found",
+      "thread": "not_found",
+      "quantity": {
+        "value": 0,
+        "per": "row",
+        "note": "Hardware count not stated; placeholder"
+      },
+      "purpose": "Bonds modules and tracker to earth system",
+      "status": "unverified",
+      "source_ids": [
+        "src_array_hz_v3"
+      ]
+    },
+    {
+      "id": "sealant_tracker",
+      "name": "Sealant at post and bearing interfaces",
+      "type": "sealant",
+      "material": "not_found",
+      "grade": "not_found",
+      "standard": "not_found",
+      "thread": "not_found",
+      "quantity": {
+        "value": 0,
+        "per": "support",
+        "note": "NOT SOURCED: placeholder"
+      },
+      "purpose": "Moisture protection",
+      "status": "not_found"
+    }
+  ],
+  "grounding_bonding": "Array states its single-fastener clamps include integrated grounding; no grounding conductor sizes are stated.",
+  "installation_notes": [
+    "Array DuraTrack HZ v3: single-fastener, high-speed mounting clamps with integrated grounding; no lubrication required for dry slide bearings.",
+    "Nextracker NX Horizon: configurable up to 240 km/h (150 mph) 10 m 3-second gust; defensive stow functions; vibration-proof fastening system (grades not stated).",
+    "Array DuraTrack HZ v3: 140 mph allowable wind load, 3-second gust, exposure C, per ASCE 7-10; snow rating not stated.",
+    "Tracker control, communication and rated tracking angles are outside this structural entry and are not covered."
+  ],
+  "status": "unverified",
+  "unverified_items": [
+    "Torque tube section, dimensions, wall thickness and steel grade (not stated by either manufacturer)",
+    "Pile type, embedment and spacing (not stated)",
+    "Bearing type details, dimensions and quantities per post (only dry slide bearings are stated for Array)",
+    "All bolt, nut and washer sizes, grades and torques (not stated)",
+    "Module clamp and end-clamp quantities per module or row (not stated)",
+    "Snow load rating (not stated for either manufacturer)",
+    "IEC 62817 design qualification status for the specific model (not verified)",
+    "Optional +/-62 degree tilt configuration (Array) not checked against the structural loads"
+  ],
+  "sources": [
+    {
+      "id": "src_array_hz_v3",
+      "title": "Array Technologies DuraTrack HZ v3 Tracking System Specification Sheet",
+      "publisher": "Array Technologies (copy in utility appendix)",
+      "url": "https://prod.aes.com/sites/vault/files/2025-04/Appendix%202-2.%20Array%20Technologies%20DuraTrack%C2%AE%20HZ%20v3%20Tracking%20System%20Specification%20Sheet.pdf",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "src_nextracker_nx_horizon",
+      "title": "NX Horizon Datasheet",
+      "publisher": "Nextracker",
+      "url": "https://info.nextracker.com/hubfs/2024%20Datasheets/nxt_NX_Horizon_Datasheet_090723.pdf",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

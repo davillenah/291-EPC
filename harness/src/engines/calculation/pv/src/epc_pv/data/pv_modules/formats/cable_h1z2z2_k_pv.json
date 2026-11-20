@@ -1,0 +1,160 @@
+{
+  "schema_version": "1.0",
+  "id": "cable_h1z2z2_k_pv",
+  "name": {
+    "en": "PV cable H1Z2Z2-K, 4 mm2 and 6 mm2 (EN 50618), with screened variants",
+    "es": "Cable fotovoltaico H1Z2Z2-K, 4 mm2 y 6 mm2 (EN 50618), con variantes apantalladas"
+  },
+  "kind": "format",
+  "description": {
+    "en": "TECSUN PV H1Z2Z2-K single-core DC cable: tinned copper class 5, cross-linked HEPR insulation and EVA sheath, 1.5/1.5 kV DC, 90 C conductor, EN 50618. Outer diameters and minimum fixed bending radius from the manufacturer table for 4 and 6 mm2.",
+    "es": "Cable monoconductor de CC TECSUN PV H1Z2Z2-K: cobre estanado clase 5, aislamiento HEPR reticulado y cubierta EVA, 1,5/1,5 kV CC, conductor a 90 C, EN 50618. Diametros exteriores y radio de curvatura fijo minimo de la tabla del fabricante para 4 y 6 mm2."
+  },
+  "typical_use": "PV string cable between modules and connectors. Lengths per project are not in the source.",
+  "layers": [],
+  "parts": [
+    {
+      "id": "cable_1x4",
+      "name": "H1Z2Z2-K 1x4 mm2",
+      "type": "cable",
+      "status": "unverified",
+      "dimensions_mm": {
+        "outer_diameter_min": 5.3,
+        "outer_diameter_max": 5.9,
+        "min_fixed_bending_radius": 18.0
+      },
+      "ratings": {
+        "cross_section_mm2": 4,
+        "conductor_resistance_20c_ohm_per_km_max": 5.09,
+        "rated_voltage_dc_kv": 1.5,
+        "rated_voltage_ac_kv": 1.0,
+        "max_conductor_temp_c": 90,
+        "short_circuit_c_5s": 250
+      },
+      "quantity_per_module": 0,
+      "source_ids": [
+        "S7"
+      ]
+    },
+    {
+      "id": "cable_1x6",
+      "name": "H1Z2Z2-K 1x6 mm2",
+      "type": "cable",
+      "status": "unverified",
+      "dimensions_mm": {
+        "outer_diameter_min": 5.9,
+        "outer_diameter_max": 6.5,
+        "min_fixed_bending_radius": 20.0
+      },
+      "ratings": {
+        "cross_section_mm2": 6,
+        "conductor_resistance_20c_ohm_per_km_max": 3.39,
+        "rated_voltage_dc_kv": 1.5,
+        "rated_voltage_ac_kv": 1.0,
+        "max_conductor_temp_c": 90,
+        "short_circuit_c_5s": 250
+      },
+      "source_ids": [
+        "S7"
+      ]
+    },
+    {
+      "id": "cable_1x4_c_screened",
+      "name": "H1Z2Z2-K 1x4 (C), braided screen",
+      "type": "cable",
+      "status": "unverified",
+      "dimensions_mm": {
+        "outer_diameter_min": 6.0,
+        "outer_diameter_max": 6.6,
+        "min_fixed_bending_radius": 26.4
+      },
+      "ratings": {
+        "cross_section_mm2": 4,
+        "conductor_resistance_20c_ohm_per_km_max": 5.09
+      },
+      "source_ids": [
+        "S7"
+      ]
+    },
+    {
+      "id": "cable_1x6_c_screened",
+      "name": "H1Z2Z2-K 1x6 (C), braided screen",
+      "type": "cable",
+      "status": "unverified",
+      "dimensions_mm": {
+        "outer_diameter_min": 6.5,
+        "outer_diameter_max": 7.1,
+        "min_fixed_bending_radius": 28.4
+      },
+      "ratings": {
+        "cross_section_mm2": 6,
+        "conductor_resistance_20c_ohm_per_km_max": 3.39
+      },
+      "source_ids": [
+        "S7"
+      ]
+    },
+    {
+      "id": "cable_length_per_project",
+      "name": "Cable length per project",
+      "type": "cable",
+      "status": "not_found",
+      "source_ids": []
+    }
+  ],
+  "geometry": {
+    "description": "Component family; no module elements. Cable routing and length are project data.",
+    "elements": []
+  },
+  "mechanical_ratings": {
+    "conductor": "electrolytic tinned copper, finely stranded, class 5 (IEC 60228)",
+    "insulation": "cross-linked HEPR, 120 C",
+    "sheath": "cross-linked EVA rubber, 120 C",
+    "standard": "EN 50618; TUV certificate 60103637 cited",
+    "available_cross_sections_mm2": [
+      1.5,
+      2.5,
+      4,
+      6,
+      10,
+      16,
+      25,
+      35,
+      50,
+      70,
+      95,
+      120,
+      150,
+      185,
+      240,
+      300
+    ],
+    "rated_voltage_dc_kv": 1.5,
+    "rated_voltage_ac_kv": 1.0,
+    "max_conductor_temp_c": 90,
+    "short_circuit_c_5s": 250
+  },
+  "status": "unverified",
+  "unverified_items": [
+    "Cable lengths per project are not in the source (not_found).",
+    "The supplier's table gives min and max outer diameter, not a nominal value.",
+    "EN 50618 cited by the manufacturer; not verified against the standard text.",
+    "TUV 2 PfG 2046 not stated in the source."
+  ],
+  "sources": [
+    {
+      "id": "S7",
+      "title": "TECSUN(PV) H1Z2Z2-K technical data sheet",
+      "publisher": "Prysmian Group",
+      "url": "https://www.prysmian.com/sites/www.prysmian.com/files/media/documents/Tecsun-PV-_H1Z2Z2-K.pdf",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "S13",
+      "title": "EN 50618, electric cables for photovoltaic systems (standard reference, title only, not fetched)",
+      "publisher": "CENELEC",
+      "url": "https://www.cenelec.eu/",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

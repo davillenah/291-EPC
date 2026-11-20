@@ -1,0 +1,186 @@
+{
+  "schema_version": "1.0",
+  "id": "roof_membrane_adhered",
+  "name": {
+    "en": "Membrane roof, mounts welded or fastened through TPO or PVC cover membrane",
+    "es": "Cubierta de membrana, soportes soldados o fijados a través de membrana TPO o PVC"
+  },
+  "family": "roof",
+  "category": "membrane_welded_mount",
+  "description": {
+    "en": "Mount fixed through a hot-air welded TPO or PVC cover membrane into the deck or purlin, with the membrane sealed by weld. Source is a rooftop equipment mount (GAF RM240), used only as the membrane-attachment reference; it is not a PV rack. EPDM and fully adhered (no penetration) systems not covered.",
+    "es": "Soporte fijado a través de una membrana de cubierta TPO o PVC soldada con aire caliente a la lámina de la cubierta. La fuente es un soporte de equipos de cubierta (GAF RM240), usado solo como referencia de fijación sobre membrana; no es un bastidor fotovoltaico. No cubre EPDM ni sistemas totalmente adheridos sin penetración."
+  },
+  "typical_use": "Membrane (TPO or PVC) flat or low-slope roofs where ballast load is not acceptable. Attachment design, fastener count and roof warranty conditions are set by the design professional.",
+  "applicable_standards": [],
+  "materials": [
+    {
+      "component": "Cover membrane",
+      "material": "TPO or PVC (hot-air weldable); EPDM not covered by source",
+      "status": "unverified",
+      "source_ids": [
+        "gaf_rm240_install"
+      ]
+    },
+    {
+      "component": "Mount base and connection hardware",
+      "material": "Not stated",
+      "status": "not_found"
+    },
+    {
+      "component": "Fastener to deck or purlin",
+      "material": "Drill-Tec series fasteners (material and grade not stated)",
+      "status": "not_found"
+    }
+  ],
+  "profiles": [],
+  "geometry": {
+    "description": "Mount dimensions and fastener layout not stated in the source. No elements placed.",
+    "elements": []
+  },
+  "accessories": [
+    {
+      "id": "membrane_mount_gaf_rm240",
+      "name": "Rooftop equipment mount 240 (membrane attachment reference)",
+      "type": "base_plate",
+      "material": "Not stated",
+      "grade": "",
+      "standard": "",
+      "thread": "",
+      "dimensions_mm": {},
+      "quantity": {
+        "value": 0,
+        "per": "support",
+        "note": "Number of mounts and fasteners per mount set by the design professional (source header). 0 means unknown."
+      },
+      "purpose": "Attaches equipment to the membrane; used as attachment reference only",
+      "status": "unverified",
+      "source_ids": [
+        "gaf_rm240_install"
+      ]
+    },
+    {
+      "id": "fastener_drill_tec_series",
+      "name": "Drill-Tec #14, Drill-Tec XHD (#15) or Drill-Tec purlin fastener (per design)",
+      "type": "screw",
+      "material": "Not stated",
+      "grade": "",
+      "standard": "",
+      "thread": "Not stated",
+      "dimensions_mm": {},
+      "quantity": {
+        "value": 0,
+        "per": "support",
+        "note": "Count per mount set by design professional. Length not stated."
+      },
+      "purpose": "Fixes the mount through the membrane to the deck or purlin",
+      "status": "unverified",
+      "source_ids": [
+        "gaf_rm240_install"
+      ]
+    },
+    {
+      "id": "connection_nut_membrane_mount",
+      "name": "Connection nut on membrane mount",
+      "type": "nut",
+      "material": "Not stated",
+      "grade": "",
+      "standard": "",
+      "thread": "",
+      "dimensions_mm": {},
+      "torque_nm": 27.1,
+      "quantity": {
+        "value": 0,
+        "per": "support",
+        "note": "Count not stated."
+      },
+      "purpose": "Clamps the mount connection",
+      "note": "Range 20 to 25 lbf-ft = 27.1 to 33.9 Nm; lower bound stored. Excess torque may damage the mount (source body text). Use calibrated wrench.",
+      "status": "unverified",
+      "source_ids": [
+        "gaf_rm240_install"
+      ]
+    },
+    {
+      "id": "membrane_perimeter_weld",
+      "name": "Hot-air weld of cover membrane perimeter",
+      "type": "other",
+      "material": "TPO or PVC membrane",
+      "grade": "",
+      "standard": "",
+      "thread": "",
+      "dimensions_mm": {
+        "min_weld_width": 50.8
+      },
+      "quantity": {
+        "value": 0,
+        "per": "support",
+        "note": "Perimeter of each mount; length not stated."
+      },
+      "purpose": "Seals the cover membrane around the mount",
+      "note": "Minimum 2 in (50.8 mm) weld around the perimeter with a 2 in roller; probe the seam to confirm (source step 4).",
+      "status": "unverified",
+      "source_ids": [
+        "gaf_rm240_install"
+      ]
+    },
+    {
+      "id": "sealant_membrane_mount",
+      "name": "Sealant for membrane mount",
+      "type": "sealant",
+      "material": "",
+      "grade": "",
+      "standard": "",
+      "thread": "",
+      "dimensions_mm": {},
+      "quantity": {
+        "value": 0,
+        "per": "support",
+        "note": "No sealant specified in source."
+      },
+      "purpose": "Not specified by source",
+      "status": "not_found"
+    },
+    {
+      "id": "grounding_membrane_mount",
+      "name": "Equipotential bonding for membrane mount",
+      "type": "grounding",
+      "material": "",
+      "grade": "",
+      "standard": "",
+      "thread": "",
+      "dimensions_mm": {},
+      "quantity": {
+        "value": 0,
+        "per": "unit",
+        "note": "Not found."
+      },
+      "purpose": "Bonding of mount and frame",
+      "status": "not_found"
+    }
+  ],
+  "grounding_bonding": "Not found for membrane-attached PV mounts in the GAF source.",
+  "installation_notes": [
+    "Hot-air weld the cover membrane perimeter; probe the seam (GAF source step 4). Fasteners are per design professional."
+  ],
+  "status": "unverified",
+  "unverified_items": [
+    "Mount dimensions and base geometry (not stated in source).",
+    "Fastener length, count per mount and layout (design professional sets them).",
+    "Fastener material and grade (Drill-Tec series; not stated).",
+    "EPDM membrane attachment (not covered by the source).",
+    "Sealant product and sealing standard (not specified).",
+    "Load ratings and uplift capacity (not found).",
+    "Membrane warranty conditions for PV attachment (not checked).",
+    "Source is a rooftop equipment mount, not a PV rack; use only as attachment reference."
+  ],
+  "sources": [
+    {
+      "id": "gaf_rm240_install",
+      "title": "GAF Rooftop Equipment Mount 240 installation instructions (COMEG542)",
+      "publisher": "GAF",
+      "url": "https://www.gaf.com/en-us/document-library/documents/installation-instructions-&-guides/gaf-rooftop-equipment-mount-240-installation-instructions-comeg542.pdf",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

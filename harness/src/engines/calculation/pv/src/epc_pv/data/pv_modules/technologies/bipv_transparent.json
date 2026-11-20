@@ -1,0 +1,485 @@
+{
+  "schema_version": "1.0",
+  "id": "bipv_transparent",
+  "name": {
+    "en": "BIPV and semi-transparent (glass-glass c-Si)",
+    "es": "BIPV y semitransparente (c-Si vidrio-vidrio)"
+  },
+  "kind": "technology",
+  "description": {
+    "en": "Building-integrated PV: crystalline cells spaced apart in a glass laminate to allow light through, with optional BIPV frame or frameless. Reference: BISOL Lumina BMO (mono c-Si, 156 mm cells, 6.2-53 % transparency).",
+    "es": "Fotovoltaica integrada en edificios: celdas cristalinas separadas en un laminado de vidrio para dejar pasar la luz, con marco BIPV opcional o sin marco. Referencia: BISOL Lumina BMO (c-Si monocristalino, celdas de 156 mm, transparencia 6,2-53 %)."
+  },
+  "typical_use": "Façades, skylights, canopies and glazing where light transmission is needed.",
+  "cell": {
+    "type": "monocrystalline c-Si, 156 x 156 mm, spaced for transparency",
+    "size_mm": [
+      156,
+      156
+    ],
+    "n_cells_typical": [
+      28,
+      32,
+      36,
+      40,
+      42,
+      48,
+      54,
+      60
+    ],
+    "status": "unverified",
+    "source_ids": [
+      "bisol_lumina"
+    ],
+    "note": "Transparency 53.0 % (28 cells) to 6.2 % (60 cells). Cell spacing not stated; busbar count not stated."
+  },
+  "layers": [
+    {
+      "id": "glass_front",
+      "name": "Front glass",
+      "material": "tempered high-transparency low-iron glass with AR coating (front)",
+      "status": "unverified",
+      "source_ids": [
+        "bisol_lumina"
+      ],
+      "thickness_mm": 3.2
+    },
+    {
+      "id": "encapsulant_front",
+      "name": "Front encapsulant",
+      "material": "EVA or POE (thickness from Fraunhofer ISE lab-module reference; product material not stated)",
+      "status": "unverified",
+      "source_ids": [
+        "fraunhofer_pfreundt_2019"
+      ],
+      "thickness_mm": 0.45
+    },
+    {
+      "id": "cell_layer",
+      "name": "Cell layer",
+      "material": "mono c-Si cells with spacing",
+      "status": "unverified",
+      "source_ids": [
+        "bisol_lumina",
+        "fraunhofer_pfreundt_2019"
+      ],
+      "thickness_mm": 0.18,
+      "note": "Thickness 0.18 mm from Fraunhofer ISE lab-module reference (replaces typical 0.2 mm)."
+    },
+    {
+      "id": "encapsulant_rear",
+      "name": "Rear encapsulant",
+      "material": "EVA or POE (thickness from Fraunhofer ISE lab-module reference; product material not stated)",
+      "status": "unverified",
+      "source_ids": [
+        "fraunhofer_pfreundt_2019"
+      ],
+      "thickness_mm": 0.45
+    },
+    {
+      "id": "rear_layer",
+      "name": "Rear layer",
+      "material": "rear glass or backsheet (not stated)",
+      "status": "unverified",
+      "source_ids": [
+        "fraunhofer_pfreundt_2019"
+      ],
+      "thickness_mm": 0.35,
+      "note": "Backsheet 0.35 mm from Fraunhofer ISE lab-module reference."
+    }
+  ],
+  "parts": [
+    {
+      "id": "glass_front",
+      "name": "Front glass",
+      "type": "glass",
+      "status": "unverified",
+      "source_ids": [
+        "bisol_lumina"
+      ],
+      "material": "tempered high-transparency low-iron glass with AR coating (front)",
+      "dimensions_mm": {
+        "thickness": 3.2
+      }
+    },
+    {
+      "id": "encapsulant_front",
+      "name": "Front encapsulant",
+      "type": "encapsulant",
+      "status": "unverified",
+      "source_ids": [
+        "fraunhofer_pfreundt_2019"
+      ],
+      "material": "EVA or POE (thickness from Fraunhofer ISE lab-module reference; product material not stated)"
+    },
+    {
+      "id": "encapsulant_rear",
+      "name": "Rear encapsulant",
+      "type": "encapsulant",
+      "status": "unverified",
+      "source_ids": [
+        "fraunhofer_pfreundt_2019"
+      ],
+      "material": "EVA or POE (thickness from Fraunhofer ISE lab-module reference; product material not stated)"
+    },
+    {
+      "id": "cells",
+      "name": "Mono c-Si cell string (spaced, 28-60 cells)",
+      "type": "cell_string",
+      "status": "unverified",
+      "source_ids": [
+        "bisol_lumina"
+      ],
+      "material": "monocrystalline silicon"
+    },
+    {
+      "id": "rear",
+      "name": "Rear layer",
+      "type": "backsheet",
+      "status": "not_found",
+      "source_ids": [],
+      "material": "rear glass or backsheet (not stated)"
+    },
+    {
+      "id": "frame",
+      "name": "Frame profile",
+      "type": "frame_profile",
+      "status": "unverified",
+      "source_ids": [
+        "bisol_lumina"
+      ],
+      "material": "aluminium alloy, anodized",
+      "quantity_per_module": 4,
+      "dimensions_mm": {
+        "height": 35,
+        "width": 30
+      },
+      "geometry_hint": "rectangular perimeter profile; section polygon not stated (footprint width typical)"
+    },
+    {
+      "id": "junction_box",
+      "name": "Junction box",
+      "type": "junction_box",
+      "status": "unverified",
+      "source_ids": [
+        "bisol_lumina"
+      ],
+      "ratings": {
+        "ip": "IP67"
+      }
+    },
+    {
+      "id": "bypass_diodes",
+      "name": "Bypass diodes",
+      "type": "bypass_diode",
+      "status": "not_found",
+      "source_ids": [
+        "bisol_lumina"
+      ],
+      "quantity_per_module": 3
+    },
+    {
+      "id": "connector",
+      "name": "Connector",
+      "type": "connector",
+      "status": "unverified",
+      "source_ids": [
+        "bisol_lumina"
+      ],
+      "ratings": {
+        "type": "MC4 compatible"
+      },
+      "quantity_per_module": 2
+    },
+    {
+      "id": "cable",
+      "name": "PV cable",
+      "type": "cable",
+      "status": "not_found",
+      "source_ids": [],
+      "ratings": {},
+      "quantity_per_module": 2
+    }
+  ],
+  "geometry": {
+    "description": "BMO variant 1649 x 991 x 35 mm with anodized aluminium frame (BISOL). BSO (Solrif BIPV frame, 1692 x 1016 x 29 mm) and BLO (frameless, 1642 x 984 x 27 mm) are variants not modelled. Frame footprint width typical; junction box size and placement typical.",
+    "coordinate_system": "x along module long side, y along short side, z up through thickness; origin at module front-left corner; mm. Here z=0 is the front glass face and z grows toward the rear through thickness.",
+    "elements": [
+      {
+        "id": "glass_front",
+        "kind": "glass",
+        "part_id": "glass_front",
+        "position_mm": [
+          30,
+          30,
+          0.0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          1589,
+          931,
+          3.2
+        ],
+        "status": "unverified"
+      },
+      {
+        "id": "encapsulant_front",
+        "kind": "encapsulant",
+        "part_id": "encapsulant_front",
+        "position_mm": [
+          30,
+          30,
+          3.2
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          1589,
+          931,
+          0.45
+        ],
+        "status": "unverified"
+      },
+      {
+        "id": "cell_layer",
+        "kind": "cell_string",
+        "part_id": "cells",
+        "position_mm": [
+          30,
+          30,
+          3.65
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          1589,
+          931,
+          0.18
+        ],
+        "status": "unverified"
+      },
+      {
+        "id": "encapsulant_rear",
+        "kind": "encapsulant",
+        "part_id": "encapsulant_rear",
+        "position_mm": [
+          30,
+          30,
+          3.83
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          1589,
+          931,
+          0.45
+        ],
+        "status": "unverified"
+      },
+      {
+        "id": "rear_layer",
+        "kind": "backsheet",
+        "part_id": "rear",
+        "position_mm": [
+          30,
+          30,
+          4.28
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          1589,
+          931,
+          0.35
+        ],
+        "status": "not_found"
+      },
+      {
+        "id": "frame_long_front",
+        "kind": "frame_profile",
+        "part_id": "frame",
+        "position_mm": [
+          0,
+          0,
+          0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          1649,
+          30,
+          35
+        ],
+        "status": "unverified",
+        "note": "footprint width typical, see frame part"
+      },
+      {
+        "id": "frame_long_back",
+        "kind": "frame_profile",
+        "part_id": "frame",
+        "position_mm": [
+          0,
+          961,
+          0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          1649,
+          30,
+          35
+        ],
+        "status": "unverified",
+        "note": "footprint width typical, see frame part"
+      },
+      {
+        "id": "frame_short_left",
+        "kind": "frame_profile",
+        "part_id": "frame",
+        "position_mm": [
+          0,
+          30,
+          0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          30,
+          931,
+          35
+        ],
+        "status": "unverified",
+        "note": "footprint width typical, see frame part"
+      },
+      {
+        "id": "frame_short_right",
+        "kind": "frame_profile",
+        "part_id": "frame",
+        "position_mm": [
+          1619,
+          30,
+          0
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          30,
+          931,
+          35
+        ],
+        "status": "unverified",
+        "note": "footprint width typical, see frame part"
+      },
+      {
+        "id": "junction_box",
+        "kind": "junction_box",
+        "part_id": "junction_box",
+        "position_mm": [
+          749.5,
+          445.5,
+          4.63
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          0
+        ],
+        "size_mm": [
+          150,
+          100,
+          20
+        ],
+        "status": "typical",
+        "note": "placement and size typical, not from datasheet"
+      }
+    ],
+    "module_dimensions_mm": [
+      1649,
+      991,
+      35
+    ]
+  },
+  "mechanical_ratings": {
+    "weight_kg": 18.3,
+    "module_efficiency_pct_range": [
+      8,
+      17
+    ],
+    "power_w_range": [
+      130,
+      280
+    ],
+    "transparency_pct_range": [
+      6.2,
+      53.0
+    ],
+    "junction_box_ip": "IP67",
+    "standards_listed_in_source": [
+      "IEC 61701 (salt water mist 'resistance')",
+      "IEC 62804-1",
+      "IEC 62716",
+      "UL 1703"
+    ],
+    "note_iec_61215_61730": "not stated in source; certificates 'available upon special request'",
+    "status_note": "values transcribed from cited datasheets only; status unverified unless marked"
+  },
+  "status": "unverified",
+  "unverified_items": [
+    "IEC 61215 and IEC 61730 certification not stated (certificates on request).",
+    "Cell spacing, busbar count not stated.",
+    "Frame variants (anodized, BIPV Solrif, frameless) differ in dimensions; only BMO modelled.",
+    "Encapsulant and backsheet thicknesses are typical values.",
+    "Encapsulant 0.45 mm, cell layer 0.18 mm and backsheet 0.35 mm (where a backsheet is stated) are Fraunhofer ISE lab-module references, not values from this product's datasheet."
+  ],
+  "sources": [
+    {
+      "id": "bisol_lumina",
+      "title": "BISOL Lumina BMO / BSO / BLO datasheet (91220)",
+      "publisher": "BISOL",
+      "url": "https://res.cloudinary.com/gpceurope/image/upload/v1551963293/Datasheet-Bisol-Lumina-BMO-BSO-BLO-Datasheet_BISOL_Lumina_BMO_BSO_BLO_EN_91220.pdf",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "iec_61701",
+      "title": "IEC 61701:2020 publication page (salt mist corrosion testing)",
+      "publisher": "IEC",
+      "url": "https://webstore.iec.ch/publication/59588",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "fraunhofer_pfreundt_2019",
+      "title": "Pfreundt et al., EU PVSEC 2019, paper 4CO43 (module layer thicknesses, lab modules)",
+      "publisher": "Fraunhofer ISE",
+      "url": "https://www.ise.fraunhofer.de/content/dam/ise/de/documents/publications/conference-paper/36-eupvsec-2019/Pfreundt_4CO43.pdf",
+      "accessed": "2026-11-20"
+    }
+  ]
+}
