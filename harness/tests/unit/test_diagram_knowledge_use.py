@@ -136,7 +136,7 @@ class DiagramAssembly(unittest.TestCase):
     def test_a_missing_cable_row_is_none_and_no_values_are_invented(self):
         from epc_drawing import diagram_assembler as A
         m = DM.build_board_model("TS1", {"X-1": {"disp": "MCB", "kind": "general"}})
-        a = A.assemble(dict(m, board="TS1"), {}, [])
+        a = A.assemble(dict(m, board="TS1"), {}, [], verdict=K.audit(m))
         c = a["circuits"][0]
         self.assertEqual({"tag": "-X-1.1"}, c["devices"][0]["labels"])
         self.assertIsNone(next(w for w in c["wires"] if w["zone"] == "external")["cable"])
@@ -177,7 +177,7 @@ class DesignConstraints(unittest.TestCase):
     def test_assembly_reports_violations_and_the_iec_reference(self):
         from epc_drawing import diagram_assembler as A
         m = dict(DM.build_board_model("TS1", {"M-1": {"disp": "MCB > KM", "kind": "motor"}}), board="TS1")
-        a = A.assemble(m, {}, [], symbols=lambda d: {"sld_symbol": "X-" + d})
+        a = A.assemble(m, {}, [], symbols=lambda d: {"sld_symbol": "X-" + d}, verdict=K.audit(m))
         self.assertEqual(["dc-02"], [v["constraint"] for v in a["violations"]])
         mcb = a["circuits"][0]["devices"][0]
         self.assertEqual("X-mcb", mcb["symbol"])

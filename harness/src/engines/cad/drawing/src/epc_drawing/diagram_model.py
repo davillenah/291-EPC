@@ -52,6 +52,11 @@ def _chain_from_items(items, tokens: dict):
     return devices, unmapped, poles
 
 
+def _circuit_chain(c: dict, tokens: dict):
+    """The device chain of a circuit: the structured chain of the standard solution first, then the calculation text."""
+    return _chain_from_items(c["chain"], tokens) if c.get("chain") else _chain_from_disp(c.get("disp"), tokens)
+
+
 def _ports(device_id: str):
     ports = K.symbol_for(device_id)["ports"]
     top = next((p for p in ports if p.startswith("top")), ports[0] if ports else None)
@@ -84,7 +89,7 @@ def _device(did, tag, device_id, board, poles):
 def _add_circuit(model, board, tag, c, start, topo, cable_ref):
     """Adds the devices, the load, the wires and the circuit group of one circuit to `model`; returns the (id, port) its children hang from."""
     slug, kind = _slug(tag), topo["kinds"].get(c.get("kind") or "general", topo["kinds"]["general"])
-    chain, bad, poles = (_chain_from_items(c["chain"], topo["token_to_device"]) if c.get("chain") else _chain_from_disp(c.get("disp"), topo["token_to_device"]))
+    chain, bad, poles = _circuit_chain(c, topo["token_to_device"])
     model["unmapped"] += [{"circuit": tag, "token": t} for t in bad]
     chain, wire_ids, prev = chain or list(kind["chain"]), [], start
     for n, device_id in enumerate(chain, 1):

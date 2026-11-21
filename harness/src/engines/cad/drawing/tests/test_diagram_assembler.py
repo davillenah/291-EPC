@@ -23,7 +23,7 @@ class ModelAndAssembler(unittest.TestCase):
     def test_assembly_passes_values_and_cable_rows_through(self):
         m = DM.build_board_model("TS1", CIRCUITS)
         rows = [{"circuit": "IUG-01", "length_m": 18}]
-        a = A.assemble(dict(m, board="TS1"), {"IUG-01": {"in_a": 10, "icu_ka": 6, "du_pct": 1.2}}, rows)
+        a = A.assemble(dict(m, board="TS1"), {"IUG-01": {"in_a": 10, "icu_ka": 6, "du_pct": 1.2}}, rows, verdict=K.audit(m))
         c = next(x for x in a["circuits"] if x["tag"] == "IUG-01")
         self.assertEqual(["dev-IUG-01-mcb"], [d["id"] for d in c["devices"]])
         self.assertEqual((10, 6), (c["devices"][0]["labels"]["rated_current"], c["devices"][0]["labels"]["breaking_capacity"]))
@@ -32,7 +32,7 @@ class ModelAndAssembler(unittest.TestCase):
 
     def test_missing_data_is_none_not_invented(self):
         m = DM.build_board_model("TS1", {"X-1": {"disp": "MCB", "kind": "general"}})
-        c = A.assemble(dict(m, board="TS1"), {}, [])["circuits"][0]
+        c = A.assemble(dict(m, board="TS1"), {}, [], verdict=K.audit(m))["circuits"][0]
         self.assertEqual({"tag": "-X-1.1"}, c["devices"][0]["labels"])
         self.assertIsNone(next(w for w in c["wires"] if w["zone"] == "external")["cable"])
 
@@ -43,7 +43,7 @@ class ModelAndAssembler(unittest.TestCase):
         self.assertEqual([], K.check_constraints(unknown))
         m = DM.build_board_model("TS1", {"M-1": {"disp": "MCB > KM", "kind": "motor"}})
         self.assertEqual(["dc-02"], [v["constraint"] for v in K.check_constraints(m)])
-        a = A.assemble(dict(m, board="TS1"), {}, [], symbols=lambda d: {"sld_symbol": "X-" + d})
+        a = A.assemble(dict(m, board="TS1"), {}, [], symbols=lambda d: {"sld_symbol": "X-" + d}, verdict=K.audit(m))
         self.assertEqual("X-mcb", a["circuits"][0]["devices"][0]["symbol"])
         self.assertIn("id", a["circuits"][0]["devices"][0]["iec_60617"])
 
@@ -61,6 +61,19 @@ class ModelAndAssembler(unittest.TestCase):
     def test_structured_chain_reports_what_it_cannot_map(self):
         m = DM.build_board_model("TS1", {"M-1": {"chain": [{"symbol": "lv_vfd", "short": "VFD", "poles": 3}], "kind": "motor"}})
         self.assertEqual([{"circuit": "M-1", "token": "VFD"}], m["unmapped"])
+
+    def test_the_verdict_is_required_and_carried(self):
+        m = dict(DM.build_board_model("TS1", {"G-1": {"disp": "RCCB 2P 40 A 30 mA", "kind": "feeder"}, "L-1": {"disp": "MCB 4P (10 A)", "kind": "lighting", "parent": "G-1"}}), board="TS1")
+        with self.assertRaises(ValueError):
+            A.assemble(m, {}, [])
+        verdict = K.audit(m)
+        self.assertEqual(("not_ok", "unverified"), (verdict["verdict"], verdict["status"]))
+        self.assertEqual(verdict, A.assemble(m, {}, [], verdict=verdict)["verdict"])
+
+    def test_only_minor_findings_keep_the_verdict_ok(self):
+        m = DM.build_board_model("TS1", {"M-1": {"disp": "MCB > KM", "kind": "motor"}})
+        v = K.audit(m)
+        self.assertEqual(("ok", ["dc-02"]), (v["verdict"], [f["constraint"] for f in v["findings"]]))
 
 
 if __name__ == "__main__":

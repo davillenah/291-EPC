@@ -43,10 +43,10 @@ KIND_OF_TYPE = {"seccional": "feeder", "motor": "motor", "iluminacion": "lightin
 def board_diagram_assembly(ch, loads, routing=None):
     """The assembled diagram description of the board (`epc_drawing.diagram_assembler`, ADR-0037): the netlist built from the device chain, parent and type of each circuit of the calculation,
     joined with the values of the calculation and the cable-list rows. Nothing is calculated here; the drawing engines read the result."""
-    from epc_drawing import diagram_assembler, diagram_model
+    from epc_drawing import diagram_assembler, diagram_knowledge, diagram_model
     datos, detalle = ch["calc"]["datos"], ch["calc"]["detalle"]
     circuits = {tag: {"chain": detalle[tag].get("cadena"), "disp": d.get("disp"), "kind": KIND_OF_TYPE.get(detalle[tag].get("tipo")), "parent": detalle[tag].get("padre") or None, "load_ref": tag} for tag, d in datos.items()}
     board = ch["form"]["board"]["name"]
     model = dict(diagram_model.build_board_model(board, circuits), board=board)
     values = {tag: {"in_a": d.get("In"), "icu_ka": d.get("icu"), "s_mm2": d.get("S"), "du_pct": d.get("dU"), "ib_a": detalle[tag].get("ib_a")} for tag, d in datos.items()}
-    return diagram_assembler.assemble(model, values, cable_rows(ch, loads, routing))
+    return diagram_assembler.assemble(model, values, cable_rows(ch, loads, routing), verdict=diagram_knowledge.audit(model))
