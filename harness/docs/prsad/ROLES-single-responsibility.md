@@ -36,8 +36,8 @@ Status: **proposed** (owner decision 2026-11-21: "each role fulfils a single rol
 ## 4. Order of work
 
 1. This map reviewed by the owner (now).
-2. Single-owner test: a test that lists every duty and fails when two roster entries own the same one or an entry owns two (no weakening of any other test).
-3. Merge the two orchestrators into one entry with a scope (roster, bodies, regenerate agents).
+2. (done) Single-owner test: a test that lists every duty and fails when two roster entries own the same one or an entry owns two (no weakening of any other test).
+3. (done) Merge the two orchestrators into one entry with a scope (roster, bodies, regenerate agents).
 4. Move steps 1 and 3 into `electrical_lv` (skills `design-board`, `diagram-model`), and make `calc_check` the single verdict.
 5. Point `documentation` and `procurement` to the assembly.
 6. Move the duplicated legacy agents out of the flow, with the hash test updated.
