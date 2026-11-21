@@ -1,0 +1,124 @@
+{
+  "schema_version": "1.0",
+  "id": "sym_contact_make_delayed_closing",
+  "name": {
+    "en": "Make contact, delayed closing (on-delay)",
+    "es": "Contacto de cierre temporizado (retardo a la conexión)"
+  },
+  "family": "control",
+  "description": {
+    "en": "Make contact that closes after a set delay once the timer is energized. Note: Arc or clock mark next to the contact shows the delay type (typical).",
+    "es": "Contacto de cierre que cierra tras un retardo ajustado al energizarse el temporizador. Nota: Un arco o marca de reloj junto al contacto indica el tipo de retardo (típico)."
+  },
+  "iec60617": {
+    "symbol_id": "S00243",
+    "iec_title_en": "Make contact, delayed closing",
+    "legacy_ref": null,
+    "status": "unverified"
+  },
+  "reference_designation": {
+    "letter": "n/a",
+    "note": {
+      "en": "Parent timer relay, typically K with suffix T (e.g. K1T).",
+      "es": "Relé temporizador principal, típicamente K con sufijo T (p. ej. K1T)."
+    },
+    "status": "unverified"
+  },
+  "ansi_nema": {
+    "equivalent": null,
+    "status": "not_found"
+  },
+  "geometry": {
+    "grid": "1 unit = one symbol grid step; origin top-left, y down; scale to the drawing standard in use",
+    "primitives": [
+      {
+        "prim": "line",
+        "p1": [
+          0,
+          0
+        ],
+        "p2": [
+          0,
+          2
+        ]
+      },
+      {
+        "prim": "line",
+        "p1": [
+          0,
+          2
+        ],
+        "p2": [
+          1.4,
+          3.2
+        ]
+      },
+      {
+        "prim": "line",
+        "p1": [
+          0,
+          4
+        ],
+        "p2": [
+          0,
+          6
+        ]
+      },
+      {
+        "prim": "polyline",
+        "pts": [
+          [
+            0.5,
+            4.8
+          ],
+          [
+            0.9,
+            5.2
+          ],
+          [
+            1.2,
+            4.7
+          ]
+        ]
+      }
+    ],
+    "status": "typical"
+  },
+  "connection_points": [
+    {
+      "id": "15",
+      "label": {
+        "en": "Input",
+        "es": "Entrada"
+      }
+    },
+    {
+      "id": "18",
+      "label": {
+        "en": "Output",
+        "es": "Salida"
+      }
+    }
+  ],
+  "status": "unverified",
+  "source_ids": [
+    "iec_S00243",
+    "ima_iec81346_letters"
+  ],
+  "sources": [
+    {
+      "id": "iec_S00243",
+      "title": "IEC 60617 database, symbol S00243: Make contact, delayed closing",
+      "url": "https://library.iec.ch/grasymb/grasymb.nsf/(SysSymbol)/S00243",
+      "kind": "standard_database",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "ima_iec81346_letters",
+      "title": "Industrial Monitor Direct: IEC 81346-2 contactor and relay numbering (secondary article)",
+      "url": "https://industrialmonitordirect.com/blogs/knowledgebase/iec-81346-2-contactor-and-relay-numbering-conventions-for-wiring-diagrams",
+      "kind": "secondary_article",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

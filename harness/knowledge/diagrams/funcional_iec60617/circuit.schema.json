@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "epc291/esquemas-sld-mld-funcional/circuit.schema.json",
+  "title": "Typical electrical circuit (power and control) with components, rungs, interlocks and sources",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "id", "name", "category", "description", "application_range", "representation", "components", "power_connection", "control_rungs", "interlocks", "protections", "sequence", "common_errors", "status", "source_ids", "sources"],
+  "$defs": {
+    "bi": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["en", "es"],
+      "properties": {
+        "en": {"type": "string", "minLength": 1},
+        "es": {"type": "string", "minLength": 1}
+      }
+    },
+    "status": {
+      "enum": ["unverified", "typical", "not_found"],
+      "description": "unverified = taken from a cited public source; typical = generic practice without a source; not_found = not located. 'verified' is never used."
+    },
+    "item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["text", "status"],
+      "properties": {
+        "text": {"$ref": "#/$defs/bi"},
+        "status": {"$ref": "#/$defs/status"},
+        "source_ids": {"type": "array", "items": {"type": "string"}}
+      }
+    }
+  },
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "id": {"type": "string", "pattern": "^[a-z0-9_.-]+$"},
+    "name": {"$ref": "#/$defs/bi"},
+    "category": {"enum": ["motor_starting", "control_typical", "transfer", "mv_control"]},
+    "description": {"$ref": "#/$defs/bi"},
+    "application_range": {"$ref": "#/$defs/item"},
+    "representation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mld", "functional"],
+      "properties": {
+        "mld": {"$ref": "#/$defs/item"},
+        "functional": {"$ref": "#/$defs/item"}
+      }
+    },
+    "components": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["ref", "letter", "symbol_id", "description", "status"],
+        "properties": {
+          "ref": {"type": "string", "description": "example designation, e.g. Q1, KM1, K1T, F2"},
+          "letter": {"type": "string"},
+          "symbol_id": {"anyOf": [{"type": "string", "pattern": "^[a-z0-9_.-]+$"}, {"type": "null"}], "description": "id of the symbol record in symbols/, or null"},
+          "description": {"$ref": "#/$defs/bi"},
+          "status": {"$ref": "#/$defs/status"}
+        }
+      }
+    },
+    "power_connection": {"type": "array", "items": {"$ref": "#/$defs/item"}},
+    "control_rungs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["rung", "text", "status"],
+        "properties": {
+          "rung": {"type": "integer", "minimum": 1},
+          "text": {"$ref": "#/$defs/bi"},
+          "status": {"$ref": "#/$defs/status"},
+          "source_ids": {"type": "array", "items": {"type": "string"}}
+        }
+      }
+    },
+    "interlocks": {"type": "array", "items": {"$ref": "#/$defs/item"}},
+    "protections": {"type": "array", "items": {"$ref": "#/$defs/item"}},
+    "sequence": {"type": "array", "items": {"$ref": "#/$defs/item"}},
+    "common_errors": {"type": "array", "items": {"$ref": "#/$defs/item"}},
+    "status": {"$ref": "#/$defs/status"},
+    "source_ids": {"type": "array", "items": {"type": "string"}},
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "title", "url", "kind", "accessed"],
+        "properties": {
+          "id": {"type": "string"},
+          "title": {"type": "string"},
+          "url": {"type": "string", "pattern": "^https://"},
+          "kind": {"enum": ["standard_database", "manufacturer_doc", "secondary_article", "academic_or_teaching"]},
+          "accessed": {"type": "string", "format": "date"}
+        }
+      }
+    }
+  }
+}

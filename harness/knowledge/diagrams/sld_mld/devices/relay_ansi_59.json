@@ -1,0 +1,84 @@
+{
+  "schema_version": "1.0",
+  "id": "relay_ansi_59",
+  "name": {
+    "en": "ANSI 59: Overvoltage",
+    "es": "ANSI 59: Sobretension"
+  },
+  "description": {
+    "en": "Operates when voltage rises above a set value. Used for generator and grid-tied protection.",
+    "es": "Opera cuando la tension sube por encima de un valor de ajuste. Se usa en proteccion de generadores y de conexion a red."
+  },
+  "kind": "protection_relay",
+  "voltage_level": "MV",
+  "status": "not_found",
+  "source_ids": [
+    "control_ansi",
+    "iec60617_db"
+  ],
+  "sources": [
+    {
+      "id": "control_ansi",
+      "title": "ANSI/IEEE Function Number Codes",
+      "url": "https://control.com/textbook/electric-power-measurement-and-control/ansiieee-function-number-codes/",
+      "publisher": "control.com",
+      "accessed": "2026-11-20",
+      "kind": "textbook_wiki"
+    },
+    {
+      "id": "iec60617_db",
+      "title": "IEC 60617 graphical symbols database (public page)",
+      "url": "https://std.iec.ch/iec60617",
+      "publisher": "IEC",
+      "accessed": "2026-11-20",
+      "kind": "standard_public_summary"
+    }
+  ],
+  "standard_refs": [
+    {
+      "ref": "ANSI/IEEE C37.2",
+      "note": {
+        "en": "Device function numbers (cited)",
+        "es": "Numeracion de funciones (citada)"
+      }
+    }
+  ],
+  "symbol_ref": {
+    "id": "not_found",
+    "status": "not_found",
+    "note": {
+      "en": "IEC 60617 public page lists no identifiers for this item; not found, not guessed.",
+      "es": "La pagina publica de IEC 60617 no lista identificadores para este elemento; no encontrado, no supuesto."
+    }
+  },
+  "ratings_typical": [
+    {
+      "parameter": "setting_range",
+      "value": null,
+      "unit": "-",
+      "status": "not_found",
+      "source_ids": [],
+      "note": {
+        "en": "Setting ranges not found in fetched sources; take from relay manual",
+        "es": "Rangos de ajuste no encontrados en las fuentes consultadas; tomar del manual del relé"
+      }
+    }
+  ],
+  "selection_criteria": {
+    "when_to_use": [
+      {
+        "en": "Overvoltage on generator or grid-tie point (typical)",
+        "es": "Sobretension en generador o punto de conexion a red (typical)"
+      }
+    ],
+    "when_not_to_use": [
+      {
+        "en": "Undervoltage: use 27 (typical)",
+        "es": "Subtension: usar 27 (typical)"
+      }
+    ],
+    "alternatives": [
+      "relay_ansi_27"
+    ]
+  }
+}

@@ -1,0 +1,124 @@
+{
+  "schema_version": "1.0",
+  "id": "sym_fuse_with_alarm_contact",
+  "name": {
+    "en": "Fuse with alarm (striker) contact",
+    "es": "Fusible con contacto de alarma (percutor)"
+  },
+  "family": "protection",
+  "description": {
+    "en": "Fuse with an auxiliary contact that changes state when the fuse blows.",
+    "es": "Fusible con contacto auxiliar que cambia de estado cuando el fusible se funde."
+  },
+  "iec60617": {
+    "symbol_id": "S00365",
+    "iec_title_en": "Fuse with alarm contact",
+    "legacy_ref": null,
+    "status": "unverified"
+  },
+  "reference_designation": {
+    "letter": "F",
+    "note": {
+      "en": "Protective device; its auxiliary contact belongs to the fuse.",
+      "es": "Dispositivo de protección; su contacto auxiliar pertenece al fusible."
+    },
+    "status": "unverified"
+  },
+  "ansi_nema": {
+    "equivalent": null,
+    "status": "not_found"
+  },
+  "geometry": {
+    "grid": "1 unit = one symbol grid step; origin top-left, y down; scale to the drawing standard in use",
+    "primitives": [
+      {
+        "prim": "line",
+        "p1": [
+          0,
+          0
+        ],
+        "p2": [
+          0,
+          1.5
+        ]
+      },
+      {
+        "prim": "rect",
+        "x": -0.35,
+        "y": 1.5,
+        "w": 0.7,
+        "h": 3
+      },
+      {
+        "prim": "line",
+        "p1": [
+          0,
+          4.5
+        ],
+        "p2": [
+          0,
+          6
+        ]
+      },
+      {
+        "prim": "line",
+        "p1": [
+          0.35,
+          2
+        ],
+        "p2": [
+          1.4,
+          2
+        ]
+      },
+      {
+        "prim": "line",
+        "p1": [
+          1.4,
+          2
+        ],
+        "p2": [
+          1.4,
+          3.2
+        ]
+      }
+    ],
+    "status": "typical"
+  },
+  "connection_points": [
+    {
+      "id": "1",
+      "label": {
+        "en": "Supply side",
+        "es": "Lado de alimentación"
+      }
+    },
+    {
+      "id": "2",
+      "label": {
+        "en": "Load side",
+        "es": "Lado de carga"
+      }
+    },
+    {
+      "id": "3",
+      "label": {
+        "en": "Alarm contact",
+        "es": "Contacto de alarma"
+      }
+    }
+  ],
+  "status": "unverified",
+  "source_ids": [
+    "iec_S00365"
+  ],
+  "sources": [
+    {
+      "id": "iec_S00365",
+      "title": "IEC 60617 database, symbol S00365: Fuse with alarm contact",
+      "url": "https://library.iec.ch/grasymb/grasymb.nsf/(SysSymbol)/S00365",
+      "kind": "standard_database",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

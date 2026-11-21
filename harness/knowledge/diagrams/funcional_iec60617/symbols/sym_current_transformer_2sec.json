@@ -1,0 +1,129 @@
+{
+  "schema_version": "1.0",
+  "id": "sym_current_transformer_2sec",
+  "name": {
+    "en": "Current transformer with two secondary windings on one core",
+    "es": "Transformador de corriente con dos secundarios en un núcleo"
+  },
+  "family": "protection",
+  "description": {
+    "en": "Current transformer drawn as a ring core with two secondary windings for metering and protection. Note: Second secondary winding is typically drawn as an additional coil on the same core.",
+    "es": "Transformador de corriente dibujado como núcleo anular con dos devanados secundarios para medida y protección. Nota: El segundo secundario suele dibujarse como una bobina adicional en el mismo núcleo."
+  },
+  "iec60617": {
+    "symbol_id": "S00882",
+    "iec_title_en": "Current transformer with two secondary windings on one core",
+    "legacy_ref": null,
+    "status": "unverified"
+  },
+  "reference_designation": {
+    "letter": "T",
+    "note": {
+      "en": "Transformer class (typical for CT).",
+      "es": "Clase de transformador (típico para TC)."
+    },
+    "status": "typical"
+  },
+  "ansi_nema": {
+    "equivalent": null,
+    "status": "not_found"
+  },
+  "geometry": {
+    "grid": "1 unit = one symbol grid step; origin top-left, y down; scale to the drawing standard in use",
+    "primitives": [
+      {
+        "prim": "circle",
+        "c": [
+          0,
+          0
+        ],
+        "r": 1.6
+      },
+      {
+        "prim": "circle",
+        "c": [
+          0,
+          0
+        ],
+        "r": 1.0
+      },
+      {
+        "prim": "line",
+        "p1": [
+          -2.6,
+          0
+        ],
+        "p2": [
+          -1.6,
+          0
+        ]
+      },
+      {
+        "prim": "line",
+        "p1": [
+          1.6,
+          0
+        ],
+        "p2": [
+          2.6,
+          0
+        ]
+      },
+      {
+        "prim": "line",
+        "p1": [
+          0.4,
+          1.0
+        ],
+        "p2": [
+          0.4,
+          2.2
+        ]
+      }
+    ],
+    "status": "typical"
+  },
+  "connection_points": [
+    {
+      "id": "P1",
+      "label": {
+        "en": "Primary terminal 1",
+        "es": "Borne primario 1"
+      }
+    },
+    {
+      "id": "P2",
+      "label": {
+        "en": "Primary terminal 2",
+        "es": "Borne primario 2"
+      }
+    },
+    {
+      "id": "1S1",
+      "label": {
+        "en": "Secondary 1 terminal",
+        "es": "Borne secundario 1"
+      }
+    },
+    {
+      "id": "2S1",
+      "label": {
+        "en": "Secondary 1 terminal",
+        "es": "Borne secundario 1 (retorno)"
+      }
+    }
+  ],
+  "status": "unverified",
+  "source_ids": [
+    "iec_S00882"
+  ],
+  "sources": [
+    {
+      "id": "iec_S00882",
+      "title": "IEC 60617 database, symbol S00882: Current transformer with two secondary windings on one core",
+      "url": "https://library.iec.ch/grasymb/grasymb.nsf/(SysSymbol)/S00882",
+      "kind": "standard_database",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

@@ -1,0 +1,97 @@
+{
+  "schema_version": "1.0",
+  "id": "spd_type3",
+  "name": {
+    "en": "SPD type 3 (point-of-use)",
+    "es": "SPD tipo 3 (punto de uso)"
+  },
+  "description": {
+    "en": "Surge protective device with low discharge capacity, installed close to sensitive loads, after type 2.",
+    "es": "Dispositivo de proteccion con baja capacidad de descarga, instalado cerca de cargas sensibles, aguas abajo del tipo 2."
+  },
+  "kind": "spd",
+  "voltage_level": "LV",
+  "status": "unverified",
+  "source_ids": [
+    "ei_spd",
+    "iec60617_db"
+  ],
+  "sources": [
+    {
+      "id": "ei_spd",
+      "title": "The Surge Protection Device (SPD) (wiki)",
+      "url": "https://www.electrical-installation.org/enwiki/The_Surge_Protection_Device_(SPD)",
+      "publisher": "electrical-installation.org",
+      "accessed": "2026-11-20",
+      "kind": "textbook_wiki"
+    },
+    {
+      "id": "iec60617_db",
+      "title": "IEC 60617 graphical symbols database (public page)",
+      "url": "https://std.iec.ch/iec60617",
+      "publisher": "IEC",
+      "accessed": "2026-11-20",
+      "kind": "standard_public_summary"
+    }
+  ],
+  "standard_refs": [
+    {
+      "ref": "IEC 61643-11",
+      "note": {
+        "en": "SPD standard (cited)",
+        "es": "Norma de SPD (citada)"
+      }
+    }
+  ],
+  "symbol_ref": {
+    "id": "not_found",
+    "status": "not_found",
+    "note": {
+      "en": "IEC 60617 public page lists no identifiers for this item; not found, not guessed.",
+      "es": "La pagina publica de IEC 60617 no lista identificadores para este elemento; no encontrado, no supuesto."
+    }
+  },
+  "ratings_typical": [
+    {
+      "parameter": "test_voltage",
+      "value": "1.2/50 us voltage and 8/20 us current",
+      "unit": "-",
+      "status": "unverified",
+      "source_ids": [
+        "ei_spd"
+      ],
+      "note": {
+        "en": "Combination wave test as described; open-circuit voltage Uoc",
+        "es": "Ensayo de onda combinada descrito; tension a circuito abierto Uoc"
+      }
+    },
+    {
+      "parameter": "nominal_discharge_In",
+      "value": null,
+      "unit": "kA",
+      "status": "not_found",
+      "source_ids": [],
+      "note": {
+        "en": "Not found in fetched sources",
+        "es": "No encontrado en las fuentes consultadas"
+      }
+    }
+  ],
+  "selection_criteria": {
+    "when_to_use": [
+      {
+        "en": "Close to sensitive electronics, used with type 2 upstream (cited)",
+        "es": "Cerca de electronica sensible, con tipo 2 aguas arriba (citado)"
+      }
+    ],
+    "when_not_to_use": [
+      {
+        "en": "As the only protection at the board entrance (typical)",
+        "es": "Como unica proteccion en la entrada del cuadro (typical)"
+      }
+    ],
+    "alternatives": [
+      "spd_type2"
+    ]
+  }
+}

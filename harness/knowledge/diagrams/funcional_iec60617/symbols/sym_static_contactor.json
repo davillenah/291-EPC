@@ -1,0 +1,117 @@
+{
+  "schema_version": "1.0",
+  "id": "sym_static_contactor",
+  "name": {
+    "en": "Static (semiconductor) contactor",
+    "es": "Contactor estático (semiconductor)"
+  },
+  "family": "power",
+  "description": {
+    "en": "Solid-state switching element (e.g. thyristor or triac based) used as a contactor.",
+    "es": "Elemento de conmutación de estado sólido (p. ej. basado en tiristor o triac) usado como contactor."
+  },
+  "iec60617": {
+    "symbol_id": "S00377",
+    "iec_title_en": "Static (semiconductor) contactor",
+    "legacy_ref": null,
+    "status": "unverified"
+  },
+  "reference_designation": {
+    "letter": "Q",
+    "note": {
+      "en": "Switching device.",
+      "es": "Dispositivo de maniobra."
+    },
+    "status": "typical"
+  },
+  "ansi_nema": {
+    "equivalent": null,
+    "status": "not_found"
+  },
+  "geometry": {
+    "grid": "1 unit = one symbol grid step; origin top-left, y down; scale to the drawing standard in use",
+    "primitives": [
+      {
+        "prim": "rect",
+        "x": 0.6,
+        "y": 1.8,
+        "w": 1.6,
+        "h": 2.4
+      },
+      {
+        "prim": "line",
+        "p1": [
+          0,
+          0
+        ],
+        "p2": [
+          0,
+          1.8
+        ]
+      },
+      {
+        "prim": "line",
+        "p1": [
+          0,
+          4.2
+        ],
+        "p2": [
+          0,
+          6
+        ]
+      },
+      {
+        "prim": "line",
+        "p1": [
+          2.2,
+          3
+        ],
+        "p2": [
+          2.8,
+          3
+        ]
+      },
+      {
+        "prim": "line",
+        "p1": [
+          2.8,
+          3
+        ],
+        "p2": [
+          2.8,
+          4.2
+        ]
+      }
+    ],
+    "status": "typical"
+  },
+  "connection_points": [
+    {
+      "id": "1",
+      "label": {
+        "en": "Line side",
+        "es": "Lado de línea"
+      }
+    },
+    {
+      "id": "2",
+      "label": {
+        "en": "Load side",
+        "es": "Lado de carga"
+      }
+    }
+  ],
+  "status": "unverified",
+  "source_ids": [
+    "iec_S00377"
+  ],
+  "sources": [
+    {
+      "id": "iec_S00377",
+      "title": "IEC 60617 database, symbol S00377: Static (semiconductor) contactor",
+      "url": "https://library.iec.ch/grasymb/grasymb.nsf/(SysSymbol)/S00377",
+      "kind": "standard_database",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

@@ -1,0 +1,109 @@
+{
+  "schema_version": "1.0",
+  "record_type": "device",
+  "id": "pv_hybrid_battery_inverter",
+  "name": {
+    "en": "PV hybrid or battery inverter",
+    "es": "Inversor híbrido o de batería FV"
+  },
+  "description": {
+    "en": "Inverter that connects PV (DC input) and a battery, with AC output or backup output. For AC-coupled storage, a battery-inverter on the AC side.",
+    "es": "Inversor que conecta FV (entrada DC) y batería, con salida AC o de respaldo. Para almacenamiento acoplado AC, inversor de batería en el lado AC."
+  },
+  "kind": "battery_inverter",
+  "voltage_level": "LV",
+  "status": "unverified",
+  "source_ids": [
+    "repo_micro_hybrid"
+  ],
+  "sources": [
+    {
+      "id": "repo_micro_hybrid",
+      "title": "Repo: string, hybrid and micro inverters research",
+      "url": "repo://harness/docs/pv/inverters/string_hybrid_micro_inverters.md",
+      "publisher": "EPC-291 repository",
+      "accessed": "2026-11-20",
+      "kind": "internal_repo"
+    }
+  ],
+  "standard_refs": [],
+  "ratings": [
+    {
+      "parameter": "rated_ac_power",
+      "value": 10,
+      "unit": "kW",
+      "status": "unverified",
+      "source_ids": [
+        "repo_micro_hybrid"
+      ],
+      "note": {
+        "en": "Repo example: Sungrow SH10RT, 10 kW; backup output 220/230/240 V",
+        "es": "Repo ejemplo: Sungrow SH10RT, 10 kW; salida de respaldo 220/230/240 V"
+      }
+    },
+    {
+      "parameter": "pv_max_dc_voltage",
+      "value": 1000,
+      "unit": "V DC",
+      "status": "unverified",
+      "source_ids": [
+        "repo_micro_hybrid"
+      ],
+      "note": {
+        "en": "Repo example: SH10RT PV max Vdc 1000 V",
+        "es": "Repo ejemplo: SH10RT Vdc FV máx 1000 V"
+      }
+    },
+    {
+      "parameter": "battery_voltage_range",
+      "value": "150-600",
+      "unit": "V DC",
+      "status": "unverified",
+      "source_ids": [
+        "repo_micro_hybrid"
+      ],
+      "note": {
+        "en": "Repo example: SH10RT battery input 150-600 V",
+        "es": "Repo ejemplo: SH10RT entrada batería 150-600 V"
+      }
+    },
+    {
+      "parameter": "ac_coupled_example",
+      "value": "Victron MultiPlus-II 48/5000/70-50: 5000 VA, no PV input",
+      "unit": "VA",
+      "status": "unverified",
+      "source_ids": [
+        "repo_micro_hybrid"
+      ],
+      "note": {
+        "en": "Repo example of an AC-coupled battery inverter-charger (no PV input)",
+        "es": "Repo ejemplo de cargador-inversor de batería AC acoplado (sin entrada FV)"
+      }
+    },
+    {
+      "parameter": "battery_dc_overcurrent_rating",
+      "value": null,
+      "unit": "A",
+      "status": "not_found",
+      "source_ids": [],
+      "note": {
+        "en": "Battery-side fuse or breaker rating not found in the sources",
+        "es": "Calibre de fusible o interruptor del lado batería no encontrado en las fuentes"
+      }
+    }
+  ],
+  "selection_criteria": {
+    "when_to_use": [
+      {
+        "en": "Hybrid PV plus battery with backup output (DC-coupled when the PV is on the battery bus).",
+        "es": "FV híbrido más batería con salida de respaldo (acoplado DC cuando la FV va al bus de batería)."
+      }
+    ],
+    "when_not_to_use": [
+      {
+        "en": "Grid-tied only without battery: a string inverter is enough (typical).",
+        "es": "Solo conexión a red sin batería: basta un inversor de string (típico)."
+      }
+    ]
+  }
+}

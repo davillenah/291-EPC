@@ -1,0 +1,181 @@
+{
+  "schema_version": "1.0",
+  "id": "pv_rapid_shutdown_initiator",
+  "family": "control_typical",
+  "name": {
+    "en": "Rapid shutdown initiator and array controlled state (US NEC 690.12 reference)",
+    "es": "Iniciador de parada rápida y estado controlado del arreglo (referencia NEC 690.12, EE. UU.)"
+  },
+  "description": {
+    "en": "An initiator signals the array disconnect or module electronics to bring conductors to a controlled state. Reference only outside the US.",
+    "es": "Un iniciador ordena al desconectador del arreglo o a la electrónica de módulo llevar los conductores a un estado controlado. Solo referencia fuera de EE. UU."
+  },
+  "application_range": {
+    "text": {
+      "en": "US NEC 690.12 requirement for rooftop PV. Outside the US it is a reference, not a local rule (not located).",
+      "es": "Requisito NEC 690.12 para FV en cubierta en EE. UU. Fuera de EE. UU. es una referencia, no una norma local (no ubicada)."
+    },
+    "status": "unverified",
+    "source_ids": [
+      "iaei_rsd"
+    ]
+  },
+  "diagram_types": [
+    "SLD",
+    "functional"
+  ],
+  "symbol_refs": [
+    "sym_disconnector",
+    "sym_relay_coil_general",
+    "sym_switch_emergency_stop"
+  ],
+  "device_refs": [
+    "switch_disconnector"
+  ],
+  "components": [
+    {
+      "ref": "S1",
+      "letter": "S",
+      "symbol_id": "sym_switch_emergency_stop",
+      "device_id": null,
+      "description": {
+        "en": "Rapid shutdown initiator switch at the service entrance.",
+        "es": "Iniciador de parada rápida en la acometida."
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "K1",
+      "letter": "K",
+      "symbol_id": "sym_relay_coil_general",
+      "device_id": null,
+      "description": {
+        "en": "Shutdown relay that sends the initiation signal.",
+        "es": "Relé de parada que envía la señal de inicio."
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "Q1",
+      "letter": "Q",
+      "symbol_id": "sym_disconnector",
+      "device_id": "switch_disconnector",
+      "description": {
+        "en": "Array-level disconnect (PVHCS) or module-level electronics (alternative).",
+        "es": "Desconexión a nivel arreglo (PVHCS) o electrónica a nivel módulo (alternativa)."
+      },
+      "status": "unverified"
+    }
+  ],
+  "power_connection": [],
+  "control_connection": [
+    {
+      "text": {
+        "en": "Initiator is the NEC 690.12(C) device; where a hazard control system needs initiation, that device performs it.",
+        "es": "El iniciador es el dispositivo NEC 690.12(C); si un sistema de control de peligro lo requiere, ese dispositivo lo ejecuta."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "iaei_rsd"
+      ]
+    }
+  ],
+  "protections": [
+    {
+      "text": {
+        "en": "Controlled state within 30 seconds of initiation (2017 NEC cycle). The 2014 NEC used 10 seconds.",
+        "es": "Estado controlado dentro de 30 s desde el inicio (ciclo NEC 2017). El NEC 2014 usaba 10 s."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "iaei_rsd"
+      ]
+    },
+    {
+      "text": {
+        "en": "Array boundary one foot (305 mm) from the array. Inside the boundary, 80 V within 30 seconds (from 2019).",
+        "es": "Límite del arreglo de un pie (305 mm). Dentro del límite, 80 V en 30 s (desde 2019)."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "iaei_rsd"
+      ]
+    },
+    {
+      "text": {
+        "en": "Array-level listed system (PVHCS, UL 3741) or module-level electronics (microinverters, optimizers) as alternatives.",
+        "es": "Sistema listado a nivel arreglo (PVHCS, UL 3741) o electrónica de módulo (microinversores, optimizadores) como alternativas."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "iaei_rsd"
+      ]
+    }
+  ],
+  "sequence": [
+    {
+      "text": {
+        "en": "Initiate: signal to Q1 and to module electronics; array conductors reach the controlled state.",
+        "es": "Iniciar: señal a Q1 y a la electrónica de módulo; los conductores del arreglo llegan a estado controlado."
+      },
+      "status": "typical",
+      "source_ids": []
+    }
+  ],
+  "common_errors": [
+    {
+      "text": {
+        "en": "Boundary conductors above the 80 V limit after the timing.",
+        "es": "Conductores del límite por encima de 80 V tras el tiempo."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "iaei_rsd"
+      ]
+    },
+    {
+      "text": {
+        "en": "Local rule (Latin America) for rapid shutdown: not located.",
+        "es": "Regla local (Latinoamérica) de parada rápida: no ubicada."
+      },
+      "status": "not_found",
+      "source_ids": []
+    }
+  ],
+  "source_conflicts": [
+    {
+      "topic": {
+        "en": "Boundary distance",
+        "es": "Distancia del límite"
+      },
+      "source_ids": [
+        "iaei_rsd"
+      ],
+      "note": {
+        "en": "IAEI says one foot (305 mm). The 1.5 m (5 ft) figure appears in the same article only as a 2014 building distance. Check the code year and jurisdiction.",
+        "es": "IAEI indica un pie (305 mm). La cifra de 1,5 m (5 ft) aparece en el mismo artículo solo como distancia de edificio de 2014. Verificar el año del código y la jurisdicción."
+      }
+    }
+  ],
+  "status": "unverified",
+  "source_ids": [
+    "iaei_rsd",
+    "repo_devices"
+  ],
+  "sources": [
+    {
+      "id": "iaei_rsd",
+      "title": "IAEI Magazine: NEC rapid shutdown requirements and UL 3741 (2023)",
+      "url": "https://iaeimagazine.org/electrical-fundamentals/nec-rapid-shutdown-requirements-and-ul-3741/",
+      "kind": "secondary_article",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "repo_devices",
+      "title": "EPC-291 repository: sld_mld/devices and funcional_iec60617/symbols_index.json (ids reused)",
+      "url": "repo://sld_mld/devices",
+      "kind": "internal_repo",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

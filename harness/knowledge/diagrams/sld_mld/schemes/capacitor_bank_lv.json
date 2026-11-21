@@ -1,0 +1,104 @@
+{
+  "schema_version": "1.0",
+  "id": "capacitor_bank_lv",
+  "name": {
+    "en": "LV capacitor bank for power factor correction",
+    "es": "Banco de condensadores BT para correccion del factor de potencia"
+  },
+  "description": {
+    "en": "Capacitor bank on a feeder through a switch-disconnector, fuses and a contactor.",
+    "es": "Banco de condensadores en un alimentador a traves de seccionador, fusibles y contactor."
+  },
+  "purpose": {
+    "en": "Show switched capacitor bank protection.",
+    "es": "Mostrar proteccion de banco de condensadores maniobrado."
+  },
+  "voltage_level": "LV",
+  "status": "typical",
+  "chain": [
+    {
+      "order": 1,
+      "device_id": "switch_disconnector",
+      "label": {
+        "en": "Isolation",
+        "es": "Aislamiento"
+      },
+      "notes": {
+        "en": "For maintenance",
+        "es": "Para mantenimiento"
+      }
+    },
+    {
+      "order": 2,
+      "device_id": "fuse_gg",
+      "label": {
+        "en": "Fuse",
+        "es": "Fusible"
+      },
+      "notes": {
+        "en": "Overcurrent back-up",
+        "es": "Respaldo de sobrecorriente"
+      }
+    },
+    {
+      "order": 3,
+      "device_id": "contactor",
+      "label": {
+        "en": "Switching contactor",
+        "es": "Contactor de maniobra"
+      },
+      "notes": {
+        "en": "Switches the bank",
+        "es": "Maniobra el banco"
+      }
+    },
+    {
+      "order": 4,
+      "device_id": "capacitor_bank",
+      "label": {
+        "en": "Capacitor bank",
+        "es": "Banco de condensadores"
+      },
+      "notes": {
+        "en": "kvar project data",
+        "es": "kvar del proyecto"
+      }
+    }
+  ],
+  "drawing_conventions": [
+    {
+      "en": "Draw source at top, loads at bottom; read upstream to downstream.",
+      "es": "Dibujar la fuente arriba y las cargas abajo; leer de aguas arriba a aguas abajo."
+    },
+    {
+      "en": "Label each device with its tag (for example QF-101) and its rating (A, kA, curve).",
+      "es": "Rotular cada equipo con su tag (por ejemplo QF-101) y su calibre (A, kA, curva)."
+    },
+    {
+      "en": "Label each feeder with conductor count, size and material where notated.",
+      "es": "Rotular cada alimentador con numero de conductores, seccion y material cuando se indique."
+    }
+  ],
+  "source_ids": [
+    "iec60617_db",
+    "viox_fuse"
+  ],
+  "sources": [
+    {
+      "id": "iec60617_db",
+      "title": "IEC 60617 graphical symbols database (public page)",
+      "url": "https://std.iec.ch/iec60617",
+      "publisher": "IEC",
+      "accessed": "2026-11-20",
+      "kind": "standard_public_summary"
+    },
+    {
+      "id": "viox_fuse",
+      "title": "IEC 60269 fuse guide: gG vs aM, NH sizes, selection rules",
+      "url": "https://viox.com/iec-60269-low-voltage-fuse-selection-guide-gg-am-nh/",
+      "publisher": "VIOX Electric",
+      "accessed": "2026-11-20",
+      "kind": "third_party_guide"
+    }
+  ]
+}

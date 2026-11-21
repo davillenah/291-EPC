@@ -1,0 +1,294 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "epc291/esquemas-sld-mld-funcional/pv_funcional/pv_circuit.schema.json",
+  "title": "PV typical circuit record (power, communication and control)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "id",
+    "family",
+    "name",
+    "description",
+    "application_range",
+    "diagram_types",
+    "symbol_refs",
+    "device_refs",
+    "components",
+    "power_connection",
+    "control_connection",
+    "protections",
+    "sequence",
+    "common_errors",
+    "source_conflicts",
+    "status",
+    "source_ids",
+    "sources"
+  ],
+  "$defs": {
+    "bi": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "en",
+        "es"
+      ],
+      "properties": {
+        "en": {
+          "type": "string",
+          "minLength": 1
+        },
+        "es": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "status": {
+      "enum": [
+        "unverified",
+        "typical",
+        "not_found"
+      ],
+      "description": "unverified = cited public source; typical = generic practice without source; not_found = not located. 'verified' is never used."
+    },
+    "item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "text",
+        "status",
+        "source_ids"
+      ],
+      "properties": {
+        "text": {
+          "$ref": "#/$defs/bi"
+        },
+        "status": {
+          "$ref": "#/$defs/status"
+        },
+        "source_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9_.-]+$"
+    },
+    "family": {
+      "enum": [
+        "string_wiring",
+        "inverter_to_board",
+        "monitoring_comms",
+        "export_storage",
+        "trackers_pumping",
+        "control_typical"
+      ]
+    },
+    "name": {
+      "$ref": "#/$defs/bi"
+    },
+    "description": {
+      "$ref": "#/$defs/bi"
+    },
+    "application_range": {
+      "$ref": "#/$defs/item"
+    },
+    "diagram_types": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "SLD",
+          "MLD",
+          "functional"
+        ]
+      }
+    },
+    "symbol_refs": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z0-9_.-]+$"
+      }
+    },
+    "device_refs": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z0-9_.-]+$"
+      }
+    },
+    "components": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "ref",
+          "letter",
+          "symbol_id",
+          "device_id",
+          "description",
+          "status"
+        ],
+        "properties": {
+          "ref": {
+            "type": "string",
+            "minLength": 1
+          },
+          "letter": {
+            "type": "string",
+            "pattern": "^[A-Z]{1,2}$",
+            "description": "IEC 81346-2 class letter, as in repository reference_designations_and_terminals.md"
+          },
+          "symbol_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[a-z0-9_.-]+$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "device_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[a-z0-9_.-]+$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "description": {
+            "$ref": "#/$defs/bi"
+          },
+          "status": {
+            "$ref": "#/$defs/status"
+          }
+        }
+      }
+    },
+    "power_connection": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/item"
+      }
+    },
+    "control_connection": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/item"
+      }
+    },
+    "protections": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/item"
+      }
+    },
+    "sequence": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/item"
+      }
+    },
+    "common_errors": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/item"
+      }
+    },
+    "source_conflicts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "topic",
+          "source_ids",
+          "note"
+        ],
+        "properties": {
+          "topic": {
+            "$ref": "#/$defs/bi"
+          },
+          "source_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "note": {
+            "$ref": "#/$defs/bi"
+          }
+        }
+      }
+    },
+    "status": {
+      "$ref": "#/$defs/status"
+    },
+    "source_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "title",
+          "url",
+          "kind",
+          "accessed"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string",
+            "pattern": "^(https://|repo://)"
+          },
+          "kind": {
+            "enum": [
+              "standard_database",
+              "manufacturer_doc",
+              "secondary_article",
+              "academic_or_teaching",
+              "internal_repo"
+            ]
+          },
+          "accessed": {
+            "type": "string",
+            "format": "date"
+          }
+        }
+      }
+    }
+  }
+}

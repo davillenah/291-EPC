@@ -1,0 +1,103 @@
+{
+  "schema_version": "1.0",
+  "id": "sym_timer_coil_on_delay",
+  "name": {
+    "en": "Timer relay coil, on-delay (with suffix T)",
+    "es": "Bobina de relé temporizador (retardo a la conexión, sufijo T)"
+  },
+  "family": "control",
+  "description": {
+    "en": "Coil of an electronic or electromechanical timer. Its contacts are the delayed make/break contacts. IEC ID not located for the coil. Note: Coil ID not located; delayed contacts are separate records.",
+    "es": "Bobina de un temporizador electrónico o electromecánico. Sus contactos son los temporizados de cierre/apertura. ID IEC de la bobina no localizado. Nota: ID de la bobina no localizado; los contactos temporizados son registros aparte."
+  },
+  "iec60617": {
+    "symbol_id": null,
+    "iec_title_en": null,
+    "legacy_ref": null,
+    "status": "not_found"
+  },
+  "reference_designation": {
+    "letter": "K",
+    "note": {
+      "en": "Processes signals; suffix T for timing function (e.g. K1T) per article.",
+      "es": "Procesa señales; sufijo T para función temporizadora (p. ej. K1T) según el artículo."
+    },
+    "status": "unverified"
+  },
+  "ansi_nema": {
+    "equivalent": null,
+    "status": "not_found"
+  },
+  "geometry": {
+    "grid": "1 unit = one symbol grid step; origin top-left, y down; scale to the drawing standard in use",
+    "primitives": [
+      {
+        "prim": "rect",
+        "x": -0.8,
+        "y": 0.5,
+        "w": 1.6,
+        "h": 2.2
+      },
+      {
+        "prim": "line",
+        "p1": [
+          0,
+          0
+        ],
+        "p2": [
+          0,
+          0.5
+        ]
+      },
+      {
+        "prim": "line",
+        "p1": [
+          0,
+          2.7
+        ],
+        "p2": [
+          0,
+          3.2
+        ]
+      },
+      {
+        "prim": "text",
+        "at": [
+          0,
+          1.6
+        ],
+        "text": "t"
+      }
+    ],
+    "status": "typical"
+  },
+  "connection_points": [
+    {
+      "id": "A1",
+      "label": {
+        "en": "Coil A1",
+        "es": "Bobina A1"
+      }
+    },
+    {
+      "id": "A2",
+      "label": {
+        "en": "Coil A2",
+        "es": "Bobina A2"
+      }
+    }
+  ],
+  "status": "not_found",
+  "source_ids": [
+    "ima_iec81346_letters"
+  ],
+  "sources": [
+    {
+      "id": "ima_iec81346_letters",
+      "title": "Industrial Monitor Direct: IEC 81346-2 contactor and relay numbering (secondary article)",
+      "url": "https://industrialmonitordirect.com/blogs/knowledgebase/iec-81346-2-contactor-and-relay-numbering-conventions-for-wiring-diagrams",
+      "kind": "secondary_article",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

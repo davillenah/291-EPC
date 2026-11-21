@@ -1,0 +1,92 @@
+{
+  "schema_version": "1.0",
+  "id": "ups_critical",
+  "name": {
+    "en": "UPS with bypass for critical loads",
+    "es": "SAI con bypass para cargas criticas"
+  },
+  "description": {
+    "en": "UPS fed from the main board, feeding critical loads, with a bypass path.",
+    "es": "SAI alimentado desde el cuadro principal que alimenta cargas criticas, con camino de bypass."
+  },
+  "purpose": {
+    "en": "Show UPS input, output and bypass for critical loads.",
+    "es": "Mostrar entrada, salida y bypass del SAI para cargas criticas."
+  },
+  "voltage_level": "LV",
+  "status": "typical",
+  "chain": [
+    {
+      "order": 1,
+      "device_id": "mccb",
+      "label": {
+        "en": "UPS input breaker",
+        "es": "Interruptor de entrada SAI"
+      },
+      "notes": {
+        "en": "From main board",
+        "es": "Desde TGBT"
+      }
+    },
+    {
+      "order": 2,
+      "device_id": "ups",
+      "label": {
+        "en": "UPS",
+        "es": "SAI"
+      },
+      "notes": {
+        "en": "Battery backed; static bypass",
+        "es": "Con bateria; bypass estatico"
+      }
+    },
+    {
+      "order": 3,
+      "device_id": "mcb",
+      "label": {
+        "en": "Critical output",
+        "es": "Salida critica"
+      },
+      "notes": {
+        "en": "To critical loads",
+        "es": "A cargas criticas"
+      }
+    }
+  ],
+  "drawing_conventions": [
+    {
+      "en": "Draw source at top, loads at bottom; read upstream to downstream.",
+      "es": "Dibujar la fuente arriba y las cargas abajo; leer de aguas arriba a aguas abajo."
+    },
+    {
+      "en": "Label each device with its tag (for example QF-101) and its rating (A, kA, curve).",
+      "es": "Rotular cada equipo con su tag (por ejemplo QF-101) y su calibre (A, kA, curva)."
+    },
+    {
+      "en": "Label each feeder with conductor count, size and material where notated.",
+      "es": "Rotular cada alimentador con numero de conductores, seccion y material cuando se indique."
+    }
+  ],
+  "source_ids": [
+    "iec60617_db",
+    "viox_sld"
+  ],
+  "sources": [
+    {
+      "id": "iec60617_db",
+      "title": "IEC 60617 graphical symbols database (public page)",
+      "url": "https://std.iec.ch/iec60617",
+      "publisher": "IEC",
+      "accessed": "2026-11-20",
+      "kind": "standard_public_summary"
+    },
+    {
+      "id": "viox_sld",
+      "title": "How to read a single line diagram",
+      "url": "https://viox.com/how-to-read-a-single-line-diagram/",
+      "publisher": "VIOX Electric",
+      "accessed": "2026-11-20",
+      "kind": "third_party_guide"
+    }
+  ]
+}

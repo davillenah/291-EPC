@@ -1,0 +1,101 @@
+{
+  "schema_version": "1.0",
+  "id": "sym_generator_rotating",
+  "name": {
+    "en": "Rotating generator (engine-driven set)",
+    "es": "Generador rotativo (grupo electrógeno)"
+  },
+  "family": "general",
+  "description": {
+    "en": "Rotating machine symbol for an engine-driven generator. A verified IEC 60617 ID was not located in this research. Note: Symbol ID not found. Geometry is a typical circle with G.",
+    "es": "Símbolo de máquina rotativa para generador accionado por motor. No se encontró un ID IEC 60617 verificable en esta investigación. Nota: ID de símbolo no encontrado. La geometría es un círculo típico con G."
+  },
+  "iec60617": {
+    "symbol_id": null,
+    "iec_title_en": null,
+    "legacy_ref": null,
+    "status": "not_found"
+  },
+  "reference_designation": {
+    "letter": "G",
+    "note": {
+      "en": "Generation class (typical).",
+      "es": "Clase de generación (típico)."
+    },
+    "status": "typical"
+  },
+  "ansi_nema": {
+    "equivalent": null,
+    "status": "not_found"
+  },
+  "geometry": {
+    "grid": "1 unit = one symbol grid step; origin top-left, y down; scale to the drawing standard in use",
+    "primitives": [
+      {
+        "prim": "circle",
+        "c": [
+          0,
+          0
+        ],
+        "r": 2
+      },
+      {
+        "prim": "text",
+        "at": [
+          0,
+          0.6
+        ],
+        "text": "G"
+      },
+      {
+        "prim": "line",
+        "p1": [
+          0,
+          2
+        ],
+        "p2": [
+          0,
+          3.2
+        ]
+      },
+      {
+        "prim": "line",
+        "p1": [
+          0,
+          -2
+        ],
+        "p2": [
+          0,
+          -3.2
+        ]
+      }
+    ],
+    "status": "typical"
+  },
+  "connection_points": [
+    {
+      "id": "U",
+      "label": {
+        "en": "Output U",
+        "es": "Salida U"
+      }
+    },
+    {
+      "id": "V",
+      "label": {
+        "en": "Output V",
+        "es": "Salida V"
+      }
+    },
+    {
+      "id": "W",
+      "label": {
+        "en": "Output W",
+        "es": "Salida W"
+      }
+    }
+  ],
+  "status": "not_found",
+  "source_ids": [],
+  "sources": []
+}

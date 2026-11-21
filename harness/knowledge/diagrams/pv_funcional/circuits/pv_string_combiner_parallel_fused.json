@@ -1,0 +1,294 @@
+{
+  "schema_version": "1.0",
+  "id": "pv_string_combiner_parallel_fused",
+  "family": "string_wiring",
+  "name": {
+    "en": "String combiner box, parallel strings with fused positives",
+    "es": "Caja combinadora de strings en paralelo con fusibles en positivo"
+  },
+  "description": {
+    "en": "Strings with MC4 connectors run to a combiner box; each string has its own fuse and the outputs are paralleled on positive and negative bus bars.",
+    "es": "Strings con conectores MC4 llegan a una caja combinadora; cada string tiene su fusible y las salidas se ponen en paralelo en barras positiva y negativa."
+  },
+  "application_range": {
+    "text": {
+      "en": "Multi-string arrays with several strings per combiner box (typical). Single-string inputs may have no fuse.",
+      "es": "Arreglos con varios strings por caja combinadora (típico). Las entradas de un solo string pueden no llevar fusible."
+    },
+    "status": "unverified",
+    "source_ids": [
+      "abb_panorama"
+    ]
+  },
+  "diagram_types": [
+    "SLD",
+    "MLD"
+  ],
+  "symbol_refs": [
+    "sym_disconnector",
+    "sym_fuse_general",
+    "sym_surge_arrester_spd",
+    "sym_terminal_block"
+  ],
+  "device_refs": [
+    "fuse_gpv",
+    "spd_type2",
+    "switch_disconnector"
+  ],
+  "components": [
+    {
+      "ref": "G1",
+      "letter": "G",
+      "symbol_id": null,
+      "device_id": null,
+      "description": {
+        "en": "PV string: modules in series. Voc at the coldest expected temperature must stay under the inverter DC maximum.",
+        "es": "String FV: módulos en serie. Voc a la temperatura mínima esperada debe quedar bajo el máximo DC del inversor."
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "X1",
+      "letter": "X",
+      "symbol_id": null,
+      "device_id": null,
+      "description": {
+        "en": "MC4 connector pair per string (positive and negative). No IEC symbol in the repository set.",
+        "es": "Par de conectores MC4 por string (positivo y negativo). Sin símbolo IEC en el repositorio."
+      },
+      "status": "not_found"
+    },
+    {
+      "ref": "F1-Fn",
+      "letter": "F",
+      "symbol_id": "sym_fuse_general",
+      "device_id": "fuse_gpv",
+      "description": {
+        "en": "String fuse gPV, one per string on the positive bus when strings are paralleled. ABB PANORAMA series: 15 A, 10x38 mm (1000 V) or 10x85 mm (1500 V).",
+        "es": "Fusible gPV por string en el bus positivo cuando hay strings en paralelo. Serie ABB PANORAMA: 15 A, 10x38 mm (1000 V) o 10x85 mm (1500 V)."
+      },
+      "status": "unverified"
+    },
+    {
+      "ref": "Q1",
+      "letter": "Q",
+      "symbol_id": "sym_disconnector",
+      "device_id": "switch_disconnector",
+      "description": {
+        "en": "DC string disconnector inside the string box.",
+        "es": "Seccionador DC de string dentro de la caja."
+      },
+      "status": "unverified"
+    },
+    {
+      "ref": "F2",
+      "letter": "F",
+      "symbol_id": "sym_surge_arrester_spd",
+      "device_id": "spd_type2",
+      "description": {
+        "en": "DC SPD type 2, pluggable, in the combiner.",
+        "es": "DPS DC tipo 2 enchufable en la combinadora."
+      },
+      "status": "unverified"
+    },
+    {
+      "ref": "A1",
+      "letter": "A",
+      "symbol_id": null,
+      "device_id": null,
+      "description": {
+        "en": "Combiner enclosure with positive and negative bus bars and an earth bar.",
+        "es": "Gabinete combinador con barras positiva y negativa y barra de tierra."
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "X2",
+      "letter": "X",
+      "symbol_id": "sym_terminal_block",
+      "device_id": null,
+      "description": {
+        "en": "Output terminals: pipe or ring lugs, copper or aluminium. Inputs enter through M16 glands for 2.5 to 16 mm2 cable.",
+        "es": "Bornes de salida: terminales de tubo u ojal, cobre o aluminio. Entradas por prensacables M16 para cable de 2,5 a 16 mm2."
+      },
+      "status": "unverified"
+    }
+  ],
+  "power_connection": [
+    {
+      "text": {
+        "en": "Each string cable enters through a gland and terminates directly on its fuse holder.",
+        "es": "Cada cable de string entra por prensacable y termina directamente en su portafusible."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "abb_panorama"
+      ]
+    },
+    {
+      "text": {
+        "en": "Strings join the positive and negative bus bars; one output pair feeds one inverter DC or MPPT input.",
+        "es": "Los strings se unen en las barras positiva y negativa; un par de salida alimenta una entrada DC o MPPT del inversor."
+      },
+      "status": "typical",
+      "source_ids": []
+    },
+    {
+      "text": {
+        "en": "One PV string per fuse position in the STRCOM range (4 to 30 positions).",
+        "es": "Un string FV por posición de fusible en la gama STRCOM (4 a 30 posiciones)."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "solectria_strcom"
+      ]
+    },
+    {
+      "text": {
+        "en": "Positive and negative cables kept separate, double insulated. Typical string cable 4 to 6 mm2 (typical value; check module datasheet and local code).",
+        "es": "Cables positivo y negativo separados, con doble aislamiento. Cable típico de string 4 a 6 mm2 (valor típico; verificar ficha del módulo y normativa local)."
+      },
+      "status": "typical",
+      "source_ids": []
+    },
+    {
+      "text": {
+        "en": "MC4 polarity: positive and negative are not interchangeable. Check polarity with a multimeter before mating.",
+        "es": "Polaridad MC4: positivo y negativo no son intercambiables. Verificar polaridad con multímetro antes de conectar."
+      },
+      "status": "typical",
+      "source_ids": []
+    },
+    {
+      "text": {
+        "en": "Cable length and voltage-drop limits per string: not located in the fetched sources.",
+        "es": "Longitud máxima y caída de tensión por string: no ubicadas en las fuentes consultadas."
+      },
+      "status": "not_found",
+      "source_ids": []
+    }
+  ],
+  "control_connection": [],
+  "protections": [
+    {
+      "text": {
+        "en": "String fuse rating typically at least 1.56 x short-circuit current (Isc) of the string; never above the module series-fuse rating on the module label.",
+        "es": "Calibre de fusible típicamente al menos 1,56 x Isc del string; nunca superior al máximo serie indicado en la etiqueta del módulo."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "solectria_strcom"
+      ]
+    },
+    {
+      "text": {
+        "en": "DC SPD type 2 in the string box (pluggable, both ranges). Mounting position not specified.",
+        "es": "DPS DC tipo 2 en la caja de string (enchufable). Posición de montaje no especificada."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "abb_panorama"
+      ]
+    },
+    {
+      "text": {
+        "en": "Parallel-string count above which string fuses become mandatory: not located (fetched pages show per-string protection without a threshold).",
+        "es": "Número de strings en paralelo a partir del cual el fusible de string es obligatorio: no ubicado (las páginas consultadas no dan umbral)."
+      },
+      "status": "not_found",
+      "source_ids": []
+    },
+    {
+      "text": {
+        "en": "Enclosure: array frame and mounting structure grounds connect to the combiner ground bar.",
+        "es": "Gabinete: el marco del arreglo y la estructura se conectan a la barra de tierra de la combinadora."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "solectria_strcom"
+      ]
+    }
+  ],
+  "sequence": [
+    {
+      "text": {
+        "en": "Measure open-circuit voltage of each string before connecting it to the combiner.",
+        "es": "Medir la tensión de circuito abierto de cada string antes de conectarlo a la combinadora."
+      },
+      "status": "typical",
+      "source_ids": []
+    },
+    {
+      "text": {
+        "en": "Install the fuses; check that the rating matches the string cable and module data.",
+        "es": "Instalar los fusibles; verificar que el calibre corresponda al cable y a los datos del módulo."
+      },
+      "status": "typical",
+      "source_ids": []
+    },
+    {
+      "text": {
+        "en": "Close the DC disconnector only after the inverter DC input checks pass.",
+        "es": "Cerrar el seccionador DC solo después de superar las verificaciones de la entrada DC del inversor."
+      },
+      "status": "typical",
+      "source_ids": []
+    }
+  ],
+  "common_errors": [
+    {
+      "text": {
+        "en": "Reversed MC4 polarity on one string.",
+        "es": "Polaridad MC4 invertida en un string."
+      },
+      "status": "typical",
+      "source_ids": []
+    },
+    {
+      "text": {
+        "en": "Parallel string without its own fuse.",
+        "es": "String en paralelo sin fusible propio."
+      },
+      "status": "typical",
+      "source_ids": []
+    },
+    {
+      "text": {
+        "en": "Mixed string lengths or module models on one MPPT input.",
+        "es": "Strings de distinta longitud o modelo de módulo en una misma entrada MPPT."
+      },
+      "status": "typical",
+      "source_ids": []
+    }
+  ],
+  "source_conflicts": [],
+  "status": "unverified",
+  "source_ids": [
+    "abb_panorama",
+    "repo_devices",
+    "solectria_strcom"
+  ],
+  "sources": [
+    {
+      "id": "abb_panorama",
+      "title": "ABB PANORAMA string combiners (1SLC009000B0202)",
+      "url": "https://library.e.abb.com/public/94aed02352b6439b8a1dc44fb85e0fc1/1SLC009000B0202%20PANORAMA%20COMBINERS.pdf",
+      "kind": "manufacturer_doc",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "repo_devices",
+      "title": "EPC-291 repository: sld_mld/devices and funcional_iec60617/symbols_index.json (ids reused)",
+      "url": "repo://sld_mld/devices",
+      "kind": "internal_repo",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "solectria_strcom",
+      "title": "Solectria STRCOM fused string combiner installation and operations manual",
+      "url": "https://www.solectria.com/downloads/installation-operation-manuals/strcom-installation-and-operations-manual",
+      "kind": "manufacturer_doc",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

@@ -1,0 +1,116 @@
+{
+  "schema_version": "1.0",
+  "id": "sym_contact_make_delayed",
+  "name": {
+    "en": "Make contact, delayed (as titled in the database)",
+    "es": "Contacto de cierre temporizado (según título de la base)"
+  },
+  "family": "control",
+  "description": {
+    "en": "Make contact with delay. The database title does not state whether the delay is on closing or opening; check the print before use. Note: Use sym_contact_make_delayed_closing for on-delay unless the print says otherwise.",
+    "es": "Contacto de cierre con retardo. El título de la base no indica si el retardo es al cerrar o al abrir; revisar la impresión antes de usar. Nota: Usar sym_contact_make_delayed_closing para retardo a la conexión salvo que la impresión indique otra cosa."
+  },
+  "iec60617": {
+    "symbol_id": "S00247",
+    "iec_title_en": "Make contact, delayed",
+    "legacy_ref": null,
+    "status": "unverified"
+  },
+  "reference_designation": {
+    "letter": "n/a",
+    "note": {
+      "en": "Parent timer relay.",
+      "es": "Relé temporizador principal."
+    },
+    "status": "typical"
+  },
+  "ansi_nema": {
+    "equivalent": null,
+    "status": "not_found"
+  },
+  "geometry": {
+    "grid": "1 unit = one symbol grid step; origin top-left, y down; scale to the drawing standard in use",
+    "primitives": [
+      {
+        "prim": "line",
+        "p1": [
+          0,
+          0
+        ],
+        "p2": [
+          0,
+          2
+        ]
+      },
+      {
+        "prim": "line",
+        "p1": [
+          0,
+          2
+        ],
+        "p2": [
+          1.4,
+          3.2
+        ]
+      },
+      {
+        "prim": "line",
+        "p1": [
+          0,
+          4
+        ],
+        "p2": [
+          0,
+          6
+        ]
+      },
+      {
+        "prim": "polyline",
+        "pts": [
+          [
+            0.5,
+            4.8
+          ],
+          [
+            0.9,
+            5.2
+          ],
+          [
+            1.2,
+            4.7
+          ]
+        ]
+      }
+    ],
+    "status": "typical"
+  },
+  "connection_points": [
+    {
+      "id": "15",
+      "label": {
+        "en": "Input",
+        "es": "Entrada"
+      }
+    },
+    {
+      "id": "18",
+      "label": {
+        "en": "Output",
+        "es": "Salida"
+      }
+    }
+  ],
+  "status": "unverified",
+  "source_ids": [
+    "iec_S00247"
+  ],
+  "sources": [
+    {
+      "id": "iec_S00247",
+      "title": "IEC 60617 database, symbol S00247: Make contact, delayed",
+      "url": "https://library.iec.ch/grasymb/grasymb.nsf/(SysSymbol)/S00247",
+      "kind": "standard_database",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

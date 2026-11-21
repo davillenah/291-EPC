@@ -1,0 +1,111 @@
+{
+  "schema_version": "1.0",
+  "id": "spd_type1",
+  "name": {
+    "en": "SPD type 1 (lightning current)",
+    "es": "SPD tipo 1 (corriente de rayo)"
+  },
+  "description": {
+    "en": "Surge protective device for direct lightning current (10/350 us). Used at the service entrance of buildings with a lightning protection system.",
+    "es": "Dispositivo de proteccion contra sobretensiones para corriente directa de rayo (10/350 us). Se usa en la entrada de edificios con sistema de proteccion contra rayos."
+  },
+  "kind": "spd",
+  "voltage_level": "LV",
+  "status": "pending review",
+  "source_ids": [
+    "ei_spd",
+    "iec60617_db"
+  ],
+  "sources": [
+    {
+      "id": "ei_spd",
+      "title": "The Surge Protection Device (SPD) (wiki)",
+      "url": "https://www.electrical-installation.org/enwiki/The_Surge_Protection_Device_(SPD)",
+      "publisher": "electrical-installation.org",
+      "accessed": "2026-11-20",
+      "kind": "textbook_wiki"
+    },
+    {
+      "id": "iec60617_db",
+      "title": "IEC 60617 graphical symbols database (public page)",
+      "url": "https://std.iec.ch/iec60617",
+      "publisher": "IEC",
+      "accessed": "2026-11-20",
+      "kind": "standard_public_summary"
+    }
+  ],
+  "standard_refs": [
+    {
+      "ref": "IEC 61643-11",
+      "note": {
+        "en": "SPD standard (cited)",
+        "es": "Norma de SPD (citada)"
+      }
+    },
+    {
+      "ref": "IEC 62305",
+      "note": {
+        "en": "Lightning protection (cited)",
+        "es": "Proteccion contra rayos (citada)"
+      }
+    }
+  ],
+  "symbol_ref": {
+    "id": "not_found",
+    "status": "not_found",
+    "note": {
+      "en": "IEC 60617 public page lists no identifiers for this item; not found, not guessed.",
+      "es": "La pagina publica de IEC 60617 no lista identificadores para este elemento; no encontrado, no supuesto."
+    }
+  },
+  "ratings_typical": [
+    {
+      "parameter": "impulse_current_Iimp",
+      "value": 25,
+      "unit": "kA per pole (3-phase)",
+      "status": "pending review",
+      "source_ids": [
+        "ei_spd"
+      ],
+      "note": {
+        "en": "IEC 62305 figure cited: 25 kA per pole (3-phase), 100 kA total for 3P+N",
+        "es": "Cifra citada de IEC 62305: 25 kA por polo (trifasico), 100 kA total para 3P+N"
+      }
+    },
+    {
+      "parameter": "test_wave",
+      "value": "10/350 us",
+      "unit": "-",
+      "status": "pending review",
+      "source_ids": [
+        "ei_spd"
+      ],
+      "note": {
+        "en": "Test wave for type 1",
+        "es": "Onda de ensayo tipo 1"
+      }
+    }
+  ],
+  "selection_criteria": {
+    "when_to_use": [
+      {
+        "en": "Buildings with a lightning protection system or meshed cage (cited)",
+        "es": "Edificios con sistema de proteccion contra rayos o malla (citado)"
+      },
+      {
+        "en": "Main distribution at service entrance (typical)",
+        "es": "Distribucion principal en la entrada de servicio (typical)"
+      }
+    ],
+    "when_not_to_use": [
+      {
+        "en": "Building without lightning protection: type 2 is usually enough (typical)",
+        "es": "Edificio sin proteccion contra rayos: normalmente basta tipo 2 (typical)"
+      }
+    ],
+    "alternatives": [
+      "spd_type2",
+      "spd_type3"
+    ]
+  }
+}

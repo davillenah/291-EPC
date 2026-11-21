@@ -1,0 +1,68 @@
+{
+  "schema_version": "1.0",
+  "id": "sym_terminal_block",
+  "name": {
+    "en": "Terminal block (terminal point)",
+    "es": "Borne (punto de conexión)"
+  },
+  "family": "general",
+  "description": {
+    "en": "Terminal point on a panel terminal strip, used to show internal to external wiring. IEC ID not located. Note: Geometry typical. Terminal numbering rules are in reference_designations_and_terminals.md.",
+    "es": "Punto de conexión en una regleta de bornes del tablero, usado para mostrar cableado interno a externo. ID IEC no localizado. Nota: Geometría típica. Las reglas de numeración están en reference_designations_and_terminals.md."
+  },
+  "iec60617": {
+    "symbol_id": null,
+    "iec_title_en": null,
+    "legacy_ref": null,
+    "status": "not_found"
+  },
+  "reference_designation": {
+    "letter": "X",
+    "note": {
+      "en": "Terminal class (typical; IEC 81346 X).",
+      "es": "Clase de bornes (típico; IEC 81346 X)."
+    },
+    "status": "typical"
+  },
+  "ansi_nema": {
+    "equivalent": null,
+    "status": "not_found"
+  },
+  "geometry": {
+    "grid": "1 unit = one symbol grid step; origin top-left, y down; scale to the drawing standard in use",
+    "primitives": [
+      {
+        "prim": "circle",
+        "c": [
+          0,
+          0
+        ],
+        "r": 0.4
+      },
+      {
+        "prim": "line",
+        "p1": [
+          0,
+          0.4
+        ],
+        "p2": [
+          0,
+          1.5
+        ]
+      }
+    ],
+    "status": "typical"
+  },
+  "connection_points": [
+    {
+      "id": "1",
+      "label": {
+        "en": "Terminal",
+        "es": "Borne"
+      }
+    }
+  ],
+  "status": "not_found",
+  "source_ids": [],
+  "sources": []
+}

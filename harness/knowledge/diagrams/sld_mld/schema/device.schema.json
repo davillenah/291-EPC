@@ -1,0 +1,323 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "sld_mld.device.schema.json",
+  "title": "SLD/MLD device record (protection, switching, equipment, instrument transformer)",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "id",
+    "name",
+    "description",
+    "kind",
+    "voltage_level",
+    "status",
+    "source_ids",
+    "sources",
+    "standard_refs",
+    "symbol_ref",
+    "ratings_typical",
+    "selection_criteria"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9_.-]+$"
+    },
+    "name": {
+      "$ref": "#/$defs/i18n"
+    },
+    "description": {
+      "$ref": "#/$defs/i18n"
+    },
+    "kind": {
+      "enum": [
+        "breaker",
+        "rcd",
+        "fuse",
+        "switch",
+        "contactor",
+        "motor_protection",
+        "overload_relay",
+        "spd",
+        "transfer_switch",
+        "mv_switch",
+        "mv_breaker",
+        "mv_earthing_switch",
+        "mv_fuse_switch",
+        "protection_relay",
+        "instrument_transformer",
+        "transformer",
+        "board",
+        "generator",
+        "ups",
+        "inverter",
+        "capacitor_bank",
+        "metering"
+      ]
+    },
+    "voltage_level": {
+      "enum": [
+        "LV",
+        "MV"
+      ]
+    },
+    "status": {
+      "$ref": "#/$defs/status"
+    },
+    "source_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/source"
+      }
+    },
+    "standard_refs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "ref",
+          "note"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "ref": {
+            "type": "string"
+          },
+          "note": {
+            "$ref": "#/$defs/i18n"
+          }
+        }
+      }
+    },
+    "symbol_ref": {
+      "type": "object",
+      "required": [
+        "id",
+        "status"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/$defs/status"
+        },
+        "note": {
+          "$ref": "#/$defs/i18n"
+        }
+      }
+    },
+    "ratings_typical": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/rating"
+      }
+    },
+    "selection_criteria": {
+      "type": "object",
+      "required": [
+        "when_to_use",
+        "when_not_to_use",
+        "alternatives"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "when_to_use": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/i18n"
+          }
+        },
+        "when_not_to_use": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/i18n"
+          }
+        },
+        "alternatives": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "notes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/i18n"
+      }
+    }
+  },
+  "$defs": {
+    "i18n": {
+      "type": "object",
+      "required": [
+        "en",
+        "es"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "en": {
+          "type": "string",
+          "minLength": 1
+        },
+        "es": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "status": {
+      "enum": [
+        "unverified",
+        "typical",
+        "not_found",
+        "pending review"
+      ],
+      "description": "unverified = sourced (see source_ids), typical = generic industry value without source, not_found = not found in sources (never guessed), pending review = value quoted from a norm, awaiting a person. Nothing is verified."
+    },
+    "source": {
+      "type": "object",
+      "required": [
+        "id",
+        "title",
+        "url",
+        "publisher",
+        "accessed",
+        "kind"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9_.-]+$"
+        },
+        "title": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string",
+          "pattern": "^(https://|repo://)"
+        },
+        "publisher": {
+          "type": "string"
+        },
+        "accessed": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+        },
+        "kind": {
+          "enum": [
+            "manufacturer",
+            "third_party_guide",
+            "standard_public_summary",
+            "textbook_wiki",
+            "internal_repo"
+          ]
+        }
+      }
+    },
+    "rating": {
+      "type": "object",
+      "required": [
+        "parameter",
+        "value",
+        "unit",
+        "status",
+        "source_ids",
+        "note"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "parameter": {
+          "type": "string"
+        },
+        "value": {
+          "type": [
+            "string",
+            "number",
+            "null"
+          ]
+        },
+        "unit": {
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/$defs/status"
+        },
+        "source_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "note": {
+          "$ref": "#/$defs/i18n"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "unverified",
+                  "pending review"
+                ]
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "source_ids": {
+                "minItems": 1
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "not_found"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "value": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

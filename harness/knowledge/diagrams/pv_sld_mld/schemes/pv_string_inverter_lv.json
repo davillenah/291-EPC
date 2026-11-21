@@ -1,0 +1,340 @@
+{
+  "schema_version": "1.0",
+  "record_type": "scheme",
+  "id": "pv_string_inverter_lv",
+  "name": {
+    "en": "PV string inverter, LV connection with full protection chain",
+    "es": "Inversor FV de string, conexión BT con cadena de protección completa"
+  },
+  "description": {
+    "en": "DC strings, optional combiner with string fuses and DC SPD, DC load-break switch, string inverter with internal RCMU, AC isolation and overcurrent, optional external RCD type B, bidirectional meter, LV board connection point.",
+    "es": "Strings DC, caja opcional con fusibles de string y SPD DC, seccionador DC de corte en carga, inversor de string con RCMU interno, aislamiento y sobrecorriente AC, RCD tipo B externo opcional, medidor bidireccional, punto de conexión en cuadro BT."
+  },
+  "purpose": {
+    "en": "Full chain for a rooftop or small commercial grid-tied string inverter. Extends the existing pv_grid_tie_lv scheme with the AC meter, the RCD and the notes.",
+    "es": "Cadena completa para inversor de string conectado a red en techo o comercial pequeño. Amplía el esquema existente pv_grid_tie_lv con medidor AC, RCD y notas."
+  },
+  "architecture": "string_inverter_lv",
+  "voltage_level": "LV",
+  "status": "unverified",
+  "chain": [
+    {
+      "order": 1,
+      "device_id": "pv_string_combiner_box",
+      "label": {
+        "en": "String combiner",
+        "es": "Caja de strings"
+      },
+      "notes": {
+        "en": "Only with more strings than inverter inputs",
+        "es": "Solo con más strings que entradas del inversor"
+      }
+    },
+    {
+      "order": 2,
+      "device_id": "fuse_gpv",
+      "label": {
+        "en": "String fuses",
+        "es": "Fusibles de string"
+      },
+      "notes": {
+        "en": "Required when reverse current from parallel strings is possible; rating rules in pv_dc_protection.md",
+        "es": "Requeridos si puede haber corriente inversa de strings en paralelo; reglas en pv_dc_protection.md"
+      }
+    },
+    {
+      "order": 3,
+      "device_id": "spd_type2",
+      "label": {
+        "en": "DC SPD",
+        "es": "SPD DC"
+      },
+      "notes": {
+        "en": "Type 2 at DC entry on rooftops without external LPS; Type 1+2 where LPS requires",
+        "es": "Tipo 2 en entrada DC en techos sin LPS externo; tipo 1+2 si el LPS lo exige"
+      }
+    },
+    {
+      "order": 4,
+      "device_id": "pv_dc_switch_load_break",
+      "label": {
+        "en": "DC load-break switch",
+        "es": "Seccionador DC de corte en carga"
+      },
+      "notes": {
+        "en": "Breaks at U_OC MAX; fuses do not load-break",
+        "es": "Corta en U_OC MAX; los fusibles no cortan en carga"
+      }
+    },
+    {
+      "order": 5,
+      "device_id": "pv_inverter_grid_tie",
+      "label": {
+        "en": "String inverter",
+        "es": "Inversor de string"
+      },
+      "notes": {
+        "en": "Internal RCMU and grid protection; model per datasheet",
+        "es": "RCMU y protección de red internos; modelo según ficha"
+      }
+    },
+    {
+      "order": 6,
+      "device_id": "switch_disconnector",
+      "label": {
+        "en": "AC isolator",
+        "es": "Seccionador AC"
+      },
+      "notes": {
+        "en": "Isolates the inverter from the board",
+        "es": "Aísla el inversor del cuadro"
+      }
+    },
+    {
+      "order": 7,
+      "device_id": "mcb",
+      "label": {
+        "en": "AC overcurrent",
+        "es": "Sobrecorriente AC"
+      },
+      "notes": {
+        "en": "Rating at least 125 % of inverter rated output current, within the manual maximum; MCCB above 125 A",
+        "es": "Calibre al menos 125 % de la corriente nominal de salida, dentro del máximo del manual; MCCB por encima de 125 A"
+      }
+    },
+    {
+      "order": 8,
+      "device_id": "rcd_type_b",
+      "label": {
+        "en": "External RCD (conditional)",
+        "es": "RCD externo (condicional)"
+      },
+      "notes": {
+        "en": "Type B where the inverter is transformerless and local rules require; type A only where the inverter manual allows",
+        "es": "Tipo B si el inversor no tiene transformador y la norma lo exige; tipo A solo si el manual lo permite"
+      }
+    },
+    {
+      "order": 9,
+      "device_id": "pv_bidirectional_meter_lv",
+      "label": {
+        "en": "Bidirectional meter",
+        "es": "Medidor bidireccional"
+      },
+      "notes": {
+        "en": "At the point of connection; utility specifies model",
+        "es": "En el punto de conexión; la distribuidora especifica el modelo"
+      }
+    },
+    {
+      "order": 10,
+      "device_id": "switchboard_tgbt",
+      "label": {
+        "en": "LV board connection",
+        "es": "Conexión al cuadro BT"
+      },
+      "notes": {
+        "en": "Point of connection; overcurrent at the connection point",
+        "es": "Punto de conexión; sobrecorriente en el punto de conexión"
+      }
+    }
+  ],
+  "device_refs": [
+    "pv_string_combiner_box",
+    "fuse_gpv",
+    "spd_type2",
+    "pv_dc_switch_load_break",
+    "pv_inverter_grid_tie",
+    "switch_disconnector",
+    "mcb",
+    "rcd_type_b",
+    "pv_bidirectional_meter_lv",
+    "switchboard_tgbt",
+    "pv_rcmu",
+    "repo.sma.sb3-0-1av-41",
+    "repo.sma.stp25000tl-30",
+    "repo.fronius.symo-advanced-20-0-3-m",
+    "repo.huawei.sun2000-100ktl-h1"
+  ],
+  "drawing_conventions": [
+    {
+      "en": "Read upstream to downstream: source (strings) at the top, the board at the bottom.",
+      "es": "Leer de aguas arriba a aguas abajo: fuente (strings) arriba, cuadro abajo."
+    },
+    {
+      "en": "Label strings and each cable with a tag; label each device with its rating (A, V, kA, curve).",
+      "es": "Rotular strings y cada cable con su tag; rotular cada equipo con su calibre (A, V, kA, curva)."
+    },
+    {
+      "en": "Show DC and AC isolators as separate devices on each side.",
+      "es": "Mostrar seccionadores DC y AC como equipos separados en cada lado."
+    }
+  ],
+  "source_ids": [
+    "repo_inverters_central",
+    "repo_micro_hybrid",
+    "repo_inverter_catalog",
+    "ei_pv_safety",
+    "ei_prosumer",
+    "viox_spd",
+    "sma_stp_protective",
+    "sma_stp_interfaces",
+    "sma_rcmu",
+    "fronius_symo_manual",
+    "huawei_l1_cables",
+    "kostal_piko_rcd",
+    "iaei_ac",
+    "iaei_oc",
+    "phoenix_combiners",
+    "viox_fuse",
+    "iec60364_7_712_preview"
+  ],
+  "sources": [
+    {
+      "id": "repo_inverters_central",
+      "title": "Repo: central inverters and accessories research",
+      "url": "repo://harness/docs/pv/inverters/central_inverters_and_accessories.md",
+      "publisher": "EPC-291 repository",
+      "accessed": "2026-11-20",
+      "kind": "internal_repo"
+    },
+    {
+      "id": "repo_micro_hybrid",
+      "title": "Repo: string, hybrid and micro inverters research",
+      "url": "repo://harness/docs/pv/inverters/string_hybrid_micro_inverters.md",
+      "publisher": "EPC-291 repository",
+      "accessed": "2026-11-20",
+      "kind": "internal_repo"
+    },
+    {
+      "id": "repo_inverter_catalog",
+      "title": "Repo: inverter_catalog.json (SMA STP datasheet numbers)",
+      "url": "repo://harness/src/engines/calculation/pv/src/epc_pv/data/inverter_catalog.json",
+      "publisher": "EPC-291 repository",
+      "accessed": "2026-11-20",
+      "kind": "internal_repo"
+    },
+    {
+      "id": "ei_pv_safety",
+      "title": "PV System: how to ensure safety during normal operation",
+      "url": "https://www.electrical-installation.org/enwiki/PV_System:_how_to_ensure_safety_during_normal_operation",
+      "publisher": "electrical-installation.org (public technical wiki)",
+      "accessed": "2026-11-20",
+      "kind": "textbook_wiki"
+    },
+    {
+      "id": "ei_prosumer",
+      "title": "Specific protection of prosumer electrical installations",
+      "url": "https://www.electrical-installation.org/enwiki/Specific_protection_of_prosumer_electrical_installations",
+      "publisher": "electrical-installation.org (public technical wiki)",
+      "accessed": "2026-11-20",
+      "kind": "textbook_wiki"
+    },
+    {
+      "id": "viox_spd",
+      "title": "VIOX: how to choose the right SPD for a solar power system",
+      "url": "https://viox.com/how-to-choose-the-right-spd-for-your-solar-power-system/",
+      "publisher": "VIOX Electric",
+      "accessed": "2026-11-20",
+      "kind": "third_party_guide"
+    },
+    {
+      "id": "sma_stp_protective",
+      "title": "SMA manual: Protective devices (DC load-break switch, reverse polarity diode, AC 60 A, Riso)",
+      "url": "https://manuals.sma.de/STPxxUS50/en-US/12078896395.html",
+      "publisher": "SMA Solar Technology AG",
+      "accessed": "2026-11-20",
+      "kind": "manufacturer"
+    },
+    {
+      "id": "sma_stp_interfaces",
+      "title": "SMA manual: Interfaces and functions (UL 1741 SA, rapid shutdown, AFCI, surge arresters)",
+      "url": "https://manuals.sma.de/STPxx-US-41/en-US/391139595.html",
+      "publisher": "SMA Solar Technology AG",
+      "accessed": "2026-11-20",
+      "kind": "manufacturer"
+    },
+    {
+      "id": "sma_rcmu",
+      "title": "SMA manual: residual-current monitoring unit (RCMU) and external RCD",
+      "url": "https://manuals.sma.de/SMAStorageXLPackage/en-US/17058314251.html",
+      "publisher": "SMA Solar Technology AG",
+      "accessed": "2026-11-20",
+      "kind": "manufacturer"
+    },
+    {
+      "id": "fronius_symo_manual",
+      "title": "Fronius Symo installation manual (English): AC fuses, RCD, DC fuses and switch",
+      "url": "https://manuals.fronius.com/html/4204260172/en.html",
+      "publisher": "Fronius International",
+      "accessed": "2026-11-20",
+      "kind": "manufacturer"
+    },
+    {
+      "id": "huawei_l1_cables",
+      "title": "Huawei SUN2000-(2KTL-6KTL)-L1 user manual: preparing cables",
+      "url": "https://support.huawei.com/enterprise/en/doc/EDOC1100136173/d7e21771/preparing-cables",
+      "publisher": "Huawei Technologies",
+      "accessed": "2026-11-20",
+      "kind": "manufacturer"
+    },
+    {
+      "id": "kostal_piko_rcd",
+      "title": "Kostal PIKO 1210 HE-RCD-RCM note: RCD type B for galvanically unisolated inverters",
+      "url": "https://www.kostal-solar-electric.com/fileadmin/downloadcenter/kse/1210_HE-RCD-RCM.pdf",
+      "publisher": "Kostal Solar Electric",
+      "accessed": "2026-11-20",
+      "kind": "manufacturer"
+    },
+    {
+      "id": "iaei_ac",
+      "title": "Conductors, currents, and circuit protection: the AC side",
+      "url": "https://iaeimagazine.org/columns/photovoltaic/conductors-currents-and-circuit-protection-the-ac-side/",
+      "publisher": "IAEI Magazine",
+      "accessed": "2026-11-20",
+      "kind": "third_party_guide"
+    },
+    {
+      "id": "iaei_oc",
+      "title": "Photovoltaic Power System Overcurrent Protection: Why, How and Where",
+      "url": "https://iaeimagazine.org/columns/photovoltaic/photovoltaic-power-system-overcurrent-protection-why-how-and-where/",
+      "publisher": "IAEI Magazine",
+      "accessed": "2026-11-20",
+      "kind": "third_party_guide"
+    },
+    {
+      "id": "phoenix_combiners",
+      "title": "Phoenix Contact string combiner boxes for PV (model list)",
+      "url": "https://www.phoenixcontact.com/en-sk/products/surge-protection/string-combiner-boxes-for-photovoltaic-systems",
+      "publisher": "Phoenix Contact",
+      "accessed": "2026-11-20",
+      "kind": "manufacturer"
+    },
+    {
+      "id": "viox_fuse",
+      "title": "IEC 60269 fuse guide: gG vs aM, NH sizes, selection rules",
+      "url": "https://viox.com/iec-60269-low-voltage-fuse-selection-guide-gg-am-nh/",
+      "publisher": "VIOX Electric",
+      "accessed": "2026-11-20",
+      "kind": "third_party_guide"
+    },
+    {
+      "id": "iec60364_7_712_preview",
+      "title": "IEC 60364-7-712 ed.3.0 (2025-10): publisher preview, scope and clause index",
+      "url": "https://assets.vde-verlag.de/iec-normen/preview-pdf/info_iec60364-7-712%7Bed3.0%7Db.pdf",
+      "publisher": "VDE Verlag (IEC publication preview)",
+      "accessed": "2026-11-20",
+      "kind": "standard_public_summary"
+    }
+  ],
+  "notes": [
+    {
+      "en": "Refs with prefix repo. are inverter ids of the repo catalogue (not sld_mld device ids): the chain uses only device ids.",
+      "es": "Las refs con prefijo repo. son ids de inversores del catálogo del repo (no ids de dispositivos sld_mld): la cadena usa solo ids de dispositivo."
+    },
+    {
+      "en": "Same DC SPD and RCD as in the fused string scheme; the DC isolator is not a fuse (see dc_protection file).",
+      "es": "Mismo SPD y RCD que en el esquema con fusibles; el seccionador DC no es un fusible (ver archivo DC)."
+    }
+  ]
+}

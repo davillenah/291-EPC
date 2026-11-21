@@ -1,0 +1,90 @@
+{
+  "schema_version": "1.0",
+  "id": "fuse_am",
+  "name": {
+    "en": "Fuse aM (partial-range, motor short-circuit)",
+    "es": "Fusible aM (rango parcial, cortocircuito de motor)"
+  },
+  "description": {
+    "en": "Partial-range fuse for short-circuit protection only. An overload device must be fitted separately.",
+    "es": "Fusible de rango parcial solo para cortocircuito. Debe instalarse por separado un dispositivo de sobrecarga."
+  },
+  "kind": "fuse",
+  "voltage_level": "LV",
+  "status": "not_found",
+  "source_ids": [
+    "viox_fuse",
+    "iec60617_db"
+  ],
+  "sources": [
+    {
+      "id": "viox_fuse",
+      "title": "IEC 60269 fuse guide: gG vs aM, NH sizes, selection rules",
+      "url": "https://viox.com/iec-60269-low-voltage-fuse-selection-guide-gg-am-nh/",
+      "publisher": "VIOX Electric",
+      "accessed": "2026-11-20",
+      "kind": "third_party_guide"
+    },
+    {
+      "id": "iec60617_db",
+      "title": "IEC 60617 graphical symbols database (public page)",
+      "url": "https://std.iec.ch/iec60617",
+      "publisher": "IEC",
+      "accessed": "2026-11-20",
+      "kind": "standard_public_summary"
+    }
+  ],
+  "standard_refs": [
+    {
+      "ref": "IEC 60269",
+      "note": {
+        "en": "Low-voltage fuse standard (cited)",
+        "es": "Norma de fusibles BT (citada)"
+      }
+    }
+  ],
+  "symbol_ref": {
+    "id": "not_found",
+    "status": "not_found",
+    "note": {
+      "en": "IEC 60617 public page lists no identifiers for this item; not found, not guessed.",
+      "es": "La pagina publica de IEC 60617 no lista identificadores para este elemento; no encontrado, no supuesto."
+    }
+  },
+  "ratings_typical": [
+    {
+      "parameter": "rated_current",
+      "value": null,
+      "unit": "A",
+      "status": "not_found",
+      "source_ids": [],
+      "note": {
+        "en": "Not found in fetched sources",
+        "es": "No encontrado en las fuentes consultadas"
+      }
+    }
+  ],
+  "selection_criteria": {
+    "when_to_use": [
+      {
+        "en": "Motor branch circuit with a thermal overload relay or motor protection relay (cited)",
+        "es": "Circuito derivado de motor con relé termico o de proteccion (citado)"
+      }
+    ],
+    "when_not_to_use": [
+      {
+        "en": "Cable or feeder without an overload device: aM does not protect against overload (cited)",
+        "es": "Cable o alimentador sin dispositivo de sobrecarga: aM no protege contra sobrecarga (citado)"
+      },
+      {
+        "en": "Substituting gG by aM can remove cable overload protection (cited)",
+        "es": "Sustituir gG por aM puede eliminar la proteccion de sobrecarga del cable (citado)"
+      }
+    ],
+    "alternatives": [
+      "fuse_gg",
+      "mpcb",
+      "thermal_overload_relay"
+    ]
+  }
+}

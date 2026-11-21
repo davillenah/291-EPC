@@ -1,0 +1,84 @@
+{
+  "schema_version": "1.0",
+  "id": "generator_set",
+  "name": {
+    "en": "Standby generator set",
+    "es": "Grupo electrogeno de emergencia"
+  },
+  "description": {
+    "en": "Engine-driven generator for backup power. Connected to the load through an ATS.",
+    "es": "Generador accionado por motor para respaldo. Conectado a la carga mediante un ATS."
+  },
+  "kind": "generator",
+  "voltage_level": "LV",
+  "status": "not_found",
+  "source_ids": [
+    "kohler_ats",
+    "iec60617_db"
+  ],
+  "sources": [
+    {
+      "id": "kohler_ats",
+      "title": "Kohler automatic transfer switch brochure",
+      "url": "https://resources.kohler.com/power/kohler/industrial/pdf/ATS_Brochure.pdf",
+      "publisher": "Kohler",
+      "accessed": "2026-11-20",
+      "kind": "manufacturer"
+    },
+    {
+      "id": "iec60617_db",
+      "title": "IEC 60617 graphical symbols database (public page)",
+      "url": "https://std.iec.ch/iec60617",
+      "publisher": "IEC",
+      "accessed": "2026-11-20",
+      "kind": "standard_public_summary"
+    }
+  ],
+  "standard_refs": [
+    {
+      "ref": "ISO 8528",
+      "note": {
+        "en": "Generating sets (cited, not quoted)",
+        "es": "Grupos electrogenos (citado, no transcrito)"
+      }
+    }
+  ],
+  "symbol_ref": {
+    "id": "not_found",
+    "status": "not_found",
+    "note": {
+      "en": "IEC 60617 public page lists no identifiers for this item; not found, not guessed.",
+      "es": "La pagina publica de IEC 60617 no lista identificadores para este elemento; no encontrado, no supuesto."
+    }
+  },
+  "ratings_typical": [
+    {
+      "parameter": "rated_power",
+      "value": null,
+      "unit": "kVA",
+      "status": "not_found",
+      "source_ids": [],
+      "note": {
+        "en": "Not found in fetched sources",
+        "es": "No encontrado en las fuentes consultadas"
+      }
+    }
+  ],
+  "selection_criteria": {
+    "when_to_use": [
+      {
+        "en": "Backup power with automatic transfer (cited for ATS context)",
+        "es": "Respaldo con transferencia automatica (citado en contexto ATS)"
+      }
+    ],
+    "when_not_to_use": [
+      {
+        "en": "Continuous parallel with the grid: needs specific synchronising design (typical)",
+        "es": "Paralelo continuo con la red: requiere diseno de sincronismo especifico (typical)"
+      }
+    ],
+    "alternatives": [
+      "ats"
+    ]
+  }
+}

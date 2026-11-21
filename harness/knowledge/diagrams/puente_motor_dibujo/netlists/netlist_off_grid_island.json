@@ -1,0 +1,76 @@
+{
+ "schema_version": "1.0",
+ "id": "netlist_off_grid_island",
+ "name": {
+  "en": "Off-grid or islanded PV with battery and insulation monitoring",
+  "es": "FV aislado o en isla con batería y monitoreo de aislamiento"
+ },
+ "diagram": "SLD",
+ "sheet": {
+  "size": "A3",
+  "style_ref": "epc_arch/epc_style.json"
+ },
+ "source_scheme": "off_grid_island",
+ "instances": [
+  {
+   "tag": "-Q1",
+   "device_id": "pv_dc_switch_load_break",
+   "symbol": "lv_dc_disconnect",
+   "labels": {},
+   "label_source": "none (ratings come from engines at project time)"
+  },
+  {
+   "tag": "-T1",
+   "device_id": "pv_hybrid_battery_inverter",
+   "symbol": "lv_inverter",
+   "labels": {},
+   "label_source": "none (ratings come from engines at project time)"
+  },
+  {
+   "tag": "-Q2",
+   "device_id": "pv_dc_breaker",
+   "symbol": "lv_dc_disconnect",
+   "labels": {},
+   "label_source": "none (ratings come from engines at project time)"
+  },
+  {
+   "tag": "-Q3",
+   "device_id": "switch_disconnector",
+   "symbol": "lv_switch_disconnector",
+   "labels": {},
+   "label_source": "none (ratings come from engines at project time)"
+  },
+  {
+   "tag": "-F1",
+   "device_id": "imd_insulation_monitor",
+   "symbol": null,
+   "labels": {},
+   "label_source": "none (ratings come from engines at project time)"
+  },
+  {
+   "tag": "-A1",
+   "device_id": "switchboard_tgbt",
+   "symbol": "lv_busbar_node",
+   "labels": {},
+   "label_source": "none (ratings come from engines at project time)"
+  }
+ ],
+ "connections": [
+  {
+   "from": "-Q1:bottom",
+   "to": "-T1:top",
+   "conductor": "L"
+  },
+  {
+   "from": "-T1:bottom",
+   "to": "-Q2:top",
+   "conductor": "L"
+  },
+  {
+   "from": "-Q2:bottom",
+   "to": "-Q3:top",
+   "conductor": "L"
+  }
+ ],
+ "status": "typical"
+}

@@ -1,0 +1,116 @@
+{
+  "schema_version": "1.0",
+  "id": "sym_circuit_breaker_device",
+  "name": {
+    "en": "Circuit breaker, general device symbol",
+    "es": "Interruptor automático, símbolo general del aparato"
+  },
+  "family": "power",
+  "description": {
+    "en": "Breaker device drawn as a blade with a thermal/magnetic release. IEC ID for the device symbol not located. Note: No IEC 60617 ID found. Geometry typical.",
+    "es": "Aparato interruptor dibujado como cuchilla con disparador térmico/magnético. No se localizó el ID IEC del símbolo del aparato. Nota: Sin ID IEC 60617 localizado. Geometría típica."
+  },
+  "iec60617": {
+    "symbol_id": null,
+    "iec_title_en": null,
+    "legacy_ref": null,
+    "status": "not_found"
+  },
+  "reference_designation": {
+    "letter": "Q",
+    "note": {
+      "en": "Switching device (article lists breakers under Q).",
+      "es": "Dispositivo de maniobra (el artículo ubica los interruptores en Q)."
+    },
+    "status": "unverified"
+  },
+  "ansi_nema": {
+    "equivalent": null,
+    "status": "not_found"
+  },
+  "geometry": {
+    "grid": "1 unit = one symbol grid step; origin top-left, y down; scale to the drawing standard in use",
+    "primitives": [
+      {
+        "prim": "line",
+        "p1": [
+          0,
+          0
+        ],
+        "p2": [
+          0,
+          2
+        ]
+      },
+      {
+        "prim": "line",
+        "p1": [
+          0,
+          2
+        ],
+        "p2": [
+          1.5,
+          3.5
+        ]
+      },
+      {
+        "prim": "line",
+        "p1": [
+          0,
+          4
+        ],
+        "p2": [
+          0,
+          6
+        ]
+      },
+      {
+        "prim": "polyline",
+        "pts": [
+          [
+            0.4,
+            1.4
+          ],
+          [
+            0.9,
+            2.2
+          ],
+          [
+            1.4,
+            1.6
+          ]
+        ]
+      }
+    ],
+    "status": "typical"
+  },
+  "connection_points": [
+    {
+      "id": "1",
+      "label": {
+        "en": "Line side",
+        "es": "Lado de línea"
+      }
+    },
+    {
+      "id": "2",
+      "label": {
+        "en": "Load side",
+        "es": "Lado de carga"
+      }
+    }
+  ],
+  "status": "not_found",
+  "source_ids": [
+    "ima_iec81346_letters"
+  ],
+  "sources": [
+    {
+      "id": "ima_iec81346_letters",
+      "title": "Industrial Monitor Direct: IEC 81346-2 contactor and relay numbering (secondary article)",
+      "url": "https://industrialmonitordirect.com/blogs/knowledgebase/iec-81346-2-contactor-and-relay-numbering-conventions-for-wiring-diagrams",
+      "kind": "secondary_article",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

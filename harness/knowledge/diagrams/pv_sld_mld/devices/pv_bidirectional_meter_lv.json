@@ -1,0 +1,92 @@
+{
+  "schema_version": "1.0",
+  "record_type": "device",
+  "id": "pv_bidirectional_meter_lv",
+  "name": {
+    "en": "LV bidirectional energy meter (PV export and import)",
+    "es": "Medidor bidireccional BT (exportación e importación FV)"
+  },
+  "description": {
+    "en": "Energy meter at the point of connection that measures import and export of the PV installation.",
+    "es": "Medidor de energía en el punto de conexión que mide importación y exportación de la instalación FV."
+  },
+  "kind": "metering",
+  "voltage_level": "LV",
+  "status": "unverified",
+  "source_ids": [
+    "repo_micro_hybrid",
+    "repo_inverters_central"
+  ],
+  "sources": [
+    {
+      "id": "repo_micro_hybrid",
+      "title": "Repo: string, hybrid and micro inverters research",
+      "url": "repo://harness/docs/pv/inverters/string_hybrid_micro_inverters.md",
+      "publisher": "EPC-291 repository",
+      "accessed": "2026-11-20",
+      "kind": "internal_repo"
+    },
+    {
+      "id": "repo_inverters_central",
+      "title": "Repo: central inverters and accessories research",
+      "url": "repo://harness/docs/pv/inverters/central_inverters_and_accessories.md",
+      "publisher": "EPC-291 repository",
+      "accessed": "2026-11-20",
+      "kind": "internal_repo"
+    }
+  ],
+  "standard_refs": [],
+  "ratings": [
+    {
+      "parameter": "sma_emeter20_direct_current",
+      "value": 63,
+      "unit": "A",
+      "status": "unverified",
+      "source_ids": [
+        "repo_inverters_central"
+      ],
+      "note": {
+        "en": "Repo: SMA EMETER-20, direct connection to 63 A, 230/400 V, 1 %",
+        "es": "Repo: SMA EMETER-20, conexión directa hasta 63 A, 230/400 V, 1 %"
+      }
+    },
+    {
+      "parameter": "huawei_dtsu666_h_ct_set",
+      "value": "100 A CT set, RS485 Modbus-RTU 9600",
+      "unit": "A / bps",
+      "status": "unverified",
+      "source_ids": [
+        "repo_inverters_central"
+      ],
+      "note": {
+        "en": "Repo: Huawei DTSU666-H with 100 A CT set, accuracy 0.5 % / 1 %",
+        "es": "Repo: Huawei DTSU666-H con juego de TC 100 A, precisión 0,5 % / 1 %"
+      }
+    },
+    {
+      "parameter": "bidirectional_capability",
+      "value": null,
+      "unit": "",
+      "status": "not_found",
+      "source_ids": [],
+      "note": {
+        "en": "Bidirectional (import and export) capability is not stated in the repo rows; confirm in the datasheet",
+        "es": "Capacidad bidireccional no indicada en las filas del repo; confirmar en la ficha"
+      }
+    }
+  ],
+  "selection_criteria": {
+    "when_to_use": [
+      {
+        "en": "Any PV connection with export or net metering; meter at the point of connection.",
+        "es": "Cualquier conexión FV con inyección o medición neta; medidor en el punto de conexión."
+      }
+    ],
+    "when_not_to_use": [
+      {
+        "en": "Do not select by the repo example alone; the utility specifies the meter model (not_found).",
+        "es": "No seleccionar solo por el ejemplo del repo; la distribuidora especifica el modelo (no encontrado)."
+      }
+    ]
+  }
+}

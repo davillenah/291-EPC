@@ -1,0 +1,87 @@
+{
+  "schema_version": "1.0",
+  "id": "relay_ansi_50_51",
+  "name": {
+    "en": "ANSI 50/51: Phase overcurrent (instantaneous / time)",
+    "es": "ANSI 50/51: Sobreintensidad de fase (instantanea / temporizada)"
+  },
+  "description": {
+    "en": "Phase-current overcurrent function: 50 instantaneous, 51 time-delayed. Used on feeders and transformers.",
+    "es": "Funcion de sobreintensidad de fase: 50 instantanea, 51 temporizada. Se usa en alimentadores y transformadores."
+  },
+  "kind": "protection_relay",
+  "voltage_level": "MV",
+  "status": "unverified",
+  "source_ids": [
+    "control_ansi",
+    "iec60617_db"
+  ],
+  "sources": [
+    {
+      "id": "control_ansi",
+      "title": "ANSI/IEEE Function Number Codes",
+      "url": "https://control.com/textbook/electric-power-measurement-and-control/ansiieee-function-number-codes/",
+      "publisher": "control.com",
+      "accessed": "2026-11-20",
+      "kind": "textbook_wiki"
+    },
+    {
+      "id": "iec60617_db",
+      "title": "IEC 60617 graphical symbols database (public page)",
+      "url": "https://std.iec.ch/iec60617",
+      "publisher": "IEC",
+      "accessed": "2026-11-20",
+      "kind": "standard_public_summary"
+    }
+  ],
+  "standard_refs": [
+    {
+      "ref": "ANSI/IEEE C37.2",
+      "note": {
+        "en": "Device function numbers (cited)",
+        "es": "Numeracion de funciones (citada)"
+      }
+    }
+  ],
+  "symbol_ref": {
+    "id": "not_found",
+    "status": "not_found",
+    "note": {
+      "en": "IEC 60617 public page lists no identifiers for this item; not found, not guessed.",
+      "es": "La pagina publica de IEC 60617 no lista identificadores para este elemento; no encontrado, no supuesto."
+    }
+  },
+  "ratings_typical": [
+    {
+      "parameter": "function_definition",
+      "value": "50 instantaneous; 51 time overcurrent",
+      "unit": "-",
+      "status": "unverified",
+      "source_ids": [
+        "control_ansi"
+      ],
+      "note": {
+        "en": "Definitions per cited ANSI function list",
+        "es": "Definiciones segun lista ANSI citada"
+      }
+    }
+  ],
+  "selection_criteria": {
+    "when_to_use": [
+      {
+        "en": "Phase fault protection of MV feeders and transformers (typical)",
+        "es": "Proteccion de fallos entre fases en alimentadores y transformadores MT (typical)"
+      }
+    ],
+    "when_not_to_use": [
+      {
+        "en": "Earth fault: use 50N/51N (typical)",
+        "es": "Falta a tierra: usar 50N/51N (typical)"
+      }
+    ],
+    "alternatives": [
+      "relay_ansi_50n_51n",
+      "relay_ansi_87"
+    ]
+  }
+}

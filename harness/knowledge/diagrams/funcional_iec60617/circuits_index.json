@@ -1,0 +1,95 @@
+{
+  "schema_version": "1.0",
+  "generated": "2026-11-20",
+  "description": {
+    "en": "Index of typical circuit records (one JSON per circuit).",
+    "es": "Índice de circuitos tipo (un JSON por circuito)."
+  },
+  "count": 14,
+  "circuits": [
+    {
+      "id": "circ_direct_on_line_starter",
+      "file": "circuits/circ_direct_on_line_starter.json",
+      "category": "motor_starting",
+      "status": "typical"
+    },
+    {
+      "id": "circ_reversing_direct_on_line",
+      "file": "circuits/circ_reversing_direct_on_line.json",
+      "category": "motor_starting",
+      "status": "unverified"
+    },
+    {
+      "id": "circ_star_delta_starter",
+      "file": "circuits/circ_star_delta_starter.json",
+      "category": "motor_starting",
+      "status": "unverified"
+    },
+    {
+      "id": "circ_autotransformer_starter",
+      "file": "circuits/circ_autotransformer_starter.json",
+      "category": "motor_starting",
+      "status": "typical"
+    },
+    {
+      "id": "circ_soft_starter",
+      "file": "circuits/circ_soft_starter.json",
+      "category": "motor_starting",
+      "status": "typical"
+    },
+    {
+      "id": "circ_vfd_drive",
+      "file": "circuits/circ_vfd_drive.json",
+      "category": "motor_starting",
+      "status": "typical"
+    },
+    {
+      "id": "circ_dahlander_two_speed",
+      "file": "circuits/circ_dahlander_two_speed.json",
+      "category": "motor_starting",
+      "status": "unverified"
+    },
+    {
+      "id": "circ_rotor_resistance_starter",
+      "file": "circuits/circ_rotor_resistance_starter.json",
+      "category": "motor_starting",
+      "status": "typical"
+    },
+    {
+      "id": "circ_emergency_stop_safe_stop",
+      "file": "circuits/circ_emergency_stop_safe_stop.json",
+      "category": "control_typical",
+      "status": "typical"
+    },
+    {
+      "id": "circ_start_stop_self_holding",
+      "file": "circuits/circ_start_stop_self_holding.json",
+      "category": "control_typical",
+      "status": "typical"
+    },
+    {
+      "id": "circ_on_delay_timer",
+      "file": "circuits/circ_on_delay_timer.json",
+      "category": "control_typical",
+      "status": "typical"
+    },
+    {
+      "id": "circ_level_control_alternating_pumps",
+      "file": "circuits/circ_level_control_alternating_pumps.json",
+      "category": "control_typical",
+      "status": "typical"
+    },
+    {
+      "id": "circ_ats_mains_generator",
+      "file": "circuits/circ_ats_mains_generator.json",
+      "category": "transfer",
+      "status": "unverified"
+    },
+    {
+      "id": "circ_mv_contactor_protection_relays",
+      "file": "circuits/circ_mv_contactor_protection_relays.json",
+      "category": "mv_control",
+      "status": "typical"
+    }
+  ]
+}

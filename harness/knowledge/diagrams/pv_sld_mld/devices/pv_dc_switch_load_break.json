@@ -1,0 +1,150 @@
+{
+  "schema_version": "1.0",
+  "record_type": "device",
+  "id": "pv_dc_switch_load_break",
+  "name": {
+    "en": "PV DC load-break switch (isolator)",
+    "es": "Seccionador DC de corte en carga FV"
+  },
+  "description": {
+    "en": "DC switch-disconnector at the inverter or combiner input that isolates the PV array and can break the DC current.",
+    "es": "Seccionador DC a la entrada del inversor o de la caja que aísla el campo FV y puede cortar la corriente DC."
+  },
+  "kind": "pv_dc_switch",
+  "voltage_level": "LV",
+  "status": "unverified",
+  "source_ids": [
+    "repo_inverters_central",
+    "ei_pv_safety",
+    "sma_stp_protective"
+  ],
+  "sources": [
+    {
+      "id": "repo_inverters_central",
+      "title": "Repo: central inverters and accessories research",
+      "url": "repo://harness/docs/pv/inverters/central_inverters_and_accessories.md",
+      "publisher": "EPC-291 repository",
+      "accessed": "2026-11-20",
+      "kind": "internal_repo"
+    },
+    {
+      "id": "ei_pv_safety",
+      "title": "PV System: how to ensure safety during normal operation",
+      "url": "https://www.electrical-installation.org/enwiki/PV_System:_how_to_ensure_safety_during_normal_operation",
+      "publisher": "electrical-installation.org (public technical wiki)",
+      "accessed": "2026-11-20",
+      "kind": "textbook_wiki"
+    },
+    {
+      "id": "sma_stp_protective",
+      "title": "SMA manual: Protective devices (DC load-break switch, reverse polarity diode, AC 60 A, Riso)",
+      "url": "https://manuals.sma.de/STPxxUS50/en-US/12078896395.html",
+      "publisher": "SMA Solar Technology AG",
+      "accessed": "2026-11-20",
+      "kind": "manufacturer"
+    }
+  ],
+  "standard_refs": [
+    {
+      "ref": "IEC 60364-7-712 (ed.3.0, 2025-10)",
+      "note": {
+        "en": "PV power supply systems; sections 712.430, 712.443, 712.533, 712.534, 712.536, 712.54 listed in the preview",
+        "es": "Sistemas FV; apartados 712.430, 712.443, 712.533, 712.534, 712.536, 712.54 indicados en la vista previa"
+      }
+    }
+  ],
+  "ratings": [
+    {
+      "parameter": "rated_dc_voltage",
+      "value": 1500,
+      "unit": "V DC",
+      "status": "unverified",
+      "source_ids": [
+        "repo_inverters_central"
+      ],
+      "note": {
+        "en": "Repo: NHP NL432PV DC switch-disconnector 1500 V DC, 32 A, 4P",
+        "es": "Repo: seccionador DC NHP NL432PV 1500 V DC, 32 A, 4P"
+      }
+    },
+    {
+      "parameter": "rated_current",
+      "value": 32,
+      "unit": "A",
+      "status": "unverified",
+      "source_ids": [
+        "repo_inverters_central"
+      ],
+      "note": {
+        "en": "Repo: NHP NL432PV 32 A (product of the repo research)",
+        "es": "Repo: NHP NL432PV 32 A (producto de la investigación del repo)"
+      }
+    },
+    {
+      "parameter": "break_at_uoc_max",
+      "value": "Must break at U_OC MAX",
+      "unit": "",
+      "status": "unverified",
+      "source_ids": [
+        "ei_pv_safety"
+      ],
+      "note": {
+        "en": "DC breakers and switches must break at UOC MAX",
+        "es": "Los interruptores DC deben cortar a UOC MAX"
+      }
+    },
+    {
+      "parameter": "poles_for_1000vdc",
+      "value": "4 poles in series for 1000 V (breaker type cited in the wiki)",
+      "unit": "poles",
+      "status": "unverified",
+      "source_ids": [
+        "ei_pv_safety"
+      ],
+      "note": {
+        "en": "The wiki states 1000 V systems need four poles in series for the DC breakers cited",
+        "es": "La wiki indica que 1000 V necesitan cuatro polos en serie para los interruptores citados"
+      }
+    },
+    {
+      "parameter": "enclosure_ip_min",
+      "value": "IP5x minimum (pollution degree 2)",
+      "unit": "",
+      "status": "unverified",
+      "source_ids": [
+        "ei_pv_safety"
+      ],
+      "note": {
+        "en": "Enclosure at least IP5x for pollution degree 2 switchgear",
+        "es": "Envolvente al menos IP5x para grado de contaminación 2"
+      }
+    },
+    {
+      "parameter": "dc_disconnect_function",
+      "value": "Input-side disconnection point of the inverter",
+      "unit": "",
+      "status": "unverified",
+      "source_ids": [
+        "sma_stp_protective"
+      ],
+      "note": {
+        "en": "SMA lists a DC load-break switch as input-side disconnection point",
+        "es": "SMA indica un seccionador de corte en carga DC como punto de desconexión de entrada"
+      }
+    }
+  ],
+  "selection_criteria": {
+    "when_to_use": [
+      {
+        "en": "DC isolation of strings or inverter input (required on the DC side).",
+        "es": "Aislamiento DC de strings o de entrada del inversor (requerido en el lado DC)."
+      }
+    ],
+    "when_not_to_use": [
+      {
+        "en": "Do not use a fuse as the only isolation: fuses do not load-break (wiki).",
+        "es": "No usar un fusible como único aislamiento: los fusibles no cortan en carga (wiki)."
+      }
+    ]
+  }
+}

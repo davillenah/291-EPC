@@ -1,0 +1,78 @@
+{
+  "schema_version": "1.0",
+  "record_type": "device",
+  "id": "relay_ansi_32_reverse_power",
+  "name": {
+    "en": "Reverse power relay (ANSI 32R)",
+    "es": "Relé de potencia inversa (ANSI 32R)"
+  },
+  "description": {
+    "en": "Directional power relay that detects power flow back toward the grid. Used for export limit or anti-backfeed.",
+    "es": "Relé de potencia direccional que detecta flujo de potencia hacia la red. Se usa para límite de exportación o anti-retroalimentación."
+  },
+  "kind": "protection_relay",
+  "voltage_level": "LV",
+  "status": "unverified",
+  "source_ids": [
+    "oeb_der_protection"
+  ],
+  "sources": [
+    {
+      "id": "oeb_der_protection",
+      "title": "Ontario Energy Board DER WG3: sample protection philosophy (utility sample)",
+      "url": "https://www.oeb.ca/sites/default/files/DER-wg3-Sample%20Protection%20Philosophy.pdf",
+      "publisher": "Ontario Energy Board (sample document)",
+      "accessed": "2026-11-20",
+      "kind": "third_party_guide"
+    }
+  ],
+  "standard_refs": [
+    {
+      "ref": "ANSI/IEEE 32",
+      "note": {
+        "en": "Device number 32 (reverse power, directional)",
+        "es": "Número de dispositivo 32 (potencia inversa, direccional)"
+      }
+    }
+  ],
+  "ratings": [
+    {
+      "parameter": "function",
+      "value": "Reverse power (32R) listed among DER protections",
+      "unit": "",
+      "status": "unverified",
+      "source_ids": [
+        "oeb_der_protection"
+      ],
+      "note": {
+        "en": "OEB sample lists 32R (reverse power) in the DER protection matrix",
+        "es": "Muestra OEB incluye 32R (potencia inversa) en la matriz de protección DER"
+      }
+    },
+    {
+      "parameter": "reverse_power_setting",
+      "value": null,
+      "unit": "kW / %",
+      "status": "not_found",
+      "source_ids": [],
+      "note": {
+        "en": "Trip threshold and time not stated in the sample",
+        "es": "Umbral y tiempo no indicados en la muestra"
+      }
+    }
+  ],
+  "selection_criteria": {
+    "when_to_use": [
+      {
+        "en": "Zero-injection or export-limited installations; DER interconnection with a utility protection requirement.",
+        "es": "Instalaciones de inyección cero o con límite de exportación; interconexión DER con requisito de protección de la distribuidora."
+      }
+    ],
+    "when_not_to_use": [
+      {
+        "en": "Not needed where export is not possible by design (typical); the utility sets settings.",
+        "es": "No necesario si la exportación es imposible por diseño (típico); la distribuidora fija los ajustes."
+      }
+    ]
+  }
+}

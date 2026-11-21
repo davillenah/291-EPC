@@ -1,0 +1,105 @@
+{
+  "schema_version": "1.0",
+  "id": "rcbo",
+  "name": {
+    "en": "RCBO (RCD with integrated overcurrent protection)",
+    "es": "RCBO (diferencial con proteccion de sobrecorriente integrada)"
+  },
+  "description": {
+    "en": "Combined residual current and overcurrent device for a single final circuit. Protects against both overcurrent and earth leakage in one module.",
+    "es": "Equipo combinado de corriente residual y sobrecorriente para un circuito final. Protege contra sobrecorriente y fuga a tierra en un solo modulo."
+  },
+  "kind": "rcd",
+  "voltage_level": "LV",
+  "status": "not_found",
+  "source_ids": [
+    "ei_rcd",
+    "abb_rccb_faq",
+    "iec60617_db"
+  ],
+  "sources": [
+    {
+      "id": "ei_rcd",
+      "title": "Protection of circuits by RCD (wiki)",
+      "url": "https://www.electrical-installation.org/enwiki/Protection_of_circuits_by_RCD",
+      "publisher": "electrical-installation.org",
+      "accessed": "2026-11-20",
+      "kind": "textbook_wiki"
+    },
+    {
+      "id": "abb_rccb_faq",
+      "title": "FAQ RCCBs",
+      "url": "https://library.e.abb.com/public/8d7aeb25c10b4a839c43878fa9718de4/FAQ_RCCBs.pdf",
+      "publisher": "ABB",
+      "accessed": "2026-11-20",
+      "kind": "manufacturer"
+    },
+    {
+      "id": "iec60617_db",
+      "title": "IEC 60617 graphical symbols database (public page)",
+      "url": "https://std.iec.ch/iec60617",
+      "publisher": "IEC",
+      "accessed": "2026-11-20",
+      "kind": "standard_public_summary"
+    }
+  ],
+  "standard_refs": [
+    {
+      "ref": "IEC 61009",
+      "note": {
+        "en": "RCBO standard (cited)",
+        "es": "Norma de RCBO (citada)"
+      }
+    }
+  ],
+  "symbol_ref": {
+    "id": "not_found",
+    "status": "not_found",
+    "note": {
+      "en": "IEC 60617 public page lists no identifiers for this item; not found, not guessed.",
+      "es": "La pagina publica de IEC 60617 no lista identificadores para este elemento; no encontrado, no supuesto."
+    }
+  },
+  "ratings_typical": [
+    {
+      "parameter": "rated_current",
+      "value": null,
+      "unit": "A",
+      "status": "not_found",
+      "source_ids": [],
+      "note": {
+        "en": "Not found in fetched sources",
+        "es": "No encontrado en las fuentes consultadas"
+      }
+    },
+    {
+      "parameter": "rated_residual_current_IDn",
+      "value": null,
+      "unit": "mA",
+      "status": "not_found",
+      "source_ids": [],
+      "note": {
+        "en": "Not found for RCBO in fetched sources",
+        "es": "No encontrado para RCBO en las fuentes consultadas"
+      }
+    }
+  ],
+  "selection_criteria": {
+    "when_to_use": [
+      {
+        "en": "Single final circuit that needs both overcurrent and RCD protection in a small space (typical)",
+        "es": "Circuito final unico que requiere sobrecorriente y diferencial en poco espacio (typical)"
+      }
+    ],
+    "when_not_to_use": [
+      {
+        "en": "Several circuits needing RCD protection: a common RCCB with MCBs may be more economical (typical)",
+        "es": "Varios circuitos que requieren diferencial: un RCCB comun con MCB puede ser mas economico (typical)"
+      }
+    ],
+    "alternatives": [
+      "rccb",
+      "mcb"
+    ]
+  }
+}

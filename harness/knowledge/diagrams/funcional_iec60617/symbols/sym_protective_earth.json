@@ -1,0 +1,103 @@
+{
+  "schema_version": "1.0",
+  "id": "sym_protective_earth",
+  "name": {
+    "en": "Protective earthing (PE)",
+    "es": "Puesta a tierra de protección (PE)"
+  },
+  "family": "general",
+  "description": {
+    "en": "Protective earth terminal or conductor symbol. Note: General earth symbol is S00200 ('Earth, general symbol'), not used here.",
+    "es": "Símbolo de borne o conductor de puesta a tierra de protección. Nota: El símbolo general de tierra es S00200 ('Earth, general symbol'), no usado aquí."
+  },
+  "iec60617": {
+    "symbol_id": "S00202",
+    "iec_title_en": "Protective earthing",
+    "legacy_ref": null,
+    "status": "unverified"
+  },
+  "reference_designation": {
+    "letter": "not_found",
+    "note": {
+      "en": "Letter not located for earth terminals in the sources read.",
+      "es": "Letra no localizada para bornes de tierra en las fuentes leídas."
+    },
+    "status": "not_found"
+  },
+  "ansi_nema": {
+    "equivalent": null,
+    "status": "not_found"
+  },
+  "geometry": {
+    "grid": "1 unit = one symbol grid step; origin top-left, y down; scale to the drawing standard in use",
+    "primitives": [
+      {
+        "prim": "line",
+        "p1": [
+          0,
+          0
+        ],
+        "p2": [
+          0,
+          2
+        ]
+      },
+      {
+        "prim": "line",
+        "p1": [
+          -1.6,
+          2
+        ],
+        "p2": [
+          1.6,
+          2
+        ]
+      },
+      {
+        "prim": "line",
+        "p1": [
+          -1.1,
+          2.6
+        ],
+        "p2": [
+          1.1,
+          2.6
+        ]
+      },
+      {
+        "prim": "line",
+        "p1": [
+          -0.6,
+          3.2
+        ],
+        "p2": [
+          0.6,
+          3.2
+        ]
+      }
+    ],
+    "status": "typical"
+  },
+  "connection_points": [
+    {
+      "id": "PE",
+      "label": {
+        "en": "Earth conductor",
+        "es": "Conductor de tierra"
+      }
+    }
+  ],
+  "status": "unverified",
+  "source_ids": [
+    "iec_S00202"
+  ],
+  "sources": [
+    {
+      "id": "iec_S00202",
+      "title": "IEC 60617 database, symbol S00202: Protective earthing",
+      "url": "https://library.iec.ch/grasymb/grasymb.nsf/(SysSymbol)/S00202",
+      "kind": "standard_database",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

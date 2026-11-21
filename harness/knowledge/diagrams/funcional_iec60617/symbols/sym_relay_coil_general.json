@@ -1,0 +1,103 @@
+{
+  "schema_version": "1.0",
+  "id": "sym_relay_coil_general",
+  "name": {
+    "en": "Relay coil, general symbol",
+    "es": "Bobina de relé, símbolo general"
+  },
+  "family": "control",
+  "description": {
+    "en": "Coil that operates the contacts of a relay. Coil terminals on IEC diagrams are A1 and A2 (see reference document). Note: General coil ID not located; the S00315 found is a coil unaffected by AC (different).",
+    "es": "Bobina que acciona los contactos de un relé. En esquemas IEC los bornes de bobina son A1 y A2 (ver documento de referencia). Nota: ID general de bobina no localizado; el S00315 encontrado es una bobina no afectada por CA (distinta)."
+  },
+  "iec60617": {
+    "symbol_id": null,
+    "iec_title_en": null,
+    "legacy_ref": null,
+    "status": "not_found"
+  },
+  "reference_designation": {
+    "letter": "K",
+    "note": {
+      "en": "Processes signals (relays; article lists K1, K2 for relays).",
+      "es": "Procesa señales (relés; el artículo lista K1, K2 para relés)."
+    },
+    "status": "unverified"
+  },
+  "ansi_nema": {
+    "equivalent": "Relay coil (typical)",
+    "status": "typical"
+  },
+  "geometry": {
+    "grid": "1 unit = one symbol grid step; origin top-left, y down; scale to the drawing standard in use",
+    "primitives": [
+      {
+        "prim": "rect",
+        "x": -0.8,
+        "y": 0.5,
+        "w": 1.6,
+        "h": 2.2
+      },
+      {
+        "prim": "line",
+        "p1": [
+          0,
+          0
+        ],
+        "p2": [
+          0,
+          0.5
+        ]
+      },
+      {
+        "prim": "line",
+        "p1": [
+          0,
+          2.7
+        ],
+        "p2": [
+          0,
+          3.2
+        ]
+      },
+      {
+        "prim": "text",
+        "at": [
+          0,
+          1.6
+        ],
+        "text": ""
+      }
+    ],
+    "status": "typical"
+  },
+  "connection_points": [
+    {
+      "id": "A1",
+      "label": {
+        "en": "Coil terminal A1",
+        "es": "Borne de bobina A1"
+      }
+    },
+    {
+      "id": "A2",
+      "label": {
+        "en": "Coil terminal A2",
+        "es": "Borne de bobina A2"
+      }
+    }
+  ],
+  "status": "not_found",
+  "source_ids": [
+    "ima_iec81346_letters"
+  ],
+  "sources": [
+    {
+      "id": "ima_iec81346_letters",
+      "title": "Industrial Monitor Direct: IEC 81346-2 contactor and relay numbering (secondary article)",
+      "url": "https://industrialmonitordirect.com/blogs/knowledgebase/iec-81346-2-contactor-and-relay-numbering-conventions-for-wiring-diagrams",
+      "kind": "secondary_article",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

@@ -1,0 +1,122 @@
+{
+  "schema_version": "1.0",
+  "record_type": "device",
+  "id": "pv_rapid_shutdown_device",
+  "name": {
+    "en": "PV rapid shutdown device (module-level or string-level)",
+    "es": "Dispositivo de parada rápida FV (a nivel de módulo o de string)"
+  },
+  "description": {
+    "en": "Device that reduces DC conductor voltage quickly on initiation. Module-level in a rapid-shutdown kit or built into the inverter.",
+    "es": "Dispositivo que reduce rápidamente la tensión de los conductores DC al iniciarse. A nivel de módulo, en kit de parada rápida o integrado en el inversor."
+  },
+  "kind": "pv_rapid_shutdown",
+  "voltage_level": "LV",
+  "status": "unverified",
+  "source_ids": [
+    "sma_stp_interfaces",
+    "repo_inverters_central"
+  ],
+  "sources": [
+    {
+      "id": "sma_stp_interfaces",
+      "title": "SMA manual: Interfaces and functions (UL 1741 SA, rapid shutdown, AFCI, surge arresters)",
+      "url": "https://manuals.sma.de/STPxx-US-41/en-US/391139595.html",
+      "publisher": "SMA Solar Technology AG",
+      "accessed": "2026-11-20",
+      "kind": "manufacturer"
+    },
+    {
+      "id": "repo_inverters_central",
+      "title": "Repo: central inverters and accessories research",
+      "url": "repo://harness/docs/pv/inverters/central_inverters_and_accessories.md",
+      "publisher": "EPC-291 repository",
+      "accessed": "2026-11-20",
+      "kind": "internal_repo"
+    }
+  ],
+  "standard_refs": [
+    {
+      "ref": "NEC 690.12 (short citation only, not fetched)",
+      "note": {
+        "en": "Rapid shutdown requirement for PV in the US code (short citation)",
+        "es": "Requisito de parada rápida en código de EE. UU. (cita corta)"
+      }
+    },
+    {
+      "ref": "IEC 60364-7-712 (ed.3.0)",
+      "note": {
+        "en": "Rapid shutdown is not listed in the preview; not_found for IEC text",
+        "es": "Parada rápida no figura en la vista previa; no encontrado en texto IEC"
+      }
+    }
+  ],
+  "ratings": [
+    {
+      "parameter": "dc_conductor_voltage_limit",
+      "value": 30,
+      "unit": "V DC",
+      "status": "pending review",
+      "source_ids": [
+        "sma_stp_interfaces"
+      ],
+      "note": {
+        "en": "SMA (UL 1741 PVRSE): DC conductors below 30 V within 30 s of initiation",
+        "es": "SMA (UL 1741 PVRSE): conductores DC por debajo de 30 V en 30 s"
+      }
+    },
+    {
+      "parameter": "array_disconnect_time",
+      "value": 15,
+      "unit": "s",
+      "status": "unverified",
+      "source_ids": [
+        "sma_stp_interfaces"
+      ],
+      "note": {
+        "en": "SMA: PV array disconnect switches disconnect within 15 s of initiation",
+        "es": "SMA: seccionadores de array desconectan en 15 s"
+      }
+    },
+    {
+      "parameter": "dc_line_length_per_string",
+      "value": 300,
+      "unit": "m (max recommended)",
+      "status": "unverified",
+      "source_ids": [
+        "sma_stp_interfaces"
+      ],
+      "note": {
+        "en": "SMA: recommended total DC line length per string not more than 300 m",
+        "es": "SMA: longitud total DC recomendada por string no más de 300 m"
+      }
+    },
+    {
+      "parameter": "repo_jms_f_reference",
+      "value": "Voc 60 V, 15 A, Type 4X",
+      "unit": "",
+      "status": "unverified",
+      "source_ids": [
+        "repo_inverters_central"
+      ],
+      "note": {
+        "en": "Repo rapid-shutdown reference; repo notes an identity mismatch, not confirmed",
+        "es": "Referencia de parada rápida del repo; el repo indica discrepancia de identidad, no confirmada"
+      }
+    }
+  ],
+  "selection_criteria": {
+    "when_to_use": [
+      {
+        "en": "Installations under a rapid-shutdown rule (for example a US code or a local rule that requires it).",
+        "es": "Instalaciones bajo una regla de parada rápida (por ejemplo código de EE. UU. o norma local que la exija)."
+      }
+    ],
+    "when_not_to_use": [
+      {
+        "en": "Not required under IEC 60364-7-712 unless the local rule requires it; IEC text not found in sources.",
+        "es": "No exigido por IEC 60364-7-712 salvo norma local; texto IEC no encontrado en las fuentes."
+      }
+    ]
+  }
+}

@@ -1,0 +1,95 @@
+{
+  "schema_version": "1.0",
+  "id": "fuse_gpv",
+  "name": {
+    "en": "Fuse gPV (PV DC protection)",
+    "es": "Fusible gPV (proteccion DC fotovoltaica)"
+  },
+  "description": {
+    "en": "Full-range fuse rated for DC PV strings and combiner boxes.",
+    "es": "Fusible de rango completo para strings DC fotovoltaicos y cajas de combinacion."
+  },
+  "kind": "fuse",
+  "voltage_level": "LV",
+  "status": "not_found",
+  "source_ids": [
+    "viox_fuse",
+    "iec60617_db"
+  ],
+  "sources": [
+    {
+      "id": "viox_fuse",
+      "title": "IEC 60269 fuse guide: gG vs aM, NH sizes, selection rules",
+      "url": "https://viox.com/iec-60269-low-voltage-fuse-selection-guide-gg-am-nh/",
+      "publisher": "VIOX Electric",
+      "accessed": "2026-11-20",
+      "kind": "third_party_guide"
+    },
+    {
+      "id": "iec60617_db",
+      "title": "IEC 60617 graphical symbols database (public page)",
+      "url": "https://std.iec.ch/iec60617",
+      "publisher": "IEC",
+      "accessed": "2026-11-20",
+      "kind": "standard_public_summary"
+    }
+  ],
+  "standard_refs": [
+    {
+      "ref": "IEC 60269-6",
+      "note": {
+        "en": "PV fuse category (cited)",
+        "es": "Categoria de fusibles FV (citada)"
+      }
+    }
+  ],
+  "symbol_ref": {
+    "id": "not_found",
+    "status": "not_found",
+    "note": {
+      "en": "IEC 60617 public page lists no identifiers for this item; not found, not guessed.",
+      "es": "La pagina publica de IEC 60617 no lista identificadores para este elemento; no encontrado, no supuesto."
+    }
+  },
+  "ratings_typical": [
+    {
+      "parameter": "dc_rated_voltage",
+      "value": null,
+      "unit": "V",
+      "status": "not_found",
+      "source_ids": [],
+      "note": {
+        "en": "Not found in fetched sources",
+        "es": "No encontrado en las fuentes consultadas"
+      }
+    },
+    {
+      "parameter": "rated_current",
+      "value": null,
+      "unit": "A",
+      "status": "not_found",
+      "source_ids": [],
+      "note": {
+        "en": "Not found in fetched sources",
+        "es": "No encontrado en las fuentes consultadas"
+      }
+    }
+  ],
+  "selection_criteria": {
+    "when_to_use": [
+      {
+        "en": "PV string and combiner protection (cited: must be DC and PV rated)",
+        "es": "Proteccion de strings y cajas de combinacion FV (citado: debe ser DC y apto FV)"
+      }
+    ],
+    "when_not_to_use": [
+      {
+        "en": "AC circuits: a gPV fuse is not the right choice (typical)",
+        "es": "Circuitos AC: un fusible gPV no es la opcion adecuada (typical)"
+      }
+    ],
+    "alternatives": [
+      "fuse_gg"
+    ]
+  }
+}

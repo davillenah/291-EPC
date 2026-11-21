@@ -1,0 +1,107 @@
+{
+  "schema_version": "1.0",
+  "id": "rcd_type_b",
+  "name": {
+    "en": "RCD type B",
+    "es": "RCD tipo B"
+  },
+  "description": {
+    "en": "Detects smooth DC residual current as well as AC and pulsating DC.",
+    "es": "Detecta corriente DC continua ademas de AC y pulsante DC."
+  },
+  "kind": "rcd",
+  "voltage_level": "LV",
+  "status": "unverified",
+  "source_ids": [
+    "ei_rcd",
+    "schneider_rcd",
+    "abb_rccb_faq",
+    "iec60617_db"
+  ],
+  "sources": [
+    {
+      "id": "ei_rcd",
+      "title": "Protection of circuits by RCD (wiki)",
+      "url": "https://www.electrical-installation.org/enwiki/Protection_of_circuits_by_RCD",
+      "publisher": "electrical-installation.org",
+      "accessed": "2026-11-20",
+      "kind": "textbook_wiki"
+    },
+    {
+      "id": "schneider_rcd",
+      "title": "CA908066E residual current devices (RCD guide)",
+      "url": "https://download.se.com/doc/CA908066E/CA908066E%20(web).pdf",
+      "publisher": "Schneider Electric",
+      "accessed": "2026-11-20",
+      "kind": "manufacturer"
+    },
+    {
+      "id": "abb_rccb_faq",
+      "title": "FAQ RCCBs",
+      "url": "https://library.e.abb.com/public/8d7aeb25c10b4a839c43878fa9718de4/FAQ_RCCBs.pdf",
+      "publisher": "ABB",
+      "accessed": "2026-11-20",
+      "kind": "manufacturer"
+    },
+    {
+      "id": "iec60617_db",
+      "title": "IEC 60617 graphical symbols database (public page)",
+      "url": "https://std.iec.ch/iec60617",
+      "publisher": "IEC",
+      "accessed": "2026-11-20",
+      "kind": "standard_public_summary"
+    }
+  ],
+  "standard_refs": [
+    {
+      "ref": "IEC 61008 / IEC 61009 / IEC 62423",
+      "note": {
+        "en": "RCD family standards (cited, type definitions not quoted)",
+        "es": "Familia de normas RCD (citada, definiciones no transcritas)"
+      }
+    }
+  ],
+  "symbol_ref": {
+    "id": "not_found",
+    "status": "not_found",
+    "note": {
+      "en": "IEC 60617 public page lists no identifiers for this item; not found, not guessed.",
+      "es": "La pagina publica de IEC 60617 no lista identificadores para este elemento; no encontrado, no supuesto."
+    }
+  },
+  "ratings_typical": [
+    {
+      "parameter": "waveform_detection",
+      "value": "Smooth DC detection (cited). B+ (up to 20 kHz) is for dedicated markets only (ABB)",
+      "unit": "-",
+      "status": "unverified",
+      "source_ids": [
+        "ei_rcd",
+        "schneider_rcd",
+        "abb_rccb_faq"
+      ],
+      "note": {
+        "en": "Smooth DC detection (cited). B+ (up to 20 kHz) is for dedicated markets only (ABB)",
+        "es": "Deteccion de DC continua (citado). B+ (hasta 20 kHz) solo para mercados especificos (ABB)"
+      }
+    }
+  ],
+  "selection_criteria": {
+    "when_to_use": [
+      {
+        "en": "Three-phase variable speed drives, three-phase EV chargers, UPS with DC leakage, medical equipment with DC loads (cited)",
+        "es": "Variadores trifasicos, cargadores VE trifasicos, SAI con fuga DC, equipos medicos con cargas DC (citado)"
+      }
+    ],
+    "when_not_to_use": [
+      {
+        "en": "Loads with no DC leakage path: type A or F is usually sufficient (typical)",
+        "es": "Cargas sin trayectoria de fuga DC: basta normalmente tipo A o F (typical)"
+      }
+    ],
+    "alternatives": [
+      "rccb",
+      "rcbo"
+    ]
+  }
+}

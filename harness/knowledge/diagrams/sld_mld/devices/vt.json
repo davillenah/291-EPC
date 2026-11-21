@@ -1,0 +1,86 @@
+{
+  "schema_version": "1.0",
+  "id": "vt",
+  "name": {
+    "en": "Voltage transformer (TT)",
+    "es": "Transformador de tension (TT)"
+  },
+  "description": {
+    "en": "Steps down voltage for metering and voltage relays (27, 59, 81).",
+    "es": "Reduce la tension para medida y relés de tension (27, 59, 81)."
+  },
+  "kind": "instrument_transformer",
+  "voltage_level": "MV",
+  "status": "not_found",
+  "source_ids": [
+    "iec60617_db"
+  ],
+  "sources": [
+    {
+      "id": "iec60617_db",
+      "title": "IEC 60617 graphical symbols database (public page)",
+      "url": "https://std.iec.ch/iec60617",
+      "publisher": "IEC",
+      "accessed": "2026-11-20",
+      "kind": "standard_public_summary"
+    }
+  ],
+  "standard_refs": [
+    {
+      "ref": "IEC 61869-3",
+      "note": {
+        "en": "Voltage transformer standard (cited)",
+        "es": "Norma de transformadores de tension (citada)"
+      }
+    }
+  ],
+  "symbol_ref": {
+    "id": "not_found",
+    "status": "not_found",
+    "note": {
+      "en": "IEC 60617 public page lists no identifiers for this item; not found, not guessed.",
+      "es": "La pagina publica de IEC 60617 no lista identificadores para este elemento; no encontrado, no supuesto."
+    }
+  },
+  "ratings_typical": [
+    {
+      "parameter": "ratio",
+      "value": null,
+      "unit": "V/V",
+      "status": "not_found",
+      "source_ids": [],
+      "note": {
+        "en": "Not found in fetched sources",
+        "es": "No encontrado en las fuentes consultadas"
+      }
+    },
+    {
+      "parameter": "accuracy_class",
+      "value": null,
+      "unit": "-",
+      "status": "not_found",
+      "source_ids": [],
+      "note": {
+        "en": "Not found in fetched sources",
+        "es": "No encontrado en las fuentes consultadas"
+      }
+    }
+  ],
+  "selection_criteria": {
+    "when_to_use": [
+      {
+        "en": "Voltage-based relays (27, 59, 81) and metering (typical)",
+        "es": "Relés basados en tension (27, 59, 81) y medida (typical)"
+      }
+    ],
+    "when_not_to_use": [
+      {
+        "en": "No voltage-based function needed (typical)",
+        "es": "No se necesita funcion basada en tension (typical)"
+      }
+    ],
+    "alternatives": [
+      "ct"
+    ]
+  }
+}

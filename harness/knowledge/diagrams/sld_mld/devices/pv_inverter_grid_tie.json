@@ -1,0 +1,86 @@
+{
+  "schema_version": "1.0",
+  "id": "pv_inverter_grid_tie",
+  "name": {
+    "en": "Grid-tie PV inverter",
+    "es": "Inversor fotovoltaico conectado a red"
+  },
+  "description": {
+    "en": "DC-to-AC converter for grid connection. Ratings are project-specific; the repository research lists central and string units.",
+    "es": "Convertidor DC-AC para conexion a red. Los valores dependen del proyecto; la investigacion del repositorio lista unidades centrales y de cadena."
+  },
+  "kind": "inverter",
+  "voltage_level": "LV",
+  "status": "not_found",
+  "source_ids": [
+    "repo_pv_inverters",
+    "iec60617_db"
+  ],
+  "sources": [
+    {
+      "id": "repo_pv_inverters",
+      "title": "Central inverters and accessories research (this repository)",
+      "url": "repo://harness/docs/pv/inverters/central_inverters_and_accessories.md",
+      "publisher": "EPC-291 repository",
+      "accessed": "2026-11-20",
+      "kind": "internal_repo"
+    },
+    {
+      "id": "iec60617_db",
+      "title": "IEC 60617 graphical symbols database (public page)",
+      "url": "https://std.iec.ch/iec60617",
+      "publisher": "IEC",
+      "accessed": "2026-11-20",
+      "kind": "standard_public_summary"
+    }
+  ],
+  "standard_refs": [
+    {
+      "ref": "IEC 62109-1",
+      "note": {
+        "en": "Safety of power converters for PV (cited)",
+        "es": "Seguridad de convertidores FV (citada)"
+      }
+    }
+  ],
+  "symbol_ref": {
+    "id": "not_found",
+    "status": "not_found",
+    "note": {
+      "en": "IEC 60617 public page lists no identifiers for this item; not found, not guessed.",
+      "es": "La pagina publica de IEC 60617 no lista identificadores para este elemento; no encontrado, no supuesto."
+    }
+  },
+  "ratings_typical": [
+    {
+      "parameter": "rated_ac_power",
+      "value": null,
+      "unit": "kW",
+      "status": "not_found",
+      "source_ids": [],
+      "note": {
+        "en": "Use the datasheet of the chosen inverter; see repository PV research",
+        "es": "Usar la ficha del inversor elegido; ver investigacion FV del repositorio"
+      }
+    }
+  ],
+  "selection_criteria": {
+    "when_to_use": [
+      {
+        "en": "PV installation feeding into the LV network (typical)",
+        "es": "Instalacion FV que inyecta en la red BT (typical)"
+      }
+    ],
+    "when_not_to_use": [
+      {
+        "en": "Stand-alone system without grid export: use a hybrid or off-grid inverter (typical)",
+        "es": "Sistema aislado sin inyeccion: usar inversor hibrido o aislado (typical)"
+      }
+    ],
+    "alternatives": [
+      "fuse_gpv",
+      "spd_type2",
+      "switch_disconnector"
+    ]
+  }
+}

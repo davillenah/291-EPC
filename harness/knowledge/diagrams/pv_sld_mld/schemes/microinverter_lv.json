@@ -1,0 +1,140 @@
+{
+  "schema_version": "1.0",
+  "record_type": "scheme",
+  "id": "microinverter_lv",
+  "name": {
+    "en": "Microinverter AC module, LV connection",
+    "es": "Microinversor (módulo AC), conexión BT"
+  },
+  "description": {
+    "en": "One microinverter per module on an AC trunk, with AC isolation, overcurrent and RCD at the board, and a bidirectional meter.",
+    "es": "Un microinversor por módulo en un troncal AC, con aislamiento, sobrecorriente y RCD en el cuadro, y medidor bidireccional."
+  },
+  "purpose": {
+    "en": "No DC string wiring: DC is at module level. The AC trunk carries the output.",
+    "es": "Sin cableado DC de string: DC a nivel de módulo. El troncal AC lleva la salida."
+  },
+  "architecture": "microinverter_lv",
+  "voltage_level": "LV",
+  "status": "typical",
+  "chain": [
+    {
+      "order": 1,
+      "device_id": "pv_microinverter",
+      "label": {
+        "en": "Microinverter (per module)",
+        "es": "Microinversor (por módulo)"
+      },
+      "notes": {
+        "en": "Module-level; DC stays inside the module frame",
+        "es": "Nivel de módulo; DC queda dentro del marco"
+      }
+    },
+    {
+      "order": 2,
+      "device_id": "switch_disconnector",
+      "label": {
+        "en": "AC isolator at trunk end",
+        "es": "Seccionador AC al final del troncal"
+      },
+      "notes": {
+        "en": "Isolates the trunk",
+        "es": "Aísla el troncal"
+      }
+    },
+    {
+      "order": 3,
+      "device_id": "mcb",
+      "label": {
+        "en": "AC overcurrent",
+        "es": "Sobrecorriente AC"
+      },
+      "notes": {
+        "en": "Per trunk rating, see AC file",
+        "es": "Calibre por troncal; ver archivo AC"
+      }
+    },
+    {
+      "order": 4,
+      "device_id": "rcd_type_b",
+      "label": {
+        "en": "RCD (conditional)",
+        "es": "RCD (condicional)"
+      },
+      "notes": {
+        "en": "Type B if the microinverter is unisolated and local rules require",
+        "es": "Tipo B si el micro no tiene aislamiento galvánico y la norma lo exige"
+      }
+    },
+    {
+      "order": 5,
+      "device_id": "pv_bidirectional_meter_lv",
+      "label": {
+        "en": "Bidirectional meter",
+        "es": "Medidor bidireccional"
+      },
+      "notes": {
+        "en": "At the point of connection",
+        "es": "En el punto de conexión"
+      }
+    },
+    {
+      "order": 6,
+      "device_id": "switchboard_tgbt",
+      "label": {
+        "en": "LV board connection",
+        "es": "Conexión al cuadro BT"
+      },
+      "notes": {
+        "en": "Point of connection",
+        "es": "Punto de conexión"
+      }
+    }
+  ],
+  "device_refs": [
+    "pv_microinverter",
+    "switch_disconnector",
+    "mcb",
+    "rcd_type_b",
+    "pv_bidirectional_meter_lv",
+    "switchboard_tgbt",
+    "repo.enphase.iq8plus-72-2-us"
+  ],
+  "drawing_conventions": [
+    {
+      "en": "Label each trunk and the number of microinverters on it.",
+      "es": "Rotular cada troncal y el número de microinversores en él."
+    }
+  ],
+  "source_ids": [
+    "repo_micro_hybrid",
+    "kostal_piko_rcd",
+    "iaei_ac"
+  ],
+  "sources": [
+    {
+      "id": "repo_micro_hybrid",
+      "title": "Repo: string, hybrid and micro inverters research",
+      "url": "repo://harness/docs/pv/inverters/string_hybrid_micro_inverters.md",
+      "publisher": "EPC-291 repository",
+      "accessed": "2026-11-20",
+      "kind": "internal_repo"
+    },
+    {
+      "id": "kostal_piko_rcd",
+      "title": "Kostal PIKO 1210 HE-RCD-RCM note: RCD type B for galvanically unisolated inverters",
+      "url": "https://www.kostal-solar-electric.com/fileadmin/downloadcenter/kse/1210_HE-RCD-RCM.pdf",
+      "publisher": "Kostal Solar Electric",
+      "accessed": "2026-11-20",
+      "kind": "manufacturer"
+    },
+    {
+      "id": "iaei_ac",
+      "title": "Conductors, currents, and circuit protection: the AC side",
+      "url": "https://iaeimagazine.org/columns/photovoltaic/conductors-currents-and-circuit-protection-the-ac-side/",
+      "publisher": "IAEI Magazine",
+      "accessed": "2026-11-20",
+      "kind": "third_party_guide"
+    }
+  ]
+}

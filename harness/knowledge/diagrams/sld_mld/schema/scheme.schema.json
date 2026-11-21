@@ -1,0 +1,165 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "sld_mld.scheme.schema.json",
+  "title": "SLD/MLD typical single-line scheme (ordered chain of devices)",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "id",
+    "name",
+    "description",
+    "voltage_level",
+    "status",
+    "purpose",
+    "chain",
+    "drawing_conventions",
+    "source_ids",
+    "sources"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9_.-]+$"
+    },
+    "name": {
+      "$ref": "#/$defs/i18n"
+    },
+    "description": {
+      "$ref": "#/$defs/i18n"
+    },
+    "purpose": {
+      "$ref": "#/$defs/i18n"
+    },
+    "voltage_level": {
+      "enum": [
+        "LV",
+        "MV"
+      ]
+    },
+    "status": {
+      "enum": [
+        "unverified",
+        "typical",
+        "not_found",
+        "pending review"
+      ]
+    },
+    "chain": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "order",
+          "device_id",
+          "label",
+          "notes"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "order": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "device_id": {
+            "type": "string",
+            "pattern": "^[a-z0-9_.-]+$"
+          },
+          "label": {
+            "$ref": "#/$defs/i18n"
+          },
+          "notes": {
+            "$ref": "#/$defs/i18n"
+          }
+        }
+      }
+    },
+    "drawing_conventions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/i18n"
+      }
+    },
+    "source_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/source"
+      }
+    }
+  },
+  "$defs": {
+    "i18n": {
+      "type": "object",
+      "required": [
+        "en",
+        "es"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "en": {
+          "type": "string",
+          "minLength": 1
+        },
+        "es": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "source": {
+      "type": "object",
+      "required": [
+        "id",
+        "title",
+        "url",
+        "publisher",
+        "accessed",
+        "kind"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9_.-]+$"
+        },
+        "title": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string",
+          "pattern": "^(https://|repo://)"
+        },
+        "publisher": {
+          "type": "string"
+        },
+        "accessed": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+        },
+        "kind": {
+          "enum": [
+            "manufacturer",
+            "third_party_guide",
+            "standard_public_summary",
+            "textbook_wiki",
+            "internal_repo"
+          ]
+        }
+      }
+    }
+  }
+}

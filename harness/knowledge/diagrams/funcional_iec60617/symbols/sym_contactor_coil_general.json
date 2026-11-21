@@ -1,0 +1,95 @@
+{
+  "schema_version": "1.0",
+  "id": "sym_contactor_coil_general",
+  "name": {
+    "en": "Contactor coil (general, not located as separate ID)",
+    "es": "Bobina de contactor (general, sin ID separado localizado)"
+  },
+  "family": "control",
+  "description": {
+    "en": "Coil that closes the power poles and auxiliary contacts of a contactor. Terminals A1/A2. Note: No separate IEC ID located. Geometry typical.",
+    "es": "Bobina que cierra los polos de potencia y contactos auxiliares de un contactor. Bornes A1/A2. Nota: Sin ID IEC separado localizado. Geometría típica."
+  },
+  "iec60617": {
+    "symbol_id": null,
+    "iec_title_en": null,
+    "legacy_ref": null,
+    "status": "not_found"
+  },
+  "reference_designation": {
+    "letter": "Q",
+    "note": {
+      "en": "Contactor poles are Q (article); coil shares the contactor's designation.",
+      "es": "Los polos del contactor son Q (artículo); la bobina comparte la designación del contactor."
+    },
+    "status": "unverified"
+  },
+  "ansi_nema": {
+    "equivalent": null,
+    "status": "not_found"
+  },
+  "geometry": {
+    "grid": "1 unit = one symbol grid step; origin top-left, y down; scale to the drawing standard in use",
+    "primitives": [
+      {
+        "prim": "rect",
+        "x": -0.8,
+        "y": 0.5,
+        "w": 1.6,
+        "h": 2.2
+      },
+      {
+        "prim": "line",
+        "p1": [
+          0,
+          0
+        ],
+        "p2": [
+          0,
+          0.5
+        ]
+      },
+      {
+        "prim": "line",
+        "p1": [
+          0,
+          2.7
+        ],
+        "p2": [
+          0,
+          3.2
+        ]
+      }
+    ],
+    "status": "typical"
+  },
+  "connection_points": [
+    {
+      "id": "A1",
+      "label": {
+        "en": "Coil terminal A1",
+        "es": "Borne de bobina A1"
+      }
+    },
+    {
+      "id": "A2",
+      "label": {
+        "en": "Coil terminal A2",
+        "es": "Borne de bobina A2"
+      }
+    }
+  ],
+  "status": "not_found",
+  "source_ids": [
+    "ima_contactor_terminals"
+  ],
+  "sources": [
+    {
+      "id": "ima_contactor_terminals",
+      "title": "Industrial Monitor Direct: IEC contactor terminal numbering (secondary article)",
+      "url": "https://industrialmonitordirect.com/blogs/knowledgebase/iec-contactor-terminal-numbering-convention-explained",
+      "kind": "secondary_article",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

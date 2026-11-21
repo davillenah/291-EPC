@@ -1,0 +1,107 @@
+{
+  "schema_version": "1.0",
+  "id": "sym_surge_arrester_spd",
+  "name": {
+    "en": "Surge protective device (SPD)",
+    "es": "Dispositivo de protección contra sobretensiones (DPS)"
+  },
+  "family": "protection",
+  "description": {
+    "en": "Surge device drawn as a spark-gap or varistor symbol between line and earth. IEC ID not located. Note: Geometry typical.",
+    "es": "Dispositivo de sobretensión dibujado como entrehierro o varistor entre línea y tierra. ID IEC no localizado. Nota: Geometría típica."
+  },
+  "iec60617": {
+    "symbol_id": null,
+    "iec_title_en": null,
+    "legacy_ref": null,
+    "status": "not_found"
+  },
+  "reference_designation": {
+    "letter": "F",
+    "note": {
+      "en": "Protection class (typical).",
+      "es": "Clase de protección (típico)."
+    },
+    "status": "typical"
+  },
+  "ansi_nema": {
+    "equivalent": null,
+    "status": "not_found"
+  },
+  "geometry": {
+    "grid": "1 unit = one symbol grid step; origin top-left, y down; scale to the drawing standard in use",
+    "primitives": [
+      {
+        "prim": "line",
+        "p1": [
+          0,
+          0
+        ],
+        "p2": [
+          0,
+          2
+        ]
+      },
+      {
+        "prim": "line",
+        "p1": [
+          0,
+          2
+        ],
+        "p2": [
+          0,
+          2.6
+        ]
+      },
+      {
+        "prim": "rect",
+        "x": -0.4,
+        "y": 2.6,
+        "w": 0.8,
+        "h": 1.2
+      },
+      {
+        "prim": "line",
+        "p1": [
+          0,
+          3.8
+        ],
+        "p2": [
+          0,
+          4.4
+        ]
+      },
+      {
+        "prim": "line",
+        "p1": [
+          -0.6,
+          4.4
+        ],
+        "p2": [
+          0.6,
+          4.4
+        ]
+      }
+    ],
+    "status": "typical"
+  },
+  "connection_points": [
+    {
+      "id": "L",
+      "label": {
+        "en": "Line",
+        "es": "Línea"
+      }
+    },
+    {
+      "id": "PE",
+      "label": {
+        "en": "Earth",
+        "es": "Tierra"
+      }
+    }
+  ],
+  "status": "not_found",
+  "source_ids": [],
+  "sources": []
+}

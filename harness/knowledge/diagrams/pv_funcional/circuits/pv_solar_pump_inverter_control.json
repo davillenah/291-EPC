@@ -1,0 +1,314 @@
+{
+  "schema_version": "1.0",
+  "id": "pv_solar_pump_inverter_control",
+  "family": "trackers_pumping",
+  "name": {
+    "en": "Solar pump controller with DC input and digital run/stop",
+    "es": "Controlador de bomba solar con entrada DC y marcha/paro digital"
+  },
+  "description": {
+    "en": "PV DC input to a pump controller; digital inputs for run/stop and dry-run or level; relay output for power-frequency switch-over.",
+    "es": "Entrada DC FV a un controlador de bomba; entradas digitales de marcha/paro y de falta de agua o nivel; salida de relé para pasar a red."
+  },
+  "application_range": {
+    "text": {
+      "en": "Solar pumping with a dedicated pump controller (Grundfos GI SPC is the source). Other brands not fetched (Danfoss page not reached).",
+      "es": "Bombeo solar con controlador dedicado (fuente: Grundfos GI SPC). Otras marcas no consultadas (página Danfoss no obtenida)."
+    },
+    "status": "unverified",
+    "source_ids": [
+      "grundfos_gi_spc"
+    ]
+  },
+  "diagram_types": [
+    "SLD",
+    "MLD",
+    "functional"
+  ],
+  "symbol_refs": [
+    "sym_circuit_breaker_device",
+    "sym_fuse_general",
+    "sym_motor_3ph_squirrel",
+    "sym_plc_io",
+    "sym_protective_earth",
+    "sym_pushbutton",
+    "sym_relay_coil_general"
+  ],
+  "device_refs": [
+    "switch_disconnector"
+  ],
+  "components": [
+    {
+      "ref": "Q1",
+      "letter": "Q",
+      "symbol_id": "sym_circuit_breaker_device",
+      "device_id": "switch_disconnector",
+      "description": {
+        "en": "PV DC breaker before the controller; open before any connection.",
+        "es": "Interruptor DC FV antes del controlador; abrir antes de cualquier conexión."
+      },
+      "status": "unverified"
+    },
+    {
+      "ref": "A1",
+      "letter": "A",
+      "symbol_id": "sym_plc_io",
+      "device_id": null,
+      "description": {
+        "en": "Solar pump controller: DC input PV+ and PV- (max 750 VDC), AC input 220-240 V 3-phase or 380-415 V 50 Hz.",
+        "es": "Controlador de bomba solar: entrada DC PV+ y PV- (máx. 750 VDC), entrada AC 220-240 V trifásica o 380-415 V 50 Hz."
+      },
+      "status": "unverified"
+    },
+    {
+      "ref": "M1",
+      "letter": "M",
+      "symbol_id": "sym_motor_3ph_squirrel",
+      "device_id": null,
+      "description": {
+        "en": "Three-phase pump motor fed by the controller. Output choke needed if the motor cable exceeds 50 m.",
+        "es": "Motor trifásico de bomba alimentado por el controlador. Se requiere reactancia de salida si el cable del motor supera 50 m."
+      },
+      "status": "unverified"
+    },
+    {
+      "ref": "S1",
+      "letter": "S",
+      "symbol_id": "sym_pushbutton",
+      "device_id": null,
+      "description": {
+        "en": "RUN/STOP push button on a digital input.",
+        "es": "Pulsador MARCHA/PARO en una entrada digital."
+      },
+      "status": "unverified"
+    },
+    {
+      "ref": "B1",
+      "letter": "B",
+      "symbol_id": null,
+      "device_id": null,
+      "description": {
+        "en": "Level or dry-run switch on a digital input (analogue level inputs not supported on the GI SPC).",
+        "es": "Interruptor de nivel o de falta de agua en una entrada digital (entradas analógicas de nivel no soportadas en GI SPC)."
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "K1",
+      "letter": "K",
+      "symbol_id": "sym_relay_coil_general",
+      "device_id": null,
+      "description": {
+        "en": "Relay RO1 switches the motor to power-frequency supply (default function 30).",
+        "es": "El relé RO1 pasa el motor a red (función por defecto 30)."
+      },
+      "status": "unverified"
+    },
+    {
+      "ref": "F1",
+      "letter": "F",
+      "symbol_id": "sym_fuse_general",
+      "device_id": null,
+      "description": {
+        "en": "Protection on the AC supply (typical). Rating not in the source.",
+        "es": "Protección en la alimentación AC (típico). El calibre no figura en la fuente."
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "X1",
+      "letter": "X",
+      "symbol_id": "sym_protective_earth",
+      "device_id": null,
+      "description": {
+        "en": "PE terminal of controller and motor.",
+        "es": "Borne PE del controlador y del motor."
+      },
+      "status": "unverified"
+    }
+  ],
+  "power_connection": [
+    {
+      "text": {
+        "en": "PV input DC PV+ and PV-; maximum 750 VDC; check polarity before connecting.",
+        "es": "Entrada DC PV+ y PV-; máximo 750 VDC; verificar polaridad antes de conectar."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "grundfos_gi_spc"
+      ]
+    },
+    {
+      "text": {
+        "en": "AC input for grid or generator supply (3-phase; 380 V models use R, Y, B and PE).",
+        "es": "Entrada AC para alimentación de red o generador (trifásica; modelos 380 V usan R, Y, B y PE)."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "grundfos_gi_spc"
+      ]
+    },
+    {
+      "text": {
+        "en": "Motor cable above 50 m needs an output choke.",
+        "es": "Cable de motor superior a 50 m requiere reactancia de salida."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "grundfos_gi_spc"
+      ]
+    }
+  ],
+  "control_connection": [
+    {
+      "text": {
+        "en": "Digital inputs 12 to 30 V NPN, programmable (S2). S3 remote run/stop by SMS. S4 RUN/STOP button. COM is +24 V common. S1 is internal to COM.",
+        "es": "Entradas digitales 12 a 30 V NPN, programables (S2). S3 marcha/paro remota por SMS. S4 pulsador MARCHA/PARO. COM es común +24 V. S1 interno a COM."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "grundfos_gi_spc"
+      ]
+    },
+    {
+      "text": {
+        "en": "Analogue water-level inputs AI1 to AI3 are marked not supported. Use a float or dry-run switch on a digital input.",
+        "es": "Entradas analógicas de nivel AI1 a AI3 marcadas como no soportadas. Usar flotador o interruptor de falta de agua en entrada digital."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "grundfos_gi_spc"
+      ]
+    },
+    {
+      "text": {
+        "en": "Relay RO2 default function 5: inverter fault.",
+        "es": "Relé RO2, función por defecto 5: falla del inversor."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "grundfos_gi_spc"
+      ]
+    }
+  ],
+  "protections": [
+    {
+      "text": {
+        "en": "Open the DC breaker before any connection. Wait at least 5 minutes, then confirm zero voltage with a multimeter.",
+        "es": "Abrir el interruptor DC antes de cualquier conexión. Esperar al menos 5 minutos y confirmar tensión cero con multímetro."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "grundfos_gi_spc"
+      ]
+    },
+    {
+      "text": {
+        "en": "Connect PE for personnel safety and EMI reduction.",
+        "es": "Conectar PE por seguridad de personas y reducción de EMI."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "grundfos_gi_spc"
+      ]
+    },
+    {
+      "text": {
+        "en": "Motor thermal protection through the controller (typical).",
+        "es": "Protección térmica del motor a través del controlador (típico)."
+      },
+      "status": "typical",
+      "source_ids": []
+    }
+  ],
+  "sequence": [
+    {
+      "text": {
+        "en": "Start: DC on, check polarity, controller powers up, run command from S4 or S3.",
+        "es": "Arranque: DC conectada, verificar polaridad, el controlador se enciende, orden de marcha desde S4 o S3."
+      },
+      "status": "typical",
+      "source_ids": []
+    },
+    {
+      "text": {
+        "en": "Dry-run or low-level input stops the pump and sets a fault (typical).",
+        "es": "La entrada de falta de agua o nivel bajo detiene la bomba y genera falla (típico)."
+      },
+      "status": "typical",
+      "source_ids": []
+    },
+    {
+      "text": {
+        "en": "Switch-over to power-frequency through RO1 when the controller is not operating (function 30).",
+        "es": "Pasar a red por RO1 cuando el controlador no opera (función 30)."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "grundfos_gi_spc"
+      ]
+    }
+  ],
+  "common_errors": [
+    {
+      "text": {
+        "en": "PV polarity reversed at the DC input.",
+        "es": "Polaridad FV invertida en la entrada DC."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "grundfos_gi_spc"
+      ]
+    },
+    {
+      "text": {
+        "en": "Analogue level sensor wired to AI1 to AI3.",
+        "es": "Sensor de nivel analógico conectado a AI1 a AI3."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "grundfos_gi_spc"
+      ]
+    },
+    {
+      "text": {
+        "en": "DC voltage above 750 VDC at the input.",
+        "es": "Tensión DC superior a 750 VDC en la entrada."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "grundfos_gi_spc"
+      ]
+    },
+    {
+      "text": {
+        "en": "NPN and PNP sensor types confused.",
+        "es": "Confusión de sensores NPN y PNP."
+      },
+      "status": "typical",
+      "source_ids": []
+    }
+  ],
+  "source_conflicts": [],
+  "status": "unverified",
+  "source_ids": [
+    "grundfos_gi_spc",
+    "repo_devices"
+  ],
+  "sources": [
+    {
+      "id": "grundfos_gi_spc",
+      "title": "Grundfos GI SPC solar pump controller, electrical I/O instructions",
+      "url": "https://www.grundfos.com/content/dam/local/en-za/catalogues/_jcr_content1/case-story-brochures11/GI%20SPC_Electical%20IO_GB_V0.0.pdf",
+      "kind": "manufacturer_doc",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "repo_devices",
+      "title": "EPC-291 repository: sld_mld/devices and funcional_iec60617/symbols_index.json (ids reused)",
+      "url": "repo://sld_mld/devices",
+      "kind": "internal_repo",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

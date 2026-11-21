@@ -1,0 +1,62 @@
+{
+ "schema_version": "1.0",
+ "id": "netlist_capacitor_bank_lv",
+ "name": {
+  "en": "LV capacitor bank for power factor correction",
+  "es": "Banco de condensadores BT para correccion del factor de potencia"
+ },
+ "diagram": "SLD",
+ "sheet": {
+  "size": "A3",
+  "style_ref": "epc_arch/epc_style.json"
+ },
+ "source_scheme": "capacitor_bank_lv",
+ "instances": [
+  {
+   "tag": "-Q1",
+   "device_id": "switch_disconnector",
+   "symbol": "lv_switch_disconnector",
+   "labels": {},
+   "label_source": "none (ratings come from engines at project time)"
+  },
+  {
+   "tag": "-F1",
+   "device_id": "fuse_gg",
+   "symbol": "lv_fuse",
+   "labels": {},
+   "label_source": "none (ratings come from engines at project time)"
+  },
+  {
+   "tag": "-Q2",
+   "device_id": "contactor",
+   "symbol": "lv_contactor",
+   "labels": {},
+   "label_source": "none (ratings come from engines at project time)"
+  },
+  {
+   "tag": "-C1",
+   "device_id": "capacitor_bank",
+   "symbol": "lv_capacitor_bank",
+   "labels": {},
+   "label_source": "none (ratings come from engines at project time)"
+  }
+ ],
+ "connections": [
+  {
+   "from": "-Q1:bottom",
+   "to": "-F1:top",
+   "conductor": "L"
+  },
+  {
+   "from": "-F1:bottom",
+   "to": "-Q2:top",
+   "conductor": "L"
+  },
+  {
+   "from": "-Q2:bottom",
+   "to": "-C1:in",
+   "conductor": "L"
+  }
+ ],
+ "status": "typical"
+}

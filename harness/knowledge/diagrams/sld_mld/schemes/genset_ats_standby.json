@@ -1,0 +1,96 @@
+{
+  "schema_version": "1.0",
+  "id": "genset_ats_standby",
+  "name": {
+    "en": "Standby generator with ATS",
+    "es": "Grupo electrogeno de emergencia con ATS"
+  },
+  "description": {
+    "en": "Generator set and utility feeding an ATS, which supplies the LV main board.",
+    "es": "Grupo electrogeno y red alimentando un ATS, que suministra el cuadro BT principal."
+  },
+  "purpose": {
+    "en": "Show automatic transfer from utility to generator.",
+    "es": "Mostrar transferencia automatica de la red al generador."
+  },
+  "voltage_level": "LV",
+  "status": "typical",
+  "chain": [
+    {
+      "order": 1,
+      "device_id": "generator_set",
+      "label": {
+        "en": "Standby generator",
+        "es": "Grupo electrogeno"
+      },
+      "notes": {
+        "en": "Engine-driven generator",
+        "es": "Generador accionado por motor"
+      }
+    },
+    {
+      "order": 2,
+      "device_id": "ats",
+      "label": {
+        "en": "Automatic transfer switch",
+        "es": "ATS"
+      },
+      "notes": {
+        "en": "Open, closed or delayed transition",
+        "es": "Transicion abierta, cerrada o diferida"
+      }
+    },
+    {
+      "order": 3,
+      "device_id": "switchboard_tgbt",
+      "label": {
+        "en": "Main LV board",
+        "es": "Cuadro BT principal"
+      },
+      "notes": {
+        "en": "Downstream of ATS",
+        "es": "Aguas abajo del ATS"
+      }
+    }
+  ],
+  "drawing_conventions": [
+    {
+      "en": "Draw source at top, loads at bottom; read upstream to downstream.",
+      "es": "Dibujar la fuente arriba y las cargas abajo; leer de aguas arriba a aguas abajo."
+    },
+    {
+      "en": "Label each device with its tag (for example QF-101) and its rating (A, kA, curve).",
+      "es": "Rotular cada equipo con su tag (por ejemplo QF-101) y su calibre (A, kA, curva)."
+    },
+    {
+      "en": "Label each feeder with conductor count, size and material where notated.",
+      "es": "Rotular cada alimentador con numero de conductores, seccion y material cuando se indique."
+    },
+    {
+      "en": "Show both utility and generator inputs to the ATS with their breakers.",
+      "es": "Mostrar las entradas de red y generador al ATS con sus interruptores."
+    }
+  ],
+  "source_ids": [
+    "kohler_ats",
+    "viox_sld"
+  ],
+  "sources": [
+    {
+      "id": "kohler_ats",
+      "title": "Kohler automatic transfer switch brochure",
+      "url": "https://resources.kohler.com/power/kohler/industrial/pdf/ATS_Brochure.pdf",
+      "publisher": "Kohler",
+      "accessed": "2026-11-20",
+      "kind": "manufacturer"
+    },
+    {
+      "id": "viox_sld",
+      "title": "How to read a single line diagram",
+      "url": "https://viox.com/how-to-read-a-single-line-diagram/",
+      "publisher": "VIOX Electric",
+      "accessed": "2026-11-20",
+      "kind": "third_party_guide"
+    }
+  ]
+}

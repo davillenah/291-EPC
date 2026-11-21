@@ -1,0 +1,188 @@
+{
+  "id": "circ_mv_contactor_protection_relays",
+  "category": "mv_control",
+  "name": {
+    "en": "Medium-voltage contactor with protection relays and trip circuit",
+    "es": "Contactor de media tensión con relés de protección y circuito de disparo"
+  },
+  "description": {
+    "en": "MV contactor (or circuit breaker) controlled by a protection relay through a trip contact. Current transformers feed the relay; a lock-out relay holds trip until reset.",
+    "es": "Contactor de media tensión (o interruptor) controlado por un relé de protección mediante un contacto de disparo. Transformadores de corriente alimentan el relé; un relé de bloqueo mantiene el disparo hasta el rearme."
+  },
+  "application_range": {
+    "text": {
+      "en": "MV motors and feeders where the contactor interrupts load current and the relay provides overcurrent and earth fault.",
+      "es": "Motores y alimentadores de MT donde el contactor interrumpe la corriente de carga y el relé aporta sobreintensidad y falla a tierra."
+    },
+    "status": "typical"
+  },
+  "representation": {
+    "mld": {
+      "text": {
+        "en": "Three-phase MV path with CTs on two phases and residual CT for earth fault.",
+        "es": "Trayectoria trifásica de MT con TC en dos fases y TC residual para falla a tierra."
+      },
+      "status": "typical"
+    },
+    "functional": {
+      "text": {
+        "en": "Protection relay trip contact in series with the contactor trip coil; lock-out relay on trip.",
+        "es": "Contacto de disparo del relé de protección en serie con la bobina de disparo del contactor; relé de bloqueo en el disparo."
+      },
+      "status": "typical"
+    }
+  },
+  "components": [
+    {
+      "ref": "CT1/CT2",
+      "letter": "T",
+      "symbol_id": "sym_current_transformer_2sec",
+      "description": {
+        "en": "Phase current transformers",
+        "es": "Transformadores de corriente de fase"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "CT3",
+      "letter": "T",
+      "symbol_id": "sym_current_transformer_2sec",
+      "description": {
+        "en": "Residual or earth-fault CT",
+        "es": "TC residual o de falla a tierra"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "KM1",
+      "letter": "Q",
+      "symbol_id": "sym_contactor_auto_trip",
+      "description": {
+        "en": "MV contactor with automatic tripping",
+        "es": "Contactor de MT con disparo automático"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "K1",
+      "letter": "K",
+      "symbol_id": "sym_relay_coil_general",
+      "description": {
+        "en": "Protection relay (overcurrent and earth fault)",
+        "es": "Relé de protección (sobreintensidad y falla a tierra)"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "K2",
+      "letter": "K",
+      "symbol_id": "sym_relay_coil_general",
+      "description": {
+        "en": "Lock-out relay (86-type, typical)",
+        "es": "Relé de bloqueo (tipo 86, típico)"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "S1",
+      "letter": "S",
+      "symbol_id": "sym_pushbutton",
+      "description": {
+        "en": "Reset push button",
+        "es": "Pulsador de rearme"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "F1",
+      "letter": "F",
+      "symbol_id": "sym_fuse_general",
+      "description": {
+        "en": "Voltage transformer fuse (if VT used)",
+        "es": "Fusible del transformador de tensión (si hay TT)"
+      },
+      "status": "typical"
+    }
+  ],
+  "power_connection": [
+    {
+      "text": {
+        "en": "Main MV path through KM1 with CT secondaries wired to K1 measurement inputs.",
+        "es": "Trayectoria principal de MT por KM1 con secundarios de TC cableados a las entradas de medida de K1."
+      },
+      "status": "typical"
+    }
+  ],
+  "control_rungs": [
+    {
+      "text": {
+        "en": "K1 trip contact in series with KM1 trip coil and K2 lock-out contact.",
+        "es": "Contacto de disparo de K1 en serie con la bobina de disparo de KM1 y el contacto de bloqueo de K2."
+      },
+      "status": "typical",
+      "rung": 1
+    },
+    {
+      "text": {
+        "en": "K2 latches on trip; reset S1 releases K2 once faults are cleared.",
+        "es": "K2 se enclava al disparar; el rearme S1 libera K2 tras despejar la falla."
+      },
+      "status": "typical",
+      "rung": 2
+    }
+  ],
+  "interlocks": [
+    {
+      "text": {
+        "en": "Lock-out prevents re-closing until reset and fault clearance.",
+        "es": "El bloqueo impide recerrar hasta el rearme y despeje de falla."
+      },
+      "status": "typical"
+    }
+  ],
+  "protections": [
+    {
+      "text": {
+        "en": "Overcurrent (phase), earth fault (residual CT), and thermal or motor protection function as the relay type allows.",
+        "es": "Sobreintensidad (fase), falla a tierra (TC residual) y función térmica o de motor según el tipo de relé."
+      },
+      "status": "typical"
+    }
+  ],
+  "sequence": [
+    {
+      "text": {
+        "en": "Fault: K1 operates, trip coil energizes, KM1 opens; K2 latches; reset after inspection.",
+        "es": "Falla: K1 actúa, se energiza la bobina de disparo, KM1 abre; K2 se enclava; rearme tras inspección."
+      },
+      "status": "typical"
+    }
+  ],
+  "common_errors": [
+    {
+      "text": {
+        "en": "CT polarity reversed: wrong directional or differential response.",
+        "es": "Polaridad de TC invertida: respuesta direccional o diferencial errónea."
+      },
+      "status": "typical"
+    },
+    {
+      "text": {
+        "en": "Trip coil not supervised; trip circuit failure undetected.",
+        "es": "Bobina de disparo sin supervisión; falla del circuito de disparo no detectada."
+      },
+      "status": "typical"
+    },
+    {
+      "text": {
+        "en": "Lock-out not wired: relay resets automatically after a transient fault.",
+        "es": "Bloqueo no cableado: el relé se rearma automáticamente tras una falla transitoria."
+      },
+      "status": "typical"
+    }
+  ],
+  "status": "typical",
+  "source_ids": [],
+  "sources": [],
+  "schema_version": "1.0"
+}

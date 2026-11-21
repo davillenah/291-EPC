@@ -1,0 +1,232 @@
+{
+  "id": "circ_ats_mains_generator",
+  "category": "transfer",
+  "name": {
+    "en": "Automatic transfer switch (ATS) mains to generator, open transition with timers",
+    "es": "Conmutación automática de red a grupo electrógeno (ATS), transición abierta con temporizadores"
+  },
+  "description": {
+    "en": "Two breakers or contactors (normal and emergency) with interlock so they never parallel. A controller monitors mains, starts the generator after a delay, and retransfers after the return of mains with a cool-down timer.",
+    "es": "Dos interruptores o contactores (normal y emergencia) con enclavamiento para que nunca estén en paralelo. Un controlador vigila la red, arranca el grupo tras un retardo y retransfiere al regresar la red con temporizador de enfriamiento."
+  },
+  "application_range": {
+    "text": {
+      "en": "Critical loads where a short interruption is accepted; a UPS is required for zero break.",
+      "es": "Cargas críticas donde se acepta una interrupción breve; se requiere UPS para corte cero."
+    },
+    "status": "typical"
+  },
+  "representation": {
+    "mld": {
+      "text": {
+        "en": "Two incoming feeders (mains and generator) joined to one load bus through two switches with mechanical interlock.",
+        "es": "Dos alimentaciones entrantes (red y grupo) unidas a un barra de carga mediante dos conmutadores con enclavamiento mecánico."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "abb_ats_white_paper_1SDC007408"
+      ]
+    },
+    "functional": {
+      "text": {
+        "en": "Controller rungs for voltage monitoring, start command to generator, transfer and retransfer timers.",
+        "es": "Ramas del controlador para vigilancia de tensión, orden de arranque al grupo, temporizadores de transferencia y retransferencia."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "abb_ats_white_paper_1SDC007408"
+      ]
+    }
+  },
+  "components": [
+    {
+      "ref": "Q1",
+      "letter": "Q",
+      "symbol_id": "sym_circuit_breaker_device",
+      "description": {
+        "en": "Normal (mains) switch",
+        "es": "Conmutador normal (red)"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "Q2",
+      "letter": "Q",
+      "symbol_id": "sym_circuit_breaker_device",
+      "description": {
+        "en": "Emergency (generator) switch",
+        "es": "Conmutador de emergencia (grupo)"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "G1",
+      "letter": "G",
+      "symbol_id": "sym_generator_rotating",
+      "description": {
+        "en": "Generator set",
+        "es": "Grupo electrógeno"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "KT1",
+      "letter": "K",
+      "symbol_id": "sym_timer_coil_on_delay",
+      "description": {
+        "en": "Transfer delay (TS) timer",
+        "es": "Temporizador de retardo de transferencia (TS)"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "KT2",
+      "letter": "K",
+      "symbol_id": "sym_timer_coil_on_delay",
+      "description": {
+        "en": "Generator stop delay (TGoff) timer",
+        "es": "Temporizador de parada del grupo (TGoff)"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "A1",
+      "letter": "A",
+      "symbol_id": "sym_plc_io",
+      "description": {
+        "en": "ATS controller",
+        "es": "Controlador ATS"
+      },
+      "status": "typical"
+    }
+  ],
+  "power_connection": [
+    {
+      "text": {
+        "en": "Mains to Q1, generator to Q2, both outputs to the common load bus. Mechanical interlock prevents paralleling.",
+        "es": "Red a Q1, grupo a Q2; ambas salidas a la barra de carga común. El enclavamiento mecánico impide el paralelo."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "abb_ats_white_paper_1SDC007408"
+      ]
+    }
+  ],
+  "control_rungs": [
+    {
+      "text": {
+        "en": "Mains voltage monitoring: after mains loss and TS delay, ATS sends generator start command.",
+        "es": "Vigilancia de tensión de red: tras la pérdida de red y el retardo TS, el ATS envía la orden de arranque del grupo."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "abb_ats_white_paper_1SDC007408"
+      ],
+      "rung": 1
+    },
+    {
+      "text": {
+        "en": "Once the generator is up, emergency switch closes; load transfers.",
+        "es": "Cuando el grupo está listo, cierra el conmutador de emergencia; la carga se transfiere."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "abb_ats_white_paper_1SDC007408"
+      ],
+      "rung": 2
+    },
+    {
+      "text": {
+        "en": "On mains return, ATS retransfers and starts TGoff for generator stop.",
+        "es": "Al regresar la red, el ATS retransfiere e inicia TGoff para parar el grupo."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "abb_ats_white_paper_1SDC007408"
+      ],
+      "rung": 3
+    }
+  ],
+  "interlocks": [
+    {
+      "text": {
+        "en": "Mechanical interlock between the two switches (ABB ATS white paper calls for a mechanical interlock for breakers); electrical interlock with breaker position feedback.",
+        "es": "Enclavamiento mecánico entre los dos conmutadores (el documento ABB exige enclavamiento mecánico para interruptores); enclavamiento eléctrico con realimentación de posición."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "abb_ats_white_paper_1SDC007408"
+      ]
+    }
+  ],
+  "protections": [
+    {
+      "text": {
+        "en": "Each source protected by its own breaker; motor operators with key lock to block manual operation.",
+        "es": "Cada fuente protegida por su interruptor; operadores motorizados con cerradura para bloquear la operación manual."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "abb_ats_white_paper_1SDC007408"
+      ]
+    }
+  ],
+  "sequence": [
+    {
+      "text": {
+        "en": "Mains fails: TS delay, generator starts, emergency switch closes; load on generator.",
+        "es": "Falla la red: retardo TS, arranca el grupo, cierra el conmutador de emergencia; carga en el grupo."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "abb_ats_white_paper_1SDC007408"
+      ]
+    },
+    {
+      "text": {
+        "en": "Mains returns: retransfer, generator runs TGoff then stops.",
+        "es": "Vuelve la red: retransferencia; el grupo funciona TGoff y luego para."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "abb_ats_white_paper_1SDC007408"
+      ]
+    }
+  ],
+  "common_errors": [
+    {
+      "text": {
+        "en": "No mechanical interlock: both sources paralleled.",
+        "es": "Sin enclavamiento mecánico: ambas fuentes en paralelo."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "abb_ats_white_paper_1SDC007408"
+      ]
+    },
+    {
+      "text": {
+        "en": "Timers not set: unnecessary transfers or generator starts on short dips.",
+        "es": "Temporizadores sin ajustar: transferencias o arranques innecesarios ante caídas breves."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "abb_ats_white_paper_1SDC007408"
+      ]
+    }
+  ],
+  "status": "unverified",
+  "source_ids": [
+    "abb_ats_white_paper_1SDC007408"
+  ],
+  "sources": [
+    {
+      "id": "abb_ats_white_paper_1SDC007408",
+      "title": "ABB: Automatic transfer switch white paper (ATS021/ATS022, interlocks, timers, generator start)",
+      "url": "https://library.e.abb.com/public/13eb7df85b4a420ea02850a2c5ea0c2d/1SDC007408G0201_WP%20ATS%20021%20022%20EN.pdf",
+      "kind": "manufacturer_doc",
+      "accessed": "2026-11-20"
+    }
+  ],
+  "schema_version": "1.0"
+}

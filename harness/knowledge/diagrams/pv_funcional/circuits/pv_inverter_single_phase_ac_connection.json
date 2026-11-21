@@ -1,0 +1,129 @@
+{
+  "schema_version": "1.0",
+  "id": "pv_inverter_single_phase_ac_connection",
+  "family": "inverter_to_board",
+  "name": {
+    "en": "Single-phase inverter to AC board",
+    "es": "Inversor monofásico al tablero AC"
+  },
+  "description": {
+    "en": "Single-phase grid-tie inverter with L, N and PE to a dedicated breaker on the board.",
+    "es": "Inversor monofásico conectado a red con L, N y PE a un interruptor dedicado del tablero."
+  },
+  "application_range": {
+    "text": {
+      "en": "Single-phase grid-tie inverters, residential and small commercial (typical). Specific limits not located.",
+      "es": "Inversores monofásicos conectados a red, residenciales y comerciales pequeños (típico). Límites específicos no ubicados."
+    },
+    "status": "not_found",
+    "source_ids": []
+  },
+  "diagram_types": [
+    "SLD",
+    "MLD"
+  ],
+  "symbol_refs": [
+    "sym_circuit_breaker_device",
+    "sym_protective_earth"
+  ],
+  "device_refs": [
+    "mcb"
+  ],
+  "components": [
+    {
+      "ref": "A1",
+      "letter": "A",
+      "symbol_id": null,
+      "device_id": null,
+      "description": {
+        "en": "Single-phase inverter, AC terminals L, N, PE.",
+        "es": "Inversor monofásico, bornes AC L, N, PE."
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "Q1",
+      "letter": "Q",
+      "symbol_id": "sym_circuit_breaker_device",
+      "device_id": "mcb",
+      "description": {
+        "en": "Single-pole or double-pole breaker dedicated to the inverter.",
+        "es": "Interruptor unipolar o bipolar dedicado al inversor."
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "X1",
+      "letter": "X",
+      "symbol_id": "sym_protective_earth",
+      "device_id": null,
+      "description": {
+        "en": "PE connection to the board bar.",
+        "es": "Conexión PE a la barra del tablero."
+      },
+      "status": "typical"
+    }
+  ],
+  "power_connection": [
+    {
+      "text": {
+        "en": "Phase L and neutral N to the breaker; PE to the board PE bar.",
+        "es": "Fase L y neutro N al interruptor; PE a la barra PE del tablero."
+      },
+      "status": "typical",
+      "source_ids": []
+    },
+    {
+      "text": {
+        "en": "Do not place the inverter on the same phase as a large single-phase load without a load study (typical).",
+        "es": "No conectar el inversor a la misma fase que una carga monofásica grande sin estudio de cargas (típico)."
+      },
+      "status": "typical",
+      "source_ids": []
+    }
+  ],
+  "control_connection": [],
+  "protections": [
+    {
+      "text": {
+        "en": "Dedicated breaker per inverter; sizing in the repository engine.",
+        "es": "Interruptor dedicado por inversor; dimensionado en el motor del repositorio."
+      },
+      "status": "typical",
+      "source_ids": []
+    },
+    {
+      "text": {
+        "en": "Check the inverter manual for neutral and PE requirements (not located here).",
+        "es": "Revisar el manual del inversor para neutro y PE (no ubicado aquí)."
+      },
+      "status": "not_found",
+      "source_ids": []
+    }
+  ],
+  "sequence": [],
+  "common_errors": [
+    {
+      "text": {
+        "en": "Phase and neutral mix-up on the AC side.",
+        "es": "Confusión de fase y neutro en el lado AC."
+      },
+      "status": "typical",
+      "source_ids": []
+    }
+  ],
+  "source_conflicts": [],
+  "status": "typical",
+  "source_ids": [
+    "repo_devices"
+  ],
+  "sources": [
+    {
+      "id": "repo_devices",
+      "title": "EPC-291 repository: sld_mld/devices and funcional_iec60617/symbols_index.json (ids reused)",
+      "url": "repo://sld_mld/devices",
+      "kind": "internal_repo",
+      "accessed": "2026-11-20"
+    }
+  ]
+}
