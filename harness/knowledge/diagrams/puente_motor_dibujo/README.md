@@ -2,7 +2,7 @@
 
 Nothing here changes the repo. It reads `harness/src/engines/cad/symbols` (library `_catalog.json`, which already has ports and label slots) and links it to the research JSON.
 
-- `device_symbol_map.json`: 57 research devices -> library symbol ids (+ MLD 1p-4p variants, ports). 51 mapped (exact or close name match, all `unverified`; "close" ones need a person to confirm), 6 without a symbol (`not_found`): IMD, blocking diode, power optimizer, rapid shutdown device, RCMU, string combiner box.
+- `device_symbol_map.json`: 57 research devices -> library symbol ids (+ MLD 1p-4p variants, ports). 51 mapped (exact or close name match, all `unverified`; "close" ones need a person to confirm), 6 as block placeholders (`match: placeholder`, a box with the device name until the real symbol exists): IMD, blocking diode, power optimizer, rapid shutdown device, RCMU, string combiner box.
 - `netlist.schema.json`: proposed contract for a project netlist: instances (IEC 81346 tag, device id, symbol id, label values from an engine) and connections `TAG:PORT -> TAG:PORT`.
 - `netlists/example_pv_strings_sld.json`: example validated against the schema; every symbol id and port exists in the library catalog.
 
