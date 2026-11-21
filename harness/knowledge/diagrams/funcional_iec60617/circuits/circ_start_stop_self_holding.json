@@ -1,0 +1,136 @@
+{
+  "id": "circ_start_stop_self_holding",
+  "category": "control_typical",
+  "name": {
+    "en": "Start-stop pushbuttons with self-holding (memory)",
+    "es": "Marcha-paro con pulsadores y autorretención (memoria)"
+  },
+  "description": {
+    "en": "Momentary start pushbutton and stop pushbutton. The contactor holds itself on through its own NO contact.",
+    "es": "Pulsador de marcha momentáneo y pulsador de paro. El contactor se mantiene energizado a través de su propio contacto NO."
+  },
+  "application_range": {
+    "text": {
+      "en": "Basic motor and actuator control.",
+      "es": "Control básico de motores y actuadores."
+    },
+    "status": "typical"
+  },
+  "representation": {
+    "mld": {
+      "text": {
+        "en": "Not applicable.",
+        "es": "No aplica."
+      },
+      "status": "typical"
+    },
+    "functional": {
+      "text": {
+        "en": "Standard two-rung diagram with holding contact.",
+        "es": "Diagrama estándar de dos ramas con contacto de mantenimiento."
+      },
+      "status": "typical"
+    }
+  },
+  "components": [
+    {
+      "ref": "S1",
+      "letter": "S",
+      "symbol_id": "sym_pushbutton",
+      "description": {
+        "en": "Stop NC",
+        "es": "Paro NC"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "S2",
+      "letter": "S",
+      "symbol_id": "sym_pushbutton",
+      "description": {
+        "en": "Start NO",
+        "es": "Marcha NO"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "KM1:13-14",
+      "letter": "Q",
+      "symbol_id": "sym_contact_make_general",
+      "description": {
+        "en": "Holding contact",
+        "es": "Contacto de mantenimiento"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "KM1",
+      "letter": "Q",
+      "symbol_id": "sym_contactor_coil_general",
+      "description": {
+        "en": "Coil",
+        "es": "Bobina"
+      },
+      "status": "typical"
+    }
+  ],
+  "power_connection": [
+    {
+      "text": {
+        "en": "Not applicable to the control circuit itself.",
+        "es": "No aplica al circuito de mando en sí."
+      },
+      "status": "typical"
+    }
+  ],
+  "control_rungs": [
+    {
+      "text": {
+        "en": "S1 (NC) and S2 (NO) in series with the coil, S2 in parallel with KM1 13-14.",
+        "es": "S1 (NC) y S2 (NO) en serie con la bobina, S2 en paralelo con KM1 13-14."
+      },
+      "status": "typical",
+      "rung": 1
+    }
+  ],
+  "interlocks": [
+    {
+      "text": {
+        "en": "None required.",
+        "es": "Ninguno requerido."
+      },
+      "status": "typical"
+    }
+  ],
+  "protections": [
+    {
+      "text": {
+        "en": "Stop NC for fail-safe; overload contact in series.",
+        "es": "Paro NC para seguridad ante fallo; contacto de sobrecarga en serie."
+      },
+      "status": "typical"
+    }
+  ],
+  "sequence": [
+    {
+      "text": {
+        "en": "Start press energizes coil; contact holds; stop press drops.",
+        "es": "Al pulsar marcha se energiza la bobina; el contacto mantiene; al pulsar paro se desenergiza."
+      },
+      "status": "typical"
+    }
+  ],
+  "common_errors": [
+    {
+      "text": {
+        "en": "Holding contact on wrong terminals; start works only while pressed.",
+        "es": "Contacto de mantenimiento en bornes equivocados; el arranque solo funciona mientras se presiona."
+      },
+      "status": "typical"
+    }
+  ],
+  "status": "typical",
+  "source_ids": [],
+  "sources": [],
+  "schema_version": "1.0"
+}

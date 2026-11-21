@@ -1,0 +1,171 @@
+{
+  "id": "circ_rotor_resistance_starter",
+  "category": "motor_starting",
+  "name": {
+    "en": "Wound-rotor motor starter with rotor resistance (slip-ring)",
+    "es": "Arrancador de motor de rotor bobinado con resistencias rotóricas (anillos rozantes)"
+  },
+  "description": {
+    "en": "Resistors in series with the rotor through slip rings are stepped out by contactors to increase starting torque while limiting starting current.",
+    "es": "Resistencias en serie con el rotor a través de anillos rozantes se eliminan por etapas con contactores para aumentar el par de arranque y limitar la corriente."
+  },
+  "application_range": {
+    "text": {
+      "en": "Cranes, hoists and high-inertia loads needing high starting torque at low current.",
+      "es": "Grúas, polipastos y cargas de alta inercia que requieren alto par de arranque con baja corriente."
+    },
+    "status": "typical"
+  },
+  "representation": {
+    "mld": {
+      "text": {
+        "en": "Stator to line via KM1; rotor via slip rings to resistor stages with KM2, KM3 shorting.",
+        "es": "Estator a línea vía KM1; rotor a través de anillos rozantes a etapas de resistencia con KM2, KM3 en cortocircuito."
+      },
+      "status": "typical"
+    },
+    "functional": {
+      "text": {
+        "en": "Stepped rungs with timers or current relay per stage; final rung shorts rotor.",
+        "es": "Ramas escalonadas con temporizadores o relé de corriente por etapa; la última rama cortocircuita el rotor."
+      },
+      "status": "typical"
+    }
+  },
+  "components": [
+    {
+      "ref": "KM1",
+      "letter": "Q",
+      "symbol_id": "sym_contact_main_pole",
+      "description": {
+        "en": "Line contactor (stator)",
+        "es": "Contactor de línea (estator)"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "KM2",
+      "letter": "Q",
+      "symbol_id": "sym_contact_main_pole",
+      "description": {
+        "en": "Resistor stage 1 shorting contactor",
+        "es": "Contactor de cortocircuito de la etapa 1 de resistencia"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "KM3",
+      "letter": "Q",
+      "symbol_id": "sym_contact_main_pole",
+      "description": {
+        "en": "Resistor stage 2 shorting contactor",
+        "es": "Contactor de cortocircuito de la etapa 2 de resistencia"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "KT1/KT2",
+      "letter": "K",
+      "symbol_id": "sym_timer_coil_on_delay",
+      "description": {
+        "en": "Stage timers",
+        "es": "Temporizadores de etapa"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "R1",
+      "letter": "R",
+      "symbol_id": null,
+      "description": {
+        "en": "Rotor resistor bank (letter R typical)",
+        "es": "Banco de resistencias rotóricas (letra R típica)"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "M1",
+      "letter": "M",
+      "symbol_id": "sym_motor_3ph_squirrel",
+      "description": {
+        "en": "Wound-rotor motor",
+        "es": "Motor de rotor bobinado"
+      },
+      "status": "typical"
+    }
+  ],
+  "power_connection": [
+    {
+      "text": {
+        "en": "Line to stator; rotor slip rings to resistor bank; stages shorted by KM2 and KM3.",
+        "es": "Línea al estator; anillos del rotor al banco de resistencias; etapas cortocircuitadas por KM2 y KM3."
+      },
+      "status": "typical"
+    }
+  ],
+  "control_rungs": [
+    {
+      "text": {
+        "en": "Start: KM1 closes with full resistance in rotor.",
+        "es": "Arranque: cierra KM1 con toda la resistencia en el rotor."
+      },
+      "status": "typical",
+      "rung": 1
+    },
+    {
+      "text": {
+        "en": "KT1 times out, KM2 closes and shorts stage 1; KT2 then shorts stage 2 via KM3.",
+        "es": "KT1 vence, cierra KM2 y cortocircuita la etapa 1; KT2 después cortocircuita la etapa 2 mediante KM3."
+      },
+      "status": "typical",
+      "rung": 2
+    }
+  ],
+  "interlocks": [
+    {
+      "text": {
+        "en": "Stage contactors interlocked in order (each depends on previous stage).",
+        "es": "Contactores de etapa enclavados en orden (cada uno depende de la etapa anterior)."
+      },
+      "status": "typical"
+    }
+  ],
+  "protections": [
+    {
+      "text": {
+        "en": "Overload and rotor fault protection (typical).",
+        "es": "Protección de sobrecarga y de fallo de rotor (típico)."
+      },
+      "status": "typical"
+    }
+  ],
+  "sequence": [
+    {
+      "text": {
+        "en": "Full resistance start, stepwise shorting of resistor stages, final full-run on rotor short.",
+        "es": "Arranque con resistencia completa, cortocircuito escalonado de etapas, marcha final con rotor cortocircuitado."
+      },
+      "status": "typical"
+    }
+  ],
+  "common_errors": [
+    {
+      "text": {
+        "en": "Stages shorted too soon: high current spike.",
+        "es": "Etapas cortocircuitadas demasiado pronto: pico alto de corriente."
+      },
+      "status": "typical"
+    },
+    {
+      "text": {
+        "en": "Resistor bank overheats if starts are repeated without cooling.",
+        "es": "El banco se sobrecalienta si se repiten arranques sin enfriamiento."
+      },
+      "status": "typical"
+    }
+  ],
+  "status": "typical",
+  "source_ids": [],
+  "sources": [],
+  "schema_version": "1.0"
+}

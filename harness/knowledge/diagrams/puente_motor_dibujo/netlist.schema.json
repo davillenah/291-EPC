@@ -1,0 +1,198 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "title": "Project netlist for the drawing engine (contract proposal)",
+ "type": "object",
+ "additionalProperties": false,
+ "required": [
+  "schema_version",
+  "id",
+  "diagram",
+  "sheet",
+  "instances",
+  "connections",
+  "status"
+ ],
+ "properties": {
+  "schema_version": {
+   "const": "1.0"
+  },
+  "id": {
+   "type": "string",
+   "pattern": "^[a-z0-9_.-]+$"
+  },
+  "name": {
+   "type": "object",
+   "required": [
+    "en",
+    "es"
+   ],
+   "properties": {
+    "en": {
+     "type": "string"
+    },
+    "es": {
+     "type": "string"
+    }
+   }
+  },
+  "diagram": {
+   "enum": [
+    "SLD",
+    "MLD"
+   ]
+  },
+  "sheet": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "size"
+   ],
+   "properties": {
+    "size": {
+     "enum": [
+      "A4",
+      "A3",
+      "A2",
+      "A1",
+      "A0"
+     ]
+    },
+    "title_block": {
+     "type": "string"
+    },
+    "style_ref": {
+     "type": "string",
+     "description": "e.g. epc_arch/epc_style.json"
+    }
+   }
+  },
+  "instances": {
+   "type": "array",
+   "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "tag",
+     "device_id",
+     "symbol"
+    ],
+    "properties": {
+     "tag": {
+      "type": "string",
+      "description": "IEC 81346 tag, e.g. -Q1"
+     },
+     "device_id": {
+      "type": "string"
+     },
+     "symbol": {
+      "type": [
+       "string",
+       "null"
+      ],
+      "description": "id in the library _catalog.json; null when the library has no symbol (see device_symbol_map.json)"
+     },
+     "enclosure": {
+      "type": "string",
+      "description": "tag of the enclosure that groups it, e.g. JB1"
+     },
+     "labels": {
+      "type": "object",
+      "additionalProperties": {
+       "type": [
+        "string",
+        "number",
+        "null"
+       ]
+      },
+      "description": "values for label_slots; every number must come from an engine, null if unknown"
+     },
+     "label_source": {
+      "type": "string",
+      "description": "engine/output that produced the numbers"
+     }
+    }
+   }
+  },
+  "connections": {
+   "type": "array",
+   "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "from",
+     "to"
+    ],
+    "properties": {
+     "from": {
+      "type": "string",
+      "pattern": "^[^:]+:[^:]+$",
+      "description": "TAG:PORT"
+     },
+     "to": {
+      "type": "string",
+      "pattern": "^[^:]+:[^:]+$"
+     },
+     "conductor": {
+      "enum": [
+       "L",
+       "L1",
+       "L2",
+       "L3",
+       "N",
+       "PE",
+       "DC+",
+       "DC-"
+      ]
+     },
+     "cable_ref": {
+      "type": "string"
+     }
+    }
+   }
+  },
+  "cables": {
+   "type": "array",
+   "items": {
+    "type": "object",
+    "required": [
+     "ref"
+    ],
+    "properties": {
+     "ref": {
+      "type": "string"
+     },
+     "type": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "section_mm2": {
+      "type": [
+       "number",
+       "null"
+      ]
+     },
+     "length_m": {
+      "type": [
+       "number",
+       "null"
+      ]
+     }
+    }
+   }
+  },
+  "status": {
+   "enum": [
+    "unverified",
+    "typical",
+    "not_found",
+    "pending review"
+   ]
+  },
+  "source_scheme": {
+   "type": "string",
+   "description": "id of the research scheme this netlist was derived from"
+  }
+ }
+}

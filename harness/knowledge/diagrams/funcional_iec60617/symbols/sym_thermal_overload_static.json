@@ -1,0 +1,128 @@
+{
+  "schema_version": "1.0",
+  "id": "sym_thermal_overload_static",
+  "name": {
+    "en": "Static thermal overload relay",
+    "es": "Relé térmico de sobrecarga estático"
+  },
+  "family": "protection",
+  "description": {
+    "en": "Overload relay with a heating element (bimetal or electronic) that trips an auxiliary contact. Note: Heater drawn as zigzag inside a rectangle; the auxiliary trip contact is a separate record (sym_break_contact).",
+    "es": "Relé de sobrecarga con elemento calefactor (bimetal o electrónico) que actúa un contacto auxiliar. Nota: Calefactor dibujado como zigzag dentro de un rectángulo; el contacto auxiliar de disparo es un registro aparte (sym_contact_break)."
+  },
+  "iec60617": {
+    "symbol_id": "S00381",
+    "iec_title_en": "Static thermal overload relay",
+    "legacy_ref": null,
+    "status": "unverified"
+  },
+  "reference_designation": {
+    "letter": "F",
+    "note": {
+      "en": "Thermal overload release is listed under F (self-acting protection).",
+      "es": "El disparador térmico de sobrecarga figura en F (protección de acción propia)."
+    },
+    "status": "unverified"
+  },
+  "ansi_nema": {
+    "equivalent": null,
+    "status": "not_found"
+  },
+  "geometry": {
+    "grid": "1 unit = one symbol grid step; origin top-left, y down; scale to the drawing standard in use",
+    "primitives": [
+      {
+        "prim": "rect",
+        "x": -1,
+        "y": 0.5,
+        "w": 2,
+        "h": 1.8
+      },
+      {
+        "prim": "polyline",
+        "pts": [
+          [
+            -0.6,
+            1.4
+          ],
+          [
+            -0.3,
+            0.9
+          ],
+          [
+            0,
+            1.9
+          ],
+          [
+            0.3,
+            0.9
+          ],
+          [
+            0.6,
+            1.4
+          ]
+        ]
+      },
+      {
+        "prim": "line",
+        "p1": [
+          0,
+          0
+        ],
+        "p2": [
+          0,
+          0.5
+        ]
+      },
+      {
+        "prim": "line",
+        "p1": [
+          0,
+          2.3
+        ],
+        "p2": [
+          0,
+          3
+        ]
+      }
+    ],
+    "status": "typical"
+  },
+  "connection_points": [
+    {
+      "id": "1",
+      "label": {
+        "en": "Heater supply",
+        "es": "Alimentación del calefactor"
+      }
+    },
+    {
+      "id": "2",
+      "label": {
+        "en": "Heater return",
+        "es": "Retorno del calefactor"
+      }
+    }
+  ],
+  "status": "unverified",
+  "source_ids": [
+    "iec_S00381",
+    "ima_iec81346_letters"
+  ],
+  "sources": [
+    {
+      "id": "iec_S00381",
+      "title": "IEC 60617 database, symbol S00381: Static thermal overload relay",
+      "url": "https://library.iec.ch/grasymb/grasymb.nsf/(SysSymbol)/S00381",
+      "kind": "standard_database",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "ima_iec81346_letters",
+      "title": "Industrial Monitor Direct: IEC 81346-2 contactor and relay numbering (secondary article)",
+      "url": "https://industrialmonitordirect.com/blogs/knowledgebase/iec-81346-2-contactor-and-relay-numbering-conventions-for-wiring-diagrams",
+      "kind": "secondary_article",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

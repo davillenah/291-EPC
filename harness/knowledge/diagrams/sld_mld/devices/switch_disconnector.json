@@ -1,0 +1,105 @@
+{
+  "schema_version": "1.0",
+  "id": "switch_disconnector",
+  "name": {
+    "en": "Switch-disconnector (interruptor-seccionador)",
+    "es": "Interruptor-seccionador"
+  },
+  "description": {
+    "en": "Load-rated switch that isolates a circuit for maintenance. Its breaking duty and utilization category differ from a breaker.",
+    "es": "Interruptor de carga que aisla un circuito para mantenimiento. Su capacidad de corte y categoria de empleo difieren de un interruptor automatico."
+  },
+  "kind": "switch",
+  "voltage_level": "LV",
+  "status": "typical",
+  "source_ids": [
+    "viox_motor",
+    "iec60617_db"
+  ],
+  "sources": [
+    {
+      "id": "viox_motor",
+      "title": "How to select contactors and circuit breakers based on motor power",
+      "url": "https://viox.com/how-to-select-contactors-and-circuit-breakers-based-on-motor-power/",
+      "publisher": "VIOX Electric",
+      "accessed": "2026-11-20",
+      "kind": "third_party_guide"
+    },
+    {
+      "id": "iec60617_db",
+      "title": "IEC 60617 graphical symbols database (public page)",
+      "url": "https://std.iec.ch/iec60617",
+      "publisher": "IEC",
+      "accessed": "2026-11-20",
+      "kind": "standard_public_summary"
+    }
+  ],
+  "standard_refs": [
+    {
+      "ref": "IEC 60947-3",
+      "note": {
+        "en": "Switch-disconnector standard (cited)",
+        "es": "Norma de interruptores-seccionadores (citada)"
+      }
+    }
+  ],
+  "symbol_ref": {
+    "id": "not_found",
+    "status": "not_found",
+    "note": {
+      "en": "IEC 60617 public page lists no identifiers for this item; not found, not guessed.",
+      "es": "La pagina publica de IEC 60617 no lista identificadores para este elemento; no encontrado, no supuesto."
+    }
+  },
+  "ratings_typical": [
+    {
+      "parameter": "rated_current",
+      "value": null,
+      "unit": "A",
+      "status": "not_found",
+      "source_ids": [],
+      "note": {
+        "en": "Not found in fetched sources",
+        "es": "No encontrado en las fuentes consultadas"
+      }
+    },
+    {
+      "parameter": "utilization_category",
+      "value": "AC-22 / AC-23 (typical)",
+      "unit": "-",
+      "status": "typical",
+      "source_ids": [],
+      "note": {
+        "en": "Use category depends on load (typical, not sourced in this run)",
+        "es": "Categoria segun carga (typical, no sourced en esta consulta)"
+      }
+    }
+  ],
+  "selection_criteria": {
+    "when_to_use": [
+      {
+        "en": "Isolation of a circuit or board for maintenance (typical)",
+        "es": "Aislamiento de un circuito o cuadro para mantenimiento (typical)"
+      },
+      {
+        "en": "Load switching at rated current within its utilization category (typical)",
+        "es": "Maniobra de carga a corriente nominal dentro de su categoria (typical)"
+      }
+    ],
+    "when_not_to_use": [
+      {
+        "en": "Overcurrent protection is needed: use a breaker or fuse (typical)",
+        "es": "Se necesita proteccion de sobrecorriente: usar interruptor automatico o fusible (typical)"
+      },
+      {
+        "en": "Fault breaking is needed: a switch-disconnector is not a fault breaker (typical)",
+        "es": "Se necesita corte de falta: un seccionador no es un interruptor de falta (typical)"
+      }
+    ],
+    "alternatives": [
+      "mcb",
+      "mccb",
+      "fuse_gg"
+    ]
+  }
+}

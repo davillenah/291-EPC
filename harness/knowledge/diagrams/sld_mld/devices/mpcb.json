@@ -1,0 +1,106 @@
+{
+  "schema_version": "1.0",
+  "id": "mpcb",
+  "name": {
+    "en": "Motor protection circuit breaker (MPCB)",
+    "es": "Interruptor de proteccion de motor (MPCB)"
+  },
+  "description": {
+    "en": "Breaker that provides both overload and short-circuit protection for a motor, usually with adjustable thermal trip.",
+    "es": "Interruptor que ofrece proteccion de sobrecarga y de cortocircuito para un motor, normalmente con disparo termico regulable."
+  },
+  "kind": "motor_protection",
+  "voltage_level": "LV",
+  "status": "unverified",
+  "source_ids": [
+    "viox_motor",
+    "iec60617_db"
+  ],
+  "sources": [
+    {
+      "id": "viox_motor",
+      "title": "How to select contactors and circuit breakers based on motor power",
+      "url": "https://viox.com/how-to-select-contactors-and-circuit-breakers-based-on-motor-power/",
+      "publisher": "VIOX Electric",
+      "accessed": "2026-11-20",
+      "kind": "third_party_guide"
+    },
+    {
+      "id": "iec60617_db",
+      "title": "IEC 60617 graphical symbols database (public page)",
+      "url": "https://std.iec.ch/iec60617",
+      "publisher": "IEC",
+      "accessed": "2026-11-20",
+      "kind": "standard_public_summary"
+    }
+  ],
+  "standard_refs": [
+    {
+      "ref": "IEC 60947-2",
+      "note": {
+        "en": "Circuit breaker standard (cited)",
+        "es": "Norma de interruptores (citada)"
+      }
+    },
+    {
+      "ref": "IEC 60947-4-1",
+      "note": {
+        "en": "Motor-starter standard (cited)",
+        "es": "Norma de arrancadores (citada)"
+      }
+    }
+  ],
+  "symbol_ref": {
+    "id": "not_found",
+    "status": "not_found",
+    "note": {
+      "en": "IEC 60617 public page lists no identifiers for this item; not found, not guessed.",
+      "es": "La pagina publica de IEC 60617 no lista identificadores para este elemento; no encontrado, no supuesto."
+    }
+  },
+  "ratings_typical": [
+    {
+      "parameter": "breaking_capacity",
+      "value": "must be at least prospective short-circuit current",
+      "unit": "kA",
+      "status": "unverified",
+      "source_ids": [
+        "viox_motor"
+      ],
+      "note": {
+        "en": "Breaking capacity must be at least the prospective short-circuit current at the point; example in guide: a 6 kA device is unsuitable where 10 kA is available",
+        "es": "El poder de corte debe ser al menos la corriente de cortocircuito presunta; ejemplo de la guia: 6 kA no sirve donde hay 10 kA"
+      }
+    },
+    {
+      "parameter": "rated_current",
+      "value": null,
+      "unit": "A",
+      "status": "not_found",
+      "source_ids": [],
+      "note": {
+        "en": "Not found in fetched sources",
+        "es": "No encontrado en las fuentes consultadas"
+      }
+    }
+  ],
+  "selection_criteria": {
+    "when_to_use": [
+      {
+        "en": "Motor with overload and short-circuit protection in one device (cited)",
+        "es": "Motor con proteccion de sobrecarga y cortocircuito en un solo equipo (citado)"
+      }
+    ],
+    "when_not_to_use": [
+      {
+        "en": "Basic overload relay alone: needs a separate short-circuit device (cited)",
+        "es": "Relé de sobrecarga basico solo: necesita dispositivo de cortocircuito separado (citado)"
+      }
+    ],
+    "alternatives": [
+      "contactor",
+      "thermal_overload_relay",
+      "fuse_am"
+    ]
+  }
+}

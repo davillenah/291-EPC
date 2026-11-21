@@ -1,0 +1,107 @@
+{
+  "schema_version": "1.0",
+  "id": "sym_disconnector",
+  "name": {
+    "en": "Disconnector (isolator)",
+    "es": "Seccionador"
+  },
+  "family": "power",
+  "description": {
+    "en": "Off-load isolating switch. Blade opens to show isolation; not a load-breaking device.",
+    "es": "Seccionador sin carga. La cuchilla se abre para mostrar aislamiento; no corta carga."
+  },
+  "iec60617": {
+    "symbol_id": "S00288",
+    "iec_title_en": "Disconnector; Isolator",
+    "legacy_ref": null,
+    "status": "unverified"
+  },
+  "reference_designation": {
+    "letter": "Q",
+    "note": {
+      "en": "Switching device.",
+      "es": "Dispositivo de maniobra."
+    },
+    "status": "unverified"
+  },
+  "ansi_nema": {
+    "equivalent": null,
+    "status": "not_found"
+  },
+  "geometry": {
+    "grid": "1 unit = one symbol grid step; origin top-left, y down; scale to the drawing standard in use",
+    "primitives": [
+      {
+        "prim": "line",
+        "p1": [
+          0,
+          0
+        ],
+        "p2": [
+          0,
+          2
+        ]
+      },
+      {
+        "prim": "line",
+        "p1": [
+          0,
+          2
+        ],
+        "p2": [
+          1.8,
+          3.2
+        ]
+      },
+      {
+        "prim": "line",
+        "p1": [
+          0,
+          4
+        ],
+        "p2": [
+          0,
+          6
+        ]
+      },
+      {
+        "prim": "circle",
+        "c": [
+          0,
+          2
+        ],
+        "r": 0.15
+      }
+    ],
+    "status": "typical"
+  },
+  "connection_points": [
+    {
+      "id": "1",
+      "label": {
+        "en": "Line side",
+        "es": "Lado de línea"
+      }
+    },
+    {
+      "id": "2",
+      "label": {
+        "en": "Load side",
+        "es": "Lado de carga"
+      }
+    }
+  ],
+  "status": "unverified",
+  "source_ids": [
+    "iec_S00288"
+  ],
+  "sources": [
+    {
+      "id": "iec_S00288",
+      "title": "IEC 60617 database, symbol S00288: Disconnector; Isolator",
+      "url": "https://library.iec.ch/grasymb/grasymb.nsf/(SysSymbol)/S00288",
+      "kind": "standard_database",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

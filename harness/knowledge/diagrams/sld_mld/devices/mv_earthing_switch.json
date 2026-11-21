@@ -1,0 +1,107 @@
+{
+  "schema_version": "1.0",
+  "id": "mv_earthing_switch",
+  "name": {
+    "en": "MV earthing (grounding) switch",
+    "es": "Seccionador de puesta a tierra MT"
+  },
+  "description": {
+    "en": "Earths the outgoing cable or transformer side after isolation, for safe work. Interlocked with the disconnector.",
+    "es": "Pone a tierra el lado del cable o del transformador tras el aislamiento, para trabajos seguros. Enclavado con el seccionador."
+  },
+  "kind": "mv_earthing_switch",
+  "voltage_level": "MV",
+  "status": "unverified",
+  "source_ids": [
+    "abb_safering_doc",
+    "abb_safering_cat",
+    "iec60617_db"
+  ],
+  "sources": [
+    {
+      "id": "abb_safering_doc",
+      "title": "12-24kV SafeRing SafePlus (product documentation)",
+      "url": "https://library.e.abb.com/public/207cafdaa3d4bfc2482578070000fce2/12-24kV_SafeRing_SafePlus_EN.pdf",
+      "publisher": "ABB",
+      "accessed": "2026-11-20",
+      "kind": "manufacturer"
+    },
+    {
+      "id": "abb_safering_cat",
+      "title": "1VDD006104 SafeRing SafePlus 12-24 kV catalogue (07-2022)",
+      "url": "https://library.e.abb.com/public/bb38f74c9b404b4b89745cde2a4b0dba/1VDD006104_Catalogue_SR-SP_12-24kV_EN_07-2022.pdf",
+      "publisher": "ABB",
+      "accessed": "2026-11-20",
+      "kind": "manufacturer"
+    },
+    {
+      "id": "iec60617_db",
+      "title": "IEC 60617 graphical symbols database (public page)",
+      "url": "https://std.iec.ch/iec60617",
+      "publisher": "IEC",
+      "accessed": "2026-11-20",
+      "kind": "standard_public_summary"
+    }
+  ],
+  "standard_refs": [
+    {
+      "ref": "IEC 62271-102",
+      "note": {
+        "en": "Disconnector and earthing switch standard (cited, not quoted)",
+        "es": "Norma de seccionadores y seccionadores de tierra (citada, no transcrita)"
+      }
+    }
+  ],
+  "symbol_ref": {
+    "id": "not_found",
+    "status": "not_found",
+    "note": {
+      "en": "IEC 60617 public page lists no identifiers for this item; not found, not guessed.",
+      "es": "La pagina publica de IEC 60617 no lista identificadores para este elemento; no encontrado, no supuesto."
+    }
+  },
+  "ratings_typical": [
+    {
+      "parameter": "downstream_earthing_switch_capacity",
+      "value": 5,
+      "unit": "kA (1 s)",
+      "status": "unverified",
+      "source_ids": [
+        "abb_safering_cat"
+      ],
+      "note": {
+        "en": "Value for F-module downstream earthing switch",
+        "es": "Valor del seccionador de tierra aguas abajo del modulo F"
+      }
+    },
+    {
+      "parameter": "making_capacity",
+      "value": null,
+      "unit": "kA",
+      "status": "not_found",
+      "source_ids": [],
+      "note": {
+        "en": "Not found for a generic earthing switch",
+        "es": "No encontrado para un seccionador de tierra generico"
+      }
+    }
+  ],
+  "selection_criteria": {
+    "when_to_use": [
+      {
+        "en": "Personal safety on cable and transformer side during maintenance (typical)",
+        "es": "Seguridad de personal en lado de cable y transformador durante mantenimiento (typical)"
+      }
+    ],
+    "when_not_to_use": [
+      {
+        "en": "Making a fault current: the earthing switch must have a making rating (typical)",
+        "es": "Establecer una corriente de falta: el seccionador de tierra debe tener poder de cierre (typical)"
+      }
+    ],
+    "alternatives": [
+      "mv_load_break_switch_c",
+      "mv_switch_fuse_f"
+    ]
+  }
+}

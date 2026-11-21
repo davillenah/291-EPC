@@ -1,0 +1,266 @@
+{
+  "id": "circ_direct_on_line_starter",
+  "category": "motor_starting",
+  "name": {
+    "en": "Direct-on-line (DOL) starter, one direction",
+    "es": "Arrancador directo (DOL), un sentido de giro"
+  },
+  "description": {
+    "en": "Full-voltage start of a squirrel-cage motor with one contactor, a motor protection breaker, a thermal overload and start/stop pushbuttons with self-holding.",
+    "es": "Arranque a tensión plena de un motor de jaula con un contactor, un interruptor de protección del motor, relé térmico y pulsadores de marcha/paro con autorretención."
+  },
+  "application_range": {
+    "text": {
+      "en": "Small to medium squirrel-cage motors where the supply can accept full-voltage starting current (typically up to the rating the local supply and protection coordination allow).",
+      "es": "Motores de jaula pequeños y medianos donde la red admite la corriente de arranque a tensión plena (típicamente hasta la potencia que permitan la red local y la coordinación de protecciones)."
+    },
+    "status": "typical"
+  },
+  "representation": {
+    "mld": {
+      "text": {
+        "en": "Single-line for power: three phases with one line per pole, MLD shows each pole and terminal.",
+        "es": "Monofilar de potencia: tres fases con una línea por polo; el MLD muestra cada polo y borne."
+      },
+      "status": "typical"
+    },
+    "functional": {
+      "text": {
+        "en": "Ladder-style control rungs with contact numbers; power drawn as three poles in series with the motor.",
+        "es": "Esquema de mando tipo escalera con números de contacto; la potencia se dibuja como tres polos en serie con el motor."
+      },
+      "status": "typical"
+    }
+  },
+  "components": [
+    {
+      "ref": "Q1",
+      "letter": "Q",
+      "symbol_id": "sym_circuit_breaker_device",
+      "description": {
+        "en": "Motor protection breaker (short-circuit and overload release)",
+        "es": "Interruptor de protección del motor (disparo por cortocircuito y sobrecarga)"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "KM1",
+      "letter": "Q",
+      "symbol_id": "sym_contact_main_pole",
+      "description": {
+        "en": "Main contactor, three power poles (1/L1-2/T1, 3/L2-4/T2, 5/L3-6/T3)",
+        "es": "Contactor principal, tres polos de potencia (1/L1-2/T1, 3/L2-4/T2, 5/L3-6/T3)"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "KM1",
+      "letter": "Q",
+      "symbol_id": "sym_contactor_coil_general",
+      "description": {
+        "en": "Contactor coil A1-A2",
+        "es": "Bobina del contactor A1-A2"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "F2",
+      "letter": "F",
+      "symbol_id": "sym_thermal_overload_static",
+      "description": {
+        "en": "Thermal overload relay with NC contact 95/96",
+        "es": "Relé térmico con contacto NC 95/96"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "M1",
+      "letter": "M",
+      "symbol_id": "sym_motor_3ph_squirrel",
+      "description": {
+        "en": "Squirrel-cage motor",
+        "es": "Motor de jaula de ardilla"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "S1",
+      "letter": "S",
+      "symbol_id": "sym_pushbutton",
+      "description": {
+        "en": "Stop pushbutton, NC contact",
+        "es": "Pulsador de paro, contacto NC"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "S2",
+      "letter": "S",
+      "symbol_id": "sym_pushbutton",
+      "description": {
+        "en": "Start pushbutton, NO contact",
+        "es": "Pulsador de marcha, contacto NO"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "F3",
+      "letter": "F",
+      "symbol_id": "sym_fuse_general",
+      "description": {
+        "en": "Control circuit fuse",
+        "es": "Fusible del circuito de mando"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "KM1:13-14",
+      "letter": "Q",
+      "symbol_id": "sym_contact_make_general",
+      "description": {
+        "en": "Self-holding auxiliary NO contact of KM1",
+        "es": "Contacto auxiliar NO de autorretención de KM1"
+      },
+      "status": "typical"
+    }
+  ],
+  "power_connection": [
+    {
+      "text": {
+        "en": "L1, L2, L3 feed Q1; Q1 outputs to KM1 line terminals 1, 3, 5; KM1 load terminals 2, 4, 6 feed F2 heater path and then M1 U, V, W.",
+        "es": "L1, L2, L3 alimentan Q1; las salidas de Q1 van a los bornes de línea 1, 3, 5 de KM1; los bornes de carga 2, 4, 6 alimentan el calefactor de F2 y luego U, V, W de M1."
+      },
+      "status": "typical"
+    },
+    {
+      "text": {
+        "en": "Overload heater is placed in series with each phase after the contactor (common practice). Heater poles are three in total.",
+        "es": "El calefactor del relé térmico se coloca en serie en cada fase después del contactor (práctica común). Son tres polos calefactores."
+      },
+      "status": "typical"
+    }
+  ],
+  "control_rungs": [
+    {
+      "text": {
+        "en": "Control supply through F3 fuse to the control bus.",
+        "es": "Alimentación de mando a través del fusible F3 hasta el bus de mando."
+      },
+      "status": "typical",
+      "rung": 1
+    },
+    {
+      "text": {
+        "en": "S1 (NC) in series with F2 contact 95-96 (NC) and S2 (NO) in parallel with KM1 self-holding contact 13-14.",
+        "es": "S1 (NC) en serie con el contacto 95-96 (NC) de F2 y S2 (NO) en paralelo con el contacto de autorretención 13-14 de KM1."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "ima_contactor_terminals",
+        "control_com_relay_numbering"
+      ],
+      "rung": 2
+    },
+    {
+      "text": {
+        "en": "KM1 coil A1-A2 connected between the rung and return.",
+        "es": "Bobina KM1 A1-A2 conectada entre la rama y el retorno."
+      },
+      "status": "typical",
+      "rung": 3
+    }
+  ],
+  "interlocks": [
+    {
+      "text": {
+        "en": "No interlock is required for a single-direction starter; the self-holding NO contact is the only auxiliary dependency.",
+        "es": "No se requiere enclavamiento para un arrancador de un sentido; el contacto NO de autorretención es la única dependencia auxiliar."
+      },
+      "status": "typical"
+    }
+  ],
+  "protections": [
+    {
+      "text": {
+        "en": "Short-circuit protection by Q1 (or fuses), overload by F2 (NC 95-96 in control).",
+        "es": "Protección de cortocircuito por Q1 (o fusibles) y sobrecarga por F2 (NC 95-96 en mando)."
+      },
+      "status": "typical"
+    },
+    {
+      "text": {
+        "en": "Control circuit fuse F3; stop button NC so that a broken wire stops the motor.",
+        "es": "Fusible F3 en el mando; pulsador de paro NC para que un hilo cortado detenga el motor."
+      },
+      "status": "typical"
+    }
+  ],
+  "sequence": [
+    {
+      "text": {
+        "en": "Press S2: KM1 coil energizes, poles close, motor accelerates at full voltage.",
+        "es": "Pulsar S2: se energiza la bobina de KM1, cierran los polos y el motor acelera a tensión plena."
+      },
+      "status": "typical"
+    },
+    {
+      "text": {
+        "en": "KM1 13-14 closes and holds the coil after S2 is released.",
+        "es": "KM1 13-14 cierra y mantiene la bobina tras soltar S2."
+      },
+      "status": "typical"
+    },
+    {
+      "text": {
+        "en": "Press S1 or overload trip (95-96 opens): coil de-energizes and motor stops.",
+        "es": "Pulsar S1 o disparo por sobrecarga (95-96 abre): la bobina se desenergiza y el motor se detiene."
+      },
+      "status": "typical"
+    }
+  ],
+  "common_errors": [
+    {
+      "text": {
+        "en": "Self-holding contact wired in parallel with the wrong contact or not wired at all: motor stops on release of start.",
+        "es": "Contacto de autorretención conectado al contacto equivocado o sin conectar: el motor se para al soltar el arranque."
+      },
+      "status": "typical"
+    },
+    {
+      "text": {
+        "en": "Overload contact wired NO instead of NC: motor cannot start.",
+        "es": "Contacto de sobrecarga cableado NO en lugar de NC: el motor no arranca."
+      },
+      "status": "typical"
+    },
+    {
+      "text": {
+        "en": "Overload heater sized below the motor full-load current, causing nuisance trips.",
+        "es": "Calefactor de sobrecarga dimensionado por debajo de la corriente nominal del motor, con disparos intempestivos."
+      },
+      "status": "typical"
+    }
+  ],
+  "status": "typical",
+  "source_ids": [
+    "ima_contactor_terminals",
+    "control_com_relay_numbering"
+  ],
+  "sources": [
+    {
+      "id": "ima_contactor_terminals",
+      "title": "Industrial Monitor Direct: IEC contactor terminal numbering convention (secondary article)",
+      "url": "https://industrialmonitordirect.com/blogs/knowledgebase/iec-contactor-terminal-numbering-convention-explained",
+      "kind": "secondary_article",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "control_com_relay_numbering",
+      "title": "Control.com: Info Byte, relay terminal numbering (secondary article)",
+      "url": "https://control.com/technical-articles/info-byte-whats-the-reason-behind-relay-terminal-numbering/",
+      "kind": "secondary_article",
+      "accessed": "2026-11-20"
+    }
+  ],
+  "schema_version": "1.0"
+}

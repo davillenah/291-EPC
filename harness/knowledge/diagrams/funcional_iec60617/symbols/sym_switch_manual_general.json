@@ -1,0 +1,115 @@
+{
+  "schema_version": "1.0",
+  "id": "sym_switch_manual_general",
+  "name": {
+    "en": "Manually operated switch, general symbol",
+    "es": "Interruptor de accionamiento manual, símbolo general"
+  },
+  "family": "control",
+  "description": {
+    "en": "Hand-operated switch; the generic form for any manual contact device.",
+    "es": "Interruptor de accionamiento manual; forma genérica para cualquier contacto manual."
+  },
+  "iec60617": {
+    "symbol_id": "S00253",
+    "iec_title_en": "Switch, manually operated, general symbol",
+    "legacy_ref": null,
+    "status": "unverified"
+  },
+  "reference_designation": {
+    "letter": "S",
+    "note": {
+      "en": "Converts manual operation into a signal.",
+      "es": "Convierte la acción manual en señal."
+    },
+    "status": "unverified"
+  },
+  "ansi_nema": {
+    "equivalent": null,
+    "status": "not_found"
+  },
+  "geometry": {
+    "grid": "1 unit = one symbol grid step; origin top-left, y down; scale to the drawing standard in use",
+    "primitives": [
+      {
+        "prim": "line",
+        "p1": [
+          0,
+          0
+        ],
+        "p2": [
+          0,
+          2
+        ]
+      },
+      {
+        "prim": "line",
+        "p1": [
+          0,
+          2
+        ],
+        "p2": [
+          1.6,
+          3.4
+        ]
+      },
+      {
+        "prim": "line",
+        "p1": [
+          0,
+          4
+        ],
+        "p2": [
+          0,
+          6
+        ]
+      },
+      {
+        "prim": "circle",
+        "c": [
+          0,
+          2
+        ],
+        "r": 0.15
+      }
+    ],
+    "status": "typical"
+  },
+  "connection_points": [
+    {
+      "id": "1",
+      "label": {
+        "en": "Terminal 1",
+        "es": "Borne 1"
+      }
+    },
+    {
+      "id": "2",
+      "label": {
+        "en": "Terminal 2",
+        "es": "Borne 2"
+      }
+    }
+  ],
+  "status": "unverified",
+  "source_ids": [
+    "iec_S00253",
+    "ima_iec81346_letters"
+  ],
+  "sources": [
+    {
+      "id": "iec_S00253",
+      "title": "IEC 60617 database, symbol S00253: Switch, manually operated, general symbol",
+      "url": "https://library.iec.ch/grasymb/grasymb.nsf/(SysSymbol)/S00253",
+      "kind": "standard_database",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "ima_iec81346_letters",
+      "title": "Industrial Monitor Direct: IEC 81346-2 contactor and relay numbering (secondary article)",
+      "url": "https://industrialmonitordirect.com/blogs/knowledgebase/iec-81346-2-contactor-and-relay-numbering-conventions-for-wiring-diagrams",
+      "kind": "secondary_article",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

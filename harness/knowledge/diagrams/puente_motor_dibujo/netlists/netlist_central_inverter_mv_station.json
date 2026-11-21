@@ -1,0 +1,153 @@
+{
+ "schema_version": "1.0",
+ "id": "netlist_central_inverter_mv_station",
+ "name": {
+  "en": "Central inverter PV plant with MV power station",
+  "es": "Planta FV con inversor central y estación de potencia MT"
+ },
+ "diagram": "SLD",
+ "sheet": {
+  "size": "A3",
+  "style_ref": "epc_arch/epc_style.json"
+ },
+ "source_scheme": "central_inverter_mv_station",
+ "instances": [
+  {
+   "tag": "-A1",
+   "device_id": "pv_string_combiner_box",
+   "symbol": null,
+   "labels": {},
+   "label_source": "none (ratings come from engines at project time)"
+  },
+  {
+   "tag": "-Q1",
+   "device_id": "pv_dc_switch_load_break",
+   "symbol": "lv_dc_disconnect",
+   "labels": {},
+   "label_source": "none (ratings come from engines at project time)"
+  },
+  {
+   "tag": "-A2",
+   "device_id": "pv_mv_power_station",
+   "symbol": "mv_ring_main_unit",
+   "labels": {},
+   "label_source": "none (ratings come from engines at project time)"
+  },
+  {
+   "tag": "-Q2",
+   "device_id": "switch_disconnector",
+   "symbol": "lv_switch_disconnector",
+   "labels": {},
+   "label_source": "none (ratings come from engines at project time)"
+  },
+  {
+   "tag": "-T1",
+   "device_id": "transformer_mv_lv",
+   "symbol": "mv_transformer_2w",
+   "labels": {},
+   "label_source": "none (ratings come from engines at project time)"
+  },
+  {
+   "tag": "-Q3",
+   "device_id": "mv_vacuum_circuit_breaker",
+   "symbol": "mv_circuit_breaker",
+   "labels": {},
+   "label_source": "none (ratings come from engines at project time)"
+  },
+  {
+   "tag": "-F1",
+   "device_id": "relay_ansi_27",
+   "symbol": "lv_protection_relay",
+   "labels": {},
+   "label_source": "none (ratings come from engines at project time)"
+  },
+  {
+   "tag": "-F2",
+   "device_id": "relay_ansi_59",
+   "symbol": "lv_protection_relay",
+   "labels": {},
+   "label_source": "none (ratings come from engines at project time)"
+  },
+  {
+   "tag": "-F3",
+   "device_id": "relay_ansi_81",
+   "symbol": "lv_protection_relay",
+   "labels": {},
+   "label_source": "none (ratings come from engines at project time)"
+  },
+  {
+   "tag": "-F4",
+   "device_id": "relay_ansi_32_reverse_power",
+   "symbol": "lv_protection_relay",
+   "labels": {},
+   "label_source": "none (ratings come from engines at project time)"
+  },
+  {
+   "tag": "-F5",
+   "device_id": "relay_ansi_67_directional_overcurrent",
+   "symbol": "lv_protection_relay",
+   "labels": {},
+   "label_source": "none (ratings come from engines at project time)"
+  },
+  {
+   "tag": "-P1",
+   "device_id": "utility_metering_mv",
+   "symbol": "mv_energy_meter",
+   "labels": {},
+   "label_source": "none (ratings come from engines at project time)"
+  }
+ ],
+ "connections": [
+  {
+   "from": "-Q1:bottom",
+   "to": "-A2:ring_in",
+   "conductor": "L"
+  },
+  {
+   "from": "-A2:feeder_out",
+   "to": "-Q2:top",
+   "conductor": "L"
+  },
+  {
+   "from": "-Q2:bottom",
+   "to": "-T1:top",
+   "conductor": "L"
+  },
+  {
+   "from": "-T1:bottom",
+   "to": "-Q3:top",
+   "conductor": "L"
+  },
+  {
+   "from": "-Q3:bottom",
+   "to": "-F1:top",
+   "conductor": "L"
+  },
+  {
+   "from": "-F1:trip",
+   "to": "-F2:top",
+   "conductor": "L"
+  },
+  {
+   "from": "-F2:trip",
+   "to": "-F3:top",
+   "conductor": "L"
+  },
+  {
+   "from": "-F3:trip",
+   "to": "-F4:top",
+   "conductor": "L"
+  },
+  {
+   "from": "-F4:trip",
+   "to": "-F5:top",
+   "conductor": "L"
+  },
+  {
+   "from": "-F5:trip",
+   "to": "-P1:top",
+   "conductor": "L"
+  }
+ ],
+ "status": "typical"
+}

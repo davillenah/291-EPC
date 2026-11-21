@@ -1,0 +1,186 @@
+{
+  "schema_version": "1.0",
+  "id": "mv_load_break_switch_c",
+  "name": {
+    "en": "MV cable switch module (C) with load-break switch",
+    "es": "Modulo MT de cable (C) con interruptor de carga"
+  },
+  "description": {
+    "en": "Ring-main cable function with load-break switch and earthing switch in SF6 gas-insulated switchgear (ABB SafeRing / SafePlus family).",
+    "es": "Funcion de cable en anillo con interruptor de carga y seccionador de puesta a tierra en aparamenta aislada en SF6 (familia ABB SafeRing / SafePlus)."
+  },
+  "kind": "mv_switch",
+  "voltage_level": "MV",
+  "status": "unverified",
+  "source_ids": [
+    "abb_safering_doc",
+    "abb_safering_cat",
+    "iec60617_db"
+  ],
+  "sources": [
+    {
+      "id": "abb_safering_doc",
+      "title": "12-24kV SafeRing SafePlus (product documentation)",
+      "url": "https://library.e.abb.com/public/207cafdaa3d4bfc2482578070000fce2/12-24kV_SafeRing_SafePlus_EN.pdf",
+      "publisher": "ABB",
+      "accessed": "2026-11-20",
+      "kind": "manufacturer"
+    },
+    {
+      "id": "abb_safering_cat",
+      "title": "1VDD006104 SafeRing SafePlus 12-24 kV catalogue (07-2022)",
+      "url": "https://library.e.abb.com/public/bb38f74c9b404b4b89745cde2a4b0dba/1VDD006104_Catalogue_SR-SP_12-24kV_EN_07-2022.pdf",
+      "publisher": "ABB",
+      "accessed": "2026-11-20",
+      "kind": "manufacturer"
+    },
+    {
+      "id": "iec60617_db",
+      "title": "IEC 60617 graphical symbols database (public page)",
+      "url": "https://std.iec.ch/iec60617",
+      "publisher": "IEC",
+      "accessed": "2026-11-20",
+      "kind": "standard_public_summary"
+    }
+  ],
+  "standard_refs": [
+    {
+      "ref": "IEC 62271-200",
+      "note": {
+        "en": "Metal-enclosed MV switchgear standard (cited, not quoted)",
+        "es": "Norma de aparamenta MT bajo envolvente metalica (citada, no transcrita)"
+      }
+    }
+  ],
+  "symbol_ref": {
+    "id": "not_found",
+    "status": "not_found",
+    "note": {
+      "en": "IEC 60617 public page lists no identifiers for this item; not found, not guessed.",
+      "es": "La pagina publica de IEC 60617 no lista identificadores para este elemento; no encontrado, no supuesto."
+    }
+  },
+  "ratings_typical": [
+    {
+      "parameter": "rated_voltage_Ur",
+      "value": "12 / 15 / 17.5 / 24",
+      "unit": "kV",
+      "status": "unverified",
+      "source_ids": [
+        "abb_safering_doc",
+        "abb_safering_cat"
+      ],
+      "note": {
+        "en": "Rated voltage listed for SafeRing / SafePlus",
+        "es": "Tension asignada listada para SafeRing / SafePlus"
+      }
+    },
+    {
+      "parameter": "rated_normal_current",
+      "value": 630,
+      "unit": "A",
+      "status": "unverified",
+      "source_ids": [
+        "abb_safering_doc",
+        "abb_safering_cat"
+      ],
+      "note": {
+        "en": "Cable module rated normal current",
+        "es": "Corriente asignada del modulo de cable"
+      }
+    },
+    {
+      "parameter": "making_capacity",
+      "value": "62.5 (12 kV); 52.5 or 50 (17.5-24 kV)",
+      "unit": "kA",
+      "status": "unverified",
+      "source_ids": [
+        "abb_safering_doc",
+        "abb_safering_cat"
+      ],
+      "note": {
+        "en": "Conflict: catalogue gives 52.5 kA at 17.5/24 kV; product document gives 50 kA for SafePlus C and 40 kA for SafeRing C; check the version of the datasheet",
+        "es": "Conflicto: catalogo da 52.5 kA a 17.5/24 kV; documento da 50 kA SafePlus C y 40 kA SafeRing C; verificar version de la ficha"
+      }
+    },
+    {
+      "parameter": "short_time_withstand_3s",
+      "value": "21 (12-24 kV)",
+      "unit": "kA",
+      "status": "unverified",
+      "source_ids": [
+        "abb_safering_doc",
+        "abb_safering_cat"
+      ],
+      "note": {
+        "en": "3 s withstand for the C module per catalogue",
+        "es": "Soportar 3 s para modulo C segun catalogo"
+      }
+    },
+    {
+      "parameter": "insulation_power_frequency",
+      "value": "28 / 38 / 50",
+      "unit": "kV",
+      "status": "unverified",
+      "source_ids": [
+        "abb_safering_cat"
+      ],
+      "note": {
+        "en": "Power-frequency withstand for 12 / 17.5 / 24 kV",
+        "es": "Tension soportada a frecuencia industrial para 12 / 17.5 / 24 kV"
+      }
+    },
+    {
+      "parameter": "insulation_impulse",
+      "value": "95 / 95 / 125",
+      "unit": "kV",
+      "status": "unverified",
+      "source_ids": [
+        "abb_safering_cat"
+      ],
+      "note": {
+        "en": "Impulse withstand for 12 / 17.5 / 24 kV",
+        "es": "Tension soportada a impulso para 12 / 17.5 / 24 kV"
+      }
+    },
+    {
+      "parameter": "gas",
+      "value": "SF6, sealed tank, IP67 tank",
+      "unit": "-",
+      "status": "unverified",
+      "source_ids": [
+        "abb_safering_doc"
+      ],
+      "note": {
+        "en": "Gas leakage below 0.1 % per year; IP67 tank as stated",
+        "es": "Fuga de gas inferior al 0,1 % anual; tanque IP67 segun ficha"
+      }
+    }
+  ],
+  "selection_criteria": {
+    "when_to_use": [
+      {
+        "en": "Ring-main cable connections in a secondary MV substation (cited)",
+        "es": "Conexiones de cable en anillo en una subestacion MT secundaria (citado)"
+      },
+      {
+        "en": "Switching and isolating MV cables without fault breaking (typical)",
+        "es": "Maniobra y aislamiento de cables MT sin corte de falta (typical)"
+      }
+    ],
+    "when_not_to_use": [
+      {
+        "en": "Fault breaking duty: use the V (vacuum circuit-breaker) module (typical)",
+        "es": "Corte de falta: usar modulo V (interruptor de vacio) (typical)"
+      },
+      {
+        "en": "Transformer protection by fuse only: use F module with fuse-links (cited)",
+        "es": "Proteccion de transformador solo con fusibles: usar modulo F con fusibles (citado)"
+      }
+    ],
+    "alternatives": [
+      "mv_vacuum_circuit_breaker",
+      "mv_switch_fuse_f"
+    ]
+  }
+}

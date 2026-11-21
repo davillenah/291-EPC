@@ -1,0 +1,129 @@
+{
+ "schema_version": "1.0",
+ "id": "netlist_pv_string_inverter_lv",
+ "name": {
+  "en": "PV string inverter, LV connection with full protection chain",
+  "es": "Inversor FV de string, conexión BT con cadena de protección completa"
+ },
+ "diagram": "SLD",
+ "sheet": {
+  "size": "A3",
+  "style_ref": "epc_arch/epc_style.json"
+ },
+ "source_scheme": "pv_string_inverter_lv",
+ "instances": [
+  {
+   "tag": "-A1",
+   "device_id": "pv_string_combiner_box",
+   "symbol": null,
+   "labels": {},
+   "label_source": "none (ratings come from engines at project time)"
+  },
+  {
+   "tag": "-F1",
+   "device_id": "fuse_gpv",
+   "symbol": "lv_fuse",
+   "labels": {},
+   "label_source": "none (ratings come from engines at project time)"
+  },
+  {
+   "tag": "-F2",
+   "device_id": "spd_type2",
+   "symbol": "lv_spd_varistor",
+   "labels": {},
+   "label_source": "none (ratings come from engines at project time)"
+  },
+  {
+   "tag": "-Q1",
+   "device_id": "pv_dc_switch_load_break",
+   "symbol": "lv_dc_disconnect",
+   "labels": {},
+   "label_source": "none (ratings come from engines at project time)"
+  },
+  {
+   "tag": "-T1",
+   "device_id": "pv_inverter_grid_tie",
+   "symbol": "lv_inverter",
+   "labels": {},
+   "label_source": "none (ratings come from engines at project time)"
+  },
+  {
+   "tag": "-Q2",
+   "device_id": "switch_disconnector",
+   "symbol": "lv_switch_disconnector",
+   "labels": {},
+   "label_source": "none (ratings come from engines at project time)"
+  },
+  {
+   "tag": "-Q3",
+   "device_id": "mcb",
+   "symbol": "lv_mcb",
+   "labels": {},
+   "label_source": "none (ratings come from engines at project time)"
+  },
+  {
+   "tag": "-Q4",
+   "device_id": "rcd_type_b",
+   "symbol": "lv_rccb",
+   "labels": {},
+   "label_source": "none (ratings come from engines at project time)"
+  },
+  {
+   "tag": "-P1",
+   "device_id": "pv_bidirectional_meter_lv",
+   "symbol": "lv_energy_meter_kwh",
+   "labels": {},
+   "label_source": "none (ratings come from engines at project time)"
+  },
+  {
+   "tag": "-A2",
+   "device_id": "switchboard_tgbt",
+   "symbol": "lv_busbar_node",
+   "labels": {},
+   "label_source": "none (ratings come from engines at project time)"
+  }
+ ],
+ "connections": [
+  {
+   "from": "-F1:bottom",
+   "to": "-F2:top",
+   "conductor": "L"
+  },
+  {
+   "from": "-F2:bottom",
+   "to": "-Q1:top",
+   "conductor": "L"
+  },
+  {
+   "from": "-Q1:bottom",
+   "to": "-T1:top",
+   "conductor": "L"
+  },
+  {
+   "from": "-T1:bottom",
+   "to": "-Q2:top",
+   "conductor": "L"
+  },
+  {
+   "from": "-Q2:bottom",
+   "to": "-Q3:top",
+   "conductor": "L"
+  },
+  {
+   "from": "-Q3:bottom",
+   "to": "-Q4:top",
+   "conductor": "L"
+  },
+  {
+   "from": "-Q4:bottom",
+   "to": "-P1:top",
+   "conductor": "L"
+  },
+  {
+   "from": "-P1:top",
+   "to": "-A2:bottom",
+   "conductor": "L"
+  }
+ ],
+ "status": "typical"
+}

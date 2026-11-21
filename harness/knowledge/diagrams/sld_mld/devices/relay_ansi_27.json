@@ -1,0 +1,84 @@
+{
+  "schema_version": "1.0",
+  "id": "relay_ansi_27",
+  "name": {
+    "en": "ANSI 27: Undervoltage",
+    "es": "ANSI 27: Subtension"
+  },
+  "description": {
+    "en": "Operates when voltage falls below a set value. Used for motor protection, load shedding and transfer schemes.",
+    "es": "Opera cuando la tension cae por debajo de un valor de ajuste. Se usa en proteccion de motores, deslastre y esquemas de transferencia."
+  },
+  "kind": "protection_relay",
+  "voltage_level": "MV",
+  "status": "not_found",
+  "source_ids": [
+    "control_ansi",
+    "iec60617_db"
+  ],
+  "sources": [
+    {
+      "id": "control_ansi",
+      "title": "ANSI/IEEE Function Number Codes",
+      "url": "https://control.com/textbook/electric-power-measurement-and-control/ansiieee-function-number-codes/",
+      "publisher": "control.com",
+      "accessed": "2026-11-20",
+      "kind": "textbook_wiki"
+    },
+    {
+      "id": "iec60617_db",
+      "title": "IEC 60617 graphical symbols database (public page)",
+      "url": "https://std.iec.ch/iec60617",
+      "publisher": "IEC",
+      "accessed": "2026-11-20",
+      "kind": "standard_public_summary"
+    }
+  ],
+  "standard_refs": [
+    {
+      "ref": "ANSI/IEEE C37.2",
+      "note": {
+        "en": "Device function numbers (cited)",
+        "es": "Numeracion de funciones (citada)"
+      }
+    }
+  ],
+  "symbol_ref": {
+    "id": "not_found",
+    "status": "not_found",
+    "note": {
+      "en": "IEC 60617 public page lists no identifiers for this item; not found, not guessed.",
+      "es": "La pagina publica de IEC 60617 no lista identificadores para este elemento; no encontrado, no supuesto."
+    }
+  },
+  "ratings_typical": [
+    {
+      "parameter": "setting_range",
+      "value": null,
+      "unit": "-",
+      "status": "not_found",
+      "source_ids": [],
+      "note": {
+        "en": "Setting ranges not found in fetched sources; take from relay manual",
+        "es": "Rangos de ajuste no encontrados en las fuentes consultadas; tomar del manual del relé"
+      }
+    }
+  ],
+  "selection_criteria": {
+    "when_to_use": [
+      {
+        "en": "Undervoltage detection on MV busbars or motor loads (typical)",
+        "es": "Deteccion de subtension en barras MT o cargas motor (typical)"
+      }
+    ],
+    "when_not_to_use": [
+      {
+        "en": "Overvoltage: use 59 (typical)",
+        "es": "Sobretension: usar 59 (typical)"
+      }
+    ],
+    "alternatives": [
+      "relay_ansi_59"
+    ]
+  }
+}

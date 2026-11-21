@@ -1,0 +1,122 @@
+{
+  "schema_version": "1.0",
+  "record_type": "device",
+  "id": "pv_dc_breaker",
+  "name": {
+    "en": "PV DC circuit breaker (battery or DC side)",
+    "es": "Interruptor automático DC FV (batería o lado DC)"
+  },
+  "description": {
+    "en": "DC circuit breaker used on the battery or DC side when a breaker is used instead of a fuse.",
+    "es": "Interruptor automático DC usado en la batería o en el lado DC cuando se usa interruptor en lugar de fusible."
+  },
+  "kind": "breaker",
+  "voltage_level": "LV",
+  "status": "unverified",
+  "source_ids": [
+    "huawei_l1_cables",
+    "ei_prosumer",
+    "ei_pv_safety"
+  ],
+  "sources": [
+    {
+      "id": "huawei_l1_cables",
+      "title": "Huawei SUN2000-(2KTL-6KTL)-L1 user manual: preparing cables",
+      "url": "https://support.huawei.com/enterprise/en/doc/EDOC1100136173/d7e21771/preparing-cables",
+      "publisher": "Huawei Technologies",
+      "accessed": "2026-11-20",
+      "kind": "manufacturer"
+    },
+    {
+      "id": "ei_prosumer",
+      "title": "Specific protection of prosumer electrical installations",
+      "url": "https://www.electrical-installation.org/enwiki/Specific_protection_of_prosumer_electrical_installations",
+      "publisher": "electrical-installation.org (public technical wiki)",
+      "accessed": "2026-11-20",
+      "kind": "textbook_wiki"
+    },
+    {
+      "id": "ei_pv_safety",
+      "title": "PV System: how to ensure safety during normal operation",
+      "url": "https://www.electrical-installation.org/enwiki/PV_System:_how_to_ensure_safety_during_normal_operation",
+      "publisher": "electrical-installation.org (public technical wiki)",
+      "accessed": "2026-11-20",
+      "kind": "textbook_wiki"
+    }
+  ],
+  "standard_refs": [
+    {
+      "ref": "IEC 60364-7-712 (ed.3.0, 2025-10)",
+      "note": {
+        "en": "Overcurrent protection sections 712.430 and 712.533 (preview)",
+        "es": "Apartados de sobrecorriente 712.430 y 712.533 (vista previa)"
+      }
+    }
+  ],
+  "ratings": [
+    {
+      "parameter": "recommended_dc_breaker_voltage",
+      "value": 600,
+      "unit": "V DC (min)",
+      "status": "unverified",
+      "source_ids": [
+        "huawei_l1_cables"
+      ],
+      "note": {
+        "en": "Huawei SUN2000-L1: recommended DC circuit breaker, rated at least 600 V DC",
+        "es": "Huawei SUN2000-L1: interruptor DC recomendado, al menos 600 V DC"
+      }
+    },
+    {
+      "parameter": "recommended_dc_breaker_current",
+      "value": 20,
+      "unit": "A",
+      "status": "unverified",
+      "source_ids": [
+        "huawei_l1_cables"
+      ],
+      "note": {
+        "en": "Huawei SUN2000-L1: rated current 20 A (battery switch uses the same recommendation)",
+        "es": "Huawei SUN2000-L1: corriente 20 A (el interruptor de batería usa la misma recomendación)"
+      }
+    },
+    {
+      "parameter": "breaker_vs_fuse",
+      "value": "Breakers can be finely adjusted and suit smaller sub-array cables",
+      "unit": "",
+      "status": "unverified",
+      "source_ids": [
+        "ei_pv_safety"
+      ],
+      "note": {
+        "en": "Breakers suit smaller sub-array cables; fuses do not load-break",
+        "es": "Los interruptores sirven para cables de subcampo pequeños; los fusibles no cortan en carga"
+      }
+    },
+    {
+      "parameter": "dc_breaker_icu_or_curve",
+      "value": null,
+      "unit": "kA / curve",
+      "status": "not_found",
+      "source_ids": [],
+      "note": {
+        "en": "Breaking capacity and curve not found for DC PV breakers",
+        "es": "Poder de corte y curva no encontrados para interruptores DC FV"
+      }
+    }
+  ],
+  "selection_criteria": {
+    "when_to_use": [
+      {
+        "en": "Battery or DC-side overcurrent where a breaker is chosen (dimensioning per dc protection rules).",
+        "es": "Sobrecorriente en batería o lado DC cuando se elige interruptor (dimensionado según reglas de protección DC)."
+      }
+    ],
+    "when_not_to_use": [
+      {
+        "en": "Do not select a breaker from the Huawei L1 values for other inverter sizes; they apply to that model only.",
+        "es": "No seleccionar el interruptor con los valores Huawei L1 para otros tamaños; son solo de ese modelo."
+      }
+    ]
+  }
+}

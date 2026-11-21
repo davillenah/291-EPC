@@ -1,0 +1,107 @@
+{
+  "schema_version": "1.0",
+  "id": "sym_contact_make_general",
+  "name": {
+    "en": "Make contact (normally open), general symbol",
+    "es": "Contacto de cierre (normalmente abierto), símbolo general"
+  },
+  "family": "control",
+  "description": {
+    "en": "Contact that closes when the device operates. Belongs to a parent device (relay, contactor, switch). Note: The blade is drawn open (NO) in the unoperated state.",
+    "es": "Contacto que cierra al accionarse el aparato. Pertenece a un aparato principal (relé, contactor, interruptor). Nota: La cuchilla se dibuja abierta (NA) en estado no accionado."
+  },
+  "iec60617": {
+    "symbol_id": "S00227",
+    "iec_title_en": "Make contact, general symbol; Switch, general symbol",
+    "legacy_ref": null,
+    "status": "unverified"
+  },
+  "reference_designation": {
+    "letter": "n/a",
+    "note": {
+      "en": "Contacts carry the letter of their parent device (e.g. K1, KM1).",
+      "es": "Los contactos llevan la letra de su aparato principal (p. ej. K1, KM1)."
+    },
+    "status": "typical"
+  },
+  "ansi_nema": {
+    "equivalent": "NO contact (ANSI/NEMA uses NO; typical)",
+    "status": "typical"
+  },
+  "geometry": {
+    "grid": "1 unit = one symbol grid step; origin top-left, y down; scale to the drawing standard in use",
+    "primitives": [
+      {
+        "prim": "line",
+        "p1": [
+          0,
+          0
+        ],
+        "p2": [
+          0,
+          2
+        ]
+      },
+      {
+        "prim": "line",
+        "p1": [
+          0,
+          2
+        ],
+        "p2": [
+          1.4,
+          3.2
+        ]
+      },
+      {
+        "prim": "line",
+        "p1": [
+          0,
+          4
+        ],
+        "p2": [
+          0,
+          6
+        ]
+      }
+    ],
+    "status": "typical"
+  },
+  "connection_points": [
+    {
+      "id": "13",
+      "label": {
+        "en": "Contact input (ex. 13)",
+        "es": "Entrada del contacto (p. ej. 13)"
+      }
+    },
+    {
+      "id": "14",
+      "label": {
+        "en": "Contact output (ex. 14)",
+        "es": "Salida del contacto (p. ej. 14)"
+      }
+    }
+  ],
+  "status": "unverified",
+  "source_ids": [
+    "iec_S00227",
+    "control_com_relay_numbering"
+  ],
+  "sources": [
+    {
+      "id": "iec_S00227",
+      "title": "IEC 60617 database, symbol S00227: Make contact, general symbol; Switch, general symbol",
+      "url": "https://library.iec.ch/grasymb/grasymb.nsf/(SysSymbol)/S00227",
+      "kind": "standard_database",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "control_com_relay_numbering",
+      "title": "Control.com: Info Byte, relay terminal numbering (secondary article)",
+      "url": "https://control.com/technical-articles/info-byte-whats-the-reason-behind-relay-terminal-numbering/",
+      "kind": "secondary_article",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

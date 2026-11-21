@@ -1,0 +1,147 @@
+{
+  "schema_version": "1.0",
+  "id": "pv_mppt_stringing_and_layout",
+  "family": "string_wiring",
+  "name": {
+    "en": "MPPT stringing diagram and array layout",
+    "es": "Diagrama de stringing por MPPT y layout del arreglo"
+  },
+  "description": {
+    "en": "Assignment of strings to MPPT inputs and routing of string cables on roof or ground arrays.",
+    "es": "Asignación de strings a entradas MPPT y recorrido de los cables de string en cubierta o suelo."
+  },
+  "application_range": {
+    "text": {
+      "en": "Any inverter with several MPPT inputs. Count and voltage window per model are not from a fetched datasheet.",
+      "es": "Cualquier inversor con varias entradas MPPT. Número y ventana de tensión por modelo no provienen de una ficha consultada."
+    },
+    "status": "not_found",
+    "source_ids": []
+  },
+  "diagram_types": [
+    "SLD",
+    "MLD"
+  ],
+  "symbol_refs": [],
+  "device_refs": [
+    "pv_inverter_grid_tie"
+  ],
+  "components": [
+    {
+      "ref": "A1",
+      "letter": "A",
+      "symbol_id": null,
+      "device_id": "pv_inverter_grid_tie",
+      "description": {
+        "en": "Grid-tie inverter with several MPPT inputs. Per-model MPPT count is in the repository inverter catalog (not re-read here).",
+        "es": "Inversor conectado a red con varias entradas MPPT. El número por modelo está en el catálogo del repositorio (no re-leído aquí)."
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "G1",
+      "letter": "G",
+      "symbol_id": null,
+      "device_id": null,
+      "description": {
+        "en": "PV strings grouped per MPPT input, same orientation and tilt.",
+        "es": "Strings FV agrupados por entrada MPPT, misma orientación e inclinación."
+      },
+      "status": "typical"
+    }
+  ],
+  "power_connection": [
+    {
+      "text": {
+        "en": "All strings on one MPPT input share orientation, tilt and shading profile.",
+        "es": "Todos los strings de una entrada MPPT comparten orientación, inclinación y perfil de sombra."
+      },
+      "status": "typical",
+      "source_ids": []
+    },
+    {
+      "text": {
+        "en": "Module count per string keeps the MPPT voltage inside the window at the lowest cell temperature and keeps Voc under the DC maximum at cold.",
+        "es": "El número de módulos por string mantiene la tensión MPPT dentro de la ventana con la temperatura de célula más baja y Voc bajo el máximo DC con frío."
+      },
+      "status": "typical",
+      "source_ids": []
+    },
+    {
+      "text": {
+        "en": "Roof layout: strings run along module rows to a tray and then to the combiner.",
+        "es": "Layout en cubierta: strings recorren las filas de módulos hasta una bandeja y luego a la combinadora."
+      },
+      "status": "typical",
+      "source_ids": []
+    },
+    {
+      "text": {
+        "en": "Ground layout: string cables run along the table ends in a trench or conduit to the combiner.",
+        "es": "Layout en suelo: cables de string recorren el extremo de las mesas en zanja o conducto hasta la combinadora."
+      },
+      "status": "typical",
+      "source_ids": []
+    }
+  ],
+  "control_connection": [],
+  "protections": [],
+  "sequence": [
+    {
+      "text": {
+        "en": "Compute Voc and Vmp per string for the site minimum and maximum temperatures.",
+        "es": "Calcular Voc y Vmp por string para las temperaturas mínima y máxima del sitio."
+      },
+      "status": "typical",
+      "source_ids": []
+    },
+    {
+      "text": {
+        "en": "Assign strings to MPPT inputs, balancing string count and orientation.",
+        "es": "Asignar strings a entradas MPPT, equilibrando número de strings y orientación."
+      },
+      "status": "typical",
+      "source_ids": []
+    },
+    {
+      "text": {
+        "en": "Route string homeruns to the combiner and mark each cable at both ends.",
+        "es": "Llevar los cables de string hasta la combinadora y marcar cada cable en ambos extremos."
+      },
+      "status": "typical",
+      "source_ids": []
+    }
+  ],
+  "common_errors": [
+    {
+      "text": {
+        "en": "Mixed orientations on one MPPT input.",
+        "es": "Orientaciones mezcladas en una entrada MPPT."
+      },
+      "status": "typical",
+      "source_ids": []
+    },
+    {
+      "text": {
+        "en": "String voltage outside the MPPT window at cold temperature.",
+        "es": "Tensión de string fuera de la ventana MPPT con frío."
+      },
+      "status": "typical",
+      "source_ids": []
+    }
+  ],
+  "source_conflicts": [],
+  "status": "typical",
+  "source_ids": [
+    "repo_devices"
+  ],
+  "sources": [
+    {
+      "id": "repo_devices",
+      "title": "EPC-291 repository: sld_mld/devices and funcional_iec60617/symbols_index.json (ids reused)",
+      "url": "repo://sld_mld/devices",
+      "kind": "internal_repo",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

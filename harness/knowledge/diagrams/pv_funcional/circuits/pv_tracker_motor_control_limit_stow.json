@@ -1,0 +1,199 @@
+{
+  "schema_version": "1.0",
+  "id": "pv_tracker_motor_control_limit_stow",
+  "family": "trackers_pumping",
+  "name": {
+    "en": "Single-axis tracker control with limit switches and wind stow",
+    "es": "Control de seguidor de un eje con finales de carrera y repliegue por viento"
+  },
+  "description": {
+    "en": "A tracker controller drives a slew motor with end-of-travel limit switches and an anemometer that triggers stow.",
+    "es": "Un controlador de seguidor acciona un motor de giro con finales de carrera y un anemómetro que dispara el repliegue."
+  },
+  "application_range": {
+    "text": {
+      "en": "Single-axis trackers. The NOV TechTrack is a self-powered proprietary product; a classic wired controller is typical.",
+      "es": "Seguidores de un eje. NOV TechTrack es un producto autoalimentado y propietario; un controlador cableado clásico es típico."
+    },
+    "status": "unverified",
+    "source_ids": [
+      "nov_techtrack"
+    ]
+  },
+  "diagram_types": [
+    "functional",
+    "MLD"
+  ],
+  "symbol_refs": [
+    "sym_contactor_coil_general",
+    "sym_plc_io"
+  ],
+  "device_refs": [],
+  "components": [
+    {
+      "ref": "A1",
+      "letter": "A",
+      "symbol_id": "sym_plc_io",
+      "device_id": null,
+      "description": {
+        "en": "Tracker controller: reads sun position or irradiance and drives the motor.",
+        "es": "Controlador de seguidor: lee la posición solar o la irradiancia y acciona el motor."
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "B1",
+      "letter": "B",
+      "symbol_id": null,
+      "device_id": null,
+      "description": {
+        "en": "Anemometer (wind speed and direction). Standard wind sensor on the NOV product.",
+        "es": "Anemómetro (velocidad y dirección del viento). Sensor de viento estándar en el producto NOV."
+      },
+      "status": "unverified"
+    },
+    {
+      "ref": "S1",
+      "letter": "S",
+      "symbol_id": null,
+      "device_id": null,
+      "description": {
+        "en": "End-of-travel limit switches (east and west). Type not located.",
+        "es": "Finales de carrera (este y oeste). Tipo no ubicado."
+      },
+      "status": "not_found"
+    },
+    {
+      "ref": "M1",
+      "letter": "M",
+      "symbol_id": null,
+      "device_id": null,
+      "description": {
+        "en": "Slew drive motor, 24 VDC on the NOV product. No DC motor symbol in the repository set.",
+        "es": "Motor de giro, 24 VDC en el producto NOV. No hay símbolo de motor DC en el repositorio."
+      },
+      "status": "unverified"
+    },
+    {
+      "ref": "G1",
+      "letter": "G",
+      "symbol_id": null,
+      "device_id": null,
+      "description": {
+        "en": "Local supply: LiFePO4 battery with integrated module on the NOV product.",
+        "es": "Alimentación local: batería LiFePO4 con módulo integrado en el producto NOV."
+      },
+      "status": "unverified"
+    },
+    {
+      "ref": "K1",
+      "letter": "K",
+      "symbol_id": "sym_contactor_coil_general",
+      "device_id": null,
+      "description": {
+        "en": "Forward and reverse contactor or H-bridge for a wired drive (typical).",
+        "es": "Contactor de avance y retroceso o puente H para un accionamiento cableado (típico)."
+      },
+      "status": "typical"
+    }
+  ],
+  "power_connection": [
+    {
+      "text": {
+        "en": "Drive motor fed from the controller through forward and reverse contacts (typical).",
+        "es": "Motor alimentado desde el controlador por contactos de avance y retroceso (típico)."
+      },
+      "status": "typical",
+      "source_ids": []
+    },
+    {
+      "text": {
+        "en": "NOV: no external controller wiring; the site uses a proprietary on-site mesh network.",
+        "es": "NOV: sin cableado externo al controlador; el sitio usa una red mesh propietaria."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "nov_techtrack"
+      ]
+    }
+  ],
+  "control_connection": [
+    {
+      "text": {
+        "en": "Anemometer wires to the controller input (typical).",
+        "es": "Cable del anemómetro a la entrada del controlador (típico)."
+      },
+      "status": "typical",
+      "source_ids": []
+    }
+  ],
+  "protections": [],
+  "sequence": [
+    {
+      "text": {
+        "en": "Wind speed above the stow threshold moves the tracker to stow (NOV states a stow at 35 mph).",
+        "es": "Viento por encima del umbral lleva el seguidor a repliegue (NOV indica repliegue a 35 mph)."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "nov_techtrack"
+      ]
+    },
+    {
+      "text": {
+        "en": "Limit switch stops the motor at the end of travel (typical).",
+        "es": "El final de carrera detiene el motor al final del recorrido (típico)."
+      },
+      "status": "typical",
+      "source_ids": []
+    }
+  ],
+  "common_errors": [
+    {
+      "text": {
+        "en": "Limit switches without fail-safe wiring.",
+        "es": "Finales de carrera sin cableado a prueba de fallas."
+      },
+      "status": "typical",
+      "source_ids": []
+    },
+    {
+      "text": {
+        "en": "Anemometer mounted in the turbulence of the array.",
+        "es": "Anemómetro montado en la turbulencia del arreglo."
+      },
+      "status": "typical",
+      "source_ids": []
+    },
+    {
+      "text": {
+        "en": "Battery undersized for winter sun hours (NOV self-powered case).",
+        "es": "Batería subdimensionada para las horas de sol de invierno (caso NOV autoalimentado)."
+      },
+      "status": "typical",
+      "source_ids": []
+    }
+  ],
+  "source_conflicts": [],
+  "status": "unverified",
+  "source_ids": [
+    "nov_techtrack",
+    "repo_devices"
+  ],
+  "sources": [
+    {
+      "id": "nov_techtrack",
+      "title": "NOV TechTrack single-axis tracker flyer",
+      "url": "https://assets.nov.com/NCP4N68N/at/cmb5wnnmbgk5brszbkjxgth/NOV_CMKT_Solar_TechTrack_Flyer.pdf",
+      "kind": "manufacturer_doc",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "repo_devices",
+      "title": "EPC-291 repository: sld_mld/devices and funcional_iec60617/symbols_index.json (ids reused)",
+      "url": "repo://sld_mld/devices",
+      "kind": "internal_repo",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

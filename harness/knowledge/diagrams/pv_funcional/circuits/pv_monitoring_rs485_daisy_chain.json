@@ -1,0 +1,227 @@
+{
+  "schema_version": "1.0",
+  "id": "pv_monitoring_rs485_daisy_chain",
+  "family": "monitoring_comms",
+  "name": {
+    "en": "RS485 Modbus daisy chain for inverter monitoring",
+    "es": "Cadena RS485 Modbus para monitoreo de inversores"
+  },
+  "description": {
+    "en": "Inverters on a two-wire RS485 bus (D+ and D-) with a shield and a termination plug at the datalogger end.",
+    "es": "Inversores en bus RS485 de dos hilos (D+ y D-) con blindaje y terminador en el extremo del registrador."
+  },
+  "application_range": {
+    "text": {
+      "en": "SMA RS485 modules; other brands use the same two-wire bus with their own terminal labels (typical).",
+      "es": "Módulos RS485 de SMA; otras marcas usan bus de dos hilos con sus propios rótulos (típico)."
+    },
+    "status": "unverified",
+    "source_ids": [
+      "sma_md485"
+    ]
+  },
+  "diagram_types": [
+    "MLD",
+    "functional"
+  ],
+  "symbol_refs": [
+    "sym_terminal_block"
+  ],
+  "device_refs": [
+    "pv_inverter_grid_tie"
+  ],
+  "components": [
+    {
+      "ref": "A1",
+      "letter": "A",
+      "symbol_id": null,
+      "device_id": "pv_inverter_grid_tie",
+      "description": {
+        "en": "Inverter with RS485 module (optional on SMA; the inverter acts as subordinate only).",
+        "es": "Inversor con módulo RS485 (opcional en SMA; el inversor actúa solo como subordinado)."
+      },
+      "status": "unverified"
+    },
+    {
+      "ref": "X1",
+      "letter": "X",
+      "symbol_id": "sym_terminal_block",
+      "device_id": null,
+      "description": {
+        "en": "RS485 terminals on the SMA module: D+ (terminal 2), D- (terminal 7), GND (terminal 5).",
+        "es": "Bornes RS485 en el módulo SMA: D+ (borne 2), D- (borne 7), GND (borne 5)."
+      },
+      "status": "unverified"
+    },
+    {
+      "ref": "A2",
+      "letter": "A",
+      "symbol_id": null,
+      "device_id": null,
+      "description": {
+        "en": "Datalogger or data manager (SMA partners: Data Manager M, COM Gateway). Model not selected.",
+        "es": "Registrador de datos (socios SMA: Data Manager M, COM Gateway). Modelo no seleccionado."
+      },
+      "status": "not_found"
+    },
+    {
+      "ref": "A3",
+      "letter": "A",
+      "symbol_id": null,
+      "device_id": null,
+      "description": {
+        "en": "Termination plug on terminals 2 and 7 at the end of the bus.",
+        "es": "Terminador en bornes 2 y 7 al final del bus."
+      },
+      "status": "unverified"
+    }
+  ],
+  "power_connection": [
+    {
+      "text": {
+        "en": "Shielded twisted pair; copper-foil shield clamped to the module shield clamp and grounded through the module fastening screw in the inverter enclosure.",
+        "es": "Par trenzado blindado; lámina de cobre del blindaje en la abrazadera del módulo y tierra por el tornillo de fijación en el gabinete del inversor."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "sma_md485"
+      ]
+    },
+    {
+      "text": {
+        "en": "Maximum bus length 1200 m.",
+        "es": "Longitud máxima del bus 1200 m."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "sma_md485"
+      ]
+    },
+    {
+      "text": {
+        "en": "Cable type beyond twisted pair: see the separate SMA RS485 cabling plan (not read).",
+        "es": "Tipo de cable más allá del par trenzado: ver el plan de cableado RS485 de SMA (no leído)."
+      },
+      "status": "not_found",
+      "source_ids": []
+    },
+    {
+      "text": {
+        "en": "Ethernet can run in parallel with RS485. No automatic firmware updates over RS485.",
+        "es": "Ethernet puede correr en paralelo con RS485. Sin actualizaciones automáticas de firmware por RS485."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "sma_rs485_page"
+      ]
+    }
+  ],
+  "control_connection": [],
+  "protections": [],
+  "sequence": [
+    {
+      "text": {
+        "en": "Power the datalogger first, then verify the RS485 link on the datalogger.",
+        "es": "Energizar primero el registrador y luego verificar el enlace RS485 en el registrador."
+      },
+      "status": "typical",
+      "source_ids": []
+    },
+    {
+      "text": {
+        "en": "Assign unique device addresses to each inverter.",
+        "es": "Asignar direcciones únicas a cada inversor."
+      },
+      "status": "typical",
+      "source_ids": []
+    },
+    {
+      "text": {
+        "en": "Terminate according to the datalogger manual.",
+        "es": "Terminar según el manual del registrador."
+      },
+      "status": "typical",
+      "source_ids": []
+    }
+  ],
+  "common_errors": [
+    {
+      "text": {
+        "en": "D+ and D- swapped.",
+        "es": "D+ y D- intercambiados."
+      },
+      "status": "typical",
+      "source_ids": []
+    },
+    {
+      "text": {
+        "en": "Bus longer than 1200 m or star wiring.",
+        "es": "Bus de más de 1200 m o cableado en estrella."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "sma_md485"
+      ]
+    },
+    {
+      "text": {
+        "en": "RS485 cable routed with power cables.",
+        "es": "Cable RS485 junto a cables de potencia."
+      },
+      "status": "typical",
+      "source_ids": []
+    },
+    {
+      "text": {
+        "en": "Termination missing on a long bus.",
+        "es": "Terminador faltante en un bus largo."
+      },
+      "status": "typical",
+      "source_ids": []
+    }
+  ],
+  "source_conflicts": [
+    {
+      "topic": {
+        "en": "RS485 termination rule",
+        "es": "Regla de terminación RS485"
+      },
+      "source_ids": [
+        "sma_md485"
+      ],
+      "note": {
+        "en": "The SMA module text says attach the terminator only when one connection cable is used. A common rule (typical) terminates both ends of the bus. Confirm with the datalogger manual.",
+        "es": "El texto SMA indica colocar el terminador solo cuando se usa un cable de conexión. Una regla común (típica) termina ambos extremos del bus. Confirmar con el manual del registrador."
+      }
+    }
+  ],
+  "status": "unverified",
+  "source_ids": [
+    "repo_devices",
+    "sma_md485",
+    "sma_rs485_page"
+  ],
+  "sources": [
+    {
+      "id": "repo_devices",
+      "title": "EPC-291 repository: sld_mld/devices and funcional_iec60617/symbols_index.json (ids reused)",
+      "url": "repo://sld_mld/devices",
+      "kind": "internal_repo",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "sma_md485",
+      "title": "SMA MD.485-40 RS485 module installation manual (rev 10)",
+      "url": "https://files.sma.de/downloads/MD485-40-IA-en-10.pdf",
+      "kind": "manufacturer_doc",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "sma_rs485_page",
+      "title": "SMA manual page: RS485 interface (STP xx50)",
+      "url": "https://manuals.sma.de/STPxx50/en-US/14988097931.html",
+      "kind": "manufacturer_doc",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

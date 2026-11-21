@@ -1,0 +1,100 @@
+{
+  "schema_version": "1.0",
+  "id": "sym_selector_switch",
+  "name": {
+    "en": "Selector switch (multi-position)",
+    "es": "Selector (multiposición)"
+  },
+  "family": "control",
+  "description": {
+    "en": "Multi-position manual switch with positions such as Hand/Off/Auto. IEC ID not located. Note: Geometry typical.",
+    "es": "Selector manual de varias posiciones, p. ej. Manual/Apagado/Automático. ID IEC no localizado. Nota: Geometría típica."
+  },
+  "iec60617": {
+    "symbol_id": null,
+    "iec_title_en": null,
+    "legacy_ref": null,
+    "status": "not_found"
+  },
+  "reference_designation": {
+    "letter": "S",
+    "note": {
+      "en": "Manual switch class (typical).",
+      "es": "Clase de interruptor manual (típico)."
+    },
+    "status": "typical"
+  },
+  "ansi_nema": {
+    "equivalent": "Selector switch (typical)",
+    "status": "typical"
+  },
+  "geometry": {
+    "grid": "1 unit = one symbol grid step; origin top-left, y down; scale to the drawing standard in use",
+    "primitives": [
+      {
+        "prim": "line",
+        "p1": [
+          0,
+          0
+        ],
+        "p2": [
+          0,
+          1.5
+        ]
+      },
+      {
+        "prim": "line",
+        "p1": [
+          -1.2,
+          1.5
+        ],
+        "p2": [
+          1.2,
+          1.5
+        ]
+      },
+      {
+        "prim": "line",
+        "p1": [
+          0,
+          1.5
+        ],
+        "p2": [
+          1.4,
+          2.8
+        ]
+      },
+      {
+        "prim": "line",
+        "p1": [
+          0,
+          1.5
+        ],
+        "p2": [
+          -1.4,
+          2.8
+        ]
+      }
+    ],
+    "status": "typical"
+  },
+  "connection_points": [
+    {
+      "id": "1",
+      "label": {
+        "en": "Contact 1",
+        "es": "Contacto 1"
+      }
+    },
+    {
+      "id": "2",
+      "label": {
+        "en": "Contact 2",
+        "es": "Contacto 2"
+      }
+    }
+  ],
+  "status": "not_found",
+  "source_ids": [],
+  "sources": []
+}

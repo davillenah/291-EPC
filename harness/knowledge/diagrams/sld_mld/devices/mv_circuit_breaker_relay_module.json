@@ -1,0 +1,149 @@
+{
+  "schema_version": "1.0",
+  "id": "mv_circuit_breaker_relay_module",
+  "name": {
+    "en": "MV circuit-breaker module with protection relay (CB)",
+    "es": "Modulo MT interruptor con relé de proteccion (CB)"
+  },
+  "description": {
+    "en": "Circuit-breaker module that is fitted with a protection relay, for feeders or the transformer side.",
+    "es": "Modulo interruptor provisto de relé de proteccion, para alimentadores o lado de transformador."
+  },
+  "kind": "mv_breaker",
+  "voltage_level": "MV",
+  "status": "unverified",
+  "source_ids": [
+    "abb_safering_doc",
+    "abb_safering_cat",
+    "iec60617_db"
+  ],
+  "sources": [
+    {
+      "id": "abb_safering_doc",
+      "title": "12-24kV SafeRing SafePlus (product documentation)",
+      "url": "https://library.e.abb.com/public/207cafdaa3d4bfc2482578070000fce2/12-24kV_SafeRing_SafePlus_EN.pdf",
+      "publisher": "ABB",
+      "accessed": "2026-11-20",
+      "kind": "manufacturer"
+    },
+    {
+      "id": "abb_safering_cat",
+      "title": "1VDD006104 SafeRing SafePlus 12-24 kV catalogue (07-2022)",
+      "url": "https://library.e.abb.com/public/bb38f74c9b404b4b89745cde2a4b0dba/1VDD006104_Catalogue_SR-SP_12-24kV_EN_07-2022.pdf",
+      "publisher": "ABB",
+      "accessed": "2026-11-20",
+      "kind": "manufacturer"
+    },
+    {
+      "id": "iec60617_db",
+      "title": "IEC 60617 graphical symbols database (public page)",
+      "url": "https://std.iec.ch/iec60617",
+      "publisher": "IEC",
+      "accessed": "2026-11-20",
+      "kind": "standard_public_summary"
+    }
+  ],
+  "standard_refs": [
+    {
+      "ref": "IEC 62271-100",
+      "note": {
+        "en": "AC circuit breaker standard (cited, not quoted)",
+        "es": "Norma de interruptores AC (citada, no transcrita)"
+      }
+    }
+  ],
+  "symbol_ref": {
+    "id": "not_found",
+    "status": "not_found",
+    "note": {
+      "en": "IEC 60617 public page lists no identifiers for this item; not found, not guessed.",
+      "es": "La pagina publica de IEC 60617 no lista identificadores para este elemento; no encontrado, no supuesto."
+    }
+  },
+  "ratings_typical": [
+    {
+      "parameter": "rated_normal_current",
+      "value": "630 or 1250",
+      "unit": "A",
+      "status": "unverified",
+      "source_ids": [
+        "abb_safering_cat"
+      ],
+      "note": {
+        "en": "1250 A variant cannot use combisensors",
+        "es": "La variante de 1250 A no admite combisensores"
+      }
+    },
+    {
+      "parameter": "breaking_current",
+      "value": "25 (12 kV); 20 (17.5-24 kV)",
+      "unit": "kA",
+      "status": "unverified",
+      "source_ids": [
+        "abb_safering_cat"
+      ],
+      "note": {
+        "en": "Short-circuit breaking current, CB module",
+        "es": "Corriente de corte, modulo CB"
+      }
+    },
+    {
+      "parameter": "making_capacity",
+      "value": "62.5 (12 kV); 50 (17.5-24 kV)",
+      "unit": "kA",
+      "status": "unverified",
+      "source_ids": [
+        "abb_safering_cat",
+        "abb_safering_doc"
+      ],
+      "note": {
+        "en": "Making capacity, CB module",
+        "es": "Poder de cierre, modulo CB"
+      }
+    },
+    {
+      "parameter": "mechanical_operations",
+      "value": 30000,
+      "unit": "operations",
+      "status": "unverified",
+      "source_ids": [
+        "abb_safering_cat"
+      ],
+      "note": {
+        "en": "Mechanical endurance, close/open",
+        "es": "Vida mecanica, cierre/apertura"
+      }
+    },
+    {
+      "parameter": "operating_sequence",
+      "value": "O - 0.3 s - CO - 15 s - CO",
+      "unit": "-",
+      "status": "unverified",
+      "source_ids": [
+        "abb_safering_cat"
+      ],
+      "note": {
+        "en": "Auto-reclose sequence stated in the catalogue",
+        "es": "Secuencia de reenganche indicada en el catalogo"
+      }
+    }
+  ],
+  "selection_criteria": {
+    "when_to_use": [
+      {
+        "en": "Feeder or transformer protection with protection relay and CTs (cited: relay required)",
+        "es": "Proteccion de alimentador o transformador con relé y TC (citado: se requiere relé)"
+      }
+    ],
+    "when_not_to_use": [
+      {
+        "en": "Cable switching only: use C module (typical)",
+        "es": "Solo maniobra de cable: usar modulo C (typical)"
+      }
+    ],
+    "alternatives": [
+      "mv_vacuum_circuit_breaker",
+      "mv_load_break_switch_c"
+    ]
+  }
+}

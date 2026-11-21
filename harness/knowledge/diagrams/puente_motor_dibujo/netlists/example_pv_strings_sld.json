@@ -1,0 +1,154 @@
+{
+ "schema_version": "1.0",
+ "id": "example_pv_strings_sld",
+ "name": {
+  "en": "Example PV strings netlist (illustrative, SLD)",
+  "es": "Netlist de ejemplo de strings FV (ilustrativo, SLD)"
+ },
+ "diagram": "SLD",
+ "sheet": {
+  "size": "A3",
+  "style_ref": "epc_arch/epc_style.json"
+ },
+ "instances": [
+  {
+   "tag": "-G1.1",
+   "device_id": "pv_module",
+   "symbol": "lv_pv_module",
+   "labels": {
+    "n_modules": null
+   },
+   "label_source": "epc_pv (n/a here)"
+  },
+  {
+   "tag": "-G1.2",
+   "device_id": "pv_module",
+   "symbol": "lv_pv_module",
+   "labels": {
+    "n_modules": null
+   }
+  },
+  {
+   "tag": "-F1.1",
+   "device_id": "fuse_gpv",
+   "symbol": "lv_fuse",
+   "enclosure": "JB1"
+  },
+  {
+   "tag": "-F1.2",
+   "device_id": "fuse_gpv",
+   "symbol": "lv_fuse",
+   "enclosure": "JB1"
+  },
+  {
+   "tag": "-Q1",
+   "device_id": "pv_dc_switch_load_break",
+   "symbol": "lv_dc_disconnect",
+   "enclosure": "JB1"
+  },
+  {
+   "tag": "-F13",
+   "device_id": "spd_type2",
+   "symbol": "lv_spd_varistor",
+   "enclosure": "JB1"
+  },
+  {
+   "tag": "-PE1",
+   "device_id": "earth",
+   "symbol": "lv_earth_pe"
+  },
+  {
+   "tag": "-T1",
+   "device_id": "pv_inverter_grid_tie",
+   "symbol": "lv_inverter"
+  },
+  {
+   "tag": "-Q10",
+   "device_id": "mccb",
+   "symbol": "lv_mccb_basic"
+  },
+  {
+   "tag": "-F10",
+   "device_id": "rcd_type_a",
+   "symbol": "lv_rccb"
+  }
+ ],
+ "connections": [
+  {
+   "from": "-G1.1:bottom",
+   "to": "-F1.1:top",
+   "conductor": "DC+",
+   "cable_ref": "W1.1"
+  },
+  {
+   "from": "-G1.2:bottom",
+   "to": "-F1.2:top",
+   "conductor": "DC+",
+   "cable_ref": "W1.2"
+  },
+  {
+   "from": "-F1.1:bottom",
+   "to": "-Q1:top",
+   "conductor": "DC+"
+  },
+  {
+   "from": "-F1.2:bottom",
+   "to": "-Q1:top",
+   "conductor": "DC+"
+  },
+  {
+   "from": "-Q1:bottom",
+   "to": "-T1:top",
+   "conductor": "DC+",
+   "cable_ref": "W10"
+  },
+  {
+   "from": "-Q1:bottom",
+   "to": "-F13:top",
+   "conductor": "DC+"
+  },
+  {
+   "from": "-F13:bottom",
+   "to": "-PE1:top",
+   "conductor": "PE"
+  },
+  {
+   "from": "-T1:bottom",
+   "to": "-Q10:top",
+   "conductor": "L",
+   "cable_ref": "W30"
+  },
+  {
+   "from": "-Q10:bottom",
+   "to": "-F10:top",
+   "conductor": "L"
+  }
+ ],
+ "cables": [
+  {
+   "ref": "W1.1",
+   "type": null,
+   "section_mm2": null,
+   "length_m": null
+  },
+  {
+   "ref": "W1.2",
+   "type": null,
+   "section_mm2": null,
+   "length_m": null
+  },
+  {
+   "ref": "W10",
+   "type": null,
+   "section_mm2": null,
+   "length_m": null
+  },
+  {
+   "ref": "W30",
+   "type": null,
+   "section_mm2": null,
+   "length_m": null
+  }
+ ],
+ "status": "typical"
+}

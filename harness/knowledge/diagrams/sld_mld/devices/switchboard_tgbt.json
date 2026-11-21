@@ -1,0 +1,100 @@
+{
+  "schema_version": "1.0",
+  "id": "switchboard_tgbt",
+  "name": {
+    "en": "Main LV switchboard (TGBT)",
+    "es": "Tablero general de baja tension (TGBT)"
+  },
+  "description": {
+    "en": "Main distribution board fed from the transformer or utility. Carries incomer, busbar, outgoing devices and surge protection.",
+    "es": "Cuadro de distribucion principal alimentado desde el transformador o la red. Incluye acometida, barras, salidas y proteccion contra sobretensiones."
+  },
+  "kind": "board",
+  "voltage_level": "LV",
+  "status": "unverified",
+  "source_ids": [
+    "viox_sld",
+    "iec60617_db"
+  ],
+  "sources": [
+    {
+      "id": "viox_sld",
+      "title": "How to read a single line diagram",
+      "url": "https://viox.com/how-to-read-a-single-line-diagram/",
+      "publisher": "VIOX Electric",
+      "accessed": "2026-11-20",
+      "kind": "third_party_guide"
+    },
+    {
+      "id": "iec60617_db",
+      "title": "IEC 60617 graphical symbols database (public page)",
+      "url": "https://std.iec.ch/iec60617",
+      "publisher": "IEC",
+      "accessed": "2026-11-20",
+      "kind": "standard_public_summary"
+    }
+  ],
+  "standard_refs": [
+    {
+      "ref": "IEC 61439",
+      "note": {
+        "en": "Low-voltage switchgear assemblies (cited)",
+        "es": "Conjuntos de aparamenta BT (citada)"
+      }
+    }
+  ],
+  "symbol_ref": {
+    "id": "not_found",
+    "status": "not_found",
+    "note": {
+      "en": "IEC 60617 public page lists no identifiers for this item; not found, not guessed.",
+      "es": "La pagina publica de IEC 60617 no lista identificadores para este elemento; no encontrado, no supuesto."
+    }
+  },
+  "ratings_typical": [
+    {
+      "parameter": "rated_current",
+      "value": null,
+      "unit": "A",
+      "status": "not_found",
+      "source_ids": [],
+      "note": {
+        "en": "Not found for a generic board",
+        "es": "No encontrado para un cuadro generico"
+      }
+    },
+    {
+      "parameter": "data_labels",
+      "value": "bus voltage, continuous current, withstand rating",
+      "unit": "-",
+      "status": "unverified",
+      "source_ids": [
+        "viox_sld"
+      ],
+      "note": {
+        "en": "Bus data labels listed in cited SLD guide",
+        "es": "Datos de barra indicados en la guia de SLD citada"
+      }
+    }
+  ],
+  "selection_criteria": {
+    "when_to_use": [
+      {
+        "en": "Main distribution from transformer or generator (typical)",
+        "es": "Distribucion principal desde transformador o generador (typical)"
+      }
+    ],
+    "when_not_to_use": [
+      {
+        "en": "Small installation: a distribution board may be enough (typical)",
+        "es": "Instalacion pequena: basta un cuadro de distribucion (typical)"
+      }
+    ],
+    "alternatives": [
+      "acb",
+      "mccb",
+      "spd_type2",
+      "rccb"
+    ]
+  }
+}

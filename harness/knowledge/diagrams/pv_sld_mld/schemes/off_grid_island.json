@@ -1,0 +1,139 @@
+{
+  "schema_version": "1.0",
+  "record_type": "scheme",
+  "id": "off_grid_island",
+  "name": {
+    "en": "Off-grid or islanded PV with battery and insulation monitoring",
+    "es": "FV aislado o en isla con batería y monitoreo de aislamiento"
+  },
+  "description": {
+    "en": "PV, hybrid inverter and battery supply an island distribution. Islanding is handled by a four-pole islanding switch, with an IMD on the transformer side for long islanded operation.",
+    "es": "FV, inversor híbrido y batería alimentan una distribución en isla. La isla se gestiona con un interruptor de isla de cuatro polos, con IMD del lado del transformador para isla larga."
+  },
+  "purpose": {
+    "en": "Stand-alone or islandable system. Earthing scheme changes the protection; verify disconnection in island mode.",
+    "es": "Sistema aislado o islable. El régimen de puesta a tierra cambia la protección; verificar la desconexión en isla."
+  },
+  "architecture": "off_grid_island",
+  "voltage_level": "LV",
+  "status": "unverified",
+  "chain": [
+    {
+      "order": 1,
+      "device_id": "pv_dc_switch_load_break",
+      "label": {
+        "en": "DC isolator (PV)",
+        "es": "Seccionador DC (FV)"
+      },
+      "notes": {
+        "en": "Breaks at U_OC MAX",
+        "es": "Corta en U_OC MAX"
+      }
+    },
+    {
+      "order": 2,
+      "device_id": "pv_hybrid_battery_inverter",
+      "label": {
+        "en": "Hybrid inverter",
+        "es": "Inversor híbrido"
+      },
+      "notes": {
+        "en": "Grid-forming or island mode per model",
+        "es": "Formador de red o modo isla según modelo"
+      }
+    },
+    {
+      "order": 3,
+      "device_id": "pv_dc_breaker",
+      "label": {
+        "en": "Battery overcurrent",
+        "es": "Sobrecorriente de batería"
+      },
+      "notes": {
+        "en": "Between battery and inverter",
+        "es": "Entre batería e inversor"
+      }
+    },
+    {
+      "order": 4,
+      "device_id": "switch_disconnector",
+      "label": {
+        "en": "Islanding switch (4P, SDFI)",
+        "es": "Interruptor de isla (4P, SDFI)"
+      },
+      "notes": {
+        "en": "Four-pole islanding device per wiki",
+        "es": "Dispositivo de isla de 4 polos según wiki"
+      }
+    },
+    {
+      "order": 5,
+      "device_id": "imd_insulation_monitor",
+      "label": {
+        "en": "IMD (transformer side)",
+        "es": "IMD (lado transformador)"
+      },
+      "notes": {
+        "en": "For long islanded operation with energized transformer",
+        "es": "Para isla larga con transformador energizado"
+      }
+    },
+    {
+      "order": 6,
+      "device_id": "switchboard_tgbt",
+      "label": {
+        "en": "Island distribution board",
+        "es": "Cuadro de distribución en isla"
+      },
+      "notes": {
+        "en": "Load side",
+        "es": "Lado de carga"
+      }
+    }
+  ],
+  "device_refs": [
+    "pv_dc_switch_load_break",
+    "pv_hybrid_battery_inverter",
+    "pv_dc_breaker",
+    "switch_disconnector",
+    "imd_insulation_monitor",
+    "switchboard_tgbt"
+  ],
+  "drawing_conventions": [
+    {
+      "en": "Show the islanding switch and the earthing scheme (TT, TN-S, TN-C-S, IT) on the same sheet.",
+      "es": "Mostrar el interruptor de isla y el régimen de puesta a tierra (TT, TN-S, TN-C-S, IT) en la misma lámina."
+    }
+  ],
+  "source_ids": [
+    "ei_self_consumption",
+    "ei_prosumer",
+    "ei_local_sources"
+  ],
+  "sources": [
+    {
+      "id": "ei_self_consumption",
+      "title": "Photovoltaic for self-consumption: architecture and equipment requirements",
+      "url": "https://www.electrical-installation.org/enwiki/Photovoltaic_for_self-consumption_-_architecture_and_equipment_requirements",
+      "publisher": "electrical-installation.org (public technical wiki)",
+      "accessed": "2026-11-20",
+      "kind": "textbook_wiki"
+    },
+    {
+      "id": "ei_prosumer",
+      "title": "Specific protection of prosumer electrical installations",
+      "url": "https://www.electrical-installation.org/enwiki/Specific_protection_of_prosumer_electrical_installations",
+      "publisher": "electrical-installation.org (public technical wiki)",
+      "accessed": "2026-11-20",
+      "kind": "textbook_wiki"
+    },
+    {
+      "id": "ei_local_sources",
+      "title": "Architectures for integration of local sources",
+      "url": "https://www.electrical-installation.org/enwiki/Architectures_for_integration_of_local_sources",
+      "publisher": "electrical-installation.org (public technical wiki)",
+      "accessed": "2026-11-20",
+      "kind": "textbook_wiki"
+    }
+  ]
+}

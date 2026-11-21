@@ -1,0 +1,128 @@
+{
+  "schema_version": "1.0",
+  "id": "pv_grid_tie_lv",
+  "name": {
+    "en": "PV grid-tie inverter on LV board",
+    "es": "Inversor FV conectado a red en cuadro BT"
+  },
+  "description": {
+    "en": "DC strings to a combiner with gPV fuses and SPD, DC switch, inverter, AC switch-disconnector and the LV board.",
+    "es": "Strings DC a caja de combinacion con fusibles gPV y SPD, interruptor DC, inversor, seccionador AC y cuadro BT."
+  },
+  "purpose": {
+    "en": "Show DC string protection and AC connection of a PV inverter.",
+    "es": "Mostrar proteccion de strings DC y conexion AC de un inversor FV."
+  },
+  "voltage_level": "LV",
+  "status": "typical",
+  "chain": [
+    {
+      "order": 1,
+      "device_id": "fuse_gpv",
+      "label": {
+        "en": "String fuses",
+        "es": "Fusibles de string"
+      },
+      "notes": {
+        "en": "gPV, DC rated",
+        "es": "gPV, apto DC"
+      }
+    },
+    {
+      "order": 2,
+      "device_id": "spd_type2",
+      "label": {
+        "en": "DC SPD",
+        "es": "SPD DC"
+      },
+      "notes": {
+        "en": "Type 2 at combiner (repository research)",
+        "es": "Tipo 2 en caja de combinacion (investigacion del repositorio)"
+      }
+    },
+    {
+      "order": 3,
+      "device_id": "switch_disconnector",
+      "label": {
+        "en": "DC switch-disconnector",
+        "es": "Interruptor-seccionador DC"
+      },
+      "notes": {
+        "en": "Isolates strings",
+        "es": "Aisla strings"
+      }
+    },
+    {
+      "order": 4,
+      "device_id": "pv_inverter_grid_tie",
+      "label": {
+        "en": "Inverter",
+        "es": "Inversor"
+      },
+      "notes": {
+        "en": "Project-specific rating",
+        "es": "Calibre segun proyecto"
+      }
+    },
+    {
+      "order": 5,
+      "device_id": "switch_disconnector",
+      "label": {
+        "en": "AC switch-disconnector",
+        "es": "Seccionador AC"
+      },
+      "notes": {
+        "en": "Isolates inverter from board",
+        "es": "Aisla el inversor del cuadro"
+      }
+    },
+    {
+      "order": 6,
+      "device_id": "switchboard_tgbt",
+      "label": {
+        "en": "LV board",
+        "es": "Cuadro BT"
+      },
+      "notes": {
+        "en": "Connection point",
+        "es": "Punto de conexion"
+      }
+    }
+  ],
+  "drawing_conventions": [
+    {
+      "en": "Draw source at top, loads at bottom; read upstream to downstream.",
+      "es": "Dibujar la fuente arriba y las cargas abajo; leer de aguas arriba a aguas abajo."
+    },
+    {
+      "en": "Label each device with its tag (for example QF-101) and its rating (A, kA, curve).",
+      "es": "Rotular cada equipo con su tag (por ejemplo QF-101) y su calibre (A, kA, curva)."
+    },
+    {
+      "en": "Label each feeder with conductor count, size and material where notated.",
+      "es": "Rotular cada alimentador con numero de conductores, seccion y material cuando se indique."
+    }
+  ],
+  "source_ids": [
+    "repo_pv_inverters",
+    "viox_fuse"
+  ],
+  "sources": [
+    {
+      "id": "repo_pv_inverters",
+      "title": "Central inverters and accessories research (this repository)",
+      "url": "repo://harness/docs/pv/inverters/central_inverters_and_accessories.md",
+      "publisher": "EPC-291 repository",
+      "accessed": "2026-11-20",
+      "kind": "internal_repo"
+    },
+    {
+      "id": "viox_fuse",
+      "title": "IEC 60269 fuse guide: gG vs aM, NH sizes, selection rules",
+      "url": "https://viox.com/iec-60269-low-voltage-fuse-selection-guide-gg-am-nh/",
+      "publisher": "VIOX Electric",
+      "accessed": "2026-11-20",
+      "kind": "third_party_guide"
+    }
+  ]
+}

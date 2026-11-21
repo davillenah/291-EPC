@@ -1,0 +1,161 @@
+{
+  "id": "circ_vfd_drive",
+  "category": "motor_starting",
+  "name": {
+    "en": "Variable frequency drive (VFD) with line contactor and STO",
+    "es": "Variador de frecuencia (VFD) con contactor de línea y STO"
+  },
+  "description": {
+    "en": "Converter with a rectifier, DC link and inverter supplies the motor with variable voltage and frequency. A line contactor and an STO (safe torque off) input provide safety functions.",
+    "es": "Convertidor con rectificador, bus de CC e inversor alimenta al motor con tensión y frecuencia variables. Un contactor de línea y una entrada STO (par seguro desactivado) dan funciones de seguridad."
+  },
+  "application_range": {
+    "text": {
+      "en": "Pumps, fans, conveyors and process control needing speed variation and soft start.",
+      "es": "Bombas, ventiladores, transportadores y control de procesos que requieren variación de velocidad y arranque suave."
+    },
+    "status": "typical"
+  },
+  "representation": {
+    "mld": {
+      "text": {
+        "en": "Line side into drive, output from drive to motor (three phases).",
+        "es": "Lado de línea al variador, salida del variador al motor (tres fases)."
+      },
+      "status": "typical"
+    },
+    "functional": {
+      "text": {
+        "en": "Control rung for run enable and STO inputs; line contactor controlled by drive or PLC.",
+        "es": "Rama de mando para habilitación de marcha y entradas STO; contactor de línea controlado por el variador o PLC."
+      },
+      "status": "typical"
+    }
+  },
+  "components": [
+    {
+      "ref": "Q1",
+      "letter": "Q",
+      "symbol_id": "sym_circuit_breaker_device",
+      "description": {
+        "en": "Input breaker",
+        "es": "Interruptor de entrada"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "KM1",
+      "letter": "Q",
+      "symbol_id": "sym_contact_main_pole",
+      "description": {
+        "en": "Line contactor",
+        "es": "Contactor de línea"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "A1",
+      "letter": "A",
+      "symbol_id": "sym_plc_io",
+      "description": {
+        "en": "Frequency drive (rectifier, DC link, inverter)",
+        "es": "Variador de frecuencia (rectificador, bus CC, inversor)"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "M1",
+      "letter": "M",
+      "symbol_id": "sym_motor_3ph_squirrel",
+      "description": {
+        "en": "Motor",
+        "es": "Motor"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "S1",
+      "letter": "S",
+      "symbol_id": "sym_pushbutton",
+      "description": {
+        "en": "Stop and enable (typical)",
+        "es": "Paro y habilitación (típico)"
+      },
+      "status": "typical"
+    }
+  ],
+  "power_connection": [
+    {
+      "text": {
+        "en": "Line to input of drive through Q1 and KM1; drive output U, V, W to motor; motor cable shielded per EMC practice.",
+        "es": "Línea a la entrada del variador mediante Q1 y KM1; salida U, V, W del variador al motor; cable de motor apantallado según práctica EMC."
+      },
+      "status": "typical"
+    }
+  ],
+  "control_rungs": [
+    {
+      "text": {
+        "en": "Run enable: safety input (STO) and start command feed the drive digital inputs.",
+        "es": "Habilitación de marcha: entrada de seguridad (STO) y orden de arranque alimentan las entradas digitales del variador."
+      },
+      "status": "typical",
+      "rung": 1
+    },
+    {
+      "text": {
+        "en": "KM1 coil driven by drive relay or PLC output, after the enable.",
+        "es": "Bobina KM1 accionada por relé del variador o salida de PLC, tras la habilitación."
+      },
+      "status": "typical",
+      "rung": 2
+    }
+  ],
+  "interlocks": [
+    {
+      "text": {
+        "en": "Drive output must not be connected to the motor while the line contactor is open unless the design allows it.",
+        "es": "La salida del variador no debe conectarse al motor con el contactor de línea abierto salvo que el diseño lo permita."
+      },
+      "status": "typical"
+    }
+  ],
+  "protections": [
+    {
+      "text": {
+        "en": "Drive motor-overload function, short-circuit protection on input, and STO as safety function (IEC 61800-5-2 typical).",
+        "es": "Función de sobrecarga del motor del variador, protección de cortocircuito en la entrada y STO como función de seguridad (típico IEC 61800-5-2)."
+      },
+      "status": "typical"
+    }
+  ],
+  "sequence": [
+    {
+      "text": {
+        "en": "Enable, line contactor closes, drive ramps frequency to setpoint.",
+        "es": "Habilitación, cierra el contactor de línea, el variador rampa la frecuencia hasta la consigna."
+      },
+      "status": "typical"
+    }
+  ],
+  "common_errors": [
+    {
+      "text": {
+        "en": "Line contactor switched frequently; can damage the input stage.",
+        "es": "Contactor de línea conmutado con frecuencia: puede dañar la etapa de entrada."
+      },
+      "status": "typical"
+    },
+    {
+      "text": {
+        "en": "STO and enable wired wrongly, drive does not run or runs unsafely.",
+        "es": "STO y habilitación cableados mal: el variador no arranca o arranca sin seguridad."
+      },
+      "status": "typical"
+    }
+  ],
+  "status": "typical",
+  "source_ids": [],
+  "sources": [],
+  "schema_version": "1.0"
+}

@@ -1,0 +1,139 @@
+{
+  "schema_version": "1.0",
+  "record_type": "scheme",
+  "id": "self_consumption_zero_injection",
+  "name": {
+    "en": "Self-consumption PV with export limit (zero injection)",
+    "es": "FV para autoconsumo con límite de inyección (inyección cero)"
+  },
+  "description": {
+    "en": "PV inverter feeds the board; a bidirectional meter at the point of connection and a reverse-power relay (32R) or equivalent controls export.",
+    "es": "El inversor FV alimenta el cuadro; un medidor bidireccional en el punto de conexión y un relé de potencia inversa (32R) o equivalente controlan la exportación."
+  },
+  "purpose": {
+    "en": "Export limitation at the point of connection. The zero-injection control method is not sourced.",
+    "es": "Limitación de exportación en el punto de conexión. El método de control de inyección cero no está sourced."
+  },
+  "architecture": "self_consumption_zero_injection",
+  "voltage_level": "LV",
+  "status": "typical",
+  "chain": [
+    {
+      "order": 1,
+      "device_id": "pv_inverter_grid_tie",
+      "label": {
+        "en": "PV inverter",
+        "es": "Inversor FV"
+      },
+      "notes": {
+        "en": "Export control per inverter capability",
+        "es": "Control de exportación según capacidad del inversor"
+      }
+    },
+    {
+      "order": 2,
+      "device_id": "switch_disconnector",
+      "label": {
+        "en": "AC isolator",
+        "es": "Seccionador AC"
+      },
+      "notes": {
+        "en": "Inverter AC side",
+        "es": "Lado AC del inversor"
+      }
+    },
+    {
+      "order": 3,
+      "device_id": "mcb",
+      "label": {
+        "en": "AC overcurrent",
+        "es": "Sobrecorriente AC"
+      },
+      "notes": {
+        "en": "Per inverter rating",
+        "es": "Por calibre del inversor"
+      }
+    },
+    {
+      "order": 4,
+      "device_id": "pv_bidirectional_meter_lv",
+      "label": {
+        "en": "Bidirectional meter",
+        "es": "Medidor bidireccional"
+      },
+      "notes": {
+        "en": "Point of connection",
+        "es": "Punto de conexión"
+      }
+    },
+    {
+      "order": 5,
+      "device_id": "relay_ansi_32_reverse_power",
+      "label": {
+        "en": "Reverse power (32R)",
+        "es": "Potencia inversa (32R)"
+      },
+      "notes": {
+        "en": "Where the utility or design requires export control",
+        "es": "Cuando la distribuidora o diseño exige control de exportación"
+      }
+    },
+    {
+      "order": 6,
+      "device_id": "switchboard_tgbt",
+      "label": {
+        "en": "LV board connection",
+        "es": "Conexión al cuadro BT"
+      },
+      "notes": {
+        "en": "Point of connection",
+        "es": "Punto de conexión"
+      }
+    }
+  ],
+  "device_refs": [
+    "pv_inverter_grid_tie",
+    "switch_disconnector",
+    "mcb",
+    "pv_bidirectional_meter_lv",
+    "relay_ansi_32_reverse_power",
+    "switchboard_tgbt"
+  ],
+  "drawing_conventions": [
+    {
+      "en": "Show the export-limit device and its CT or meter location.",
+      "es": "Mostrar el dispositivo de límite de exportación y la ubicación de TC o medidor."
+    }
+  ],
+  "source_ids": [
+    "oeb_der_protection",
+    "ei_self_consumption",
+    "repo_inverters_central"
+  ],
+  "sources": [
+    {
+      "id": "oeb_der_protection",
+      "title": "Ontario Energy Board DER WG3: sample protection philosophy (utility sample)",
+      "url": "https://www.oeb.ca/sites/default/files/DER-wg3-Sample%20Protection%20Philosophy.pdf",
+      "publisher": "Ontario Energy Board (sample document)",
+      "accessed": "2026-11-20",
+      "kind": "third_party_guide"
+    },
+    {
+      "id": "ei_self_consumption",
+      "title": "Photovoltaic for self-consumption: architecture and equipment requirements",
+      "url": "https://www.electrical-installation.org/enwiki/Photovoltaic_for_self-consumption_-_architecture_and_equipment_requirements",
+      "publisher": "electrical-installation.org (public technical wiki)",
+      "accessed": "2026-11-20",
+      "kind": "textbook_wiki"
+    },
+    {
+      "id": "repo_inverters_central",
+      "title": "Repo: central inverters and accessories research",
+      "url": "repo://harness/docs/pv/inverters/central_inverters_and_accessories.md",
+      "publisher": "EPC-291 repository",
+      "accessed": "2026-11-20",
+      "kind": "internal_repo"
+    }
+  ]
+}

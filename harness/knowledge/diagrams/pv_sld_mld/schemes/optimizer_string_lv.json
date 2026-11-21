@@ -1,0 +1,140 @@
+{
+  "schema_version": "1.0",
+  "record_type": "scheme",
+  "id": "optimizer_string_lv",
+  "name": {
+    "en": "Power optimizer on a string inverter, LV connection",
+    "es": "Optimizador de potencia con inversor de string, conexión BT"
+  },
+  "description": {
+    "en": "Module-level DC-DC optimizers feed a string, which goes through a DC load-break switch to a string inverter, then AC isolation, overcurrent and the board.",
+    "es": "Optimizadores DC-DC por módulo alimentan un string, que pasa por un seccionador DC a un inversor de string, luego aislamiento AC, sobrecorriente y cuadro."
+  },
+  "purpose": {
+    "en": "Module-level MPPT with the string inverter.",
+    "es": "MPPT por módulo con el inversor de string."
+  },
+  "architecture": "optimizer_string_lv",
+  "voltage_level": "LV",
+  "status": "typical",
+  "chain": [
+    {
+      "order": 1,
+      "device_id": "pv_power_optimizer",
+      "label": {
+        "en": "Optimizer (per module)",
+        "es": "Optimizador (por módulo)"
+      },
+      "notes": {
+        "en": "Module-level DC-DC",
+        "es": "DC-DC por módulo"
+      }
+    },
+    {
+      "order": 2,
+      "device_id": "pv_dc_switch_load_break",
+      "label": {
+        "en": "DC load-break switch",
+        "es": "Seccionador DC de corte en carga"
+      },
+      "notes": {
+        "en": "Isolates the string at the inverter input",
+        "es": "Aísla el string en la entrada del inversor"
+      }
+    },
+    {
+      "order": 3,
+      "device_id": "pv_inverter_grid_tie",
+      "label": {
+        "en": "String inverter",
+        "es": "Inversor de string"
+      },
+      "notes": {
+        "en": "Sets the AC output",
+        "es": "Fija la salida AC"
+      }
+    },
+    {
+      "order": 4,
+      "device_id": "switch_disconnector",
+      "label": {
+        "en": "AC isolator",
+        "es": "Seccionador AC"
+      },
+      "notes": {
+        "en": "Isolates the inverter from the board",
+        "es": "Aísla el inversor del cuadro"
+      }
+    },
+    {
+      "order": 5,
+      "device_id": "mcb",
+      "label": {
+        "en": "AC overcurrent",
+        "es": "Sobrecorriente AC"
+      },
+      "notes": {
+        "en": "Per inverter rating",
+        "es": "Por calibre del inversor"
+      }
+    },
+    {
+      "order": 6,
+      "device_id": "switchboard_tgbt",
+      "label": {
+        "en": "LV board connection",
+        "es": "Conexión al cuadro BT"
+      },
+      "notes": {
+        "en": "Point of connection",
+        "es": "Punto de conexión"
+      }
+    }
+  ],
+  "device_refs": [
+    "pv_power_optimizer",
+    "pv_dc_switch_load_break",
+    "pv_inverter_grid_tie",
+    "switch_disconnector",
+    "mcb",
+    "switchboard_tgbt",
+    "repo.solaredge.se10k"
+  ],
+  "drawing_conventions": [
+    {
+      "en": "Optimizer DC output is limited per module; the string voltage is set by the inverter.",
+      "es": "La salida DC del optimizador es por módulo; la tensión de string la fija el inversor."
+    }
+  ],
+  "source_ids": [
+    "repo_inverters_central",
+    "repo_micro_hybrid",
+    "iec60364_7_712_preview"
+  ],
+  "sources": [
+    {
+      "id": "repo_inverters_central",
+      "title": "Repo: central inverters and accessories research",
+      "url": "repo://harness/docs/pv/inverters/central_inverters_and_accessories.md",
+      "publisher": "EPC-291 repository",
+      "accessed": "2026-11-20",
+      "kind": "internal_repo"
+    },
+    {
+      "id": "repo_micro_hybrid",
+      "title": "Repo: string, hybrid and micro inverters research",
+      "url": "repo://harness/docs/pv/inverters/string_hybrid_micro_inverters.md",
+      "publisher": "EPC-291 repository",
+      "accessed": "2026-11-20",
+      "kind": "internal_repo"
+    },
+    {
+      "id": "iec60364_7_712_preview",
+      "title": "IEC 60364-7-712 ed.3.0 (2025-10): publisher preview, scope and clause index",
+      "url": "https://assets.vde-verlag.de/iec-normen/preview-pdf/info_iec60364-7-712%7Bed3.0%7Db.pdf",
+      "publisher": "VDE Verlag (IEC publication preview)",
+      "accessed": "2026-11-20",
+      "kind": "standard_public_summary"
+    }
+  ]
+}

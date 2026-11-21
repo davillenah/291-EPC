@@ -1,0 +1,169 @@
+{
+  "schema_version": "1.0",
+  "record_type": "device",
+  "id": "pv_string_combiner_box",
+  "name": {
+    "en": "PV string combiner box",
+    "es": "Caja combinadora de strings FV"
+  },
+  "description": {
+    "en": "Enclosure that joins DC strings into one DC output, with string fuse holders and an SPD. Ratings depend on the model.",
+    "es": "Caja que une strings DC en una salida DC, con portafusibles de string y SPD. Los calibres dependen del modelo."
+  },
+  "kind": "pv_combiner",
+  "voltage_level": "LV",
+  "status": "unverified",
+  "source_ids": [
+    "phoenix_combiners",
+    "repo_inverters_central",
+    "iec60617_db"
+  ],
+  "sources": [
+    {
+      "id": "phoenix_combiners",
+      "title": "Phoenix Contact string combiner boxes for PV (model list)",
+      "url": "https://www.phoenixcontact.com/en-sk/products/surge-protection/string-combiner-boxes-for-photovoltaic-systems",
+      "publisher": "Phoenix Contact",
+      "accessed": "2026-11-20",
+      "kind": "manufacturer"
+    },
+    {
+      "id": "repo_inverters_central",
+      "title": "Repo: central inverters and accessories research",
+      "url": "repo://harness/docs/pv/inverters/central_inverters_and_accessories.md",
+      "publisher": "EPC-291 repository",
+      "accessed": "2026-11-20",
+      "kind": "internal_repo"
+    },
+    {
+      "id": "iec60617_db",
+      "title": "IEC 60617 graphical symbols database (public page)",
+      "url": "https://std.iec.ch/iec60617",
+      "publisher": "IEC",
+      "accessed": "2026-11-20",
+      "kind": "standard_public_summary"
+    }
+  ],
+  "standard_refs": [
+    {
+      "ref": "IEC 60364-7-712 (ed.3.0, 2025-10)",
+      "note": {
+        "en": "Overcurrent and SPD sections apply to combiners",
+        "es": "Las secciones de sobrecorriente y SPD aplican a las cajas"
+      }
+    }
+  ],
+  "ratings": [
+    {
+      "parameter": "string_inputs",
+      "value": "1 or 2 per model (list), up to 6 MPP trackers in the 2MPPT/4MPPT families",
+      "unit": "strings",
+      "status": "unverified",
+      "source_ids": [
+        "phoenix_combiners"
+      ],
+      "note": {
+        "en": "Phoenix Contact list: 1 or 2 strings depending on model",
+        "es": "Lista Phoenix Contact: 1 o 2 strings según modelo"
+      }
+    },
+    {
+      "parameter": "rated_dc_mpp_voltage",
+      "value": 1000,
+      "unit": "V DC",
+      "status": "unverified",
+      "source_ids": [
+        "phoenix_combiners"
+      ],
+      "note": {
+        "en": "All listed Phoenix models show MPP voltage 1000 V DC",
+        "es": "Todos los modelos listados de Phoenix muestran tensión MPP 1000 V DC"
+      }
+    },
+    {
+      "parameter": "sol_sc16st_mpp_voltage",
+      "value": 1500,
+      "unit": "V DC",
+      "status": "unverified",
+      "source_ids": [
+        "repo_inverters_central"
+      ],
+      "note": {
+        "en": "Repo: DC combiner 16 strings (Phoenix SCB SOL SC16ST) 1500 V MPP",
+        "es": "Repo: caja 16 strings (Phoenix SCB SOL SC16ST) 1500 V MPP"
+      }
+    },
+    {
+      "parameter": "sol_sc16st_string_fuse_ratings",
+      "value": "15, 16, 20, 25, 30, 32",
+      "unit": "A",
+      "status": "unverified",
+      "source_ids": [
+        "repo_inverters_central"
+      ],
+      "note": {
+        "en": "Repo: fuses 15/16/20/25/30/32 A, 10.3 x 85 mm, with T2 SPD and DC switch",
+        "es": "Repo: fusibles 15/16/20/25/30/32 A, 10,3 x 85 mm, con SPD T2 e interruptor DC"
+      }
+    },
+    {
+      "parameter": "spd_type",
+      "value": "Type 1+2 or Type 2 (model-dependent)",
+      "unit": "",
+      "status": "unverified",
+      "source_ids": [
+        "phoenix_combiners"
+      ],
+      "note": {
+        "en": "Most listed Phoenix models: T1/T2 or T2 per model; newer products integrated",
+        "es": "La mayoría de los modelos Phoenix: T1/T2 o T2 según modelo"
+      }
+    },
+    {
+      "parameter": "spd_uc_up_in",
+      "value": null,
+      "unit": "V / kV / kA",
+      "status": "not_found",
+      "source_ids": [],
+      "note": {
+        "en": "Uc, Up and In not stated on the model list page",
+        "es": "Uc, Up e In no indicados en la página de modelos"
+      }
+    },
+    {
+      "parameter": "string_fuse_rating_phoenix_list",
+      "value": null,
+      "unit": "A",
+      "status": "not_found",
+      "source_ids": [],
+      "note": {
+        "en": "Fuse rating not stated on the Phoenix model list",
+        "es": "Calibre de fusible no indicado en la lista Phoenix"
+      }
+    }
+  ],
+  "selection_criteria": {
+    "when_to_use": [
+      {
+        "en": "Multi-string DC collection before the inverter, typical above a few strings.",
+        "es": "Colección DC multistring antes del inversor, típica a partir de unos pocos strings."
+      },
+      {
+        "en": "Rooftop systems with one or two strings and an inverter with its own inputs.",
+        "es": "Techos con uno o dos strings e inversor con entradas propias."
+      }
+    ],
+    "when_not_to_use": [
+      {
+        "en": "Not needed where the inverter has enough inputs and string fusing is not required (typical).",
+        "es": "No necesaria si el inversor tiene entradas suficientes y no se requiere fusibilidad de string (típico)."
+      }
+    ]
+  },
+  "notes": [
+    {
+      "en": "Model-specific ratings. Read the chosen datasheet before selecting fuse rating.",
+      "es": "Calibres específicos del modelo. Leer la ficha del modelo elegido antes de elegir el fusible."
+    }
+  ]
+}

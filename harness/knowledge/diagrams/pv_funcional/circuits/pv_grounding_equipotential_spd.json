@@ -1,0 +1,200 @@
+{
+  "schema_version": "1.0",
+  "id": "pv_grounding_equipotential_spd",
+  "family": "inverter_to_board",
+  "name": {
+    "en": "Grounding, equipotential bonding and surge protection",
+    "es": "Puesta a tierra, equipotencial y protección contra sobretensiones"
+  },
+  "description": {
+    "en": "Structure bonding to a combiner earth bar and the inverter PE, with DC and AC SPD stages and an optional lightning rod.",
+    "es": "Unión de la estructura a la barra de la combinadora y al PE del inversor, con etapas de DPS DC y AC y pararrayos opcional."
+  },
+  "application_range": {
+    "text": {
+      "en": "Ground-mounted and roof arrays with a DC combiner and central or string inverters.",
+      "es": "Arreglos en suelo y cubierta con combinadora DC e inversores centrales o de string."
+    },
+    "status": "typical",
+    "source_ids": []
+  },
+  "diagram_types": [
+    "SLD",
+    "MLD"
+  ],
+  "symbol_refs": [
+    "sym_protective_earth",
+    "sym_surge_arrester_spd"
+  ],
+  "device_refs": [
+    "spd_type1",
+    "spd_type2",
+    "spd_type3"
+  ],
+  "components": [
+    {
+      "ref": "X1",
+      "letter": "X",
+      "symbol_id": "sym_protective_earth",
+      "device_id": null,
+      "description": {
+        "en": "Structure earth bonding to the combiner ground bar and the board PE bar.",
+        "es": "Unión de tierra de la estructura a la barra de la combinadora y a la barra PE del tablero."
+      },
+      "status": "unverified"
+    },
+    {
+      "ref": "F1",
+      "letter": "F",
+      "symbol_id": "sym_surge_arrester_spd",
+      "device_id": "spd_type2",
+      "description": {
+        "en": "DC SPD type 2 at the combiner or the inverter DC input.",
+        "es": "DPS DC tipo 2 en la combinadora o en la entrada DC del inversor."
+      },
+      "status": "unverified"
+    },
+    {
+      "ref": "F2",
+      "letter": "F",
+      "symbol_id": "sym_surge_arrester_spd",
+      "device_id": "spd_type1",
+      "description": {
+        "en": "SPD type 1 at the service entrance (lightning current stage).",
+        "es": "DPS tipo 1 en la acometida (etapa de corriente de rayo)."
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "F3",
+      "letter": "F",
+      "symbol_id": "sym_surge_arrester_spd",
+      "device_id": "spd_type3",
+      "description": {
+        "en": "SPD type 3 near sensitive equipment.",
+        "es": "DPS tipo 3 cerca de equipos sensibles."
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "A1",
+      "letter": "A",
+      "symbol_id": null,
+      "device_id": null,
+      "description": {
+        "en": "Lightning rod and down conductor to the structure: not located in the sources.",
+        "es": "Pararrayos y bajante a la estructura: no ubicado en las fuentes."
+      },
+      "status": "not_found"
+    }
+  ],
+  "power_connection": [
+    {
+      "text": {
+        "en": "Array frame and mounting structure connect to the combiner ground bar.",
+        "es": "Marco del arreglo y estructura se conectan a la barra de tierra de la combinadora."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "solectria_strcom"
+      ]
+    },
+    {
+      "text": {
+        "en": "Negative DC terminal is grounded only by the inverter, per the STRCOM manual (the combiner does not ground it).",
+        "es": "El negativo DC se conecta a tierra solo en el inversor, según el manual STRCOM (la combinadora no lo conecta)."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "solectria_strcom"
+      ]
+    },
+    {
+      "text": {
+        "en": "Grounding conductor sized per the standard in force; STRCOM cites UL 690.47 and NEC 250.166 (US references).",
+        "es": "Conductor de puesta a tierra según la norma vigente; STRCOM cita UL 690.47 y NEC 250.166 (referencias US)."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "solectria_strcom"
+      ]
+    },
+    {
+      "text": {
+        "en": "Equipotential bonding of metal parts: typical practice, no numeric value here.",
+        "es": "Equipotencial de partes metálicas: práctica típica, sin valor numérico aquí."
+      },
+      "status": "typical",
+      "source_ids": []
+    }
+  ],
+  "control_connection": [],
+  "protections": [
+    {
+      "text": {
+        "en": "Lightning protection standard (IEC 62305) values: not read in this research.",
+        "es": "Valores de la norma IEC 62305: no leídos en esta investigación."
+      },
+      "status": "not_found",
+      "source_ids": []
+    }
+  ],
+  "sequence": [
+    {
+      "text": {
+        "en": "Bond the structure first, then the combiner earth bar, then the inverter PE. Check continuity.",
+        "es": "Unir primero la estructura, luego la barra de la combinadora y luego el PE del inversor. Verificar continuidad."
+      },
+      "status": "typical",
+      "source_ids": []
+    }
+  ],
+  "common_errors": [
+    {
+      "text": {
+        "en": "Negative grounded at two points on a non-isolated system.",
+        "es": "Negativo puesto a tierra en dos puntos en un sistema no aislado."
+      },
+      "status": "typical",
+      "source_ids": []
+    },
+    {
+      "text": {
+        "en": "No DC SPD on the array side.",
+        "es": "Sin DPS DC en el lado del arreglo."
+      },
+      "status": "typical",
+      "source_ids": []
+    },
+    {
+      "text": {
+        "en": "Paint or anodising left between structure and bonding point.",
+        "es": "Pintura o anodizado entre estructura y punto de unión."
+      },
+      "status": "typical",
+      "source_ids": []
+    }
+  ],
+  "source_conflicts": [],
+  "status": "unverified",
+  "source_ids": [
+    "repo_devices",
+    "solectria_strcom"
+  ],
+  "sources": [
+    {
+      "id": "repo_devices",
+      "title": "EPC-291 repository: sld_mld/devices and funcional_iec60617/symbols_index.json (ids reused)",
+      "url": "repo://sld_mld/devices",
+      "kind": "internal_repo",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "solectria_strcom",
+      "title": "Solectria STRCOM fused string combiner installation and operations manual",
+      "url": "https://www.solectria.com/downloads/installation-operation-manuals/strcom-installation-and-operations-manual",
+      "kind": "manufacturer_doc",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

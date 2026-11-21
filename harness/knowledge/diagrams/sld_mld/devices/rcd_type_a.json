@@ -1,0 +1,97 @@
+{
+  "schema_version": "1.0",
+  "id": "rcd_type_a",
+  "name": {
+    "en": "RCD type A",
+    "es": "RCD tipo A"
+  },
+  "description": {
+    "en": "Detects sinusoidal AC and pulsating DC residual current (up to 6 mA DC as stated).",
+    "es": "Detecta corriente residual alterna sinusoidal y pulsante DC (hasta 6 mA DC segun la fuente)."
+  },
+  "kind": "rcd",
+  "voltage_level": "LV",
+  "status": "unverified",
+  "source_ids": [
+    "ei_rcd",
+    "schneider_rcd",
+    "iec60617_db"
+  ],
+  "sources": [
+    {
+      "id": "ei_rcd",
+      "title": "Protection of circuits by RCD (wiki)",
+      "url": "https://www.electrical-installation.org/enwiki/Protection_of_circuits_by_RCD",
+      "publisher": "electrical-installation.org",
+      "accessed": "2026-11-20",
+      "kind": "textbook_wiki"
+    },
+    {
+      "id": "schneider_rcd",
+      "title": "CA908066E residual current devices (RCD guide)",
+      "url": "https://download.se.com/doc/CA908066E/CA908066E%20(web).pdf",
+      "publisher": "Schneider Electric",
+      "accessed": "2026-11-20",
+      "kind": "manufacturer"
+    },
+    {
+      "id": "iec60617_db",
+      "title": "IEC 60617 graphical symbols database (public page)",
+      "url": "https://std.iec.ch/iec60617",
+      "publisher": "IEC",
+      "accessed": "2026-11-20",
+      "kind": "standard_public_summary"
+    }
+  ],
+  "standard_refs": [
+    {
+      "ref": "IEC 61008 / IEC 61009 / IEC 62423",
+      "note": {
+        "en": "RCD family standards (cited, type definitions not quoted)",
+        "es": "Familia de normas RCD (citada, definiciones no transcritas)"
+      }
+    }
+  ],
+  "symbol_ref": {
+    "id": "not_found",
+    "status": "not_found",
+    "note": {
+      "en": "IEC 60617 public page lists no identifiers for this item; not found, not guessed.",
+      "es": "La pagina publica de IEC 60617 no lista identificadores para este elemento; no encontrado, no supuesto."
+    }
+  },
+  "ratings_typical": [
+    {
+      "parameter": "waveform_detection",
+      "value": "AC and pulsating DC up to 6 mA DC (cited)",
+      "unit": "-",
+      "status": "unverified",
+      "source_ids": [
+        "ei_rcd",
+        "schneider_rcd"
+      ],
+      "note": {
+        "en": "AC and pulsating DC up to 6 mA DC (cited)",
+        "es": "AC y pulsante DC hasta 6 mA DC (citado)"
+      }
+    }
+  ],
+  "selection_criteria": {
+    "when_to_use": [
+      {
+        "en": "Single-phase loads with rectifiers: induction hobs, washing machines, tumble-dryers, single-phase UPS (cited)",
+        "es": "Cargas monofasicas con rectificador: placas de induccion, lavadoras, secadoras, SAI monofasico (citado)"
+      }
+    ],
+    "when_not_to_use": [
+      {
+        "en": "Single-phase variable speed drives (use F), three-phase drives or EV chargers (use B)",
+        "es": "Variadores monofasicos (usar F), variadores trifasicos o cargadores VE (usar B)"
+      }
+    ],
+    "alternatives": [
+      "rccb",
+      "rcbo"
+    ]
+  }
+}

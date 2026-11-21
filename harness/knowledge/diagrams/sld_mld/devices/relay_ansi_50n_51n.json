@@ -1,0 +1,86 @@
+{
+  "schema_version": "1.0",
+  "id": "relay_ansi_50n_51n",
+  "name": {
+    "en": "ANSI 50N/51N: Earth (ground) overcurrent",
+    "es": "ANSI 50N/51N: Sobreintensidad de tierra"
+  },
+  "description": {
+    "en": "Earth-fault overcurrent function. The cited list gives 50G and 51G (ground conductor); the 50N and 51N naming is the common convention and is marked typical.",
+    "es": "Funcion de sobreintensidad de falta a tierra. La lista citada da 50G y 51G (conductor de tierra); la denominacion 50N y 51N es la convencion habitual y se marca como typical."
+  },
+  "kind": "protection_relay",
+  "voltage_level": "MV",
+  "status": "typical",
+  "source_ids": [
+    "control_ansi",
+    "iec60617_db"
+  ],
+  "sources": [
+    {
+      "id": "control_ansi",
+      "title": "ANSI/IEEE Function Number Codes",
+      "url": "https://control.com/textbook/electric-power-measurement-and-control/ansiieee-function-number-codes/",
+      "publisher": "control.com",
+      "accessed": "2026-11-20",
+      "kind": "textbook_wiki"
+    },
+    {
+      "id": "iec60617_db",
+      "title": "IEC 60617 graphical symbols database (public page)",
+      "url": "https://std.iec.ch/iec60617",
+      "publisher": "IEC",
+      "accessed": "2026-11-20",
+      "kind": "standard_public_summary"
+    }
+  ],
+  "standard_refs": [
+    {
+      "ref": "ANSI/IEEE C37.2",
+      "note": {
+        "en": "Device function numbers (cited)",
+        "es": "Numeracion de funciones (citada)"
+      }
+    }
+  ],
+  "symbol_ref": {
+    "id": "not_found",
+    "status": "not_found",
+    "note": {
+      "en": "IEC 60617 public page lists no identifiers for this item; not found, not guessed.",
+      "es": "La pagina publica de IEC 60617 no lista identificadores para este elemento; no encontrado, no supuesto."
+    }
+  },
+  "ratings_typical": [
+    {
+      "parameter": "function_definition",
+      "value": "50G / 51G in cited list; 50N / 51N convention",
+      "unit": "-",
+      "status": "typical",
+      "source_ids": [
+        "control_ansi"
+      ],
+      "note": {
+        "en": "Equivalent naming for ground function; 50N/51N not in cited list",
+        "es": "Denominacion equivalente de la funcion de tierra; 50N/51N no aparece en la lista citada"
+      }
+    }
+  ],
+  "selection_criteria": {
+    "when_to_use": [
+      {
+        "en": "Earth-fault detection with residual or core-balance CT (typical)",
+        "es": "Deteccion de falta a tierra con TC residual o toroidal (typical)"
+      }
+    ],
+    "when_not_to_use": [
+      {
+        "en": "Phase faults: use 50/51 (typical)",
+        "es": "Fallos entre fases: usar 50/51 (typical)"
+      }
+    ],
+    "alternatives": [
+      "relay_ansi_50_51"
+    ]
+  }
+}

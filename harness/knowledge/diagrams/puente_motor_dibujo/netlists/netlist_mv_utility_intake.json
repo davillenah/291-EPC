@@ -1,0 +1,74 @@
+{
+ "schema_version": "1.0",
+ "id": "netlist_mv_utility_intake",
+ "name": {
+  "en": "MV utility intake to LV board",
+  "es": "Acometida MT de red a cuadro BT"
+ },
+ "diagram": "SLD",
+ "sheet": {
+  "size": "A3",
+  "style_ref": "epc_arch/epc_style.json"
+ },
+ "source_scheme": "mv_utility_intake",
+ "instances": [
+  {
+   "tag": "-P1",
+   "device_id": "utility_metering_mv",
+   "symbol": "mv_energy_meter",
+   "labels": {},
+   "label_source": "none (ratings come from engines at project time)"
+  },
+  {
+   "tag": "-Q1",
+   "device_id": "mv_load_break_switch_c",
+   "symbol": "mv_load_break_switch",
+   "labels": {},
+   "label_source": "none (ratings come from engines at project time)"
+  },
+  {
+   "tag": "-Q2",
+   "device_id": "mv_circuit_breaker_relay_module",
+   "symbol": "mv_circuit_breaker",
+   "labels": {},
+   "label_source": "none (ratings come from engines at project time)"
+  },
+  {
+   "tag": "-T1",
+   "device_id": "transformer_mv_lv",
+   "symbol": "mv_transformer_2w",
+   "labels": {},
+   "label_source": "none (ratings come from engines at project time)"
+  },
+  {
+   "tag": "-A1",
+   "device_id": "switchboard_tgbt",
+   "symbol": "lv_busbar_node",
+   "labels": {},
+   "label_source": "none (ratings come from engines at project time)"
+  }
+ ],
+ "connections": [
+  {
+   "from": "-P1:top",
+   "to": "-Q1:top",
+   "conductor": "L"
+  },
+  {
+   "from": "-Q1:bottom",
+   "to": "-Q2:top",
+   "conductor": "L"
+  },
+  {
+   "from": "-Q2:bottom",
+   "to": "-T1:top",
+   "conductor": "L"
+  },
+  {
+   "from": "-T1:bottom",
+   "to": "-A1:bottom",
+   "conductor": "L"
+  }
+ ],
+ "status": "typical"
+}

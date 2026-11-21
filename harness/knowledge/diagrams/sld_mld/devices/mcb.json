@@ -1,0 +1,204 @@
+{
+  "schema_version": "1.0",
+  "id": "mcb",
+  "name": {
+    "en": "Miniature circuit breaker (MCB)",
+    "es": "Interruptor automatico miniatura (MCB)"
+  },
+  "description": {
+    "en": "Thermal-magnetic breaker for final and small feeder circuits. The letter of the trip curve sets the instantaneous (magnetic) band.",
+    "es": "Interruptor termomagnetico para circuitos finales y alimentadores pequenos. La letra de la curva fija la banda de disparo instantaneo (magnetico)."
+  },
+  "kind": "breaker",
+  "voltage_level": "LV",
+  "status": "unverified",
+  "source_ids": [
+    "abb_mcb_curves",
+    "viox_breaker_sizes",
+    "iec60617_db"
+  ],
+  "sources": [
+    {
+      "id": "abb_mcb_curves",
+      "title": "What you need to know about MCB trip curves",
+      "url": "https://library.e.abb.com/public/b5acf03b2a1f42e3b08ed2fc27672c30/What%20you%20need%20to%20know%20about%20MCB%20trip%20curves.pdf",
+      "publisher": "ABB",
+      "accessed": "2026-11-20",
+      "kind": "manufacturer"
+    },
+    {
+      "id": "viox_breaker_sizes",
+      "title": "Standard breaker sizes: MCCB current ratings 16 A to 1600 A",
+      "url": "https://viox.com/standard-breaker-sizes/",
+      "publisher": "VIOX Electric",
+      "accessed": "2026-11-20",
+      "kind": "third_party_guide"
+    },
+    {
+      "id": "iec60617_db",
+      "title": "IEC 60617 graphical symbols database (public page)",
+      "url": "https://std.iec.ch/iec60617",
+      "publisher": "IEC",
+      "accessed": "2026-11-20",
+      "kind": "standard_public_summary"
+    }
+  ],
+  "standard_refs": [
+    {
+      "ref": "IEC 60898-1",
+      "note": {
+        "en": "Household and similar MCB standard; trip band values pending review",
+        "es": "Norma para MCB domesticos y similares; valores de banda pendientes de revision"
+      }
+    }
+  ],
+  "symbol_ref": {
+    "id": "not_found",
+    "status": "not_found",
+    "note": {
+      "en": "IEC 60617 public page lists no identifiers for this item; not found, not guessed.",
+      "es": "La pagina publica de IEC 60617 no lista identificadores para este elemento; no encontrado, no supuesto."
+    }
+  },
+  "ratings_typical": [
+    {
+      "parameter": "rated_current_max",
+      "value": 125,
+      "unit": "A",
+      "status": "unverified",
+      "source_ids": [
+        "viox_breaker_sizes"
+      ],
+      "note": {
+        "en": "MCB range up to 125 A per cited guide",
+        "es": "Rango MCB hasta 125 A segun guia citada"
+      }
+    },
+    {
+      "parameter": "curve_B_instantaneous",
+      "value": "3-5",
+      "unit": "x In",
+      "status": "pending review",
+      "source_ids": [
+        "abb_mcb_curves"
+      ],
+      "note": {
+        "en": "Trip band as quoted by ABB from the standard",
+        "es": "Banda de disparo segun ABB, citando la norma"
+      }
+    },
+    {
+      "parameter": "curve_C_instantaneous",
+      "value": "5-10",
+      "unit": "x In",
+      "status": "pending review",
+      "source_ids": [
+        "abb_mcb_curves"
+      ],
+      "note": {
+        "en": "Trip band as quoted by ABB from the standard",
+        "es": "Banda de disparo segun ABB, citando la norma"
+      }
+    },
+    {
+      "parameter": "curve_D_instantaneous",
+      "value": "10-20",
+      "unit": "x In",
+      "status": "pending review",
+      "source_ids": [
+        "abb_mcb_curves"
+      ],
+      "note": {
+        "en": "Trip band as quoted by ABB from the standard",
+        "es": "Banda de disparo segun ABB, citando la norma"
+      }
+    },
+    {
+      "parameter": "curve_K_instantaneous",
+      "value": "10-14",
+      "unit": "x In",
+      "status": "pending review",
+      "source_ids": [
+        "abb_mcb_curves"
+      ],
+      "note": {
+        "en": "Trip band as quoted by ABB from the standard",
+        "es": "Banda de disparo segun ABB, citando la norma"
+      }
+    },
+    {
+      "parameter": "curve_Z_instantaneous",
+      "value": "2-3",
+      "unit": "x In",
+      "status": "pending review",
+      "source_ids": [
+        "abb_mcb_curves"
+      ],
+      "note": {
+        "en": "Trip band as quoted by ABB from the standard",
+        "es": "Banda de disparo segun ABB, citando la norma"
+      }
+    },
+    {
+      "parameter": "breaking_capacity_Icn",
+      "value": null,
+      "unit": "kA",
+      "status": "not_found",
+      "source_ids": [],
+      "note": {
+        "en": "Not found in fetched sources; take from the manufacturer catalogue",
+        "es": "No encontrado en las fuentes consultadas; tomar del catalogo del fabricante"
+      }
+    }
+  ],
+  "selection_criteria": {
+    "when_to_use": [
+      {
+        "en": "Final circuits and small feeders where the prospective short-circuit current is below the device Icn (check Icn in the catalogue)",
+        "es": "Circuitos finales y alimentadores pequenos donde la corriente de cortocircuito presunta es inferior al Icn del equipo (verificar Icn en catalogo)"
+      },
+      {
+        "en": "Lighting, socket and general circuits: curve C is the usual default (typical)",
+        "es": "Circuitos de alumbrado, tomas y uso general: la curva C es el valor habitual (typical)"
+      },
+      {
+        "en": "Resistive or lighting loads with low inrush: curve B (typical)",
+        "es": "Cargas resistivas o de alumbrado con bajo pico de arranque: curva B (typical)"
+      },
+      {
+        "en": "Loads with high inrush (motors, transformers): curve D or K (typical)",
+        "es": "Cargas con pico de arranque alto (motores, transformadores): curva D o K (typical)"
+      }
+    ],
+    "when_not_to_use": [
+      {
+        "en": "Rated current above 125 A: use MCCB",
+        "es": "Corriente nominal superior a 125 A: usar MCCB"
+      },
+      {
+        "en": "Prospective short-circuit current above its Icn: use MCCB or a fuse with higher breaking capacity",
+        "es": "Corriente de cortocircuito presunta superior a su Icn: usar MCCB o fusible de mayor poder de corte"
+      },
+      {
+        "en": "Motor duty without motor-specific protection: use MPCB or contactor with thermal overload relay",
+        "es": "Servicio de motor sin proteccion especifica: usar MPCB o contactor con relé termico"
+      },
+      {
+        "en": "Where an RCD function is needed in the same device: use RCBO",
+        "es": "Si se necesita funcion diferencial en el mismo equipo: usar RCBO"
+      }
+    ],
+    "alternatives": [
+      "mccb",
+      "rcbo",
+      "mpcb",
+      "fuse_gg"
+    ]
+  },
+  "notes": [
+    {
+      "en": "Selectivity and back-up (filiation) with upstream devices are not covered by the fetched sources; check manufacturer coordination tables.",
+      "es": "La selectividad y la filiacion con aguas arriba no estan cubiertas por las fuentes consultadas; consultar tablas de coordinacion del fabricante."
+    }
+  ]
+}

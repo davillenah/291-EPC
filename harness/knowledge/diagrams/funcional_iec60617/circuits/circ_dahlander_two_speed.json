@@ -1,0 +1,200 @@
+{
+  "id": "circ_dahlander_two_speed",
+  "category": "motor_starting",
+  "name": {
+    "en": "Dahlander two-speed motor (pole-changing, one direction)",
+    "es": "Motor Dahlander de dos velocidades (cambio de polos, un sentido)"
+  },
+  "description": {
+    "en": "Single winding motor with two pole counts: low speed (delta, high pole count) and high speed (double star, low pole count). Three contactors select the connection.",
+    "es": "Motor de un devanado con dos números de polos: baja velocidad (triángulo, más polos) y alta velocidad (doble estrella, menos polos). Tres contactores seleccionan la conexión."
+  },
+  "application_range": {
+    "text": {
+      "en": "Fans, pumps, machine tools and mixers needing two fixed speeds with a 2:1 ratio.",
+      "es": "Ventiladores, bombas, máquinas herramienta y mezcladoras que necesitan dos velocidades fijas con relación 2:1."
+    },
+    "status": "typical"
+  },
+  "representation": {
+    "mld": {
+      "text": {
+        "en": "Motor with six terminal ends; three power paths (low: delta; high: double star with a star point) using three contactors.",
+        "es": "Motor con seis extremos de bornes; tres caminos de potencia (baja: triángulo; alta: doble estrella con punto neutro) con tres contactores."
+      },
+      "status": "typical"
+    },
+    "functional": {
+      "text": {
+        "en": "Rungs: low speed contactor, high speed star contactor and high speed double-star contactor, with interlocks.",
+        "es": "Ramas: contactor de baja velocidad, contactor de estrella de alta velocidad y contactor de doble estrella, con enclavamientos."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "electricaltechnology_dahlander_2speed"
+      ]
+    }
+  },
+  "components": [
+    {
+      "ref": "KM1",
+      "letter": "Q",
+      "symbol_id": "sym_contact_main_pole",
+      "description": {
+        "en": "Low-speed contactor (line to winding)",
+        "es": "Contactor de baja velocidad (línea a devanado)"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "KM2",
+      "letter": "Q",
+      "symbol_id": "sym_contact_main_pole",
+      "description": {
+        "en": "High-speed contactor (line to double star)",
+        "es": "Contactor de alta velocidad (línea a doble estrella)"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "KM3",
+      "letter": "Q",
+      "symbol_id": "sym_contact_main_pole",
+      "description": {
+        "en": "Star point contactor for high speed",
+        "es": "Contactor de punto neutro para alta velocidad"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "F2",
+      "letter": "F",
+      "symbol_id": "sym_thermal_overload_static",
+      "description": {
+        "en": "Thermal overload (set per speed as per design)",
+        "es": "Relé térmico (ajuste por velocidad según diseño)"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "M1",
+      "letter": "M",
+      "symbol_id": "sym_motor_3ph_squirrel",
+      "description": {
+        "en": "Dahlander motor",
+        "es": "Motor Dahlander"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "S1/S2/S3",
+      "letter": "S",
+      "symbol_id": "sym_pushbutton",
+      "description": {
+        "en": "Stop, low-speed and high-speed selectors",
+        "es": "Paro, selección de baja y alta velocidad"
+      },
+      "status": "typical"
+    }
+  ],
+  "power_connection": [
+    {
+      "text": {
+        "en": "Low speed: line to motor in delta-based pole configuration. High speed: line to double star with star point closed.",
+        "es": "Baja velocidad: línea al motor en configuración de polos basada en triángulo. Alta velocidad: línea a doble estrella con punto neutro cerrado."
+      },
+      "status": "typical"
+    }
+  ],
+  "control_rungs": [
+    {
+      "text": {
+        "en": "Low speed: KM1 coil with stop and overload chain.",
+        "es": "Baja velocidad: bobina KM1 con cadena de paro y sobrecarga."
+      },
+      "status": "typical",
+      "rung": 1
+    },
+    {
+      "text": {
+        "en": "High speed: KM3 star contactor energizes only when KM1 NC contact is closed; KM2 energizes after KM3 NO closes.",
+        "es": "Alta velocidad: el contactor de estrella KM3 se energiza solo cuando el NC de KM1 está cerrado; KM2 se energiza tras cerrar el NO de KM3."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "electricaltechnology_dahlander_2speed"
+      ],
+      "rung": 2
+    }
+  ],
+  "interlocks": [
+    {
+      "text": {
+        "en": "Low and high speed never together. KM1 NC in the KM3 coil path; KM3 NO in the KM2 coil path.",
+        "es": "Baja y alta velocidad nunca juntas. NC de KM1 en el camino de la bobina KM3; NO de KM3 en el camino de la bobina KM2."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "electricaltechnology_dahlander_2speed"
+      ]
+    }
+  ],
+  "protections": [
+    {
+      "text": {
+        "en": "Thermal overload per speed; short-circuit protection on line.",
+        "es": "Relé térmico por velocidad; protección de cortocircuito en línea."
+      },
+      "status": "typical"
+    }
+  ],
+  "sequence": [
+    {
+      "text": {
+        "en": "Low speed: KM1 closes, motor runs at low speed.",
+        "es": "Baja velocidad: cierra KM1, el motor gira a baja velocidad."
+      },
+      "status": "typical"
+    },
+    {
+      "text": {
+        "en": "High speed: KM1 drops, star KM3 closes first, then KM2 closes; motor runs at high speed (low pole count).",
+        "es": "Alta velocidad: se abre KM1, cierra primero KM3 (estrella) y luego KM2; el motor gira a alta velocidad (menos polos)."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "electricaltechnology_dahlander_2speed"
+      ]
+    }
+  ],
+  "common_errors": [
+    {
+      "text": {
+        "en": "Low and high speed coils energized together: short circuit.",
+        "es": "Bobinas de baja y alta velocidad energizadas a la vez: cortocircuito."
+      },
+      "status": "typical"
+    },
+    {
+      "text": {
+        "en": "Wrong sequence (KM2 before KM3): wrong connection and overload.",
+        "es": "Secuencia incorrecta (KM2 antes que KM3): conexión errada y sobrecarga."
+      },
+      "status": "typical"
+    }
+  ],
+  "status": "unverified",
+  "source_ids": [
+    "electricaltechnology_dahlander_2speed"
+  ],
+  "sources": [
+    {
+      "id": "electricaltechnology_dahlander_2speed",
+      "title": "electricaltechnology.org: two-speed, two-direction 3-phase motor power and control diagrams (secondary, Dahlander)",
+      "url": "https://www.electricaltechnology.org/2014/06/two-speeds-two-directions-3-phase-motor-power-control-diagrams.html/amp",
+      "kind": "secondary_article",
+      "accessed": "2026-11-20"
+    }
+  ],
+  "schema_version": "1.0"
+}

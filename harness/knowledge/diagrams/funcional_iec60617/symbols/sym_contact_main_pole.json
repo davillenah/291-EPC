@@ -1,0 +1,115 @@
+{
+  "schema_version": "1.0",
+  "id": "sym_contact_main_pole",
+  "name": {
+    "en": "Contactor main pole (power contact, normally open when de-energized)",
+    "es": "Polo principal de contactor (contacto de potencia)"
+  },
+  "family": "power",
+  "description": {
+    "en": "Power pole of a contactor, drawn as a blade between two terminals. Switches the load current. Note: The IEC page remark for S00286 reads 'Contact closed in the unoperated position'. This is the opposite of a normally open power pole: check the printed symbol before using it.",
+    "es": "Polo de potencia de un contactor, dibujado como una cuchilla entre dos bornes. Conmuta la corriente de carga. Nota: La nota de la página IEC de S00286 dice 'contacto cerrado en posición no accionada'. Es lo contrario de un polo de potencia normalmente abierto: revisar el símbolo impreso antes de usarlo."
+  },
+  "iec60617": {
+    "symbol_id": "S00286",
+    "iec_title_en": "Contactor; Main break contact of a contactor",
+    "legacy_ref": null,
+    "status": "unverified"
+  },
+  "reference_designation": {
+    "letter": "Q",
+    "note": {
+      "en": "Switching device (contactor power poles). Source article lists power contactors under Q.",
+      "es": "Dispositivo de maniobra (polos de potencia del contactor). El artículo fuente ubica los contactores de potencia en Q."
+    },
+    "status": "unverified"
+  },
+  "ansi_nema": {
+    "equivalent": null,
+    "status": "not_found"
+  },
+  "geometry": {
+    "grid": "1 unit = one symbol grid step; origin top-left, y down; scale to the drawing standard in use",
+    "primitives": [
+      {
+        "prim": "line",
+        "p1": [
+          0,
+          0
+        ],
+        "p2": [
+          0,
+          2
+        ]
+      },
+      {
+        "prim": "line",
+        "p1": [
+          0,
+          2
+        ],
+        "p2": [
+          1.6,
+          3.6
+        ]
+      },
+      {
+        "prim": "line",
+        "p1": [
+          0,
+          4
+        ],
+        "p2": [
+          0,
+          6
+        ]
+      },
+      {
+        "prim": "circle",
+        "c": [
+          0,
+          2
+        ],
+        "r": 0.15
+      }
+    ],
+    "status": "typical"
+  },
+  "connection_points": [
+    {
+      "id": "1",
+      "label": {
+        "en": "Line side (upper terminal)",
+        "es": "Lado de línea (borne superior)"
+      }
+    },
+    {
+      "id": "2",
+      "label": {
+        "en": "Load side (lower terminal)",
+        "es": "Lado de carga (borne inferior)"
+      }
+    }
+  ],
+  "status": "unverified",
+  "source_ids": [
+    "iec_S00286",
+    "ima_iec81346_letters"
+  ],
+  "sources": [
+    {
+      "id": "iec_S00286",
+      "title": "IEC 60617 database, symbol S00286: Contactor; Main break contact of a contactor",
+      "url": "https://library.iec.ch/grasymb/grasymb.nsf/(SysSymbol)/S00286",
+      "kind": "standard_database",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "ima_iec81346_letters",
+      "title": "Industrial Monitor Direct: IEC 81346-2 contactor and relay numbering (secondary article)",
+      "url": "https://industrialmonitordirect.com/blogs/knowledgebase/iec-81346-2-contactor-and-relay-numbering-conventions-for-wiring-diagrams",
+      "kind": "secondary_article",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

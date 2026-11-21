@@ -1,0 +1,120 @@
+{
+  "schema_version": "1.0",
+  "id": "sym_thermal_switch_break",
+  "name": {
+    "en": "Thermal switch, self-operating, break contact",
+    "es": "Interruptor térmico de acción propia, contacto de apertura"
+  },
+  "family": "protection",
+  "description": {
+    "en": "Self-operating thermal contact that opens on temperature rise.",
+    "es": "Contacto térmico de acción propia que abre al subir la temperatura."
+  },
+  "iec60617": {
+    "symbol_id": "S00265",
+    "iec_title_en": "Thermal switch, self-operating, break contact",
+    "legacy_ref": null,
+    "status": "unverified"
+  },
+  "reference_designation": {
+    "letter": "F",
+    "note": {
+      "en": "Self-acting protection.",
+      "es": "Protección de acción propia."
+    },
+    "status": "typical"
+  },
+  "ansi_nema": {
+    "equivalent": null,
+    "status": "not_found"
+  },
+  "geometry": {
+    "grid": "1 unit = one symbol grid step; origin top-left, y down; scale to the drawing standard in use",
+    "primitives": [
+      {
+        "prim": "line",
+        "p1": [
+          0,
+          0
+        ],
+        "p2": [
+          0,
+          2.5
+        ]
+      },
+      {
+        "prim": "line",
+        "p1": [
+          0,
+          2.5
+        ],
+        "p2": [
+          1.4,
+          4
+        ]
+      },
+      {
+        "prim": "line",
+        "p1": [
+          0,
+          4
+        ],
+        "p2": [
+          0,
+          6
+        ]
+      },
+      {
+        "prim": "polyline",
+        "pts": [
+          [
+            -0.5,
+            3.6
+          ],
+          [
+            -0.2,
+            4.3
+          ],
+          [
+            0.2,
+            3.7
+          ],
+          [
+            0.5,
+            4.4
+          ]
+        ]
+      }
+    ],
+    "status": "typical"
+  },
+  "connection_points": [
+    {
+      "id": "1",
+      "label": {
+        "en": "Terminal 1",
+        "es": "Borne 1"
+      }
+    },
+    {
+      "id": "2",
+      "label": {
+        "en": "Terminal 2",
+        "es": "Borne 2"
+      }
+    }
+  ],
+  "status": "unverified",
+  "source_ids": [
+    "iec_S00265"
+  ],
+  "sources": [
+    {
+      "id": "iec_S00265",
+      "title": "IEC 60617 database, symbol S00265: Thermal switch, self-operating, break contact",
+      "url": "https://library.iec.ch/grasymb/grasymb.nsf/(SysSymbol)/S00265",
+      "kind": "standard_database",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

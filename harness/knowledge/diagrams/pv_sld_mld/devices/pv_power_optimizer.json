@@ -1,0 +1,96 @@
+{
+  "schema_version": "1.0",
+  "record_type": "device",
+  "id": "pv_power_optimizer",
+  "name": {
+    "en": "PV power optimizer (DC-DC, one per module)",
+    "es": "Optimizador de potencia FV (DC-DC, uno por módulo)"
+  },
+  "description": {
+    "en": "DC-DC optimizer at each module feeding a string inverter. The string inverter sets the AC output.",
+    "es": "Optimizador DC-DC en cada módulo que alimenta un inversor de string. El inversor de string fija la salida AC."
+  },
+  "kind": "power_optimizer",
+  "voltage_level": "LV",
+  "status": "unverified",
+  "source_ids": [
+    "repo_inverters_central"
+  ],
+  "sources": [
+    {
+      "id": "repo_inverters_central",
+      "title": "Repo: central inverters and accessories research",
+      "url": "repo://harness/docs/pv/inverters/central_inverters_and_accessories.md",
+      "publisher": "EPC-291 repository",
+      "accessed": "2026-11-20",
+      "kind": "internal_repo"
+    }
+  ],
+  "standard_refs": [],
+  "ratings": [
+    {
+      "parameter": "max_input_voltage",
+      "value": 80,
+      "unit": "V DC",
+      "status": "unverified",
+      "source_ids": [
+        "repo_inverters_central"
+      ],
+      "note": {
+        "en": "Repo: SolarEdge P400 and Tigo TS4-A-O input 80 V",
+        "es": "Repo: SolarEdge P400 y Tigo TS4-A-O entrada 80 V"
+      }
+    },
+    {
+      "parameter": "max_output_current",
+      "value": 15,
+      "unit": "A",
+      "status": "unverified",
+      "source_ids": [
+        "repo_inverters_central"
+      ],
+      "note": {
+        "en": "Repo: SolarEdge P400 output 15 A",
+        "es": "Repo: SolarEdge P400 salida 15 A"
+      }
+    },
+    {
+      "parameter": "tigo_ts4_isc_input",
+      "value": 22,
+      "unit": "A",
+      "status": "unverified",
+      "source_ids": [
+        "repo_inverters_central"
+      ],
+      "note": {
+        "en": "Repo: Tigo TS4-A-O Isc 22 A (input)",
+        "es": "Repo: Tigo TS4-A-O Isc 22 A (entrada)"
+      }
+    },
+    {
+      "parameter": "optimizer_ip",
+      "value": null,
+      "unit": "IP",
+      "status": "not_found",
+      "source_ids": [],
+      "note": {
+        "en": "IP for listed optimizers is in the repo rows and not repeated here",
+        "es": "IP de optimizadores listados en el repo; no repetido aquí"
+      }
+    }
+  ],
+  "selection_criteria": {
+    "when_to_use": [
+      {
+        "en": "Module-level MPPT with a string inverter; partial shading and per-module monitoring.",
+        "es": "MPPT por módulo con inversor de string; sombras parciales y monitoreo por módulo."
+      }
+    ],
+    "when_not_to_use": [
+      {
+        "en": "Not needed on a plain string layout without shading or module monitoring (typical).",
+        "es": "No necesario en un layout de string simple sin sombras ni monitoreo por módulo (típico)."
+      }
+    ]
+  }
+}

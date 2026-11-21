@@ -1,0 +1,315 @@
+{
+  "schema_version": "1.0",
+  "description": {
+    "en": "Index of IEC 60617 symbol records (one JSON per symbol).",
+    "es": "Índice de registros de símbolos IEC 60617 (un JSON por símbolo)."
+  },
+  "generated": "2026-11-20",
+  "count": 38,
+  "symbols": [
+    {
+      "id": "sym_contact_main_pole",
+      "file": "symbols/sym_contact_main_pole.json",
+      "family": "power",
+      "iec60617_symbol_id": "S00286",
+      "letter": "Q",
+      "status": "unverified"
+    },
+    {
+      "id": "sym_disconnector",
+      "file": "symbols/sym_disconnector.json",
+      "family": "power",
+      "iec60617_symbol_id": "S00288",
+      "letter": "Q",
+      "status": "unverified"
+    },
+    {
+      "id": "sym_static_contactor",
+      "file": "symbols/sym_static_contactor.json",
+      "family": "power",
+      "iec60617_symbol_id": "S00377",
+      "letter": "Q",
+      "status": "unverified"
+    },
+    {
+      "id": "sym_switch_manual_general",
+      "file": "symbols/sym_switch_manual_general.json",
+      "family": "control",
+      "iec60617_symbol_id": "S00253",
+      "letter": "S",
+      "status": "unverified"
+    },
+    {
+      "id": "sym_switch_emergency_stop",
+      "file": "symbols/sym_switch_emergency_stop.json",
+      "family": "control",
+      "iec60617_symbol_id": "S00258",
+      "letter": "S",
+      "status": "unverified"
+    },
+    {
+      "id": "sym_fuse_general",
+      "file": "symbols/sym_fuse_general.json",
+      "family": "protection",
+      "iec60617_symbol_id": "S00362",
+      "letter": "F",
+      "status": "unverified"
+    },
+    {
+      "id": "sym_fuse_with_alarm_contact",
+      "file": "symbols/sym_fuse_with_alarm_contact.json",
+      "family": "protection",
+      "iec60617_symbol_id": "S00365",
+      "letter": "F",
+      "status": "unverified"
+    },
+    {
+      "id": "sym_thermal_overload_static",
+      "file": "symbols/sym_thermal_overload_static.json",
+      "family": "protection",
+      "iec60617_symbol_id": "S00381",
+      "letter": "F",
+      "status": "unverified"
+    },
+    {
+      "id": "sym_thermal_switch_break",
+      "file": "symbols/sym_thermal_switch_break.json",
+      "family": "protection",
+      "iec60617_symbol_id": "S00265",
+      "letter": "F",
+      "status": "unverified"
+    },
+    {
+      "id": "sym_motor_3ph_squirrel",
+      "file": "symbols/sym_motor_3ph_squirrel.json",
+      "family": "power",
+      "iec60617_symbol_id": "S00836",
+      "letter": "M",
+      "status": "unverified"
+    },
+    {
+      "id": "sym_transformer_2w",
+      "file": "symbols/sym_transformer_2w.json",
+      "family": "power",
+      "iec60617_symbol_id": "S00841",
+      "letter": "T",
+      "status": "unverified"
+    },
+    {
+      "id": "sym_current_transformer_2sec",
+      "file": "symbols/sym_current_transformer_2sec.json",
+      "family": "protection",
+      "iec60617_symbol_id": "S00882",
+      "letter": "T",
+      "status": "unverified"
+    },
+    {
+      "id": "sym_generator_static",
+      "file": "symbols/sym_generator_static.json",
+      "family": "general",
+      "iec60617_symbol_id": "S00899",
+      "letter": "G",
+      "status": "unverified"
+    },
+    {
+      "id": "sym_generator_rotating",
+      "file": "symbols/sym_generator_rotating.json",
+      "family": "general",
+      "iec60617_symbol_id": null,
+      "letter": "G",
+      "status": "not_found"
+    },
+    {
+      "id": "sym_protective_earth",
+      "file": "symbols/sym_protective_earth.json",
+      "family": "general",
+      "iec60617_symbol_id": "S00202",
+      "letter": "not_found",
+      "status": "unverified"
+    },
+    {
+      "id": "sym_circuit_breaker_function",
+      "file": "symbols/sym_circuit_breaker_function.json",
+      "family": "power",
+      "iec60617_symbol_id": "S00219",
+      "letter": "Q",
+      "status": "unverified"
+    },
+    {
+      "id": "sym_circuit_breaker_device",
+      "file": "symbols/sym_circuit_breaker_device.json",
+      "family": "power",
+      "iec60617_symbol_id": null,
+      "letter": "Q",
+      "status": "not_found"
+    },
+    {
+      "id": "sym_mcb_miniature",
+      "file": "symbols/sym_mcb_miniature.json",
+      "family": "protection",
+      "iec60617_symbol_id": null,
+      "letter": "F",
+      "status": "not_found"
+    },
+    {
+      "id": "sym_rcd_residual_current",
+      "file": "symbols/sym_rcd_residual_current.json",
+      "family": "protection",
+      "iec60617_symbol_id": null,
+      "letter": "F",
+      "status": "not_found"
+    },
+    {
+      "id": "sym_surge_arrester_spd",
+      "file": "symbols/sym_surge_arrester_spd.json",
+      "family": "protection",
+      "iec60617_symbol_id": null,
+      "letter": "F",
+      "status": "not_found"
+    },
+    {
+      "id": "sym_differential_current_relay",
+      "file": "symbols/sym_differential_current_relay.json",
+      "family": "protection",
+      "iec60617_symbol_id": "S00332",
+      "letter": "K",
+      "status": "unverified"
+    },
+    {
+      "id": "sym_contact_make_general",
+      "file": "symbols/sym_contact_make_general.json",
+      "family": "control",
+      "iec60617_symbol_id": "S00227",
+      "letter": "n/a",
+      "status": "unverified"
+    },
+    {
+      "id": "sym_contact_break_general",
+      "file": "symbols/sym_contact_break_general.json",
+      "family": "control",
+      "iec60617_symbol_id": "S00229",
+      "letter": "n/a",
+      "status": "unverified"
+    },
+    {
+      "id": "sym_contact_make_delayed_closing",
+      "file": "symbols/sym_contact_make_delayed_closing.json",
+      "family": "control",
+      "iec60617_symbol_id": "S00243",
+      "letter": "n/a",
+      "status": "unverified"
+    },
+    {
+      "id": "sym_contact_break_delayed_opening",
+      "file": "symbols/sym_contact_break_delayed_opening.json",
+      "family": "control",
+      "iec60617_symbol_id": "S00245",
+      "letter": "n/a",
+      "status": "unverified"
+    },
+    {
+      "id": "sym_contact_make_delayed",
+      "file": "symbols/sym_contact_make_delayed.json",
+      "family": "control",
+      "iec60617_symbol_id": "S00247",
+      "letter": "n/a",
+      "status": "unverified"
+    },
+    {
+      "id": "sym_pushbutton",
+      "file": "symbols/sym_pushbutton.json",
+      "family": "control",
+      "iec60617_symbol_id": "S00475",
+      "letter": "S",
+      "status": "unverified"
+    },
+    {
+      "id": "sym_actuator_pushing",
+      "file": "symbols/sym_actuator_pushing.json",
+      "family": "control",
+      "iec60617_symbol_id": "S00171",
+      "letter": "S",
+      "status": "unverified"
+    },
+    {
+      "id": "sym_relay_coil_general",
+      "file": "symbols/sym_relay_coil_general.json",
+      "family": "control",
+      "iec60617_symbol_id": null,
+      "letter": "K",
+      "status": "not_found"
+    },
+    {
+      "id": "sym_relay_coil_ac_unaffected",
+      "file": "symbols/sym_relay_coil_ac_unaffected.json",
+      "family": "control",
+      "iec60617_symbol_id": "S00315",
+      "letter": "K",
+      "status": "unverified"
+    },
+    {
+      "id": "sym_contactor_coil_general",
+      "file": "symbols/sym_contactor_coil_general.json",
+      "family": "control",
+      "iec60617_symbol_id": null,
+      "letter": "Q",
+      "status": "not_found"
+    },
+    {
+      "id": "sym_contactor_auto_trip",
+      "file": "symbols/sym_contactor_auto_trip.json",
+      "family": "control",
+      "iec60617_symbol_id": "S00285",
+      "letter": "Q",
+      "status": "unverified"
+    },
+    {
+      "id": "sym_switch_signal_lamp",
+      "file": "symbols/sym_switch_signal_lamp.json",
+      "family": "control",
+      "iec60617_symbol_id": "S00467",
+      "letter": "S",
+      "status": "unverified"
+    },
+    {
+      "id": "sym_lamp_signal_general",
+      "file": "symbols/sym_lamp_signal_general.json",
+      "family": "control",
+      "iec60617_symbol_id": null,
+      "letter": "H",
+      "status": "not_found"
+    },
+    {
+      "id": "sym_plc_io",
+      "file": "symbols/sym_plc_io.json",
+      "family": "control",
+      "iec60617_symbol_id": null,
+      "letter": "A",
+      "status": "not_found"
+    },
+    {
+      "id": "sym_timer_coil_on_delay",
+      "file": "symbols/sym_timer_coil_on_delay.json",
+      "family": "control",
+      "iec60617_symbol_id": null,
+      "letter": "K",
+      "status": "not_found"
+    },
+    {
+      "id": "sym_selector_switch",
+      "file": "symbols/sym_selector_switch.json",
+      "family": "control",
+      "iec60617_symbol_id": null,
+      "letter": "S",
+      "status": "not_found"
+    },
+    {
+      "id": "sym_terminal_block",
+      "file": "symbols/sym_terminal_block.json",
+      "family": "general",
+      "iec60617_symbol_id": null,
+      "letter": "X",
+      "status": "not_found"
+    }
+  ]
+}

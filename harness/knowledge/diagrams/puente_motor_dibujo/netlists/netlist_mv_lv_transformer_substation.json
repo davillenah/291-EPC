@@ -1,0 +1,62 @@
+{
+ "schema_version": "1.0",
+ "id": "netlist_mv_lv_transformer_substation",
+ "name": {
+  "en": "MV/LV transformer substation",
+  "es": "Transformador MT/BT con cuadro BT"
+ },
+ "diagram": "SLD",
+ "sheet": {
+  "size": "A3",
+  "style_ref": "epc_arch/epc_style.json"
+ },
+ "source_scheme": "mv_lv_transformer_substation",
+ "instances": [
+  {
+   "tag": "-Q1",
+   "device_id": "mv_circuit_breaker_relay_module",
+   "symbol": "mv_circuit_breaker",
+   "labels": {},
+   "label_source": "none (ratings come from engines at project time)"
+  },
+  {
+   "tag": "-T1",
+   "device_id": "transformer_mv_lv",
+   "symbol": "mv_transformer_2w",
+   "labels": {},
+   "label_source": "none (ratings come from engines at project time)"
+  },
+  {
+   "tag": "-Q2",
+   "device_id": "acb",
+   "symbol": "lv_acb_basic",
+   "labels": {},
+   "label_source": "none (ratings come from engines at project time)"
+  },
+  {
+   "tag": "-A1",
+   "device_id": "switchboard_tgbt",
+   "symbol": "lv_busbar_node",
+   "labels": {},
+   "label_source": "none (ratings come from engines at project time)"
+  }
+ ],
+ "connections": [
+  {
+   "from": "-Q1:bottom",
+   "to": "-T1:top",
+   "conductor": "L"
+  },
+  {
+   "from": "-T1:bottom",
+   "to": "-Q2:top",
+   "conductor": "L"
+  },
+  {
+   "from": "-Q2:bottom",
+   "to": "-A1:bottom",
+   "conductor": "L"
+  }
+ ],
+ "status": "typical"
+}

@@ -1,0 +1,107 @@
+{
+  "schema_version": "1.0",
+  "id": "sym_plc_io",
+  "name": {
+    "en": "PLC input/output module (programmable controller I/O)",
+    "es": "Módulo de entrada/salida de PLC"
+  },
+  "family": "control",
+  "description": {
+    "en": "Block with input and output channels for control logic. IEC ID not located; use a rectangle with labelled channels. Note: No IEC ID; geometry typical.",
+    "es": "Bloque con canales de entrada y salida para lógica de control. ID IEC no localizado; usar un rectángulo con canales rotulados. Nota: Sin ID IEC; geometría típica."
+  },
+  "iec60617": {
+    "symbol_id": null,
+    "iec_title_en": null,
+    "legacy_ref": null,
+    "status": "not_found"
+  },
+  "reference_designation": {
+    "letter": "A",
+    "note": {
+      "en": "Assembly / controller class (IEC 81346 A; typical).",
+      "es": "Clase de conjunto / controlador (IEC 81346 A; típico)."
+    },
+    "status": "typical"
+  },
+  "ansi_nema": {
+    "equivalent": null,
+    "status": "not_found"
+  },
+  "geometry": {
+    "grid": "1 unit = one symbol grid step; origin top-left, y down; scale to the drawing standard in use",
+    "primitives": [
+      {
+        "prim": "rect",
+        "x": 0,
+        "y": 0,
+        "w": 4,
+        "h": 4
+      },
+      {
+        "prim": "line",
+        "p1": [
+          -1,
+          1
+        ],
+        "p2": [
+          0,
+          1
+        ]
+      },
+      {
+        "prim": "line",
+        "p1": [
+          -1,
+          3
+        ],
+        "p2": [
+          0,
+          3
+        ]
+      },
+      {
+        "prim": "line",
+        "p1": [
+          4,
+          1
+        ],
+        "p2": [
+          5,
+          1
+        ]
+      },
+      {
+        "prim": "line",
+        "p1": [
+          4,
+          3
+        ],
+        "p2": [
+          5,
+          3
+        ]
+      }
+    ],
+    "status": "typical"
+  },
+  "connection_points": [
+    {
+      "id": "I0",
+      "label": {
+        "en": "Input channel 0",
+        "es": "Canal de entrada 0"
+      }
+    },
+    {
+      "id": "Q0",
+      "label": {
+        "en": "Output channel 0",
+        "es": "Canal de salida 0"
+      }
+    }
+  ],
+  "status": "not_found",
+  "source_ids": [],
+  "sources": []
+}

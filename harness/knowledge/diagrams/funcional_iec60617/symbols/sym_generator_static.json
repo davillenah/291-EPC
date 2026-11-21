@@ -1,0 +1,103 @@
+{
+  "schema_version": "1.0",
+  "id": "sym_generator_static",
+  "name": {
+    "en": "Static generator, general symbol",
+    "es": "Generador estático, símbolo general"
+  },
+  "family": "general",
+  "description": {
+    "en": "General symbol for a generator that converts energy without a rotating machine (static source).",
+    "es": "Símbolo general para un generador que convierte energía sin máquina rotativa (fuente estática)."
+  },
+  "iec60617": {
+    "symbol_id": "S00899",
+    "iec_title_en": "Static generator, general symbol",
+    "legacy_ref": null,
+    "status": "unverified"
+  },
+  "reference_designation": {
+    "letter": "G",
+    "note": {
+      "en": "Generation class (typical; IEC 81346 class G).",
+      "es": "Clase de generación (típico; clase G de IEC 81346)."
+    },
+    "status": "typical"
+  },
+  "ansi_nema": {
+    "equivalent": null,
+    "status": "not_found"
+  },
+  "geometry": {
+    "grid": "1 unit = one symbol grid step; origin top-left, y down; scale to the drawing standard in use",
+    "primitives": [
+      {
+        "prim": "rect",
+        "x": -1.6,
+        "y": 1.4,
+        "w": 3.2,
+        "h": 3.2
+      },
+      {
+        "prim": "text",
+        "at": [
+          0,
+          3.0
+        ],
+        "text": "~"
+      },
+      {
+        "prim": "line",
+        "p1": [
+          0,
+          0
+        ],
+        "p2": [
+          0,
+          1.4
+        ]
+      },
+      {
+        "prim": "line",
+        "p1": [
+          0,
+          4.6
+        ],
+        "p2": [
+          0,
+          6
+        ]
+      }
+    ],
+    "status": "typical"
+  },
+  "connection_points": [
+    {
+      "id": "1",
+      "label": {
+        "en": "Output terminal 1",
+        "es": "Borne de salida 1"
+      }
+    },
+    {
+      "id": "2",
+      "label": {
+        "en": "Output terminal 2",
+        "es": "Borne de salida 2"
+      }
+    }
+  ],
+  "status": "unverified",
+  "source_ids": [
+    "iec_S00899"
+  ],
+  "sources": [
+    {
+      "id": "iec_S00899",
+      "title": "IEC 60617 database, symbol S00899: Static generator, general symbol",
+      "url": "https://library.iec.ch/grasymb/grasymb.nsf/(SysSymbol)/S00899",
+      "kind": "standard_database",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

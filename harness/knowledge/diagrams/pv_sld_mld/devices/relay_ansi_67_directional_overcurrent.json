@@ -1,0 +1,78 @@
+{
+  "schema_version": "1.0",
+  "record_type": "device",
+  "id": "relay_ansi_67_directional_overcurrent",
+  "name": {
+    "en": "Directional overcurrent relay (ANSI 67)",
+    "es": "Relé de sobrecorriente direccional (ANSI 67)"
+  },
+  "description": {
+    "en": "Overcurrent relay that trips only for fault current flowing in one direction, normally used where there are two or more sources on a bus.",
+    "es": "Relé de sobrecorriente que dispara solo con corriente de falla en un sentido; normalmente en barras con dos o más fuentes."
+  },
+  "kind": "protection_relay",
+  "voltage_level": "LV",
+  "status": "unverified",
+  "source_ids": [
+    "oeb_der_protection"
+  ],
+  "sources": [
+    {
+      "id": "oeb_der_protection",
+      "title": "Ontario Energy Board DER WG3: sample protection philosophy (utility sample)",
+      "url": "https://www.oeb.ca/sites/default/files/DER-wg3-Sample%20Protection%20Philosophy.pdf",
+      "publisher": "Ontario Energy Board (sample document)",
+      "accessed": "2026-11-20",
+      "kind": "third_party_guide"
+    }
+  ],
+  "standard_refs": [
+    {
+      "ref": "ANSI/IEEE 67",
+      "note": {
+        "en": "Device number 67 (directional overcurrent)",
+        "es": "Número de dispositivo 67 (sobrecorriente direccional)"
+      }
+    }
+  ],
+  "ratings": [
+    {
+      "parameter": "function",
+      "value": "Directional overcurrent (67) listed for fault current flowing back into a source",
+      "unit": "",
+      "status": "unverified",
+      "source_ids": [
+        "oeb_der_protection"
+      ],
+      "note": {
+        "en": "OEB sample: 67 trips for fault current flowing back into a source, normally on incoming breakers with two or more sources",
+        "es": "Muestra OEB: 67 dispara con falla hacia una fuente; normalmente en interruptores de entrada con dos o más fuentes"
+      }
+    },
+    {
+      "parameter": "directional_setting",
+      "value": null,
+      "unit": "A / deg",
+      "status": "not_found",
+      "source_ids": [],
+      "note": {
+        "en": "Pickup and angle not stated in the sample",
+        "es": "Ajuste y ángulo no indicados en la muestra"
+      }
+    }
+  ],
+  "selection_criteria": {
+    "when_to_use": [
+      {
+        "en": "Buses with two or more sources (for example PV plus grid) where fault direction matters.",
+        "es": "Barras con dos o más fuentes (por ejemplo FV más red) donde importa la dirección de falla."
+      }
+    ],
+    "when_not_to_use": [
+      {
+        "en": "Single-source PV feeder with inverter-limited fault current (typical).",
+        "es": "Alimentador FV de fuente única con corriente de falla limitada por inversor (típico)."
+      }
+    ]
+  }
+}

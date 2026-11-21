@@ -1,0 +1,107 @@
+{
+  "schema_version": "1.0",
+  "id": "sym_contactor_auto_trip",
+  "name": {
+    "en": "Contactor with automatic tripping",
+    "es": "Contactor con disparo automático"
+  },
+  "family": "control",
+  "description": {
+    "en": "Contactor that drops out automatically by a protective trip (e.g. overload) in addition to normal operation.",
+    "es": "Contactor que se abre automáticamente por disparo de protección (p. ej. sobrecarga) además de su operación normal."
+  },
+  "iec60617": {
+    "symbol_id": "S00285",
+    "iec_title_en": "Contactor with automatic tripping",
+    "legacy_ref": null,
+    "status": "unverified"
+  },
+  "reference_designation": {
+    "letter": "Q",
+    "note": {
+      "en": "Switching device.",
+      "es": "Dispositivo de maniobra."
+    },
+    "status": "unverified"
+  },
+  "ansi_nema": {
+    "equivalent": null,
+    "status": "not_found"
+  },
+  "geometry": {
+    "grid": "1 unit = one symbol grid step; origin top-left, y down; scale to the drawing standard in use",
+    "primitives": [
+      {
+        "prim": "line",
+        "p1": [
+          0,
+          0
+        ],
+        "p2": [
+          0,
+          2
+        ]
+      },
+      {
+        "prim": "line",
+        "p1": [
+          0,
+          2
+        ],
+        "p2": [
+          1.4,
+          3.4
+        ]
+      },
+      {
+        "prim": "line",
+        "p1": [
+          0,
+          4
+        ],
+        "p2": [
+          0,
+          6
+        ]
+      },
+      {
+        "prim": "text",
+        "at": [
+          1.2,
+          4.5
+        ],
+        "text": "T"
+      }
+    ],
+    "status": "typical"
+  },
+  "connection_points": [
+    {
+      "id": "1",
+      "label": {
+        "en": "Line side",
+        "es": "Lado de línea"
+      }
+    },
+    {
+      "id": "2",
+      "label": {
+        "en": "Load side",
+        "es": "Lado de carga"
+      }
+    }
+  ],
+  "status": "unverified",
+  "source_ids": [
+    "iec_S00285"
+  ],
+  "sources": [
+    {
+      "id": "iec_S00285",
+      "title": "IEC 60617 database, symbol S00285: Contactor with automatic tripping",
+      "url": "https://library.iec.ch/grasymb/grasymb.nsf/(SysSymbol)/S00285",
+      "kind": "standard_database",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

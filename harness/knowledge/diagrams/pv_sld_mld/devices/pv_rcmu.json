@@ -1,0 +1,89 @@
+{
+  "schema_version": "1.0",
+  "record_type": "device",
+  "id": "pv_rcmu",
+  "name": {
+    "en": "Residual-current monitoring unit (RCMU, inverter internal)",
+    "es": "Unidad de monitoreo de corriente residual (RCMU, interna al inversor)"
+  },
+  "description": {
+    "en": "All-pole sensitive residual-current monitoring unit inside the inverter that monitors AC and DC residual currents and disconnects the inverter from the grid.",
+    "es": "Unidad sensible de todos los polos interna al inversor que vigila corrientes residuales AC y DC y desconecta el inversor de la red."
+  },
+  "kind": "rcd",
+  "voltage_level": "LV",
+  "status": "unverified",
+  "source_ids": [
+    "sma_rcmu",
+    "sma_stp_protective"
+  ],
+  "sources": [
+    {
+      "id": "sma_rcmu",
+      "title": "SMA manual: residual-current monitoring unit (RCMU) and external RCD",
+      "url": "https://manuals.sma.de/SMAStorageXLPackage/en-US/17058314251.html",
+      "publisher": "SMA Solar Technology AG",
+      "accessed": "2026-11-20",
+      "kind": "manufacturer"
+    },
+    {
+      "id": "sma_stp_protective",
+      "title": "SMA manual: Protective devices (DC load-break switch, reverse polarity diode, AC 60 A, Riso)",
+      "url": "https://manuals.sma.de/STPxxUS50/en-US/12078896395.html",
+      "publisher": "SMA Solar Technology AG",
+      "accessed": "2026-11-20",
+      "kind": "manufacturer"
+    }
+  ],
+  "standard_refs": [
+    {
+      "ref": "EN 62109-1 (cited by manufacturer, not fetched)",
+      "note": {
+        "en": "Residual-current monitoring in PV inverters (cited in the Kostal note)",
+        "es": "Vigilancia de corriente residual en inversores FV (citada en la nota Kostal)"
+      }
+    }
+  ],
+  "ratings": [
+    {
+      "parameter": "trip_residual_current_jump",
+      "value": 30,
+      "unit": "mA",
+      "status": "unverified",
+      "source_ids": [
+        "sma_rcmu"
+      ],
+      "note": {
+        "en": "SMA: disconnects from the grid when residual-current jumps exceed 30 mA",
+        "es": "SMA: desconecta de la red si el salto de corriente residual supera 30 mA"
+      }
+    },
+    {
+      "parameter": "availability",
+      "value": "Available (all-pole, AC and DC)",
+      "unit": "",
+      "status": "unverified",
+      "source_ids": [
+        "sma_stp_protective"
+      ],
+      "note": {
+        "en": "SMA STP 50 US: all-pole residual-current monitoring listed as available, not mandatory",
+        "es": "SMA STP 50 US: vigilancia de corriente residual de todos los polos, disponible, no obligatoria"
+      }
+    }
+  ],
+  "selection_criteria": {
+    "when_to_use": [
+      {
+        "en": "Internal to the inverter; it is not an external RCD and does not replace one where local rules require it.",
+        "es": "Interno al inversor; no es un RCD externo y no reemplaza uno si la norma local lo exige."
+      }
+    ],
+    "when_not_to_use": [
+      {
+        "en": "Do not draw as an external RCD on the SLD unless the design includes one (see rcd_type_b).",
+        "es": "No dibujar como RCD externo en el SLD salvo que el diseño lo incluya (ver rcd_type_b)."
+      }
+    ]
+  }
+}

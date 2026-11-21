@@ -1,0 +1,81 @@
+{
+ "schema_version": "1.0",
+ "id": "netlist_optimizer_string_lv",
+ "name": {
+  "en": "Power optimizer on a string inverter, LV connection",
+  "es": "Optimizador de potencia con inversor de string, conexión BT"
+ },
+ "diagram": "SLD",
+ "sheet": {
+  "size": "A3",
+  "style_ref": "epc_arch/epc_style.json"
+ },
+ "source_scheme": "optimizer_string_lv",
+ "instances": [
+  {
+   "tag": "-T1",
+   "device_id": "pv_power_optimizer",
+   "symbol": null,
+   "labels": {},
+   "label_source": "none (ratings come from engines at project time)"
+  },
+  {
+   "tag": "-Q1",
+   "device_id": "pv_dc_switch_load_break",
+   "symbol": "lv_dc_disconnect",
+   "labels": {},
+   "label_source": "none (ratings come from engines at project time)"
+  },
+  {
+   "tag": "-T2",
+   "device_id": "pv_inverter_grid_tie",
+   "symbol": "lv_inverter",
+   "labels": {},
+   "label_source": "none (ratings come from engines at project time)"
+  },
+  {
+   "tag": "-Q2",
+   "device_id": "switch_disconnector",
+   "symbol": "lv_switch_disconnector",
+   "labels": {},
+   "label_source": "none (ratings come from engines at project time)"
+  },
+  {
+   "tag": "-Q3",
+   "device_id": "mcb",
+   "symbol": "lv_mcb",
+   "labels": {},
+   "label_source": "none (ratings come from engines at project time)"
+  },
+  {
+   "tag": "-A1",
+   "device_id": "switchboard_tgbt",
+   "symbol": "lv_busbar_node",
+   "labels": {},
+   "label_source": "none (ratings come from engines at project time)"
+  }
+ ],
+ "connections": [
+  {
+   "from": "-Q1:bottom",
+   "to": "-T2:top",
+   "conductor": "L"
+  },
+  {
+   "from": "-T2:bottom",
+   "to": "-Q2:top",
+   "conductor": "L"
+  },
+  {
+   "from": "-Q2:bottom",
+   "to": "-Q3:top",
+   "conductor": "L"
+  },
+  {
+   "from": "-Q3:bottom",
+   "to": "-A1:bottom",
+   "conductor": "L"
+  }
+ ],
+ "status": "typical"
+}
