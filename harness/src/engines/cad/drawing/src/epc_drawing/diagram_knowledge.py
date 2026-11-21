@@ -72,3 +72,63 @@ def check_board(calculo: dict) -> list:
                           "en": f"{tag}: {cls.upper()} drawn for {current} A; rule {rule['id']} ({rule['status']}) selects {', '.join(sorted(picks)).upper()}. Review.",
                           "es": f"{tag}: se dibuja {cls.upper()} para {current} A; la regla {rule['id']} ({rule['status']}) elige {', '.join(sorted(picks)).upper()}. Revisar."})
     return notes
+
+
+def iec_60617_for(device_id: str) -> dict:
+    """The IEC 60617 reference of a researched device (`symbol_ref` of its research file: {'id', 'status', ...}); {'id': 'not_found'} when it has none."""
+    for folder in ("sld_mld/devices", "pv_sld_mld/devices"):
+        path = root() / folder / f"{device_id}.json"
+        if path.exists():
+            return json.loads(path.read_text(encoding="utf-8")).get("symbol_ref") or {"id": "not_found"}
+    return {"id": "not_found"}
+
+
+def constraints() -> list:
+    """The design constraints on the connections of a board (`model/design_constraints.json`), all typical and unverified."""
+    return _json("puente_motor_dibujo/model/design_constraints.json")["constraints"]
+
+
+def _downstream(model: dict, start: str) -> list:
+    """Device ids reachable from the device `start` following the wires of the model (nearest first)."""
+    nxt = {}
+    for w in model["wires"]:
+        nxt.setdefault(w["from"]["ref"], []).append(w["to"]["ref"])
+    out, queue = [], list(nxt.get(start, []))
+    while queue:
+        cur = queue.pop(0)
+        if cur not in out:
+            out.append(cur)
+            queue += nxt.get(cur, [])
+    return out
+
+
+def _poles_violations(c: dict, model: dict, by_id: dict) -> list:
+    found = []
+    for up in (d for d in model["devices"] if d["device_id"] in c["upstream"] and d.get("poles")):
+        for did in _downstream(model, up["id"]):
+            d = by_id.get(did)
+            if d and d["device_id"] in c["downstream"] and d.get("poles") and d["poles"] > up["poles"]:
+                found.append({"constraint": c["id"], "device": d["id"], "upstream": up["id"], "detail": f"{d['poles']}P downstream of {up['poles']}P"})
+    return found
+
+
+def _requires_violations(c: dict, model: dict, by_id: dict) -> list:
+    found = []
+    for dev in (d for d in model["devices"] if d["device_id"] == c["device"]):
+        if not any(by_id[i]["device_id"] in c["requires"] for i in _downstream(model, dev["id"]) if i in by_id):
+            found.append({"constraint": c["id"], "device": dev["id"], "upstream": None, "detail": "needs " + "/".join(c["requires"]) + " downstream"})
+    return found
+
+
+_CHECKS = {"poles_downstream_le_upstream": _poles_violations, "requires_downstream": _requires_violations}
+
+
+def check_constraints(model: dict) -> list:
+    """Violations of the design constraints in the netlist `model` (devices, wires): [{constraint, severity, device, upstream, detail, en, es}]. A constraint whose data
+    are missing (a device without poles) is not applied, never guessed. Advisory: a person reviews them."""
+    by_id = {d["id"]: d for d in model["devices"]}
+    out = []
+    for c in constraints():
+        for v in _CHECKS[c["type"]](c, model, by_id):
+            out.append(dict(v, severity=c["severity"], status=c["status"], en=c["message"]["en"], es=c["message"]["es"]))
+    return out

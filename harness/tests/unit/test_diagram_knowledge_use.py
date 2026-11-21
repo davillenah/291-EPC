@@ -2,6 +2,7 @@
 import json
 import sys
 import unittest
+import unittest.mock
 from pathlib import Path
 
 H = Path(__file__).resolve().parents[2]
@@ -108,22 +109,65 @@ class Stage9Notes(unittest.TestCase):
         self.assertEqual([], S.diagram_findings(SimpleNamespace(engine_cache={}, pipeline_run_id="r1"), 1))
 
 
-class Stage8Model(unittest.TestCase):
-    """Stage 8 hands over the board model built from the calculation: chain from `disp`, kind from the circuit type, parent from `padre`; no values."""
+class DiagramAssembly(unittest.TestCase):
+    """The assembler joins the model (connections), the calculation values and the cable-list rows; the stage hands it over from the calculation. Nothing is computed."""
 
-    def test_board_model_from_the_chain(self):
+    CH = {"form": {"board": {"name": "TS1"}}, "calc": {
+        "datos": {"G-02": {"disp": "RCCB 4P 63 A 30 mA", "In": 63}, "IUG-01": {"disp": "MCB (10 A)", "In": 10, "S": 1.5, "dU": 1.2, "icu": 6}, "M-01": {"disp": "MCB > KM > OL (25 A)", "In": 25}},
+        "detalle": {"G-02": {"tipo": "seccional", "padre": ""}, "IUG-01": {"tipo": "iluminacion", "padre": "G-02", "ib_a": 7.5}, "M-01": {"tipo": "motor", "padre": ""}}}}
+
+    def test_assembly_from_the_calculation(self):
         sys.path.insert(0, str(H / "src"))
-        from disciplines.electrical_lv.stages.cable_list import board_diagram_model
-        ch = {"form": {"board": {"name": "TS1"}}, "calc": {
-            "datos": {"G-02": {"disp": "RCCB 4P 63 A 30 mA"}, "IUG-01": {"disp": "MCB (10 A)"}, "M-01": {"disp": "MCB > KM > OL (25 A)"}},
-            "detalle": {"G-02": {"tipo": "seccional", "padre": ""}, "IUG-01": {"tipo": "iluminacion", "padre": "G-02"}, "M-01": {"tipo": "motor", "padre": ""}}}}
-        m = board_diagram_model(ch)
-        self.assertEqual("TS1", m["board"])
-        self.assertEqual(["dev-TS1-bus", "dev-G-02-rccb", "dev-IUG-01-mcb", "dev-M-01-mcb", "dev-M-01-contactor", "dev-M-01-thermal_overload_relay"], [d["id"] for d in m["devices"]])
-        self.assertEqual([], m["unmapped"])
-        w = next(x for x in m["wires"] if x["id"] == "wire-IUG-01-load")
-        self.assertEqual(("external", "IUG-01"), (w["zone"], w["cable_ref"]))
-        self.assertEqual(m, board_diagram_model(ch))
+        from disciplines.electrical_lv.stages import cable_list
+        rows = [{"circuit": "IUG-01", "length_m": 18, "s_mm2": 1.5}]
+        with unittest.mock.patch.object(cable_list, "cable_rows", return_value=rows):
+            a = cable_list.board_diagram_assembly(self.CH, [])
+            again = cable_list.board_diagram_assembly(self.CH, [])
+        self.assertEqual(a, again)
+        self.assertEqual("TS1", a["board"])
+        self.assertEqual([], a["unmapped"])
+        c = next(x for x in a["circuits"] if x["tag"] == "IUG-01")
+        self.assertEqual(["dev-IUG-01-mcb"], [d["id"] for d in c["devices"]])
+        self.assertEqual(("lv_mcb", 10, 6), (c["devices"][0]["symbol"], c["devices"][0]["labels"]["rated_current"], c["devices"][0]["labels"]["breaking_capacity"]))
+        w = next(x for x in c["wires"] if x["zone"] == "external")
+        self.assertEqual(rows[0], w["cable"])
+        self.assertEqual(1.2, c["values"]["du_pct"])
+
+    def test_a_missing_cable_row_is_none_and_no_values_are_invented(self):
+        from epc_drawing import diagram_assembler as A
+        m = DM.build_board_model("TS1", {"X-1": {"disp": "MCB", "kind": "general"}})
+        a = A.assemble(dict(m, board="TS1"), {}, [])
+        c = a["circuits"][0]
+        self.assertEqual({"tag": "-X-1.1"}, c["devices"][0]["labels"])
+        self.assertIsNone(next(w for w in c["wires"] if w["zone"] == "external")["cable"])
+
+
+class DesignConstraints(unittest.TestCase):
+    """Design rules are constraints on the connections (no 4P MCB behind a 2P RCCB), not symbols; a constraint without its data is not applied."""
+
+    def test_poles_behind_an_rccb(self):
+        bad = DM.build_board_model("TS1", {"G-1": {"disp": "RCCB 2P 40 A 30 mA", "kind": "feeder"}, "L-1": {"disp": "MCB 4P (10 A)", "kind": "lighting", "parent": "G-1"}})
+        self.assertEqual([2, 4], [d["poles"] for d in bad["devices"] if "poles" in d])
+        found = K.check_constraints(bad)
+        self.assertEqual([("dc-01", "dev-L-1-mcb", "dev-G-1-rccb")], [(v["constraint"], v["device"], v["upstream"]) for v in found])
+        self.assertEqual("major", found[0]["severity"])
+        ok = DM.build_board_model("TS1", {"G-1": {"disp": "RCCB 4P 40 A 30 mA", "kind": "feeder"}, "L-1": {"disp": "MCB 2P (10 A)", "kind": "lighting", "parent": "G-1"}})
+        self.assertEqual([], K.check_constraints(ok))
+        unknown = DM.build_board_model("TS1", {"G-1": {"disp": "RCCB 40 A", "kind": "feeder"}, "L-1": {"disp": "MCB 4P (10 A)", "kind": "lighting", "parent": "G-1"}})
+        self.assertEqual([], K.check_constraints(unknown))
+
+    def test_contactor_needs_overload_protection(self):
+        m = DM.build_board_model("TS1", {"M-1": {"disp": "MCB > KM", "kind": "motor"}, "M-2": {"disp": "MCB > KM > OL (25 A)", "kind": "motor"}})
+        self.assertEqual([("dc-02", "dev-M-1-contactor")], [(v["constraint"], v["device"]) for v in K.check_constraints(m)])
+
+    def test_assembly_reports_violations_and_the_iec_reference(self):
+        from epc_drawing import diagram_assembler as A
+        m = dict(DM.build_board_model("TS1", {"M-1": {"disp": "MCB > KM", "kind": "motor"}}), board="TS1")
+        a = A.assemble(m, {}, [], symbols=lambda d: {"sld_symbol": "X-" + d})
+        self.assertEqual(["dc-02"], [v["constraint"] for v in a["violations"]])
+        mcb = a["circuits"][0]["devices"][0]
+        self.assertEqual("X-mcb", mcb["symbol"])
+        self.assertIn("id", mcb["iec_60617"])
 
 
 class TypicalTopologies(unittest.TestCase):
