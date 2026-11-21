@@ -15,7 +15,7 @@ Owner plugin: `board-design`. Wrapper over `python -m epc_drawing.diagram_model`
 5. **`.svg` is internal only.** Deliverables are `.dxf` and `.pdf`.
 
 ## Assembler
-The model alone draws nothing. `epc_drawing.diagram_assembler.assemble(model, values, cable_rows, symbols)` joins four sources: the model (connections), the calculation values, the cable-list rows and the symbols (IEC 60617 reference plus the library symbol, through a swappable provider). The design rules are **constraints** (`design_constraints.json`: for example no 4P MCB behind a 2P RCCB), not symbols: it reports them as `violations`, advisory. Stage 10 hands the result over as `diagram_assembly`. It computes nothing: values are looked up by circuit tag and passed through; a constraint without its data (a device with no pole count) is not applied.
+The model alone draws nothing. `epc_drawing.diagram_assembler.assemble(model, values, cable_rows, symbols, verdict)` joins four sources: the model (connections), the calculation values, the cable-list rows and the symbols (IEC 60617 reference plus the library symbol, through a swappable provider). The design rules are **constraints** (`design_constraints.json`: for example no 4P MCB behind a 2P RCCB), not symbols: `diagram_knowledge.audit(model)` checks them and gives the verdict (`ok` or `not_ok`, always `unverified`; blocking or major findings give `not_ok`). The assembly refuses to run without that verdict and carries it with its `findings` (also in `violations`). Stage 10 hands the result over as `diagram_assembly`. It computes nothing: values are looked up by circuit tag and passed through; a constraint without its data (a device with no pole count) is not applied.
 
 ## Run
 ```
