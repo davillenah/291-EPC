@@ -83,25 +83,15 @@ def _feature_faces(feature: Dict[str, Any], host: Tuple[Tuple[float, float, floa
     return _box(o, s)
 
 
-def faces(record: Dict[str, Any]) -> Dict[str, Any]:
-    """The model of one record: {"faces": {layer: [quad]}, "skipped": [ids of elements or features that give too little to draw]}."""
-    geo = record.get("geometry") or {}
-    profiles = {p["id"]: p for p in record.get("profiles", [])}
-    layers: Dict[str, List[Quad]] = {}
-    skipped: List[str] = []
-    hosts: Dict[str, Any] = {}
-    for e in geo.get("elements", []):
-        layer = pv_parts.layer_for(e.get("status"))
-        if e.get("size_mm"):
-            size, o = _mm(e["size_mm"]), _mm(e.get("position_mm") or (0, 0, 0))
-            solid = _turn(_box(o, size), e)
-            hosts[e["id"]] = (o, size)
-        else:
-            solid = _profile_faces(e, profiles)
-        if solid:
-            layers.setdefault(layer, []).extend(solid)
-        else:
-            skipped.append(e["id"])
+def _element_solid(e: Dict[str, Any], profiles: Dict[str, Any]):
+    """(faces, host box or None) of one element: a box by `size_mm` (turned by its rotation) or a profile run; None faces when it gives too little."""
+    if not e.get("size_mm"):
+        return _profile_faces(e, profiles), None
+    size, o = _mm(e["size_mm"]), _mm(e.get("position_mm") or (0, 0, 0))
+    return _turn(_box(o, size), e), (o, size)
+
+
+def _features(record: Dict[str, Any], hosts: Dict[str, Any], layers: Dict[str, List[Quad]], skipped: List[str]) -> None:
     default_host = next(iter(hosts.values()), None)
     for f in record.get("features", []):
         host = hosts.get(f.get("on"), default_host)
@@ -110,6 +100,23 @@ def faces(record: Dict[str, Any]) -> Dict[str, Any]:
             layers.setdefault(LAYER_CUT if (f.get("depth_mm") or 0) < 0 else LAYER_FEATURE, []).extend(solid)
         else:
             skipped.append(f.get("id", "feature"))
+
+
+def faces(record: Dict[str, Any]) -> Dict[str, Any]:
+    """The model of one record: {"faces": {layer: [quad]}, "skipped": [ids of elements or features that give too little to draw]}."""
+    profiles = {p["id"]: p for p in record.get("profiles", [])}
+    layers: Dict[str, List[Quad]] = {}
+    skipped: List[str] = []
+    hosts: Dict[str, Any] = {}
+    for e in (record.get("geometry") or {}).get("elements", []):
+        solid, host = _element_solid(e, profiles)
+        if host:
+            hosts[e["id"]] = host
+        if solid:
+            layers.setdefault(pv_parts.layer_for(e.get("status")), []).extend(solid)
+        else:
+            skipped.append(e["id"])
+    _features(record, hosts, layers, skipped)
     return {"faces": layers, "skipped": skipped}
 
 

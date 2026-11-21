@@ -110,6 +110,15 @@ def _faces(entities):
     return by_layer
 
 
+def _emit_entity(fh, e, stats: Dict[str, int]) -> None:
+    if e.dxftype() == "INSERT":
+        x, y, z = e.dxf.insert
+        fh.write(f"I({json.dumps(e.dxf.name)}, {x:.4f}, {y:.4f}, {z:.4f}, {json.dumps(e.dxf.layer)})\n")
+        stats["instances"] += 1
+    elif e.dxftype() == "POLYLINE":
+        fh.write(f"P({json.dumps(e.dxf.layer)}, {json.dumps([[round(c, 4) for c in v.dxf.location] for v in e.vertices])}, {str(bool(e.is_closed)).title()})\n")
+
+
 def _emit(fh, doc, used: set, stats: Dict[str, int]) -> None:
     """Writes the macro lines of one DXF document: its blocks (not yet written), then its modelspace."""
     for block in doc.blocks:
@@ -119,16 +128,10 @@ def _emit(fh, doc, used: set, stats: Dict[str, int]) -> None:
         fh.write(f"B({json.dumps(block.name)}, {json.dumps(_faces(block))})\n")
         stats["blocks"] += 1
     msp = doc.modelspace()
-    faces = _faces(msp)
-    for layer, quads in faces.items():
+    for layer, quads in _faces(msp).items():
         fh.write(f"F({json.dumps(layer)}, {json.dumps(quads)})\n")
     for e in msp:
-        if e.dxftype() == "INSERT":
-            x, y, z = e.dxf.insert
-            fh.write(f"I({json.dumps(e.dxf.name)}, {x:.4f}, {y:.4f}, {z:.4f}, {json.dumps(e.dxf.layer)})\n")
-            stats["instances"] += 1
-        elif e.dxftype() == "POLYLINE":
-            fh.write(f"P({json.dumps(e.dxf.layer)}, {json.dumps([[round(c, 4) for c in v.dxf.location] for v in e.vertices])}, {str(bool(e.is_closed)).title()})\n")
+        _emit_entity(fh, e, stats)
 
 
 def write_document(doc, path, title: str, colours: Dict[str, Any]) -> Path:
