@@ -5,6 +5,7 @@ All notable changes. Format: Keep a Changelog; versions follow `harness/docs/BRA
 ## [Unreleased]
 
 ### Changed
+- `calc_check` is the only role that states the verdict of a board: it reads the `verdict` of the assembly and reports its findings, it never recomputes it (DGM-15).
 - Cable types before the section: `epc_aea90364.cable_types` decides material, insulation, cores and installation method of each circuit (row first, then role, then design criteria) with no cross-section; the pipeline uses it and results are unchanged (DGM-12).
 - Audit verdict before the assembly: `diagram_knowledge.audit` decides ok or not_ok from the design constraints (blocking or major findings give not_ok) and `diagram_assembler.assemble` refuses to run without it and carries it in its output (DGM-12).
 - The board netlist reads the structured chain of the standard solution (`detalle.cadena`: devices and poles) and no longer has to parse the calculation text; the text stays as the fallback (DGM-12).
