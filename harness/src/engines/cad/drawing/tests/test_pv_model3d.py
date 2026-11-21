@@ -122,3 +122,46 @@ class TestPvModel3dStructure(unittest.TestCase):
         self.assertAlmostEqual(xs[1] - xs[0], 0.08, places=3)          # width of the 80 x 160 x 5 rectangular tube
         plain = Counter(e.dxf.layer for e in pv_model3d.build(g, PLANT["result"]).modelspace())
         self.assertGreater(plain["PV-3D-ESTRUCTURA"], Counter(e.dxf.layer for e in doc.modelspace())["PV-3D-ESTRUCTURA"])
+
+
+class TestFreecadMacro(unittest.TestCase):
+    def test_the_macro_is_valid_python_with_one_part_per_table_type_and_one_link_per_table(self):
+        from epc_drawing import pv_freecad
+        g = geometry()
+        with tempfile.TemporaryDirectory() as tmp:
+            done = pv_freecad.write(g, PLANT["result"], tmp, "PVT", parts=records())
+            text = done["macro"].read_text(encoding="utf-8")
+        self.assertTrue(done["macro"].name.endswith("_pv_model_3d_freecad.FCMacro"))
+        compile(text, "macro", "exec")
+        kinds = {(t["array"], t["modules"], t["width_m"]) for t in g["tables"]}
+        inverters = [i for i in g["inverters"] if i.get("x") is not None]
+        self.assertEqual(sum(1 for line in text.splitlines() if line.startswith("I(")), len(g["tables"]) + len(inverters))
+        self.assertGreaterEqual(done["blocks"], len(kinds))
+        self.assertLessEqual(done["blocks"], len(kinds) + len(inverters))
+        self.assertIn("PV-3D-SUELO", text)
+
+    def test_a_layout_without_tables_is_refused(self):
+        from epc_drawing import pv_freecad
+        g = geometry()
+        g["tables"] = []
+        with tempfile.TemporaryDirectory() as tmp, self.assertRaises(ValueError):
+            pv_freecad.write(g, PLANT["result"], tmp, "PVT")
+
+
+class TestRoofModel(unittest.TestCase):
+    def test_every_placed_module_is_six_faces_and_the_planes_are_slabs(self):
+        from epc_drawing import pv_roof_model3d
+        data = json.loads((Path(__file__).parent / "fixtures" / "pv_roof.json").read_text(encoding="utf-8"))
+        with tempfile.TemporaryDirectory() as tmp:
+            path = pv_roof_model3d.write(data["roof"], data["result"], tmp, "PVR", stamp_date="2026-11-20")
+            doc = ezdxf.readfile(str(path))
+            used = Counter(e.dxf.layer for e in doc.modelspace())
+        self.assertTrue(path.name.endswith("_pv_roof_model_3d.dxf"))
+        self.assertEqual(used["PV-3D-MODULOS"], 6 * sum(len(p["cells"]) for p in data["roof"]["planes"]))
+        self.assertEqual(used["PV-3D-CUBIERTA"], 6 * len(data["roof"]["planes"]))
+        self.assertGreater(used["PV-3D-OBSTACULOS"], 0)
+
+    def test_a_roof_without_planes_is_refused(self):
+        from epc_drawing import pv_roof_model3d
+        with self.assertRaises(ValueError):
+            pv_roof_model3d.build({"planes": []}, {})

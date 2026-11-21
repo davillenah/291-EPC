@@ -7,3 +7,4 @@
 | [LL-0003](LL-0003-auxiliary-circuit-needs-rcd-on-tt.md) | electrical LV | validated | A plant's auxiliary circuit on a TT board needs its residual-current device from the start |
 | [LL-0004](LL-0004-find-the-limit-with-a-size-ladder.md) | process | validated | Find a system's limit with a size ladder, not with one huge case |
 | [LL-0005](LL-0005-pv-inverter-placement-between-rows.md) | PV | proposed | Where the string inverters go in a low-tilt ground plant |
+| [LL-0006](LL-0006-describe-parts-once-regenerate-the-model.md) | drawing | proposed | Describe a part once in its record and regenerate its 3D model from the description |
