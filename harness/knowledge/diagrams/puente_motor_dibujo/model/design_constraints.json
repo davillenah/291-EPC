@@ -1,0 +1,46 @@
+{
+ "schema_version": "1.0",
+ "id": "design_constraints",
+ "description": {
+  "en": "Design constraints on the connections of a board (what may not be installed where). They check the netlist, not the calculation; every one is typical and unverified until a person confirms it against the standard and the manufacturer.",
+  "es": "Restricciones de diseno sobre las conexiones de un tablero (que no se puede instalar donde). Verifican el netlist, no el calculo; todas son tipicas y sin verificar hasta que una persona las confirme con la norma y el fabricante."
+ },
+ "status": "typical",
+ "constraints": [
+  {
+   "id": "dc-01",
+   "type": "poles_downstream_le_upstream",
+   "upstream": [
+    "rccb"
+   ],
+   "downstream": [
+    "mcb",
+    "mccb",
+    "rcbo",
+    "mpcb"
+   ],
+   "severity": "major",
+   "status": "typical",
+   "message": {
+    "en": "A device downstream of an RCCB must not have more poles than the RCCB (for example no 4P MCB behind a 2P RCCB).",
+    "es": "Un aparato aguas abajo de un RCCB no debe tener mas polos que el RCCB (por ejemplo, no un MCB de 4P detras de un RCCB de 2P)."
+   }
+  },
+  {
+   "id": "dc-02",
+   "type": "requires_downstream",
+   "device": "contactor",
+   "requires": [
+    "thermal_overload_relay",
+    "mpcb"
+   ],
+   "unless_kinds": [],
+   "severity": "minor",
+   "status": "typical",
+   "message": {
+    "en": "A motor contactor needs overload protection downstream (thermal overload relay or motor protection circuit breaker).",
+    "es": "Un contactor de motor necesita proteccion de sobrecarga aguas abajo (rele termico o guardamotor)."
+   }
+  }
+ ]
+}

@@ -22,16 +22,22 @@ def _topologies() -> dict:
     return K._json(_TOPO)
 
 
+_POLES = re.compile(r"\b([1-4])P\b", re.IGNORECASE)
+
+
 def _chain_from_disp(disp, tokens: dict):
-    """([device ids], [unmapped tokens]) of a calculation device text such as 'MCB > KM > OL (25 A)'."""
-    devices, unmapped = [], []
+    """([device ids], [unmapped tokens], [poles or None]) of a calculation device text such as 'MCB > KM > OL (25 A)' or 'RCCB 4P 63 A 30 mA'."""
+    devices, unmapped, poles = [], [], []
     for part in (disp or "").split(">"):
         words = part.split()
         if not words:
             continue
         device = tokens.get(words[0].upper())
         (devices if device else unmapped).append(device or words[0])
-    return devices, unmapped
+        if device:
+            found = _POLES.search(part)
+            poles.append(int(found.group(1)) if found else None)
+    return devices, unmapped, poles
 
 
 def _ports(device_id: str):
@@ -57,15 +63,21 @@ def build_board_model(board: str, circuits: dict, cable_refs: dict = None) -> di
     return model
 
 
+def _device(did, tag, device_id, board, poles):
+    """A device of the model; `poles` (2P, 4P) is carried only when the calculation names it."""
+    device = {"id": did, "tag": tag, "device_id": device_id, "symbol": K.symbol_for(device_id)["sld_symbol"], "enclosure": board}
+    return dict(device, poles=poles) if poles else device
+
+
 def _add_circuit(model, board, tag, c, start, topo, cable_ref):
     """Adds the devices, the load, the wires and the circuit group of one circuit to `model`; returns the (id, port) its children hang from."""
     slug, kind = _slug(tag), topo["kinds"].get(c.get("kind") or "general", topo["kinds"]["general"])
-    chain, bad = _chain_from_disp(c.get("disp"), topo["token_to_device"])
+    chain, bad, poles = _chain_from_disp(c.get("disp"), topo["token_to_device"])
     model["unmapped"] += [{"circuit": tag, "token": t} for t in bad]
     chain, wire_ids, prev = chain or list(kind["chain"]), [], start
     for n, device_id in enumerate(chain, 1):
         did = f"dev-{slug}-{device_id}" + (f"-{n}" if chain.count(device_id) > 1 else "")
-        model["devices"].append({"id": did, "tag": f"-{tag}.{n}", "device_id": device_id, "symbol": K.symbol_for(device_id)["sld_symbol"], "enclosure": board})
+        model["devices"].append(_device(did, f"-{tag}.{n}", device_id, board, poles[n - 1] if n <= len(poles) else None))
         wire_ids.append(_link(model, prev, (did, _ports(device_id)[0]), f"wire-{slug}-{n}", "internal", None))
         prev = (did, _ports(device_id)[1])
     has_load = kind["load_symbol"] is not None and c.get("kind") != "feeder"
