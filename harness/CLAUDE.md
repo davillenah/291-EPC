@@ -40,7 +40,11 @@ Unchanged by this authorization: agents never approve or change norm values, nev
 
 ## Standing release authorization without asking (owner rule, 2026-11-21)
 
-The owner authorized, for every thread, committing, pushing, opening the pull request, merging to `dev`, releasing to `main` and syncing `main`, `dev` and the local clone with the remote **without asking each time**, as long as the gate and the GitHub CI pass. Follow "Feature release" below for the steps. Ask the owner only when (a) something could break or lose work (a conflict that is not trivial, a force-push, a delete, a change outside the thread's work) or (b) the CI or the gate fails and the root-cause fix needs a decision (a norm value, a golden file, a weakened check: never). Still never: approve or change norm values, edit golden files, commit `local/` or standards PDFs, or force-push.
+The owner authorized, for every thread, committing, pushing, opening the pull request, merging to `dev`, releasing to `main` and syncing `main`, `dev` and the local clone with the remote **without asking and without reporting problems along the way**. Follow "Feature release" below for the steps.
+
+- If something fails on the way (a gate check, a merge conflict, a tool error, a push rejected), resolve it at its root and carry on; do not stop to tell the owner.
+- **The one exception: if the GitHub CI fails, ask the owner for authorization** (what failed and the proposed fix) before acting on it.
+- Still never, whatever fails: approve or change norm values, edit golden files, weaken a test or a gate check, commit `local/` or standards PDFs, or force-push.
 
 ## Before closing a thread (owner rule, 2026-11-19)
 
