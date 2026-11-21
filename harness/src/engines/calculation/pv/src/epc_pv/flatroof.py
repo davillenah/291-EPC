@@ -88,6 +88,24 @@ def propose(document: Dict[str, Any], spec: Dict[str, Any]) -> Dict[str, Any]:
             "warnings": [item("roof_short", n=short, capacity=best["modules"])] if short else []}
 
 
+def compare_structures(document: Dict[str, Any], spec: Dict[str, Any]) -> List[Dict[str, Any]]:
+    """The ground fixed-table structures that state a tilt range, each tried on the same site: [{structure_id, tilt_deg, modules, specific_yield_kwh_kwp, energy_index}] best first, where `energy_index` is
+    modules x specific yield (kWh/kWp, relative: the DC power of a module is the same for all). Structures without a range, trackers and structures that hold no module on the site are left out. Cost is not compared (no price data)."""
+    rows = []
+    for record in equipment.structures("ground"):
+        if "fixed_table" not in record["id"] or equipment.tilt_range_deg(record["id"]) is None:
+            continue
+        try:
+            found = propose(document, dict(spec, structure_id=record["id"]))
+        except PvError:
+            continue
+        best = next(o for o in found["options"] if o["tilt_deg"] == found["tilt_deg"])
+        if found["modules"] >= 1:
+            rows.append({"structure_id": record["id"], "tilt_deg": found["tilt_deg"], "modules": found["modules"], "specific_yield_kwh_kwp": best["specific_yield_kwh_kwp"],
+                         "energy_index": round(found["modules"] * best["specific_yield_kwh_kwp"], 1)})
+    return sorted(rows, key=lambda r: (-r["energy_index"], r["structure_id"]))
+
+
 def fit_table(layout: Dict[str, Any]) -> Dict[str, Any]:
     """The layout with the largest table (modules per row, then rows) that fits inside the site; the same layout, untouched, when the table already fits. The shape is the person's table reduced, never enlarged."""
     frame, table = lay._frame(layout), dict(layout["table"])

@@ -127,6 +127,21 @@ def _pv_inverter_blocks(result):
     return [{"type": "h", "text": "Inverters (position in the layout)"}, _table(["inverter", "model", "x_m", "y_m"], rows)] if rows else []
 
 
+def _pv_fill_blocks(result):
+    """The alternatives the harness compared for a ground plant filled to its site: the tilts tried and the structures tried on the same site (relative energy: modules x kWh/kWp). Cost is not compared."""
+    fill = result.get("site_fill")
+    if not fill:
+        return []
+    blocks = [{"type": "h", "text": "Alternatives compared (ground plant)"},
+              {"type": "p", "text": f"Chosen: tilt {fill['tilt_deg']:g} deg, azimuth {fill['azimuth_deg']:g} deg, {fill['modules']} module(s) in {fill['structure']['frames']} table(s)."},
+              _table(["tilt_deg", "modules", "kwh_per_kwp"], [[o["tilt_deg"], o["modules"], o["specific_yield_kwh_kwp"]] for o in fill["options"]])]
+    rows = fill.get("structure_options") or []
+    if rows:
+        blocks += [{"type": "p", "text": "Structures tried on the same site (best first; the structure of the project is the one the person gave, and the foundation and cost of each are not compared):"},
+                   _table(["structure", "tilt_deg", "modules", "kwh_per_kwp", "energy_index"], [[r["structure_id"], r["tilt_deg"], r["modules"], r["specific_yield_kwh_kwp"], r["energy_index"]] for r in rows])]
+    return blocks
+
+
 def _pv_weight_blocks(result):
     """The weight of the modules when the module format record gives one (`epc_pv.equipment.module_weight_kg`): each and in total. A load figure for the structure designer, not a structural check."""
     from epc_pv import equipment
@@ -157,7 +172,7 @@ def _pv_report(d, project):
               _table(["array", "poa_kwh_m2", "ac_kwh", "kwh_per_kwp", "pr", "cf"], yield_rows),
               {"type": "h", "text": "Monthly AC energy (kWh)"}, _table(["month", "ac_kwh"], months),
               {"type": "p", "text": f"Total: DC {totals['dc_kwp']} kWp, AC {totals['ac_kw']} kW, {totals['ac_kwh']} kWh per year, specific yield {totals['specific_yield_kwh_kwp']} kWh/kWp, clipping {totals['clipping_kwh']} kWh."}]
-    blocks += _pv_equipment_blocks(result)
+    blocks += _pv_equipment_blocks(result) + _pv_fill_blocks(result)
     plan = result.get("layout")
     if plan:
         blocks += [{"type": "h", "text": "Plant layout"},

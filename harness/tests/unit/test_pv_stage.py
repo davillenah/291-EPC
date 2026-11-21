@@ -302,7 +302,7 @@ class PvDrawingsTests(unittest.TestCase):
             run(ctx, stop_after=10, run_id="r1")
             res = ctx.results[10]
         self.assertEqual(res.status, "ok")
-        self.assertEqual({k.rsplit("_pv_", 1)[1] for k in res.outputs["pv_sheets"]}, {"roof_layout_sheet", "roof_stringing_sheet", "roof_cabling_sheet", "equipment_detail_sheet"})      # the detail sheet of the module record of the outline (PVX-04)
+        self.assertEqual({k.rsplit("_pv_", 1)[1] for k in res.outputs["pv_sheets"]}, {"roof_layout_sheet", "roof_stringing_sheet", "roof_cabling_sheet", "roof_sld_sheet", "equipment_detail_sheet"})      # the detail sheet of the module record of the outline (PVX-04)
 
 
 
@@ -408,3 +408,24 @@ class PvRoofDetailTests(unittest.TestCase):
         self.assertTrue(found == {} or found["module"]["id"])
         self.assertEqual(pv_drawings.roof_parts({"planes": [{"module": {"width_m": 1.0, "depth_m": 0.5}}]}), {})      # no record has this outline
         self.assertEqual(pv_drawings.roof_parts({"planes": [{}]}), {})
+
+
+class PvFillAlternativesTests(unittest.TestCase):
+    def test_the_study_shows_the_tilts_and_the_structures_compared_for_a_ground_plant(self):
+        from disciplines.electrical_lv.stages import rendering
+        fill = {"tilt_deg": 25.0, "azimuth_deg": 0.0, "modules": 100, "structure": {"frames": 5}, "options": [{"tilt_deg": 25, "modules": 100, "specific_yield_kwh_kwp": 4.1}],
+                "structure_options": [{"structure_id": "s1", "tilt_deg": 25, "modules": 100, "specific_yield_kwh_kwp": 4.1, "energy_index": 410.0}]}
+        blocks = rendering._pv_fill_blocks({"site_fill": fill})
+        self.assertEqual([b["type"] for b in blocks], ["h", "p", "table", "p", "table"])
+        self.assertEqual(rendering._pv_fill_blocks({}), [])
+
+
+class PvBoqEquipmentTests(unittest.TestCase):
+    def test_the_boq_lines_of_a_plant_come_from_the_arrays_stage_3_counted(self):
+        from types import SimpleNamespace as NS
+        from disciplines.electrical_lv.stages import output_stages
+        arrays = [{"id": "A1", "modules": 210, "inverters": 2, "strings": {"strings": 15, "n_series": 14}}]
+        ctx = NS(results={3: NS(status="ok", outputs={"pv": {"arrays": arrays}})})
+        lines = output_stages.pv_equipment(ctx)
+        self.assertEqual([(l["quantity"]) for l in lines], [210, 15, 2])
+        self.assertIsNone(output_stages.pv_equipment(NS(results={})))

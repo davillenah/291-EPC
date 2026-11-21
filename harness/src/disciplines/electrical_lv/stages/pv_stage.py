@@ -277,7 +277,9 @@ def _with_fill(section):
             target = layout.pop("target_modules", target)
             wanted = layout["table"]
         layout = flatroof.fit_table(layout)
-        proposal = flatroof.propose(document, flatroof.spec_from_layout(layout, array, target))
+        spec = flatroof.spec_from_layout(layout, array, target)
+        proposal = flatroof.propose(document, spec)
+        proposal["structure_options"] = flatroof.compare_structures(document, spec)      # the other structures tried on the same site (PVX-09); the person's choice is not changed
     except epc_pv.PvError as exc:
         raise StageInputError([f"layout: {exc} / {exc.es}"]) from exc
     proposal["warnings"] += picked

@@ -33,7 +33,7 @@ This plugin is packaging only. The code lives in `harness/src/engines/calculatio
 |---|---|
 | Incluye (motor) | `aea90364`, `arch`, `calc_common`, `drawing`, `dxf`, `feeder_sizing`, `grounding`, `load_balance`, `mld`, `plan`, `pv`, `selectivity`, `short_circuit`, `sld`, `symbols`, `titleblock`, `voltage_drop` |
 | Es dueño de | `drawing` |
-| Necesita (plugins) | `aea-calc`, `dxf-output`, `iram-titleblock`, `mld`, `sld` |
+| Necesita (plugins) | `aea-calc`, `dxf-output`, `iec-symbols`, `iram-titleblock`, `mld`, `sld` |
 | Lo necesitan | — |
 | Paquetes de Python | `ezdxf`, `lxml`, `matplotlib`, `numpy`, `openpyxl`, `pillow`, `pypdfium2`, `shapely`, `svgelements`, `vtracer` |
 | Si lo modificas, revisa | plugins —; módulos del backend — |

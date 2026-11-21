@@ -217,3 +217,19 @@ class ValidationTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class EquipmentTests(unittest.TestCase):
+    def test_equipment_counted_by_another_engine_becomes_numbered_lines(self):
+        lines = [{"description": "PV module, array A1", "unit": "un", "quantity": 210, "source": ["A1"]}, {"description": "PV inverter, array A1", "quantity": 1}]
+        result = boq(equipment=lines)
+        found = by_cat(result, "pv_equipment")
+        self.assertEqual([i["item_id"] for i in found], ["PVE-001", "PVE-002"])
+        self.assertEqual([i["quantity"] for i in found], [210, 1])
+        self.assertEqual(found[1]["unit"], "un")
+        self.assertEqual(by_cat(boq(), "pv_equipment"), [])
+
+    def test_a_bad_equipment_line_is_refused(self):
+        for bad in ({"description": "", "quantity": 1}, {"description": "x", "quantity": -1}, {"description": "x", "quantity": True}, "x"):
+            with self.assertRaises(ValueError):
+                boq(equipment=[bad])
