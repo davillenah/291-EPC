@@ -22,6 +22,7 @@ Missing data is never defaulted: it raises `StageInputError` (the stage is `bloc
 import copy
 import importlib
 
+from disciplines.electrical_lv.stages import pv_feeders as PF
 from disciplines.electrical_lv.stages.base import StageInputError
 from disciplines.electrical_lv.stages.mappings import (
     KIND_TAG_PREFIX, KIND_TOPOLOGY, OVERRIDE_KEYS, PHASE_CODE, POWER_UNITS_WITH_FP)
@@ -109,7 +110,7 @@ def build_form(context):
     board = _board(context, errors)
     overrides = inputs_of(context).get("circuits") or {}
     circuits = [_circuit(load, overrides, errors) for load in loads]
-    extra = [dict(c) for c in inputs_of(context).get("extra_circuits") or []]
+    extra = PF.feeder_rows(context, inputs_of(context).get("pv_feeders")) + [dict(c) for c in inputs_of(context).get("extra_circuits") or []]
     errors += [f"extra circuit {n}: tag is required" for n, c in enumerate(extra, start=1) if not c.get("tag")]
     errors += _needs_fp(circuits, board)
     if not loads:

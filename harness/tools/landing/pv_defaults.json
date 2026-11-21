@@ -44,5 +44,9 @@
     "phases": 1,
     "length_m": 20
   },
+  "feeder": {
+    "phases": 3,
+    "length_m": 30
+  },
   "module_placeholder": "jinko.jkm670n-66ql6-bdv"
 }

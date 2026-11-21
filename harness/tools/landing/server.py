@@ -289,7 +289,7 @@ def _pv(selected, flat, submit):
         weather = pv.fetch_weather(flat)
     except Exception as exc:      # PvError (English and Spanish) or anything the network raises: the project is not created
         return {"state": "invalid", "errors": [], "problem": {"code": "pvgis", "detail": f"{exc} / {getattr(exc, 'es', '')}"[:300]}}, None
-    return {"state": "created", "errors": []}, {"section": pv.section(flat), "drawings": pv.drawings_options(pv.values_of(flat)[0]), "files": {pv.WEATHER_FILE: weather}, "aux": None if "architectural" in selected else (pv.aux_loads(flat), pv.board_of(flat))}
+    return {"state": "created", "errors": []}, {"section": pv.section(flat), "drawings": pv.drawings_options(pv.values_of(flat)[0]), "files": {pv.WEATHER_FILE: weather}, "aux": None if "architectural" in selected else (pv.aux_loads(flat), pv.board_of(flat)), "feeders": pv.feeders_of(flat)}
 
 
 def _merge_pv(data, pv_data):
@@ -297,7 +297,7 @@ def _merge_pv(data, pv_data):
     if not pv_data:
         return data
     (areas, loads), board = pv_data["aux"] or (([], []), None)
-    data = data or {"plans": {}, "loads": {"schema_version": "1.0", "areas": areas, "loads": loads}, "inputs": {"board": board, "documents": {"formats": ["pdf", "docx", "xlsx"]}, "circuits": {"AUX-01": {"kind": "rcbo"}}}}      # the auxiliary service carries its residual-current device (TT needs it, stage 8)
+    data = data or {"plans": {}, "loads": {"schema_version": "1.0", "areas": areas, "loads": loads}, "inputs": {"board": board, "documents": {"formats": ["pdf", "docx", "xlsx"]}, "circuits": {"AUX-01": {"kind": "rcbo"}}, "pv_feeders": pv_data.get("feeders")}}      # the auxiliary service carries its residual-current device (TT needs it, stage 8)
     inputs = dict(data["inputs"], pv=pv_data["section"], **({"drawings": dict(data["inputs"].get("drawings") or {}, **pv_data["drawings"])} if pv_data.get("drawings") else {}))
     return dict(data, inputs=inputs, files=pv_data["files"])
 
