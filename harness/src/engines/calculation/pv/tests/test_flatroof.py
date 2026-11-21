@@ -143,3 +143,16 @@ class TestStructureTiltRange(unittest.TestCase):
         self.assertEqual(flatroof.candidate_tilts(dict(SPEC, structure_id="roof_flat_ballast_east_west")), (10,))
         self.assertEqual(flatroof.candidate_tilts(dict(SPEC, structure_id="roof_flat_ballast_east_west", tilt_deg=30)), (30.0,))      # the person's tilt wins
         self.assertEqual(flatroof.candidate_tilts({k: v for k, v in SPEC.items() if k not in ("structure_id", "tilt_deg")}), flatroof.TILTS_DEG)
+
+
+class TestCompareStructures(unittest.TestCase):
+    def test_every_fixed_table_structure_with_a_range_is_tried_best_first(self):
+        spec = dict(copy.deepcopy(SPEC), mounting="ground")
+        rows = flatroof.compare_structures(doc(), spec)
+        self.assertTrue(rows)
+        self.assertEqual([r["energy_index"] for r in rows], sorted((r["energy_index"] for r in rows), reverse=True))
+        from epc_pv import equipment
+        for r in rows:
+            lo, hi = equipment.tilt_range_deg(r["structure_id"])
+            self.assertTrue(lo <= r["tilt_deg"] <= hi)
+            self.assertIn("fixed_table", r["structure_id"])

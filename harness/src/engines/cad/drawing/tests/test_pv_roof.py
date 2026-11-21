@@ -9,7 +9,7 @@ import ezdxf
 from epc_drawing import pv_roof
 
 ROOF = json.loads((Path(__file__).parent / "fixtures" / "pv_roof.json").read_text(encoding="utf-8"))
-NAMES = {"roof_layout", "roof_stringing", "roof_cabling"}
+NAMES = {"roof_layout", "roof_stringing", "roof_cabling", "roof_sld"}
 
 
 def layers_of(path):
@@ -20,7 +20,7 @@ class TestPvRoof(unittest.TestCase):
     def write(self, tmp, language="en"):
         return pv_roof.write_all(ROOF["roof"], ROOF["result"], Path(tmp) / language, "PVR", language=language, stamp_date="2026-11-19")
 
-    def test_three_drafts_in_both_languages(self):
+    def test_four_drafts_in_both_languages(self):
         with tempfile.TemporaryDirectory() as tmp:
             for language in ("en", "es"):
                 paths = self.write(tmp, language)
@@ -59,3 +59,16 @@ class TestPvRoof(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestRoofSld(unittest.TestCase):
+    def test_the_single_line_has_one_inverter_per_array_unit_and_the_library_symbol(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = pv_roof.write_all(ROOF["roof"], ROOF["result"], Path(tmp), "PVR", stamp_date="2026-11-21")["PVR_roof_sld"]
+            doc = ezdxf.readfile(str(path))
+            inserts = [e for e in doc.modelspace() if e.dxftype() == "INSERT"]
+            texts = " ".join(e.dxf.text for e in doc.modelspace() if e.dxftype() == "TEXT")
+        self.assertEqual(len(inserts), sum(int(a["inverters"]) for a in ROOF["result"]["arrays"]))
+        self.assertTrue(all(e.dxf.name.endswith("_inverter") for e in inserts))
+        for a in ROOF["result"]["arrays"]:
+            self.assertIn(f"{a['id']}-INV1", texts)
