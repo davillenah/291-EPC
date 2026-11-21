@@ -1,0 +1,120 @@
+{
+  "schema_version": "1.0",
+  "id": "mv_ring_main_cell",
+  "name": {
+    "en": "MV ring-main cell arrangement",
+    "es": "Esquema de celdas MT en anillo"
+  },
+  "description": {
+    "en": "Ring-main unit with cable-switch cells and one switch-fuse or breaker cell feeding a transformer.",
+    "es": "Unidad en anillo con celdas de interruptor de cable y una celda interruptor-fusible o interruptor que alimenta un transformador."
+  },
+  "purpose": {
+    "en": "Show how MV cells are sequenced in a secondary substation.",
+    "es": "Mostrar la secuencia de celdas MT en una subestacion secundaria."
+  },
+  "voltage_level": "MV",
+  "status": "typical",
+  "chain": [
+    {
+      "order": 1,
+      "device_id": "mv_load_break_switch_c",
+      "label": {
+        "en": "Incoming cable cell (C)",
+        "es": "Celda de cable entrante (C)"
+      },
+      "notes": {
+        "en": "Ring feed in",
+        "es": "Entrada en anillo"
+      }
+    },
+    {
+      "order": 2,
+      "device_id": "mv_load_break_switch_c",
+      "label": {
+        "en": "Outgoing cable cell (C)",
+        "es": "Celda de cable saliente (C)"
+      },
+      "notes": {
+        "en": "Ring feed out",
+        "es": "Salida en anillo"
+      }
+    },
+    {
+      "order": 3,
+      "device_id": "mv_switch_fuse_f",
+      "label": {
+        "en": "Transformer cell (F)",
+        "es": "Celda de transformador (F)"
+      },
+      "notes": {
+        "en": "Switch-fuse; downstream earthing switch 5 kA 1 s",
+        "es": "Interruptor-fusible; seccionador de tierra 5 kA 1 s"
+      }
+    },
+    {
+      "order": 4,
+      "device_id": "mv_earthing_switch",
+      "label": {
+        "en": "Earthing at transformer side",
+        "es": "Puesta a tierra del lado transformador"
+      },
+      "notes": {
+        "en": "Interlocked with disconnector",
+        "es": "Enclavado con el seccionador"
+      }
+    },
+    {
+      "order": 5,
+      "device_id": "transformer_mv_lv",
+      "label": {
+        "en": "MV/LV transformer",
+        "es": "Transformador MT/BT"
+      },
+      "notes": {
+        "en": "Protected by fuse-link",
+        "es": "Protegido por fusible"
+      }
+    }
+  ],
+  "drawing_conventions": [
+    {
+      "en": "Draw source at top, loads at bottom; read upstream to downstream.",
+      "es": "Dibujar la fuente arriba y las cargas abajo; leer de aguas arriba a aguas abajo."
+    },
+    {
+      "en": "Label each device with its tag (for example QF-101) and its rating (A, kA, curve).",
+      "es": "Rotular cada equipo con su tag (por ejemplo QF-101) y su calibre (A, kA, curva)."
+    },
+    {
+      "en": "Label each feeder with conductor count, size and material where notated.",
+      "es": "Rotular cada alimentador con numero de conductores, seccion y material cuando se indique."
+    },
+    {
+      "en": "Indicate interlocks between disconnector and earthing switch.",
+      "es": "Indicar los enclavamientos entre seccionador y seccionador de tierra."
+    }
+  ],
+  "source_ids": [
+    "abb_safering_cat",
+    "viox_sld"
+  ],
+  "sources": [
+    {
+      "id": "abb_safering_cat",
+      "title": "1VDD006104 SafeRing SafePlus 12-24 kV catalogue (07-2022)",
+      "url": "https://library.e.abb.com/public/bb38f74c9b404b4b89745cde2a4b0dba/1VDD006104_Catalogue_SR-SP_12-24kV_EN_07-2022.pdf",
+      "publisher": "ABB",
+      "accessed": "2026-11-20",
+      "kind": "manufacturer"
+    },
+    {
+      "id": "viox_sld",
+      "title": "How to read a single line diagram",
+      "url": "https://viox.com/how-to-read-a-single-line-diagram/",
+      "publisher": "VIOX Electric",
+      "accessed": "2026-11-20",
+      "kind": "third_party_guide"
+    }
+  ]
+}

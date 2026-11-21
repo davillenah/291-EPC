@@ -1,0 +1,108 @@
+{
+  "schema_version": "1.0",
+  "id": "ats",
+  "name": {
+    "en": "Automatic transfer switch (ATS)",
+    "es": "Conmutador automatico de transferencia (ATS)"
+  },
+  "description": {
+    "en": "Switches a load between utility and standby generator. Transition can be open (break-before-make), closed (make-before-break) or delayed.",
+    "es": "Transfiere una carga entre red y generador de emergencia. La transicion puede ser abierta (corte antes de conexion), cerrada (conexion antes de corte) o diferida."
+  },
+  "kind": "transfer_switch",
+  "voltage_level": "LV",
+  "status": "unverified",
+  "source_ids": [
+    "kohler_ats",
+    "iec60617_db"
+  ],
+  "sources": [
+    {
+      "id": "kohler_ats",
+      "title": "Kohler automatic transfer switch brochure",
+      "url": "https://resources.kohler.com/power/kohler/industrial/pdf/ATS_Brochure.pdf",
+      "publisher": "Kohler",
+      "accessed": "2026-11-20",
+      "kind": "manufacturer"
+    },
+    {
+      "id": "iec60617_db",
+      "title": "IEC 60617 graphical symbols database (public page)",
+      "url": "https://std.iec.ch/iec60617",
+      "publisher": "IEC",
+      "accessed": "2026-11-20",
+      "kind": "standard_public_summary"
+    }
+  ],
+  "standard_refs": [
+    {
+      "ref": "UL 1008",
+      "note": {
+        "en": "Transfer switch standard referenced by the brochure (cited, not quoted)",
+        "es": "Norma de conmutadores citada en el folleto (citada, no transcrita)"
+      }
+    }
+  ],
+  "symbol_ref": {
+    "id": "not_found",
+    "status": "not_found",
+    "note": {
+      "en": "IEC 60617 public page lists no identifiers for this item; not found, not guessed.",
+      "es": "La pagina publica de IEC 60617 no lista identificadores para este elemento; no encontrado, no supuesto."
+    }
+  },
+  "ratings_typical": [
+    {
+      "parameter": "rated_current",
+      "value": "30 to 4000",
+      "unit": "A",
+      "status": "unverified",
+      "source_ids": [
+        "kohler_ats"
+      ],
+      "note": {
+        "en": "Brochure states ATS available from 30 to 4000 A",
+        "es": "El folleto indica ATS de 30 a 4000 A"
+      }
+    },
+    {
+      "parameter": "transition_modes",
+      "value": "open / closed / delayed",
+      "unit": "-",
+      "status": "unverified",
+      "source_ids": [
+        "kohler_ats"
+      ],
+      "note": {
+        "en": "Transition modes described in brochure",
+        "es": "Modos de transicion descritos en el folleto"
+      }
+    }
+  ],
+  "selection_criteria": {
+    "when_to_use": [
+      {
+        "en": "Standby generator plus utility supply with automatic transfer (cited)",
+        "es": "Generador de emergencia mas red con transferencia automatica (citado)"
+      },
+      {
+        "en": "Closed transition where a short overlap is acceptable for critical loads (cited: data centers and hospitals)",
+        "es": "Transicion cerrada cuando es aceptable un solape breve para cargas criticas (citado: centros de datos y hospitales)"
+      }
+    ],
+    "when_not_to_use": [
+      {
+        "en": "Inductive loads sensitive to surges: delayed transition (cited)",
+        "es": "Cargas inductivas sensibles a picos: transicion diferida (citado)"
+      },
+      {
+        "en": "Source-to-source without generator control: not a generator ATS (typical)",
+        "es": "Fuente a fuente sin control de generador: no es ATS de generador (typical)"
+      }
+    ],
+    "alternatives": [
+      "switch_disconnector",
+      "contactor"
+    ]
+  }
+}

@@ -1,0 +1,218 @@
+{
+  "schema_version": "1.0",
+  "id": "pv_export_limitation_meter_ct_limiter",
+  "family": "export_storage",
+  "name": {
+    "en": "Zero or limited export with grid meter, CT and limiter",
+    "es": "Inyección cero o limitada con medidor de red, TC y limitador"
+  },
+  "description": {
+    "en": "A CT at the grid connection feeds a meter and a limiter that sets the inverter output. A relay or Modbus setpoint is the inverter input.",
+    "es": "Un TC en el punto de conexión alimenta un medidor y un limitador que fija la salida del inversor. La entrada del inversor es un relé o una consigna Modbus."
+  },
+  "application_range": {
+    "text": {
+      "en": "Zero or limited export where the utility or the site prohibits feed-in.",
+      "es": "Inyección cero o limitada donde la distribuidora o el sitio lo impide."
+    },
+    "status": "typical",
+    "source_ids": []
+  },
+  "diagram_types": [
+    "SLD",
+    "functional"
+  ],
+  "symbol_refs": [
+    "sym_current_transformer_2sec",
+    "sym_relay_coil_general"
+  ],
+  "device_refs": [
+    "ct",
+    "pv_inverter_grid_tie"
+  ],
+  "components": [
+    {
+      "ref": "T1",
+      "letter": "T",
+      "symbol_id": "sym_current_transformer_2sec",
+      "device_id": "ct",
+      "description": {
+        "en": "CT at the grid connection point, ahead of the loads, measures net flow.",
+        "es": "TC en el punto de conexión a red, antes de las cargas, mide el flujo neto."
+      },
+      "status": "unverified"
+    },
+    {
+      "ref": "P1",
+      "letter": "P",
+      "symbol_id": null,
+      "device_id": null,
+      "description": {
+        "en": "Grid meter reading the CT. Letter P not in the repository table.",
+        "es": "Medidor de red que lee el TC. La letra P no figura en la tabla del repositorio."
+      },
+      "status": "unverified"
+    },
+    {
+      "ref": "A1",
+      "letter": "A",
+      "symbol_id": null,
+      "device_id": null,
+      "description": {
+        "en": "Export controller or limiter. Brand (e.g., DEIF) not located.",
+        "es": "Controlador o limitador de exportación. Marca (p. ej. DEIF) no ubicada."
+      },
+      "status": "not_found"
+    },
+    {
+      "ref": "K1",
+      "letter": "K",
+      "symbol_id": "sym_relay_coil_general",
+      "device_id": null,
+      "description": {
+        "en": "Relay output sending the export limit to the inverter (if the inverter has a hardware input).",
+        "es": "Salida de relé que envía el límite de exportación al inversor (si tiene entrada por hardware)."
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "A2",
+      "letter": "A",
+      "symbol_id": null,
+      "device_id": "pv_inverter_grid_tie",
+      "description": {
+        "en": "Inverter with power limit input or Modbus setpoint.",
+        "es": "Inversor con entrada de límite de potencia o consigna Modbus."
+      },
+      "status": "typical"
+    }
+  ],
+  "power_connection": [
+    {
+      "text": {
+        "en": "CT on the incoming supply ahead of the loads. A meter after the inverter sees only inverter output and misses consumption.",
+        "es": "TC en la acometida antes de las cargas. Un medidor después del inversor solo ve la salida del inversor y no el consumo."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "victron_grid_meter_qa"
+      ]
+    },
+    {
+      "text": {
+        "en": "A grid-side meter measures the same as the inverter internal sensor when no loads are on the AC input.",
+        "es": "Un medidor en lado red mide lo mismo que el sensor interno del inversor cuando no hay cargas en la entrada AC."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "victron_grid_meter_qa"
+      ]
+    }
+  ],
+  "control_connection": [
+    {
+      "text": {
+        "en": "Relay or Modbus signal from the limiter to the inverter setpoint.",
+        "es": "Señal de relé o Modbus del limitador a la consigna del inversor."
+      },
+      "status": "typical",
+      "source_ids": []
+    }
+  ],
+  "protections": [
+    {
+      "text": {
+        "en": "Fail-safe: if the meter link is lost, the inverter limits to zero export (typical).",
+        "es": "A prueba de fallas: si se pierde el enlace del medidor, el inversor limita a cero exportación (típico)."
+      },
+      "status": "typical",
+      "source_ids": []
+    }
+  ],
+  "sequence": [
+    {
+      "text": {
+        "en": "Set the meter role in the gateway, then set the external meter as an AC load (Victron Q&A).",
+        "es": "Definir el rol del medidor en el gateway y luego el medidor externo como carga AC (Q&A de Victron)."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "victron_grid_meter_qa"
+      ]
+    },
+    {
+      "text": {
+        "en": "Verify export is zero under real load.",
+        "es": "Verificar exportación cero con carga real."
+      },
+      "status": "typical",
+      "source_ids": []
+    }
+  ],
+  "common_errors": [
+    {
+      "text": {
+        "en": "CT polarity reversed.",
+        "es": "Polaridad del TC invertida."
+      },
+      "status": "typical",
+      "source_ids": []
+    },
+    {
+      "text": {
+        "en": "Meter placed after the inverter.",
+        "es": "Medidor colocado después del inversor."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "victron_grid_meter_qa"
+      ]
+    },
+    {
+      "text": {
+        "en": "Feed-in control inactive because the meter role was not set.",
+        "es": "Control de inyección inactivo por no definir el rol del medidor."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "victron_grid_meter_qa"
+      ]
+    }
+  ],
+  "source_conflicts": [
+    {
+      "topic": {
+        "en": "Grid meter role thread",
+        "es": "Hilo del rol de medidor de red"
+      },
+      "source_ids": [
+        "victron_grid_meter_qa"
+      ],
+      "note": {
+        "en": "The Q&A says feed-in worked only after the MultiPlus was set as grid meter. A later poster still saw only critical loads measured, and the thread does not resolve it.",
+        "es": "El Q&A dice que la inyección funcionó solo al definir el MultiPlus como medidor de red. Otro usuario aún veía solo cargas críticas y el hilo no lo resuelve."
+      }
+    }
+  ],
+  "status": "unverified",
+  "source_ids": [
+    "repo_devices",
+    "victron_grid_meter_qa"
+  ],
+  "sources": [
+    {
+      "id": "repo_devices",
+      "title": "EPC-291 repository: sld_mld/devices and funcional_iec60617/symbols_index.json (ids reused)",
+      "url": "repo://sld_mld/devices",
+      "kind": "internal_repo",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "victron_grid_meter_qa",
+      "title": "Victron community archive: grid meter position in ESS configuration (Q&A)",
+      "url": "https://communityarchive.victronenergy.com/questions/143738/grid-meter-position-in-ess-configuration.html",
+      "kind": "secondary_article",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

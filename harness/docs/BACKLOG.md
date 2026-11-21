@@ -27,6 +27,20 @@ Actualizado: 2026-11-08.
 - [ ] **PRB-06 · Motores fuera del pipeline.** Iluminación, climatización y tomacorrientes no entran en las 16 etapas (la potencia se escribe a mano); el transformador usa un `demand_kva` escrito a mano porque la demanda total del tablero está pendiente (etapa 5).
 - [ ] **PRB-07 · Tensión fuera de 380/400 V.** El pipeline bloquea media tensión (p. ej. 13200 V) en la etapa 4. Obra civil y estructura (`civil_structural`) no tienen motores.
 
+## Diagram knowledge (DGM)
+
+Data in `knowledge/diagrams/` (research of 2026-11-20: LV/MV and PV devices, typical schemes, IEC 60617 symbols, functional circuits). All `unverified`/`typical`/`not_found`; test `tests/unit/test_diagram_knowledge.py`.
+
+- [x] **DGM-01 · Research data and bridge to the symbol library** (2026-11-21). 57 devices mapped to `epc_symbols` symbols and ports, netlist contract proposal and 18 netlists.
+- [ ] **DGM-02 · Drawing engine reads a project netlist** (`knowledge/diagrams/puente_motor_dibujo/netlist.schema.json`). Today `epc_sld` is driven by `SLD_CALC_JSON` and the board workbook. Decide who produces the netlist (stage 10 from engine results) and fix branching: the 17 scheme netlists are linear chains, so shunt devices (SPD, arresters, meter taps, earthing) sit in series.
+- [x] **DGM-08 · Code that reads the diagram knowledge** (2026-11-21). `epc_drawing.diagram_knowledge`: `rules()`, `matching(variables)`, `symbol_for(device_id)` and `check_board(calculo)` (advisory notes EN/ES, never changes a result). Tests: `tests/unit/test_diagram_knowledge_use.py`.
+- [x] **DGM-09 · Stage 9 lists the diagram-rule notes** (2026-11-21). `calc_check_stage.diagram_findings`: where the protective device of a circuit differs from the one the LV rules select for its current, a `note` finding (verifier calc-check, EN and ES text) joins stage 9. Advisory, no result changes; goldens unchanged. Test: `tests/unit/test_diagram_knowledge_use.py`.
+- [ ] **DGM-03 · Six devices without a library symbol:** IMD, blocking diode, power optimizer, rapid shutdown device, RCMU, string combiner box (`device_symbol_map.json`, `not_found`).
+- [ ] **DGM-04 · Confirm the 'close' symbol matches** (e.g. RCD types A/B/F to the RCCB symbol, ANSI relays to the generic relay) and the contactor main-contact symbol (S00286 note says closed at rest). (Owner)
+- [ ] **DGM-05 · Open source conflicts for a person:** string fuse factor (1.5 x Isc vs 1.25 x 1.25 x Isc), RCD type on transformerless inverters (A vs B), rapid shutdown threshold (30 V / 30 s from SMA, not in IEC 60364-7-712), DC/AC shutdown order, RS485 terminator, MV station envelope. (Owner)
+- [ ] **DGM-06 · Standards read only through secondary sources:** IEC 60445 / EN 50005 terminal marking, IEC 81346-2, IEC 62548, AEA 90364-7-712, NEC 690. Read the standards and promote values (pending review).
+- [ ] **DGM-07 · Feed `epc_pv` and the PV drawings from these criteria** (decision rules for DC protection, grounding, SPD) once the PV equipment loader (audit H1-H3) is in.
+
 ## Landing (LND)
 
 - [~] **LND-01 · Landing conectada al pipeline** (2026-11-19). Hecho: lectura del pedido por reglas, propuesta de casa de una planta, campos editables, corrida de 12 etapas y lista de entregables. Dos plantas con escalera y montante ya corren. Falta: más de dos plantas, techos, otras disciplinas (solo se guarda el pedido), abrir DXF desde la página.

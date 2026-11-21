@@ -1,0 +1,113 @@
+{
+  "schema_version": "1.0",
+  "id": "spd_type2",
+  "name": {
+    "en": "SPD type 2 (switching and induced surges)",
+    "es": "SPD tipo 2 (sobretensiones de maniobra e inducidas)"
+  },
+  "description": {
+    "en": "Surge protective device for induced and switching surges (8/20 us). Main protection in each LV switchboard.",
+    "es": "Dispositivo de proteccion para sobretensiones inducidas y de maniobra (8/20 us). Proteccion principal en cada cuadro BT."
+  },
+  "kind": "spd",
+  "voltage_level": "LV",
+  "status": "pending review",
+  "source_ids": [
+    "ei_spd",
+    "iec60617_db"
+  ],
+  "sources": [
+    {
+      "id": "ei_spd",
+      "title": "The Surge Protection Device (SPD) (wiki)",
+      "url": "https://www.electrical-installation.org/enwiki/The_Surge_Protection_Device_(SPD)",
+      "publisher": "electrical-installation.org",
+      "accessed": "2026-11-20",
+      "kind": "textbook_wiki"
+    },
+    {
+      "id": "iec60617_db",
+      "title": "IEC 60617 graphical symbols database (public page)",
+      "url": "https://std.iec.ch/iec60617",
+      "publisher": "IEC",
+      "accessed": "2026-11-20",
+      "kind": "standard_public_summary"
+    }
+  ],
+  "standard_refs": [
+    {
+      "ref": "IEC 61643-11",
+      "note": {
+        "en": "SPD standard (cited)",
+        "es": "Norma de SPD (citada)"
+      }
+    }
+  ],
+  "symbol_ref": {
+    "id": "not_found",
+    "status": "not_found",
+    "note": {
+      "en": "IEC 60617 public page lists no identifiers for this item; not found, not guessed.",
+      "es": "La pagina publica de IEC 60617 no lista identificadores para este elemento; no encontrado, no supuesto."
+    }
+  },
+  "ratings_typical": [
+    {
+      "parameter": "nominal_discharge_In",
+      "value": 5,
+      "unit": "kA (8/20 us, minimum)",
+      "status": "pending review",
+      "source_ids": [
+        "ei_spd"
+      ],
+      "note": {
+        "en": "Minimum 5 kA, withstood at least 19 times; higher recommended",
+        "es": "Minimo 5 kA, soportado al menos 19 veces; se recomienda mas"
+      }
+    },
+    {
+      "parameter": "max_discharge_Imax",
+      "value": null,
+      "unit": "kA",
+      "status": "not_found",
+      "source_ids": [],
+      "note": {
+        "en": "Imax value not found in fetched sources",
+        "es": "Valor Imax no encontrado en las fuentes consultadas"
+      }
+    },
+    {
+      "parameter": "voltage_protection_Up",
+      "value": null,
+      "unit": "kV",
+      "status": "not_found",
+      "source_ids": [],
+      "note": {
+        "en": "Up is defined (must be below load withstand) but no value fetched",
+        "es": "Up definido (debe quedar por debajo de la resistencia de la carga), sin valor obtenido"
+      }
+    }
+  ],
+  "selection_criteria": {
+    "when_to_use": [
+      {
+        "en": "Each LV switchboard as main surge protection (cited)",
+        "es": "Cada cuadro BT como proteccion principal contra sobretensiones (citado)"
+      },
+      {
+        "en": "Downstream of type 1, or alone where no lightning protection system (typical)",
+        "es": "Aguas abajo de tipo 1, o solo si no hay sistema de rayos (typical)"
+      }
+    ],
+    "when_not_to_use": [
+      {
+        "en": "Only as sole protection at a sensitive load: type 3 is lower discharge (typical)",
+        "es": "Solo como proteccion unica de una carga sensible: tipo 3 tiene menor descarga (typical)"
+      }
+    ],
+    "alternatives": [
+      "spd_type1",
+      "spd_type3"
+    ]
+  }
+}

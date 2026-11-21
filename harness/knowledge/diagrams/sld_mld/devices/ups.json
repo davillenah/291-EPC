@@ -1,0 +1,76 @@
+{
+  "schema_version": "1.0",
+  "id": "ups",
+  "name": {
+    "en": "Uninterruptible power supply (UPS)",
+    "es": "Sistema de alimentacion ininterrumpida (SAI / UPS)"
+  },
+  "description": {
+    "en": "Provides uninterrupted power to critical loads with battery and static bypass.",
+    "es": "Proporciona energia sin interrupcion a cargas criticas con bateria y bypass estatico."
+  },
+  "kind": "ups",
+  "voltage_level": "LV",
+  "status": "not_found",
+  "source_ids": [
+    "iec60617_db"
+  ],
+  "sources": [
+    {
+      "id": "iec60617_db",
+      "title": "IEC 60617 graphical symbols database (public page)",
+      "url": "https://std.iec.ch/iec60617",
+      "publisher": "IEC",
+      "accessed": "2026-11-20",
+      "kind": "standard_public_summary"
+    }
+  ],
+  "standard_refs": [
+    {
+      "ref": "IEC 62040-3",
+      "note": {
+        "en": "UPS performance standard (cited)",
+        "es": "Norma de rendimiento de SAI (citada)"
+      }
+    }
+  ],
+  "symbol_ref": {
+    "id": "not_found",
+    "status": "not_found",
+    "note": {
+      "en": "IEC 60617 public page lists no identifiers for this item; not found, not guessed.",
+      "es": "La pagina publica de IEC 60617 no lista identificadores para este elemento; no encontrado, no supuesto."
+    }
+  },
+  "ratings_typical": [
+    {
+      "parameter": "rated_power",
+      "value": null,
+      "unit": "kVA",
+      "status": "not_found",
+      "source_ids": [],
+      "note": {
+        "en": "Not found in fetched sources",
+        "es": "No encontrado en las fuentes consultadas"
+      }
+    }
+  ],
+  "selection_criteria": {
+    "when_to_use": [
+      {
+        "en": "Critical loads needing no break on transfer (typical)",
+        "es": "Cargas criticas que no admiten interrupcion en la transferencia (typical)"
+      }
+    ],
+    "when_not_to_use": [
+      {
+        "en": "Non-critical loads: no UPS needed (typical)",
+        "es": "Cargas no criticas: no se necesita SAI (typical)"
+      }
+    ],
+    "alternatives": [
+      "rccb",
+      "mcb"
+    ]
+  }
+}

@@ -1,0 +1,86 @@
+{
+ "schema_version": "1.0",
+ "id": "netlist_microinverter_lv",
+ "name": {
+  "en": "Microinverter AC module, LV connection",
+  "es": "Microinversor (módulo AC), conexión BT"
+ },
+ "diagram": "SLD",
+ "sheet": {
+  "size": "A3",
+  "style_ref": "epc_arch/epc_style.json"
+ },
+ "source_scheme": "microinverter_lv",
+ "instances": [
+  {
+   "tag": "-T1",
+   "device_id": "pv_microinverter",
+   "symbol": "lv_inverter",
+   "labels": {},
+   "label_source": "none (ratings come from engines at project time)"
+  },
+  {
+   "tag": "-Q1",
+   "device_id": "switch_disconnector",
+   "symbol": "lv_switch_disconnector",
+   "labels": {},
+   "label_source": "none (ratings come from engines at project time)"
+  },
+  {
+   "tag": "-Q2",
+   "device_id": "mcb",
+   "symbol": "lv_mcb",
+   "labels": {},
+   "label_source": "none (ratings come from engines at project time)"
+  },
+  {
+   "tag": "-Q3",
+   "device_id": "rcd_type_b",
+   "symbol": "lv_rccb",
+   "labels": {},
+   "label_source": "none (ratings come from engines at project time)"
+  },
+  {
+   "tag": "-P1",
+   "device_id": "pv_bidirectional_meter_lv",
+   "symbol": "lv_energy_meter_kwh",
+   "labels": {},
+   "label_source": "none (ratings come from engines at project time)"
+  },
+  {
+   "tag": "-A1",
+   "device_id": "switchboard_tgbt",
+   "symbol": "lv_busbar_node",
+   "labels": {},
+   "label_source": "none (ratings come from engines at project time)"
+  }
+ ],
+ "connections": [
+  {
+   "from": "-T1:bottom",
+   "to": "-Q1:top",
+   "conductor": "L"
+  },
+  {
+   "from": "-Q1:bottom",
+   "to": "-Q2:top",
+   "conductor": "L"
+  },
+  {
+   "from": "-Q2:bottom",
+   "to": "-Q3:top",
+   "conductor": "L"
+  },
+  {
+   "from": "-Q3:bottom",
+   "to": "-P1:top",
+   "conductor": "L"
+  },
+  {
+   "from": "-P1:top",
+   "to": "-A1:bottom",
+   "conductor": "L"
+  }
+ ],
+ "status": "typical"
+}

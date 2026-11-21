@@ -1,0 +1,241 @@
+{
+  "schema_version": "1.0",
+  "id": "pv_inverter_three_phase_ac_to_board",
+  "family": "inverter_to_board",
+  "name": {
+    "en": "Three-phase inverter to AC board, with neutral and earth",
+    "es": "Inversor trifásico al tablero AC, con neutro y tierra"
+  },
+  "description": {
+    "en": "Dedicated AC breaker per inverter in the main board, with L1 L2 L3 N PE connection and board earth bar.",
+    "es": "Interruptor AC dedicado por inversor en el tablero principal, con conexión L1 L2 L3 N PE y barra de tierra del tablero."
+  },
+  "application_range": {
+    "text": {
+      "en": "Three-phase grid-tie inverters, one dedicated breaker each. Neutral requirement depends on the inverter.",
+      "es": "Inversores trifásicos conectados a red, un interruptor dedicado cada uno. El neutro depende del inversor."
+    },
+    "status": "typical",
+    "source_ids": []
+  },
+  "diagram_types": [
+    "SLD",
+    "MLD"
+  ],
+  "symbol_refs": [
+    "sym_circuit_breaker_device",
+    "sym_disconnector",
+    "sym_protective_earth",
+    "sym_surge_arrester_spd",
+    "sym_terminal_block"
+  ],
+  "device_refs": [
+    "mccb",
+    "pv_inverter_grid_tie",
+    "spd_type2",
+    "switch_disconnector"
+  ],
+  "components": [
+    {
+      "ref": "A1",
+      "letter": "A",
+      "symbol_id": null,
+      "device_id": "pv_inverter_grid_tie",
+      "description": {
+        "en": "Three-phase inverter, AC terminals L1 L2 L3 N PE per manufacturer.",
+        "es": "Inversor trifásico, bornes AC L1 L2 L3 N PE según fabricante."
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "Q1",
+      "letter": "Q",
+      "symbol_id": "sym_circuit_breaker_device",
+      "device_id": "mccb",
+      "description": {
+        "en": "AC breaker dedicated to the inverter, sized by the repository calculation engine.",
+        "es": "Interruptor AC dedicado al inversor, dimensionado por el motor de cálculo del repositorio."
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "Q2",
+      "letter": "Q",
+      "symbol_id": "sym_disconnector",
+      "device_id": "switch_disconnector",
+      "description": {
+        "en": "AC disconnector at the inverter or the board, lockable.",
+        "es": "Seccionador AC en el inversor o en el tablero, bloqueable."
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "F1",
+      "letter": "F",
+      "symbol_id": "sym_surge_arrester_spd",
+      "device_id": "spd_type2",
+      "description": {
+        "en": "AC SPD type 2 at the board.",
+        "es": "DPS AC tipo 2 en el tablero."
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "X1",
+      "letter": "X",
+      "symbol_id": "sym_protective_earth",
+      "device_id": null,
+      "description": {
+        "en": "Board PE bar, bonded to the inverter PE terminal and the structure equipotential bar.",
+        "es": "Barra PE del tablero, unida al borne PE del inversor y a la barra equipotencial de la estructura."
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "X2",
+      "letter": "X",
+      "symbol_id": "sym_terminal_block",
+      "device_id": null,
+      "description": {
+        "en": "Neutral bar (N) at the board.",
+        "es": "Barra de neutro (N) en el tablero."
+      },
+      "status": "typical"
+    }
+  ],
+  "power_connection": [
+    {
+      "text": {
+        "en": "Phase cables L1, L2, L3 from inverter AC terminals to the line side of Q1, sized by the repository calculation (no value here).",
+        "es": "Cables de fase L1, L2, L3 desde los bornes AC del inversor al lado línea de Q1, dimensionados por el cálculo del repositorio (sin valor aquí)."
+      },
+      "status": "typical",
+      "source_ids": []
+    },
+    {
+      "text": {
+        "en": "Neutral: connect only when the inverter manual requires it. The fetched sources give no universal rule.",
+        "es": "Neutro: conectar solo si lo exige el manual del inversor. Las fuentes consultadas no dan regla universal."
+      },
+      "status": "not_found",
+      "source_ids": []
+    },
+    {
+      "text": {
+        "en": "PE from the inverter PE terminal to the board PE bar and to the structure equipotential bar.",
+        "es": "PE desde el borne PE del inversor a la barra PE del tablero y a la barra equipotencial de la estructura."
+      },
+      "status": "typical",
+      "source_ids": []
+    },
+    {
+      "text": {
+        "en": "Inverter breaker is not shared with loads.",
+        "es": "El interruptor del inversor no se comparte con cargas."
+      },
+      "status": "typical",
+      "source_ids": []
+    }
+  ],
+  "control_connection": [],
+  "protections": [
+    {
+      "text": {
+        "en": "AC breaker and SPD sized per repository engine (no value here).",
+        "es": "Interruptor AC y DPS dimensionados por el motor del repositorio (sin valor aquí)."
+      },
+      "status": "typical",
+      "source_ids": []
+    },
+    {
+      "text": {
+        "en": "Islanding and grid-fault protection is in pv_interface_protection_27_59_81.",
+        "es": "La protección anti-isla y de fallas de red está en pv_interface_protection_27_59_81."
+      },
+      "status": "typical",
+      "source_ids": []
+    }
+  ],
+  "sequence": [
+    {
+      "text": {
+        "en": "Close the AC breaker with grid present and check phase sequence before enabling DC.",
+        "es": "Cerrar el interruptor AC con red presente y verificar secuencia de fases antes de habilitar DC."
+      },
+      "status": "typical",
+      "source_ids": []
+    },
+    {
+      "text": {
+        "en": "Shut down: the STRCOM manual says turn off the DC disconnect before the AC disconnect.",
+        "es": "Apagado: el manual STRCOM indica abrir primero el seccionador DC y luego el AC."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "solectria_strcom"
+      ]
+    }
+  ],
+  "common_errors": [
+    {
+      "text": {
+        "en": "Wrong phase sequence or swapped L phases.",
+        "es": "Secuencia de fases incorrecta o fases L intercambiadas."
+      },
+      "status": "typical",
+      "source_ids": []
+    },
+    {
+      "text": {
+        "en": "Neutral missing where the inverter requires it.",
+        "es": "Neutro faltante cuando el inversor lo requiere."
+      },
+      "status": "typical",
+      "source_ids": []
+    },
+    {
+      "text": {
+        "en": "PE not bonded to the structure equipotential bar.",
+        "es": "PE sin unir a la barra equipotencial de la estructura."
+      },
+      "status": "typical",
+      "source_ids": []
+    }
+  ],
+  "source_conflicts": [
+    {
+      "topic": {
+        "en": "Shutdown order DC vs AC",
+        "es": "Orden de apagado DC vs AC"
+      },
+      "source_ids": [
+        "solectria_strcom"
+      ],
+      "note": {
+        "en": "STRCOM says open the DC disconnect first. Common inverter practice (typical) opens the AC side first. Follow the specific inverter manual.",
+        "es": "STRCOM indica abrir primero el DC. La práctica común (típica) abre primero el AC. Seguir el manual del inversor concreto."
+      }
+    }
+  ],
+  "status": "unverified",
+  "source_ids": [
+    "repo_devices",
+    "solectria_strcom"
+  ],
+  "sources": [
+    {
+      "id": "repo_devices",
+      "title": "EPC-291 repository: sld_mld/devices and funcional_iec60617/symbols_index.json (ids reused)",
+      "url": "repo://sld_mld/devices",
+      "kind": "internal_repo",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "solectria_strcom",
+      "title": "Solectria STRCOM fused string combiner installation and operations manual",
+      "url": "https://www.solectria.com/downloads/installation-operation-manuals/strcom-installation-and-operations-manual",
+      "kind": "manufacturer_doc",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

@@ -1,0 +1,144 @@
+{
+  "id": "circ_on_delay_timer",
+  "category": "control_typical",
+  "name": {
+    "en": "On-delay timer control (retardo a la conexión)",
+    "es": "Control con temporizador de retardo a la conexión"
+  },
+  "description": {
+    "en": "Coil energizes; the delayed make contact closes after the set time to operate a load.",
+    "es": "La bobina se energiza; el contacto temporizado de cierre cierra tras el tiempo ajustado para accionar una carga."
+  },
+  "application_range": {
+    "text": {
+      "en": "Delayed start of pumps, fans, or staged loads.",
+      "es": "Arranque temporizado de bombas, ventiladores o cargas escalonadas."
+    },
+    "status": "typical"
+  },
+  "representation": {
+    "mld": {
+      "text": {
+        "en": "Not applicable.",
+        "es": "No aplica."
+      },
+      "status": "typical"
+    },
+    "functional": {
+      "text": {
+        "en": "Timer rung with delayed NO contact in load rung.",
+        "es": "Rama de temporizador con contacto NO temporizado en la rama de carga."
+      },
+      "status": "typical"
+    }
+  },
+  "components": [
+    {
+      "ref": "S2",
+      "letter": "S",
+      "symbol_id": "sym_pushbutton",
+      "description": {
+        "en": "Start NO",
+        "es": "Marcha NO"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "K1T",
+      "letter": "K",
+      "symbol_id": "sym_timer_coil_on_delay",
+      "description": {
+        "en": "On-delay timer coil",
+        "es": "Bobina de temporizador de retardo a la conexión"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "K1T:15-18",
+      "letter": "K",
+      "symbol_id": "sym_contact_make_delayed_closing",
+      "description": {
+        "en": "Delayed make contact",
+        "es": "Contacto de cierre temporizado"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "KM1",
+      "letter": "Q",
+      "symbol_id": "sym_contactor_coil_general",
+      "description": {
+        "en": "Load contactor",
+        "es": "Contactor de carga"
+      },
+      "status": "typical"
+    }
+  ],
+  "power_connection": [
+    {
+      "text": {
+        "en": "Load contactor poles per DOL; timer is control only.",
+        "es": "Polos del contactor de carga según DOL; el temporizador es solo de mando."
+      },
+      "status": "typical"
+    }
+  ],
+  "control_rungs": [
+    {
+      "text": {
+        "en": "S2 (NO) energizes K1T coil.",
+        "es": "S2 (NO) energiza la bobina K1T."
+      },
+      "status": "typical",
+      "rung": 1
+    },
+    {
+      "text": {
+        "en": "K1T delayed contact (15-18) energizes KM1 coil after the set time.",
+        "es": "El contacto temporizado K1T (15-18) energiza la bobina KM1 tras el tiempo ajustado."
+      },
+      "status": "typical",
+      "rung": 2
+    }
+  ],
+  "interlocks": [
+    {
+      "text": {
+        "en": "None; delay only.",
+        "es": "Ninguno; solo retardo."
+      },
+      "status": "typical"
+    }
+  ],
+  "protections": [
+    {
+      "text": {
+        "en": "Standard load protection; timer fault or power cut restarts the timing.",
+        "es": "Protección estándar de carga; un fallo del temporizador o corte de alimentación reinicia el conteo."
+      },
+      "status": "typical"
+    }
+  ],
+  "sequence": [
+    {
+      "text": {
+        "en": "Energize timer; after set delay the load contactor closes.",
+        "es": "Energizar el temporizador; tras el retardo ajustado cierra el contactor de carga."
+      },
+      "status": "typical"
+    }
+  ],
+  "common_errors": [
+    {
+      "text": {
+        "en": "Timer not reset when the coil is released; delay repeats incorrectly.",
+        "es": "Temporizador no reiniciado al soltar la bobina; el retardo se repite incorrectamente."
+      },
+      "status": "typical"
+    }
+  ],
+  "status": "typical",
+  "source_ids": [],
+  "sources": [],
+  "schema_version": "1.0"
+}

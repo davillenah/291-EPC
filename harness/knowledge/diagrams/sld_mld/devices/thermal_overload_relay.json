@@ -1,0 +1,109 @@
+{
+  "schema_version": "1.0",
+  "id": "thermal_overload_relay",
+  "name": {
+    "en": "Thermal overload relay (relé termico)",
+    "es": "Relé termico de sobrecarga"
+  },
+  "description": {
+    "en": "Protects a motor against sustained overload; set to the motor nameplate full-load current. It does not protect against short-circuit.",
+    "es": "Protege el motor contra sobrecarga sostenida; se ajusta a la corriente de placa del motor. No protege contra cortocircuito."
+  },
+  "kind": "overload_relay",
+  "voltage_level": "LV",
+  "status": "unverified",
+  "source_ids": [
+    "viox_motor",
+    "iec60617_db"
+  ],
+  "sources": [
+    {
+      "id": "viox_motor",
+      "title": "How to select contactors and circuit breakers based on motor power",
+      "url": "https://viox.com/how-to-select-contactors-and-circuit-breakers-based-on-motor-power/",
+      "publisher": "VIOX Electric",
+      "accessed": "2026-11-20",
+      "kind": "third_party_guide"
+    },
+    {
+      "id": "iec60617_db",
+      "title": "IEC 60617 graphical symbols database (public page)",
+      "url": "https://std.iec.ch/iec60617",
+      "publisher": "IEC",
+      "accessed": "2026-11-20",
+      "kind": "standard_public_summary"
+    }
+  ],
+  "standard_refs": [
+    {
+      "ref": "IEC 60947-4-1",
+      "note": {
+        "en": "Overload relay standard (cited)",
+        "es": "Norma de relés de sobrecarga (citada)"
+      }
+    }
+  ],
+  "symbol_ref": {
+    "id": "not_found",
+    "status": "not_found",
+    "note": {
+      "en": "IEC 60617 public page lists no identifiers for this item; not found, not guessed.",
+      "es": "La pagina publica de IEC 60617 no lista identificadores para este elemento; no encontrado, no supuesto."
+    }
+  },
+  "ratings_typical": [
+    {
+      "parameter": "trip_class",
+      "value": "10 / 20 / 30",
+      "unit": "class",
+      "status": "unverified",
+      "source_ids": [
+        "viox_motor"
+      ],
+      "note": {
+        "en": "Trip classes listed; higher classes for longer acceleration times",
+        "es": "Clases de disparo listadas; clases mayores para arranques mas largos"
+      }
+    },
+    {
+      "parameter": "adjustment_range",
+      "value": null,
+      "unit": "% of FLC",
+      "status": "not_found",
+      "source_ids": [],
+      "note": {
+        "en": "Numeric adjustment range not found in fetched sources",
+        "es": "Rango de regulacion numerico no encontrado en las fuentes consultadas"
+      }
+    },
+    {
+      "parameter": "setting",
+      "value": "motor nameplate FLC",
+      "unit": "A",
+      "status": "typical",
+      "source_ids": [],
+      "note": {
+        "en": "Set to nameplate full-load current (typical)",
+        "es": "Ajustar a la corriente de placa del motor (typical)"
+      }
+    }
+  ],
+  "selection_criteria": {
+    "when_to_use": [
+      {
+        "en": "Motor overload protection with a contactor (cited)",
+        "es": "Proteccion de sobrecarga de motor con contactor (citado)"
+      }
+    ],
+    "when_not_to_use": [
+      {
+        "en": "Short-circuit protection is needed: add a breaker or fuse (cited)",
+        "es": "Se necesita proteccion de cortocircuito: anadir interruptor o fusible (citado)"
+      }
+    ],
+    "alternatives": [
+      "mpcb",
+      "contactor"
+    ]
+  }
+}

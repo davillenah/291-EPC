@@ -1,0 +1,122 @@
+{
+  "schema_version": "1.0",
+  "id": "mccb",
+  "name": {
+    "en": "Moulded-case circuit breaker (MCCB)",
+    "es": "Interruptor automatico de caja moldeada (MCCB)"
+  },
+  "description": {
+    "en": "Moulded-case breaker for feeders and mains, with adjustable or fixed trip units, rated current from 16 A to 1600 A.",
+    "es": "Interruptor de caja moldeada para alimentadores y acometidas, con unidad de disparo fija o regulable, de 16 A a 1600 A."
+  },
+  "kind": "breaker",
+  "voltage_level": "LV",
+  "status": "unverified",
+  "source_ids": [
+    "viox_breaker_sizes",
+    "iec60617_db"
+  ],
+  "sources": [
+    {
+      "id": "viox_breaker_sizes",
+      "title": "Standard breaker sizes: MCCB current ratings 16 A to 1600 A",
+      "url": "https://viox.com/standard-breaker-sizes/",
+      "publisher": "VIOX Electric",
+      "accessed": "2026-11-20",
+      "kind": "third_party_guide"
+    },
+    {
+      "id": "iec60617_db",
+      "title": "IEC 60617 graphical symbols database (public page)",
+      "url": "https://std.iec.ch/iec60617",
+      "publisher": "IEC",
+      "accessed": "2026-11-20",
+      "kind": "standard_public_summary"
+    }
+  ],
+  "standard_refs": [
+    {
+      "ref": "IEC 60947-2",
+      "note": {
+        "en": "Industrial circuit breaker standard (cited, not quoted)",
+        "es": "Norma de interruptores industriales (citada, no transcrita)"
+      }
+    }
+  ],
+  "symbol_ref": {
+    "id": "not_found",
+    "status": "not_found",
+    "note": {
+      "en": "IEC 60617 public page lists no identifiers for this item; not found, not guessed.",
+      "es": "La pagina publica de IEC 60617 no lista identificadores para este elemento; no encontrado, no supuesto."
+    }
+  },
+  "ratings_typical": [
+    {
+      "parameter": "rated_current",
+      "value": "16-1600",
+      "unit": "A",
+      "status": "unverified",
+      "source_ids": [
+        "viox_breaker_sizes"
+      ],
+      "note": {
+        "en": "Standard rated currents 16, 20, 25, 32, 40, 50, 63, 80, 100, 125, 160, 200, 250, 320, 400, 500, 630, 800, 1000, 1250, 1600 A",
+        "es": "Corrientes nominales estandar de 16 a 1600 A"
+      }
+    },
+    {
+      "parameter": "breaking_capacity_Icu",
+      "value": "25-150",
+      "unit": "kA",
+      "status": "unverified",
+      "source_ids": [
+        "viox_breaker_sizes"
+      ],
+      "note": {
+        "en": "Range by frame: small 25-50 kA, medium 35-70 kA, large 50-100 kA; the same page also lists 65-150 kA for large frames (conflict, check catalogue)",
+        "es": "Rango por tamano: pequeno 25-50 kA, medio 35-70 kA, grande 50-100 kA; la misma pagina lista 65-150 kA para grande (conflicto, verificar catalogo)"
+      }
+    },
+    {
+      "parameter": "service_breaking_Ics",
+      "value": "25 / 50 / 75 / 100",
+      "unit": "% of Icu",
+      "status": "unverified",
+      "source_ids": [
+        "viox_breaker_sizes"
+      ],
+      "note": {
+        "en": "Ics expressed as a percentage of Icu",
+        "es": "Ics expresado como porcentaje de Icu"
+      }
+    }
+  ],
+  "selection_criteria": {
+    "when_to_use": [
+      {
+        "en": "Feeders and mains where the prospective short-circuit current or the current exceeds MCB limits (rated current above 125 A)",
+        "es": "Alimentadores y acometidas donde la corriente o la corriente de cortocircuito superan los limites del MCB (nominal superior a 125 A)"
+      },
+      {
+        "en": "Selectable trip unit (thermal and magnetic, electronic) for selectivity studies (typical)",
+        "es": "Unidad de disparo regulable (termomagnetica o electronica) para estudios de selectividad (typical)"
+      }
+    ],
+    "when_not_to_use": [
+      {
+        "en": "Continuous current above 1600 A: use ACB",
+        "es": "Corriente continua superior a 1600 A: usar ACB"
+      },
+      {
+        "en": "Small final circuit where an MCB is sufficient: MCB is lower cost (typical)",
+        "es": "Circuito final pequeno donde basta un MCB: el MCB es de menor coste (typical)"
+      }
+    ],
+    "alternatives": [
+      "acb",
+      "mcb",
+      "rccb"
+    ]
+  }
+}

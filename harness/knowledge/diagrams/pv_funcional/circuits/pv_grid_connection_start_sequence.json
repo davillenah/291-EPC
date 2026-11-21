@@ -1,0 +1,184 @@
+{
+  "schema_version": "1.0",
+  "id": "pv_grid_connection_start_sequence",
+  "family": "control_typical",
+  "name": {
+    "en": "Inverter grid connection start and reconnection sequence",
+    "es": "Secuencia de arranque, conexión a red y reconexión del inversor"
+  },
+  "description": {
+    "en": "Functional sequence: DC on, grid check with a waiting time, interface closes, MPPT ramp, trip and reconnection.",
+    "es": "Secuencia funcional: DC conectada, verificación de red con tiempo de espera, cierre de la interfaz, rampa MPPT, disparo y reconexión."
+  },
+  "application_range": {
+    "text": {
+      "en": "Grid-tie inverters at LV. Trip concept from the Tesla frequency page; reconnection timing not located.",
+      "es": "Inversores conectados a red en BT. Concepto de disparo según la página Tesla; tiempo de reconexión no ubicado."
+    },
+    "status": "unverified",
+    "source_ids": [
+      "tesla_freq"
+    ]
+  },
+  "diagram_types": [
+    "functional"
+  ],
+  "symbol_refs": [
+    "sym_circuit_breaker_device",
+    "sym_contactor_coil_general"
+  ],
+  "device_refs": [
+    "contactor",
+    "mccb",
+    "pv_inverter_grid_tie"
+  ],
+  "components": [
+    {
+      "ref": "A1",
+      "letter": "A",
+      "symbol_id": null,
+      "device_id": "pv_inverter_grid_tie",
+      "description": {
+        "en": "Grid-tie inverter with internal grid monitoring.",
+        "es": "Inversor conectado a red con monitoreo interno de red."
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "Q1",
+      "letter": "Q",
+      "symbol_id": "sym_circuit_breaker_device",
+      "device_id": "mccb",
+      "description": {
+        "en": "AC breaker or interface breaker.",
+        "es": "Interruptor AC o de interfaz."
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "K1",
+      "letter": "K",
+      "symbol_id": "sym_contactor_coil_general",
+      "device_id": "contactor",
+      "description": {
+        "en": "Interface contactor closed by the inverter run signal (if external).",
+        "es": "Contactor de interfaz cerrado por la señal de marcha del inversor (si es externo)."
+      },
+      "status": "typical"
+    }
+  ],
+  "power_connection": [
+    {
+      "text": {
+        "en": "Inverter closes the grid connection only when voltage and frequency are inside limits for the waiting time.",
+        "es": "El inversor cierra la conexión a red solo cuando tensión y frecuencia están dentro de límites durante el tiempo de espera."
+      },
+      "status": "typical",
+      "source_ids": []
+    }
+  ],
+  "control_connection": [
+    {
+      "text": {
+        "en": "Run signal from inverter to the K1 coil (if external contactor).",
+        "es": "Señal de marcha del inversor a la bobina de K1 (si hay contactor externo)."
+      },
+      "status": "typical",
+      "source_ids": []
+    }
+  ],
+  "protections": [
+    {
+      "text": {
+        "en": "Under/over-frequency and voltage trips with time delays (see pv_interface_protection_27_59_81).",
+        "es": "Disparos por baja/alta frecuencia y tensión con retardos (ver pv_interface_protection_27_59_81)."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "tesla_freq"
+      ]
+    }
+  ],
+  "sequence": [
+    {
+      "text": {
+        "en": "1. DC applied; inverter self-test.",
+        "es": "1. DC conectada; autotest del inversor."
+      },
+      "status": "typical",
+      "source_ids": []
+    },
+    {
+      "text": {
+        "en": "2. Grid check: voltage and frequency inside limits for the waiting time. Waiting time value not located.",
+        "es": "2. Verificación de red: tensión y frecuencia dentro de límites durante el tiempo de espera. Valor no ubicado."
+      },
+      "status": "not_found",
+      "source_ids": []
+    },
+    {
+      "text": {
+        "en": "3. Interface closes; MPPT ramps up.",
+        "es": "3. Cierra la interfaz; el MPPT entra en rampa."
+      },
+      "status": "typical",
+      "source_ids": []
+    },
+    {
+      "text": {
+        "en": "4. Abnormal grid: disconnect and wait before reconnecting.",
+        "es": "4. Red anormal: desconectar y esperar antes de reconectar."
+      },
+      "status": "typical",
+      "source_ids": []
+    },
+    {
+      "text": {
+        "en": "5. Reconnection after grid return: value not located in the fetched sources.",
+        "es": "5. Reconexión tras el retorno de red: valor no ubicado en las fuentes consultadas."
+      },
+      "status": "not_found",
+      "source_ids": []
+    }
+  ],
+  "common_errors": [
+    {
+      "text": {
+        "en": "Reconnect immediately after a trip (typical risk: repeated trips).",
+        "es": "Reconectar de inmediato tras un disparo (riesgo típico: disparos repetidos)."
+      },
+      "status": "typical",
+      "source_ids": []
+    },
+    {
+      "text": {
+        "en": "Grid settings not set to the local grid code.",
+        "es": "Ajustes de red no fijados al código de red local."
+      },
+      "status": "typical",
+      "source_ids": []
+    }
+  ],
+  "source_conflicts": [],
+  "status": "unverified",
+  "source_ids": [
+    "repo_devices",
+    "tesla_freq"
+  ],
+  "sources": [
+    {
+      "id": "repo_devices",
+      "title": "EPC-291 repository: sld_mld/devices and funcional_iec60617/symbols_index.json (ids reused)",
+      "url": "repo://sld_mld/devices",
+      "kind": "internal_repo",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "tesla_freq",
+      "title": "Tesla Powerwall+ installation manual, Appendix D: frequency ride-through",
+      "url": "https://energylibrary.tesla.com/docs/Public/EnergyStorage/Powerwall/+/InstallManual/BackupSwitch/en-us/GUID-7374FAFE-32F2-4FF8-AFB8-B7E9ECAF3852.html",
+      "kind": "manufacturer_doc",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "schema_version": "1.0",
+  "record_type": "device",
+  "id": "pv_blocking_diode",
+  "name": {
+    "en": "PV reverse-polarity protection diode",
+    "es": "Diodo de protección contra polaridad inversa FV"
+  },
+  "description": {
+    "en": "Short-circuit diode on the DC input that protects against reverse polarity.",
+    "es": "Diodo de cortocircuito en la entrada DC que protege contra inversión de polaridad."
+  },
+  "kind": "pv_diode",
+  "voltage_level": "LV",
+  "status": "unverified",
+  "source_ids": [
+    "sma_stp_protective"
+  ],
+  "sources": [
+    {
+      "id": "sma_stp_protective",
+      "title": "SMA manual: Protective devices (DC load-break switch, reverse polarity diode, AC 60 A, Riso)",
+      "url": "https://manuals.sma.de/STPxxUS50/en-US/12078896395.html",
+      "publisher": "SMA Solar Technology AG",
+      "accessed": "2026-11-20",
+      "kind": "manufacturer"
+    }
+  ],
+  "standard_refs": [],
+  "ratings": [
+    {
+      "parameter": "function",
+      "value": "DC reverse polarity protection by short-circuit diode",
+      "unit": "",
+      "status": "unverified",
+      "source_ids": [
+        "sma_stp_protective"
+      ],
+      "note": {
+        "en": "SMA lists a short-circuit diode for DC reverse polarity",
+        "es": "SMA indica diodo de cortocircuito para polaridad inversa DC"
+      }
+    },
+    {
+      "parameter": "diode_current_voltage",
+      "value": null,
+      "unit": "A / V",
+      "status": "not_found",
+      "source_ids": [],
+      "note": {
+        "en": "Diode ratings not found in sources",
+        "es": "Calibres del diodo no encontrados en las fuentes"
+      }
+    }
+  ],
+  "selection_criteria": {
+    "when_to_use": [
+      {
+        "en": "Inverters that do not provide reverse-polarity protection internally (typical).",
+        "es": "Inversores sin protección de polaridad inversa interna (típico)."
+      }
+    ],
+    "when_not_to_use": [
+      {
+        "en": "Not a reverse-current (string overcurrent) protection; see the DC protection file.",
+        "es": "No es protección de corriente inversa de string; ver el archivo de protección DC."
+      }
+    ]
+  }
+}

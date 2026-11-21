@@ -91,6 +91,20 @@ def engine_inputs_for_check(context):
     return {"circuits": circuits, "voltage_v": copy.deepcopy(chain["form"]["board"]["voltage_v"])}
 
 
+def diagram_findings(context, first_number):
+    """Advisory notes (severity `note`) where a protective device of the calculation differs from the one the diagram rules select for its current
+    (`epc_drawing.diagram_knowledge`, criteria of `knowledge/diagrams`). No result changes; a person reviews them. [] when the chain did not run."""
+    chain = context.engine_cache.get("chain")
+    if chain is None:
+        return []
+    from epc_drawing import diagram_knowledge
+    board = {tag: d["proteccion"] for tag, d in chain["calc"]["detalle"].items() if d.get("proteccion")}
+    return [{"id": f"F-{first_number + i:04d}", "run_id": context.pipeline_run_id, "verifier": "calc-check", "severity": "note", "document": "protection",
+             "field": f"{n['circuit']}/device_per_rules", "value": n["drawn"], "expected": "/".join(n["suggested"]), "clause": f"diagram rule {n['rule']} ({n['status']})",
+             "action": n["en"] + " | " + n["es"], "evidence": [f"decision rule {n['rule']} of knowledge/diagrams, status {n['status']}"], "status": "open"}
+            for i, n in enumerate(diagram_knowledge.check_board(board))]
+
+
 def by_severity(findings):
     counts = {s: 0 for s in SEVERITIES}
     for f in findings:
@@ -121,6 +135,7 @@ class CalcCheckStage(Stage):
     def execute(self, context):
         import epc_calc_check
         found = epc_calc_check.check_run(run_dict(context, 8), project=engine_inputs_for_check(context), run_id=context.pipeline_run_id, groups=STAGE_GROUPS)
+        found = list(found) + diagram_findings(context, len(found) + 1)
         outputs = {"findings_count": len(found), "by_severity": by_severity(found)}
         calls = [{"engine": "validation/calc_check", "function": "epc_calc_check.check_run", "version": epc_calc_check.__version__}]
         outputs["run_findings"] = run_totals(context, self.spec.number, found)

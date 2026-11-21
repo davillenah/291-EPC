@@ -1,0 +1,98 @@
+{
+  "schema_version": "1.0",
+  "id": "transformer_mv_lv",
+  "name": {
+    "en": "MV/LV distribution transformer",
+    "es": "Transformador de distribucion MT/BT"
+  },
+  "description": {
+    "en": "Steps medium voltage down to the LV distribution level. Vector group, impedance and kVA are project data.",
+    "es": "Reduce la tension media al nivel de distribucion BT. Grupo de conexion, impedancia y kVA son datos del proyecto."
+  },
+  "kind": "transformer",
+  "voltage_level": "MV",
+  "status": "unverified",
+  "source_ids": [
+    "repo_pv_inverters",
+    "iec60617_db"
+  ],
+  "sources": [
+    {
+      "id": "repo_pv_inverters",
+      "title": "Central inverters and accessories research (this repository)",
+      "url": "repo://harness/docs/pv/inverters/central_inverters_and_accessories.md",
+      "publisher": "EPC-291 repository",
+      "accessed": "2026-11-20",
+      "kind": "internal_repo"
+    },
+    {
+      "id": "iec60617_db",
+      "title": "IEC 60617 graphical symbols database (public page)",
+      "url": "https://std.iec.ch/iec60617",
+      "publisher": "IEC",
+      "accessed": "2026-11-20",
+      "kind": "standard_public_summary"
+    }
+  ],
+  "standard_refs": [
+    {
+      "ref": "IEC 60076",
+      "note": {
+        "en": "Power transformer standard (cited)",
+        "es": "Norma de transformadores de potencia (citada)"
+      }
+    }
+  ],
+  "symbol_ref": {
+    "id": "not_found",
+    "status": "not_found",
+    "note": {
+      "en": "IEC 60617 public page lists no identifiers for this item; not found, not guessed.",
+      "es": "La pagina publica de IEC 60617 no lista identificadores para este elemento; no encontrado, no supuesto."
+    }
+  },
+  "ratings_typical": [
+    {
+      "parameter": "rated_power",
+      "value": null,
+      "unit": "kVA",
+      "status": "not_found",
+      "source_ids": [],
+      "note": {
+        "en": "kVA rating not found in fetched sources",
+        "es": "Potencia asignada no encontrada en las fuentes consultadas"
+      }
+    },
+    {
+      "parameter": "vector_group",
+      "value": "Dyn11 / YNd11 / YNy0 (examples)",
+      "unit": "-",
+      "status": "unverified",
+      "source_ids": [
+        "repo_pv_inverters"
+      ],
+      "note": {
+        "en": "Vector groups mentioned in cited PV-station research; applicability depends on project",
+        "es": "Grupos de conexion citados en la investigacion de plantas FV; depende del proyecto"
+      }
+    }
+  ],
+  "selection_criteria": {
+    "when_to_use": [
+      {
+        "en": "MV to LV supply of an LV board (typical)",
+        "es": "Alimentacion BT de un cuadro BT desde MT (typical)"
+      }
+    ],
+    "when_not_to_use": [
+      {
+        "en": "Load below the threshold where a transformer is justified: use a utility supply (typical)",
+        "es": "Carga por debajo del umbral en que se justifica transformador: usar suministro de red (typical)"
+      }
+    ],
+    "alternatives": [
+      "switchboard_tgbt",
+      "mv_circuit_breaker_relay_module"
+    ]
+  }
+}

@@ -1,0 +1,313 @@
+{
+  "id": "circ_star_delta_starter",
+  "category": "motor_starting",
+  "name": {
+    "en": "Star-delta (wye-delta) starter, open transition with timer",
+    "es": "Arrancador estrella-triángulo con temporizador (transición abierta)"
+  },
+  "description": {
+    "en": "Motor started with windings in star (reduced voltage per winding) and transferred to delta after a timed delay. Three contactors: main, star, delta.",
+    "es": "Motor arrancado con devanados en estrella (tensión reducida por devanado) y transferido a triángulo tras un retardo temporizado. Tres contactores: principal, estrella y triángulo."
+  },
+  "application_range": {
+    "text": {
+      "en": "Motors whose windings are designed for delta at line voltage and where the starting current must be reduced; not for motors without six accessible winding terminals.",
+      "es": "Motores cuyos devanados están diseñados para triángulo a tensión de línea y donde hay que reducir la corriente de arranque; no apto para motores sin los seis bornes de devanado accesibles."
+    },
+    "status": "typical"
+  },
+  "representation": {
+    "mld": {
+      "text": {
+        "en": "Six-terminal motor with two power paths: star via KM2 (common point) and delta via KM3 between phase ends.",
+        "es": "Motor de seis bornes con dos caminos de potencia: estrella vía KM2 (punto común) y triángulo vía KM3 entre extremos de fase."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "ima_star_delta_wye_delta"
+      ]
+    },
+    "functional": {
+      "text": {
+        "en": "Control rungs with KM1 start, KM2 star with timer and KM3 delta with interlock to KM2.",
+        "es": "Ramas de mando con arranque KM1, estrella KM2 con temporizador y triángulo KM3 con enclavamiento a KM2."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "schneider_tesys_tera_star_delta",
+        "ima_star_delta_wye_delta"
+      ]
+    }
+  },
+  "components": [
+    {
+      "ref": "Q1",
+      "letter": "Q",
+      "symbol_id": "sym_circuit_breaker_device",
+      "description": {
+        "en": "Breaker",
+        "es": "Interruptor"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "KM1",
+      "letter": "Q",
+      "symbol_id": "sym_contact_main_pole",
+      "description": {
+        "en": "Main contactor (line to motor)",
+        "es": "Contactor principal (línea a motor)"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "KM2",
+      "letter": "Q",
+      "symbol_id": "sym_contact_main_pole",
+      "description": {
+        "en": "Star contactor (star point)",
+        "es": "Contactor estrella (punto neutro)"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "KM3",
+      "letter": "Q",
+      "symbol_id": "sym_contact_main_pole",
+      "description": {
+        "en": "Delta contactor (reconnection)",
+        "es": "Contactor triángulo (reconexión)"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "KT1",
+      "letter": "K",
+      "symbol_id": "sym_timer_coil_on_delay",
+      "description": {
+        "en": "Star timer, on-delay; drives transition",
+        "es": "Temporizador de estrella, retardo a la conexión; ejecuta la transferencia"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "KT1 contacts",
+      "letter": "K",
+      "symbol_id": "sym_contact_break_delayed_opening",
+      "description": {
+        "en": "Timed contact that opens the star path",
+        "es": "Contacto temporizado que abre el camino de estrella"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "F2",
+      "letter": "F",
+      "symbol_id": "sym_thermal_overload_static",
+      "description": {
+        "en": "Thermal overload (line current, set at the in-delta current of the motor per typical practice)",
+        "es": "Relé térmico (corriente de línea, ajuste típico a la corriente en triángulo del motor)"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "M1",
+      "letter": "M",
+      "symbol_id": "sym_motor_3ph_squirrel",
+      "description": {
+        "en": "Six-terminal squirrel-cage motor",
+        "es": "Motor de jaula de seis bornes"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "S1/S2",
+      "letter": "S",
+      "symbol_id": "sym_pushbutton",
+      "description": {
+        "en": "Stop NC and start NO",
+        "es": "Paro NC y marcha NO"
+      },
+      "status": "typical"
+    }
+  ],
+  "power_connection": [
+    {
+      "text": {
+        "en": "KM1 feeds the motor line side. KM2 joins the W2, U2, V2 ends (star point). KM3 connects U1-W2, V1-U2, W1-V2 (delta).",
+        "es": "KM1 alimenta el lado de línea del motor. KM2 une los extremos W2, U2, V2 (punto neutro). KM3 conecta U1-W2, V1-U2, W1-V2 (triángulo)."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "schneider_tesys_tera_star_delta",
+        "ima_star_delta_wye_delta"
+      ]
+    },
+    {
+      "text": {
+        "en": "The star and delta contactors must never be closed together; the default design uses mechanical and electrical interlock.",
+        "es": "Los contactores estrella y triángulo nunca deben cerrar juntos; el diseño por defecto usa enclavamiento mecánico y eléctrico."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "ima_star_delta_wye_delta"
+      ]
+    }
+  ],
+  "control_rungs": [
+    {
+      "text": {
+        "en": "Start: S1 (NC), F2 (95-96 NC), S2 (NO) in series; KM1 coil and KM2 coil (star) energized.",
+        "es": "Arranque: S1 (NC), F2 (95-96 NC), S2 (NO) en serie; bobinas de KM1 y KM2 (estrella) energizadas."
+      },
+      "status": "typical",
+      "rung": 1
+    },
+    {
+      "text": {
+        "en": "KM2 NC interlock on KM3 rung; KM3 NC interlock on KM2 rung.",
+        "es": "NC de KM2 en la rama de KM3; NC de KM3 en la rama de KM2."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "ima_star_delta_wye_delta"
+      ],
+      "rung": 2
+    },
+    {
+      "text": {
+        "en": "KT1 timer, energized with the start, opens the KM2 rung after the star time (Delay 1); a second short delay (changeover) closes KM3.",
+        "es": "KT1 temporizador, energizado con el arranque, abre la rama de KM2 tras el tiempo de estrella (Delay 1); un segundo retardo corto (cambio) cierra KM3."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "schneider_tesys_tera_star_delta"
+      ],
+      "rung": 3
+    },
+    {
+      "text": {
+        "en": "KM1 holding through KM1 13-14 across S2.",
+        "es": "Autorretención de KM1 por 13-14 en paralelo con S2."
+      },
+      "status": "typical",
+      "rung": 4
+    }
+  ],
+  "interlocks": [
+    {
+      "text": {
+        "en": "Mechanical interlock between KM2 and KM3 and electrical NC contacts from each in the other's coil circuit.",
+        "es": "Enclavamiento mecánico entre KM2 y KM3 y contactos NC eléctricos de cada uno en el circuito de bobina del otro."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "ima_star_delta_wye_delta"
+      ]
+    },
+    {
+      "text": {
+        "en": "Timer KT1 must reset when the start is removed.",
+        "es": "El temporizador KT1 debe reiniciarse al retirar el arranque."
+      },
+      "status": "typical"
+    }
+  ],
+  "protections": [
+    {
+      "text": {
+        "en": "Overload protects the line current; short-circuit by Q1. Thermal overload setting differs from the DOL setting: typically the motor's in-delta current.",
+        "es": "El relé térmico protege la corriente de línea; cortocircuito por Q1. El ajuste térmico difiere del DOL: típicamente la corriente de triángulo del motor."
+      },
+      "status": "typical"
+    }
+  ],
+  "sequence": [
+    {
+      "text": {
+        "en": "Start: KM1 and KM2 close, motor accelerates in star at reduced voltage per winding.",
+        "es": "Arranque: cierran KM1 y KM2; el motor acelera en estrella con tensión reducida por devanado."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "ima_star_delta_wye_delta"
+      ]
+    },
+    {
+      "text": {
+        "en": "After the star time: KM2 opens, short changeover, KM3 closes; motor runs in delta at line voltage per winding.",
+        "es": "Tras el tiempo de estrella: se abre KM2, breve cambio, cierra KM3; el motor funciona en triángulo con tensión de línea por devanado."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "schneider_tesys_tera_star_delta",
+        "ima_star_delta_wye_delta"
+      ]
+    }
+  ],
+  "common_errors": [
+    {
+      "text": {
+        "en": "Mechanical or electrical interlock missing: KM2 and KM3 close together and short-circuit phases.",
+        "es": "Enclavamiento mecánico o eléctrico ausente: KM2 y KM3 cierran juntos y cortocircuitan fases."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "ima_star_delta_wye_delta"
+      ]
+    },
+    {
+      "text": {
+        "en": "Wrong motor terminal identification: poor running in star or excess current in delta.",
+        "es": "Identificación errónea de bornes del motor: funcionamiento deficiente en estrella o exceso de corriente en triángulo."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "ima_star_delta_wye_delta"
+      ]
+    },
+    {
+      "text": {
+        "en": "Star time too short: high transition current; too long: overheating (article suggests 5-15 s depending on inertia; manufacturer default 10 s in TeSys Tera example).",
+        "es": "Tiempo de estrella corto: corriente de transición alta; largo: sobrecalentamiento (el artículo sugiere 5-15 s según inercia; el valor por defecto del ejemplo TeSys Tera es 10 s)."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "ima_star_delta_wye_delta",
+        "schneider_tesys_tera_star_delta"
+      ]
+    },
+    {
+      "text": {
+        "en": "PLC output too weak to drive contactor coils: use interposing relays for larger contactors.",
+        "es": "Salida de PLC insuficiente para bobinas: usar relés auxiliares para contactores grandes."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "ima_star_delta_wye_delta"
+      ]
+    }
+  ],
+  "status": "unverified",
+  "source_ids": [
+    "schneider_tesys_tera_star_delta",
+    "ima_star_delta_wye_delta"
+  ],
+  "sources": [
+    {
+      "id": "schneider_tesys_tera_star_delta",
+      "title": "Schneider Electric: TeSys Tera user guide, star-delta function (default delays and contactor outputs)",
+      "url": "https://www.productinfo.schneider-electric.com/tesys_tera_ug/tesys-tera-motor-management-system-user-guide/EN/TeSys-Tera-User%20Guide-DOCA0257-01.xml/$/W2_TeSys_Tera_UG_StarDelta_0001013349",
+      "kind": "manufacturer_doc",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "ima_star_delta_wye_delta",
+      "title": "Industrial Monitor Direct: Star-delta (wye-delta) starter circuit design and wiring (secondary article)",
+      "url": "https://industrialmonitordirect.com/blogs/knowledgebase/star-delta-wye-delta-motor-starter-circuit-design-wiring",
+      "kind": "secondary_article",
+      "accessed": "2026-11-20"
+    }
+  ],
+  "schema_version": "1.0"
+}

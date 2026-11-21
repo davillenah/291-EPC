@@ -1,0 +1,113 @@
+{
+  "schema_version": "1.0",
+  "id": "sym_differential_current_relay",
+  "name": {
+    "en": "Percentage differential current (relay characteristic)",
+    "es": "Corriente diferencial porcentual (característica de relé)"
+  },
+  "family": "protection",
+  "description": {
+    "en": "Symbol for percentage differential protection function. Used in protection diagrams, not as a device. Note: Geometry typical.",
+    "es": "Símbolo de la función de protección diferencial porcentual. Se usa en diagramas de protección, no como aparato. Nota: Geometría típica."
+  },
+  "iec60617": {
+    "symbol_id": "S00332",
+    "iec_title_en": "Percentage differential current",
+    "legacy_ref": null,
+    "status": "unverified"
+  },
+  "reference_designation": {
+    "letter": "K",
+    "note": {
+      "en": "Processes signals (protection relay function, typical).",
+      "es": "Procesa señales (función de relé de protección, típico)."
+    },
+    "status": "typical"
+  },
+  "ansi_nema": {
+    "equivalent": null,
+    "status": "not_found"
+  },
+  "geometry": {
+    "grid": "1 unit = one symbol grid step; origin top-left, y down; scale to the drawing standard in use",
+    "primitives": [
+      {
+        "prim": "line",
+        "p1": [
+          0,
+          0
+        ],
+        "p2": [
+          0,
+          1.5
+        ]
+      },
+      {
+        "prim": "polyline",
+        "pts": [
+          [
+            -1.5,
+            1.5
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            1.5,
+            1.5
+          ]
+        ]
+      },
+      {
+        "prim": "line",
+        "p1": [
+          0,
+          3
+        ],
+        "p2": [
+          0,
+          4.5
+        ]
+      },
+      {
+        "prim": "text",
+        "at": [
+          0.5,
+          2.8
+        ],
+        "text": "Δ"
+      }
+    ],
+    "status": "typical"
+  },
+  "connection_points": [
+    {
+      "id": "I1",
+      "label": {
+        "en": "Input 1",
+        "es": "Entrada 1"
+      }
+    },
+    {
+      "id": "I2",
+      "label": {
+        "en": "Input 2",
+        "es": "Entrada 2"
+      }
+    }
+  ],
+  "status": "unverified",
+  "source_ids": [
+    "iec_S00332"
+  ],
+  "sources": [
+    {
+      "id": "iec_S00332",
+      "title": "IEC 60617 database, symbol S00332: Percentage differential current",
+      "url": "https://library.iec.ch/grasymb/grasymb.nsf/(SysSymbol)/S00332",
+      "kind": "standard_database",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

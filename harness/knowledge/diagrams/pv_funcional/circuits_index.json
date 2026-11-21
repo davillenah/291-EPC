@@ -1,0 +1,172 @@
+{
+  "schema_version": "1.0",
+  "generated": "2026-11-20",
+  "description": {
+    "en": "Index of PV typical circuit records (one JSON per circuit).",
+    "es": "Índice de circuitos FV tipo (un JSON por circuito)."
+  },
+  "count": 16,
+  "circuits": [
+    {
+      "id": "pv_string_combiner_parallel_fused",
+      "file": "circuits/pv_string_combiner_parallel_fused.json",
+      "family": "string_wiring",
+      "diagram_types": [
+        "SLD",
+        "MLD"
+      ],
+      "status": "unverified"
+    },
+    {
+      "id": "pv_mppt_stringing_and_layout",
+      "file": "circuits/pv_mppt_stringing_and_layout.json",
+      "family": "string_wiring",
+      "diagram_types": [
+        "SLD",
+        "MLD"
+      ],
+      "status": "typical"
+    },
+    {
+      "id": "pv_inverter_three_phase_ac_to_board",
+      "file": "circuits/pv_inverter_three_phase_ac_to_board.json",
+      "family": "inverter_to_board",
+      "diagram_types": [
+        "SLD",
+        "MLD"
+      ],
+      "status": "unverified"
+    },
+    {
+      "id": "pv_inverter_single_phase_ac_connection",
+      "file": "circuits/pv_inverter_single_phase_ac_connection.json",
+      "family": "inverter_to_board",
+      "diagram_types": [
+        "SLD",
+        "MLD"
+      ],
+      "status": "typical"
+    },
+    {
+      "id": "pv_grounding_equipotential_spd",
+      "file": "circuits/pv_grounding_equipotential_spd.json",
+      "family": "inverter_to_board",
+      "diagram_types": [
+        "SLD",
+        "MLD"
+      ],
+      "status": "unverified"
+    },
+    {
+      "id": "pv_monitoring_rs485_daisy_chain",
+      "file": "circuits/pv_monitoring_rs485_daisy_chain.json",
+      "family": "monitoring_comms",
+      "diagram_types": [
+        "MLD",
+        "functional"
+      ],
+      "status": "unverified"
+    },
+    {
+      "id": "pv_monitoring_ethernet_datalogger_sensors",
+      "file": "circuits/pv_monitoring_ethernet_datalogger_sensors.json",
+      "family": "monitoring_comms",
+      "diagram_types": [
+        "MLD",
+        "functional"
+      ],
+      "status": "unverified"
+    },
+    {
+      "id": "pv_export_limitation_meter_ct_limiter",
+      "file": "circuits/pv_export_limitation_meter_ct_limiter.json",
+      "family": "export_storage",
+      "diagram_types": [
+        "SLD",
+        "functional"
+      ],
+      "status": "unverified"
+    },
+    {
+      "id": "pv_battery_dc_coupled_ess",
+      "file": "circuits/pv_battery_dc_coupled_ess.json",
+      "family": "export_storage",
+      "diagram_types": [
+        "SLD",
+        "MLD",
+        "functional"
+      ],
+      "status": "unverified"
+    },
+    {
+      "id": "pv_battery_ac_coupled_storage",
+      "file": "circuits/pv_battery_ac_coupled_storage.json",
+      "family": "export_storage",
+      "diagram_types": [
+        "SLD",
+        "MLD"
+      ],
+      "status": "typical"
+    },
+    {
+      "id": "pv_tracker_motor_control_limit_stow",
+      "file": "circuits/pv_tracker_motor_control_limit_stow.json",
+      "family": "trackers_pumping",
+      "diagram_types": [
+        "functional",
+        "MLD"
+      ],
+      "status": "unverified"
+    },
+    {
+      "id": "pv_solar_pump_inverter_control",
+      "file": "circuits/pv_solar_pump_inverter_control.json",
+      "family": "trackers_pumping",
+      "diagram_types": [
+        "SLD",
+        "MLD",
+        "functional"
+      ],
+      "status": "unverified"
+    },
+    {
+      "id": "pv_grid_connection_start_sequence",
+      "file": "circuits/pv_grid_connection_start_sequence.json",
+      "family": "control_typical",
+      "diagram_types": [
+        "functional"
+      ],
+      "status": "unverified"
+    },
+    {
+      "id": "pv_interface_protection_27_59_81",
+      "file": "circuits/pv_interface_protection_27_59_81.json",
+      "family": "control_typical",
+      "diagram_types": [
+        "SLD",
+        "functional"
+      ],
+      "status": "unverified"
+    },
+    {
+      "id": "pv_rapid_shutdown_initiator",
+      "file": "circuits/pv_rapid_shutdown_initiator.json",
+      "family": "control_typical",
+      "diagram_types": [
+        "SLD",
+        "functional"
+      ],
+      "status": "unverified"
+    },
+    {
+      "id": "pv_motorized_disconnector_trip_interlock",
+      "file": "circuits/pv_motorized_disconnector_trip_interlock.json",
+      "family": "control_typical",
+      "diagram_types": [
+        "SLD",
+        "functional"
+      ],
+      "status": "typical"
+    }
+  ]
+}

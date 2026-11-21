@@ -1,0 +1,214 @@
+{
+  "schema_version": "1.0",
+  "id": "pv_monitoring_ethernet_datalogger_sensors",
+  "family": "monitoring_comms",
+  "name": {
+    "en": "Ethernet datalogger with meter, MPPT and irradiance/temperature sensors",
+    "es": "Registrador Ethernet con medidor, MPPT y sensores de irradiancia y temperatura"
+  },
+  "description": {
+    "en": "A central gateway (Victron GX type) collects inverter, meter and sensor data over Ethernet, USB-RS485 and VE.direct links.",
+    "es": "Un gateway central (tipo Victron GX) recoge datos de inversor, medidor y sensores por Ethernet, USB-RS485 y VE.direct."
+  },
+  "application_range": {
+    "text": {
+      "en": "Remote monitoring of PV plants with a datalogger and a meter. Brand-specific items from the Victron ESS guide.",
+      "es": "Monitoreo remoto de plantas FV con registrador y medidor. Elementos de marca según la guía ESS de Victron."
+    },
+    "status": "unverified",
+    "source_ids": [
+      "victron_ess_guide"
+    ]
+  },
+  "diagram_types": [
+    "MLD",
+    "functional"
+  ],
+  "symbol_refs": [
+    "sym_current_transformer_2sec",
+    "sym_plc_io"
+  ],
+  "device_refs": [
+    "ct"
+  ],
+  "components": [
+    {
+      "ref": "A1",
+      "letter": "A",
+      "symbol_id": "sym_plc_io",
+      "device_id": null,
+      "description": {
+        "en": "Datalogger / GX gateway: online via Ethernet or WiFi module.",
+        "es": "Registrador / gateway GX: en línea por Ethernet o módulo WiFi."
+      },
+      "status": "unverified"
+    },
+    {
+      "ref": "A2",
+      "letter": "A",
+      "symbol_id": null,
+      "device_id": null,
+      "description": {
+        "en": "Ethernet switch or router for the plant network.",
+        "es": "Switch o router Ethernet para la red de planta."
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "P1",
+      "letter": "P",
+      "symbol_id": null,
+      "device_id": null,
+      "description": {
+        "en": "Energy meter. Letter P is not in the repository table; to confirm.",
+        "es": "Medidor de energía. La letra P no figura en la tabla del repositorio; confirmar."
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "T1",
+      "letter": "T",
+      "symbol_id": "sym_current_transformer_2sec",
+      "device_id": "ct",
+      "description": {
+        "en": "PV current sensor (CT) for inverters not on the Victron auto-list (Fronius, SMA, ABB, SolarEdge).",
+        "es": "Sensor de corriente FV (TC) para inversores fuera de la lista automática de Victron (Fronius, SMA, ABB, SolarEdge)."
+      },
+      "status": "unverified"
+    },
+    {
+      "ref": "B1",
+      "letter": "B",
+      "symbol_id": null,
+      "device_id": null,
+      "description": {
+        "en": "Irradiance sensor (pyranometer). Output type not located in the sources.",
+        "es": "Sensor de irradiancia (piranómetro). Tipo de salida no ubicado en las fuentes."
+      },
+      "status": "not_found"
+    },
+    {
+      "ref": "B2",
+      "letter": "B",
+      "symbol_id": null,
+      "device_id": null,
+      "description": {
+        "en": "Module temperature sensor. Typical types PT100 or 4-20 mA transmitter (typical).",
+        "es": "Sensor de temperatura de módulo. Tipos típicos PT100 o transmisor 4-20 mA (típico)."
+      },
+      "status": "typical"
+    }
+  ],
+  "power_connection": [
+    {
+      "text": {
+        "en": "Energy meters connect to the GX device through a USB-to-RS485 interface or Zigbee.",
+        "es": "Los medidores se conectan al GX por interfaz USB-RS485 o Zigbee."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "victron_ess_guide"
+      ]
+    },
+    {
+      "text": {
+        "en": "The smart battery connects through a special RJ45 cable (CAN-bus BMS cable).",
+        "es": "La batería inteligente se conecta con cable RJ45 especial (cable BMS CAN-bus)."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "victron_ess_guide"
+      ]
+    },
+    {
+      "text": {
+        "en": "MPPT chargers connect to the GX by VE.direct cable.",
+        "es": "Cargadores MPPT se conectan al GX por cable VE.direct."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "victron_ess_guide"
+      ]
+    },
+    {
+      "text": {
+        "en": "Inverter links to the GX by RJ45 cable.",
+        "es": "El inversor se enlaza al GX por cable RJ45."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "victron_ess_guide"
+      ]
+    },
+    {
+      "text": {
+        "en": "Sensor signal type and cabling for the irradiance sensor: not located.",
+        "es": "Tipo de señal y cableado del sensor de irradiancia: no ubicado."
+      },
+      "status": "not_found",
+      "source_ids": []
+    }
+  ],
+  "control_connection": [],
+  "protections": [],
+  "sequence": [
+    {
+      "text": {
+        "en": "Wire each part per its own manual; install inter-device communication cables last.",
+        "es": "Cablear cada equipo según su manual; instalar los cables de comunicación entre equipos al final."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "victron_ess_guide"
+      ]
+    }
+  ],
+  "common_errors": [
+    {
+      "text": {
+        "en": "Sensor signal type mismatch (voltage vs current loop).",
+        "es": "Tipo de señal del sensor no coincide (tensión vs lazo de corriente)."
+      },
+      "status": "typical",
+      "source_ids": []
+    },
+    {
+      "text": {
+        "en": "BMS cable plugged into a standard Ethernet port.",
+        "es": "Cable BMS conectado a un puerto Ethernet estándar."
+      },
+      "status": "typical",
+      "source_ids": []
+    },
+    {
+      "text": {
+        "en": "Meter placed in the wrong position for export control (see pv_export_limitation_meter_ct_limiter).",
+        "es": "Medidor en posición incorrecta para control de exportación (ver pv_export_limitation_meter_ct_limiter)."
+      },
+      "status": "typical",
+      "source_ids": []
+    }
+  ],
+  "source_conflicts": [],
+  "status": "unverified",
+  "source_ids": [
+    "repo_devices",
+    "victron_ess_guide"
+  ],
+  "sources": [
+    {
+      "id": "repo_devices",
+      "title": "EPC-291 repository: sld_mld/devices and funcional_iec60617/symbols_index.json (ids reused)",
+      "url": "repo://sld_mld/devices",
+      "kind": "internal_repo",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "victron_ess_guide",
+      "title": "Victron ESS quick installation guide (online manual)",
+      "url": "https://victronenergy.com/live/_export/xhtml/ess:quick-installation-guide",
+      "kind": "manufacturer_doc",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

@@ -1,0 +1,223 @@
+{
+  "schema_version": "1.0",
+  "record_type": "scheme",
+  "id": "central_inverter_mv_station",
+  "name": {
+    "en": "Central inverter PV plant with MV power station",
+    "es": "Planta FV con inversor central y estación de potencia MT"
+  },
+  "description": {
+    "en": "DC combiners feed a central inverter inside a station with LV-side switch, MV transformer, MV switchgear with cable and transformer panels, and the MV utility meter with interface relays.",
+    "es": "Cajas combinadoras alimentan un inversor central dentro de una estación con seccionador BT, transformador MT, celdas MT (cables y transformador) y medidor MT de la distribuidora con relés de interfaz."
+  },
+  "purpose": {
+    "en": "MV plant layout for utility-scale PV. Repo station data are the container envelope and MV switchgear; the internal positions are not sourced.",
+    "es": "Layout de planta MT para FV de gran escala. Los datos de estación del repo son envolvente y celdas MT; posiciones internas no sourced."
+  },
+  "architecture": "central_inverter_mv_station",
+  "voltage_level": "MV",
+  "status": "typical",
+  "chain": [
+    {
+      "order": 1,
+      "device_id": "pv_string_combiner_box",
+      "label": {
+        "en": "DC combiner",
+        "es": "Caja combinadora DC"
+      },
+      "notes": {
+        "en": "16-string class per repo; 1500 V MPP in repo example",
+        "es": "Clase 16 strings según repo; 1500 V MPP en ejemplo del repo"
+      }
+    },
+    {
+      "order": 2,
+      "device_id": "pv_dc_switch_load_break",
+      "label": {
+        "en": "DC switch",
+        "es": "Seccionador DC"
+      },
+      "notes": {
+        "en": "DC isolation of the central inverter input",
+        "es": "Aislamiento DC de la entrada del inversor central"
+      }
+    },
+    {
+      "order": 3,
+      "device_id": "pv_mv_power_station",
+      "label": {
+        "en": "Power station",
+        "es": "Estación de potencia"
+      },
+      "notes": {
+        "en": "Container with inverter, LV/MV transformer and MV panels (repo)",
+        "es": "Contenedor con inversor, transformador BT/MT y celdas MT (repo)"
+      }
+    },
+    {
+      "order": 4,
+      "device_id": "switch_disconnector",
+      "label": {
+        "en": "LV isolator",
+        "es": "Seccionador BT"
+      },
+      "notes": {
+        "en": "LV side of the station transformer",
+        "es": "Lado BT del transformador de la estación"
+      }
+    },
+    {
+      "order": 5,
+      "device_id": "transformer_mv_lv",
+      "label": {
+        "en": "Station transformer",
+        "es": "Transformador de la estación"
+      },
+      "notes": {
+        "en": "MV/LV transformer, kV ratings not found",
+        "es": "Transformador MT/BT, relaciones kV no encontradas"
+      }
+    },
+    {
+      "order": 6,
+      "device_id": "mv_vacuum_circuit_breaker",
+      "label": {
+        "en": "MV breaker (transformer panel)",
+        "es": "Interruptor MT (celda del transformador)"
+      },
+      "notes": {
+        "en": "Breaking capacity and relays per project",
+        "es": "Poder de corte y relés según proyecto"
+      }
+    },
+    {
+      "order": 7,
+      "device_id": "relay_ansi_27",
+      "label": {
+        "en": "Undervoltage",
+        "es": "Subtensión"
+      },
+      "notes": {
+        "en": "Interface relay; settings from utility",
+        "es": "Relé de interfaz; ajustes de la distribuidora"
+      }
+    },
+    {
+      "order": 8,
+      "device_id": "relay_ansi_59",
+      "label": {
+        "en": "Overvoltage",
+        "es": "Sobretensión"
+      },
+      "notes": {
+        "en": "Interface relay; settings from utility",
+        "es": "Relé de interfaz; ajustes de la distribuidora"
+      }
+    },
+    {
+      "order": 9,
+      "device_id": "relay_ansi_81",
+      "label": {
+        "en": "Frequency (81O/81U)",
+        "es": "Frecuencia (81O/81U)"
+      },
+      "notes": {
+        "en": "Interface relay; settings from utility",
+        "es": "Relé de interfaz; ajustes de la distribuidora"
+      }
+    },
+    {
+      "order": 10,
+      "device_id": "relay_ansi_32_reverse_power",
+      "label": {
+        "en": "Reverse power (32R)",
+        "es": "Potencia inversa (32R)"
+      },
+      "notes": {
+        "en": "Where the utility requires",
+        "es": "Cuando la distribuidora lo exige"
+      }
+    },
+    {
+      "order": 11,
+      "device_id": "relay_ansi_67_directional_overcurrent",
+      "label": {
+        "en": "Directional overcurrent (67)",
+        "es": "Sobrecorriente direccional (67)"
+      },
+      "notes": {
+        "en": "Bus with two or more sources",
+        "es": "Barra con dos o más fuentes"
+      }
+    },
+    {
+      "order": 12,
+      "device_id": "utility_metering_mv",
+      "label": {
+        "en": "MV utility meter",
+        "es": "Medidor MT de la distribuidora"
+      },
+      "notes": {
+        "en": "Point of connection",
+        "es": "Punto de conexión"
+      }
+    }
+  ],
+  "device_refs": [
+    "pv_string_combiner_box",
+    "pv_dc_switch_load_break",
+    "pv_mv_power_station",
+    "switch_disconnector",
+    "transformer_mv_lv",
+    "mv_vacuum_circuit_breaker",
+    "relay_ansi_27",
+    "relay_ansi_59",
+    "relay_ansi_81",
+    "relay_ansi_32_reverse_power",
+    "relay_ansi_67_directional_overcurrent",
+    "utility_metering_mv",
+    "repo.sma.mvps-5860-6120",
+    "repo.sungrow.mvs3200-us"
+  ],
+  "drawing_conventions": [
+    {
+      "en": "MV station: show the MV side with its own protections and the interface relays on the MV breaker.",
+      "es": "Estación MT: mostrar el lado MT con sus protecciones y los relés de interfaz en el interruptor MT."
+    },
+    {
+      "en": "Read the station envelope and transformer kV from the datasheet; not sourced here.",
+      "es": "Leer envolvente y kV del transformador en la ficha; no sourced aquí."
+    }
+  ],
+  "source_ids": [
+    "repo_inverters_central",
+    "oeb_der_protection",
+    "iec60364_7_712_preview"
+  ],
+  "sources": [
+    {
+      "id": "repo_inverters_central",
+      "title": "Repo: central inverters and accessories research",
+      "url": "repo://harness/docs/pv/inverters/central_inverters_and_accessories.md",
+      "publisher": "EPC-291 repository",
+      "accessed": "2026-11-20",
+      "kind": "internal_repo"
+    },
+    {
+      "id": "oeb_der_protection",
+      "title": "Ontario Energy Board DER WG3: sample protection philosophy (utility sample)",
+      "url": "https://www.oeb.ca/sites/default/files/DER-wg3-Sample%20Protection%20Philosophy.pdf",
+      "publisher": "Ontario Energy Board (sample document)",
+      "accessed": "2026-11-20",
+      "kind": "third_party_guide"
+    },
+    {
+      "id": "iec60364_7_712_preview",
+      "title": "IEC 60364-7-712 ed.3.0 (2025-10): publisher preview, scope and clause index",
+      "url": "https://assets.vde-verlag.de/iec-normen/preview-pdf/info_iec60364-7-712%7Bed3.0%7Db.pdf",
+      "publisher": "VDE Verlag (IEC publication preview)",
+      "accessed": "2026-11-20",
+      "kind": "standard_public_summary"
+    }
+  ]
+}

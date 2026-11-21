@@ -1,0 +1,129 @@
+{
+  "schema_version": "1.0",
+  "id": "tgbt_main_board",
+  "name": {
+    "en": "Main LV board (TGBT) with surge protection",
+    "es": "Tablero general BT (TGBT) con proteccion contra sobretensiones"
+  },
+  "description": {
+    "en": "Main LV board: incomer, SPD type 2 on busbar, outgoing MCCBs and MCBs with RCDs on final circuits.",
+    "es": "TGBT: acometida, SPD tipo 2 en barras, salidas MCCB y MCB con diferenciales en circuitos finales."
+  },
+  "purpose": {
+    "en": "Show the standard arrangement of a main LV board.",
+    "es": "Mostrar la disposicion habitual de un cuadro BT principal."
+  },
+  "voltage_level": "LV",
+  "status": "typical",
+  "chain": [
+    {
+      "order": 1,
+      "device_id": "mccb",
+      "label": {
+        "en": "Incomer",
+        "es": "Acometida"
+      },
+      "notes": {
+        "en": "MCCB or ACB by current",
+        "es": "MCCB o ACB segun corriente"
+      }
+    },
+    {
+      "order": 2,
+      "device_id": "spd_type2",
+      "label": {
+        "en": "Surge protection",
+        "es": "Proteccion contra sobretensiones"
+      },
+      "notes": {
+        "en": "Type 2 at board; type 1 upstream if LPS",
+        "es": "Tipo 2 en cuadro; tipo 1 aguas arriba si hay SPL"
+      }
+    },
+    {
+      "order": 3,
+      "device_id": "mccb",
+      "label": {
+        "en": "Outgoing feeder",
+        "es": "Alimentador de salida"
+      },
+      "notes": {
+        "en": "To sub-board",
+        "es": "A cuadro seccional"
+      }
+    },
+    {
+      "order": 4,
+      "device_id": "mcb",
+      "label": {
+        "en": "Outgoing final circuit",
+        "es": "Circuito final"
+      },
+      "notes": {
+        "en": "Curve C for general use (typical)",
+        "es": "Curva C uso general (typical)"
+      }
+    },
+    {
+      "order": 5,
+      "device_id": "rccb",
+      "label": {
+        "en": "RCD 30 mA",
+        "es": "Diferencial 30 mA"
+      },
+      "notes": {
+        "en": "Sockets and lighting; pending review",
+        "es": "Tomas y alumbrado; pending review"
+      }
+    }
+  ],
+  "drawing_conventions": [
+    {
+      "en": "Draw source at top, loads at bottom; read upstream to downstream.",
+      "es": "Dibujar la fuente arriba y las cargas abajo; leer de aguas arriba a aguas abajo."
+    },
+    {
+      "en": "Label each device with its tag (for example QF-101) and its rating (A, kA, curve).",
+      "es": "Rotular cada equipo con su tag (por ejemplo QF-101) y su calibre (A, kA, curva)."
+    },
+    {
+      "en": "Label each feeder with conductor count, size and material where notated.",
+      "es": "Rotular cada alimentador con numero de conductores, seccion y material cuando se indique."
+    },
+    {
+      "en": "Label the busbar with voltage and current rating.",
+      "es": "Rotular las barras con tension y corriente nominal."
+    }
+  ],
+  "source_ids": [
+    "viox_sld",
+    "ei_spd",
+    "ei_rcd"
+  ],
+  "sources": [
+    {
+      "id": "viox_sld",
+      "title": "How to read a single line diagram",
+      "url": "https://viox.com/how-to-read-a-single-line-diagram/",
+      "publisher": "VIOX Electric",
+      "accessed": "2026-11-20",
+      "kind": "third_party_guide"
+    },
+    {
+      "id": "ei_spd",
+      "title": "The Surge Protection Device (SPD) (wiki)",
+      "url": "https://www.electrical-installation.org/enwiki/The_Surge_Protection_Device_(SPD)",
+      "publisher": "electrical-installation.org",
+      "accessed": "2026-11-20",
+      "kind": "textbook_wiki"
+    },
+    {
+      "id": "ei_rcd",
+      "title": "Protection of circuits by RCD (wiki)",
+      "url": "https://www.electrical-installation.org/enwiki/Protection_of_circuits_by_RCD",
+      "publisher": "electrical-installation.org",
+      "accessed": "2026-11-20",
+      "kind": "textbook_wiki"
+    }
+  ]
+}

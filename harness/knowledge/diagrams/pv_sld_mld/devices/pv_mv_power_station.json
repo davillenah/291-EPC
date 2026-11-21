@@ -1,0 +1,117 @@
+{
+  "schema_version": "1.0",
+  "record_type": "device",
+  "id": "pv_mv_power_station",
+  "name": {
+    "en": "PV MV power station (containerised inverter and MV transformer)",
+    "es": "Estación de potencia FV MT (inversor y transformador en contenedor)"
+  },
+  "description": {
+    "en": "Containerised power station with central inverter, LV/MV transformer and MV switchgear, connected to the MV network.",
+    "es": "Estación en contenedor con inversor central, transformador BT/MT y celdas MT, conectada a la red de media tensión."
+  },
+  "kind": "pv_power_station",
+  "voltage_level": "MV",
+  "status": "unverified",
+  "source_ids": [
+    "repo_inverters_central"
+  ],
+  "sources": [
+    {
+      "id": "repo_inverters_central",
+      "title": "Repo: central inverters and accessories research",
+      "url": "repo://harness/docs/pv/inverters/central_inverters_and_accessories.md",
+      "publisher": "EPC-291 repository",
+      "accessed": "2026-11-20",
+      "kind": "internal_repo"
+    }
+  ],
+  "standard_refs": [
+    {
+      "ref": "IEC 60364-7-712 (ed.3.0)",
+      "note": {
+        "en": "LV side only; MV station design is outside the preview scope",
+        "es": "Solo lado BT; el diseño de estación MT está fuera de la vista previa"
+      }
+    }
+  ],
+  "ratings": [
+    {
+      "parameter": "sma_mvps_5860_6120_kva",
+      "value": "5866 / 6134 (-25 to 35 C)",
+      "unit": "kVA",
+      "status": "unverified",
+      "source_ids": [
+        "repo_inverters_central"
+      ],
+      "note": {
+        "en": "Repo: SMA MVPS 5860/6120-S4-US, 40 ft station",
+        "es": "Repo: SMA MVPS 5860/6120-S4-US, estación 40 ft"
+      }
+    },
+    {
+      "parameter": "mv_voltage",
+      "value": 34.5,
+      "unit": "kV",
+      "status": "unverified",
+      "source_ids": [
+        "repo_inverters_central"
+      ],
+      "note": {
+        "en": "Repo: 34.5 kV, 60 Hz output for SMA MVPS",
+        "es": "Repo: salida 34,5 kV, 60 Hz para SMA MVPS"
+      }
+    },
+    {
+      "parameter": "mv_switchgear_iac",
+      "value": "IAC A FL 25 kA 1 s (5860/6120); IAC A FL 20 kA 1 s (8000-9200)",
+      "unit": "kA 1 s",
+      "status": "unverified",
+      "source_ids": [
+        "repo_inverters_central"
+      ],
+      "note": {
+        "en": "Repo: 3 MV panels (2 cable with load-break, 1 transformer with breaker)",
+        "es": "Repo: 3 paneles MT (2 cables con corte en carga, 1 transformador con interruptor)"
+      }
+    },
+    {
+      "parameter": "container_envelope_mm",
+      "value": "12192 x 2438 x 2896 (order inconsistent in repo; see conflicts)",
+      "unit": "mm",
+      "status": "unverified",
+      "source_ids": [
+        "repo_inverters_central"
+      ],
+      "note": {
+        "en": "Repo gives this container envelope in two orders; verify on datasheet",
+        "es": "El repo da esta envolvente en dos órdenes; verificar en ficha"
+      }
+    },
+    {
+      "parameter": "mv_transformer_kv_ratio",
+      "value": null,
+      "unit": "kV",
+      "status": "not_found",
+      "source_ids": [],
+      "note": {
+        "en": "MV transformer kV ratings not found",
+        "es": "Relaciones kV del transformador MT no encontradas"
+      }
+    }
+  ],
+  "selection_criteria": {
+    "when_to_use": [
+      {
+        "en": "Central inverter plants above a few MW with an MV collection network.",
+        "es": "Plantas con inversor central por encima de unos MW con red de colección MT."
+      }
+    ],
+    "when_not_to_use": [
+      {
+        "en": "Not for LV rooftop systems; use string or micro inverter schemes.",
+        "es": "No para techos BT; usar esquemas de inversor de string o micro."
+      }
+    ]
+  }
+}

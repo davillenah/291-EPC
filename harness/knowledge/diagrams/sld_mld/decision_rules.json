@@ -1,0 +1,894 @@
+{
+  "schema_version": "1.0",
+  "id": "lv_mv_device_selection",
+  "description": {
+    "en": "Machine-readable if/then table for selecting SLD devices. Rules are research output; norm-quoted thresholds are pending review. Input variables are declared under variables.",
+    "es": "Tabla if/then legible por maquina para seleccionar equipos del SLD. Son salida de investigacion; los umbrales de norma estan pendientes de revision. Las variables de entrada se declaran en variables."
+  },
+  "variables": {
+    "voltage_level": {
+      "type": "enum",
+      "values": [
+        "LV",
+        "MV"
+      ]
+    },
+    "load_type": {
+      "type": "enum",
+      "values": [
+        "general",
+        "lighting",
+        "sockets",
+        "motor",
+        "transformer",
+        "single_phase_drive",
+        "three_phase_drive",
+        "ev_charger",
+        "pv_string",
+        "electronic",
+        "capacitor",
+        "dc_source"
+      ]
+    },
+    "rated_current_a": {
+      "type": "number",
+      "unit": "A"
+    },
+    "prospective_fault_ka": {
+      "type": "number",
+      "unit": "kA"
+    },
+    "residual_protection_required": {
+      "type": "boolean"
+    },
+    "dc_leakage_possible": {
+      "type": "boolean"
+    },
+    "overload_protection_required": {
+      "type": "boolean"
+    },
+    "lightning_protection_system": {
+      "type": "boolean"
+    },
+    "mv_fault_breaking_required": {
+      "type": "boolean"
+    },
+    "transformer_fuse_protection_only": {
+      "type": "boolean"
+    },
+    "backup_generator": {
+      "type": "boolean"
+    },
+    "critical_load": {
+      "type": "boolean"
+    }
+  },
+  "rules": [
+    {
+      "id": "r01",
+      "domain": "lv_protection",
+      "when": [
+        {
+          "variable": "voltage_level",
+          "op": "eq",
+          "value": "LV"
+        },
+        {
+          "variable": "rated_current_a",
+          "op": "lte",
+          "value": 125
+        },
+        {
+          "variable": "load_type",
+          "op": "in",
+          "value": [
+            "general",
+            "lighting",
+            "sockets"
+          ]
+        }
+      ],
+      "then": {
+        "select": "mcb",
+        "rationale": {
+          "en": "Final circuit up to 125 A with general load: MCB, check Icn against the prospective fault.",
+          "es": "Circuito final hasta 125 A con carga general: MCB, verificar Icn frente a la falta presunta."
+        }
+      },
+      "status": "typical",
+      "source_ids": [
+        "abb_mcb_curves",
+        "viox_breaker_sizes"
+      ]
+    },
+    {
+      "id": "r02",
+      "domain": "lv_protection",
+      "when": [
+        {
+          "variable": "voltage_level",
+          "op": "eq",
+          "value": "LV"
+        },
+        {
+          "variable": "rated_current_a",
+          "op": "gt",
+          "value": 125
+        },
+        {
+          "variable": "rated_current_a",
+          "op": "lte",
+          "value": 1600
+        }
+      ],
+      "then": {
+        "select": "mccb",
+        "rationale": {
+          "en": "Rated current above 125 A up to 1600 A: MCCB.",
+          "es": "Corriente nominal superior a 125 A hasta 1600 A: MCCB."
+        }
+      },
+      "status": "unverified",
+      "source_ids": [
+        "viox_breaker_sizes"
+      ]
+    },
+    {
+      "id": "r03",
+      "domain": "lv_protection",
+      "when": [
+        {
+          "variable": "voltage_level",
+          "op": "eq",
+          "value": "LV"
+        },
+        {
+          "variable": "rated_current_a",
+          "op": "gt",
+          "value": 1600
+        }
+      ],
+      "then": {
+        "select": "acb",
+        "rationale": {
+          "en": "Rated current above 1600 A: ACB.",
+          "es": "Corriente nominal superior a 1600 A: ACB."
+        }
+      },
+      "status": "unverified",
+      "source_ids": [
+        "viox_breaker_sizes"
+      ]
+    },
+    {
+      "id": "r04",
+      "domain": "lv_protection",
+      "when": [
+        {
+          "variable": "voltage_level",
+          "op": "eq",
+          "value": "LV"
+        },
+        {
+          "variable": "load_type",
+          "op": "eq",
+          "value": "motor"
+        },
+        {
+          "variable": "overload_protection_required",
+          "op": "eq",
+          "value": true
+        }
+      ],
+      "then": {
+        "select": "thermal_overload_relay",
+        "rationale": {
+          "en": "Motor: contactor with thermal overload relay set to nameplate FLC, or MPCB.",
+          "es": "Motor: contactor con relé termico ajustado a la placa, o MPCB."
+        }
+      },
+      "status": "unverified",
+      "source_ids": [
+        "viox_motor"
+      ]
+    },
+    {
+      "id": "r05",
+      "domain": "lv_switching_motor",
+      "when": [
+        {
+          "variable": "voltage_level",
+          "op": "eq",
+          "value": "LV"
+        },
+        {
+          "variable": "load_type",
+          "op": "eq",
+          "value": "motor"
+        },
+        {
+          "variable": "overload_protection_required",
+          "op": "eq",
+          "value": true
+        }
+      ],
+      "then": {
+        "select": "mpcb",
+        "rationale": {
+          "en": "Motor with overload and short-circuit in one device: MPCB, breaking capacity above prospective short-circuit.",
+          "es": "Motor con sobrecarga y cortocircuito en un equipo: MPCB con poder de corte superior a la falta presunta."
+        }
+      },
+      "status": "unverified",
+      "source_ids": [
+        "viox_motor"
+      ]
+    },
+    {
+      "id": "r06",
+      "domain": "lv_switching_motor",
+      "when": [
+        {
+          "variable": "voltage_level",
+          "op": "eq",
+          "value": "LV"
+        },
+        {
+          "variable": "load_type",
+          "op": "eq",
+          "value": "motor"
+        }
+      ],
+      "then": {
+        "select": "fuse_am",
+        "rationale": {
+          "en": "Motor branch short-circuit only: aM fuse, overload device still required.",
+          "es": "Solo cortocircuito en derivacion de motor: fusible aM; sigue siendo necesario dispositivo de sobrecarga."
+        }
+      },
+      "status": "unverified",
+      "source_ids": [
+        "viox_fuse"
+      ]
+    },
+    {
+      "id": "r07",
+      "domain": "rcd",
+      "when": [
+        {
+          "variable": "voltage_level",
+          "op": "eq",
+          "value": "LV"
+        },
+        {
+          "variable": "residual_protection_required",
+          "op": "eq",
+          "value": true
+        },
+        {
+          "variable": "dc_leakage_possible",
+          "op": "eq",
+          "value": true
+        }
+      ],
+      "then": {
+        "select": "rcd_type_b",
+        "rationale": {
+          "en": "Possible DC leakage (VFD three-phase, EV charger, UPS): type B.",
+          "es": "Posible fuga DC (variador trifasico, cargador VE, SAI): tipo B."
+        }
+      },
+      "status": "unverified",
+      "source_ids": [
+        "schneider_rcd",
+        "ei_rcd",
+        "abb_rccb_faq"
+      ]
+    },
+    {
+      "id": "r08",
+      "domain": "rcd",
+      "when": [
+        {
+          "variable": "voltage_level",
+          "op": "eq",
+          "value": "LV"
+        },
+        {
+          "variable": "residual_protection_required",
+          "op": "eq",
+          "value": true
+        },
+        {
+          "variable": "load_type",
+          "op": "eq",
+          "value": "single_phase_drive"
+        }
+      ],
+      "then": {
+        "select": "rcd_type_f",
+        "rationale": {
+          "en": "Single-phase variable speed drive: type F.",
+          "es": "Variador monofasico: tipo F."
+        }
+      },
+      "status": "unverified",
+      "source_ids": [
+        "schneider_rcd",
+        "ei_rcd"
+      ]
+    },
+    {
+      "id": "r09",
+      "domain": "rcd",
+      "when": [
+        {
+          "variable": "voltage_level",
+          "op": "eq",
+          "value": "LV"
+        },
+        {
+          "variable": "residual_protection_required",
+          "op": "eq",
+          "value": true
+        },
+        {
+          "variable": "load_type",
+          "op": "eq",
+          "value": "electronic"
+        }
+      ],
+      "then": {
+        "select": "rcd_type_a",
+        "rationale": {
+          "en": "Single-phase load with rectifier (hob, washing machine, single-phase UPS): type A.",
+          "es": "Carga monofasica con rectificador (placa, lavadora, SAI monofasico): tipo A."
+        }
+      },
+      "status": "unverified",
+      "source_ids": [
+        "ei_rcd"
+      ]
+    },
+    {
+      "id": "r10",
+      "domain": "rcd",
+      "when": [
+        {
+          "variable": "voltage_level",
+          "op": "eq",
+          "value": "LV"
+        },
+        {
+          "variable": "residual_protection_required",
+          "op": "eq",
+          "value": true
+        },
+        {
+          "variable": "load_type",
+          "op": "in",
+          "value": [
+            "sockets",
+            "lighting"
+          ]
+        }
+      ],
+      "then": {
+        "select": "rccb",
+        "rationale": {
+          "en": "Sockets up to 20 A and lighting: RCCB 30 mA (direct-contact protection, pending review).",
+          "es": "Tomas hasta 20 A y alumbrado: RCCB 30 mA (proteccion contra contacto directo, pending review)."
+        }
+      },
+      "status": "pending review",
+      "source_ids": [
+        "ei_rcd"
+      ]
+    },
+    {
+      "id": "r11",
+      "domain": "rcd",
+      "when": [
+        {
+          "variable": "voltage_level",
+          "op": "eq",
+          "value": "LV"
+        },
+        {
+          "variable": "residual_protection_required",
+          "op": "eq",
+          "value": true
+        },
+        {
+          "variable": "overload_protection_required",
+          "op": "eq",
+          "value": true
+        }
+      ],
+      "then": {
+        "select": "rcbo",
+        "rationale": {
+          "en": "Single circuit needing overcurrent and RCD in one module: RCBO.",
+          "es": "Circuito unico con sobrecorriente y diferencial en un modulo: RCBO."
+        }
+      },
+      "status": "typical",
+      "source_ids": [
+        "ei_rcd"
+      ]
+    },
+    {
+      "id": "r12",
+      "domain": "surge",
+      "when": [
+        {
+          "variable": "voltage_level",
+          "op": "eq",
+          "value": "LV"
+        },
+        {
+          "variable": "lightning_protection_system",
+          "op": "eq",
+          "value": true
+        }
+      ],
+      "then": {
+        "select": "spd_type1",
+        "rationale": {
+          "en": "Building with lightning protection system: type 1 at service entrance.",
+          "es": "Edificio con sistema de proteccion contra rayos: tipo 1 en entrada de servicio."
+        }
+      },
+      "status": "pending review",
+      "source_ids": [
+        "ei_spd"
+      ]
+    },
+    {
+      "id": "r13",
+      "domain": "surge",
+      "when": [
+        {
+          "variable": "voltage_level",
+          "op": "eq",
+          "value": "LV"
+        }
+      ],
+      "then": {
+        "select": "spd_type2",
+        "rationale": {
+          "en": "Each LV switchboard: type 2 as main surge protection.",
+          "es": "Cada cuadro BT: tipo 2 como proteccion principal."
+        }
+      },
+      "status": "pending review",
+      "source_ids": [
+        "ei_spd"
+      ]
+    },
+    {
+      "id": "r14",
+      "domain": "surge",
+      "when": [
+        {
+          "variable": "voltage_level",
+          "op": "eq",
+          "value": "LV"
+        },
+        {
+          "variable": "critical_load",
+          "op": "eq",
+          "value": true
+        }
+      ],
+      "then": {
+        "select": "spd_type3",
+        "rationale": {
+          "en": "Sensitive load: type 3 close to the load, downstream of type 2.",
+          "es": "Carga sensible: tipo 3 cerca de la carga, aguas abajo del tipo 2."
+        }
+      },
+      "status": "typical",
+      "source_ids": [
+        "ei_spd"
+      ]
+    },
+    {
+      "id": "r15",
+      "domain": "generation",
+      "when": [
+        {
+          "variable": "voltage_level",
+          "op": "eq",
+          "value": "LV"
+        },
+        {
+          "variable": "backup_generator",
+          "op": "eq",
+          "value": true
+        }
+      ],
+      "then": {
+        "select": "ats",
+        "rationale": {
+          "en": "Generator backup with utility: ATS (choose transition mode).",
+          "es": "Respaldo con generador y red: ATS (elegir modo de transicion)."
+        }
+      },
+      "status": "unverified",
+      "source_ids": [
+        "kohler_ats"
+      ]
+    },
+    {
+      "id": "r16",
+      "domain": "lv_protection",
+      "when": [
+        {
+          "variable": "voltage_level",
+          "op": "eq",
+          "value": "LV"
+        },
+        {
+          "variable": "load_type",
+          "op": "eq",
+          "value": "pv_string"
+        }
+      ],
+      "then": {
+        "select": "fuse_gpv",
+        "rationale": {
+          "en": "PV string protection: gPV fuse, DC rated.",
+          "es": "Proteccion de string FV: fusible gPV, apto DC."
+        }
+      },
+      "status": "unverified",
+      "source_ids": [
+        "viox_fuse"
+      ]
+    },
+    {
+      "id": "r17",
+      "domain": "mv_switching",
+      "when": [
+        {
+          "variable": "voltage_level",
+          "op": "eq",
+          "value": "MV"
+        },
+        {
+          "variable": "mv_fault_breaking_required",
+          "op": "eq",
+          "value": true
+        }
+      ],
+      "then": {
+        "select": "mv_vacuum_circuit_breaker",
+        "rationale": {
+          "en": "MV fault breaking: vacuum circuit breaker (V).",
+          "es": "Corte de falta MT: interruptor de vacio (V)."
+        }
+      },
+      "status": "unverified",
+      "source_ids": [
+        "abb_safering_cat"
+      ]
+    },
+    {
+      "id": "r18",
+      "domain": "mv_switching",
+      "when": [
+        {
+          "variable": "voltage_level",
+          "op": "eq",
+          "value": "MV"
+        },
+        {
+          "variable": "mv_fault_breaking_required",
+          "op": "eq",
+          "value": false
+        }
+      ],
+      "then": {
+        "select": "mv_load_break_switch_c",
+        "rationale": {
+          "en": "MV cable switching without fault breaking: C module.",
+          "es": "Maniobra de cable MT sin corte de falta: modulo C."
+        }
+      },
+      "status": "unverified",
+      "source_ids": [
+        "abb_safering_cat"
+      ]
+    },
+    {
+      "id": "r19",
+      "domain": "mv_switching",
+      "when": [
+        {
+          "variable": "voltage_level",
+          "op": "eq",
+          "value": "MV"
+        },
+        {
+          "variable": "transformer_fuse_protection_only",
+          "op": "eq",
+          "value": true
+        }
+      ],
+      "then": {
+        "select": "mv_switch_fuse_f",
+        "rationale": {
+          "en": "MV transformer protected by fuse-links only: F module, fuse limits by voltage.",
+          "es": "Transformador MT protegido solo por fusibles: modulo F, limites de fusible por tension."
+        }
+      },
+      "status": "unverified",
+      "source_ids": [
+        "abb_safering_cat"
+      ]
+    },
+    {
+      "id": "r20",
+      "domain": "mv_protection",
+      "when": [
+        {
+          "variable": "voltage_level",
+          "op": "eq",
+          "value": "MV"
+        },
+        {
+          "variable": "mv_fault_breaking_required",
+          "op": "eq",
+          "value": true
+        }
+      ],
+      "then": {
+        "select": "relay_ansi_50_51",
+        "rationale": {
+          "en": "MV phase protection: relay 50/51 with CTs.",
+          "es": "Proteccion de fases MT: relé 50/51 con TC."
+        }
+      },
+      "status": "typical",
+      "source_ids": [
+        "control_ansi"
+      ]
+    },
+    {
+      "id": "r21",
+      "domain": "mv_protection",
+      "when": [
+        {
+          "variable": "voltage_level",
+          "op": "eq",
+          "value": "MV"
+        },
+        {
+          "variable": "mv_fault_breaking_required",
+          "op": "eq",
+          "value": true
+        }
+      ],
+      "then": {
+        "select": "relay_ansi_50n_51n",
+        "rationale": {
+          "en": "MV earth-fault protection: relay 50N/51N (50G/51G in cited list).",
+          "es": "Proteccion de falta a tierra MT: relé 50N/51N (50G/51G en la lista citada)."
+        }
+      },
+      "status": "typical",
+      "source_ids": [
+        "control_ansi"
+      ]
+    },
+    {
+      "id": "r22",
+      "domain": "mv_protection",
+      "when": [
+        {
+          "variable": "voltage_level",
+          "op": "eq",
+          "value": "MV"
+        },
+        {
+          "variable": "load_type",
+          "op": "eq",
+          "value": "transformer"
+        }
+      ],
+      "then": {
+        "select": "relay_ansi_63",
+        "rationale": {
+          "en": "Oil-immersed transformer: Buchholz / pressure relay 63 (typical).",
+          "es": "Transformador en aceite: relé Buchholz / presostato 63 (typical)."
+        }
+      },
+      "status": "typical",
+      "source_ids": [
+        "control_ansi"
+      ]
+    },
+    {
+      "id": "r23",
+      "domain": "mv_protection",
+      "when": [
+        {
+          "variable": "voltage_level",
+          "op": "eq",
+          "value": "MV"
+        },
+        {
+          "variable": "load_type",
+          "op": "eq",
+          "value": "transformer"
+        },
+        {
+          "variable": "critical_load",
+          "op": "eq",
+          "value": true
+        }
+      ],
+      "then": {
+        "select": "relay_ansi_87",
+        "rationale": {
+          "en": "Transformer differential protection for critical installations (typical).",
+          "es": "Proteccion diferencial de transformador en instalaciones criticas (typical)."
+        }
+      },
+      "status": "typical",
+      "source_ids": [
+        "control_ansi"
+      ]
+    },
+    {
+      "id": "r24",
+      "domain": "mv_protection",
+      "when": [
+        {
+          "variable": "voltage_level",
+          "op": "eq",
+          "value": "MV"
+        },
+        {
+          "variable": "backup_generator",
+          "op": "eq",
+          "value": true
+        }
+      ],
+      "then": {
+        "select": "relay_ansi_81",
+        "rationale": {
+          "en": "Generator or islanding: frequency protection 81 (typical).",
+          "es": "Generador o isla: proteccion de frecuencia 81 (typical)."
+        }
+      },
+      "status": "typical",
+      "source_ids": [
+        "control_ansi"
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "id": "abb_mcb_curves",
+      "title": "What you need to know about MCB trip curves",
+      "url": "https://library.e.abb.com/public/b5acf03b2a1f42e3b08ed2fc27672c30/What%20you%20need%20to%20know%20about%20MCB%20trip%20curves.pdf",
+      "publisher": "ABB",
+      "accessed": "2026-11-20",
+      "kind": "manufacturer"
+    },
+    {
+      "id": "abb_rccb_faq",
+      "title": "FAQ RCCBs",
+      "url": "https://library.e.abb.com/public/8d7aeb25c10b4a839c43878fa9718de4/FAQ_RCCBs.pdf",
+      "publisher": "ABB",
+      "accessed": "2026-11-20",
+      "kind": "manufacturer"
+    },
+    {
+      "id": "schneider_rcd",
+      "title": "CA908066E residual current devices (RCD guide)",
+      "url": "https://download.se.com/doc/CA908066E/CA908066E%20(web).pdf",
+      "publisher": "Schneider Electric",
+      "accessed": "2026-11-20",
+      "kind": "manufacturer"
+    },
+    {
+      "id": "ei_rcd",
+      "title": "Protection of circuits by RCD (wiki)",
+      "url": "https://www.electrical-installation.org/enwiki/Protection_of_circuits_by_RCD",
+      "publisher": "electrical-installation.org",
+      "accessed": "2026-11-20",
+      "kind": "textbook_wiki"
+    },
+    {
+      "id": "ei_spd",
+      "title": "The Surge Protection Device (SPD) (wiki)",
+      "url": "https://www.electrical-installation.org/enwiki/The_Surge_Protection_Device_(SPD)",
+      "publisher": "electrical-installation.org",
+      "accessed": "2026-11-20",
+      "kind": "textbook_wiki"
+    },
+    {
+      "id": "control_ansi",
+      "title": "ANSI/IEEE Function Number Codes",
+      "url": "https://control.com/textbook/electric-power-measurement-and-control/ansiieee-function-number-codes/",
+      "publisher": "control.com",
+      "accessed": "2026-11-20",
+      "kind": "textbook_wiki"
+    },
+    {
+      "id": "abb_safering_doc",
+      "title": "12-24kV SafeRing SafePlus (product documentation)",
+      "url": "https://library.e.abb.com/public/207cafdaa3d4bfc2482578070000fce2/12-24kV_SafeRing_SafePlus_EN.pdf",
+      "publisher": "ABB",
+      "accessed": "2026-11-20",
+      "kind": "manufacturer"
+    },
+    {
+      "id": "abb_safering_cat",
+      "title": "1VDD006104 SafeRing SafePlus 12-24 kV catalogue (07-2022)",
+      "url": "https://library.e.abb.com/public/bb38f74c9b404b4b89745cde2a4b0dba/1VDD006104_Catalogue_SR-SP_12-24kV_EN_07-2022.pdf",
+      "publisher": "ABB",
+      "accessed": "2026-11-20",
+      "kind": "manufacturer"
+    },
+    {
+      "id": "viox_breaker_sizes",
+      "title": "Standard breaker sizes: MCCB current ratings 16 A to 1600 A",
+      "url": "https://viox.com/standard-breaker-sizes/",
+      "publisher": "VIOX Electric",
+      "accessed": "2026-11-20",
+      "kind": "third_party_guide"
+    },
+    {
+      "id": "viox_fuse",
+      "title": "IEC 60269 fuse guide: gG vs aM, NH sizes, selection rules",
+      "url": "https://viox.com/iec-60269-low-voltage-fuse-selection-guide-gg-am-nh/",
+      "publisher": "VIOX Electric",
+      "accessed": "2026-11-20",
+      "kind": "third_party_guide"
+    },
+    {
+      "id": "viox_sld",
+      "title": "How to read a single line diagram",
+      "url": "https://viox.com/how-to-read-a-single-line-diagram/",
+      "publisher": "VIOX Electric",
+      "accessed": "2026-11-20",
+      "kind": "third_party_guide"
+    },
+    {
+      "id": "viox_motor",
+      "title": "How to select contactors and circuit breakers based on motor power",
+      "url": "https://viox.com/how-to-select-contactors-and-circuit-breakers-based-on-motor-power/",
+      "publisher": "VIOX Electric",
+      "accessed": "2026-11-20",
+      "kind": "third_party_guide"
+    },
+    {
+      "id": "kohler_ats",
+      "title": "Kohler automatic transfer switch brochure",
+      "url": "https://resources.kohler.com/power/kohler/industrial/pdf/ATS_Brochure.pdf",
+      "publisher": "Kohler",
+      "accessed": "2026-11-20",
+      "kind": "manufacturer"
+    },
+    {
+      "id": "iec60617_db",
+      "title": "IEC 60617 graphical symbols database (public page)",
+      "url": "https://std.iec.ch/iec60617",
+      "publisher": "IEC",
+      "accessed": "2026-11-20",
+      "kind": "standard_public_summary"
+    },
+    {
+      "id": "repo_pv_inverters",
+      "title": "Central inverters and accessories research (this repository)",
+      "url": "repo://harness/docs/pv/inverters/central_inverters_and_accessories.md",
+      "publisher": "EPC-291 repository",
+      "accessed": "2026-11-20",
+      "kind": "internal_repo"
+    }
+  ]
+}

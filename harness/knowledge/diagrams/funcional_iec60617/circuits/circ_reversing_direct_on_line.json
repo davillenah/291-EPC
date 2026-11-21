@@ -1,0 +1,300 @@
+{
+  "id": "circ_reversing_direct_on_line",
+  "category": "motor_starting",
+  "name": {
+    "en": "Direct-on-line reversing starter (forward and reverse)",
+    "es": "Arrancador directo reversible (avance y retroceso)"
+  },
+  "description": {
+    "en": "Two DOL contactors, one for each direction, with the motor phases interchanged in the reverse contactor; mechanical and electrical interlocks prevent both closing together.",
+    "es": "Dos contactores DOL, uno por sentido, con dos fases del motor intercambiadas en el de retroceso; enclavamientos mecánico y eléctrico impiden cerrar ambos a la vez."
+  },
+  "application_range": {
+    "text": {
+      "en": "Conveyors, hoists and any motor needing reversal without speed change. Not for stopping by plugging without a suitable braking strategy.",
+      "es": "Transportadores, polipastos y cualquier motor que requiera inversión sin cambio de velocidad. No apto para frenado por contramarcha sin una estrategia de frenado adecuada."
+    },
+    "status": "typical"
+  },
+  "representation": {
+    "mld": {
+      "text": {
+        "en": "Three-pole power with an interchanged pair of phases between the two contactor outputs.",
+        "es": "Potencia de tres polos con dos fases intercambiadas entre las salidas de los dos contactores."
+      },
+      "status": "typical"
+    },
+    "functional": {
+      "text": {
+        "en": "Two rungs (forward, reverse) each with a NC interlock contact from the other.",
+        "es": "Dos ramas (avance, retroceso) cada una con un contacto NC de enclavamiento de la otra."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "abb_reversing_contactors_open_type"
+      ]
+    }
+  },
+  "components": [
+    {
+      "ref": "Q1",
+      "letter": "Q",
+      "symbol_id": "sym_circuit_breaker_device",
+      "description": {
+        "en": "Motor protection breaker",
+        "es": "Interruptor de protección del motor"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "KM1",
+      "letter": "Q",
+      "symbol_id": "sym_contact_main_pole",
+      "description": {
+        "en": "Forward contactor poles",
+        "es": "Polos del contactor de avance"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "KM2",
+      "letter": "Q",
+      "symbol_id": "sym_contact_main_pole",
+      "description": {
+        "en": "Reverse contactor poles (two phases interchanged)",
+        "es": "Polos del contactor de retroceso (dos fases intercambiadas)"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "KM1/KM2 coils",
+      "letter": "Q",
+      "symbol_id": "sym_contactor_coil_general",
+      "description": {
+        "en": "Coils A1-A2 for each contactor",
+        "es": "Bobinas A1-A2 de cada contactor"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "F2",
+      "letter": "F",
+      "symbol_id": "sym_thermal_overload_static",
+      "description": {
+        "en": "Common overload relay",
+        "es": "Relé térmico común"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "KM1:21-22",
+      "letter": "Q",
+      "symbol_id": "sym_contact_break_general",
+      "description": {
+        "en": "NC interlock of KM1 in the KM2 rung",
+        "es": "NC de enclavamiento de KM1 en la rama de KM2"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "KM2:21-22",
+      "letter": "Q",
+      "symbol_id": "sym_contact_break_general",
+      "description": {
+        "en": "NC interlock of KM2 in the KM1 rung",
+        "es": "NC de enclavamiento de KM2 en la rama de KM1"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "S1",
+      "letter": "S",
+      "symbol_id": "sym_pushbutton",
+      "description": {
+        "en": "Stop NC",
+        "es": "Paro NC"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "S2",
+      "letter": "S",
+      "symbol_id": "sym_pushbutton",
+      "description": {
+        "en": "Forward start NO",
+        "es": "Marcha avance NO"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "S3",
+      "letter": "S",
+      "symbol_id": "sym_pushbutton",
+      "description": {
+        "en": "Reverse start NO",
+        "es": "Marcha retroceso NO"
+      },
+      "status": "typical"
+    }
+  ],
+  "power_connection": [
+    {
+      "text": {
+        "en": "KM1 feeds the motor as L1, L2, L3 to U, V, W. KM2 feeds the same motor with two phases swapped at its load terminals.",
+        "es": "KM1 alimenta el motor como L1, L2, L3 a U, V, W. KM2 alimenta el mismo motor con dos fases intercambiadas en sus bornes de carga."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "abb_reversing_contactors_open_type"
+      ]
+    },
+    {
+      "text": {
+        "en": "The ABB technical document shows the reverse pole connection with an L2/L3 interchange at the labelled terminals (KM1 at 5/L3, KM2 at 3/L2). Verify against the actual product's marking before drawing.",
+        "es": "El documento técnico de ABB muestra la conexión inversa con intercambio L2/L3 en los bornes rotulados (KM1 en 5/L3, KM2 en 3/L2). Verificar con el marcado del producto real antes de dibujar."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "abb_reversing_contactors_open_type"
+      ]
+    }
+  ],
+  "control_rungs": [
+    {
+      "text": {
+        "en": "Forward: S2 (NO) in series with KM2 NC interlock (21-22) and F2 (95-96 NC) and S1 (NC); KM1 coil.",
+        "es": "Avance: S2 (NO) en serie con el NC de enclavamiento de KM2 (21-22), F2 (95-96 NC) y S1 (NC); bobina KM1."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "abb_reversing_contactors_open_type"
+      ],
+      "rung": 1
+    },
+    {
+      "text": {
+        "en": "Reverse: S3 (NO) in series with KM1 NC interlock (21-22) and the same stop and overload chain; KM2 coil.",
+        "es": "Retroceso: S3 (NO) en serie con el NC de enclavamiento de KM1 (21-22) y la misma cadena de paro y sobrecarga; bobina KM2."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "abb_reversing_contactors_open_type"
+      ],
+      "rung": 2
+    },
+    {
+      "text": {
+        "en": "Self-holding: KM1 13-14 across S2, KM2 13-14 across S3.",
+        "es": "Autorretención: KM1 13-14 en paralelo con S2, KM2 13-14 en paralelo con S3."
+      },
+      "status": "typical",
+      "rung": 3
+    }
+  ],
+  "interlocks": [
+    {
+      "text": {
+        "en": "Electrical: NC auxiliary of each contactor in the other coil circuit.",
+        "es": "Eléctrico: NC auxiliar de cada contactor en el circuito de bobina del otro."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "abb_reversing_contactors_open_type"
+      ]
+    },
+    {
+      "text": {
+        "en": "Mechanical: a mechanical interlock device prevents one contactor from closing while the other is closed (ABB reversing kits VM/VE types).",
+        "es": "Mecánico: un dispositivo de enclavamiento mecánico impide cerrar un contactor mientras el otro está cerrado (kits de reversibilidad ABB tipos VM/VE)."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "abb_reversing_contactors_open_type"
+      ]
+    },
+    {
+      "text": {
+        "en": "Use both: the mechanical interlock prevents power contact closing; the electrical interlock prevents the coil being energized.",
+        "es": "Usar ambos: el enclavamiento mecánico evita el cierre de los polos; el eléctrico evita que la bobina se energice."
+      },
+      "status": "typical"
+    }
+  ],
+  "protections": [
+    {
+      "text": {
+        "en": "Motor protection breaker and overload as in DOL. Overload at common point.",
+        "es": "Interruptor de protección del motor y sobrecarga como en DOL. Sobrecarga en punto común."
+      },
+      "status": "typical"
+    }
+  ],
+  "sequence": [
+    {
+      "text": {
+        "en": "Forward: S2 energizes KM1; NC of KM1 opens the KM2 path. Motor runs forward.",
+        "es": "Avance: S2 energiza KM1; el NC de KM1 abre el camino de KM2. El motor gira en avance."
+      },
+      "status": "typical"
+    },
+    {
+      "text": {
+        "en": "To reverse, press stop, then S3: KM1 drops, interlock releases, KM2 energizes.",
+        "es": "Para invertir, pulsar paro y luego S3: KM1 se abre, el enclavamiento libera, KM2 se energiza."
+      },
+      "status": "typical"
+    },
+    {
+      "text": {
+        "en": "Direct reversal from forward to reverse without stop is avoided: the interlock blocks it; a stop is required (or a timer if the design allows).",
+        "es": "La inversión directa de avance a retroceso sin paro queda bloqueada por el enclavamiento; se requiere paro (o un temporizador si el diseño lo permite)."
+      },
+      "status": "typical"
+    }
+  ],
+  "common_errors": [
+    {
+      "text": {
+        "en": "No NC interlock wired, so both contactors can close on a faulty switch and short-circuit the phases.",
+        "es": "Sin NC de enclavamiento: ambos contactores pueden cerrar con un selector defectuoso y cortocircuitar las fases."
+      },
+      "status": "typical"
+    },
+    {
+      "text": {
+        "en": "Interlock on the wrong contact (NO instead of NC).",
+        "es": "Enclavamiento en el contacto equivocado (NO en lugar de NC)."
+      },
+      "status": "typical"
+    },
+    {
+      "text": {
+        "en": "Phases not swapped in the reverse contactor, so the motor does not reverse.",
+        "es": "Fases no intercambiadas en el contactor de retroceso: el motor no invierte."
+      },
+      "status": "typical"
+    }
+  ],
+  "status": "unverified",
+  "source_ids": [
+    "abb_reversing_contactors_open_type",
+    "control_com_relay_numbering"
+  ],
+  "sources": [
+    {
+      "id": "abb_reversing_contactors_open_type",
+      "title": "ABB: Reversing contactors, open type, technical document (interlocking and reversing terminal arrangement, pp. 3/1-3/6)",
+      "url": "https://library.e.abb.com/public/237dd490110bfcb4c1256e35005048b6/Reversing%20Contactors%20Open%20Type_technical.pdf",
+      "kind": "manufacturer_doc",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "control_com_relay_numbering",
+      "title": "Control.com: Info Byte, relay terminal numbering (secondary article)",
+      "url": "https://control.com/technical-articles/info-byte-whats-the-reason-behind-relay-terminal-numbering/",
+      "kind": "secondary_article",
+      "accessed": "2026-11-20"
+    }
+  ],
+  "schema_version": "1.0"
+}

@@ -1,0 +1,188 @@
+{
+  "id": "circ_autotransformer_starter",
+  "category": "motor_starting",
+  "name": {
+    "en": "Autotransformer (compensator) starter, closed transition",
+    "es": "Arrancador con autotransformador (compensador), transición cerrada"
+  },
+  "description": {
+    "en": "Motor starts at a reduced voltage tapped from a three-phase autotransformer, then runs on line voltage. Contactors select the tap, start, and the run.",
+    "es": "El motor arranca con tensión reducida tomada de un autotransformador trifásico y luego funciona a tensión de red. Contactores seleccionan toma, arranque y marcha."
+  },
+  "application_range": {
+    "text": {
+      "en": "Medium to large motors where a higher starting torque than star-delta is needed with a reduced current; typical taps 50 %, 65 %, 80 % (typical values).",
+      "es": "Motores medianos y grandes donde se necesita mayor par de arranque que estrella-triángulo con corriente reducida; tomas típicas 50 %, 65 %, 80 % (valores típicos)."
+    },
+    "status": "typical"
+  },
+  "representation": {
+    "mld": {
+      "text": {
+        "en": "Three-phase autotransformer in the power path between line and motor, with two contactors (start, run) and a tap.",
+        "es": "Autotransformador trifásico en el camino de potencia entre línea y motor, con dos contactores (arranque, marcha) y una toma."
+      },
+      "status": "typical"
+    },
+    "functional": {
+      "text": {
+        "en": "Rungs for start contactor, autotransformer contactor, timer, run contactor.",
+        "es": "Ramas para contactor de arranque, contactor del autotransformador, temporizador y contactor de marcha."
+      },
+      "status": "typical"
+    }
+  },
+  "components": [
+    {
+      "ref": "KM1",
+      "letter": "Q",
+      "symbol_id": "sym_contact_main_pole",
+      "description": {
+        "en": "Line contactor",
+        "es": "Contactor de línea"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "KM2",
+      "letter": "Q",
+      "symbol_id": "sym_contact_main_pole",
+      "description": {
+        "en": "Start contactor (autotransformer in circuit)",
+        "es": "Contactor de arranque (autotransformador en circuito)"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "KM3",
+      "letter": "Q",
+      "symbol_id": "sym_contact_main_pole",
+      "description": {
+        "en": "Run contactor (bypass autotransformer, motor on line)",
+        "es": "Contactor de marcha (bypass del autotransformador, motor a línea)"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "TA1",
+      "letter": "T",
+      "symbol_id": "sym_transformer_2w",
+      "description": {
+        "en": "Autotransformer (3-phase, tapped)",
+        "es": "Autotransformador (trifásico, con tomas)"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "KT1",
+      "letter": "K",
+      "symbol_id": "sym_timer_coil_on_delay",
+      "description": {
+        "en": "Start timer",
+        "es": "Temporizador de arranque"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "F2",
+      "letter": "F",
+      "symbol_id": "sym_thermal_overload_static",
+      "description": {
+        "en": "Thermal overload",
+        "es": "Relé térmico"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "M1",
+      "letter": "M",
+      "symbol_id": "sym_motor_3ph_squirrel",
+      "description": {
+        "en": "Motor",
+        "es": "Motor"
+      },
+      "status": "typical"
+    }
+  ],
+  "power_connection": [
+    {
+      "text": {
+        "en": "Line to autotransformer through KM2; autotransformer output to motor. KM3 bypasses the autotransformer for run.",
+        "es": "Línea al autotransformador mediante KM2; salida del autotransformador al motor. KM3 puentea el autotransformador en marcha."
+      },
+      "status": "typical"
+    }
+  ],
+  "control_rungs": [
+    {
+      "text": {
+        "en": "Start: KM1 and KM2 coil energized (reduced voltage start).",
+        "es": "Arranque: bobinas KM1 y KM2 energizadas (arranque a tensión reducida)."
+      },
+      "status": "typical",
+      "rung": 1
+    },
+    {
+      "text": {
+        "en": "KT1 timer opens KM2 and closes KM3 after the start time (closed transition variant closes KM3 before opening KM2 per design).",
+        "es": "El temporizador KT1 abre KM2 y cierra KM3 tras el tiempo de arranque (la variante de transición cerrada cierra KM3 antes de abrir KM2 según diseño)."
+      },
+      "status": "typical",
+      "rung": 2
+    }
+  ],
+  "interlocks": [
+    {
+      "text": {
+        "en": "KM2 and KM3 interlocked; KM3 must not close while KM2 is closed in open-transition configuration.",
+        "es": "KM2 y KM3 enclavados; KM3 no debe cerrar mientras KM2 esté cerrado en configuración de transición abierta."
+      },
+      "status": "typical"
+    }
+  ],
+  "protections": [
+    {
+      "text": {
+        "en": "Thermal overload and short-circuit protection at the line; autotransformer protected by the same breaker per design.",
+        "es": "Relé térmico y protección de cortocircuito en línea; autotransformador protegido por el mismo interruptor según diseño."
+      },
+      "status": "typical"
+    }
+  ],
+  "sequence": [
+    {
+      "text": {
+        "en": "Start on reduced voltage (tap), timer, then transfer to full voltage on KM3.",
+        "es": "Arranque a tensión reducida (toma), temporizador, luego transferencia a tensión plena por KM3."
+      },
+      "status": "typical"
+    }
+  ],
+  "common_errors": [
+    {
+      "text": {
+        "en": "Tap not selected correctly; motor does not accelerate.",
+        "es": "Toma mal seleccionada; el motor no acelera."
+      },
+      "status": "typical"
+    },
+    {
+      "text": {
+        "en": "Transition without interlock creates a transient current spike.",
+        "es": "Transición sin enclavamiento genera un pico transitorio de corriente."
+      },
+      "status": "typical"
+    },
+    {
+      "text": {
+        "en": "Autotransformer undersized for the motor's starting duty.",
+        "es": "Autotransformador subdimensionado para el servicio de arranque del motor."
+      },
+      "status": "typical"
+    }
+  ],
+  "status": "typical",
+  "source_ids": [],
+  "sources": [],
+  "schema_version": "1.0"
+}

@@ -1,0 +1,92 @@
+{
+  "schema_version": "1.0",
+  "record_type": "device",
+  "id": "imd_insulation_monitor",
+  "name": {
+    "en": "Insulation monitoring device (IMD)",
+    "es": "Monitor de aislamiento (IMD)"
+  },
+  "description": {
+    "en": "Device that monitors insulation resistance between conductors and earth. Used in islanded or ungrounded schemes.",
+    "es": "Dispositivo que vigila la resistencia de aislamiento entre conductores y tierra. Se usa en esquemas aislados o sin puesta a tierra."
+  },
+  "kind": "insulation_monitor",
+  "voltage_level": "LV",
+  "status": "unverified",
+  "source_ids": [
+    "ei_prosumer",
+    "sma_stp_protective"
+  ],
+  "sources": [
+    {
+      "id": "ei_prosumer",
+      "title": "Specific protection of prosumer electrical installations",
+      "url": "https://www.electrical-installation.org/enwiki/Specific_protection_of_prosumer_electrical_installations",
+      "publisher": "electrical-installation.org (public technical wiki)",
+      "accessed": "2026-11-20",
+      "kind": "textbook_wiki"
+    },
+    {
+      "id": "sma_stp_protective",
+      "title": "SMA manual: Protective devices (DC load-break switch, reverse polarity diode, AC 60 A, Riso)",
+      "url": "https://manuals.sma.de/STPxxUS50/en-US/12078896395.html",
+      "publisher": "SMA Solar Technology AG",
+      "accessed": "2026-11-20",
+      "kind": "manufacturer"
+    }
+  ],
+  "standard_refs": [],
+  "ratings": [
+    {
+      "parameter": "riso_monitor_threshold",
+      "value": ">100",
+      "unit": "kOhm",
+      "status": "unverified",
+      "source_ids": [
+        "sma_stp_protective"
+      ],
+      "note": {
+        "en": "SMA: ground-fault insulation monitoring with Riso > 100 kOhm (inverter internal)",
+        "es": "SMA: vigilancia de aislamiento a tierra con Riso > 100 kOhm (interno al inversor)"
+      }
+    },
+    {
+      "parameter": "use_case",
+      "value": "Islanded operation where the grid-side transformer stays energized for long periods",
+      "unit": "",
+      "status": "unverified",
+      "source_ids": [
+        "ei_prosumer"
+      ],
+      "note": {
+        "en": "Wiki: an IMD may be added on the transformer side for long islanded operation",
+        "es": "Wiki: puede añadirse un IMD del lado del transformador para isla larga"
+      }
+    },
+    {
+      "parameter": "imd_alarm_threshold",
+      "value": null,
+      "unit": "kOhm",
+      "status": "not_found",
+      "source_ids": [],
+      "note": {
+        "en": "IMD alarm threshold for an external IMD not found",
+        "es": "Umbral de alarma de un IMD externo no encontrado"
+      }
+    }
+  ],
+  "selection_criteria": {
+    "when_to_use": [
+      {
+        "en": "Islanded or off-grid installations; ungrounded (IT-like) island operation.",
+        "es": "Instalaciones aisladas o en isla; operación en isla tipo IT."
+      }
+    ],
+    "when_not_to_use": [
+      {
+        "en": "Grid-tied inverters with transformer and internal insulation monitoring (not required as external device; typical).",
+        "es": "Inversores conectados a red con transformador y monitoreo interno (no requerido como equipo externo; típico)."
+      }
+    ]
+  }
+}

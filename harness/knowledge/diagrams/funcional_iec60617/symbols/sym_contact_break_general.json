@@ -1,0 +1,118 @@
+{
+  "schema_version": "1.0",
+  "id": "sym_contact_break_general",
+  "name": {
+    "en": "Break contact (normally closed), general symbol",
+    "es": "Contacto de apertura (normalmente cerrado)"
+  },
+  "family": "control",
+  "description": {
+    "en": "Contact that opens when the device operates; closed in the de-energized state. Note: Drawn closed in the unoperated state; the blade is shown as a cross-bar.",
+    "es": "Contacto que abre al accionarse el aparato; cerrado en estado desenergizado. Nota: Se dibuja cerrado en estado no accionado; la cuchilla se muestra como barra transversal."
+  },
+  "iec60617": {
+    "symbol_id": "S00229",
+    "iec_title_en": "Break contact",
+    "legacy_ref": null,
+    "status": "unverified"
+  },
+  "reference_designation": {
+    "letter": "n/a",
+    "note": {
+      "en": "Carries the letter of its parent device.",
+      "es": "Lleva la letra de su aparato principal."
+    },
+    "status": "typical"
+  },
+  "ansi_nema": {
+    "equivalent": "NC contact (typical)",
+    "status": "typical"
+  },
+  "geometry": {
+    "grid": "1 unit = one symbol grid step; origin top-left, y down; scale to the drawing standard in use",
+    "primitives": [
+      {
+        "prim": "line",
+        "p1": [
+          0,
+          0
+        ],
+        "p2": [
+          0,
+          2
+        ]
+      },
+      {
+        "prim": "line",
+        "p1": [
+          0,
+          2
+        ],
+        "p2": [
+          1.4,
+          2
+        ]
+      },
+      {
+        "prim": "line",
+        "p1": [
+          0,
+          4
+        ],
+        "p2": [
+          0,
+          6
+        ]
+      },
+      {
+        "prim": "line",
+        "p1": [
+          0.2,
+          1.3
+        ],
+        "p2": [
+          1.6,
+          2.8
+        ]
+      }
+    ],
+    "status": "typical"
+  },
+  "connection_points": [
+    {
+      "id": "21",
+      "label": {
+        "en": "Contact input (ex. 21)",
+        "es": "Entrada del contacto (p. ej. 21)"
+      }
+    },
+    {
+      "id": "22",
+      "label": {
+        "en": "Contact output (ex. 22)",
+        "es": "Salida del contacto (p. ej. 22)"
+      }
+    }
+  ],
+  "status": "unverified",
+  "source_ids": [
+    "iec_S00229",
+    "control_com_relay_numbering"
+  ],
+  "sources": [
+    {
+      "id": "iec_S00229",
+      "title": "IEC 60617 database, symbol S00229: Break contact",
+      "url": "https://library.iec.ch/grasymb/grasymb.nsf/(SysSymbol)/S00229",
+      "kind": "standard_database",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "control_com_relay_numbering",
+      "title": "Control.com: Info Byte, relay terminal numbering (secondary article)",
+      "url": "https://control.com/technical-articles/info-byte-whats-the-reason-behind-relay-terminal-numbering/",
+      "kind": "secondary_article",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

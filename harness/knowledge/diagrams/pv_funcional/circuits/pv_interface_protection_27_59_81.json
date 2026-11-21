@@ -1,0 +1,212 @@
+{
+  "schema_version": "1.0",
+  "id": "pv_interface_protection_27_59_81",
+  "family": "control_typical",
+  "name": {
+    "en": "Interface protection: 27, 59, 81 relays and lockout 86",
+    "es": "Protección de interfaz: relés 27, 59, 81 y bloqueo 86"
+  },
+  "description": {
+    "en": "Undervoltage 27, overvoltage 59 and frequency 81 relays read grid voltage through a VT and trip the interface breaker through a shunt coil; lockout 86 holds it open.",
+    "es": "Relés de subtensión 27, sobretensión 59 y frecuencia 81 leen la tensión de red por un TV y disparan el interruptor de interfaz por bobina de disparo; el bloqueo 86 lo mantiene abierto."
+  },
+  "application_range": {
+    "text": {
+      "en": "Distributed generation tied to the LV grid. Set points follow the local grid code.",
+      "es": "Generación distribuida conectada a la red BT. Los ajustes siguen el código de red local."
+    },
+    "status": "typical",
+    "source_ids": []
+  },
+  "diagram_types": [
+    "SLD",
+    "functional"
+  ],
+  "symbol_refs": [
+    "sym_circuit_breaker_device",
+    "sym_relay_coil_general",
+    "sym_transformer_2w"
+  ],
+  "device_refs": [
+    "mccb",
+    "relay_ansi_27",
+    "relay_ansi_59",
+    "relay_ansi_81",
+    "relay_ansi_86",
+    "vt"
+  ],
+  "components": [
+    {
+      "ref": "K27",
+      "letter": "K",
+      "symbol_id": "sym_relay_coil_general",
+      "device_id": "relay_ansi_27",
+      "description": {
+        "en": "Undervoltage relay (ANSI 27).",
+        "es": "Relé de subtensión (ANSI 27)."
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "K59",
+      "letter": "K",
+      "symbol_id": "sym_relay_coil_general",
+      "device_id": "relay_ansi_59",
+      "description": {
+        "en": "Overvoltage relay (ANSI 59).",
+        "es": "Relé de sobretensión (ANSI 59)."
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "K81",
+      "letter": "K",
+      "symbol_id": "sym_relay_coil_general",
+      "device_id": "relay_ansi_81",
+      "description": {
+        "en": "Frequency relay (ANSI 81), under and over.",
+        "es": "Relé de frecuencia (ANSI 81), baja y alta."
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "K86",
+      "letter": "K",
+      "symbol_id": "sym_relay_coil_general",
+      "device_id": "relay_ansi_86",
+      "description": {
+        "en": "Lockout relay, latched after a trip, manual reset.",
+        "es": "Relé de bloqueo, enclavado tras un disparo, rearme manual."
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "T1",
+      "letter": "T",
+      "symbol_id": "sym_transformer_2w",
+      "device_id": "vt",
+      "description": {
+        "en": "Voltage transformer on the grid side, feeding the relays.",
+        "es": "Transformador de tensión en el lado red, alimenta los relés."
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "Q1",
+      "letter": "Q",
+      "symbol_id": "sym_circuit_breaker_device",
+      "device_id": "mccb",
+      "description": {
+        "en": "Interface breaker, opened by shunt coil.",
+        "es": "Interruptor de interfaz, abierto por bobina de disparo."
+      },
+      "status": "typical"
+    }
+  ],
+  "power_connection": [
+    {
+      "text": {
+        "en": "VT on the grid side of the interface breaker, not the load side.",
+        "es": "TV en el lado red del interruptor de interfaz, no en el lado carga."
+      },
+      "status": "typical",
+      "source_ids": []
+    }
+  ],
+  "control_connection": [
+    {
+      "text": {
+        "en": "Relay outputs wired to the shunt trip coil of Q1 through K86 contacts.",
+        "es": "Salidas de relés a la bobina de disparo de Q1 a través de contactos de K86."
+      },
+      "status": "typical",
+      "source_ids": []
+    }
+  ],
+  "protections": [
+    {
+      "text": {
+        "en": "Frequency trip points are configurable within listed ranges: three under and three over trip points, each with a time, plus one instantaneous under and over point. Defaults meet IEEE 1547 (Tesla).",
+        "es": "Puntos de disparo por frecuencia configurables dentro de rangos listados: tres bajos y tres altos, cada uno con tiempo, más uno instantáneo bajo y alto. Los valores por defecto cumplen IEEE 1547 (Tesla)."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "tesla_freq"
+      ]
+    },
+    {
+      "text": {
+        "en": "Voltage trip set points and times: not covered in the frequency source.",
+        "es": "Ajustes de disparo por tensión y tiempos: no cubiertos en la fuente de frecuencia."
+      },
+      "status": "not_found",
+      "source_ids": []
+    }
+  ],
+  "sequence": [
+    {
+      "text": {
+        "en": "Fault: relay picks up, time delay runs, then Q1 trips and K86 latches.",
+        "es": "Falla: el relé actúa, corre el retardo, Q1 dispara y K86 queda enclavado."
+      },
+      "status": "typical",
+      "source_ids": []
+    },
+    {
+      "text": {
+        "en": "Manual reset of K86 after the grid is restored and the cause is cleared.",
+        "es": "Rearme manual de K86 tras restablecer la red y eliminar la causa."
+      },
+      "status": "typical",
+      "source_ids": []
+    }
+  ],
+  "common_errors": [
+    {
+      "text": {
+        "en": "Set points not matching the local grid code.",
+        "es": "Ajustes que no coinciden con el código de red local."
+      },
+      "status": "typical",
+      "source_ids": []
+    },
+    {
+      "text": {
+        "en": "VT on the load side.",
+        "es": "TV en el lado carga."
+      },
+      "status": "typical",
+      "source_ids": []
+    },
+    {
+      "text": {
+        "en": "K86 not reset, inverter stays off.",
+        "es": "K86 sin rearmar, el inversor queda apagado."
+      },
+      "status": "typical",
+      "source_ids": []
+    }
+  ],
+  "source_conflicts": [],
+  "status": "unverified",
+  "source_ids": [
+    "repo_devices",
+    "tesla_freq"
+  ],
+  "sources": [
+    {
+      "id": "repo_devices",
+      "title": "EPC-291 repository: sld_mld/devices and funcional_iec60617/symbols_index.json (ids reused)",
+      "url": "repo://sld_mld/devices",
+      "kind": "internal_repo",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "tesla_freq",
+      "title": "Tesla Powerwall+ installation manual, Appendix D: frequency ride-through",
+      "url": "https://energylibrary.tesla.com/docs/Public/EnergyStorage/Powerwall/+/InstallManual/BackupSwitch/en-us/GUID-7374FAFE-32F2-4FF8-AFB8-B7E9ECAF3852.html",
+      "kind": "manufacturer_doc",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

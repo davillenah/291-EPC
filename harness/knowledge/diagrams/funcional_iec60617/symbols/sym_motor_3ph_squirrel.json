@@ -1,0 +1,122 @@
+{
+  "schema_version": "1.0",
+  "id": "sym_motor_3ph_squirrel",
+  "name": {
+    "en": "Three-phase squirrel-cage induction motor",
+    "es": "Motor de inducción trifásico de jaula de ardilla"
+  },
+  "family": "power",
+  "description": {
+    "en": "Circle with M inside, three supply terminals. Use the tilde mark for AC. Note: Terminal labels follow typical marking; not sourced.",
+    "es": "Círculo con la letra M en el interior y tres bornes de alimentación. Usar la marca de tilde para CA. Nota: Las etiquetas de bornes siguen la práctica típica; no tienen fuente."
+  },
+  "iec60617": {
+    "symbol_id": "S00836",
+    "iec_title_en": "Induction motor, three-phase, squirrel cage",
+    "legacy_ref": null,
+    "status": "unverified"
+  },
+  "reference_designation": {
+    "letter": "M",
+    "note": {
+      "en": "Motor (IEC 81346 uses M for motors or drives; source article lists M as a suffix only).",
+      "es": "Motor (IEC 81346 usa M para motores o accionamientos; el artículo fuente lo lista solo como sufijo)."
+    },
+    "status": "typical"
+  },
+  "ansi_nema": {
+    "equivalent": null,
+    "status": "not_found"
+  },
+  "geometry": {
+    "grid": "1 unit = one symbol grid step; origin top-left, y down; scale to the drawing standard in use",
+    "primitives": [
+      {
+        "prim": "circle",
+        "c": [
+          0,
+          0
+        ],
+        "r": 2
+      },
+      {
+        "prim": "text",
+        "at": [
+          0,
+          0.5
+        ],
+        "text": "M"
+      },
+      {
+        "prim": "line",
+        "p1": [
+          -1.2,
+          2
+        ],
+        "p2": [
+          -1.2,
+          3.5
+        ]
+      },
+      {
+        "prim": "line",
+        "p1": [
+          0,
+          2
+        ],
+        "p2": [
+          0,
+          3.5
+        ]
+      },
+      {
+        "prim": "line",
+        "p1": [
+          1.2,
+          2
+        ],
+        "p2": [
+          1.2,
+          3.5
+        ]
+      }
+    ],
+    "status": "typical"
+  },
+  "connection_points": [
+    {
+      "id": "U",
+      "label": {
+        "en": "Phase U (1U1/2U1 in marking practice)",
+        "es": "Fase U"
+      }
+    },
+    {
+      "id": "V",
+      "label": {
+        "en": "Phase V",
+        "es": "Fase V"
+      }
+    },
+    {
+      "id": "W",
+      "label": {
+        "en": "Phase W",
+        "es": "Fase W"
+      }
+    }
+  ],
+  "status": "unverified",
+  "source_ids": [
+    "iec_S00836"
+  ],
+  "sources": [
+    {
+      "id": "iec_S00836",
+      "title": "IEC 60617 database, symbol S00836: Induction motor, three-phase, squirrel cage",
+      "url": "https://library.iec.ch/grasymb/grasymb.nsf/(SysSymbol)/S00836",
+      "kind": "standard_database",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

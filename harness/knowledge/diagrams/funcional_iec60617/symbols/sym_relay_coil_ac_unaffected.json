@@ -1,0 +1,106 @@
+{
+  "schema_version": "1.0",
+  "id": "sym_relay_coil_ac_unaffected",
+  "name": {
+    "en": "Relay coil of a relay unaffected by alternating current",
+    "es": "Bobina de relé no afectada por corriente alterna"
+  },
+  "family": "control",
+  "description": {
+    "en": "Coil symbol specified by the database title for relays that do not respond to AC (e.g. DC-only coil).",
+    "es": "Símbolo de bobina según el título de la base para relés que no responden a CA (p. ej. bobina solo de CC)."
+  },
+  "iec60617": {
+    "symbol_id": "S00315",
+    "iec_title_en": "Relay coil of a relay unaffected by alternating current",
+    "legacy_ref": null,
+    "status": "unverified"
+  },
+  "reference_designation": {
+    "letter": "K",
+    "note": {
+      "en": "Relay class.",
+      "es": "Clase de relé."
+    },
+    "status": "typical"
+  },
+  "ansi_nema": {
+    "equivalent": null,
+    "status": "not_found"
+  },
+  "geometry": {
+    "grid": "1 unit = one symbol grid step; origin top-left, y down; scale to the drawing standard in use",
+    "primitives": [
+      {
+        "prim": "rect",
+        "x": -0.8,
+        "y": 0.5,
+        "w": 1.6,
+        "h": 2.2
+      },
+      {
+        "prim": "line",
+        "p1": [
+          0,
+          0
+        ],
+        "p2": [
+          0,
+          0.5
+        ]
+      },
+      {
+        "prim": "line",
+        "p1": [
+          0,
+          2.7
+        ],
+        "p2": [
+          0,
+          3.2
+        ]
+      },
+      {
+        "prim": "line",
+        "p1": [
+          -0.8,
+          1.6
+        ],
+        "p2": [
+          0.8,
+          1.6
+        ]
+      }
+    ],
+    "status": "typical"
+  },
+  "connection_points": [
+    {
+      "id": "A1",
+      "label": {
+        "en": "Coil terminal A1",
+        "es": "Borne de bobina A1"
+      }
+    },
+    {
+      "id": "A2",
+      "label": {
+        "en": "Coil terminal A2",
+        "es": "Borne de bobina A2"
+      }
+    }
+  ],
+  "status": "unverified",
+  "source_ids": [
+    "iec_S00315"
+  ],
+  "sources": [
+    {
+      "id": "iec_S00315",
+      "title": "IEC 60617 database, symbol S00315: Relay coil of a relay unaffected by alternating current",
+      "url": "https://library.iec.ch/grasymb/grasymb.nsf/(SysSymbol)/S00315",
+      "kind": "standard_database",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

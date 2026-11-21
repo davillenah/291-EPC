@@ -1,0 +1,108 @@
+{
+  "schema_version": "1.0",
+  "id": "sym_rcd_residual_current",
+  "name": {
+    "en": "Residual current device (RCD / differential switch)",
+    "es": "Interruptor diferencial (RCD)"
+  },
+  "family": "protection",
+  "description": {
+    "en": "Breaker with residual current detection. IEC ID not located; the symbol S00332 found is for differential relay current, not an RCD. Note: Geometry typical (toroid around poles plus test mark).",
+    "es": "Interruptor con detección de corriente diferencial residual. ID IEC no localizado; el símbolo S00332 encontrado es de corriente diferencial de relé, no de RCD. Nota: Geometría típica (toroide alrededor de polos y marca de prueba)."
+  },
+  "iec60617": {
+    "symbol_id": null,
+    "iec_title_en": null,
+    "legacy_ref": null,
+    "status": "not_found"
+  },
+  "reference_designation": {
+    "letter": "F",
+    "note": {
+      "en": "Protection class (typical).",
+      "es": "Clase de protección (típico)."
+    },
+    "status": "typical"
+  },
+  "ansi_nema": {
+    "equivalent": null,
+    "status": "not_found"
+  },
+  "geometry": {
+    "grid": "1 unit = one symbol grid step; origin top-left, y down; scale to the drawing standard in use",
+    "primitives": [
+      {
+        "prim": "circle",
+        "c": [
+          0,
+          1.5
+        ],
+        "r": 0.9
+      },
+      {
+        "prim": "line",
+        "p1": [
+          0,
+          0
+        ],
+        "p2": [
+          0,
+          0.6
+        ]
+      },
+      {
+        "prim": "line",
+        "p1": [
+          0,
+          2.4
+        ],
+        "p2": [
+          0,
+          3
+        ]
+      },
+      {
+        "prim": "line",
+        "p1": [
+          -0.6,
+          1.5
+        ],
+        "p2": [
+          0.6,
+          1.5
+        ]
+      },
+      {
+        "prim": "line",
+        "p1": [
+          0.8,
+          0.9
+        ],
+        "p2": [
+          0.8,
+          0.2
+        ]
+      }
+    ],
+    "status": "typical"
+  },
+  "connection_points": [
+    {
+      "id": "1",
+      "label": {
+        "en": "Line side",
+        "es": "Lado de línea"
+      }
+    },
+    {
+      "id": "2",
+      "label": {
+        "en": "Load side",
+        "es": "Lado de carga"
+      }
+    }
+  ],
+  "status": "not_found",
+  "source_ids": [],
+  "sources": []
+}

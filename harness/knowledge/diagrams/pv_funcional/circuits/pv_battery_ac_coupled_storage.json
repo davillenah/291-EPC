@@ -1,0 +1,148 @@
+{
+  "schema_version": "1.0",
+  "id": "pv_battery_ac_coupled_storage",
+  "family": "export_storage",
+  "name": {
+    "en": "AC-coupled battery storage on the AC board",
+    "es": "Almacenamiento con batería acoplado en AC al tablero"
+  },
+  "description": {
+    "en": "A storage inverter sits on the AC side next to the PV inverter, with its own AC breaker and a shared grid meter.",
+    "es": "Un inversor de almacenamiento se ubica en el lado AC junto al inversor FV, con su propio interruptor AC y un medidor de red compartido."
+  },
+  "application_range": {
+    "text": {
+      "en": "Retrofit of storage on an existing PV plant. Topology details not located in the fetched sources.",
+      "es": "Adición de almacenamiento a una planta FV existente. Detalles de topología no ubicados en las fuentes consultadas."
+    },
+    "status": "not_found",
+    "source_ids": []
+  },
+  "diagram_types": [
+    "SLD",
+    "MLD"
+  ],
+  "symbol_refs": [
+    "sym_circuit_breaker_device"
+  ],
+  "device_refs": [
+    "mccb"
+  ],
+  "components": [
+    {
+      "ref": "A1",
+      "letter": "A",
+      "symbol_id": null,
+      "device_id": null,
+      "description": {
+        "en": "Storage inverter (bidirectional) with battery.",
+        "es": "Inversor de almacenamiento (bidireccional) con batería."
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "G1",
+      "letter": "G",
+      "symbol_id": null,
+      "device_id": null,
+      "description": {
+        "en": "Battery pack.",
+        "es": "Pack de batería."
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "Q1",
+      "letter": "Q",
+      "symbol_id": "sym_circuit_breaker_device",
+      "device_id": "mccb",
+      "description": {
+        "en": "AC breaker for the storage inverter.",
+        "es": "Interruptor AC del inversor de almacenamiento."
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "P1",
+      "letter": "P",
+      "symbol_id": null,
+      "device_id": null,
+      "description": {
+        "en": "Shared grid meter (letter P not in the repository table).",
+        "es": "Medidor de red compartido (la letra P no figura en el repositorio)."
+      },
+      "status": "typical"
+    }
+  ],
+  "power_connection": [
+    {
+      "text": {
+        "en": "AC output of the storage inverter connects to its own breaker on the AC board.",
+        "es": "Salida AC del inversor de almacenamiento a su interruptor propio en el tablero AC."
+      },
+      "status": "typical",
+      "source_ids": []
+    },
+    {
+      "text": {
+        "en": "Grid meter must see both PV and storage flows for export control.",
+        "es": "El medidor de red debe ver los flujos FV y de almacenamiento para el control de exportación."
+      },
+      "status": "typical",
+      "source_ids": []
+    }
+  ],
+  "control_connection": [
+    {
+      "text": {
+        "en": "Communication between storage and PV inverter for export control: typical Modbus or CAN; not located.",
+        "es": "Comunicación entre almacenamiento e inversor FV para control de exportación: típico Modbus o CAN; no ubicado."
+      },
+      "status": "not_found",
+      "source_ids": []
+    }
+  ],
+  "protections": [
+    {
+      "text": {
+        "en": "Anti-islanding and export limit as in the other files.",
+        "es": "Anti-isla y límite de exportación como en los otros archivos."
+      },
+      "status": "typical",
+      "source_ids": []
+    }
+  ],
+  "sequence": [],
+  "common_errors": [
+    {
+      "text": {
+        "en": "Charge from grid and export at the same time without control (typical).",
+        "es": "Carga desde la red y exportación al mismo tiempo sin control (típico)."
+      },
+      "status": "typical",
+      "source_ids": []
+    },
+    {
+      "text": {
+        "en": "Storage inverter on the PV inverter output without a dedicated breaker.",
+        "es": "Inversor de almacenamiento sobre la salida del inversor FV sin interruptor dedicado."
+      },
+      "status": "typical",
+      "source_ids": []
+    }
+  ],
+  "source_conflicts": [],
+  "status": "typical",
+  "source_ids": [
+    "repo_devices"
+  ],
+  "sources": [
+    {
+      "id": "repo_devices",
+      "title": "EPC-291 repository: sld_mld/devices and funcional_iec60617/symbols_index.json (ids reused)",
+      "url": "repo://sld_mld/devices",
+      "kind": "internal_repo",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

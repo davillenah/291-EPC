@@ -1,0 +1,151 @@
+{
+  "id": "circ_soft_starter",
+  "category": "motor_starting",
+  "name": {
+    "en": "Soft starter with bypass contactor",
+    "es": "Arrancador suave con contactor de by-pass"
+  },
+  "description": {
+    "en": "Electronic (thyristor) voltage controller ramps the motor voltage, then a bypass contactor closes at full speed to avoid semiconductor losses.",
+    "es": "Controlador electrónico de tensión (tiristores) que rampa la tensión del motor; luego un contactor de by-pass cierra a plena velocidad para evitar pérdidas en semiconductores."
+  },
+  "application_range": {
+    "text": {
+      "en": "Pumps, fans and conveyors where a limited starting torque or current ramp is required.",
+      "es": "Bombas, ventiladores y transportadores donde se requiere limitar el par o la corriente de arranque."
+    },
+    "status": "typical"
+  },
+  "representation": {
+    "mld": {
+      "text": {
+        "en": "Three-phase line into soft starter, output to motor; bypass contactor in parallel with the semiconductor stage.",
+        "es": "Línea trifásica al arrancador suave, salida al motor; contactor de by-pass en paralelo con la etapa de semiconductores."
+      },
+      "status": "typical"
+    },
+    "functional": {
+      "text": {
+        "en": "Control rung enables the soft starter and energizes the bypass after the ramp.",
+        "es": "La rama de mando habilita el arrancador suave y energiza el by-pass tras la rampa."
+      },
+      "status": "typical"
+    }
+  },
+  "components": [
+    {
+      "ref": "Q1",
+      "letter": "Q",
+      "symbol_id": "sym_circuit_breaker_device",
+      "description": {
+        "en": "Upstream breaker",
+        "es": "Interruptor aguas arriba"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "A1",
+      "letter": "A",
+      "symbol_id": "sym_plc_io",
+      "description": {
+        "en": "Soft starter (controller and thyristor stage)",
+        "es": "Arrancador suave (controlador y etapa de tiristores)"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "KM1",
+      "letter": "Q",
+      "symbol_id": "sym_contact_main_pole",
+      "description": {
+        "en": "Bypass contactor",
+        "es": "Contactor de by-pass"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "M1",
+      "letter": "M",
+      "symbol_id": "sym_motor_3ph_squirrel",
+      "description": {
+        "en": "Motor",
+        "es": "Motor"
+      },
+      "status": "typical"
+    }
+  ],
+  "power_connection": [
+    {
+      "text": {
+        "en": "Line to soft starter input; output to motor; bypass contactor connects line to motor directly after the ramp.",
+        "es": "Línea a la entrada del arrancador suave; salida al motor; el contactor de by-pass conecta la línea al motor tras la rampa."
+      },
+      "status": "typical"
+    }
+  ],
+  "control_rungs": [
+    {
+      "text": {
+        "en": "Start command enables the soft starter.",
+        "es": "Orden de arranque habilita el arrancador suave."
+      },
+      "status": "typical",
+      "rung": 1
+    },
+    {
+      "text": {
+        "en": "Soft starter relay output (run/bypass) energizes KM1 coil at end of ramp.",
+        "es": "Salida de relé del arrancador (marcha/by-pass) energiza la bobina de KM1 al final de la rampa."
+      },
+      "status": "typical",
+      "rung": 2
+    }
+  ],
+  "interlocks": [
+    {
+      "text": {
+        "en": "Soft starter output must not be energized while bypass is closed (per manufacturer).",
+        "es": "La salida del arrancador no debe energizarse con el by-pass cerrado (según el fabricante)."
+      },
+      "status": "typical"
+    }
+  ],
+  "protections": [
+    {
+      "text": {
+        "en": "Motor overload by the soft starter's internal model or external relay; short-circuit by the breaker.",
+        "es": "Sobrecarga del motor por el modelo interno del arrancador o relé externo; cortocircuito por el interruptor."
+      },
+      "status": "typical"
+    }
+  ],
+  "sequence": [
+    {
+      "text": {
+        "en": "Start command, voltage ramp, KM1 closes at end of ramp, soft starter stops conducting.",
+        "es": "Orden de arranque, rampa de tensión, cierra KM1 al final de la rampa; el arrancador deja de conducir."
+      },
+      "status": "typical"
+    }
+  ],
+  "common_errors": [
+    {
+      "text": {
+        "en": "Bypass wired before ramp completes; a current spike occurs.",
+        "es": "By-pass cableado antes de terminar la rampa: aparece un pico de corriente."
+      },
+      "status": "typical"
+    },
+    {
+      "text": {
+        "en": "Soft starter without correct motor rating sized.",
+        "es": "Arrancador suave sin dimensionar según la potencia real del motor."
+      },
+      "status": "typical"
+    }
+  ],
+  "status": "typical",
+  "source_ids": [],
+  "sources": [],
+  "schema_version": "1.0"
+}

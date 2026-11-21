@@ -1,0 +1,105 @@
+{
+  "schema_version": "1.0",
+  "id": "fuse_gg",
+  "name": {
+    "en": "Fuse gG (full-range, general purpose)",
+    "es": "Fusible gG (rango completo, uso general)"
+  },
+  "description": {
+    "en": "Full-range fuse for cable and feeder protection; covers overload and short-circuit.",
+    "es": "Fusible de rango completo para proteccion de cables y alimentadores; cubre sobrecarga y cortocircuito."
+  },
+  "kind": "fuse",
+  "voltage_level": "LV",
+  "status": "not_found",
+  "source_ids": [
+    "viox_fuse",
+    "iec60617_db"
+  ],
+  "sources": [
+    {
+      "id": "viox_fuse",
+      "title": "IEC 60269 fuse guide: gG vs aM, NH sizes, selection rules",
+      "url": "https://viox.com/iec-60269-low-voltage-fuse-selection-guide-gg-am-nh/",
+      "publisher": "VIOX Electric",
+      "accessed": "2026-11-20",
+      "kind": "third_party_guide"
+    },
+    {
+      "id": "iec60617_db",
+      "title": "IEC 60617 graphical symbols database (public page)",
+      "url": "https://std.iec.ch/iec60617",
+      "publisher": "IEC",
+      "accessed": "2026-11-20",
+      "kind": "standard_public_summary"
+    }
+  ],
+  "standard_refs": [
+    {
+      "ref": "IEC 60269",
+      "note": {
+        "en": "Low-voltage fuse standard (cited)",
+        "es": "Norma de fusibles BT (citada)"
+      }
+    }
+  ],
+  "symbol_ref": {
+    "id": "not_found",
+    "status": "not_found",
+    "note": {
+      "en": "IEC 60617 public page lists no identifiers for this item; not found, not guessed.",
+      "es": "La pagina publica de IEC 60617 no lista identificadores para este elemento; no encontrado, no supuesto."
+    }
+  },
+  "ratings_typical": [
+    {
+      "parameter": "rated_current",
+      "value": null,
+      "unit": "A",
+      "status": "not_found",
+      "source_ids": [],
+      "note": {
+        "en": "NH size current ratings not found in fetched sources",
+        "es": "Corrientes NH no encontradas en las fuentes consultadas"
+      }
+    },
+    {
+      "parameter": "breaking_capacity",
+      "value": null,
+      "unit": "kA",
+      "status": "not_found",
+      "source_ids": [],
+      "note": {
+        "en": "Not found in fetched sources",
+        "es": "No encontrado en las fuentes consultadas"
+      }
+    }
+  ],
+  "selection_criteria": {
+    "when_to_use": [
+      {
+        "en": "Cable and feeder protection with overload and short-circuit cover (cited)",
+        "es": "Proteccion de cables y alimentadores con cobertura de sobrecarga y cortocircuito (citado)"
+      },
+      {
+        "en": "Distribution boards and main distribution with NH fuses (cited, by application)",
+        "es": "Cuadros de distribucion y distribucion principal con fusibles NH (citado, por aplicacion)"
+      }
+    ],
+    "when_not_to_use": [
+      {
+        "en": "Motor circuits where a separate overload device is not fitted: use aM with overload relay, or MPCB (cited)",
+        "es": "Circuitos de motor sin dispositivo de sobrecarga separado: usar aM con relé de sobrecarga o MPCB (citado)"
+      },
+      {
+        "en": "PV strings: use gPV (typical)",
+        "es": "Strings FV: usar gPV (typical)"
+      }
+    ],
+    "alternatives": [
+      "fuse_am",
+      "mcb",
+      "mccb"
+    ]
+  }
+}

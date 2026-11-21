@@ -1,0 +1,131 @@
+{
+  "schema_version": "1.0",
+  "record_type": "scheme",
+  "id": "hybrid_ac_coupled",
+  "name": {
+    "en": "Hybrid PV and battery, AC-coupled, LV",
+    "es": "Híbrido FV y batería, acoplado AC, BT"
+  },
+  "description": {
+    "en": "PV string inverter on the AC side and a battery-inverter on the same AC bus. Both connect to the local sources switchboard.",
+    "es": "Inversor FV de string en el lado AC y un inversor de batería en el mismo bus AC. Ambos se conectan al cuadro de fuentes locales."
+  },
+  "purpose": {
+    "en": "Storage added on the AC side of an existing PV system.",
+    "es": "Almacenamiento agregado en el lado AC de un sistema FV existente."
+  },
+  "architecture": "hybrid_ac_coupled",
+  "voltage_level": "LV",
+  "status": "typical",
+  "chain": [
+    {
+      "order": 1,
+      "device_id": "pv_inverter_grid_tie",
+      "label": {
+        "en": "PV string inverter",
+        "es": "Inversor FV de string"
+      },
+      "notes": {
+        "en": "Grid-tied, PV side DC protections as in string scheme",
+        "es": "Conectado a red; protecciones DC como en el esquema de string"
+      }
+    },
+    {
+      "order": 2,
+      "device_id": "pv_hybrid_battery_inverter",
+      "label": {
+        "en": "Battery inverter (AC-coupled)",
+        "es": "Inversor de batería (AC acoplado)"
+      },
+      "notes": {
+        "en": "On the AC bus; battery DC side",
+        "es": "En el bus AC; lado DC de batería"
+      }
+    },
+    {
+      "order": 3,
+      "device_id": "switch_disconnector",
+      "label": {
+        "en": "AC isolator",
+        "es": "Seccionador AC"
+      },
+      "notes": {
+        "en": "Per inverter",
+        "es": "Por inversor"
+      }
+    },
+    {
+      "order": 4,
+      "device_id": "mcb",
+      "label": {
+        "en": "AC overcurrent",
+        "es": "Sobrecorriente AC"
+      },
+      "notes": {
+        "en": "Local sources switchboard",
+        "es": "Cuadro de fuentes locales"
+      }
+    },
+    {
+      "order": 5,
+      "device_id": "rcd_type_b",
+      "label": {
+        "en": "RCD (conditional)",
+        "es": "RCD (condicional)"
+      },
+      "notes": {
+        "en": "Type per inverter (see AC file)",
+        "es": "Tipo según inversor (ver archivo AC)"
+      }
+    },
+    {
+      "order": 6,
+      "device_id": "switchboard_tgbt",
+      "label": {
+        "en": "Local sources board",
+        "es": "Cuadro de fuentes locales"
+      },
+      "notes": {
+        "en": "Single connection point to main LV board",
+        "es": "Un punto de conexión al cuadro BT principal"
+      }
+    }
+  ],
+  "device_refs": [
+    "pv_inverter_grid_tie",
+    "pv_hybrid_battery_inverter",
+    "switch_disconnector",
+    "mcb",
+    "rcd_type_b",
+    "switchboard_tgbt",
+    "repo.victron.multiplus-ii-48-5000-70-50-230v"
+  ],
+  "drawing_conventions": [
+    {
+      "en": "Show the local sources switchboard as a single block with its connection to the main LV board.",
+      "es": "Mostrar el cuadro de fuentes locales como un bloque con su conexión al cuadro BT principal."
+    }
+  ],
+  "source_ids": [
+    "ei_local_sources",
+    "repo_micro_hybrid"
+  ],
+  "sources": [
+    {
+      "id": "ei_local_sources",
+      "title": "Architectures for integration of local sources",
+      "url": "https://www.electrical-installation.org/enwiki/Architectures_for_integration_of_local_sources",
+      "publisher": "electrical-installation.org (public technical wiki)",
+      "accessed": "2026-11-20",
+      "kind": "textbook_wiki"
+    },
+    {
+      "id": "repo_micro_hybrid",
+      "title": "Repo: string, hybrid and micro inverters research",
+      "url": "repo://harness/docs/pv/inverters/string_hybrid_micro_inverters.md",
+      "publisher": "EPC-291 repository",
+      "accessed": "2026-11-20",
+      "kind": "internal_repo"
+    }
+  ]
+}

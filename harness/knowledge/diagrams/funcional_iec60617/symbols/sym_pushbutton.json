@@ -1,0 +1,118 @@
+{
+  "schema_version": "1.0",
+  "id": "sym_pushbutton",
+  "name": {
+    "en": "Push-button (general)",
+    "es": "Pulsador (general)"
+  },
+  "family": "control",
+  "description": {
+    "en": "Momentary actuator; contacts change state only while pressed. Contact type (NO/NC) is shown on the contact symbol. Note: Actuator and contact are drawn together on the control diagram.",
+    "es": "Accionador momentáneo; los contactos cambian de estado solo mientras se presiona. El tipo de contacto (NA/NC) se indica en el símbolo del contacto. Nota: El accionador y el contacto se dibujan juntos en el esquema de mando."
+  },
+  "iec60617": {
+    "symbol_id": "S00475",
+    "iec_title_en": "Push-button",
+    "legacy_ref": null,
+    "status": "unverified"
+  },
+  "reference_designation": {
+    "letter": "S",
+    "note": {
+      "en": "Converts manual operation into a signal.",
+      "es": "Convierte la acción manual en señal."
+    },
+    "status": "unverified"
+  },
+  "ansi_nema": {
+    "equivalent": "Momentary pushbutton (typical)",
+    "status": "typical"
+  },
+  "geometry": {
+    "grid": "1 unit = one symbol grid step; origin top-left, y down; scale to the drawing standard in use",
+    "primitives": [
+      {
+        "prim": "line",
+        "p1": [
+          0,
+          0
+        ],
+        "p2": [
+          0,
+          1.5
+        ]
+      },
+      {
+        "prim": "line",
+        "p1": [
+          -1,
+          1.5
+        ],
+        "p2": [
+          1,
+          1.5
+        ]
+      },
+      {
+        "prim": "line",
+        "p1": [
+          0,
+          1.5
+        ],
+        "p2": [
+          0,
+          2.5
+        ]
+      },
+      {
+        "prim": "line",
+        "p1": [
+          -0.8,
+          2.5
+        ],
+        "p2": [
+          0.8,
+          2.5
+        ]
+      }
+    ],
+    "status": "typical"
+  },
+  "connection_points": [
+    {
+      "id": "1",
+      "label": {
+        "en": "Contact input",
+        "es": "Entrada del contacto"
+      }
+    },
+    {
+      "id": "2",
+      "label": {
+        "en": "Contact output",
+        "es": "Salida del contacto"
+      }
+    }
+  ],
+  "status": "unverified",
+  "source_ids": [
+    "iec_S00475",
+    "ima_iec81346_letters"
+  ],
+  "sources": [
+    {
+      "id": "iec_S00475",
+      "title": "IEC 60617 database, symbol S00475: Push-button",
+      "url": "https://library.iec.ch/grasymb/grasymb.nsf/(SysSymbol)/S00475",
+      "kind": "standard_database",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "ima_iec81346_letters",
+      "title": "Industrial Monitor Direct: IEC 81346-2 contactor and relay numbering (secondary article)",
+      "url": "https://industrialmonitordirect.com/blogs/knowledgebase/iec-81346-2-contactor-and-relay-numbering-conventions-for-wiring-diagrams",
+      "kind": "secondary_article",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

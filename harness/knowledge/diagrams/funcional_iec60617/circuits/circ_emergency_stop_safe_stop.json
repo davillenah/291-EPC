@@ -1,0 +1,151 @@
+{
+  "id": "circ_emergency_stop_safe_stop",
+  "category": "control_typical",
+  "name": {
+    "en": "Emergency stop circuit (latching, NC contacts, reset)",
+    "es": "Circuito de parada de emergencia (enclavado, contactos NC, rearme)"
+  },
+  "description": {
+    "en": "Mushroom-head emergency stop in a series NC loop that drops the power contactors and requires a manual reset.",
+    "es": "Parada de emergencia de cabeza tipo hongo en un lazo de contactos NC en serie que desenergiza los contactores de potencia y requiere rearme manual."
+  },
+  "application_range": {
+    "text": {
+      "en": "Any machine with stop-category requirements; use a safety relay for higher categories.",
+      "es": "Cualquier máquina con requisitos de categoría de parada; usar relé de seguridad para categorías superiores."
+    },
+    "status": "typical"
+  },
+  "representation": {
+    "mld": {
+      "text": {
+        "en": "Not applicable; the emergency stop is a control element.",
+        "es": "No aplica; la parada de emergencia es un elemento de mando."
+      },
+      "status": "typical"
+    },
+    "functional": {
+      "text": {
+        "en": "Series NC loop in the first rung of control; reset via a separate NO reset push button.",
+        "es": "Lazo NC en serie en la primera rama de mando; rearme mediante un pulsador de rearme NO separado."
+      },
+      "status": "typical"
+    }
+  },
+  "components": [
+    {
+      "ref": "S0",
+      "letter": "S",
+      "symbol_id": "sym_switch_emergency_stop",
+      "description": {
+        "en": "Emergency stop mushroom, latching, NC",
+        "es": "Parada de emergencia tipo hongo, enclavada, NC"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "S0 second block",
+      "letter": "S",
+      "symbol_id": "sym_contact_break_general",
+      "description": {
+        "en": "Second NC contact on the same E-stop",
+        "es": "Segundo NC en la misma parada de emergencia"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "KA1",
+      "letter": "K",
+      "symbol_id": "sym_relay_coil_general",
+      "description": {
+        "en": "Safety relay (optional, for category 3 or 4 designs)",
+        "es": "Relé de seguridad (opcional, diseños categoría 3 o 4)"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "S4",
+      "letter": "S",
+      "symbol_id": "sym_pushbutton",
+      "description": {
+        "en": "Reset push button (NO)",
+        "es": "Pulsador de rearme (NO)"
+      },
+      "status": "typical"
+    }
+  ],
+  "power_connection": [
+    {
+      "text": {
+        "en": "E-stop acts on the control circuit; for hazardous power removal, contactors or safety relays cut the motor supply.",
+        "es": "La parada actúa en el circuito de mando; para retirar energía peligrosa, los contactores o relés de seguridad cortan la alimentación del motor."
+      },
+      "status": "typical"
+    }
+  ],
+  "control_rungs": [
+    {
+      "text": {
+        "en": "E-stop NC contacts in series with all motor start rungs.",
+        "es": "Contactos NC de la parada de emergencia en serie con todas las ramas de arranque."
+      },
+      "status": "typical",
+      "rung": 1
+    },
+    {
+      "text": {
+        "en": "Reset: NO reset pushbutton energizes the safety relay or contactor only after E-stop is released.",
+        "es": "Rearme: el pulsador NO de rearme energiza el relé de seguridad o contactor solo tras soltar la parada."
+      },
+      "status": "typical",
+      "rung": 2
+    }
+  ],
+  "interlocks": [
+    {
+      "text": {
+        "en": "Emergency stop overrides all start commands.",
+        "es": "La parada de emergencia anula todas las órdenes de arranque."
+      },
+      "status": "typical"
+    }
+  ],
+  "protections": [
+    {
+      "text": {
+        "en": "Loop monitoring (wire break gives stop). Two NC contacts on the same button for redundancy.",
+        "es": "Supervisión del lazo (un hilo cortado da parada). Dos contactos NC en el mismo pulsador como redundancia."
+      },
+      "status": "typical"
+    }
+  ],
+  "sequence": [
+    {
+      "text": {
+        "en": "Press E-stop: NC open, all contactors drop; release E-stop; press reset; restart allowed only after normal start command.",
+        "es": "Pulsar parada: los NC abren, todos los contactores se abren; soltar la parada; pulsar rearme; rearranque solo con orden normal."
+      },
+      "status": "typical"
+    }
+  ],
+  "common_errors": [
+    {
+      "text": {
+        "en": "E-stop used as a normal stop (wear).",
+        "es": "Parada de emergencia usada como paro normal (desgaste)."
+      },
+      "status": "typical"
+    },
+    {
+      "text": {
+        "en": "Missing reset: machine restarts automatically after release.",
+        "es": "Falta de rearme: la máquina rearranca automáticamente al soltar."
+      },
+      "status": "typical"
+    }
+  ],
+  "status": "typical",
+  "source_ids": [],
+  "sources": [],
+  "schema_version": "1.0"
+}

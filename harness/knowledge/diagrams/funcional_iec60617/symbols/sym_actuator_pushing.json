@@ -1,0 +1,109 @@
+{
+  "schema_version": "1.0",
+  "id": "sym_actuator_pushing",
+  "name": {
+    "en": "Actuator, operated by pushing",
+    "es": "Accionador, operado por empuje"
+  },
+  "family": "control",
+  "description": {
+    "en": "Mechanical actuator arrow used with contacts that change by pushing.",
+    "es": "Flecha de accionador mecánico usada con contactos que cambian por empuje."
+  },
+  "iec60617": {
+    "symbol_id": "S00171",
+    "iec_title_en": "Actuator (operated by pushing)",
+    "legacy_ref": null,
+    "status": "unverified"
+  },
+  "reference_designation": {
+    "letter": "S",
+    "note": {
+      "en": "Manual or mechanical actuator.",
+      "es": "Accionador manual o mecánico."
+    },
+    "status": "typical"
+  },
+  "ansi_nema": {
+    "equivalent": null,
+    "status": "not_found"
+  },
+  "geometry": {
+    "grid": "1 unit = one symbol grid step; origin top-left, y down; scale to the drawing standard in use",
+    "primitives": [
+      {
+        "prim": "line",
+        "p1": [
+          0,
+          0
+        ],
+        "p2": [
+          0,
+          1.5
+        ]
+      },
+      {
+        "prim": "line",
+        "p1": [
+          -0.6,
+          1.5
+        ],
+        "p2": [
+          0.6,
+          1.5
+        ]
+      },
+      {
+        "prim": "line",
+        "p1": [
+          0,
+          1.5
+        ],
+        "p2": [
+          0,
+          2.4
+        ]
+      },
+      {
+        "prim": "polyline",
+        "pts": [
+          [
+            -0.5,
+            2.1
+          ],
+          [
+            0,
+            2.9
+          ],
+          [
+            0.5,
+            2.1
+          ]
+        ]
+      }
+    ],
+    "status": "typical"
+  },
+  "connection_points": [
+    {
+      "id": "A",
+      "label": {
+        "en": "Actuator",
+        "es": "Accionador"
+      }
+    }
+  ],
+  "status": "unverified",
+  "source_ids": [
+    "iec_S00171"
+  ],
+  "sources": [
+    {
+      "id": "iec_S00171",
+      "title": "IEC 60617 database, symbol S00171: Actuator (operated by pushing)",
+      "url": "https://library.iec.ch/grasymb/grasymb.nsf/(SysSymbol)/S00171",
+      "kind": "standard_database",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

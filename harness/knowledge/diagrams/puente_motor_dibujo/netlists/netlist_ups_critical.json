@@ -1,0 +1,50 @@
+{
+ "schema_version": "1.0",
+ "id": "netlist_ups_critical",
+ "name": {
+  "en": "UPS with bypass for critical loads",
+  "es": "SAI con bypass para cargas criticas"
+ },
+ "diagram": "SLD",
+ "sheet": {
+  "size": "A3",
+  "style_ref": "epc_arch/epc_style.json"
+ },
+ "source_scheme": "ups_critical",
+ "instances": [
+  {
+   "tag": "-Q1",
+   "device_id": "mccb",
+   "symbol": "lv_mccb_basic",
+   "labels": {},
+   "label_source": "none (ratings come from engines at project time)"
+  },
+  {
+   "tag": "-G1",
+   "device_id": "ups",
+   "symbol": "lv_ups",
+   "labels": {},
+   "label_source": "none (ratings come from engines at project time)"
+  },
+  {
+   "tag": "-Q2",
+   "device_id": "mcb",
+   "symbol": "lv_mcb",
+   "labels": {},
+   "label_source": "none (ratings come from engines at project time)"
+  }
+ ],
+ "connections": [
+  {
+   "from": "-Q1:bottom",
+   "to": "-G1:top",
+   "conductor": "L"
+  },
+  {
+   "from": "-G1:bottom",
+   "to": "-Q2:top",
+   "conductor": "L"
+  }
+ ],
+ "status": "typical"
+}

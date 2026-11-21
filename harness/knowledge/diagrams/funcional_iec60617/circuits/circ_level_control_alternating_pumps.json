@@ -1,0 +1,206 @@
+{
+  "id": "circ_level_control_alternating_pumps",
+  "category": "control_typical",
+  "name": {
+    "en": "Tank level control with two alternating pumps",
+    "es": "Control de nivel de tanque con dos bombas alternadas"
+  },
+  "description": {
+    "en": "Float or electrode switches start the duty pump at high level, stop at low level; the duty pump alternates on each cycle; the standby pump starts on high-high or on fault of the duty pump.",
+    "es": "Flotadores o electrodos arrancan la bomba de servicio en nivel alto y la paran en nivel bajo; la bomba de servicio alterna en cada ciclo; la de reserva arranca en nivel muy alto o por falla de la de servicio."
+  },
+  "application_range": {
+    "text": {
+      "en": "Sumps, water tanks and wastewater wells.",
+      "es": "Pozos de bombeo, tanques de agua y pozos de aguas residuales."
+    },
+    "status": "typical"
+  },
+  "representation": {
+    "mld": {
+      "text": {
+        "en": "Two motor power branches from the same supply, each with its own contactor and overload.",
+        "es": "Dos ramas de potencia de motor desde la misma alimentación, cada una con su contactor y relé térmico."
+      },
+      "status": "typical"
+    },
+    "functional": {
+      "text": {
+        "en": "Level switches feed a relay chain with alternation (a flip-flop or PLC) selecting pump 1 or pump 2.",
+        "es": "Los interruptores de nivel alimentan una cadena de relés con alternancia (biestable o PLC) que selecciona bomba 1 o bomba 2."
+      },
+      "status": "typical"
+    }
+  },
+  "components": [
+    {
+      "ref": "LS1",
+      "letter": "B",
+      "symbol_id": null,
+      "description": {
+        "en": "Low-level float (stop)",
+        "es": "Flotador de nivel bajo (paro)"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "LS2",
+      "letter": "B",
+      "symbol_id": null,
+      "description": {
+        "en": "High-level float (start duty pump)",
+        "es": "Flotador de nivel alto (arranque de bomba de servicio)"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "LS3",
+      "letter": "B",
+      "symbol_id": null,
+      "description": {
+        "en": "High-high level float (start standby)",
+        "es": "Flotador de nivel muy alto (arranque de reserva)"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "KM1/KM2",
+      "letter": "Q",
+      "symbol_id": "sym_contactor_coil_general",
+      "description": {
+        "en": "Pump contactors",
+        "es": "Contactores de bomba"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "K1/K2",
+      "letter": "K",
+      "symbol_id": "sym_relay_coil_general",
+      "description": {
+        "en": "Alternation relays",
+        "es": "Relés de alternancia"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "M1/M2",
+      "letter": "M",
+      "symbol_id": "sym_motor_3ph_squirrel",
+      "description": {
+        "en": "Two pump motors",
+        "es": "Dos motores de bomba"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "F2/F3",
+      "letter": "F",
+      "symbol_id": "sym_thermal_overload_static",
+      "description": {
+        "en": "Overload per pump",
+        "es": "Relé térmico por bomba"
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "S5",
+      "letter": "S",
+      "symbol_id": "sym_selector_switch",
+      "description": {
+        "en": "Hand-Off-Auto selector per pump",
+        "es": "Selector Manual-Apagado-Automático por bomba"
+      },
+      "status": "typical"
+    }
+  ],
+  "power_connection": [
+    {
+      "text": {
+        "en": "Each pump has its own protection and contactor; both are fed from the same distribution board.",
+        "es": "Cada bomba tiene su protección y contactor; ambas se alimentan desde el mismo cuadro de distribución."
+      },
+      "status": "typical"
+    }
+  ],
+  "control_rungs": [
+    {
+      "text": {
+        "en": "Level floats select duty pump and standby pump.",
+        "es": "Los flotadores de nivel seleccionan la bomba de servicio y la de reserva."
+      },
+      "status": "typical",
+      "rung": 1
+    },
+    {
+      "text": {
+        "en": "Alternation relay swaps duty pump on each cycle.",
+        "es": "El relé de alternancia intercambia la bomba de servicio en cada ciclo."
+      },
+      "status": "typical",
+      "rung": 2
+    },
+    {
+      "text": {
+        "en": "Overload and Hand/Off/Auto chain in series with each coil.",
+        "es": "Cadena de sobrecarga y Manual/Apagado/Automático en serie con cada bobina."
+      },
+      "status": "typical",
+      "rung": 3
+    }
+  ],
+  "interlocks": [
+    {
+      "text": {
+        "en": "Each pump's contactor interlocked with the other's start rung to avoid double start on the same signal.",
+        "es": "El contactor de cada bomba enclavado con la rama de arranque de la otra para evitar doble arranque con la misma señal."
+      },
+      "status": "typical"
+    }
+  ],
+  "protections": [
+    {
+      "text": {
+        "en": "Thermal overload per pump, dry-run protection (typical), level high-high alarm.",
+        "es": "Relé térmico por bomba, protección de marcha en seco (típico), alarma de nivel muy alto."
+      },
+      "status": "typical"
+    }
+  ],
+  "sequence": [
+    {
+      "text": {
+        "en": "High level starts duty pump; low level stops it; the next cycle uses the other pump.",
+        "es": "Nivel alto arranca la bomba de servicio; nivel bajo la para; el siguiente ciclo usa la otra bomba."
+      },
+      "status": "typical"
+    },
+    {
+      "text": {
+        "en": "Failure of duty pump transfers the start to standby.",
+        "es": "Falla de la bomba de servicio transfiere el arranque a la reserva."
+      },
+      "status": "typical"
+    }
+  ],
+  "common_errors": [
+    {
+      "text": {
+        "en": "Float switches wired without hysteresis; pumps short-cycle.",
+        "es": "Flotadores sin histéresis: las bombas hacen ciclos cortos."
+      },
+      "status": "typical"
+    },
+    {
+      "text": {
+        "en": "Both pumps selected as duty by selector setting.",
+        "es": "Ambas bombas seleccionadas como servicio por el ajuste del selector."
+      },
+      "status": "typical"
+    }
+  ],
+  "status": "typical",
+  "source_ids": [],
+  "sources": [],
+  "schema_version": "1.0"
+}

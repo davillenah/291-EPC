@@ -1,0 +1,103 @@
+{
+  "schema_version": "1.0",
+  "id": "sym_fuse_general",
+  "name": {
+    "en": "Fuse, general symbol",
+    "es": "Fusible, símbolo general"
+  },
+  "family": "protection",
+  "description": {
+    "en": "Overcurrent element that opens by melting the link. Drawn as a rectangle in series with the conductor.",
+    "es": "Elemento de sobrecorriente que abre por fusión del elemento. Se dibuja como rectángulo en serie con el conductor."
+  },
+  "iec60617": {
+    "symbol_id": "S00362",
+    "iec_title_en": "Fuse, general symbol",
+    "legacy_ref": null,
+    "status": "unverified"
+  },
+  "reference_designation": {
+    "letter": "F",
+    "note": {
+      "en": "Direct self-acting protection (fuses).",
+      "es": "Protección directa de acción propia (fusibles)."
+    },
+    "status": "unverified"
+  },
+  "ansi_nema": {
+    "equivalent": null,
+    "status": "not_found"
+  },
+  "geometry": {
+    "grid": "1 unit = one symbol grid step; origin top-left, y down; scale to the drawing standard in use",
+    "primitives": [
+      {
+        "prim": "line",
+        "p1": [
+          0,
+          0
+        ],
+        "p2": [
+          0,
+          1.5
+        ]
+      },
+      {
+        "prim": "rect",
+        "x": -0.35,
+        "y": 1.5,
+        "w": 0.7,
+        "h": 3
+      },
+      {
+        "prim": "line",
+        "p1": [
+          0,
+          4.5
+        ],
+        "p2": [
+          0,
+          6
+        ]
+      }
+    ],
+    "status": "typical"
+  },
+  "connection_points": [
+    {
+      "id": "1",
+      "label": {
+        "en": "Supply side",
+        "es": "Lado de alimentación"
+      }
+    },
+    {
+      "id": "2",
+      "label": {
+        "en": "Load side",
+        "es": "Lado de carga"
+      }
+    }
+  ],
+  "status": "unverified",
+  "source_ids": [
+    "iec_S00362",
+    "ima_iec81346_letters"
+  ],
+  "sources": [
+    {
+      "id": "iec_S00362",
+      "title": "IEC 60617 database, symbol S00362: Fuse, general symbol",
+      "url": "https://library.iec.ch/grasymb/grasymb.nsf/(SysSymbol)/S00362",
+      "kind": "standard_database",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "ima_iec81346_letters",
+      "title": "Industrial Monitor Direct: IEC 81346-2 contactor and relay numbering (secondary article)",
+      "url": "https://industrialmonitordirect.com/blogs/knowledgebase/iec-81346-2-contactor-and-relay-numbering-conventions-for-wiring-diagrams",
+      "kind": "secondary_article",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

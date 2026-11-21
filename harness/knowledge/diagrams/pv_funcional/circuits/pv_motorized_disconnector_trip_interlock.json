@@ -1,0 +1,203 @@
+{
+  "schema_version": "1.0",
+  "id": "pv_motorized_disconnector_trip_interlock",
+  "family": "control_typical",
+  "name": {
+    "en": "Motorized disconnector with shunt trip, contactor and interlocks",
+    "es": "Seccionador motorizado con bobina de disparo, contactor y enclavamientos"
+  },
+  "description": {
+    "en": "Motor-operated disconnector on the board with a shunt coil, a disconnection contactor, a lockout and a key interlock with the grid breaker.",
+    "es": "Seccionador de operación motorizada en el tablero, con bobina de disparo, contactor de desconexión, bloqueo y enclavamiento con llave con el interruptor de red."
+  },
+  "application_range": {
+    "text": {
+      "en": "Motorized disconnector or breaker on a PV or grid interface board. No specific source fetched for this circuit.",
+      "es": "Seccionador o interruptor motorizado en un tablero de interfaz FV o de red. No se consultó fuente específica para este circuito."
+    },
+    "status": "not_found",
+    "source_ids": []
+  },
+  "diagram_types": [
+    "SLD",
+    "functional"
+  ],
+  "symbol_refs": [
+    "sym_contactor_coil_general",
+    "sym_disconnector",
+    "sym_fuse_general",
+    "sym_pushbutton",
+    "sym_relay_coil_general"
+  ],
+  "device_refs": [
+    "contactor",
+    "relay_ansi_86",
+    "switch_disconnector"
+  ],
+  "components": [
+    {
+      "ref": "Q1",
+      "letter": "Q",
+      "symbol_id": "sym_disconnector",
+      "device_id": "switch_disconnector",
+      "description": {
+        "en": "Motorized disconnector or breaker with spring-charge motor.",
+        "es": "Seccionador o interruptor motorizado con motor de carga de resorte."
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "Q1-YC",
+      "letter": "Q",
+      "symbol_id": "sym_relay_coil_general",
+      "device_id": null,
+      "description": {
+        "en": "Shunt trip coil on the breaker (suffix YC; not in the repository table).",
+        "es": "Bobina de disparo en el interruptor (sufijo YC; no figura en la tabla del repositorio)."
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "K1",
+      "letter": "K",
+      "symbol_id": "sym_contactor_coil_general",
+      "device_id": "contactor",
+      "description": {
+        "en": "Disconnection contactor, energised by the protection output.",
+        "es": "Contactor de desconexión, energizado por la salida de protección."
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "K2",
+      "letter": "K",
+      "symbol_id": "sym_relay_coil_general",
+      "device_id": "relay_ansi_86",
+      "description": {
+        "en": "Lockout relay: holds the trip until manual reset.",
+        "es": "Relé de bloqueo: mantiene el disparo hasta el rearme manual."
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "S1",
+      "letter": "S",
+      "symbol_id": "sym_pushbutton",
+      "device_id": null,
+      "description": {
+        "en": "Manual trip push button.",
+        "es": "Pulsador de disparo manual."
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "S2",
+      "letter": "S",
+      "symbol_id": null,
+      "device_id": null,
+      "description": {
+        "en": "Key interlock with the grid breaker. Symbol not in the repository set.",
+        "es": "Enclavamiento con llave con el interruptor de red. El símbolo no está en el repositorio."
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "F1",
+      "letter": "F",
+      "symbol_id": "sym_fuse_general",
+      "device_id": null,
+      "description": {
+        "en": "Fuse for the control supply of the shunt coil and contactor.",
+        "es": "Fusible de la alimentación de control de la bobina de disparo y del contactor."
+      },
+      "status": "typical"
+    }
+  ],
+  "power_connection": [
+    {
+      "text": {
+        "en": "Shunt coil is energised only to trip; the motor operator charges the spring after each close.",
+        "es": "La bobina de disparo se energiza solo para disparar; el motor carga el resorte tras cada cierre."
+      },
+      "status": "typical",
+      "source_ids": []
+    }
+  ],
+  "control_connection": [
+    {
+      "text": {
+        "en": "Auxiliary contact of Q1 (normally closed) in series with K1 so that K1 cannot re-close a tripped breaker (typical).",
+        "es": "Contacto auxiliar de Q1 (normalmente cerrado) en serie con K1, para que K1 no cierre un interruptor disparado (típico)."
+      },
+      "status": "typical",
+      "source_ids": []
+    },
+    {
+      "text": {
+        "en": "Key interlock with the grid breaker: only one of the two can be closed (typical).",
+        "es": "Enclavamiento con llave con el interruptor de red: solo uno de los dos puede estar cerrado (típico)."
+      },
+      "status": "typical",
+      "source_ids": []
+    }
+  ],
+  "protections": [],
+  "sequence": [
+    {
+      "text": {
+        "en": "Protection output energises K1 or the shunt coil; Q1 opens; the auxiliary contact opens K1.",
+        "es": "La salida de protección energiza K1 o la bobina; Q1 abre; el auxiliar abre K1."
+      },
+      "status": "typical",
+      "source_ids": []
+    },
+    {
+      "text": {
+        "en": "Close only after K2 is reset and protection is healthy.",
+        "es": "Cerrar solo tras el rearme de K2 y con la protección sana."
+      },
+      "status": "typical",
+      "source_ids": []
+    }
+  ],
+  "common_errors": [
+    {
+      "text": {
+        "en": "Shunt coil energised continuously.",
+        "es": "Bobina de disparo energizada de forma continua."
+      },
+      "status": "typical",
+      "source_ids": []
+    },
+    {
+      "text": {
+        "en": "Auxiliary contacts wired in the wrong state.",
+        "es": "Contactos auxiliares cableados en estado incorrecto."
+      },
+      "status": "typical",
+      "source_ids": []
+    },
+    {
+      "text": {
+        "en": "K2 lockout not reset after a trip.",
+        "es": "K2 sin rearmar tras un disparo."
+      },
+      "status": "typical",
+      "source_ids": []
+    }
+  ],
+  "source_conflicts": [],
+  "status": "typical",
+  "source_ids": [
+    "repo_devices"
+  ],
+  "sources": [
+    {
+      "id": "repo_devices",
+      "title": "EPC-291 repository: sld_mld/devices and funcional_iec60617/symbols_index.json (ids reused)",
+      "url": "repo://sld_mld/devices",
+      "kind": "internal_repo",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

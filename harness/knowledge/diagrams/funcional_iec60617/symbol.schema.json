@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "epc291/esquemas-sld-mld-funcional/symbol.schema.json",
+  "title": "IEC 60617 electrical symbol record (drawing geometry + designation + sources)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "id", "name", "family", "description", "iec60617", "reference_designation", "ansi_nema", "geometry", "connection_points", "status", "source_ids", "sources"],
+  "$defs": {
+    "bi": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["en", "es"],
+      "properties": {
+        "en": {"type": "string", "minLength": 1},
+        "es": {"type": "string", "minLength": 1}
+      }
+    },
+    "status": {
+      "enum": ["unverified", "typical", "not_found"],
+      "description": "unverified = taken from a cited public source, not checked against the printed standard; typical = generic practice without a source; not_found = not located. 'verified' is never used."
+    }
+  },
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "id": {"type": "string", "pattern": "^[a-z0-9_.-]+$"},
+    "name": {"$ref": "#/$defs/bi"},
+    "family": {"enum": ["power", "control", "protection", "mv", "general"]},
+    "description": {"$ref": "#/$defs/bi"},
+    "iec60617": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["symbol_id", "iec_title_en", "legacy_ref", "status"],
+      "properties": {
+        "symbol_id": {"anyOf": [{"type": "string", "pattern": "^S[0-9]{5}$"}, {"type": "null"}], "description": "IEC 60617 database identifier (S + 5 digits) or null when not found"},
+        "iec_title_en": {"type": ["string", "null"]},
+        "legacy_ref": {"type": ["string", "null"], "description": "older numbering such as 06-06-03 when printed on the source page"},
+        "status": {"$ref": "#/$defs/status"}
+      }
+    },
+    "reference_designation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["letter", "note", "status"],
+      "properties": {
+        "letter": {"type": "string", "description": "IEC 81346-2 class letter, or 'not_found'"},
+        "note": {"$ref": "#/$defs/bi"},
+        "status": {"$ref": "#/$defs/status"}
+      }
+    },
+    "ansi_nema": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["equivalent", "status"],
+      "properties": {
+        "equivalent": {"type": ["string", "null"]},
+        "status": {"$ref": "#/$defs/status"}
+      }
+    },
+    "geometry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["grid", "primitives", "status"],
+      "properties": {
+        "grid": {"type": "string", "description": "coordinate unit; origin top-left, y down; 1 unit = one symbol grid step (scale to the drawing standard)"},
+        "primitives": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["prim"],
+            "properties": {
+              "prim": {"enum": ["line", "circle", "rect", "polyline", "text", "arc"]}
+            }
+          }
+        },
+        "status": {"$ref": "#/$defs/status"}
+      }
+    },
+    "connection_points": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "label"],
+        "properties": {
+          "id": {"type": "string"},
+          "label": {"$ref": "#/$defs/bi"}
+        }
+      }
+    },
+    "status": {"$ref": "#/$defs/status"},
+    "source_ids": {"type": "array", "items": {"type": "string"}},
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "title", "url", "kind", "accessed"],
+        "properties": {
+          "id": {"type": "string"},
+          "title": {"type": "string"},
+          "url": {"type": "string", "pattern": "^https://"},
+          "kind": {"enum": ["standard_database", "manufacturer_doc", "secondary_article", "academic_or_teaching"]},
+          "accessed": {"type": "string", "format": "date"}
+        }
+      }
+    }
+  }
+}

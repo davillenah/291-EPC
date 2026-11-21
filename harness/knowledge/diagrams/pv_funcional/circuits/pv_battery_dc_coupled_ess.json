@@ -1,0 +1,259 @@
+{
+  "schema_version": "1.0",
+  "id": "pv_battery_dc_coupled_ess",
+  "family": "export_storage",
+  "name": {
+    "en": "DC-coupled battery with BMS, fuse, disconnector and precharge",
+    "es": "Batería acoplada en DC con BMS, fusible, seccionador y precarga"
+  },
+  "description": {
+    "en": "Battery on a DC bus with fuse, DC disconnector, main contactor and precharge, controlled by the BMS over CAN.",
+    "es": "Batería en bus DC con fusible, seccionador DC, contactor principal y precarga, controlada por el BMS por CAN."
+  },
+  "application_range": {
+    "text": {
+      "en": "Lithium battery with a hybrid or DC-coupled inverter-charger. Brand-specific items from the Victron guide only.",
+      "es": "Batería de litio con inversor-cargador híbrido o acoplado en DC. Elementos de marca solo según la guía Victron."
+    },
+    "status": "unverified",
+    "source_ids": [
+      "victron_ess_guide"
+    ]
+  },
+  "diagram_types": [
+    "SLD",
+    "MLD",
+    "functional"
+  ],
+  "symbol_refs": [
+    "sym_contactor_coil_general",
+    "sym_disconnector",
+    "sym_fuse_general",
+    "sym_plc_io",
+    "sym_switch_emergency_stop"
+  ],
+  "device_refs": [
+    "contactor",
+    "fuse_gg",
+    "switch_disconnector"
+  ],
+  "components": [
+    {
+      "ref": "G1",
+      "letter": "G",
+      "symbol_id": null,
+      "device_id": null,
+      "description": {
+        "en": "Battery pack (storage). The repository table has no storage letter; G used for generation or storage (typical).",
+        "es": "Pack de batería (almacenamiento). La tabla del repositorio no tiene letra de almacenamiento; G como generación o almacenamiento (típico)."
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "F1",
+      "letter": "F",
+      "symbol_id": "sym_fuse_general",
+      "device_id": "fuse_gg",
+      "description": {
+        "en": "Battery fuse at the positive pole, close to the battery (typical).",
+        "es": "Fusible de batería en el polo positivo, cerca de la batería (típico)."
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "Q1",
+      "letter": "Q",
+      "symbol_id": "sym_disconnector",
+      "device_id": "switch_disconnector",
+      "description": {
+        "en": "Battery DC disconnector, lockable.",
+        "es": "Seccionador DC de batería, bloqueable."
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "K1",
+      "letter": "K",
+      "symbol_id": "sym_contactor_coil_general",
+      "device_id": "contactor",
+      "description": {
+        "en": "Main battery contactor.",
+        "es": "Contactor principal de batería."
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "K2",
+      "letter": "K",
+      "symbol_id": "sym_contactor_coil_general",
+      "device_id": null,
+      "description": {
+        "en": "Precharge contactor in series with a precharge resistor (resistor letter R not in the repository table).",
+        "es": "Contactor de precarga en serie con una resistencia de precarga (la letra R no figura en la tabla del repositorio)."
+      },
+      "status": "typical"
+    },
+    {
+      "ref": "A1",
+      "letter": "A",
+      "symbol_id": "sym_plc_io",
+      "device_id": null,
+      "description": {
+        "en": "BMS: monitors cell voltage, temperature and current; enables the contactors.",
+        "es": "BMS: monitorea tensión de celdas, temperatura y corriente; habilita los contactores."
+      },
+      "status": "unverified"
+    },
+    {
+      "ref": "S1",
+      "letter": "S",
+      "symbol_id": "sym_switch_emergency_stop",
+      "device_id": null,
+      "description": {
+        "en": "Emergency stop removing the contactor control supply.",
+        "es": "Parada de emergencia que retira la alimentación de control de los contactores."
+      },
+      "status": "typical"
+    }
+  ],
+  "power_connection": [
+    {
+      "text": {
+        "en": "Battery to inverter DC input through fuse, disconnector and main contactor; cable kept short.",
+        "es": "Batería a entrada DC del inversor por fusible, seccionador y contactor principal; cable corto."
+      },
+      "status": "typical",
+      "source_ids": []
+    },
+    {
+      "text": {
+        "en": "BMS communicates with the inverter-charger over CAN (special RJ45 cable).",
+        "es": "El BMS se comunica con el inversor-cargador por CAN (cable RJ45 especial)."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "victron_ess_guide"
+      ]
+    },
+    {
+      "text": {
+        "en": "Precharge value and time: not located in the sources.",
+        "es": "Valor y tiempo de precarga: no ubicados en las fuentes."
+      },
+      "status": "not_found",
+      "source_ids": []
+    }
+  ],
+  "control_connection": [
+    {
+      "text": {
+        "en": "BMS enable signal to the main contactor (typical).",
+        "es": "Señal de habilitación del BMS al contactor principal (típico)."
+      },
+      "status": "typical",
+      "source_ids": []
+    },
+    {
+      "text": {
+        "en": "Emergency stop breaks the control supply to the contactors.",
+        "es": "La parada de emergencia corta la alimentación de control de los contactores."
+      },
+      "status": "typical",
+      "source_ids": []
+    }
+  ],
+  "protections": [
+    {
+      "text": {
+        "en": "Battery fuse rated for the DC short-circuit current of the battery (typical).",
+        "es": "Fusible de batería con calibre según la corriente de cortocircuito DC de la batería (típico)."
+      },
+      "status": "typical",
+      "source_ids": []
+    },
+    {
+      "text": {
+        "en": "Over/under voltage and temperature cut-offs in the BMS (typical).",
+        "es": "Cortes por sobre/baja tensión y temperatura en el BMS (típico)."
+      },
+      "status": "typical",
+      "source_ids": []
+    }
+  ],
+  "sequence": [
+    {
+      "text": {
+        "en": "BMS powers up; inverter checks battery voltage.",
+        "es": "Energiza el BMS; el inversor verifica la tensión de batería."
+      },
+      "status": "typical",
+      "source_ids": []
+    },
+    {
+      "text": {
+        "en": "Close the precharge contactor through the resistor until the DC bus is near battery voltage.",
+        "es": "Cerrar el contactor de precarga por la resistencia hasta que el bus DC esté cerca de la tensión de batería."
+      },
+      "status": "typical",
+      "source_ids": []
+    },
+    {
+      "text": {
+        "en": "Close the main contactor, then open the precharge contactor.",
+        "es": "Cerrar el contactor principal y luego abrir el de precarga."
+      },
+      "status": "typical",
+      "source_ids": []
+    }
+  ],
+  "common_errors": [
+    {
+      "text": {
+        "en": "No precharge: inrush at main contactor closing.",
+        "es": "Sin precarga: irrupción al cerrar el contactor principal."
+      },
+      "status": "typical",
+      "source_ids": []
+    },
+    {
+      "text": {
+        "en": "BMS cable plugged in the wrong port.",
+        "es": "Cable BMS en el puerto equivocado."
+      },
+      "status": "unverified",
+      "source_ids": [
+        "victron_ess_guide"
+      ]
+    },
+    {
+      "text": {
+        "en": "Battery polarity reversed on DC terminals.",
+        "es": "Polaridad de batería invertida en bornes DC."
+      },
+      "status": "typical",
+      "source_ids": []
+    }
+  ],
+  "source_conflicts": [],
+  "status": "unverified",
+  "source_ids": [
+    "repo_devices",
+    "victron_ess_guide"
+  ],
+  "sources": [
+    {
+      "id": "repo_devices",
+      "title": "EPC-291 repository: sld_mld/devices and funcional_iec60617/symbols_index.json (ids reused)",
+      "url": "repo://sld_mld/devices",
+      "kind": "internal_repo",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "victron_ess_guide",
+      "title": "Victron ESS quick installation guide (online manual)",
+      "url": "https://victronenergy.com/live/_export/xhtml/ess:quick-installation-guide",
+      "kind": "manufacturer_doc",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

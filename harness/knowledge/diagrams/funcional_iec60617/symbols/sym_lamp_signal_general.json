@@ -1,0 +1,86 @@
+{
+  "schema_version": "1.0",
+  "id": "sym_lamp_signal_general",
+  "name": {
+    "en": "Signal lamp, general symbol",
+    "es": "Lámpara de señalización, símbolo general"
+  },
+  "family": "control",
+  "description": {
+    "en": "Indicator lamp drawn as a circle with an X or cross-diagonals. IEC ID not located in this research (S00488 found is 'Spot light'). Note: Geometry typical.",
+    "es": "Lámpara indicadora dibujada como círculo con X o diagonales. ID IEC no localizado en esta investigación (S00488 encontrado es 'Spot light'). Nota: Geometría típica."
+  },
+  "iec60617": {
+    "symbol_id": null,
+    "iec_title_en": null,
+    "legacy_ref": null,
+    "status": "not_found"
+  },
+  "reference_designation": {
+    "letter": "H",
+    "note": {
+      "en": "Signalling class (IEC 81346 H; not covered by the article, typical).",
+      "es": "Clase de señalización (IEC 81346 H; no cubierto por el artículo, típico)."
+    },
+    "status": "typical"
+  },
+  "ansi_nema": {
+    "equivalent": "Pilot light (typical)",
+    "status": "typical"
+  },
+  "geometry": {
+    "grid": "1 unit = one symbol grid step; origin top-left, y down; scale to the drawing standard in use",
+    "primitives": [
+      {
+        "prim": "circle",
+        "c": [
+          0,
+          0
+        ],
+        "r": 1.2
+      },
+      {
+        "prim": "line",
+        "p1": [
+          -0.85,
+          -0.85
+        ],
+        "p2": [
+          0.85,
+          0.85
+        ]
+      },
+      {
+        "prim": "line",
+        "p1": [
+          -0.85,
+          0.85
+        ],
+        "p2": [
+          0.85,
+          -0.85
+        ]
+      }
+    ],
+    "status": "typical"
+  },
+  "connection_points": [
+    {
+      "id": "X1",
+      "label": {
+        "en": "Lamp terminal 1",
+        "es": "Borne de lámpara 1"
+      }
+    },
+    {
+      "id": "X2",
+      "label": {
+        "en": "Lamp terminal 2",
+        "es": "Borne de lámpara 2"
+      }
+    }
+  ],
+  "status": "not_found",
+  "source_ids": [],
+  "sources": []
+}

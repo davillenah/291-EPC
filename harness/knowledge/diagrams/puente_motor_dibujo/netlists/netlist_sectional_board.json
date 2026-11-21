@@ -1,0 +1,62 @@
+{
+ "schema_version": "1.0",
+ "id": "netlist_sectional_board",
+ "name": {
+  "en": "Sectional LV board",
+  "es": "Cuadro seccional BT"
+ },
+ "diagram": "SLD",
+ "sheet": {
+  "size": "A3",
+  "style_ref": "epc_arch/epc_style.json"
+ },
+ "source_scheme": "sectional_board",
+ "instances": [
+  {
+   "tag": "-Q1",
+   "device_id": "mcb",
+   "symbol": "lv_mcb",
+   "labels": {},
+   "label_source": "none (ratings come from engines at project time)"
+  },
+  {
+   "tag": "-Q2",
+   "device_id": "rccb",
+   "symbol": "lv_rccb",
+   "labels": {},
+   "label_source": "none (ratings come from engines at project time)"
+  },
+  {
+   "tag": "-Q3",
+   "device_id": "mcb",
+   "symbol": "lv_mcb",
+   "labels": {},
+   "label_source": "none (ratings come from engines at project time)"
+  },
+  {
+   "tag": "-Q4",
+   "device_id": "rcbo",
+   "symbol": "lv_rcbo",
+   "labels": {},
+   "label_source": "none (ratings come from engines at project time)"
+  }
+ ],
+ "connections": [
+  {
+   "from": "-Q1:bottom",
+   "to": "-Q2:top",
+   "conductor": "L"
+  },
+  {
+   "from": "-Q2:bottom",
+   "to": "-Q3:top",
+   "conductor": "L"
+  },
+  {
+   "from": "-Q3:bottom",
+   "to": "-Q4:top",
+   "conductor": "L"
+  }
+ ],
+ "status": "typical"
+}

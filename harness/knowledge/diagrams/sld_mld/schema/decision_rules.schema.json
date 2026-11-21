@@ -1,0 +1,218 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "sld_mld.decision_rules.schema.json",
+  "title": "SLD/MLD device selection rules (machine-readable if/then table)",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "id",
+    "description",
+    "variables",
+    "rules"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9_.-]+$"
+    },
+    "description": {
+      "$ref": "#/$defs/i18n"
+    },
+    "variables": {
+      "type": "object",
+      "description": "Declared input variables: name -> {type, allowed values or unit}",
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "type"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "enum": [
+              "enum",
+              "boolean",
+              "number"
+            ]
+          },
+          "values": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "unit": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "rules": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "domain",
+          "when",
+          "then",
+          "status",
+          "source_ids"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9_.-]+$"
+          },
+          "domain": {
+            "enum": [
+              "lv_protection",
+              "rcd",
+              "lv_switching_motor",
+              "surge",
+              "mv_switching",
+              "mv_protection",
+              "transfer",
+              "generation"
+            ]
+          },
+          "when": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": [
+                "variable",
+                "op",
+                "value"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "variable": {
+                  "type": "string"
+                },
+                "op": {
+                  "enum": [
+                    "eq",
+                    "neq",
+                    "in",
+                    "gt",
+                    "gte",
+                    "lt",
+                    "lte"
+                  ]
+                },
+                "value": {}
+              }
+            }
+          },
+          "then": {
+            "type": "object",
+            "required": [
+              "select",
+              "rationale"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "select": {
+                "type": "string",
+                "pattern": "^[a-z0-9_.-]+$"
+              },
+              "rationale": {
+                "$ref": "#/$defs/i18n"
+              }
+            }
+          },
+          "status": {
+            "enum": [
+              "unverified",
+              "typical",
+              "not_found",
+              "pending review"
+            ]
+          },
+          "source_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/source"
+      }
+    }
+  },
+  "$defs": {
+    "i18n": {
+      "type": "object",
+      "required": [
+        "en",
+        "es"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "en": {
+          "type": "string",
+          "minLength": 1
+        },
+        "es": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "source": {
+      "type": "object",
+      "required": [
+        "id",
+        "title",
+        "url",
+        "publisher",
+        "accessed",
+        "kind"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9_.-]+$"
+        },
+        "title": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string",
+          "pattern": "^(https://|repo://)"
+        },
+        "publisher": {
+          "type": "string"
+        },
+        "accessed": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+        },
+        "kind": {
+          "enum": [
+            "manufacturer",
+            "third_party_guide",
+            "standard_public_summary",
+            "textbook_wiki",
+            "internal_repo"
+          ]
+        }
+      }
+    }
+  }
+}

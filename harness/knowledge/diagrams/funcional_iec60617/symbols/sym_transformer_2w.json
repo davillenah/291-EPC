@@ -1,0 +1,118 @@
+{
+  "schema_version": "1.0",
+  "id": "sym_transformer_2w",
+  "name": {
+    "en": "Transformer with two windings, general symbol",
+    "es": "Transformador de dos devanados, símbolo general"
+  },
+  "family": "power",
+  "description": {
+    "en": "Two coupled circles (windings) with primary and secondary terminals. Note: Terminal names are typical marking, not sourced.",
+    "es": "Dos círculos acoplados (devanados) con bornes primario y secundario. Nota: Los nombres de bornes son marcado típico, sin fuente."
+  },
+  "iec60617": {
+    "symbol_id": "S00841",
+    "iec_title_en": "Transformer with two windings, general symbol",
+    "legacy_ref": null,
+    "status": "unverified"
+  },
+  "reference_designation": {
+    "letter": "T",
+    "note": {
+      "en": "Transformer class (typical; IEC 81346 class T).",
+      "es": "Clase de transformador (típico; clase T de IEC 81346)."
+    },
+    "status": "typical"
+  },
+  "ansi_nema": {
+    "equivalent": null,
+    "status": "not_found"
+  },
+  "geometry": {
+    "grid": "1 unit = one symbol grid step; origin top-left, y down; scale to the drawing standard in use",
+    "primitives": [
+      {
+        "prim": "circle",
+        "c": [
+          0,
+          1.4
+        ],
+        "r": 1.2
+      },
+      {
+        "prim": "circle",
+        "c": [
+          0,
+          3.6
+        ],
+        "r": 1.2
+      },
+      {
+        "prim": "line",
+        "p1": [
+          0,
+          0
+        ],
+        "p2": [
+          0,
+          0.2
+        ]
+      },
+      {
+        "prim": "line",
+        "p1": [
+          0,
+          4.8
+        ],
+        "p2": [
+          0,
+          6
+        ]
+      }
+    ],
+    "status": "typical"
+  },
+  "connection_points": [
+    {
+      "id": "1U",
+      "label": {
+        "en": "Primary terminal 1",
+        "es": "Borne primario 1"
+      }
+    },
+    {
+      "id": "2U",
+      "label": {
+        "en": "Primary terminal 2",
+        "es": "Borne primario 2"
+      }
+    },
+    {
+      "id": "1V",
+      "label": {
+        "en": "Secondary terminal 1",
+        "es": "Borne secundario 1"
+      }
+    },
+    {
+      "id": "2V",
+      "label": {
+        "en": "Secondary terminal 2",
+        "es": "Borne secundario 2"
+      }
+    }
+  ],
+  "status": "unverified",
+  "source_ids": [
+    "iec_S00841"
+  ],
+  "sources": [
+    {
+      "id": "iec_S00841",
+      "title": "IEC 60617 database, symbol S00841: Transformer with two windings, general symbol",
+      "url": "https://library.iec.ch/grasymb/grasymb.nsf/(SysSymbol)/S00841",
+      "kind": "standard_database",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

@@ -1,0 +1,178 @@
+{
+  "schema_version": "1.0",
+  "id": "rccb",
+  "name": {
+    "en": "Residual current circuit breaker (RCCB, RCD)",
+    "es": "Interruptor diferencial (RCCB, RCD)"
+  },
+  "description": {
+    "en": "Residual current device without overcurrent protection. Senses earth leakage and opens the circuit. Sensitivity IΔn and type (AC, A, F, B) are the main selection parameters.",
+    "es": "Dispositivo diferencial sin proteccion de sobrecorriente. Detecta fuga a tierra y abre el circuito. La sensibilidad IΔn y el tipo (AC, A, F, B) son los parametros principales."
+  },
+  "kind": "rcd",
+  "voltage_level": "LV",
+  "status": "unverified",
+  "source_ids": [
+    "schneider_rcd",
+    "ei_rcd",
+    "abb_rccb_faq",
+    "iec60617_db"
+  ],
+  "sources": [
+    {
+      "id": "schneider_rcd",
+      "title": "CA908066E residual current devices (RCD guide)",
+      "url": "https://download.se.com/doc/CA908066E/CA908066E%20(web).pdf",
+      "publisher": "Schneider Electric",
+      "accessed": "2026-11-20",
+      "kind": "manufacturer"
+    },
+    {
+      "id": "ei_rcd",
+      "title": "Protection of circuits by RCD (wiki)",
+      "url": "https://www.electrical-installation.org/enwiki/Protection_of_circuits_by_RCD",
+      "publisher": "electrical-installation.org",
+      "accessed": "2026-11-20",
+      "kind": "textbook_wiki"
+    },
+    {
+      "id": "abb_rccb_faq",
+      "title": "FAQ RCCBs",
+      "url": "https://library.e.abb.com/public/8d7aeb25c10b4a839c43878fa9718de4/FAQ_RCCBs.pdf",
+      "publisher": "ABB",
+      "accessed": "2026-11-20",
+      "kind": "manufacturer"
+    },
+    {
+      "id": "iec60617_db",
+      "title": "IEC 60617 graphical symbols database (public page)",
+      "url": "https://std.iec.ch/iec60617",
+      "publisher": "IEC",
+      "accessed": "2026-11-20",
+      "kind": "standard_public_summary"
+    }
+  ],
+  "standard_refs": [
+    {
+      "ref": "IEC 61008",
+      "note": {
+        "en": "RCCB standard (cited)",
+        "es": "Norma de RCCB (citada)"
+      }
+    },
+    {
+      "ref": "IEC 60364-4-41",
+      "note": {
+        "en": "Protection against electric shock, 30 mA additional protection (cited)",
+        "es": "Proteccion contra choques, proteccion adicional 30 mA (citada)"
+      }
+    }
+  ],
+  "symbol_ref": {
+    "id": "not_found",
+    "status": "not_found",
+    "note": {
+      "en": "IEC 60617 public page lists no identifiers for this item; not found, not guessed.",
+      "es": "La pagina publica de IEC 60617 no lista identificadores para este elemento; no encontrado, no supuesto."
+    }
+  },
+  "ratings_typical": [
+    {
+      "parameter": "rated_residual_current_IDn",
+      "value": "10 / 30 / 100 / 300 / 500 / 1000",
+      "unit": "mA",
+      "status": "unverified",
+      "source_ids": [
+        "schneider_rcd",
+        "ei_rcd"
+      ],
+      "note": {
+        "en": "Sensitivity values listed in the cited sources; 10 mA is niche with nuisance-trip risk; 3000 mA is an upper bound for indirect contact",
+        "es": "Valores de sensibilidad citados; 10 mA es de uso nicho con riesgo de disparos molestos; 3000 mA es limite superior para contacto indirecto"
+      }
+    },
+    {
+      "parameter": "additional_protection_direct_contact",
+      "value": 30,
+      "unit": "mA",
+      "status": "pending review",
+      "source_ids": [
+        "ei_rcd"
+      ],
+      "note": {
+        "en": "30 mA for direct-contact protection, as stated in cited wiki citing the standard",
+        "es": "30 mA para proteccion contra contacto directo, segun wiki citando la norma"
+      }
+    },
+    {
+      "parameter": "fire_protection_sensitivity",
+      "value": 300,
+      "unit": "mA",
+      "status": "pending review",
+      "source_ids": [
+        "ei_rcd"
+      ],
+      "note": {
+        "en": "Sensitivity of 300 mA or less for high-risk premises, IEC 60364-4-42 as cited",
+        "es": "Sensibilidad de 300 mA o menos en locales de alto riesgo, IEC 60364-4-42 segun cita"
+      }
+    },
+    {
+      "parameter": "rated_current",
+      "value": null,
+      "unit": "A",
+      "status": "not_found",
+      "source_ids": [],
+      "note": {
+        "en": "Not found in fetched sources",
+        "es": "No encontrado en las fuentes consultadas"
+      }
+    }
+  ],
+  "selection_criteria": {
+    "when_to_use": [
+      {
+        "en": "Socket outlets up to 20 A and lighting circuits in dwellings and offices: 30 mA (pending review)",
+        "es": "Tomas hasta 20 A y circuitos de alumbrado en viviendas y oficinas: 30 mA (pending review)"
+      },
+      {
+        "en": "Portable outdoor appliances up to 32 A: 30 mA (pending review)",
+        "es": "Aparatos portatiles de exterior hasta 32 A: 30 mA (pending review)"
+      },
+      {
+        "en": "Fire-risk premises: 300 mA or less (pending review)",
+        "es": "Locales con riesgo de incendio: 300 mA o menos (pending review)"
+      },
+      {
+        "en": "Load types: pick RCD type by the residual waveform (see rcd_type_* devices)",
+        "es": "Tipo de carga: elegir tipo de RCD segun la forma de onda residual (ver rcd_type_*)"
+      }
+    ],
+    "when_not_to_use": [
+      {
+        "en": "Circuit also needs overcurrent protection in the same device: use RCBO",
+        "es": "El circuito necesita tambien proteccion de sobrecorriente en el mismo equipo: usar RCBO"
+      },
+      {
+        "en": "Loads that can produce smooth DC leakage: use type B, not AC (typical)",
+        "es": "Cargas que pueden generar fuga DC continua: usar tipo B, no AC (typical)"
+      },
+      {
+        "en": "400 Hz networks: AC type is not recommended (cited)",
+        "es": "Redes de 400 Hz: no se recomienda tipo AC (citado)"
+      }
+    ],
+    "alternatives": [
+      "rcbo",
+      "rcd_type_a",
+      "rcd_type_f",
+      "rcd_type_b"
+    ]
+  },
+  "notes": [
+    {
+      "en": "Selective (S) and time-delayed (R) versions exist at 100 mA to 1000 mA (cited); check coordination before use.",
+      "es": "Existen versiones selectivas (S) y temporizadas (R) de 100 mA a 1000 mA (citado); verificar coordinacion antes de usar."
+    }
+  ]
+}

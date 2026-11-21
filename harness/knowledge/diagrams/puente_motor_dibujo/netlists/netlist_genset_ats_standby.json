@@ -1,0 +1,50 @@
+{
+ "schema_version": "1.0",
+ "id": "netlist_genset_ats_standby",
+ "name": {
+  "en": "Standby generator with ATS",
+  "es": "Grupo electrogeno de emergencia con ATS"
+ },
+ "diagram": "SLD",
+ "sheet": {
+  "size": "A3",
+  "style_ref": "epc_arch/epc_style.json"
+ },
+ "source_scheme": "genset_ats_standby",
+ "instances": [
+  {
+   "tag": "-G1",
+   "device_id": "generator_set",
+   "symbol": "lv_generator",
+   "labels": {},
+   "label_source": "none (ratings come from engines at project time)"
+  },
+  {
+   "tag": "-Q1",
+   "device_id": "ats",
+   "symbol": "lv_ats",
+   "labels": {},
+   "label_source": "none (ratings come from engines at project time)"
+  },
+  {
+   "tag": "-A1",
+   "device_id": "switchboard_tgbt",
+   "symbol": "lv_busbar_node",
+   "labels": {},
+   "label_source": "none (ratings come from engines at project time)"
+  }
+ ],
+ "connections": [
+  {
+   "from": "-G1:top",
+   "to": "-Q1:top_1",
+   "conductor": "L"
+  },
+  {
+   "from": "-Q1:bottom",
+   "to": "-A1:bottom",
+   "conductor": "L"
+  }
+ ],
+ "status": "typical"
+}

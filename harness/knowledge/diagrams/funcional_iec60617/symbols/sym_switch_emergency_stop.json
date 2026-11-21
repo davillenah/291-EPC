@@ -1,0 +1,122 @@
+{
+  "schema_version": "1.0",
+  "id": "sym_switch_emergency_stop",
+  "name": {
+    "en": "Emergency stop switch",
+    "es": "Interruptor de parada de emergencia"
+  },
+  "family": "control",
+  "description": {
+    "en": "Mushroom-head actuator on a contact block. Latching, normally closed contact in the stop circuit. Note: Mushroom head is drawn with the bar shown as the actuator; exact outline is typical.",
+    "es": "Actuador de cabeza tipo hongo sobre bloque de contactos. Enclavado; contacto normalmente cerrado en el circuito de parada. Nota: La cabeza tipo hongo se dibuja con la barra como actuador; el contorno exacto es típico."
+  },
+  "iec60617": {
+    "symbol_id": "S00258",
+    "iec_title_en": "Switch, emergency stop",
+    "legacy_ref": null,
+    "status": "unverified"
+  },
+  "reference_designation": {
+    "letter": "S",
+    "note": {
+      "en": "Manual operation to signal.",
+      "es": "Operación manual a señal."
+    },
+    "status": "unverified"
+  },
+  "ansi_nema": {
+    "equivalent": null,
+    "status": "not_found"
+  },
+  "geometry": {
+    "grid": "1 unit = one symbol grid step; origin top-left, y down; scale to the drawing standard in use",
+    "primitives": [
+      {
+        "prim": "line",
+        "p1": [
+          0,
+          0
+        ],
+        "p2": [
+          0,
+          2
+        ]
+      },
+      {
+        "prim": "line",
+        "p1": [
+          0,
+          2
+        ],
+        "p2": [
+          1.6,
+          3.4
+        ]
+      },
+      {
+        "prim": "line",
+        "p1": [
+          0,
+          4
+        ],
+        "p2": [
+          0,
+          6
+        ]
+      },
+      {
+        "prim": "circle",
+        "c": [
+          0,
+          2
+        ],
+        "r": 0.15
+      },
+      {
+        "prim": "rect",
+        "x": -0.9,
+        "y": 3.9,
+        "w": 1.8,
+        "h": 0.25
+      }
+    ],
+    "status": "typical"
+  },
+  "connection_points": [
+    {
+      "id": "1",
+      "label": {
+        "en": "Contact input",
+        "es": "Entrada del contacto"
+      }
+    },
+    {
+      "id": "2",
+      "label": {
+        "en": "Contact output",
+        "es": "Salida del contacto"
+      }
+    }
+  ],
+  "status": "unverified",
+  "source_ids": [
+    "iec_S00258",
+    "ima_iec81346_letters"
+  ],
+  "sources": [
+    {
+      "id": "iec_S00258",
+      "title": "IEC 60617 database, symbol S00258: Switch, emergency stop",
+      "url": "https://library.iec.ch/grasymb/grasymb.nsf/(SysSymbol)/S00258",
+      "kind": "standard_database",
+      "accessed": "2026-11-20"
+    },
+    {
+      "id": "ima_iec81346_letters",
+      "title": "Industrial Monitor Direct: IEC 81346-2 contactor and relay numbering (secondary article)",
+      "url": "https://industrialmonitordirect.com/blogs/knowledgebase/iec-81346-2-contactor-and-relay-numbering-conventions-for-wiring-diagrams",
+      "kind": "secondary_article",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

@@ -1,0 +1,96 @@
+{
+  "schema_version": "1.0",
+  "id": "sym_switch_signal_lamp",
+  "name": {
+    "en": "Switch with signal lamp (installation diagram)",
+    "es": "Interruptor con piloto de señalización (esquema de instalación)"
+  },
+  "family": "control",
+  "description": {
+    "en": "Switch combined with an indicator lamp, for installation layouts.",
+    "es": "Interruptor combinado con lámpara indicadora, para planos de instalación."
+  },
+  "iec60617": {
+    "symbol_id": "S00467",
+    "iec_title_en": "Switch with signal lamp, general symbol for installation diagram",
+    "legacy_ref": null,
+    "status": "unverified"
+  },
+  "reference_designation": {
+    "letter": "S",
+    "note": {
+      "en": "Manual switch.",
+      "es": "Interruptor manual."
+    },
+    "status": "unverified"
+  },
+  "ansi_nema": {
+    "equivalent": null,
+    "status": "not_found"
+  },
+  "geometry": {
+    "grid": "1 unit = one symbol grid step; origin top-left, y down; scale to the drawing standard in use",
+    "primitives": [
+      {
+        "prim": "circle",
+        "c": [
+          0,
+          0
+        ],
+        "r": 0.8
+      },
+      {
+        "prim": "line",
+        "p1": [
+          0,
+          -0.8
+        ],
+        "p2": [
+          0,
+          -2
+        ]
+      },
+      {
+        "prim": "line",
+        "p1": [
+          -1.4,
+          0
+        ],
+        "p2": [
+          1.4,
+          0
+        ]
+      }
+    ],
+    "status": "typical"
+  },
+  "connection_points": [
+    {
+      "id": "1",
+      "label": {
+        "en": "Terminal 1",
+        "es": "Borne 1"
+      }
+    },
+    {
+      "id": "2",
+      "label": {
+        "en": "Terminal 2",
+        "es": "Borne 2"
+      }
+    }
+  ],
+  "status": "unverified",
+  "source_ids": [
+    "iec_S00467"
+  ],
+  "sources": [
+    {
+      "id": "iec_S00467",
+      "title": "IEC 60617 database, symbol S00467: Switch with signal lamp, general symbol for installation diagram",
+      "url": "https://library.iec.ch/grasymb/grasymb.nsf/(SysSymbol)/S00467",
+      "kind": "standard_database",
+      "accessed": "2026-11-20"
+    }
+  ]
+}

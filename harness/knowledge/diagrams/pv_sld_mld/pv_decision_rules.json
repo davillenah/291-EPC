@@ -1,0 +1,634 @@
+{
+  "schema_version": "1.0",
+  "record_type": "rules",
+  "id": "pv_sld_device_selection",
+  "description": {
+    "en": "If/then table for PV SLD devices. Thresholds from norms are pending review; utility and manufacturer values are unverified; nothing is verified.",
+    "es": "Tabla si/entonces para equipos SLD FV. Umbrales de norma pendientes de revisión; valores de distribuidora y fabricante no verificados; nada verificado."
+  },
+  "variables": {
+    "architecture": {
+      "type": "enum",
+      "values": [
+        "string_inverter_lv",
+        "central_inverter_mv_station",
+        "microinverter_lv",
+        "optimizer_string_lv",
+        "hybrid_dc_coupled",
+        "hybrid_ac_coupled",
+        "off_grid_island",
+        "self_consumption_zero_injection"
+      ]
+    },
+    "parallel_strings": {
+      "type": "number",
+      "unit": "strings"
+    },
+    "reverse_current_possible": {
+      "type": "boolean"
+    },
+    "inverter_transformerless": {
+      "type": "boolean"
+    },
+    "local_rules_require_rcd": {
+      "type": "boolean"
+    },
+    "external_lps": {
+      "type": "boolean"
+    },
+    "rooftop_without_external_lps": {
+      "type": "boolean"
+    },
+    "battery_present": {
+      "type": "boolean"
+    },
+    "islandable": {
+      "type": "boolean"
+    },
+    "rapid_shutdown_required": {
+      "type": "boolean"
+    },
+    "utility_interface_protection_required": {
+      "type": "boolean"
+    },
+    "inverter_rated_output_current_a": {
+      "type": "number",
+      "unit": "A"
+    },
+    "uoc_max_v": {
+      "type": "number",
+      "unit": "V DC"
+    }
+  },
+  "rules": [
+    {
+      "id": "r01",
+      "domain": "dc_protection",
+      "when": [
+        {
+          "variable": "reverse_current_possible",
+          "op": "eq",
+          "value": true
+        }
+      ],
+      "then": {
+        "select": "fuse_gpv or pv_dc_breaker (string overcurrent)",
+        "rationale": {
+          "en": "Reverse current from parallel strings: protect each string at the source.",
+          "es": "Corriente inversa de strings en paralelo: proteger cada string en origen."
+        }
+      },
+      "status": "unverified",
+      "source_ids": [
+        "ei_pv_safety",
+        "iaei_oc"
+      ]
+    },
+    {
+      "id": "r02",
+      "domain": "dc_protection",
+      "when": [
+        {
+          "variable": "reverse_current_possible",
+          "op": "eq",
+          "value": true
+        }
+      ],
+      "then": {
+        "select": "string overcurrent rating >= 1.5 x Isc_module (wiki) or >= 1.25 x 1.25 x Isc (NEC short citation)",
+        "rationale": {
+          "en": "Two rating bases exist; both kept until a person decides (conflict c01).",
+          "es": "Existen dos bases de calibre; se conservan ambas hasta decisión humana (conflicto c01)."
+        }
+      },
+      "status": "pending review",
+      "source_ids": [
+        "ei_pv_safety",
+        "iaei_oc"
+      ],
+      "conflict_ref": "c01"
+    },
+    {
+      "id": "r03",
+      "domain": "dc_protection",
+      "when": [
+        {
+          "variable": "uoc_max_v",
+          "op": "gt",
+          "value": 1000
+        }
+      ],
+      "then": {
+        "select": "DC isolator/breaker rated for U_OC MAX with multiple poles in series",
+        "rationale": {
+          "en": "DC breakers and switches must break at U_OC MAX; the wiki cites four poles in series for 1000 V breakers.",
+          "es": "Interruptores DC deben cortar a U_OC MAX; la wiki cita cuatro polos en serie para 1000 V."
+        }
+      },
+      "status": "unverified",
+      "source_ids": [
+        "ei_pv_safety"
+      ]
+    },
+    {
+      "id": "r04",
+      "domain": "dc_protection",
+      "when": [
+        {
+          "variable": "reverse_current_possible",
+          "op": "eq",
+          "value": true
+        }
+      ],
+      "then": {
+        "select": "pv_dc_switch_load_break in series with string fuses",
+        "rationale": {
+          "en": "Fuses do not load-break; a load-break switch allows cartridge replacement.",
+          "es": "Los fusibles no cortan en carga; un seccionador de corte permite reemplazar el cartucho."
+        }
+      },
+      "status": "unverified",
+      "source_ids": [
+        "ei_pv_safety"
+      ]
+    },
+    {
+      "id": "r05",
+      "domain": "dc_spd",
+      "when": [
+        {
+          "variable": "rooftop_without_external_lps",
+          "op": "eq",
+          "value": true
+        }
+      ],
+      "then": {
+        "select": "spd_type2 at DC entry (combiner or inverter)",
+        "rationale": {
+          "en": "Type 2 is commonly evaluated for rooftop PV without external LPS.",
+          "es": "Tipo 2 se evalúa comúnmente en techos sin LPS externo."
+        }
+      },
+      "status": "unverified",
+      "source_ids": [
+        "viox_spd"
+      ]
+    },
+    {
+      "id": "r06",
+      "domain": "dc_spd",
+      "when": [
+        {
+          "variable": "external_lps",
+          "op": "eq",
+          "value": true
+        }
+      ],
+      "then": {
+        "select": "spd type 1+2 at relevant entry points",
+        "rationale": {
+          "en": "Type 1 or 1+2 is commonly evaluated at entry points when an external LPS exists.",
+          "es": "Tipo 1 o 1+2 se evalúa en puntos de entrada cuando hay LPS externo."
+        }
+      },
+      "status": "unverified",
+      "source_ids": [
+        "viox_spd"
+      ]
+    },
+    {
+      "id": "r07",
+      "domain": "dc_spd",
+      "when": [
+        {
+          "variable": "uoc_max_v",
+          "op": "gt",
+          "value": 0
+        }
+      ],
+      "then": {
+        "select": "DC SPD Uc suitable at maximum normal PV voltage (cold Voc)",
+        "rationale": {
+          "en": "Uc must be suitable at maximum normal PV voltage; the multiplier is not sourced (not_found).",
+          "es": "Uc adecuado a la tensión FV máxima normal (Voc en frío); el multiplicador no está sourced (no encontrado)."
+        }
+      },
+      "status": "unverified",
+      "source_ids": [
+        "viox_spd",
+        "sma_voc_article"
+      ]
+    },
+    {
+      "id": "r08",
+      "domain": "ac_protection",
+      "when": [
+        {
+          "variable": "inverter_rated_output_current_a",
+          "op": "gt",
+          "value": 0
+        }
+      ],
+      "then": {
+        "select": "AC overcurrent device rated >= 125 % of inverter rated output current, not above the manual maximum",
+        "rationale": {
+          "en": "125 % factor cited from NEC through IAEI; the manual maximum overrides when lower.",
+          "es": "Factor 125 % citado de NEC vía IAEI; el máximo del manual manda si es menor."
+        }
+      },
+      "status": "pending review",
+      "source_ids": [
+        "iaei_ac",
+        "fronius_symo_manual",
+        "huawei_l1_cables"
+      ]
+    },
+    {
+      "id": "r09",
+      "domain": "rcd",
+      "when": [
+        {
+          "variable": "inverter_transformerless",
+          "op": "eq",
+          "value": true
+        }
+      ],
+      "then": {
+        "select": "rcd_type_b (external) where required",
+        "rationale": {
+          "en": "Galvanically unisolated inverters may pass DC leakage; type B recommended by the cited manufacturer note, citing EN 62109-1 (6 mA threshold).",
+          "es": "Inversores sin aislamiento galvánico pueden pasar fuga DC; tipo B recomendado por la nota citada, con EN 62109-1 (umbral 6 mA)."
+        }
+      },
+      "status": "pending review",
+      "source_ids": [
+        "kostal_piko_rcd"
+      ],
+      "conflict_ref": "c03"
+    },
+    {
+      "id": "r10",
+      "domain": "rcd",
+      "when": [
+        {
+          "variable": "local_rules_require_rcd",
+          "op": "eq",
+          "value": true
+        }
+      ],
+      "then": {
+        "select": "rcd_type_b >= 500 mA, one RCD per inverter",
+        "rationale": {
+          "en": "SMA condition for an external RCD where local rules require it.",
+          "es": "Condición SMA para un RCD externo cuando la norma local lo exige."
+        }
+      },
+      "status": "unverified",
+      "source_ids": [
+        "sma_rcmu"
+      ],
+      "conflict_ref": "c03"
+    },
+    {
+      "id": "r11",
+      "domain": "interface",
+      "when": [
+        {
+          "variable": "utility_interface_protection_required",
+          "op": "eq",
+          "value": true
+        }
+      ],
+      "then": {
+        "select": "relays 27, 59, 81O, 81U, 32R, 67 as the utility lists them; settings from utility",
+        "rationale": {
+          "en": "Utility sample lists these functions; thresholds not stated (not_found).",
+          "es": "La muestra de la distribuidora lista estas funciones; umbrales no indicados (no encontrado)."
+        }
+      },
+      "status": "unverified",
+      "source_ids": [
+        "oeb_der_protection"
+      ]
+    },
+    {
+      "id": "r12",
+      "domain": "islanding",
+      "when": [
+        {
+          "variable": "islandable",
+          "op": "eq",
+          "value": true
+        }
+      ],
+      "then": {
+        "select": "switch_disconnector 4P (islanding, SDFI) and imd_insulation_monitor on transformer side for long islanded operation",
+        "rationale": {
+          "en": "Four-pole islanding device and IMD as described in the wiki.",
+          "es": "Dispositivo de isla de 4 polos e IMD según la wiki."
+        }
+      },
+      "status": "unverified",
+      "source_ids": [
+        "ei_prosumer"
+      ]
+    },
+    {
+      "id": "r13",
+      "domain": "battery",
+      "when": [
+        {
+          "variable": "battery_present",
+          "op": "eq",
+          "value": true
+        }
+      ],
+      "then": {
+        "select": "pv_dc_breaker between battery and inverter (DC-coupled)",
+        "rationale": {
+          "en": "Storage follows the solar-inverter rules plus an overcurrent device between battery and inverter.",
+          "es": "El almacenamiento sigue las reglas del inversor solar más un dispositivo de sobrecorriente entre batería e inversor."
+        }
+      },
+      "status": "unverified",
+      "source_ids": [
+        "ei_prosumer"
+      ]
+    },
+    {
+      "id": "r14",
+      "domain": "rapid_shutdown",
+      "when": [
+        {
+          "variable": "rapid_shutdown_required",
+          "op": "eq",
+          "value": true
+        }
+      ],
+      "then": {
+        "select": "pv_rapid_shutdown_device; DC conductors below 30 V within 30 s; array disconnect within 15 s",
+        "rationale": {
+          "en": "Limits as cited in the SMA UL 1741 PVRSE description; not IEC text.",
+          "es": "Límites citados en la descripción SMA UL 1741 PVRSE; no es texto IEC."
+        }
+      },
+      "status": "pending review",
+      "source_ids": [
+        "sma_stp_interfaces"
+      ]
+    },
+    {
+      "id": "r15",
+      "domain": "connection_point",
+      "when": [
+        {
+          "variable": "architecture",
+          "op": "ne",
+          "value": "off_grid_island"
+        }
+      ],
+      "then": {
+        "select": "overcurrent device at the point where the PV system connects to the building installation",
+        "rationale": {
+          "en": "Protects the building feeder from a PV feeder fault and keeps selectivity with the main breaker.",
+          "es": "Protege el alimentador del edificio ante falla del alimentador FV y mantiene selectividad con el principal."
+        }
+      },
+      "status": "unverified",
+      "source_ids": [
+        "ei_prosumer"
+      ]
+    },
+    {
+      "id": "r16",
+      "domain": "local_sources",
+      "when": [
+        {
+          "variable": "architecture",
+          "op": "in",
+          "value": [
+            "hybrid_ac_coupled",
+            "hybrid_dc_coupled"
+          ]
+        }
+      ],
+      "then": {
+        "select": "local sources switchboard connected to the main LV board at a single point",
+        "rationale": {
+          "en": "Recommended layout: simple to maintain; secondary board is not for islandable prosumer installs.",
+          "es": "Layout recomendado: simple de mantener; el cuadro secundario no es para instalaciones islables."
+        }
+      },
+      "status": "unverified",
+      "source_ids": [
+        "ei_local_sources"
+      ]
+    },
+    {
+      "id": "r17",
+      "domain": "earthing",
+      "when": [
+        {
+          "variable": "inverter_transformerless",
+          "op": "eq",
+          "value": true
+        }
+      ],
+      "then": {
+        "select": "no pole can be earthed on the DC side without galvanic separation; check earthing scheme and RCD type",
+        "rationale": {
+          "en": "Without galvanic separation one DC pole cannot be earthed (manufacturer wiki).",
+          "es": "Sin aislamiento galvánico no se puede poner a tierra un polo DC (wiki)."
+        }
+      },
+      "status": "unverified",
+      "source_ids": [
+        "ei_pv_safety"
+      ]
+    }
+  ],
+  "conflicts": [
+    {
+      "id": "c01",
+      "topic": "String overcurrent rating multiplier",
+      "sources": [
+        "ei_pv_safety",
+        "iaei_oc"
+      ],
+      "note": {
+        "en": "Wiki: string rating above 1.5 x Isc_module (below 2.4 x). IAEI NEC citation: 1.25 x 1.25 x Isc, and two-string fuse sizing 2 x 1.25 x 1.25 x Isc. Not reconciled; pending review.",
+        "es": "Wiki: calibre de string > 1,5 x Isc_módulo (< 2,4 x). IAEI cita NEC: 1,25 x 1,25 x Isc; y para dos strings 2 x 1,25 x 1,25 x Isc. No conciliado; pendiente de revisión."
+      }
+    },
+    {
+      "id": "c02",
+      "topic": "Voc temperature correction factor and sign",
+      "sources": [
+        "sma_voc_article",
+        "ei_pv_safety"
+      ],
+      "note": {
+        "en": "SMA gives the coefficient method only; a reader comment on the same page cites a 1.14 factor for -10 C and notes that the article subtracts in the wrong order. Use the method, not the comment value. Not verified.",
+        "es": "SMA da solo el método por coeficiente; un comentario de lector cita un factor 1,14 para -10 C y señala que el artículo resta en orden incorrecto. Usar el método, no el valor del comentario. No verificado."
+      }
+    },
+    {
+      "id": "c03",
+      "topic": "RCD type for transformerless inverters",
+      "sources": [
+        "sma_rcmu",
+        "fronius_symo_manual",
+        "kostal_piko_rcd"
+      ],
+      "note": {
+        "en": "SMA: type B >= 500 mA only where local rules require. Fronius: type A generally sufficient, RCD suitable for frequency converters, >= 100 mA. Kostal (citing EN 62109-1): type B for galvanically unisolated inverters. Not reconciled; project and local rules decide.",
+        "es": "SMA: tipo B >= 500 mA solo si la norma local lo exige. Fronius: tipo A en general, >= 100 mA, apto convertidor de frecuencia. Kostal (citando EN 62109-1): tipo B sin aislamiento galvánico. No conciliado; decide el proyecto y la norma local."
+      }
+    },
+    {
+      "id": "c04",
+      "topic": "MV station container envelope order",
+      "sources": [
+        "repo_inverters_central"
+      ],
+      "note": {
+        "en": "Repo gives 12192 x 2438 x 2896 in one table and 12192 x 2896 x 2438 mm (W x H x D) in another. Internal inconsistency; verify on the datasheet.",
+        "es": "El repo da 12192 x 2438 x 2896 en una tabla y 12192 x 2896 x 2438 mm (A x H x P) en otra. Inconsistencia interna; verificar en la ficha."
+      }
+    },
+    {
+      "id": "c05",
+      "topic": "Rapid shutdown: IEC vs US code",
+      "sources": [
+        "iec60364_7_712_preview",
+        "sma_stp_interfaces"
+      ],
+      "note": {
+        "en": "IEC 60364-7-712 preview lists no rapid shutdown topic (not_found). The 30 V / 30 s limit comes from SMA's UL 1741 PVRSE description (US code). Not an IEC requirement as far as sources show.",
+        "es": "La vista previa de IEC 60364-7-712 no lista parada rápida (no encontrado). El límite 30 V / 30 s viene de la descripción SMA UL 1741 PVRSE (código EE. UU.). No es un requisito IEC según las fuentes."
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": "ei_local_sources",
+      "title": "Architectures for integration of local sources",
+      "url": "https://www.electrical-installation.org/enwiki/Architectures_for_integration_of_local_sources",
+      "publisher": "electrical-installation.org (public technical wiki)",
+      "accessed": "2026-11-20",
+      "kind": "textbook_wiki"
+    },
+    {
+      "id": "ei_prosumer",
+      "title": "Specific protection of prosumer electrical installations",
+      "url": "https://www.electrical-installation.org/enwiki/Specific_protection_of_prosumer_electrical_installations",
+      "publisher": "electrical-installation.org (public technical wiki)",
+      "accessed": "2026-11-20",
+      "kind": "textbook_wiki"
+    },
+    {
+      "id": "ei_pv_safety",
+      "title": "PV System: how to ensure safety during normal operation",
+      "url": "https://www.electrical-installation.org/enwiki/PV_System:_how_to_ensure_safety_during_normal_operation",
+      "publisher": "electrical-installation.org (public technical wiki)",
+      "accessed": "2026-11-20",
+      "kind": "textbook_wiki"
+    },
+    {
+      "id": "fronius_symo_manual",
+      "title": "Fronius Symo installation manual (English): AC fuses, RCD, DC fuses and switch",
+      "url": "https://manuals.fronius.com/html/4204260172/en.html",
+      "publisher": "Fronius International",
+      "accessed": "2026-11-20",
+      "kind": "manufacturer"
+    },
+    {
+      "id": "huawei_l1_cables",
+      "title": "Huawei SUN2000-(2KTL-6KTL)-L1 user manual: preparing cables",
+      "url": "https://support.huawei.com/enterprise/en/doc/EDOC1100136173/d7e21771/preparing-cables",
+      "publisher": "Huawei Technologies",
+      "accessed": "2026-11-20",
+      "kind": "manufacturer"
+    },
+    {
+      "id": "iaei_ac",
+      "title": "Conductors, currents, and circuit protection: the AC side",
+      "url": "https://iaeimagazine.org/columns/photovoltaic/conductors-currents-and-circuit-protection-the-ac-side/",
+      "publisher": "IAEI Magazine",
+      "accessed": "2026-11-20",
+      "kind": "third_party_guide"
+    },
+    {
+      "id": "iaei_oc",
+      "title": "Photovoltaic Power System Overcurrent Protection: Why, How and Where",
+      "url": "https://iaeimagazine.org/columns/photovoltaic/photovoltaic-power-system-overcurrent-protection-why-how-and-where/",
+      "publisher": "IAEI Magazine",
+      "accessed": "2026-11-20",
+      "kind": "third_party_guide"
+    },
+    {
+      "id": "iec60364_7_712_preview",
+      "title": "IEC 60364-7-712 ed.3.0 (2025-10): publisher preview, scope and clause index",
+      "url": "https://assets.vde-verlag.de/iec-normen/preview-pdf/info_iec60364-7-712%7Bed3.0%7Db.pdf",
+      "publisher": "VDE Verlag (IEC publication preview)",
+      "accessed": "2026-11-20",
+      "kind": "standard_public_summary"
+    },
+    {
+      "id": "kostal_piko_rcd",
+      "title": "Kostal PIKO 1210 HE-RCD-RCM note: RCD type B for galvanically unisolated inverters",
+      "url": "https://www.kostal-solar-electric.com/fileadmin/downloadcenter/kse/1210_HE-RCD-RCM.pdf",
+      "publisher": "Kostal Solar Electric",
+      "accessed": "2026-11-20",
+      "kind": "manufacturer"
+    },
+    {
+      "id": "oeb_der_protection",
+      "title": "Ontario Energy Board DER WG3: sample protection philosophy (utility sample)",
+      "url": "https://www.oeb.ca/sites/default/files/DER-wg3-Sample%20Protection%20Philosophy.pdf",
+      "publisher": "Ontario Energy Board (sample document)",
+      "accessed": "2026-11-20",
+      "kind": "third_party_guide"
+    },
+    {
+      "id": "repo_inverters_central",
+      "title": "Repo: central inverters and accessories research",
+      "url": "repo://harness/docs/pv/inverters/central_inverters_and_accessories.md",
+      "publisher": "EPC-291 repository",
+      "accessed": "2026-11-20",
+      "kind": "internal_repo"
+    },
+    {
+      "id": "sma_rcmu",
+      "title": "SMA manual: residual-current monitoring unit (RCMU) and external RCD",
+      "url": "https://manuals.sma.de/SMAStorageXLPackage/en-US/17058314251.html",
+      "publisher": "SMA Solar Technology AG",
+      "accessed": "2026-11-20",
+      "kind": "manufacturer"
+    },
+    {
+      "id": "sma_stp_interfaces",
+      "title": "SMA manual: Interfaces and functions (UL 1741 SA, rapid shutdown, AFCI, surge arresters)",
+      "url": "https://manuals.sma.de/STPxx-US-41/en-US/391139595.html",
+      "publisher": "SMA Solar Technology AG",
+      "accessed": "2026-11-20",
+      "kind": "manufacturer"
+    },
+    {
+      "id": "sma_voc_article",
+      "title": "SMA article: calculating maximum PV voltage",
+      "url": "https://sma-sunny.com/us/?p=116684",
+      "publisher": "SMA America (article)",
+      "accessed": "2026-11-20",
+      "kind": "manufacturer"
+    },
+    {
+      "id": "viox_spd",
+      "title": "VIOX: how to choose the right SPD for a solar power system",
+      "url": "https://viox.com/how-to-choose-the-right-spd-for-your-solar-power-system/",
+      "publisher": "VIOX Electric",
+      "accessed": "2026-11-20",
+      "kind": "third_party_guide"
+    }
+  ]
+}
