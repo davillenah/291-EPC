@@ -165,6 +165,7 @@ class TestPipeline(unittest.TestCase):
         self.assertAlmostEqual(sum(a["monthly_ac_kwh"]), a["ac_kwh"], delta=0.01)
         self.assertEqual(r["totals"]["ac_kwh"], a["ac_kwh"])
         self.assertAlmostEqual(a["dc_ac_ratio"], a["dc_kwp"] / a["ac_kw"], places=3)
+        self.assertAlmostEqual(a["inverter_ac_kw"] * a["inverters"], a["ac_kw"], places=2)      # the rating of one inverter (the AC feeder of each unit is sized from it)
         self.assertTrue(0.5 < a["performance_ratio"] < 1.0)
 
     def test_the_input_can_be_text_or_bytes(self):

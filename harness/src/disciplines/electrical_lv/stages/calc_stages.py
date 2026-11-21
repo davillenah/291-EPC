@@ -186,7 +186,7 @@ class EarthingStage(ChainStage):
 class LoadsDemandStage(GroupedStage):
     """Stage 3: load schedule and phase balance, then demand and simultaneity, then (only with `engine_inputs["lighting"]`) the lighting of the rooms, then (only with `engine_inputs["routing"]`) the runs and circuits of the floors."""
 
-    slice_classes = {4: LoadScheduleStage, 5: DemandStage, 17: LightingStage, 18: RoutingStage, 24: HvacStage, 25: PhaseBalanceStage, 31: ReceptaclesStage, 32: PvStage}
+    slice_classes = {32: PvStage, 4: LoadScheduleStage, 5: DemandStage, 17: LightingStage, 18: RoutingStage, 24: HvacStage, 25: PhaseBalanceStage, 31: ReceptaclesStage}      # the plant first: its inverter feeders join the board (`pv_feeders.py`)
 
 
 class CableSizingStage(GroupedStage):

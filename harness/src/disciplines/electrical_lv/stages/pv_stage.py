@@ -34,6 +34,7 @@ import json
 from pathlib import Path
 
 from disciplines.electrical_lv.stages import engine_calls as EC
+from disciplines.electrical_lv.stages import pv_feeders as PF
 from disciplines.electrical_lv.stages.base import Stage, StageInputError
 
 ENGINE = "calculation/pv"
@@ -508,6 +509,7 @@ class PvStage(Stage):
         findings += [warning_finding(len(findings) + n, context.pipeline_run_id, self.spec.slug, w) for n, w in enumerate(warnings, start=1)]
         totals, counts = result["totals"], result["counts"]
         result = dict(result, technical_feasibility=technical_summary(result, section.get("economics")))
+        context.engine_cache[PF.CACHE_KEY] = result
         return self.result("ok", outputs=result, findings=findings, engine_calls=calls,
                            message=f"{counts['arrays']} array(s), {counts['inverters']} inverter(s), {counts['modules']} module(s), "
                                    f"{totals['dc_kwp']} kWp DC, {totals['ac_kw']} kW AC (draft)")
