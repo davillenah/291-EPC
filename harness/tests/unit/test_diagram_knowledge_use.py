@@ -124,3 +124,20 @@ class Stage8Model(unittest.TestCase):
         w = next(x for x in m["wires"] if x["id"] == "wire-IUG-01-load")
         self.assertEqual(("external", "IUG-01"), (w["zone"], w["cable_ref"]))
         self.assertEqual(m, board_diagram_model(ch))
+
+
+class TypicalTopologies(unittest.TestCase):
+    """The typical chains of star-delta, ATS, UPS and the MV intake exist in the library and build a model with no unmapped device."""
+
+    def test_new_kinds_build_with_library_symbols(self):
+        topo = DM._topologies()["kinds"]
+        for kind in ("motor_star_delta", "ats_feeder", "ups_feeder", "mv_intake", "mv_transformer_feeder"):
+            self.assertIn(kind, topo)
+            for role in topo[kind]["chain"]:
+                self.assertIsNotNone(K.symbol_for(role)["sld_symbol"], f"{kind}/{role}")
+        m = DM.build_board_model("TS1", {"M-02": {"kind": "motor_star_delta"}, "A-01": {"kind": "ats_feeder"}, "U-01": {"kind": "ups_feeder"}, "MV-01": {"kind": "mv_intake"}})
+        self.assertEqual([], m["unmapped"])
+        ids = [d["id"] for d in m["devices"]]
+        self.assertEqual(3, sum(1 for i in ids if i.startswith("dev-M-02-contactor")))
+        self.assertIn("dev-A-01-ats", ids)
+        self.assertEqual(2, sum(1 for i in ids if i.startswith("dev-MV-01-")))

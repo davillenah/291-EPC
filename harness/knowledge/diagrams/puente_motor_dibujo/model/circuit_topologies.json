@@ -61,6 +61,49 @@
     "mccb"
    ],
    "load_symbol": null
+  },
+  "motor_star_delta": {
+   "chain": [
+    "mcb",
+    "contactor",
+    "contactor",
+    "contactor",
+    "thermal_overload_relay"
+   ],
+   "load_symbol": "lv_motor_3ph"
+  },
+  "ats_feeder": {
+   "chain": [
+    "mccb",
+    "ats"
+   ],
+   "load_symbol": null
+  },
+  "ups_feeder": {
+   "chain": [
+    "mccb",
+    "ups",
+    "mcb"
+   ],
+   "load_symbol": "lv_generic_load"
+  },
+  "mv_intake": {
+   "chain": [
+    "mv_load_break_switch_c",
+    "mv_vacuum_circuit_breaker"
+   ],
+   "load_symbol": null
+  },
+  "mv_transformer_feeder": {
+   "chain": [
+    "mv_switch_fuse_f",
+    "transformer_mv_lv"
+   ],
+   "load_symbol": null
   }
+ },
+ "notes": {
+  "en": "star-delta: main, star and delta contactors in series order of the chain (the real wiring of the three contactors is functional, DGM-10); ats_feeder: only the first source port is linked, the second source is another circuit; every kind here is typical and unverified.",
+  "es": "estrella-triangulo: contactores principal, estrella y triangulo en el orden de la cadena (el cableado real de los tres contactores es funcional, DGM-10); ats_feeder: solo se enlaza el puerto de la primera fuente, la segunda fuente es otro circuito; todos los tipos son tipicos y sin verificar."
  }
 }
