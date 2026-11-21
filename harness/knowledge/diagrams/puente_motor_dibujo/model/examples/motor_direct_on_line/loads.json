@@ -1,0 +1,19 @@
+{
+ "schema_version": "1.0",
+ "model_id": "motor_direct_on_line",
+ "board": "TS-EX3",
+ "description": {
+  "en": "Direct-on-line motor from the calculation chain MCB > KM > OL",
+  "es": "Motor de arranque directo desde la cadena del calculo MCB > KM > OL"
+ },
+ "status": "typical",
+ "loads": [
+  {
+   "id": "load-M-01",
+   "tag": "-M-01",
+   "kind": "load",
+   "symbol": "lv_motor_3ph",
+   "load_ref": null
+  }
+ ]
+}

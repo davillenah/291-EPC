@@ -1,0 +1,25 @@
+{
+ "schema_version": "1.0",
+ "model_id": "lighting_rccb_mcb",
+ "board": "TS-EX1",
+ "description": {
+  "en": "Lighting circuit from the typical topology: RCCB then MCB then lamps",
+  "es": "Circuito de iluminacion desde la topologia tipica: RCCB, MCB y luminarias"
+ },
+ "status": "typical",
+ "circuits": [
+  {
+   "id": "circ-IUG-01",
+   "name": {
+    "en": "IUG-01",
+    "es": "IUG-01"
+   },
+   "load": "load-IUG-01",
+   "wires": [
+    "wire-IUG-01-1",
+    "wire-IUG-01-2",
+    "wire-IUG-01-load"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,110 @@
+{
+ "schema_version": "1.0",
+ "model_id": "pv_two_strings_to_inverter",
+ "board": "JB1",
+ "description": {
+  "en": "Two PV strings with fuses in parallel, DC switch-disconnector, SPD and inverter (hand-built: the builder covers board circuits)",
+  "es": "Dos strings FV con fusibles en paralelo, seccionador DC, DPS e inversor (hecho a mano: el constructor cubre circuitos de tablero)"
+ },
+ "status": "typical",
+ "wires": [
+  {
+   "id": "wire-S1.1-string",
+   "from": {
+    "ref": "load-S1.1",
+    "port": "bottom"
+   },
+   "to": {
+    "ref": "dev-JB1-fuse1",
+    "port": "top"
+   },
+   "zone": "external",
+   "conductor": "DC+",
+   "cable_ref": "W1.1"
+  },
+  {
+   "id": "wire-S1.2-string",
+   "from": {
+    "ref": "load-S1.2",
+    "port": "bottom"
+   },
+   "to": {
+    "ref": "dev-JB1-fuse2",
+    "port": "top"
+   },
+   "zone": "external",
+   "conductor": "DC+",
+   "cable_ref": "W1.2"
+  },
+  {
+   "id": "wire-JB1-1",
+   "from": {
+    "ref": "dev-JB1-fuse1",
+    "port": "bottom"
+   },
+   "to": {
+    "ref": "dev-JB1-dcswitch",
+    "port": "top"
+   },
+   "zone": "internal",
+   "conductor": "DC+",
+   "cable_ref": null
+  },
+  {
+   "id": "wire-JB1-2",
+   "from": {
+    "ref": "dev-JB1-fuse2",
+    "port": "bottom"
+   },
+   "to": {
+    "ref": "dev-JB1-dcswitch",
+    "port": "top"
+   },
+   "zone": "internal",
+   "conductor": "DC+",
+   "cable_ref": null
+  },
+  {
+   "id": "wire-JB1-main",
+   "from": {
+    "ref": "dev-JB1-dcswitch",
+    "port": "bottom"
+   },
+   "to": {
+    "ref": "dev-T1-inverter",
+    "port": "top"
+   },
+   "zone": "external",
+   "conductor": "DC+",
+   "cable_ref": "W10"
+  },
+  {
+   "id": "wire-JB1-spd",
+   "from": {
+    "ref": "dev-JB1-dcswitch",
+    "port": "bottom"
+   },
+   "to": {
+    "ref": "dev-JB1-spd",
+    "port": "top"
+   },
+   "zone": "internal",
+   "conductor": "DC+",
+   "cable_ref": null
+  },
+  {
+   "id": "wire-JB1-pe",
+   "from": {
+    "ref": "dev-JB1-spd",
+    "port": "bottom"
+   },
+   "to": {
+    "ref": "load-PE1",
+    "port": "top"
+   },
+   "zone": "internal",
+   "conductor": "PE",
+   "cable_ref": null
+  }
+ ]
+}

@@ -67,6 +67,37 @@ class DiagramKnowledge(unittest.TestCase):
                     tag, port = end.split(":")
                     self.assertIn(port, cat[sym[tag]], f"{f} {end}")
 
+    def test_relational_model_examples(self):
+        """devices.json, loads.json, wires.json and circuits.json link only by unique ids; every reference, symbol and port exists; wires carry no values."""
+        cat = catalog()
+        devs = {Path(f).stem for d in ("sld_mld/devices", "pv_sld_mld/devices") for f in glob.glob(str(K / d / "*.json"))}
+        base = K / "puente_motor_dibujo/model"
+        schemas = {n: V(json.loads((base / f"{n}.schema.json").read_text(encoding="utf-8"))) for n in ("devices", "loads", "wires", "circuits")}
+        examples = sorted(p for p in (base / "examples").iterdir() if p.is_dir())
+        self.assertGreaterEqual(len(examples), 4)
+        for ex in examples:
+            data = {}
+            for n, v in schemas.items():
+                data[n] = json.loads((ex / f"{n}.json").read_text(encoding="utf-8"))
+                self.assertEqual([], [e.message for e in v.iter_errors(data[n])], str(ex / n))
+            nodes = {d["id"]: d for d in data["devices"]["devices"]}
+            nodes.update({x["id"]: x for x in data["loads"]["loads"]})
+            self.assertEqual(len(nodes), len(data["devices"]["devices"]) + len(data["loads"]["loads"]), f"duplicate id in {ex.name}")
+            for d in data["devices"]["devices"]:
+                self.assertIn(d["device_id"], devs, ex.name)
+                self.assertIn(d["symbol"], cat, ex.name)
+            for x in data["loads"]["loads"]:
+                self.assertIn(x["symbol"], cat, ex.name)
+            wires = {w["id"]: w for w in data["wires"]["wires"]}
+            self.assertEqual(len(wires), len(data["wires"]["wires"]), ex.name)
+            for w in wires.values():
+                for end in (w["from"], w["to"]):
+                    self.assertIn(end["ref"], nodes, ex.name)
+                    self.assertIn(end["port"], cat[nodes[end["ref"]]["symbol"]], f"{ex.name} {w['id']}")
+            for c in data["circuits"]["circuits"]:
+                self.assertTrue(set(c["wires"]) <= set(wires), ex.name)
+                self.assertTrue(c["load"] is None or c["load"] in nodes, ex.name)
+
 
 if __name__ == "__main__":
     unittest.main()

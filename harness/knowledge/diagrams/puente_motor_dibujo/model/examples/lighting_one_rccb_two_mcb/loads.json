@@ -1,0 +1,26 @@
+{
+ "schema_version": "1.0",
+ "model_id": "lighting_one_rccb_two_mcb",
+ "board": "TS-EX2",
+ "description": {
+  "en": "One RCCB feeding two lighting MCBs (children hang from the parent)",
+  "es": "Un RCCB que alimenta dos MCB de iluminacion (los hijos cuelgan del padre)"
+ },
+ "status": "typical",
+ "loads": [
+  {
+   "id": "load-IUG-01",
+   "tag": "-IUG-01",
+   "kind": "load",
+   "symbol": "lv_lighting_load",
+   "load_ref": null
+  },
+  {
+   "id": "load-IUG-02",
+   "tag": "-IUG-02",
+   "kind": "load",
+   "symbol": "lv_lighting_load",
+   "load_ref": null
+  }
+ ]
+}

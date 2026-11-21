@@ -48,7 +48,8 @@
       ],
       "skills": [
         "structure-customer-input",
-        "design-board"
+        "design-board",
+        "diagram-model"
       ],
       "max_turns": 30,
       "summary_prompt_rules": [

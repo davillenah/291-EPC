@@ -1,0 +1,97 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "title": "Circuits of a model: groups of wires that feed one load",
+ "type": "object",
+ "additionalProperties": false,
+ "required": [
+  "schema_version",
+  "model_id",
+  "circuits",
+  "board"
+ ],
+ "properties": {
+  "schema_version": {
+   "const": "1.0"
+  },
+  "model_id": {
+   "type": "string",
+   "pattern": "^[a-z0-9_.-]+$"
+  },
+  "description": {
+   "type": "object",
+   "required": [
+    "en",
+    "es"
+   ],
+   "properties": {
+    "en": {
+     "type": "string"
+    },
+    "es": {
+     "type": "string"
+    }
+   }
+  },
+  "status": {
+   "enum": [
+    "unverified",
+    "typical",
+    "not_found",
+    "pending review"
+   ]
+  },
+  "circuits": {
+   "type": "array",
+   "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "id",
+     "name",
+     "wires"
+    ],
+    "properties": {
+     "id": {
+      "type": "string",
+      "pattern": "^circ-[A-Za-z0-9][A-Za-z0-9._-]*$",
+      "description": "stable id built from the circuit tag and the role, never from a counter"
+     },
+     "name": {
+      "type": "object",
+      "required": [
+       "en",
+       "es"
+      ],
+      "properties": {
+       "en": {
+        "type": "string"
+       },
+       "es": {
+        "type": "string"
+       }
+      }
+     },
+     "load": {
+      "type": [
+       "string",
+       "null"
+      ],
+      "pattern": "^load-[A-Za-z0-9][A-Za-z0-9._-]*$"
+     },
+     "wires": {
+      "type": "array",
+      "items": {
+       "type": "string",
+       "pattern": "^wire-[A-Za-z0-9][A-Za-z0-9._-]*$"
+      },
+      "minItems": 1
+     }
+    }
+   }
+  },
+  "board": {
+   "type": "string",
+   "description": "tag of the board (tablero) this model belongs to; one model per board"
+  }
+ }
+}

@@ -79,6 +79,7 @@ No agent writes a number by hand. Every value comes from an engine (through the 
 
 ## Where things live
 
+- **Diagram knowledge and model:** `knowledge/diagrams/` (research data, symbol map, relational model per board: devices, loads, wires, circuits linked by stable ids, ADR-0037); builder `epc_drawing.diagram_model`, rules reader `epc_drawing.diagram_knowledge`; skill `diagram-model`. The netlist holds no values: the calculation and the cable list do.
 - Project data: `projects/<code>/` (never in this repository). Inputs are immutable after intake and hashed (`inputs/`).
 - Single source of truth: `ssot/`, written only by the pipeline. Agents cannot write `ssot/`, `deliverables/` or `inputs/` directly.
 - Deliverables: `deliverables/TR-NNN/` (one folder per transmittal) with one manifest per transmittal in `.epc/manifests/` (PRD §13). A deliverable is never "approved for construction" while it uses an unreviewed norm value (D21).

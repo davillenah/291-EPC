@@ -1,0 +1,66 @@
+{
+ "schema_version": "1.0",
+ "id": "circuit_topologies",
+ "description": {
+  "en": "Typical chain of device roles per kind of circuit, used only when the calculation gives no device chain. Roles are research device ids; the first role is nearest the board. Any discipline can add its own kinds.",
+  "es": "Cadena tipica de roles de dispositivos por tipo de circuito; se usa solo si el calculo no da la cadena de aparatos. Los roles son ids de dispositivos investigados; el primero es el mas cercano al tablero. Cada disciplina puede sumar sus tipos."
+ },
+ "status": "typical",
+ "token_to_device": {
+  "MCB": "mcb",
+  "MCCB": "mccb",
+  "ACB": "acb",
+  "RCCB": "rccb",
+  "RCBO": "rcbo",
+  "KM": "contactor",
+  "OL": "thermal_overload_relay",
+  "MPCB": "mpcb",
+  "FU": "fuse_gg",
+  "SPD": "spd_type2",
+  "ATS": "ats",
+  "UPS": "ups",
+  "SD": "switch_disconnector"
+ },
+ "kinds": {
+  "lighting": {
+   "chain": [
+    "rccb",
+    "mcb"
+   ],
+   "load_symbol": "lv_lighting_load"
+  },
+  "sockets": {
+   "chain": [
+    "rccb",
+    "mcb"
+   ],
+   "load_symbol": "lv_socket_outlet"
+  },
+  "general": {
+   "chain": [
+    "mcb"
+   ],
+   "load_symbol": "lv_generic_load"
+  },
+  "heating": {
+   "chain": [
+    "mcb"
+   ],
+   "load_symbol": "lv_heating_load"
+  },
+  "motor": {
+   "chain": [
+    "mcb",
+    "contactor",
+    "thermal_overload_relay"
+   ],
+   "load_symbol": "lv_motor_3ph"
+  },
+  "feeder": {
+   "chain": [
+    "mccb"
+   ],
+   "load_symbol": null
+  }
+ }
+}

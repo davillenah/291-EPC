@@ -1,0 +1,77 @@
+{
+ "schema_version": "1.0",
+ "model_id": "lighting_one_rccb_two_mcb",
+ "board": "TS-EX2",
+ "description": {
+  "en": "One RCCB feeding two lighting MCBs (children hang from the parent)",
+  "es": "Un RCCB que alimenta dos MCB de iluminacion (los hijos cuelgan del padre)"
+ },
+ "status": "typical",
+ "wires": [
+  {
+   "id": "wire-G-02-1",
+   "from": {
+    "ref": "dev-TS-EX2-bus",
+    "port": "bottom"
+   },
+   "to": {
+    "ref": "dev-G-02-rccb",
+    "port": "top"
+   },
+   "zone": "internal",
+   "cable_ref": null
+  },
+  {
+   "id": "wire-IUG-01-1",
+   "from": {
+    "ref": "dev-G-02-rccb",
+    "port": "bottom"
+   },
+   "to": {
+    "ref": "dev-IUG-01-mcb",
+    "port": "top"
+   },
+   "zone": "internal",
+   "cable_ref": null
+  },
+  {
+   "id": "wire-IUG-01-load",
+   "from": {
+    "ref": "dev-IUG-01-mcb",
+    "port": "bottom"
+   },
+   "to": {
+    "ref": "load-IUG-01",
+    "port": "top"
+   },
+   "zone": "external",
+   "cable_ref": "IUG-01"
+  },
+  {
+   "id": "wire-IUG-02-1",
+   "from": {
+    "ref": "dev-G-02-rccb",
+    "port": "bottom"
+   },
+   "to": {
+    "ref": "dev-IUG-02-mcb",
+    "port": "top"
+   },
+   "zone": "internal",
+   "cable_ref": null
+  },
+  {
+   "id": "wire-IUG-02-load",
+   "from": {
+    "ref": "dev-IUG-02-mcb",
+    "port": "bottom"
+   },
+   "to": {
+    "ref": "load-IUG-02",
+    "port": "top"
+   },
+   "zone": "external",
+   "cable_ref": "IUG-02"
+  }
+ ]
+}

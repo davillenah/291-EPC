@@ -33,7 +33,8 @@
       },
       "skills": [
         "design-board",
-        "freecad"
+        "freecad",
+        "diagram-model"
       ],
       "engine": [
         "aea90364",
@@ -54,7 +55,7 @@
         "titleblock",
         "voltage_drop"
       ],
-      "hash": "69ed413b4029e5ed"
+      "hash": "b5cd58cefbb74898"
     },
     "doc-quality": {
       "version": "0.1.0",
@@ -99,7 +100,7 @@
       "engine": [
         "symbols"
       ],
-      "hash": "c863bc52e5d470eb"
+      "hash": "39fd907b4998ed26"
     },
     "intake-analysis": {
       "version": "0.1.0",
@@ -155,7 +156,7 @@
         "titleblock",
         "voltage_drop"
       ],
-      "hash": "1b6d1bab6e589b70"
+      "hash": "2be1c3c6a1ffe551"
     },
     "plan-drawing": {
       "version": "0.1.0",
@@ -228,7 +229,7 @@
         "titleblock",
         "voltage_drop"
       ],
-      "hash": "38f9b59b1537cc8f"
+      "hash": "b0510bf3aa4de589"
     },
     "spec-writer": {
       "version": "0.1.0",
@@ -268,6 +269,9 @@
       "owner": "pm2-docs"
     },
     "design-board": {
+      "owner": "board-design"
+    },
+    "diagram-model": {
       "owner": "board-design"
     },
     "freecad": {

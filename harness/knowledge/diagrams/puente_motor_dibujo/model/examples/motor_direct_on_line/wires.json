@@ -1,0 +1,64 @@
+{
+ "schema_version": "1.0",
+ "model_id": "motor_direct_on_line",
+ "board": "TS-EX3",
+ "description": {
+  "en": "Direct-on-line motor from the calculation chain MCB > KM > OL",
+  "es": "Motor de arranque directo desde la cadena del calculo MCB > KM > OL"
+ },
+ "status": "typical",
+ "wires": [
+  {
+   "id": "wire-M-01-1",
+   "from": {
+    "ref": "dev-TS-EX3-bus",
+    "port": "bottom"
+   },
+   "to": {
+    "ref": "dev-M-01-mcb",
+    "port": "top"
+   },
+   "zone": "internal",
+   "cable_ref": null
+  },
+  {
+   "id": "wire-M-01-2",
+   "from": {
+    "ref": "dev-M-01-mcb",
+    "port": "bottom"
+   },
+   "to": {
+    "ref": "dev-M-01-contactor",
+    "port": "top"
+   },
+   "zone": "internal",
+   "cable_ref": null
+  },
+  {
+   "id": "wire-M-01-3",
+   "from": {
+    "ref": "dev-M-01-contactor",
+    "port": "bottom"
+   },
+   "to": {
+    "ref": "dev-M-01-thermal_overload_relay",
+    "port": "top"
+   },
+   "zone": "internal",
+   "cable_ref": null
+  },
+  {
+   "id": "wire-M-01-load",
+   "from": {
+    "ref": "dev-M-01-thermal_overload_relay",
+    "port": "bottom"
+   },
+   "to": {
+    "ref": "load-M-01",
+    "port": "top"
+   },
+   "zone": "external",
+   "cable_ref": "M-01"
+  }
+ ]
+}
