@@ -142,6 +142,20 @@ class DiagramAssembly(unittest.TestCase):
         self.assertIsNone(next(w for w in c["wires"] if w["zone"] == "external")["cable"])
 
 
+class SolutionChainFeedsTheNetlist(unittest.TestCase):
+    """The netlist reads the structured chain of the standard solution (`detalle.cadena`), not the text; the result equals the one read from the text."""
+
+    def test_chain_and_text_give_the_same_devices(self):
+        from epc_aea90364 import solutions as S
+        cases = [("G-02", "feeder", "feeder", "3F+N", "seccional", 63, 50, True, False), ("M-01", "motor", "dol", "3F", "motor", 25, 20, False, True)]
+        for tag, kind, top, phase, tipo, in_a, ib, kids, motor in cases:
+            sol = S.resolve(S.facts(tag, "", "", top, kind, phase, tipo, in_a, ib, 10, 30, kids, motor))
+            by_chain = DM.build_board_model("TS1", {tag: {"chain": sol["chain"], "kind": kind}})
+            by_text = DM.build_board_model("TS1", {tag: {"disp": sol["disp"], "kind": kind}})
+            self.assertEqual([d["id"] for d in by_text["devices"]], [d["id"] for d in by_chain["devices"]], tag)
+            self.assertEqual(by_text["unmapped"], by_chain["unmapped"], tag)
+
+
 class DesignConstraints(unittest.TestCase):
     """Design rules are constraints on the connections (no 4P MCB behind a 2P RCCB), not symbols; a constraint without its data is not applied."""
 

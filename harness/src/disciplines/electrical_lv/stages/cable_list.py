@@ -45,7 +45,7 @@ def board_diagram_assembly(ch, loads, routing=None):
     joined with the values of the calculation and the cable-list rows. Nothing is calculated here; the drawing engines read the result."""
     from epc_drawing import diagram_assembler, diagram_model
     datos, detalle = ch["calc"]["datos"], ch["calc"]["detalle"]
-    circuits = {tag: {"disp": d.get("disp"), "kind": KIND_OF_TYPE.get(detalle[tag].get("tipo")), "parent": detalle[tag].get("padre") or None, "load_ref": tag} for tag, d in datos.items()}
+    circuits = {tag: {"chain": detalle[tag].get("cadena"), "disp": d.get("disp"), "kind": KIND_OF_TYPE.get(detalle[tag].get("tipo")), "parent": detalle[tag].get("padre") or None, "load_ref": tag} for tag, d in datos.items()}
     board = ch["form"]["board"]["name"]
     model = dict(diagram_model.build_board_model(board, circuits), board=board)
     values = {tag: {"in_a": d.get("In"), "icu_ka": d.get("icu"), "s_mm2": d.get("S"), "du_pct": d.get("dU"), "ib_a": detalle[tag].get("ib_a")} for tag, d in datos.items()}

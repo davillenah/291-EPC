@@ -51,6 +51,17 @@ class ModelAndAssembler(unittest.TestCase):
         m = DM.build_board_model("TS1", {"M-02": {"kind": "motor_star_delta"}, "A-01": {"kind": "ats_feeder"}, "MV-01": {"kind": "mv_intake"}})
         self.assertEqual([], m["unmapped"])
 
+    def test_structured_chain_wins_over_the_text(self):
+        chain = [{"symbol": "lv_mcb", "short": "MCB", "poles": 3}, {"symbol": "lv_contactor", "short": "KM", "poles": 3}]
+        m = DM.build_board_model("TS1", {"M-1": {"chain": chain, "disp": "MCCB (10 A)", "kind": "motor"}})
+        self.assertEqual(["dev-M-1-mcb", "dev-M-1-contactor"], [d["id"] for d in m["devices"] if d["id"] != "dev-TS1-bus"])
+        self.assertEqual([3, 3], [d["poles"] for d in m["devices"] if "poles" in d])
+        self.assertEqual([], m["unmapped"])
+
+    def test_structured_chain_reports_what_it_cannot_map(self):
+        m = DM.build_board_model("TS1", {"M-1": {"chain": [{"symbol": "lv_vfd", "short": "VFD", "poles": 3}], "kind": "motor"}})
+        self.assertEqual([{"circuit": "M-1", "token": "VFD"}], m["unmapped"])
+
 
 if __name__ == "__main__":
     unittest.main()

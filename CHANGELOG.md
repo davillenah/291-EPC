@@ -5,6 +5,7 @@ All notable changes. Format: Keep a Changelog; versions follow `harness/docs/BRA
 ## [Unreleased]
 
 ### Changed
+- The board netlist reads the structured chain of the standard solution (`detalle.cadena`: devices and poles) and no longer has to parse the calculation text; the text stays as the fallback (DGM-12).
 - One duty per role (`docs/prsad/ROLES-single-responsibility.md`): each roster entry has a `duty` (roster schema) and a test fails when two roles share one; the `orchestrator` now covers discipline and project scope with the interface register, and `multidisciplinary_orchestrator` was removed.
 - Removed the 35 unused legacy agents from `harness/.claude/agents/` (owner decision, 2026-11-21); `document-writer`, the seven `senior-*-engineer` reviewers, `agents/disciplines/` and the five product agents stay. Roles map with one duty per role: `docs/prsad/ROLES-single-responsibility.md`.
 - `epc_pv` now reads its research data (`epc_pv.equipment`): the inverter blocks are derived from the 10 inverter data sheets in `data/pv_inverters/inverters` (the only source, ADR-0012; `inverter_catalog.json` is no longer read and a test checks that it agrees with the derived STP values), models whose sheet does not give a value as one plain number are listed as gaps and never used; `auto` picks only inverters that admit a string of the module; mounting structures, module formats and technologies, accessories and the 7 feasibility references are loaded and tested; the package data now includes the sub-folders.
