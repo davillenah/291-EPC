@@ -190,6 +190,8 @@ def _inverter_cell(pen: Pen, inv: Dict[str, Any], x: float, y: float) -> float:
     pen.text("pv.TEXT", f"{len(inv['strings'])} strings", mid, y - 18, 0.8, True)
     pen.line("pv.DIAGRAM", (mid, y), (mid, y + 8))
     pen.text("pv.TEXT", "DC", mid + 4, y + 5, 0.7)
+    _symbol(pen, "pv_module", x + 2, y + 14, 0.35)          # the strings that feed this inverter
+    _symbol(pen, "dc_disconnect", mid - 6, y + 6, 0.3)       # its DC isolator
     pen.line("pv.DIAGRAM", (mid, y - CELL_H), (mid, y - CELL_H - 10))
     return mid
 
@@ -216,6 +218,7 @@ def _array_block(pen: Pen, a: Dict[str, Any], inverters: List[Dict[str, Any]], y
     pen.line("pv.DIAGRAM", (collector_x, mid_y), (collector_x + 24, mid_y))
     pen.rect("pv.STATION", collector_x + 24, mid_y - 20, 70, 40)
     pen.text("pv.TEXT", _t("station", language), collector_x + 59, mid_y, 0.9, True)
+    _symbol(pen, "energy_meter_kwh", collector_x + 28, mid_y + 18, 0.35)    # the plant meter at the station
     return bus_y[-1] - 40
 
 
