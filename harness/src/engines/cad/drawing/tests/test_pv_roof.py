@@ -68,7 +68,11 @@ class TestRoofSld(unittest.TestCase):
             doc = ezdxf.readfile(str(path))
             inserts = [e for e in doc.modelspace() if e.dxftype() == "INSERT"]
             texts = " ".join(e.dxf.text for e in doc.modelspace() if e.dxftype() == "TEXT")
-        self.assertEqual(len(inserts), sum(int(a["inverters"]) for a in ROOF["result"]["arrays"]))
-        self.assertTrue(all(e.dxf.name.endswith("_inverter") for e in inserts))
+        names = [e.dxf.name.split("IEC60617_")[-1] for e in inserts]
+        units = sum(int(a["inverters"]) for a in ROOF["result"]["arrays"])
+        self.assertEqual(names.count("inverter"), units)
+        self.assertEqual(names.count("pv_module"), units)
+        self.assertEqual(names.count("dc_disconnect"), units)
+        self.assertEqual(names.count("energy_meter_kwh"), len(ROOF["result"]["arrays"]))
         for a in ROOF["result"]["arrays"]:
             self.assertIn(f"{a['id']}-INV1", texts)
