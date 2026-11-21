@@ -165,7 +165,7 @@ def _array_result(spec: Dict[str, Any], lay: Dict[str, Any], e: Dict[str, Any], 
     kwp = lay["dc_kwp"]
     ac_rated_kw = lay["inverters"] * float(spec["inverter"]["pac0_w"]) / 1000.0
     total_hours = w["n"] * hours
-    return {"id": str(spec["id"]), "name": str(spec.get("name", spec["id"])), "modules": lay["modules"], "inverters": lay["inverters"], "dc_kwp": round(kwp, 3), "ac_kw": round(ac_rated_kw, 3),
+    return {"id": str(spec["id"]), "name": str(spec.get("name", spec["id"])), "modules": lay["modules"], "inverters": lay["inverters"], "dc_kwp": round(kwp, 3), "ac_kw": round(ac_rated_kw, 3), "inverter_ac_kw": round(float(spec["inverter"]["pac0_w"]) / 1000.0, 3),
             "dc_ac_ratio": round(kwp / ac_rated_kw, 4), "strings": {k: lay[k] for k in ("n_series", "series_range", "strings", "strings_per_inverter", "strings_per_mppt", "strings_per_mppt_limit")},
             "poa_kwh_m2": round(poa_kwh, 3), "dc_kwh": round(e["dc_kwh"], 3), "ac_kwh": round(e["ac_kwh"], 3), "clipping_kwh": round(e["clipping_kwh"], 3), "peak_ac_kw": round(e["peak_ac_kw"], 3),
             "specific_yield_kwh_kwp": round(e["ac_kwh"] / kwp, 3), "performance_ratio": round(e["ac_kwh"] / (kwp * poa_kwh), 5) if poa_kwh > 0 else 0.0,

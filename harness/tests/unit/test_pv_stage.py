@@ -429,3 +429,28 @@ class PvBoqEquipmentTests(unittest.TestCase):
         lines = output_stages.pv_equipment(ctx)
         self.assertEqual([(l["quantity"]) for l in lines], [210, 15, 2])
         self.assertIsNone(output_stages.pv_equipment(NS(results={})))
+
+
+class PvFeedersTests(unittest.TestCase):
+    """PVX-06: every inverter of a plant-only project gets an AC feeder in the board form."""
+
+    def _ctx(self, area="PV", plant=True):
+        from types import SimpleNamespace as NS
+        from disciplines.electrical_lv.stages import pv_feeders as PF
+        cache = {PF.CACHE_KEY: {"arrays": [{"id": "A1", "inverters": 3, "inverter_ac_kw": 25.0}, {"id": "A2", "inverters": 1, "inverter_ac_kw": 10.0}]}} if plant else {}
+        return NS(loads={"loads": [{"id": "AUX-01", "area": area}]}, engine_cache=cache)
+
+    def test_one_feeder_per_inverter_with_the_rating_stage_3_counted(self):
+        from disciplines.electrical_lv.stages import pv_feeders as PF
+        rows = PF.feeder_rows(self._ctx(), {"phases": 3, "length_m": 30, "fp": 0.9})
+        self.assertEqual([r["tag"] for r in rows], ["E-A1-INV1", "E-A1-INV2", "E-A1-INV3", "E-A2-INV1"])
+        self.assertEqual([r["load"] for r in rows], [25.0, 25.0, 25.0, 10.0])
+        self.assertTrue(all(r["phase"] == "3F" and r["length_m"] == 30 and r["fp"] == 0.9 for r in rows))
+
+    def test_nothing_is_added_in_a_building_project_without_the_input_or_without_a_plant(self):
+        from disciplines.electrical_lv.stages import pv_feeders as PF
+        given = {"phases": 3, "length_m": 30}
+        self.assertEqual(PF.feeder_rows(self._ctx(area="A1"), given), [])
+        self.assertEqual(PF.feeder_rows(self._ctx(), None), [])
+        self.assertEqual(PF.feeder_rows(self._ctx(), {"phases": 3}), [])
+        self.assertEqual(PF.feeder_rows(self._ctx(plant=False), given), [])

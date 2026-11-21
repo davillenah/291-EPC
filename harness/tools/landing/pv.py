@@ -16,10 +16,10 @@ ROOF_TYPES = ("flat", "pitched")
 EXTRA_PLANES = (2, 3, 4)      # a pitched roof can have up to four planes: the first one is the `roof_*` fields, the others `roof2_*` to `roof4_*`
 PLANE_FIELDS = ("width_m", "slope_m", "tilt_deg", "azimuth_deg")
 NUMBERS = ("latitude_deg", "longitude_deg", "utc_offset_h", "target_kwp", "tilt_deg", "azimuth_deg", "dc_ac_ratio", "albedo", "design_t_min_c", "isc_max_input_a", "energy_price", "investment",
-           "aux_load_kw", "aux_phases", "aux_length_m", "board_fp", "roof_width_m", "roof_slope_m", "roof_setback_m", "site_width_m", "site_length_m", "setback_m", "table_rows", "table_modules_per_row", "module_gap_m", "table_gap_m", "road_width_m") + tuple(f"roof{n}_{k}" for n in EXTRA_PLANES for k in PLANE_FIELDS)
+           "aux_load_kw", "aux_phases", "aux_length_m", "feeder_phases", "feeder_length_m", "board_fp", "roof_width_m", "roof_slope_m", "roof_setback_m", "site_width_m", "site_length_m", "setback_m", "table_rows", "table_modules_per_row", "module_gap_m", "table_gap_m", "road_width_m") + tuple(f"roof{n}_{k}" for n in EXTRA_PLANES for k in PLANE_FIELDS)
 GROUND_ONLY = ("site_width_m", "site_length_m", "setback_m", "table_rows", "table_modules_per_row", "table_orientation", "module_gap_m", "table_gap_m", "road_width_m")
 REQUIRED = ("mode", "latitude_deg", "longitude_deg")
-ADVANCED = ("model3d_format", "structure_id", "currency", "utc_offset_h", "module", "inverter", "isc_max_input_a", "aux_load_kw", "aux_phases", "aux_length_m", "board_fp", "target_kwp", "tilt_deg", "azimuth_deg", "dc_ac_ratio", "albedo", "design_t_min_c",
+ADVANCED = ("model3d_format", "structure_id", "currency", "utc_offset_h", "module", "inverter", "isc_max_input_a", "aux_load_kw", "aux_phases", "aux_length_m", "feeder_phases", "feeder_length_m", "board_fp", "target_kwp", "tilt_deg", "azimuth_deg", "dc_ac_ratio", "albedo", "design_t_min_c",
             "roof_setback_m", "setback_m", "table_rows", "table_modules_per_row", "table_orientation", "module_gap_m", "table_gap_m", "road_width_m")
 RANGES = {"energy_price": (0, 1e9), "investment": (0, 1e15), "target_kwp": (0.001, 1e6), "tilt_deg": (0, 90), "azimuth_deg": (0, 360), "latitude_deg": (-90, 90), "longitude_deg": (-180, 180), "utc_offset_h": (-14, 14),
           **{f"roof{n}_{k}": r for n in EXTRA_PLANES for k, r in (("tilt_deg", (0, 90)), ("azimuth_deg", (0, 360)), ("width_m", (0.001, 1e4)), ("slope_m", (0.001, 1e4)))}}
@@ -46,7 +46,7 @@ def form():
         sel("mode", list(MODES)), sel("roof_type", list(ROOF_TYPES), False), num("latitude_deg"), num("longitude_deg"), num("energy_price", False), {"path": "pv.currency", "kind": "text", "required": False}, num("investment", False), num("utc_offset_h", False),
         sel("structure_id", ["auto"] + sorted(structures()), False), sel("model3d_format", list(MODEL3D_FORMATS), False),
         sel("module", ["auto"] + sorted(modules), False), sel("inverter", ["auto"] + sorted(inverters), False), num("isc_max_input_a", False),
-        num("aux_load_kw", False), sel("aux_phases", ["1", "3"], False), num("aux_length_m", False), num("board_fp", False),
+        num("aux_load_kw", False), sel("aux_phases", ["1", "3"], False), num("aux_length_m", False), sel("feeder_phases", ["1", "3"], False), num("feeder_length_m", False), num("board_fp", False),
         num("target_kwp", False), num("tilt_deg", False), num("azimuth_deg", False), num("dc_ac_ratio", False), num("albedo", False), num("design_t_min_c", False),
         num("roof_width_m", False), num("roof_slope_m", False), num("roof_setback_m", False),
         *[num(f"roof{n}_{k}", False) for n in EXTRA_PLANES for k in PLANE_FIELDS],
@@ -64,7 +64,7 @@ def proposals():
     d, lay = DEFAULTS, DEFAULTS["layout"]
     keys = ("setback_m", "table_rows", "table_modules_per_row", "table_orientation", "module_gap_m", "table_gap_m", "road_width_m")
     import house
-    return {"pv.aux_load_kw": d["aux"]["load_kw"], "pv.aux_phases": str(d["aux"]["phases"]), "pv.aux_length_m": d["aux"]["length_m"], "pv.module": d["module"], "pv.inverter": d["inverter"], "pv.board_fp": house.DEFAULTS["board"]["fp_default"], "pv.albedo": d["albedo"], "pv.dc_ac_ratio": d["dc_ac_ratio"], "pv.roof_type": d["roof_type"], "pv.roof_setback_m": d["roof_setback_m"], **{f"pv.{k}": lay[k] for k in keys}}
+    return {"pv.aux_load_kw": d["aux"]["load_kw"], "pv.aux_phases": str(d["aux"]["phases"]), "pv.aux_length_m": d["aux"]["length_m"], "pv.feeder_phases": str(d["feeder"]["phases"]), "pv.feeder_length_m": d["feeder"]["length_m"], "pv.module": d["module"], "pv.inverter": d["inverter"], "pv.board_fp": house.DEFAULTS["board"]["fp_default"], "pv.albedo": d["albedo"], "pv.dc_ac_ratio": d["dc_ac_ratio"], "pv.roof_type": d["roof_type"], "pv.roof_setback_m": d["roof_setback_m"], **{f"pv.{k}": lay[k] for k in keys}}
 
 
 def values_of(flat):
@@ -288,6 +288,14 @@ def aux_loads(flat):
             "power": {"value": v["aux_load_kw"], "unit": "kW"}, "phases": int(v["aux_phases"])}
     load["length"] = {"value": v["aux_length_m"], "unit": "m"}
     return [{"id": "PV", "name": "Planta fotovoltaica"}], [load]
+
+
+def feeders_of(flat):
+    """`engine_inputs["pv_feeders"]`: phases and run length of the AC feeder of each inverter (the person's or the proposal, pending review) and the board power factor."""
+    v, _ = values_of(flat)
+    feeder = DEFAULTS["feeder"]
+    out = {"phases": int(v.get("feeder_phases", feeder["phases"])), "length_m": v.get("feeder_length_m", feeder["length_m"])}
+    return dict(out, fp=v["board_fp"]) if v.get("board_fp") is not None else out
 
 
 def fetch_weather(flat):

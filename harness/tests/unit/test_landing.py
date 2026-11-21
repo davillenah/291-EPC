@@ -212,6 +212,8 @@ class PvProjectTests(unittest.TestCase):
         self.assertTrue(section["layout"]["fill"])
         self.assertNotIn("target_modules", section["layout"])
         self.assertEqual(pv.aux_loads(minimal)[1][0]["power"]["value"], pv.DEFAULTS["aux"]["load_kw"])      # a project needs one load: typical proposal, pending review
+        feeder = pv.feeders_of(minimal)
+        self.assertEqual((feeder["phases"], feeder["length_m"]), (pv.DEFAULTS["feeder"]["phases"], pv.DEFAULTS["feeder"]["length_m"]))      # the feeder of each inverter: typical proposal, pending review
         roof = pv.section(dict(minimal, **{"pv.mode": "rooftop", "pv.roof_width_m": "12", "pv.roof_slope_m": "6"}))
         self.assertNotIn("target_modules", roof["flat_roof"])
         capped = pv.section(dict(minimal, **{"pv.target_kwp": "10"}))
