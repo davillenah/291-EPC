@@ -1,0 +1,50 @@
+{
+ "schema_version": "1.0",
+ "model_id": "pv_two_strings_to_inverter",
+ "board": "JB1",
+ "description": {
+  "en": "Two PV strings with fuses in parallel, DC switch-disconnector, SPD and inverter (hand-built: the builder covers board circuits)",
+  "es": "Dos strings FV con fusibles en paralelo, seccionador DC, DPS e inversor (hecho a mano: el constructor cubre circuitos de tablero)"
+ },
+ "status": "typical",
+ "circuits": [
+  {
+   "id": "circ-S1.1",
+   "name": {
+    "en": "String 1.1",
+    "es": "String 1.1"
+   },
+   "load": "load-S1.1",
+   "wires": [
+    "wire-S1.1-string",
+    "wire-JB1-1",
+    "wire-JB1-main"
+   ]
+  },
+  {
+   "id": "circ-S1.2",
+   "name": {
+    "en": "String 1.2",
+    "es": "String 1.2"
+   },
+   "load": "load-S1.2",
+   "wires": [
+    "wire-S1.2-string",
+    "wire-JB1-2",
+    "wire-JB1-main"
+   ]
+  },
+  {
+   "id": "circ-JB1-spd",
+   "name": {
+    "en": "Surge protection",
+    "es": "Proteccion contra sobretension"
+   },
+   "load": "load-PE1",
+   "wires": [
+    "wire-JB1-spd",
+    "wire-JB1-pe"
+   ]
+  }
+ ]
+}

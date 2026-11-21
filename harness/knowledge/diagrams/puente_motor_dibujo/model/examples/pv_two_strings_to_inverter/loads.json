@@ -1,0 +1,33 @@
+{
+ "schema_version": "1.0",
+ "model_id": "pv_two_strings_to_inverter",
+ "board": "JB1",
+ "description": {
+  "en": "Two PV strings with fuses in parallel, DC switch-disconnector, SPD and inverter (hand-built: the builder covers board circuits)",
+  "es": "Dos strings FV con fusibles en paralelo, seccionador DC, DPS e inversor (hecho a mano: el constructor cubre circuitos de tablero)"
+ },
+ "status": "typical",
+ "loads": [
+  {
+   "id": "load-S1.1",
+   "tag": "-G1.1",
+   "kind": "source",
+   "symbol": "lv_pv_module",
+   "load_ref": null
+  },
+  {
+   "id": "load-S1.2",
+   "tag": "-G1.2",
+   "kind": "source",
+   "symbol": "lv_pv_module",
+   "load_ref": null
+  },
+  {
+   "id": "load-PE1",
+   "tag": "-PE1",
+   "kind": "load",
+   "symbol": "lv_earth_pe",
+   "load_ref": null
+  }
+ ]
+}

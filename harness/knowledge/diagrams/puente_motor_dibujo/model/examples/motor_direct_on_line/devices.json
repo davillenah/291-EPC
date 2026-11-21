@@ -1,0 +1,40 @@
+{
+ "schema_version": "1.0",
+ "model_id": "motor_direct_on_line",
+ "board": "TS-EX3",
+ "description": {
+  "en": "Direct-on-line motor from the calculation chain MCB > KM > OL",
+  "es": "Motor de arranque directo desde la cadena del calculo MCB > KM > OL"
+ },
+ "status": "typical",
+ "devices": [
+  {
+   "id": "dev-TS-EX3-bus",
+   "tag": "-TS-EX3",
+   "device_id": "switchboard_tgbt",
+   "symbol": "lv_busbar_node",
+   "enclosure": null
+  },
+  {
+   "id": "dev-M-01-mcb",
+   "tag": "-M-01.1",
+   "device_id": "mcb",
+   "symbol": "lv_mcb",
+   "enclosure": "TS-EX3"
+  },
+  {
+   "id": "dev-M-01-contactor",
+   "tag": "-M-01.2",
+   "device_id": "contactor",
+   "symbol": "lv_contactor",
+   "enclosure": "TS-EX3"
+  },
+  {
+   "id": "dev-M-01-thermal_overload_relay",
+   "tag": "-M-01.3",
+   "device_id": "thermal_overload_relay",
+   "symbol": "lv_thermal_overload",
+   "enclosure": "TS-EX3"
+  }
+ ]
+}

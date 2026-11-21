@@ -1,0 +1,134 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "title": "Wires of a model: what is connected to what; no values",
+ "type": "object",
+ "additionalProperties": false,
+ "required": [
+  "schema_version",
+  "model_id",
+  "wires",
+  "board"
+ ],
+ "properties": {
+  "schema_version": {
+   "const": "1.0"
+  },
+  "model_id": {
+   "type": "string",
+   "pattern": "^[a-z0-9_.-]+$"
+  },
+  "description": {
+   "type": "object",
+   "required": [
+    "en",
+    "es"
+   ],
+   "properties": {
+    "en": {
+     "type": "string"
+    },
+    "es": {
+     "type": "string"
+    }
+   }
+  },
+  "status": {
+   "enum": [
+    "unverified",
+    "typical",
+    "not_found",
+    "pending review"
+   ]
+  },
+  "wires": {
+   "type": "array",
+   "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "id",
+     "from",
+     "to",
+     "zone"
+    ],
+    "properties": {
+     "id": {
+      "type": "string",
+      "pattern": "^wire-[A-Za-z0-9][A-Za-z0-9._-]*$",
+      "description": "stable id built from the circuit tag and the role, never from a counter"
+     },
+     "from": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+       "ref",
+       "port"
+      ],
+      "properties": {
+       "ref": {
+        "type": "string",
+        "pattern": "^(dev|load)-[A-Za-z0-9][A-Za-z0-9._-]*$",
+        "description": "id of a device (devices.json) or a load/source (loads.json)"
+       },
+       "port": {
+        "type": "string",
+        "description": "port id of the symbol in the epc_symbols catalog"
+       }
+      }
+     },
+     "to": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+       "ref",
+       "port"
+      ],
+      "properties": {
+       "ref": {
+        "type": "string",
+        "pattern": "^(dev|load)-[A-Za-z0-9][A-Za-z0-9._-]*$",
+        "description": "id of a device (devices.json) or a load/source (loads.json)"
+       },
+       "port": {
+        "type": "string",
+        "description": "port id of the symbol in the epc_symbols catalog"
+       }
+      }
+     },
+     "zone": {
+      "enum": [
+       "internal",
+       "external"
+      ],
+      "description": "internal = inside the board, external = leaves the board"
+     },
+     "conductor": {
+      "enum": [
+       "L",
+       "L1",
+       "L2",
+       "L3",
+       "N",
+       "PE",
+       "DC+",
+       "DC-",
+       "3L",
+       "3L+N"
+      ]
+     },
+     "cable_ref": {
+      "type": [
+       "string",
+       "null"
+      ],
+      "description": "tag of the row in the cable list (stage 8); length, section and specification live there, never here"
+     }
+    }
+   }
+  },
+  "board": {
+   "type": "string",
+   "description": "tag of the board (tablero) this model belongs to; one model per board"
+  }
+ }
+}
