@@ -24,10 +24,12 @@ Today the calculation chooses the protection and writes it as text (`disp`); the
 | 3 | Cable type estimate | design criteria | load, environment, installation | conductor material, insulation, number of cores, installation method; **no cross-section** | no |
 | 4 | Calculation | engines (aea90364 and calculation/*) | netlist + cable types + loads | ratings per device (In, Icu, poles, sensitivity), cross-section, voltage drop, short-circuit | yes (only here) |
 | 5 | Audit | auditor (`calc_check` is the base) | all of the above + design constraints | verdict ok / not ok, with findings per rule | no |
-| 6 | Assembly | `epc_drawing.diagram_assembler` | netlist, calculation values, cable rows, IEC 60617 symbols, the verdict | the board diagram assembly | passes values through |
+| 6 | Assembly | `epc_drawing.diagram_assembler` | netlist, calculation values, cable rows, IEC 60617 symbols, the verdict | the assembly: one package with everything, handed to the generators (step 7) | passes values through |
+| 7 | Generation | the generators (drawing engine, documents, procurement) | the assembly only | SLD, MLD, lists (cable list, terminal blocks, BOQ), datasheets, specifications (pliegos) | no, they read the assembly |
 
 Rules of the flow:
 
+- The assembly is the single hand-over: the SLD, the MLD, the lists and the specifications are generated from it, none of them re-reads the calculation (today four selectors do; DGM-13).
 - A step reads only the outputs of the steps above it. Nothing is computed twice.
 - Design rules give **constraints**, never symbols (example: no 4P MCB downstream of a 2P RCCB). A constraint without its data is not applied.
 - The auditor is the only one that decides pass or fail. The assembly runs only once the verdict exists; a "not ok" verdict is carried into the output, never hidden.
