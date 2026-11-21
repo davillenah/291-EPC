@@ -45,7 +45,7 @@ def load_roster(claude_dir, filename="roster.json", names_expected=None):
 
 
 DISCIPLINES_ROSTER = "roster.disciplines.json"
-DISCIPLINE_NAMES = ("multidisciplinary_orchestrator", "civil_structural_lead", "mechanical_lead", "hvac_lead", "piping_plumbing_lead",
+DISCIPLINE_NAMES = ("civil_structural_lead", "mechanical_lead", "hvac_lead", "piping_plumbing_lead",
                     "fire_protection_lead", "instrumentation_control_lead", "telecommunications_lead")
 
 

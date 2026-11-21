@@ -180,5 +180,33 @@ class LegacyAgentsAreUntouched(unittest.TestCase):
         self.assertEqual(found, LEGACY_SHA256)
 
 
+class OneDutyPerRole(unittest.TestCase):
+    """docs/prsad/ROLES-single-responsibility.md: every role owns exactly one duty and no duty has two owners (both rosters)."""
+    DISCIPLINES = json.loads((CLAUDE / "roster.disciplines.json").read_text(encoding="utf-8"))
+    ALL = ROSTER["agents"] + DISCIPLINES["agents"]
+
+    def test_both_rosters_match_the_schema(self):
+        for roster in (ROSTER, self.DISCIPLINES):
+            self.assertEqual([], validate(roster, SCHEMA))
+
+    def test_every_role_has_one_duty_and_no_duty_is_shared(self):
+        owners = {}
+        for a in self.ALL:
+            self.assertIsInstance(a["duty"], str, a["name"])
+            owners.setdefault(a["duty"], []).append(a["name"])
+        self.assertEqual({d: n for d, n in owners.items() if len(n) > 1}, {})
+
+    def test_there_is_one_orchestrator_and_one_auditor(self):
+        by_duty = {a["duty"]: a["name"] for a in self.ALL}
+        self.assertEqual("orchestrator", by_duty["sequencing"])
+        self.assertEqual("calc_check", by_duty["audit"])
+        self.assertEqual(1, sum(1 for a in self.ALL if "orchestrator" in a["name"]))
+
+    def test_each_discipline_has_one_leader(self):
+        leaders = [a["duty"] for a in self.ALL if a["duty"].startswith("design_intent:")]
+        self.assertEqual(len(leaders), len(set(leaders)))
+        self.assertIn("design_intent:electrical_lv", leaders)
+
+
 if __name__ == "__main__":
     unittest.main()

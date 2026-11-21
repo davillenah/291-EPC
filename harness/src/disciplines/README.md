@@ -18,4 +18,4 @@ One folder per engineering discipline. Each discipline is a plugin of the platfo
 
 ## Discipline contract
 
-A discipline folder holds a README (scope, status, lead agent, reference standards) and, later, its stages, its engines registered under `harness/src/engines/`, its norm records under `harness/config/normative/<country>/<discipline>/` (every value `pending review` until the owner approves it), and a README. Cross-discipline coordination is done by the `multidisciplinary_orchestrator`. The generic pipeline core will be extracted from `electrical_lv` when a second discipline gets its first engine.
+A discipline folder holds a README (scope, status, lead agent, reference standards) and, later, its stages, its engines registered under `harness/src/engines/`, its norm records under `harness/config/normative/<country>/<discipline>/` (every value `pending review` until the owner approves it), and a README. Cross-discipline coordination is done by the `orchestrator` (project scope). The generic pipeline core will be extracted from `electrical_lv` when a second discipline gets its first engine.
