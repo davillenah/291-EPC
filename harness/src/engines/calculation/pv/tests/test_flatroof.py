@@ -132,3 +132,14 @@ class TestModulePick(unittest.TestCase):
         self.assertEqual(rows, sorted(rows, key=lambda r: (-r["dc_kwp"], -r["modules"])))
         self.assertIn("kWp", modulepick.summary(rows))
         self.assertEqual(modulepick.block(row["record"])["id"], row["record"]["id"])
+
+
+class TestStructureTiltRange(unittest.TestCase):
+    def test_the_tilts_tried_stay_inside_the_range_of_the_structure_record(self):
+        from epc_pv import equipment
+        self.assertEqual(equipment.tilt_range_deg("roof_flat_ballast_east_west"), (10.0, 10.0))
+        self.assertIsNone(equipment.tilt_range_deg(None))
+        self.assertIsNone(equipment.tilt_range_deg("no_such_structure"))
+        self.assertEqual(flatroof.candidate_tilts(dict(SPEC, structure_id="roof_flat_ballast_east_west")), (10,))
+        self.assertEqual(flatroof.candidate_tilts(dict(SPEC, structure_id="roof_flat_ballast_east_west", tilt_deg=30)), (30.0,))      # the person's tilt wins
+        self.assertEqual(flatroof.candidate_tilts({k: v for k, v in SPEC.items() if k not in ("structure_id", "tilt_deg")}), flatroof.TILTS_DEG)

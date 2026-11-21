@@ -115,6 +115,35 @@ def _lighting_report(d, project, language="en"):
 MONTHS = ("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
 
 
+def _pv_array_rows(arrays):
+    """One row per array and a total row: modules, strings, modules per string, inverters, strings per inverter."""
+    rows = [[a["id"], a["modules"], a["strings"]["strings"], a["strings"]["n_series"], a["inverters"], a["strings"]["strings_per_inverter"]] for a in arrays]
+    return rows + [["total", sum(a["modules"] for a in arrays), sum(a["strings"]["strings"] for a in arrays), "", sum(a["inverters"] for a in arrays), ""]]
+
+
+def _pv_inverter_blocks(result):
+    placed = [i for i in (result.get("layout") or {}).get("inverters", []) if i.get("x") is not None]
+    rows = [[i["id"], i.get("catalog_id") or "", round(i["x"], 2), round(i["y"], 2)] for i in placed]
+    return [{"type": "h", "text": "Inverters (position in the layout)"}, _table(["inverter", "model", "x_m", "y_m"], rows)] if rows else []
+
+
+def _pv_weight_blocks(result):
+    """The weight of the modules when the module format record gives one (`epc_pv.equipment.module_weight_kg`): each and in total. A load figure for the structure designer, not a structural check."""
+    from epc_pv import equipment
+    dims = ((result.get("layout") or {}).get("module") or {}).get("dimensions_mm")
+    each = equipment.module_weight_kg(dims) if dims else None
+    if each is None:
+        return []
+    total = each * sum(a["modules"] for a in result["arrays"])
+    return [{"type": "p", "text": f"Module weight (record of the module format): {each:g} kg each, {total / 1000.0:.1f} t in total. Loads on the structure and the roof are not checked."}]
+
+
+def _pv_equipment_blocks(result):
+    """The equipment the plant needs, as the engine counted it (nothing is added): modules, strings and inverters per array with the totals, and one line per inverter of the layout (its model and position)."""
+    head = [{"type": "h", "text": "Equipment of the plant"}, _table(["array", "modules", "strings", "modules_per_string", "inverters", "strings_per_inverter"], _pv_array_rows(result["arrays"]))]
+    return head + _pv_inverter_blocks(result) + _pv_weight_blocks(result)
+
+
 def _pv_report(d, project):
     result = d["result"]
     layout_rows = [[a["id"], a["modules"], a["inverters"], a["dc_kwp"], a["ac_kw"], a["dc_ac_ratio"], a["strings"]["n_series"], a["strings"]["strings"]] for a in result["arrays"]]
@@ -128,6 +157,7 @@ def _pv_report(d, project):
               _table(["array", "poa_kwh_m2", "ac_kwh", "kwh_per_kwp", "pr", "cf"], yield_rows),
               {"type": "h", "text": "Monthly AC energy (kWh)"}, _table(["month", "ac_kwh"], months),
               {"type": "p", "text": f"Total: DC {totals['dc_kwp']} kWp, AC {totals['ac_kw']} kW, {totals['ac_kwh']} kWh per year, specific yield {totals['specific_yield_kwh_kwp']} kWh/kWp, clipping {totals['clipping_kwh']} kWh."}]
+    blocks += _pv_equipment_blocks(result)
     plan = result.get("layout")
     if plan:
         blocks += [{"type": "h", "text": "Plant layout"},

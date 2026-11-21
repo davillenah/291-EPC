@@ -302,7 +302,7 @@ class PvDrawingsTests(unittest.TestCase):
             run(ctx, stop_after=10, run_id="r1")
             res = ctx.results[10]
         self.assertEqual(res.status, "ok")
-        self.assertEqual({k.rsplit("_pv_", 1)[1] for k in res.outputs["pv_sheets"]}, {"roof_layout_sheet", "roof_stringing_sheet", "roof_cabling_sheet"})
+        self.assertEqual({k.rsplit("_pv_", 1)[1] for k in res.outputs["pv_sheets"]}, {"roof_layout_sheet", "roof_stringing_sheet", "roof_cabling_sheet", "equipment_detail_sheet"})      # the detail sheet of the module record of the outline (PVX-04)
 
 
 
@@ -366,3 +366,45 @@ class PvModel3dSizeTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class PvEquipmentListTests(unittest.TestCase):
+    def test_the_report_lists_modules_strings_and_every_placed_inverter(self):
+        from disciplines.electrical_lv.stages import rendering
+        result = {"arrays": [{"id": "A1", "modules": 210, "inverters": 2, "strings": {"strings": 15, "n_series": 14, "strings_per_inverter": 8}},
+                             {"id": "A2", "modules": 28, "inverters": 1, "strings": {"strings": 2, "n_series": 14, "strings_per_inverter": 2}}],
+                  "layout": {"inverters": [{"id": "INV-01", "catalog_id": "m1", "x": 1.0, "y": 2.0}, {"id": "INV-02", "x": None, "y": None}]}}
+        blocks = rendering._pv_equipment_blocks(result)
+        total = blocks[1]["rows"][-1]
+        self.assertEqual([str(total[1]), str(total[2]), str(total[4])], ["238", "17", "3"])
+        self.assertEqual(len(blocks), 4)
+
+
+class PvModel3dFormatTests(unittest.TestCase):
+    def test_the_person_chooses_the_dxf_the_freecad_macro_or_both(self):
+        from disciplines.electrical_lv.stages import pv_drawings
+        self.assertEqual(pv_drawings.model3d_formats(None), (True, True))
+        self.assertEqual(pv_drawings.model3d_formats({"model3d_format": "dxf"}), (True, False))
+        self.assertEqual(pv_drawings.model3d_formats({"model3d_format": "freecad"}), (False, True))
+        with self.assertRaises(ValueError):
+            pv_drawings.model3d_formats({"model3d_format": "step"})
+
+
+class PvWeightTests(unittest.TestCase):
+    def test_the_report_states_the_module_weight_only_when_the_record_gives_it(self):
+        from disciplines.electrical_lv.stages import rendering
+        result = {"arrays": [{"id": "A1", "modules": 100, "inverters": 1, "strings": {"strings": 5, "n_series": 20, "strings_per_inverter": 5}}], "layout": {"module": {"dimensions_mm": [1954, 1134, 30]}}}
+        text = " ".join(b.get("text", "") for b in rendering._pv_equipment_blocks(result))
+        self.assertIn("Module weight", text)
+        result["layout"]["module"]["dimensions_mm"] = [1000, 500, 30]      # no record has this outline
+        self.assertNotIn("Module weight", " ".join(b.get("text", "") for b in rendering._pv_equipment_blocks(result)))
+
+
+class PvRoofDetailTests(unittest.TestCase):
+    def test_a_roof_plant_gets_the_module_record_of_its_outline_or_nothing(self):
+        from disciplines.electrical_lv.stages import pv_drawings
+        roof = {"planes": [{"module": {"width_m": 2.382, "depth_m": 1.134}}]}
+        found = pv_drawings.roof_parts(roof)
+        self.assertTrue(found == {} or found["module"]["id"])
+        self.assertEqual(pv_drawings.roof_parts({"planes": [{"module": {"width_m": 1.0, "depth_m": 0.5}}]}), {})      # no record has this outline
+        self.assertEqual(pv_drawings.roof_parts({"planes": [{}]}), {})

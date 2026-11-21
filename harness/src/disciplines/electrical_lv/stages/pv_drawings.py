@@ -40,19 +40,30 @@ def _drafts(context, target, name, stamp_date, language, calls):
         from epc_drawing import pv_diagrams
         drafts.update(pv_diagrams.write_all(copy.deepcopy(found[0]), found[1], Path(target) / "pv_drafts", f"{name}_pv", language, stamp_date))
         calls.append(EC.record_for("cad/drawing", WRITE))
-        drafts.update(_detail(found[0], target, name, language, stamp_date, calls))
+        drafts.update(_detail(equipment_parts(found[0]), target, name, language, stamp_date, calls))
     if roof is not None:
         from epc_drawing import pv_roof
         drafts.update(pv_roof.write_all(copy.deepcopy(roof[0]), roof[1], Path(target) / "pv_drafts", f"{name}_pv", language, stamp_date))
         calls.append(EC.record_for("cad/drawing", WRITE_ROOF))
+        if found is None:
+            drafts.update(_detail(roof_parts(roof[0]), target, name, language, stamp_date, calls))
     return drafts
 
 
-def _detail(geometry, target, name, language, stamp_date, calls):
-    """The equipment detail draft (module, inverter and post views from the records the layout names); {} when no record is found."""
+def roof_parts(roof):
+    """The equipment records of a roof plant for the detail sheet: the module format with the outline the planes use (`{}` when no record has it)."""
+    from epc_pv import equipment
+    module = (roof["planes"][0] or {}).get("module") or {}
+    outline = sorted((module.get("width_m", 0) * 1000.0, module.get("depth_m", 0) * 1000.0), reverse=True)
+    record = equipment.module_format(outline) if all(outline) else None
+    return {"module": record} if record else {}
+
+
+def _detail(parts, target, name, language, stamp_date, calls):
+    """The equipment detail draft (module, inverter and post views from the records the layout names); {} when no record is found. `parts` are the records of `equipment_parts` (ground) or `roof_parts` (roof)."""
     from disciplines.electrical_lv.stages import engine_calls as EC
     from epc_drawing import pv_details
-    path = pv_details.write(equipment_parts(geometry), Path(target) / "pv_drafts", f"{name}_pv", language, stamp_date)
+    path = pv_details.write(parts, Path(target) / "pv_drafts", f"{name}_pv", language, stamp_date)
     if path is None:
         return {}
     calls.append(EC.record_for("cad/drawing", WRITE_DETAIL))
@@ -103,19 +114,48 @@ def model3d_plan(modules):
     return ("single", None) if modules <= MODEL3D_SINGLE_MAX_MODULES else ("assembly", None)
 
 
+MODEL3D_FORMATS = ("both", "dxf", "freecad")
+
+
+def model3d_formats(given):
+    """(write the DXF, write the FreeCAD macro) from `engine_inputs["drawings"]["model3d_format"]` (`both` when not given)."""
+    fmt = (given or {}).get("model3d_format") or "both"
+    if fmt not in MODEL3D_FORMATS:
+        raise ValueError(f"engine_inputs.drawings.model3d_format: {fmt!r} is not one of {', '.join(MODEL3D_FORMATS)}")
+    return fmt in ("both", "dxf"), fmt in ("both", "freecad")
+
+
 def _model3d(context, target, name, stamp_date, calls):
     """The 3D model of the plant (`epc_drawing.pv_model3d`) when stage 3 placed tables; it lands in the 3D folder of the transmittal. Big plants are written as parts and a master (`model3d_plan`)."""
+    out = {}
+    roof = roof_of(context)
+    if roof is not None:
+        from disciplines.electrical_lv.stages import engine_calls as EC
+        from epc_drawing import pv_roof_model3d
+        calls.append(EC.record_for("cad/drawing", "epc_drawing.pv_roof_model3d.write"))
+        out["pv_roof_model_3d"] = pv_roof_model3d.write(copy.deepcopy(roof[0]), roof[1], Path(target) / "out", f"{name}", stamp_date).name
     found = layout_of(context)
     if found is None:
-        return {}
+        return out
+    from disciplines.electrical_lv.stages import engine_calls as EC
+    want_dxf, want_freecad = model3d_formats(EC.inputs_of(context).get("drawings"))
+    parts, modules = equipment_parts(found[0]), sum(int(t["modules"]) for t in found[0]["tables"])
+    folder = Path(target) / "out"
+    if want_freecad:
+        from epc_drawing import pv_freecad
+        calls.append(EC.record_for("cad/drawing", "epc_drawing.pv_freecad.write"))
+        out["pv_model_3d_freecad"] = pv_freecad.write(copy.deepcopy(found[0]), found[1], folder, f"{name}", stamp_date, parts=parts)["macro"].name
+    return dict(out, **(_dxf_model(found, folder, name, stamp_date, parts, modules, calls) if want_dxf else {}))
+
+
+def _dxf_model(found, folder, name, stamp_date, parts, modules, calls):
+    """The DXF of the plant: one file, or parts and a master for a big plant (`model3d_plan`)."""
     from disciplines.electrical_lv.stages import engine_calls as EC
     from epc_drawing import pv_model3d
-    modules = sum(int(t["modules"]) for t in found[0]["tables"])
-    parts = equipment_parts(found[0])
     kind, _ = model3d_plan(modules)
     calls.append(EC.record_for("cad/drawing", "epc_drawing.pv_model3d.write" if kind == "single" else "epc_drawing.pv_model3d.write_assembly"))
     if kind == "single":
-        return {"pv_model_3d": pv_model3d.write(copy.deepcopy(found[0]), found[1], Path(target) / "out", f"{name}", stamp_date, parts=parts).name}
-    done = pv_model3d.write_assembly(copy.deepcopy(found[0]), found[1], Path(target) / "out", f"{name}", stamp_date, parts=parts)
+        return {"pv_model_3d": pv_model3d.write(copy.deepcopy(found[0]), found[1], folder, f"{name}", stamp_date, parts=parts).name}
+    done = pv_model3d.write_assembly(copy.deepcopy(found[0]), found[1], folder, f"{name}", stamp_date, parts=parts)
     note = {k: v.format(n=done["sectors"], modules=modules) for k, v in MODEL3D_PARTS.items()}
     return {"pv_model_3d": done["master"].name, "pv_model_3d_parts": [p.name for p in done["parts"]], "pv_model_3d_note": note}

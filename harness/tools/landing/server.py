@@ -186,12 +186,18 @@ def clean(flat, form):
     return nested
 
 
+KILLED = {"en": "The run was stopped by the system (signal {sig}), usually for lack of memory; make the plant smaller or free memory and run again.",
+          "es": "El sistema detuvo la corrida (señal {sig}), normalmente por falta de memoria; achicá la planta o liberá memoria y corré de nuevo."}
+
+
 def run_epc(projects_root, args, timeout=120):
     env = dict(os.environ, PYTHONPATH=os.pathsep.join(PATHS), EPC_PROJECTS_ROOT=str(projects_root))
     p = subprocess.run([sys.executable, "-m", "epc_platform.cli", "--json", *args], capture_output=True, text=True, env=env, timeout=timeout)
     try:
         return json.loads(p.stdout)
     except ValueError:
+        if p.returncode < 0:      # the process was ended by a signal (the system kills a run that uses all the memory): say so, an empty message tells nothing
+            return {"ok": False, "error": {"code": "cli_killed", "message": KILLED["en"].format(sig=-p.returncode) + " / " + KILLED["es"].format(sig=-p.returncode)}}
         return {"ok": False, "error": {"code": "cli", "message": (p.stderr or p.stdout)[-400:]}}
 
 
@@ -283,7 +289,7 @@ def _pv(selected, flat, submit):
         weather = pv.fetch_weather(flat)
     except Exception as exc:      # PvError (English and Spanish) or anything the network raises: the project is not created
         return {"state": "invalid", "errors": [], "problem": {"code": "pvgis", "detail": f"{exc} / {getattr(exc, 'es', '')}"[:300]}}, None
-    return {"state": "created", "errors": []}, {"section": pv.section(flat), "files": {pv.WEATHER_FILE: weather}, "aux": None if "architectural" in selected else (pv.aux_loads(flat), pv.board_of(flat))}
+    return {"state": "created", "errors": []}, {"section": pv.section(flat), "drawings": pv.drawings_options(pv.values_of(flat)[0]), "files": {pv.WEATHER_FILE: weather}, "aux": None if "architectural" in selected else (pv.aux_loads(flat), pv.board_of(flat))}
 
 
 def _merge_pv(data, pv_data):
@@ -292,7 +298,8 @@ def _merge_pv(data, pv_data):
         return data
     (areas, loads), board = pv_data["aux"] or (([], []), None)
     data = data or {"plans": {}, "loads": {"schema_version": "1.0", "areas": areas, "loads": loads}, "inputs": {"board": board, "documents": {"formats": ["pdf", "docx", "xlsx"]}, "circuits": {"AUX-01": {"kind": "rcbo"}}}}      # the auxiliary service carries its residual-current device (TT needs it, stage 8)
-    return dict(data, inputs=dict(data["inputs"], pv=pv_data["section"]), files=pv_data["files"])
+    inputs = dict(data["inputs"], pv=pv_data["section"], **({"drawings": dict(data["inputs"].get("drawings") or {}, **pv_data["drawings"])} if pv_data.get("drawings") else {}))
+    return dict(data, inputs=inputs, files=pv_data["files"])
 
 
 def _launch(root, folder, code, data, created):

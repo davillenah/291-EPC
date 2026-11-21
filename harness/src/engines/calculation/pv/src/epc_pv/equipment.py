@@ -165,6 +165,15 @@ def structure(ident: str) -> Dict[str, Any]:
     return found
 
 
+def tilt_range_deg(ident: Optional[str]) -> Optional[Tuple[float, float]]:
+    """(lowest, highest) tilt the mounting structure record allows, when it gives a range; None for no structure, an unknown id or a record without one."""
+    try:
+        window = (structure(ident).get("geometry") or {}).get("tilt_range_deg") if ident else None
+    except KeyError:
+        return None
+    return (float(window[0]), float(window[1])) if isinstance(window, list) and len(window) == 2 else None
+
+
 _KINDS = (("micropile", "embedded"), ("pile", "embedded"), ("screw", "embedded"), ("concrete_footing", "concrete"), ("ballast", "ballast"))
 
 

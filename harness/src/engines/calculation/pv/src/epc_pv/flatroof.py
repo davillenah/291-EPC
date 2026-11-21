@@ -9,8 +9,9 @@ Not calculated: wind uplift, ballast, roof loads and fixings (they need the roof
 clearance): nothing is defaulted here.
 """
 import math
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
+from epc_pv import equipment
 from epc_pv import layout as lay
 from epc_pv import orient
 from epc_pv.messages import bi, item
@@ -57,7 +58,17 @@ def _document(document: Dict[str, Any], spec: Dict[str, Any]) -> Dict[str, Any]:
 def _options(document: Dict[str, Any], spec: Dict[str, Any], altitude: float, azimuth: float) -> List[Dict[str, Any]]:
     """Capacity and yield of every candidate tilt (a tilt the person fixed is the only candidate)."""
     base = _document(document, spec)
-    return [dict(capacity(spec, t, altitude), specific_yield_kwh_kwp=orient._yield(base, t, azimuth)) for t in ([float(spec["tilt_deg"])] if "tilt_deg" in spec else TILTS_DEG)]
+    return [dict(capacity(spec, t, altitude), specific_yield_kwh_kwp=orient._yield(base, t, azimuth)) for t in candidate_tilts(spec)]
+
+
+def candidate_tilts(spec: Dict[str, Any]) -> Tuple[float, ...]:
+    """The tilts to try: the one the person fixed, else those of `TILTS_DEG` inside the range of the structure record (its lowest tilt when none of them is inside)."""
+    if "tilt_deg" in spec:
+        return (float(spec["tilt_deg"]),)
+    window = equipment.tilt_range_deg(spec.get("structure_id"))
+    if window is None:
+        return TILTS_DEG
+    return tuple(t for t in TILTS_DEG if window[0] <= t <= window[1]) or (window[0],)
 
 
 def propose(document: Dict[str, Any], spec: Dict[str, Any]) -> Dict[str, Any]:
