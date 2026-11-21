@@ -61,7 +61,7 @@ from epc_aea90364 import aea_route as AR
 from epc_aea90364 import aea_conductors as CO
 from epc_aea90364 import aea_export as EX
 from epc_aea90364 import aea_voltage_drop as VD
-from epc_aea90364 import current_and_loads as CL, insulation_roles as IR, policy, system_voltage as SV
+from epc_aea90364 import cable_types as CT, current_and_loads as CL, policy, system_voltage as SV
 from epc_aea90364 import simultaneity as SIM
 from epc_aea90364 import short_circuit as SC
 from epc_aea90364 import solutions as SOL
@@ -424,15 +424,13 @@ def calculate(tablero, circuitos, margen_iz=1.0, eta_motores=False, temp_c=70.0,
         limite = limites[tipo]
         smin = smin_tab[tipo]
         cc = dict(c)
-        if not cc.get("MATERIAL"):
-            cc["MATERIAL"] = mat_def
-        if not cc.get("AISLACION"):
-            cc["AISLACION"] = IR.insulation_for_role(tipo) or ais_def          # D6: the role of the circuit decides; ais_def only for the roles D6 does not cover
+        tipo_cable = CT.cable_type(c, tipo, mat_def, ais_def)               # D6: the role of the circuit decides the insulation; ais_def only for the roles D6 does not cover
+        cc["MATERIAL"], cc["AISLACION"] = tipo_cable["material"], tipo_cable["insulation"]
         for col, k in (("TEMP_AMBIENTE_C", "t_amb"), ("TEMP_SUELO_C", "t_suelo"), ("RESIST_TERMICA_KMW", "rho")):
             if cc.get(col) in (None, ""):
                 cc[col] = inst[k]
-        if not cc.get("METODO") and cc["AISLACION"] == "xlpe":
-            cc["METODO"] = "B2"                       # B1 solo tiene tabla para PVC
+        if tipo_cable["method"]:
+            cc["METODO"] = tipo_cable["method"]       # B1 solo tiene tabla para PVC: con XLPE y sin METODO se usa B2
         par = AMP.parametros(cc)
         t_cond = AMP.temp_conductor(par, temp_c)
         elegida, du_prop, ultimo_error, iz_ok, s_termica, r_ok = None, 0.0, None, None, None, None
