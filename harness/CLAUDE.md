@@ -43,7 +43,8 @@ Unchanged by this authorization: agents never approve or change norm values, nev
 The owner authorized, for every thread, committing, pushing, opening the pull request, merging to `dev`, releasing to `main` and syncing `main`, `dev` and the local clone with the remote **without asking and without reporting problems along the way**. Follow "Feature release" below for the steps.
 
 - If something fails on the way (a gate check, a merge conflict, a tool error, a push rejected), resolve it at its root and carry on; do not stop to tell the owner.
-- **The one exception: if the GitHub CI fails, ask the owner for authorization** (what failed and the proposed fix) before acting on it.
+- **If the GitHub CI fails, resolve it at its root and push the fix, without asking** (owner rule, 2026-11-21). Before pushing anything, analyse that it breaks nothing (the full gate, the tests around the change, the generated files, the other branches and consumers of what changes).
+- **The one exception: ask the owner for authorization only when what you need to push could break something** (a change of behavior outside the thread's work, a data or schema change that others read, a risk of losing work), saying what could break and the proposed fix.
 - **When the owner asks to close a thread, run the whole release and sync yourself** (commit, push, PR, merge to `dev`, release branch in production, merge to `main`, `main`, `dev` and the local clone identical with the remote, generated files fresh, BACKLOG and CHANGELOG updated) and then close the thread with the report of "Before closing a thread". No further questions.
 - Still never, whatever fails: approve or change norm values, edit golden files, weaken a test or a gate check, commit `local/` or standards PDFs, or force-push.
 
