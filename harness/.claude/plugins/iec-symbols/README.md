@@ -29,7 +29,7 @@ This plugin is packaging only. The code lives in `harness/src/engines/cad/drawin
 | Incluye (motor) | `symbols` |
 | Es dueño de | `symbols` |
 | Necesita (plugins) | — |
-| Lo necesitan | `mld`, `sld` |
+| Lo necesitan | `board-design`, `mld`, `sld` |
 | Paquetes de Python | — |
 | Si lo modificas, revisa | plugins `board-design`, `mld`, `sld`; módulos del backend — |
 

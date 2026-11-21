@@ -176,6 +176,22 @@ def boq_circuits(ch):
     return rows
 
 
+def pv_equipment(context):
+    """The photovoltaic equipment lines of the BOQ (modules, strings, inverters per array, as stage 3 counted them); None when the run has no plant."""
+    res = context.results.get(3)
+    pv = res.outputs.get("pv") if res is not None and res.status == "ok" else None
+    arrays = (pv or {}).get("arrays")
+    if not arrays:
+        return None
+    out = []
+    for a in arrays:
+        st = a["strings"]
+        out += [{"description": f"PV module, array {a['id']}", "unit": "un", "quantity": a["modules"], "source": [a["id"]]},
+                {"description": f"PV string of {st['n_series']} modules in series, array {a['id']}", "unit": "un", "quantity": st["strings"], "source": [a["id"]]},
+                {"description": f"PV inverter, array {a['id']}", "unit": "un", "quantity": a["inverters"], "source": [a["id"]]}]
+    return out
+
+
 def boq_allowance(context):
     """The wastage percentage the engineer gave, or None: it is never defaulted."""
     given = EC.inputs_of(context).get("boq")
@@ -258,10 +274,10 @@ class DocumentsStage(Stage):
     calls = ("epc_aea90364.board_memo.memoria_doc", "epc_aea90364.board_memo.sintesis_doc")
 
     @staticmethod
-    def boq(ch, allowance, terminal_totals):
+    def boq(ch, allowance, terminal_totals, equipment=None):
         import epc_boq
         try:
-            return epc_boq.build_boq(ch["form"]["board"]["name"], boq_circuits(ch), allowance_pct=allowance, terminal_totals=terminal_totals)
+            return epc_boq.build_boq(ch["form"]["board"]["name"], boq_circuits(ch), allowance_pct=allowance, terminal_totals=terminal_totals, equipment=equipment)
         except ValueError as exc:
             raise StageInputError([f"bill of quantities: {exc}"]) from exc
 
@@ -304,7 +320,7 @@ class DocumentsStage(Stage):
         if allowance is None:
             pending = [dict(p, reason=NO_ALLOWANCE) if p["name"] == BOQ_PENDING_NAME else p for p in pending]
         else:
-            docs["boq"] = self.boq(ch, allowance, terminals["totals"])
+            docs["boq"] = self.boq(ch, allowance, terminals["totals"], pv_equipment(context))
             pending = [p for p in pending if p["name"] != BOQ_PENDING_NAME]
             calls.append(EC.record_for(BOQ_ENGINE, BOQ_BUILD))
         given = datasheets_inputs(context)

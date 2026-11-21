@@ -9,7 +9,7 @@ import math
 from epc_boq import inputs
 
 UNSPECIFIED = "unspecified"
-PREFIX = {"cable": "CAB", "protective_device": "DEV", "terminal_block": "TRM", "enclosure": "ENC"}
+PREFIX = {"cable": "CAB", "protective_device": "DEV", "terminal_block": "TRM", "enclosure": "ENC", "pv_equipment": "PVE"}
 DEVICE_FIELDS = ("device_kind", "in_a", "poles", "breaking_capacity_ka")
 ASSUMPTIONS = (
     "quantities only: this engine holds no price and no cost; the cost engine is planned for a later phase",
@@ -158,12 +158,22 @@ def _totals(items):
     return {"lines": len(items), "cable_m": round(sum(cables), 6), "devices": sum(i["quantity"] for i in items if i["category"] == "protective_device")}
 
 
-def build_boq(board_name, circuits, *, allowance_pct=None, terminal_totals=None, round_up_m=False):
+def _equipment_lines(equipment):
+    """Lines for equipment counted by another engine (the photovoltaic plant: modules, strings, inverters): `[{"description", "unit", "quantity", "source"?}]`, quantities as the engine counted them."""
+    lines = []
+    for e in equipment or []:
+        if not isinstance(e, dict) or not e.get("description") or isinstance(e.get("quantity"), bool) or not isinstance(e.get("quantity"), (int, float)) or e["quantity"] < 0:
+            raise ValueError(f"equipment line needs a description and a quantity of zero or more (got {e!r})")
+        lines.append(("pv_equipment", str(e["description"]), str(e.get("unit") or "un"), e["quantity"], list(e.get("source") or []), "counted by the plant engine (epc_pv)", {}, []))
+    return lines
+
+
+def build_boq(board_name, circuits, *, allowance_pct=None, terminal_totals=None, round_up_m=False, equipment=None):
     """The draft bill of quantities of a board (quantities only).
 
     `circuits`: list of {"tag", "phases" (1 or 3), "s_mm2", optional "neutral_mm2", "pe_mm2", "length_m", "material", "insulation", "device_kind", "in_a",
     "poles", "breaking_capacity_ka", "description", "device"}. `allowance_pct` is REQUIRED (percent of wastage on cable lengths, 0 allowed).
-    `terminal_totals`: optional totals of a terminal-block list ({"by_terminal_size": {"2.5": 4, ...}}). `round_up_m`: round each cable length up to a whole metre.
+    `terminal_totals`: optional totals of a terminal-block list ({"by_terminal_size": {"2.5": 4, ...}}). `round_up_m`: round each cable length up to a whole metre. `equipment`: optional lines counted by another engine (the PV plant) as {description, unit, quantity, source}.
     Returns {"board", "allowance_pct", "round_up_m", "items", "totals", "assumptions", "norm_records", "issues"}; a ValueError names an invalid input.
     """
     allowance = inputs.allowance(allowance_pct)
@@ -177,7 +187,7 @@ def build_boq(board_name, circuits, *, allowance_pct=None, terminal_totals=None,
     terminals, terminal_issues = _terminals(by_size)
     enclosure = [("enclosure", f"Enclosure/board {board_name} (sizing not modelled)", "un", 1, [c["tag"] for c in checked], "one enclosure per board",
                   {"board": board_name}, [])]
-    items = _numbered(cables + devices + terminals + enclosure)
+    items = _numbered(cables + devices + terminals + enclosure + _equipment_lines(equipment))
     assumptions = list(ASSUMPTIONS) + ([] if by_size else ["terminal blocks are not included: no terminal-block totals were given"])
     return {"board": board_name, "allowance_pct": allowance, "round_up_m": round_up_m, "items": items, "totals": _totals(items), "assumptions": assumptions,
             "norm_records": [], "issues": sorted(set(cable_issues + device_issues + terminal_issues))}

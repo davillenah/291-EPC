@@ -156,12 +156,37 @@ def _route(pen: Pen, p: Dict[str, Any], ox: float, n_series: int, n_strings: int
             pen.line("pv.DC", (x, c["y"]), (x, y))
 
 
+def _inverters_of(a: Dict[str, Any]) -> List[Dict[str, Any]]:
+    """The inverters of an array without positions (a roof plan does not place them): ids `<array>-INV<k>`, the array's strings shared among them in order."""
+    n, total = max(int(a["inverters"]), 1), int(a["strings"]["strings"])
+    share = [total // n + (1 if k < total % n else 0) for k in range(n)]
+    out, first = [], 0
+    for k, count in enumerate(share, start=1):
+        out.append({"id": f"{a['id']}-INV{k}", "array": a["id"], "strings": [f"{a['id']}-S{i + 1}" for i in range(first, first + count)]})
+        first += count
+    return out
+
+
+def _sld(roof: Dict[str, Any], result: Dict[str, Any], language: str):
+    """The plant single-line diagram of a roof plant: the arrays of the run with their inverters (no positions) and strings, to the station."""
+    from epc_drawing import pv_diagrams as D
+    doc, style = D._new_doc(4)
+    D._layers(doc, ("pv.DIAGRAM", "pv.TEXT", "pv.STATION"))
+    pen = Pen(doc, style, 3.0)
+    pen.text("pv.TEXT", D._t("sld", language), 0, 20, 1.8)
+    pen.text("pv.TEXT", D._t("draft", language), 0, 10, 0.9)
+    y = 0.0
+    for a in result["arrays"]:
+        y = D._array_block(pen, a, _inverters_of(a), y, language)
+    return doc
+
+
 def write_all(roof: Dict[str, Any], result: Dict[str, Any], out_dir, name: str, language: str = "en", stamp_date=None) -> Dict[str, Path]:
-    """Writes `<name>_roof_layout.dxf`, `_roof_stringing.dxf` and `_roof_cabling.dxf` under `out_dir`; returns {plan name: path}."""
+    """Writes `<name>_roof_layout.dxf`, `_roof_stringing.dxf`, `_roof_cabling.dxf` and `_roof_sld.dxf` (single-line) under `out_dir`; returns {plan name: path}."""
     from epc_dxf import deliverable
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
-    docs = {"roof_layout": _layout(roof, result, language), "roof_stringing": _stringing(roof, result, language), "roof_cabling": _cabling(roof, result, language)}
+    docs = {"roof_layout": _layout(roof, result, language), "roof_stringing": _stringing(roof, result, language), "roof_cabling": _cabling(roof, result, language), "roof_sld": _sld(roof, result, language)}
     written = {}
     for key, doc in docs.items():
         path = out / f"{name}_{key}.dxf"

@@ -158,10 +158,34 @@ def _sld(geometry: Dict[str, Any], result: Dict[str, Any], language: str):
     return doc
 
 
+SYMBOL_SCALE = 0.55      # the library symbols are drawn about 30 units wide; the cell is 44 wide
+
+
+def _symbol(pen: Pen, name: str, x: float, y: float, scale: float = SYMBOL_SCALE) -> bool:
+    """Inserts the IEC 60617 symbol `name` of the SLD library (`epc_symbols`, SVG source converted to DXF blocks) at (x, y); False when the library has no such symbol (the caller keeps its plain box)."""
+    from pathlib import Path as P
+    import ezdxf
+    from ezdxf.addons.importer import Importer
+    from epc_symbols import library_dir
+    path = P(str(library_dir("sld-lv-symbol"))) / f"291_E_LV_SLD_IEC60617_{name}.dxf"
+    if not path.is_file():
+        return False
+    block = f"291_E_LV_SLD_IEC60617_{name}"
+    doc = pen.msp.doc
+    if block not in doc.blocks:
+        source = ezdxf.readfile(str(path))
+        importer = Importer(source, doc)
+        importer.import_block(block)
+        importer.finalize()
+    pen.msp.add_blockref(block, (x, y), dxfattribs={"layer": "pv.DIAGRAM", "xscale": scale, "yscale": scale, "zscale": scale})
+    return True
+
+
 def _inverter_cell(pen: Pen, inv: Dict[str, Any], x: float, y: float) -> float:
     """One inverter box with its strings above and its AC output below; returns the x of its centre."""
     mid = x + (CELL_W - 8) / 2
     pen.rect("pv.DIAGRAM", x, y - CELL_H, CELL_W - 8, CELL_H)
+    _symbol(pen, "inverter", x + CELL_W - 8 - 4, y - 3)      # the inverter symbol in the corner of the box
     pen.text("pv.TEXT", inv["id"], mid, y - 9, 0.9, True)
     pen.text("pv.TEXT", f"{len(inv['strings'])} strings", mid, y - 18, 0.8, True)
     pen.line("pv.DIAGRAM", (mid, y), (mid, y + 8))
