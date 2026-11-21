@@ -44,11 +44,12 @@ The owner authorized, for every thread, committing, pushing, opening the pull re
 
 - If something fails on the way (a gate check, a merge conflict, a tool error, a push rejected), resolve it at its root and carry on; do not stop to tell the owner.
 - **The one exception: if the GitHub CI fails, ask the owner for authorization** (what failed and the proposed fix) before acting on it.
+- **When the owner asks to close a thread, run the whole release and sync yourself** (commit, push, PR, merge to `dev`, release branch in production, merge to `main`, `main`, `dev` and the local clone identical with the remote, generated files fresh, BACKLOG and CHANGELOG updated) and then close the thread with the report of "Before closing a thread". No further questions.
 - Still never, whatever fails: approve or change norm values, edit golden files, weaken a test or a gate check, commit `local/` or standards PDFs, or force-push.
 
 ## Before closing a thread (owner rule, 2026-11-19)
 
-Always, before closing a thread and before the owner is told it can be closed (and again whenever the owner asks to close it), verify everything. Nothing is closed on "it looked fine":
+Always, before closing a thread and before the owner is told it can be closed (and again whenever the owner asks to close it, which also triggers the release and sync of "Standing release authorization without asking"), verify everything. Nothing is closed on "it looked fine":
 
 1. The full gate passes: `python harness/tools/ci/run_gate.py` (47 of 47 checks; a failure is fixed at its root, never by weakening a test or a check).
 2. GitHub CI is **green** on the pull request and on `dev` and `main` after the merges. Read the real result (check runs), do not assume it.
