@@ -1,6 +1,6 @@
 # PRD — Diagram flow: analysis, netlist, cables, calculation, audit, assembly
 
-Status: **proposed** (owner, 2026-11-21). Backlog: DGM-12 (electrical), DGM-14 (photovoltaic). Builds on ADR-0037 (relational diagram model) and the diagram assembler.
+Status: **proposed** (owner, 2026-11-21). Backlog: DGM-12 (electrical), DGM-14 (photovoltaic), DGM-15 (coordination). Builds on ADR-0037 (relational diagram model) and the diagram assembler.
 
 ## 1. Purpose
 
@@ -58,13 +58,31 @@ Candidate PV constraints (all `unverified`, each one needs a person's confirmati
 - the rapid shutdown device and the residual current or insulation monitor are present where the plant type requires them;
 - every string and every inverter has its isolating device on the DC and on the AC side.
 
-## 5. Non-goals
+## 5. Coordination layer: discipline leaders and coordinators
+
+The flow above runs inside one discipline (electrical LV, PV, and later HVAC, lighting, control). On top of it:
+
+| Role | Scope | Responsibility |
+| --- | --- | --- |
+| Discipline leader | one discipline | owns the flow of its discipline (steps 1 to 7), answers for its audit verdict, publishes its assembly |
+| Interdisciplinary coordinator | the interfaces between two or more disciplines | resolves what crosses a boundary: the loads that HVAC, lighting or PV hand to the electrical board, the inverter-to-board connection, shared ids and shared data; checks that two assemblies agree on every shared item |
+| Multidisciplinary leader | the whole project | sequences the disciplines, collects the assemblies and audit verdicts, decides what goes in a transmittal, and hands the package to the engineer of record for review and signature |
+
+Rules:
+
+- Each discipline publishes its assembly; a coordinator reads assemblies, never the inner steps of another discipline.
+- An interface datum has one owner (the discipline that produces it) and the others read it (ADR-0012, one source of truth).
+- A coordinator audits the interface the way the auditor audits a circuit: constraints in, verdict out, findings carried to the transmittal.
+- Nothing here approves a norm value or signs; only a person does.
+- The product agents (orchestrator and the discipline agents) take their model, effort, tools and skills from the rosters only; this section adds no agent by hand. Open point: whether the leader and coordinator roles are new roster entries or duties of the orchestrator.
+
+## 6. Non-goals
 
 - No norm value is added, changed or approved here. New values are `pending review` in the norm register.
 - No change to golden files, D15 or D26.
 - The functional and control scheme drawing (DGM-10) and the other disciplines (DGM-11) follow the same flow later.
 
-## 6. Impact and rollout
+## 7. Impact and rollout
 
 Moving the decision of device roles ahead of the calculation touches stage 3 and the calculation input, which other threads and the golden comparisons depend on. Rollout:
 
@@ -74,7 +92,7 @@ Moving the decision of device roles ahead of the calculation touches stage 3 and
 4. Switch the calculation input; compare against the reference snapshot.
 5. PV roles, topologies and constraints on the same modules (DGM-14).
 
-## 7. Acceptance
+## 8. Acceptance
 
 - The device lists, the netlist and the cable types exist before any number is calculated, and contain no value.
 - The calculation emits no device text that the netlist depends on.
