@@ -89,10 +89,14 @@ class DrawingsStage(Stage):
         extra = self._floor_plans(context, target, name, calls)
         extra.update(self._pv_drawings(context, target, name, calls))
         extra.update(self._model3d(context, target, name, calls))
+        extra.update(self._assembly(context, ch))
         unify_dxf(target / "out", drawing_date(context))
-        outputs = {"directory": f"drawings/{name}/out", "files": list_files(target / "out"), "summary": {k: copy.deepcopy(summary[k]) for k in SUMMARY_KEYS},
-                   "diagram_assembly": board_diagram_assembly(ch, (context.loads or {}).get("loads") or [], self._routing(context))}
+        outputs = {"directory": f"drawings/{name}/out", "files": list_files(target / "out"), "summary": {k: copy.deepcopy(summary[k]) for k in SUMMARY_KEYS}}
         return self.result("ok", outputs=dict(outputs, **extra), engine_calls=calls)
+
+    def _assembly(self, context, ch):
+        """The four-source diagram assembly of the board (see `diagram_assembler`)."""
+        return {"diagram_assembly": board_diagram_assembly(ch, (context.loads or {}).get("loads") or [], self._routing(context))}
 
     @staticmethod
     def _routing(context):
