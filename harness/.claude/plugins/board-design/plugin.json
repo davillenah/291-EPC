@@ -68,6 +68,10 @@
     {
       "id": "freecad",
       "role": "owner"
+    },
+    {
+      "id": "diagram-model",
+      "role": "owner"
     }
   ],
   "engine": [

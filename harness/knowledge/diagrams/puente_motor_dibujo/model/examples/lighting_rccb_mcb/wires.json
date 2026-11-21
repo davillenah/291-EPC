@@ -1,0 +1,51 @@
+{
+ "schema_version": "1.0",
+ "model_id": "lighting_rccb_mcb",
+ "board": "TS-EX1",
+ "description": {
+  "en": "Lighting circuit from the typical topology: RCCB then MCB then lamps",
+  "es": "Circuito de iluminacion desde la topologia tipica: RCCB, MCB y luminarias"
+ },
+ "status": "typical",
+ "wires": [
+  {
+   "id": "wire-IUG-01-1",
+   "from": {
+    "ref": "dev-TS-EX1-bus",
+    "port": "bottom"
+   },
+   "to": {
+    "ref": "dev-IUG-01-rccb",
+    "port": "top"
+   },
+   "zone": "internal",
+   "cable_ref": null
+  },
+  {
+   "id": "wire-IUG-01-2",
+   "from": {
+    "ref": "dev-IUG-01-rccb",
+    "port": "bottom"
+   },
+   "to": {
+    "ref": "dev-IUG-01-mcb",
+    "port": "top"
+   },
+   "zone": "internal",
+   "cable_ref": null
+  },
+  {
+   "id": "wire-IUG-01-load",
+   "from": {
+    "ref": "dev-IUG-01-mcb",
+    "port": "bottom"
+   },
+   "to": {
+    "ref": "load-IUG-01",
+    "port": "top"
+   },
+   "zone": "external",
+   "cable_ref": "IUG-01"
+  }
+ ]
+}

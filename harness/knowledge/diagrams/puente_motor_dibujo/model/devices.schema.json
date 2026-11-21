@@ -1,0 +1,90 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "title": "Devices of a model (one row per piece of switchgear)",
+ "type": "object",
+ "additionalProperties": false,
+ "required": [
+  "schema_version",
+  "model_id",
+  "devices",
+  "board"
+ ],
+ "properties": {
+  "schema_version": {
+   "const": "1.0"
+  },
+  "model_id": {
+   "type": "string",
+   "pattern": "^[a-z0-9_.-]+$"
+  },
+  "description": {
+   "type": "object",
+   "required": [
+    "en",
+    "es"
+   ],
+   "properties": {
+    "en": {
+     "type": "string"
+    },
+    "es": {
+     "type": "string"
+    }
+   }
+  },
+  "status": {
+   "enum": [
+    "unverified",
+    "typical",
+    "not_found",
+    "pending review"
+   ]
+  },
+  "devices": {
+   "type": "array",
+   "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "id",
+     "tag",
+     "device_id",
+     "symbol"
+    ],
+    "properties": {
+     "id": {
+      "type": "string",
+      "pattern": "^dev-[A-Za-z0-9][A-Za-z0-9._-]*$",
+      "description": "stable id built from the circuit tag and the role, never from a counter"
+     },
+     "tag": {
+      "type": "string",
+      "description": "IEC 81346 tag, e.g. -Q1"
+     },
+     "device_id": {
+      "type": "string",
+      "description": "research device id (sld_mld/devices, pv_sld_mld/devices)"
+     },
+     "symbol": {
+      "type": [
+       "string",
+       "null"
+      ],
+      "description": "epc_symbols id; null when the library has none"
+     },
+     "enclosure": {
+      "type": [
+       "string",
+       "null"
+      ],
+      "description": "tag of the enclosure or board that holds it"
+     }
+    }
+   }
+  },
+  "board": {
+   "type": "string",
+   "description": "tag of the board (tablero) this model belongs to; one model per board"
+  }
+ }
+}

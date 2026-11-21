@@ -1,0 +1,19 @@
+{
+ "schema_version": "1.0",
+ "model_id": "lighting_rccb_mcb",
+ "board": "TS-EX1",
+ "description": {
+  "en": "Lighting circuit from the typical topology: RCCB then MCB then lamps",
+  "es": "Circuito de iluminacion desde la topologia tipica: RCCB, MCB y luminarias"
+ },
+ "status": "typical",
+ "loads": [
+  {
+   "id": "load-IUG-01",
+   "tag": "-IUG-01",
+   "kind": "load",
+   "symbol": "lv_lighting_load",
+   "load_ref": null
+  }
+ ]
+}

@@ -1,0 +1,26 @@
+{
+ "schema_version": "1.0",
+ "model_id": "motor_direct_on_line",
+ "board": "TS-EX3",
+ "description": {
+  "en": "Direct-on-line motor from the calculation chain MCB > KM > OL",
+  "es": "Motor de arranque directo desde la cadena del calculo MCB > KM > OL"
+ },
+ "status": "typical",
+ "circuits": [
+  {
+   "id": "circ-M-01",
+   "name": {
+    "en": "M-01",
+    "es": "M-01"
+   },
+   "load": "load-M-01",
+   "wires": [
+    "wire-M-01-1",
+    "wire-M-01-2",
+    "wire-M-01-3",
+    "wire-M-01-load"
+   ]
+  }
+ ]
+}

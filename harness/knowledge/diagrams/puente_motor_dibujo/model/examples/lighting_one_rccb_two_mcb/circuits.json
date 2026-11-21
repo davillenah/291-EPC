@@ -1,0 +1,47 @@
+{
+ "schema_version": "1.0",
+ "model_id": "lighting_one_rccb_two_mcb",
+ "board": "TS-EX2",
+ "description": {
+  "en": "One RCCB feeding two lighting MCBs (children hang from the parent)",
+  "es": "Un RCCB que alimenta dos MCB de iluminacion (los hijos cuelgan del padre)"
+ },
+ "status": "typical",
+ "circuits": [
+  {
+   "id": "circ-G-02",
+   "name": {
+    "en": "G-02",
+    "es": "G-02"
+   },
+   "load": null,
+   "wires": [
+    "wire-G-02-1"
+   ]
+  },
+  {
+   "id": "circ-IUG-01",
+   "name": {
+    "en": "IUG-01",
+    "es": "IUG-01"
+   },
+   "load": "load-IUG-01",
+   "wires": [
+    "wire-IUG-01-1",
+    "wire-IUG-01-load"
+   ]
+  },
+  {
+   "id": "circ-IUG-02",
+   "name": {
+    "en": "IUG-02",
+    "es": "IUG-02"
+   },
+   "load": "load-IUG-02",
+   "wires": [
+    "wire-IUG-02-1",
+    "wire-IUG-02-load"
+   ]
+  }
+ ]
+}

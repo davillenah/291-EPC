@@ -41,5 +41,9 @@
   "freecad": {
     "owner": "board-design",
     "status": "active"
+  },
+  "diagram-model": {
+    "owner": "board-design",
+    "status": "active"
   }
 }

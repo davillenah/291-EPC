@@ -1,0 +1,33 @@
+{
+ "schema_version": "1.0",
+ "model_id": "lighting_rccb_mcb",
+ "board": "TS-EX1",
+ "description": {
+  "en": "Lighting circuit from the typical topology: RCCB then MCB then lamps",
+  "es": "Circuito de iluminacion desde la topologia tipica: RCCB, MCB y luminarias"
+ },
+ "status": "typical",
+ "devices": [
+  {
+   "id": "dev-TS-EX1-bus",
+   "tag": "-TS-EX1",
+   "device_id": "switchboard_tgbt",
+   "symbol": "lv_busbar_node",
+   "enclosure": null
+  },
+  {
+   "id": "dev-IUG-01-rccb",
+   "tag": "-IUG-01.1",
+   "device_id": "rccb",
+   "symbol": "lv_rccb",
+   "enclosure": "TS-EX1"
+  },
+  {
+   "id": "dev-IUG-01-mcb",
+   "tag": "-IUG-01.2",
+   "device_id": "mcb",
+   "symbol": "lv_mcb",
+   "enclosure": "TS-EX1"
+  }
+ ]
+}
