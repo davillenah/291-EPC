@@ -174,14 +174,17 @@
   },
   {
    "device_id": "imd_insulation_monitor",
-   "sld_symbol": null,
-   "match": "none",
+   "sld_symbol": "lv_imd",
+   "match": "placeholder",
    "mld_symbols": [],
-   "ports": [],
-   "status": "not_found",
+   "ports": [
+    "top",
+    "bottom"
+   ],
+   "status": "unverified",
    "note": {
-    "en": "No symbol in the repo library; needs a new symbol (data request, no drawing done here).",
-    "es": "No hay simbolo en la biblioteca del repo; hace falta uno nuevo (pedido de datos, no se dibujo nada)."
+    "en": "Block placeholder (a box with the device name) until the real IEC 60617 symbol exists (DGM-03). MLD variants not created yet.",
+    "es": "Bloque provisorio (caja con el nombre del dispositivo) hasta que exista el simbolo IEC 60617 real (DGM-03). Variantes MLD aun no creadas."
    }
   },
   {
@@ -329,14 +332,17 @@
   },
   {
    "device_id": "pv_blocking_diode",
-   "sld_symbol": null,
-   "match": "none",
+   "sld_symbol": "lv_pv_blocking_diode",
+   "match": "placeholder",
    "mld_symbols": [],
-   "ports": [],
-   "status": "not_found",
+   "ports": [
+    "top",
+    "bottom"
+   ],
+   "status": "unverified",
    "note": {
-    "en": "No symbol in the repo library; needs a new symbol (data request, no drawing done here).",
-    "es": "No hay simbolo en la biblioteca del repo; hace falta uno nuevo (pedido de datos, no se dibujo nada)."
+    "en": "Block placeholder (a box with the device name) until the real IEC 60617 symbol exists (DGM-03). MLD variants not created yet.",
+    "es": "Bloque provisorio (caja con el nombre del dispositivo) hasta que exista el simbolo IEC 60617 real (DGM-03). Variantes MLD aun no creadas."
    }
   },
   {
@@ -432,50 +438,62 @@
   },
   {
    "device_id": "pv_power_optimizer",
-   "sld_symbol": null,
-   "match": "none",
+   "sld_symbol": "lv_pv_power_optimizer",
+   "match": "placeholder",
    "mld_symbols": [],
-   "ports": [],
-   "status": "not_found",
+   "ports": [
+    "top",
+    "bottom"
+   ],
+   "status": "unverified",
    "note": {
-    "en": "No symbol in the repo library; needs a new symbol (data request, no drawing done here).",
-    "es": "No hay simbolo en la biblioteca del repo; hace falta uno nuevo (pedido de datos, no se dibujo nada)."
+    "en": "Block placeholder (a box with the device name) until the real IEC 60617 symbol exists (DGM-03). MLD variants not created yet.",
+    "es": "Bloque provisorio (caja con el nombre del dispositivo) hasta que exista el simbolo IEC 60617 real (DGM-03). Variantes MLD aun no creadas."
    }
   },
   {
    "device_id": "pv_rapid_shutdown_device",
-   "sld_symbol": null,
-   "match": "none",
+   "sld_symbol": "lv_pv_rapid_shutdown",
+   "match": "placeholder",
    "mld_symbols": [],
-   "ports": [],
-   "status": "not_found",
+   "ports": [
+    "top",
+    "bottom"
+   ],
+   "status": "unverified",
    "note": {
-    "en": "No symbol in the repo library; needs a new symbol (data request, no drawing done here).",
-    "es": "No hay simbolo en la biblioteca del repo; hace falta uno nuevo (pedido de datos, no se dibujo nada)."
+    "en": "Block placeholder (a box with the device name) until the real IEC 60617 symbol exists (DGM-03). MLD variants not created yet.",
+    "es": "Bloque provisorio (caja con el nombre del dispositivo) hasta que exista el simbolo IEC 60617 real (DGM-03). Variantes MLD aun no creadas."
    }
   },
   {
    "device_id": "pv_rcmu",
-   "sld_symbol": null,
-   "match": "none",
+   "sld_symbol": "lv_pv_rcmu",
+   "match": "placeholder",
    "mld_symbols": [],
-   "ports": [],
-   "status": "not_found",
+   "ports": [
+    "top",
+    "bottom"
+   ],
+   "status": "unverified",
    "note": {
-    "en": "No symbol in the repo library; needs a new symbol (data request, no drawing done here).",
-    "es": "No hay simbolo en la biblioteca del repo; hace falta uno nuevo (pedido de datos, no se dibujo nada)."
+    "en": "Block placeholder (a box with the device name) until the real IEC 60617 symbol exists (DGM-03). MLD variants not created yet.",
+    "es": "Bloque provisorio (caja con el nombre del dispositivo) hasta que exista el simbolo IEC 60617 real (DGM-03). Variantes MLD aun no creadas."
    }
   },
   {
    "device_id": "pv_string_combiner_box",
-   "sld_symbol": null,
-   "match": "none",
+   "sld_symbol": "lv_pv_combiner_box",
+   "match": "placeholder",
    "mld_symbols": [],
-   "ports": [],
-   "status": "not_found",
+   "ports": [
+    "top",
+    "bottom"
+   ],
+   "status": "unverified",
    "note": {
-    "en": "No symbol in the repo library; needs a new symbol (data request, no drawing done here).",
-    "es": "No hay simbolo en la biblioteca del repo; hace falta uno nuevo (pedido de datos, no se dibujo nada)."
+    "en": "Block placeholder (a box with the device name) until the real IEC 60617 symbol exists (DGM-03). MLD variants not created yet.",
+    "es": "Bloque provisorio (caja con el nombre del dispositivo) hasta que exista el simbolo IEC 60617 real (DGM-03). Variantes MLD aun no creadas."
    }
   },
   {

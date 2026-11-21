@@ -26,7 +26,8 @@ class DiagramKnowledgeUse(unittest.TestCase):
 
     def test_symbol_lookup(self):
         self.assertEqual("lv_mcb", K.symbol_for("mcb")["sld_symbol"])
-        self.assertIsNone(K.symbol_for("pv_rcmu")["sld_symbol"])
+        self.assertEqual("lv_pv_rcmu", K.symbol_for("pv_rcmu")["sld_symbol"])
+        self.assertEqual("placeholder", K.symbol_for("pv_rcmu")["match"])
         with self.assertRaises(KeyError):
             K.symbol_for("nope")
 

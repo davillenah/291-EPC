@@ -5946,6 +5946,318 @@
           "size": 3.47
         }
       ]
+    },
+    {
+      "id": "lv_imd",
+      "file": "291_E_LV_SLD_IEC60617_imd.svg",
+      "name_es": "Monitor de aislación (IMD)",
+      "name_en": "Insulation monitoring device (IMD)",
+      "description": "Bloque provisorio (caja con el nombre) hasta que exista el símbolo real. / Placeholder block until the real symbol exists.",
+      "tags": [
+        "placeholder",
+        "imd_insulation_monitor"
+      ],
+      "origin": "placeholder",
+      "source": "Bloque provisorio EPC-291 (DGM-03)",
+      "notes": null,
+      "size": {
+        "w": 52.0,
+        "h": 23.2
+      },
+      "viewBox": {
+        "x": -26.0,
+        "y": -1.6,
+        "w": 52.0,
+        "h": 23.2
+      },
+      "ports": [
+        {
+          "id": "top",
+          "x": 0.0,
+          "y": 0.0,
+          "dir": "up"
+        },
+        {
+          "id": "bottom",
+          "x": 0.0,
+          "y": 20.0,
+          "dir": "down"
+        }
+      ],
+      "fixed_texts": [
+        "IMD"
+      ],
+      "label_slots": [
+        {
+          "key": "tag",
+          "placeholder": "{tag}",
+          "example": "-X1",
+          "x": -14.0,
+          "y": 10.0,
+          "anchor": "end",
+          "size": 3.47
+        }
+      ]
+    },
+    {
+      "id": "lv_pv_blocking_diode",
+      "file": "291_E_LV_SLD_IEC60617_pv_blocking_diode.svg",
+      "name_es": "Diodo de bloqueo FV",
+      "name_en": "PV blocking diode",
+      "description": "Bloque provisorio (caja con el nombre) hasta que exista el símbolo real. / Placeholder block until the real symbol exists.",
+      "tags": [
+        "placeholder",
+        "pv_blocking_diode"
+      ],
+      "origin": "placeholder",
+      "source": "Bloque provisorio EPC-291 (DGM-03)",
+      "notes": null,
+      "size": {
+        "w": 52.0,
+        "h": 23.2
+      },
+      "viewBox": {
+        "x": -26.0,
+        "y": -1.6,
+        "w": 52.0,
+        "h": 23.2
+      },
+      "ports": [
+        {
+          "id": "top",
+          "x": 0.0,
+          "y": 0.0,
+          "dir": "up"
+        },
+        {
+          "id": "bottom",
+          "x": 0.0,
+          "y": 20.0,
+          "dir": "down"
+        }
+      ],
+      "fixed_texts": [
+        "DIODO"
+      ],
+      "label_slots": [
+        {
+          "key": "tag",
+          "placeholder": "{tag}",
+          "example": "-X1",
+          "x": -14.0,
+          "y": 10.0,
+          "anchor": "end",
+          "size": 3.47
+        }
+      ]
+    },
+    {
+      "id": "lv_pv_power_optimizer",
+      "file": "291_E_LV_SLD_IEC60617_pv_power_optimizer.svg",
+      "name_es": "Optimizador de potencia FV",
+      "name_en": "PV power optimizer",
+      "description": "Bloque provisorio (caja con el nombre) hasta que exista el símbolo real. / Placeholder block until the real symbol exists.",
+      "tags": [
+        "placeholder",
+        "pv_power_optimizer"
+      ],
+      "origin": "placeholder",
+      "source": "Bloque provisorio EPC-291 (DGM-03)",
+      "notes": null,
+      "size": {
+        "w": 52.0,
+        "h": 23.2
+      },
+      "viewBox": {
+        "x": -26.0,
+        "y": -1.6,
+        "w": 52.0,
+        "h": 23.2
+      },
+      "ports": [
+        {
+          "id": "top",
+          "x": 0.0,
+          "y": 0.0,
+          "dir": "up"
+        },
+        {
+          "id": "bottom",
+          "x": 0.0,
+          "y": 20.0,
+          "dir": "down"
+        }
+      ],
+      "fixed_texts": [
+        "OPTIM"
+      ],
+      "label_slots": [
+        {
+          "key": "tag",
+          "placeholder": "{tag}",
+          "example": "-X1",
+          "x": -14.0,
+          "y": 10.0,
+          "anchor": "end",
+          "size": 3.47
+        }
+      ]
+    },
+    {
+      "id": "lv_pv_rapid_shutdown",
+      "file": "291_E_LV_SLD_IEC60617_pv_rapid_shutdown.svg",
+      "name_es": "Dispositivo de corte rápido FV",
+      "name_en": "PV rapid shutdown device",
+      "description": "Bloque provisorio (caja con el nombre) hasta que exista el símbolo real. / Placeholder block until the real symbol exists.",
+      "tags": [
+        "placeholder",
+        "pv_rapid_shutdown_device"
+      ],
+      "origin": "placeholder",
+      "source": "Bloque provisorio EPC-291 (DGM-03)",
+      "notes": null,
+      "size": {
+        "w": 52.0,
+        "h": 23.2
+      },
+      "viewBox": {
+        "x": -26.0,
+        "y": -1.6,
+        "w": 52.0,
+        "h": 23.2
+      },
+      "ports": [
+        {
+          "id": "top",
+          "x": 0.0,
+          "y": 0.0,
+          "dir": "up"
+        },
+        {
+          "id": "bottom",
+          "x": 0.0,
+          "y": 20.0,
+          "dir": "down"
+        }
+      ],
+      "fixed_texts": [
+        "RSD"
+      ],
+      "label_slots": [
+        {
+          "key": "tag",
+          "placeholder": "{tag}",
+          "example": "-X1",
+          "x": -14.0,
+          "y": 10.0,
+          "anchor": "end",
+          "size": 3.47
+        }
+      ]
+    },
+    {
+      "id": "lv_pv_rcmu",
+      "file": "291_E_LV_SLD_IEC60617_pv_rcmu.svg",
+      "name_es": "Monitor de corriente residual (RCMU)",
+      "name_en": "Residual current monitoring unit (RCMU)",
+      "description": "Bloque provisorio (caja con el nombre) hasta que exista el símbolo real. / Placeholder block until the real symbol exists.",
+      "tags": [
+        "placeholder",
+        "pv_rcmu"
+      ],
+      "origin": "placeholder",
+      "source": "Bloque provisorio EPC-291 (DGM-03)",
+      "notes": null,
+      "size": {
+        "w": 52.0,
+        "h": 23.2
+      },
+      "viewBox": {
+        "x": -26.0,
+        "y": -1.6,
+        "w": 52.0,
+        "h": 23.2
+      },
+      "ports": [
+        {
+          "id": "top",
+          "x": 0.0,
+          "y": 0.0,
+          "dir": "up"
+        },
+        {
+          "id": "bottom",
+          "x": 0.0,
+          "y": 20.0,
+          "dir": "down"
+        }
+      ],
+      "fixed_texts": [
+        "RCMU"
+      ],
+      "label_slots": [
+        {
+          "key": "tag",
+          "placeholder": "{tag}",
+          "example": "-X1",
+          "x": -14.0,
+          "y": 10.0,
+          "anchor": "end",
+          "size": 3.47
+        }
+      ]
+    },
+    {
+      "id": "lv_pv_combiner_box",
+      "file": "291_E_LV_SLD_IEC60617_pv_combiner_box.svg",
+      "name_es": "Caja combinadora de strings FV",
+      "name_en": "PV string combiner box",
+      "description": "Bloque provisorio (caja con el nombre) hasta que exista el símbolo real. / Placeholder block until the real symbol exists.",
+      "tags": [
+        "placeholder",
+        "pv_string_combiner_box"
+      ],
+      "origin": "placeholder",
+      "source": "Bloque provisorio EPC-291 (DGM-03)",
+      "notes": null,
+      "size": {
+        "w": 52.0,
+        "h": 23.2
+      },
+      "viewBox": {
+        "x": -26.0,
+        "y": -1.6,
+        "w": 52.0,
+        "h": 23.2
+      },
+      "ports": [
+        {
+          "id": "top",
+          "x": 0.0,
+          "y": 0.0,
+          "dir": "up"
+        },
+        {
+          "id": "bottom",
+          "x": 0.0,
+          "y": 20.0,
+          "dir": "down"
+        }
+      ],
+      "fixed_texts": [
+        "CAJA STR"
+      ],
+      "label_slots": [
+        {
+          "key": "tag",
+          "placeholder": "{tag}",
+          "example": "-X1",
+          "x": -14.0,
+          "y": 10.0,
+          "anchor": "end",
+          "size": 3.47
+        }
+      ]
     }
   ],
   "standards": "Forma IEC 60617; líneas IRAM 4502; letras IRAM 4503; puertos en retícula de 2,5 mm"
