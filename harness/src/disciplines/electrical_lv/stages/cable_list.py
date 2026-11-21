@@ -35,3 +35,16 @@ def cable_rows(ch, loads, routing=None):
 def cable_list_document(ch, loads, routing=None):
     return {"document": "cable_list", "status": "draft", "board": ch["form"]["board"]["name"], "rows": copy.deepcopy(cable_rows(ch, loads, routing)),
             "source": "epc_aea90364.aea_pipeline.calculate"}
+
+
+KIND_OF_TYPE = {"seccional": "feeder", "motor": "motor", "iluminacion": "lighting", "tomacorrientes": "sockets"}     # circuit type of the calculation -> kind of the typical topologies
+
+
+def board_diagram_model(ch):
+    """The relational diagram model of the board (devices, loads, wires, circuits by stable ids; ADR-0037), built from the calculation: the device chain of each circuit
+    (`disp`), its parent and its type. It carries no value; each external wire points at its row of the cable list by circuit tag. Nothing is calculated here."""
+    from epc_drawing import diagram_model
+    circuits = {tag: {"disp": data.get("disp"), "kind": KIND_OF_TYPE.get(ch["calc"]["detalle"][tag].get("tipo")), "parent": ch["calc"]["detalle"][tag].get("padre") or None, "load_ref": tag}
+                for tag, data in ch["calc"]["datos"].items()}
+    board = ch["form"]["board"]["name"]
+    return dict(diagram_model.build_board_model(board, circuits), board=board)

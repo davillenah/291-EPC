@@ -15,7 +15,7 @@ from disciplines.electrical_lv.norm_records import VERIFIED, read_norm_records
 from disciplines.electrical_lv.stages import engine_calls as EC
 from disciplines.electrical_lv.stages.base import Stage, StageInputError
 from disciplines.electrical_lv.stages import rendering, specification, studies
-from disciplines.electrical_lv.stages.cable_list import cable_list_document
+from disciplines.electrical_lv.stages.cable_list import board_diagram_model, cable_list_document
 from disciplines.electrical_lv.stages.plan_drawings import FUNCTION as PLAN_FUNCTION, ENGINE as PLAN_ENGINE, place_on_sheets, sheet_options, write_floor_plans
 from disciplines.electrical_lv.stages.mappings import ENGINE_CHAIN, PENDING_DOCUMENTS
 
@@ -421,7 +421,8 @@ class DocumentsStage(Stage):
         pending = self.cable_list(context, ch, docs, pending)
         pending = self.design_basis_document(context, docs, calls, pending)
         pending = self.descriptive_report_document(context, ch, terminals, docs, calls, pending)
-        outputs = {"documents": [document_entry(n, d) for n, d in docs.items()], "memo_summary": copy.deepcopy(memo["resumen"]), "pending_documents": pending}
+        outputs = {"documents": [document_entry(n, d) for n, d in docs.items()], "memo_summary": copy.deepcopy(memo["resumen"]), "pending_documents": pending,
+                   "diagram_model": board_diagram_model(ch)}
         outputs.update(self.rendered(context, docs, calls))
         return self.result("ok", outputs=outputs, engine_calls=calls)
 

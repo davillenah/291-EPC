@@ -106,3 +106,21 @@ class Stage9Notes(unittest.TestCase):
         self.assertEqual(["F-0005"], [f["id"] for f in found])
         self.assertEqual(("note", "calc-check", "X/device_per_rules"), (found[0]["severity"], found[0]["verifier"], found[0]["field"]))
         self.assertEqual([], S.diagram_findings(SimpleNamespace(engine_cache={}, pipeline_run_id="r1"), 1))
+
+
+class Stage8Model(unittest.TestCase):
+    """Stage 8 hands over the board model built from the calculation: chain from `disp`, kind from the circuit type, parent from `padre`; no values."""
+
+    def test_board_model_from_the_chain(self):
+        sys.path.insert(0, str(H / "src"))
+        from disciplines.electrical_lv.stages.cable_list import board_diagram_model
+        ch = {"form": {"board": {"name": "TS1"}}, "calc": {
+            "datos": {"G-02": {"disp": "RCCB 4P 63 A 30 mA"}, "IUG-01": {"disp": "MCB (10 A)"}, "M-01": {"disp": "MCB > KM > OL (25 A)"}},
+            "detalle": {"G-02": {"tipo": "seccional", "padre": ""}, "IUG-01": {"tipo": "iluminacion", "padre": "G-02"}, "M-01": {"tipo": "motor", "padre": ""}}}}
+        m = board_diagram_model(ch)
+        self.assertEqual("TS1", m["board"])
+        self.assertEqual(["dev-TS1-bus", "dev-G-02-rccb", "dev-IUG-01-mcb", "dev-M-01-mcb", "dev-M-01-contactor", "dev-M-01-thermal_overload_relay"], [d["id"] for d in m["devices"]])
+        self.assertEqual([], m["unmapped"])
+        w = next(x for x in m["wires"] if x["id"] == "wire-IUG-01-load")
+        self.assertEqual(("external", "IUG-01"), (w["zone"], w["cable_ref"]))
+        self.assertEqual(m, board_diagram_model(ch))
