@@ -2,37 +2,9 @@
   "schema_version": 1,
   "agents": [
     {
-      "name": "multidisciplinary_orchestrator",
-      "role": "Coordinates the discipline leads, routes cross-discipline interfaces, never calculates",
-      "model": "claude-sonnet-5-5",
-      "effort": "medium",
-      "tools": [
-        "Read",
-        "Grep",
-        "Glob",
-        "Bash",
-        "mcp__epc__epc_stage_table",
-        "mcp__epc__epc_engine_list",
-        "mcp__epc__epc_engine_info",
-        "mcp__epc__epc_norm_records",
-        "mcp__epc__epc_project_status",
-        "mcp__epc__epc_project_init",
-        "mcp__epc__epc_pipeline_run",
-        "mcp__epc__epc_project_issue"
-      ],
-      "skills": [],
-      "max_turns": 40,
-      "summary_prompt_rules": [
-        "Summarize each run as: stages run, stages not available, findings by severity, next step.",
-        "Say which agent or person must act next; never claim a deliverable is approved.",
-        "Explain to the engineer in Spanish; product content (documents, findings, labels) stays in English and uses the es/en i18n of the deliverable.",
-        "Report only values that came from an engine call or from the SSOT; if a value is not available, write 'not available' and raise a finding.",
-        "Cite the stage, the engine version and the norm record for every number you mention."
-      ]
-    },
-    {
       "name": "civil_structural_lead",
       "role": "Civil and structural discipline lead (planned): scopes inputs and criteria, calls engines when they exist",
+      "duty": "design_intent:civil_structural",
       "model": "claude-sonnet-5-5",
       "effort": "medium",
       "tools": [
@@ -59,6 +31,7 @@
     {
       "name": "mechanical_lead",
       "role": "Mechanical discipline lead (planned): scopes inputs and criteria, calls engines when they exist",
+      "duty": "design_intent:mechanical",
       "model": "claude-sonnet-5-5",
       "effort": "medium",
       "tools": [
@@ -85,6 +58,7 @@
     {
       "name": "hvac_lead",
       "role": "HVAC discipline lead (planned): scopes inputs and criteria, calls engines when they exist",
+      "duty": "design_intent:hvac",
       "model": "claude-sonnet-5-5",
       "effort": "medium",
       "tools": [
@@ -111,6 +85,7 @@
     {
       "name": "piping_plumbing_lead",
       "role": "Piping and plumbing discipline lead (planned): scopes inputs and criteria, calls engines when they exist",
+      "duty": "design_intent:piping_plumbing",
       "model": "claude-sonnet-5-5",
       "effort": "medium",
       "tools": [
@@ -137,6 +112,7 @@
     {
       "name": "fire_protection_lead",
       "role": "Fire protection discipline lead (planned): scopes inputs and criteria, calls engines when they exist",
+      "duty": "design_intent:fire_protection",
       "model": "claude-sonnet-5-5",
       "effort": "medium",
       "tools": [
@@ -163,6 +139,7 @@
     {
       "name": "instrumentation_control_lead",
       "role": "Instrumentation and control discipline lead (planned): scopes inputs and criteria, calls engines when they exist",
+      "duty": "design_intent:instrumentation_control",
       "model": "claude-sonnet-5-5",
       "effort": "medium",
       "tools": [
@@ -189,6 +166,7 @@
     {
       "name": "telecommunications_lead",
       "role": "Telecommunications discipline lead (planned): scopes inputs and criteria, calls engines when they exist",
+      "duty": "design_intent:telecommunications",
       "model": "claude-sonnet-5-5",
       "effort": "medium",
       "tools": [

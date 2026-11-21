@@ -3,7 +3,8 @@
   "agents": [
     {
       "name": "orchestrator",
-      "role": "Runs the pipeline, routes work, writes progress, never calculates",
+      "role": "Sequences the work (stages of one discipline, disciplines of a project), keeps the interface register, never calculates",
+      "duty": "sequencing",
       "model": "claude-sonnet-5-5",
       "effort": "medium",
       "tools": [
@@ -33,6 +34,7 @@
     {
       "name": "electrical_lv",
       "role": "Interprets inputs and criteria, calls engines through MCP/CLI",
+      "duty": "design_intent:electrical_lv",
       "model": "claude-sonnet-5-5",
       "effort": "medium",
       "tools": [
@@ -63,6 +65,7 @@
     {
       "name": "calc_check",
       "role": "Deterministic checks first; judgment review second; consolidates findings",
+      "duty": "audit",
       "model": "claude-sonnet-5-5",
       "effort": "medium",
       "tools": [
@@ -93,6 +96,7 @@
     {
       "name": "documentation",
       "role": "Builds documents and drawings from SSOT through engines",
+      "duty": "documents",
       "model": "claude-sonnet-5-5",
       "effort": "medium",
       "tools": [
@@ -122,6 +126,7 @@
     {
       "name": "procurement",
       "role": "Lists, BOQ, datasheets, RFQ from SSOT",
+      "duty": "procurement_lists",
       "model": "claude-sonnet-5-5",
       "effort": "medium",
       "tools": [

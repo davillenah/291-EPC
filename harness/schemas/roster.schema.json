@@ -12,11 +12,12 @@
       "minItems": 1,
       "items": {
         "type": "object",
-        "required": ["name", "role", "model", "effort", "tools", "skills", "max_turns", "summary_prompt_rules"],
+        "required": ["name", "role", "duty", "model", "effort", "tools", "skills", "max_turns", "summary_prompt_rules"],
         "additionalProperties": false,
         "properties": {
           "name": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
           "role": {"type": "string", "minLength": 10},
+          "duty": {"type": "string", "pattern": "^[a-z][a-z0-9_]*(:[a-z][a-z0-9_]*)?$", "description": "The one duty this role owns; no two roles own the same duty (docs/prsad/ROLES-single-responsibility.md)"},
           "model": {"type": "string", "pattern": "^claude-[a-z0-9-]+$"},
           "effort": {"type": "string", "enum": ["low", "medium", "high"]},
           "tools": {"type": "array", "items": {"type": "string", "pattern": "^(Read|Grep|Glob|Bash|Write|Edit|mcp__epc__epc_[a-z_]+)$"}},
