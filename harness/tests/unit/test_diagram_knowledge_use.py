@@ -136,10 +136,24 @@ class DiagramAssembly(unittest.TestCase):
     def test_a_missing_cable_row_is_none_and_no_values_are_invented(self):
         from epc_drawing import diagram_assembler as A
         m = DM.build_board_model("TS1", {"X-1": {"disp": "MCB", "kind": "general"}})
-        a = A.assemble(dict(m, board="TS1"), {}, [])
+        a = A.assemble(dict(m, board="TS1"), {}, [], verdict=K.audit(m))
         c = a["circuits"][0]
         self.assertEqual({"tag": "-X-1.1"}, c["devices"][0]["labels"])
         self.assertIsNone(next(w for w in c["wires"] if w["zone"] == "external")["cable"])
+
+
+class SolutionChainFeedsTheNetlist(unittest.TestCase):
+    """The netlist reads the structured chain of the standard solution (`detalle.cadena`), not the text; the result equals the one read from the text."""
+
+    def test_chain_and_text_give_the_same_devices(self):
+        from epc_aea90364 import solutions as S
+        cases = [("G-02", "feeder", "feeder", "3F+N", "seccional", 63, 50, True, False), ("M-01", "motor", "dol", "3F", "motor", 25, 20, False, True)]
+        for tag, kind, top, phase, tipo, in_a, ib, kids, motor in cases:
+            sol = S.resolve(S.facts(tag, "", "", top, kind, phase, tipo, in_a, ib, 10, 30, kids, motor))
+            by_chain = DM.build_board_model("TS1", {tag: {"chain": sol["chain"], "kind": kind}})
+            by_text = DM.build_board_model("TS1", {tag: {"disp": sol["disp"], "kind": kind}})
+            self.assertEqual([d["id"] for d in by_text["devices"]], [d["id"] for d in by_chain["devices"]], tag)
+            self.assertEqual(by_text["unmapped"], by_chain["unmapped"], tag)
 
 
 class DesignConstraints(unittest.TestCase):
@@ -163,7 +177,7 @@ class DesignConstraints(unittest.TestCase):
     def test_assembly_reports_violations_and_the_iec_reference(self):
         from epc_drawing import diagram_assembler as A
         m = dict(DM.build_board_model("TS1", {"M-1": {"disp": "MCB > KM", "kind": "motor"}}), board="TS1")
-        a = A.assemble(m, {}, [], symbols=lambda d: {"sld_symbol": "X-" + d})
+        a = A.assemble(m, {}, [], symbols=lambda d: {"sld_symbol": "X-" + d}, verdict=K.audit(m))
         self.assertEqual(["dc-02"], [v["constraint"] for v in a["violations"]])
         mcb = a["circuits"][0]["devices"][0]
         self.assertEqual("X-mcb", mcb["symbol"])

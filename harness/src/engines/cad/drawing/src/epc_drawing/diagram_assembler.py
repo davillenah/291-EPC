@@ -32,11 +32,13 @@ def _assemble_circuit(c, index, v, rows, symbols):
             "wires": [{"id": w["id"], "from": w["from"], "to": w["to"], "zone": w["zone"], "cable": rows.get(w.get("cable_ref"))} for w in ws]}
 
 
-def assemble(model: dict, values: dict, cable_rows: list = None, symbols=None) -> dict:
-    """{'board', 'circuits': [...], 'violations': [...], 'unmapped': [...]} from the model, the per-circuit `values` ({tag: {...}}) and the cable-list rows ([{'circuit': tag, ...}]).
+def assemble(model: dict, values: dict, cable_rows: list = None, symbols=None, verdict: dict = None) -> dict:
+    """{'board', 'circuits': [...], 'verdict': {...}, 'violations': [...], 'unmapped': [...]} from the model, the per-circuit `values` ({tag: {...}}) and the cable-list rows ([{'circuit': tag, ...}]).
 
-    A wire's `cable_ref` is resolved to its row of the cable list (None when the row is missing: the engine then draws the wire without a cable text). `symbols(device_id) -> {'sld_symbol': ...}` is the symbol provider (default: the library map of `diagram_knowledge`)."""
+    `verdict` is the audit of the board (`diagram_knowledge.audit`): the assembly refuses to run without it (ValueError) and carries it, so a 'not_ok' is never hidden. A wire's `cable_ref` is resolved to its row of the cable list (None when the row is missing: the engine then draws the wire without a cable text). `symbols(device_id) -> {'sld_symbol': ...}` is the symbol provider (default: the library map of `diagram_knowledge`)."""
+    if not verdict or verdict.get("verdict") not in ("ok", "not_ok"):
+        raise ValueError("the assembly needs the audit verdict of the board (diagram_knowledge.audit)")
     rows, symbols = {r["circuit"]: r for r in (cable_rows or [])}, symbols or K.symbol_for
     index = {key: {x["id"]: x for x in model[key]} for key in ("devices", "wires", "loads")}
     out = [_assemble_circuit(c, index, values.get(c["name"]["en"], {}), rows, symbols) for c in model["circuits"]]
-    return {"board": model["board"], "circuits": out, "violations": K.check_constraints(model), "unmapped": list(model["unmapped"])}
+    return {"board": model["board"], "circuits": out, "verdict": verdict, "violations": list(verdict["findings"]), "unmapped": list(model["unmapped"])}

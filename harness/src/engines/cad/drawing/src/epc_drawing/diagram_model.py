@@ -2,8 +2,8 @@
 
 The model says what connects to what; it holds no value. Sizes, ratings and lengths stay in the calculation and in the cable list (a wire only carries `cable_ref`, the tag
 of its row there). The SLD and MLD engines look each id up in its file. Ids are built from the circuit tag and the role (`dev-IUG-01-mcb`), never from a counter, so the same
-input always gives the same ids and adding a circuit changes none of the others. The device chain of a circuit comes from the calculation (`disp`, e.g. "MCB > KM > OL (25 A)");
-only when it is missing is the typical topology of the circuit kind used (`circuit_topologies.json`). A circuit with `parent` hangs from the last device of its parent (one RCCB
+input always gives the same ids and adding a circuit changes none of the others. The device chain of a circuit comes from the structured standard solution (`chain`, the devices with their poles, chosen by `epc_aea90364.solutions` from the kind of circuit),
+else from the calculation text (`disp`, e.g. "MCB > KM > OL (25 A)"); only when both are missing is the typical topology of the circuit kind used (`circuit_topologies.json`). A circuit with `parent` hangs from the last device of its parent (one RCCB
 feeding several MCBs). Other disciplines build their own models the same way with their own topology kinds.
 """
 import re
@@ -40,6 +40,23 @@ def _chain_from_disp(disp, tokens: dict):
     return devices, unmapped, poles
 
 
+def _chain_from_items(items, tokens: dict):
+    """The same triple as `_chain_from_disp` from the structured chain of the standard solution (`detalle.cadena`: items with `short` and `poles`): no text is parsed and the poles are the ones the solution set."""
+    devices, unmapped, poles = [], [], []
+    for item in items:
+        words = (item.get("short") or "").split()
+        device = tokens.get(words[0].upper()) if words else None
+        (devices if device else unmapped).append(device or (words[0] if words else str(item.get("symbol"))))
+        if device:
+            poles.append(item["poles"] if isinstance(item.get("poles"), int) else None)
+    return devices, unmapped, poles
+
+
+def _circuit_chain(c: dict, tokens: dict):
+    """The device chain of a circuit: the structured chain of the standard solution first, then the calculation text."""
+    return _chain_from_items(c["chain"], tokens) if c.get("chain") else _chain_from_disp(c.get("disp"), tokens)
+
+
 def _ports(device_id: str):
     ports = K.symbol_for(device_id)["ports"]
     top = next((p for p in ports if p.startswith("top")), ports[0] if ports else None)
@@ -50,7 +67,7 @@ def _ports(device_id: str):
 def build_board_model(board: str, circuits: dict, cable_refs: dict = None) -> dict:
     """{'devices', 'loads', 'wires', 'circuits', 'unmapped'} of the board `board`.
 
-    `circuits` = {tag: {"disp": calculation device text or None, "kind": circuit kind or None, "parent": tag or None, "load_ref": id in the load list or None}};
+    `circuits` = {tag: {"chain": structured chain of the standard solution or None, "disp": calculation device text or None, "kind": circuit kind or None, "parent": tag or None, "load_ref": id in the load list or None}};
     `cable_refs` = {tag: tag of the row of the cable list} (default: the circuit tag for the external wire). Deterministic: circuits are taken in tag order."""
     topo, cable_refs = _topologies(), cable_refs or {}
     bus = {"id": f"dev-{_slug(board)}-bus", "tag": f"-{board}", "device_id": "switchboard_tgbt", "symbol": K.symbol_for("switchboard_tgbt")["sld_symbol"], "enclosure": None}
@@ -72,7 +89,7 @@ def _device(did, tag, device_id, board, poles):
 def _add_circuit(model, board, tag, c, start, topo, cable_ref):
     """Adds the devices, the load, the wires and the circuit group of one circuit to `model`; returns the (id, port) its children hang from."""
     slug, kind = _slug(tag), topo["kinds"].get(c.get("kind") or "general", topo["kinds"]["general"])
-    chain, bad, poles = _chain_from_disp(c.get("disp"), topo["token_to_device"])
+    chain, bad, poles = _circuit_chain(c, topo["token_to_device"])
     model["unmapped"] += [{"circuit": tag, "token": t} for t in bad]
     chain, wire_ids, prev = chain or list(kind["chain"]), [], start
     for n, device_id in enumerate(chain, 1):

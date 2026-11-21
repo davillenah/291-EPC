@@ -132,3 +132,16 @@ def check_constraints(model: dict) -> list:
         for v in _CHECKS[c["type"]](c, model, by_id):
             out.append(dict(v, severity=c["severity"], status=c["status"], en=c["message"]["en"], es=c["message"]["es"]))
     return out
+
+
+BLOCKING = ("blocking", "major")
+
+
+def audit(model: dict) -> dict:
+    """The verdict on a board model: {'verdict': 'ok' | 'not_ok', 'findings': [...], 'status': 'unverified'}.
+
+    The design constraints are checked on the connections (`check_constraints`); 'not_ok' when a finding is blocking or major, 'ok' otherwise (minor findings travel with the verdict). It is the
+    only place that decides pass or fail before the assembly (PRD-diagram-flow, step 5); it never changes the model, and no verdict is ever marked verified."""
+    findings = check_constraints(model)
+    return {"verdict": "not_ok" if any(f["severity"] in BLOCKING for f in findings) else "ok", "findings": findings, "status": "unverified"}
+
