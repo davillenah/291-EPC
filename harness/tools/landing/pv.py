@@ -19,7 +19,7 @@ NUMBERS = ("latitude_deg", "longitude_deg", "utc_offset_h", "target_kwp", "tilt_
            "aux_load_kw", "aux_phases", "aux_length_m", "board_fp", "roof_width_m", "roof_slope_m", "roof_setback_m", "site_width_m", "site_length_m", "setback_m", "table_rows", "table_modules_per_row", "module_gap_m", "table_gap_m", "road_width_m") + tuple(f"roof{n}_{k}" for n in EXTRA_PLANES for k in PLANE_FIELDS)
 GROUND_ONLY = ("site_width_m", "site_length_m", "setback_m", "table_rows", "table_modules_per_row", "table_orientation", "module_gap_m", "table_gap_m", "road_width_m")
 REQUIRED = ("mode", "latitude_deg", "longitude_deg")
-ADVANCED = ("structure_id", "currency", "utc_offset_h", "module", "inverter", "isc_max_input_a", "aux_load_kw", "aux_phases", "aux_length_m", "board_fp", "target_kwp", "tilt_deg", "azimuth_deg", "dc_ac_ratio", "albedo", "design_t_min_c",
+ADVANCED = ("model3d_format", "structure_id", "currency", "utc_offset_h", "module", "inverter", "isc_max_input_a", "aux_load_kw", "aux_phases", "aux_length_m", "board_fp", "target_kwp", "tilt_deg", "azimuth_deg", "dc_ac_ratio", "albedo", "design_t_min_c",
             "roof_setback_m", "setback_m", "table_rows", "table_modules_per_row", "table_orientation", "module_gap_m", "table_gap_m", "road_width_m")
 RANGES = {"energy_price": (0, 1e9), "investment": (0, 1e15), "target_kwp": (0.001, 1e6), "tilt_deg": (0, 90), "azimuth_deg": (0, 360), "latitude_deg": (-90, 90), "longitude_deg": (-180, 180), "utc_offset_h": (-14, 14),
           **{f"roof{n}_{k}": r for n in EXTRA_PLANES for k, r in (("tilt_deg", (0, 90)), ("azimuth_deg", (0, 360)), ("width_m", (0.001, 1e4)), ("slope_m", (0.001, 1e4)))}}
@@ -44,7 +44,7 @@ def form():
     sel = lambda p, options, req=True: {"path": f"pv.{p}", "kind": "select", "required": req, "options": options}      # noqa: E731
     out = {"id": "pv", "status": "available", "fields": [
         sel("mode", list(MODES)), sel("roof_type", list(ROOF_TYPES), False), num("latitude_deg"), num("longitude_deg"), num("energy_price", False), {"path": "pv.currency", "kind": "text", "required": False}, num("investment", False), num("utc_offset_h", False),
-        sel("structure_id", ["auto"] + sorted(structures()), False),
+        sel("structure_id", ["auto"] + sorted(structures()), False), sel("model3d_format", list(MODEL3D_FORMATS), False),
         sel("module", ["auto"] + sorted(modules), False), sel("inverter", ["auto"] + sorted(inverters), False), num("isc_max_input_a", False),
         num("aux_load_kw", False), sel("aux_phases", ["1", "3"], False), num("aux_length_m", False), num("board_fp", False),
         num("target_kwp", False), num("tilt_deg", False), num("azimuth_deg", False), num("dc_ac_ratio", False), num("albedo", False), num("design_t_min_c", False),
@@ -91,6 +91,32 @@ def _module_auto(v):
     return v.get("module", DEFAULTS["module"]) == DEFAULTS["module"]
 
 
+MODEL3D_FORMATS = ("both", "dxf", "freecad")      # the 3D model the person wants: the DXF, the FreeCAD macro or both (default)
+
+
+def drawings_options(v):
+    """`engine_inputs.drawings` for the 3D format the person chose; {} for the default (both)."""
+    return {"model3d_format": v["model3d_format"]} if v.get("model3d_format", "both") != "both" else {}
+
+
+def _site_problem(v):
+    """The 3D format must be one of the offered; the time zone comes from the place unless typed: without a zone (open sea) or without the database the person types `utc_offset_h`."""
+    if v.get("model3d_format", "both") not in MODEL3D_FORMATS:
+        return {"code": "pv_range", "detail": "model3d_format"}
+    if utc_offset(v) is None:
+        return {"code": "pv_timezone", "detail": "timezonefinder" if not _has_timezone_database() else "utc_offset_h"}
+    return None
+
+
+def _has_timezone_database():
+    """True when the offline time zone database (`timezonefinder`) is installed, so a missing offset means the point has no zone (open sea) and not a missing package."""
+    try:
+        import timezonefinder  # noqa: F401
+        return True
+    except ImportError:
+        return False
+
+
 def utc_offset(v):
     """The UTC offset of the form: the typed one, or the standard offset of the place (`epc_pv.timezone`); None when the place has no zone."""
     if "utc_offset_h" in v:
@@ -135,9 +161,7 @@ def check(flat, building=False):
     out = next(({"code": "pv_range", "detail": f"{n} {lo}..{hi}"} for n, (lo, hi) in RANGES.items() if n in v and not lo <= v[n] <= hi), None)
     if v["mode"] not in MODES:
         out = {"code": "pv_range", "detail": "mode"}
-    if not out and utc_offset(v) is None:
-        out = {"code": "pv_missing", "detail": "utc_offset_h"}      # no zone for this point (open sea or no database): the person types it
-    return out or _catalog_problem(v) or _missing(v, building)
+    return out or _site_problem(v) or _catalog_problem(v) or _missing(v, building)
 
 
 def _template(v, modules, inverters):

@@ -1,4 +1,5 @@
 """The landing page end to end without a browser: the request read by rules, the house proposed from it, the form checked, the project created and the run launched."""
+from unittest import mock
 import sys
 import tempfile
 import time
@@ -246,6 +247,23 @@ class PvProjectTests(unittest.TestCase):
         self.assertEqual(pv.utc_offset(v(latitude_deg="40.4", longitude_deg="-3.7")), 1.0)      # standard time, not summer time
         self.assertEqual(pv.utc_offset(v(latitude_deg="-32.89", longitude_deg="-68.84", utc_offset_h="-4")), -4.0)
 
+    def test_a_place_without_a_time_zone_is_asked_with_its_own_code(self):
+        base = {k: v for k, v in PV_ANSWERS.items() if not k.startswith("pv.")}
+        base.update({"pv.mode": "ground", "pv.latitude_deg": "0", "pv.longitude_deg": "-30", "pv.site_width_m": "60", "pv.site_length_m": "40"})      # open Atlantic
+        with mock.patch.object(pv, "utc_offset", return_value=None):
+            problem = pv.check(base)
+        self.assertEqual(problem["code"], "pv_timezone")
+        self.assertIn(problem["detail"], ("utc_offset_h", "timezonefinder"))
+
+    def test_a_run_ended_by_a_signal_says_so(self):
+        import subprocess
+        done = subprocess.CompletedProcess([], -9, stdout="", stderr="")
+        with mock.patch.object(server.subprocess, "run", return_value=done):
+            res = server.run_epc(self.root, ["run", "X"])
+        self.assertEqual(res["error"]["code"], "cli_killed")
+        self.assertIn("memory", res["error"]["message"])
+        self.assertIn("memoria", res["error"]["message"])
+
     def test_the_client_price_becomes_the_economics_key_and_none_is_invented(self):
         base = {k: v for k, v in PV_ANSWERS.items() if not k.startswith("pv.")}
         base.update({"pv.mode": "ground", "pv.latitude_deg": "-34.6", "pv.longitude_deg": "-58.4", "pv.site_width_m": "60", "pv.site_length_m": "40"})
@@ -358,3 +376,12 @@ class RunnerTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class PvModel3dFormatFormTests(unittest.TestCase):
+    def test_the_3d_format_choice_reaches_the_drawings_inputs_and_is_checked(self):
+        self.assertEqual(pv.drawings_options({}), {})
+        self.assertEqual(pv.drawings_options({"model3d_format": "freecad"}), {"model3d_format": "freecad"})
+        base = {k: v for k, v in PV_ANSWERS.items() if not k.startswith("pv.")}
+        base.update({"pv.mode": "ground", "pv.latitude_deg": "-34.6", "pv.longitude_deg": "-58.4", "pv.site_width_m": "60", "pv.site_length_m": "40", "pv.model3d_format": "step"})
+        self.assertEqual(pv.check(base)["code"], "pv_range")

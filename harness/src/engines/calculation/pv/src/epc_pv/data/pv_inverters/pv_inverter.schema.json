@@ -101,6 +101,7 @@
     }
    }
   },
+  "features": {"type": "array", "description": "Small recognisable details of the part (the dot at a corner, a label field, a hole) so it can be redrawn from this record: on = element id, face, position_mm [u, v] on the face from its lower-left corner seen from outside, size_mm [w, h], depth_mm (negative = recess).", "items": {"type": "object", "required": ["id", "kind", "face", "position_mm", "size_mm", "status"], "additionalProperties": false, "properties": {"id": {"type": "string"}, "kind": {"enum": ["dot", "box", "hole", "label"]}, "on": {"type": "string"}, "face": {"enum": ["front", "back", "left", "right", "top", "bottom"]}, "position_mm": {"type": "array", "items": {"type": "number"}, "minItems": 2, "maxItems": 2}, "size_mm": {"type": "array", "items": {"type": "number"}, "minItems": 1, "maxItems": 2}, "depth_mm": {"type": "number"}, "status": {"$ref": "#/$defs/status"}, "source_ids": {"type": "array", "items": {"type": "string"}}, "note": {"type": "string"}}}},
   "parts": {
    "type": "array",
    "description": "Every physical part: frame profiles, corner keys, junction box, bypass diodes, connectors (MC4), cables, busbars/ribbons, mounting/grounding holes, labels, sealant, drain holes",
