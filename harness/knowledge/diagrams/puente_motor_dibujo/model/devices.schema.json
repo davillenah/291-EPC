@@ -78,6 +78,15 @@
        "null"
       ],
       "description": "tag of the enclosure or board that holds it"
+     },
+     "poles": {
+      "type": [
+       "integer",
+       "null"
+      ],
+      "minimum": 1,
+      "maximum": 4,
+      "description": "number of poles when the calculation names them (2P, 4P); a connection characteristic, not a rating"
      }
     }
    }

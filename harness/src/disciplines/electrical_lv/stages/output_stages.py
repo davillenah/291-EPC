@@ -15,7 +15,7 @@ from disciplines.electrical_lv.norm_records import VERIFIED, read_norm_records
 from disciplines.electrical_lv.stages import engine_calls as EC
 from disciplines.electrical_lv.stages.base import Stage, StageInputError
 from disciplines.electrical_lv.stages import rendering, specification, studies
-from disciplines.electrical_lv.stages.cable_list import board_diagram_model, cable_list_document
+from disciplines.electrical_lv.stages.cable_list import board_diagram_assembly, cable_list_document
 from disciplines.electrical_lv.stages.plan_drawings import FUNCTION as PLAN_FUNCTION, ENGINE as PLAN_ENGINE, place_on_sheets, sheet_options, write_floor_plans
 from disciplines.electrical_lv.stages.mappings import ENGINE_CHAIN, PENDING_DOCUMENTS
 
@@ -89,9 +89,20 @@ class DrawingsStage(Stage):
         extra = self._floor_plans(context, target, name, calls)
         extra.update(self._pv_drawings(context, target, name, calls))
         extra.update(self._model3d(context, target, name, calls))
+        extra.update(self._assembly(context, ch))
         unify_dxf(target / "out", drawing_date(context))
         outputs = {"directory": f"drawings/{name}/out", "files": list_files(target / "out"), "summary": {k: copy.deepcopy(summary[k]) for k in SUMMARY_KEYS}}
         return self.result("ok", outputs=dict(outputs, **extra), engine_calls=calls)
+
+    def _assembly(self, context, ch):
+        """The four-source diagram assembly of the board (see `diagram_assembler`)."""
+        return {"diagram_assembly": board_diagram_assembly(ch, (context.loads or {}).get("loads") or [], self._routing(context))}
+
+    @staticmethod
+    def _routing(context):
+        """The routing section of stage 3 when it ran the slice, else None."""
+        res = context.results.get(3)
+        return res.outputs.get("routing") if res is not None and res.status == "ok" else None
 
     @staticmethod
     def _pv_drawings(context, target, name, calls):
@@ -421,8 +432,7 @@ class DocumentsStage(Stage):
         pending = self.cable_list(context, ch, docs, pending)
         pending = self.design_basis_document(context, docs, calls, pending)
         pending = self.descriptive_report_document(context, ch, terminals, docs, calls, pending)
-        outputs = {"documents": [document_entry(n, d) for n, d in docs.items()], "memo_summary": copy.deepcopy(memo["resumen"]), "pending_documents": pending,
-                   "diagram_model": board_diagram_model(ch)}
+        outputs = {"documents": [document_entry(n, d) for n, d in docs.items()], "memo_summary": copy.deepcopy(memo["resumen"]), "pending_documents": pending}
         outputs.update(self.rendered(context, docs, calls))
         return self.result("ok", outputs=outputs, engine_calls=calls)
 
