@@ -60,6 +60,20 @@ Read this first; the items below keep their detail. Legend: **A** = an agent can
 - [ ] **DGM-06 · Standards read only through secondary sources:** IEC 60445 / EN 50005 terminal marking, IEC 81346-2, IEC 62548, AEA 90364-7-712, NEC 690. Read the standards and promote values (pending review).
 - [ ] **DGM-07 · Feed `epc_pv` and the PV drawings from these criteria** (decision rules for DC protection, grounding, SPD) once the PV equipment loader (audit H1-H3) is in.
 
+## Symbols (SYM)
+
+PRD: `docs/prsad/PRD-symbols.md` (owner, 2026-11-21: one `epc_symbols` segmented by domain, migrated in parts; priority first). One pull request per phase, gate green before the next; nothing here changes norm values or calculation results.
+
+- [ ] **SYM-00 · Fix the DXF block lookup in the SLD path** so the deliverables carry `INSERT` blocks. Checked 2026-11-22: the cause is confirmed (`bloques_dxf._bloque_disponible` looks for `<id>.dxf`, the library file is `291_E_LV_SLD_IEC60617_<name>.dxf`; an SLD of the example board has 0 `INSERT`). A trial fix (try both file names, take the block name from the library file) gave 42 `INSERT`, 17 block definitions and no audit errors, but it changes the DXF bytes, so `test_characterization_drawings` (3 cases) fails against the golden files; golden files are never edited (D27), so the trial was reverted and it waits for the owner to review and request the new golden. The MLD does not pass a symbol library to the DXF conversion at all (`mld_generator` calls `deliverable.convert` without `symbol_library`), so it needs its own change.
+- [ ] **SYM-01 · Catalogue schema and `epc_symbols` API** (`resolve`, `svg_fragment`, `dxf_block`, `insert`, `terminals`, `list`) with aliases of the old names.
+- [ ] **SYM-02 · SLD and MLD generators use the API** (no engine builds a symbol file name).
+- [ ] **SYM-03 · `photovoltaic` domain and PV drawings insert library symbols;** the silent box fallback in `pv_diagrams._symbol` is removed.
+- [ ] **SYM-04 · `electrical-plan` domain:** the 31 symbols of `epc_plan/symbols.json` move into `epc_symbols` (replaced through a reviewed change, not deleted silently).
+- [ ] **SYM-05 · `architecture` domain:** the 25 `epc_arch/biblioteca` symbols and the door and window drawings.
+- [ ] **SYM-06 · Complete `electrical-mv`:** DXF blocks for `mld-mv` and `ssd-mv`.
+- [ ] **SYM-07 · Gate guard:** no drawing engine draws a symbol outside `epc_symbols`; deliverable DXF files of the golden projects have `INSERT` blocks; every symbol id used in the code exists.
+- [ ] **(Owner) SYM-OD · Open decisions** of the PRD section 9: ids (keep file names plus aliases, or rename), shared record across views for the same meaning, where the catalogue spreadsheet lives, placement of the architecture symbols.
+
 ## Landing (LND)
 
 - [~] **LND-01 · Landing conectada al pipeline** (2026-11-19). Hecho: lectura del pedido por reglas, propuesta de casa de una planta, campos editables, corrida de 12 etapas y lista de entregables. Dos plantas con escalera y montante ya corren. Falta: más de dos plantas, techos, otras disciplinas (solo se guarda el pedido), abrir DXF desde la página.
