@@ -41,6 +41,8 @@ Data in `knowledge/diagrams/` (research of 2026-11-20: LV/MV and PV devices, typ
 Read this first; the items below keep their detail. Legend: **A** = an agent can do it now; **P** = needs a person first (norm value, drawing standard, owner decision).
 
 1. **A, in progress: DGM-16 engines as called functions** (ADR-0038). SLD runs in process (done); next the formal `epc_sld.draw` contract, the end of the Excel round trip, then the MLD, then audit the other engines.
+1b. **A, next: SYM-01 and SYM-02** (symbols PRD, approved by the owner 2026-11-22 as the plan). SYM-01 (catalogue schema and `epc_symbols` API with aliases) changes no drawing, so no golden is touched; SYM-02 (SLD and MLD use the API) follows. Section "Symbols (SYM)".
+1c. **(Owner) golden review for SYM-00, then SYM-03 to SYM-06.** Any phase that turns strokes into blocks changes DXF bytes and fails `test_characterization_drawings` against the golden files, which agents never edit (D27): SYM-00 (SLD blocks) and the domain moves SYM-04 and SYM-05 wait for the owner to review and request the new golden. SYM-07 (gate guard) last.
 2. **A: DGM-12 remainder.** The flow resolver run before the sizing (structural conditions), the auditor verdict as an agent step, the SLD and MLD reading the assembly (needs the DGM-16 contract), then lists, datasheets and specifications from the assembly (step 7).
 3. **A: DGM-15 roster.** `electrical_lv` takes flow steps 1 and 3; `documentation` and `procurement` read the assembly once the generators do (follows step 2).
 4. **A: DGM-13 (a), (b-done), (e).** One device catalogue for the diagrams, the five speedups (measure only if they pay, owner prefers implementing).
