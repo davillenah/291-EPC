@@ -117,23 +117,3 @@ def svg_fragment(symbol_id: str, view: Optional[str] = None):
     rec = resolve(symbol_id, view)
     root = ElementTree.parse(rec.svg).getroot()
     return next((el for el in root.iter() if el.get("id") == rec.catalog_id), root)
-
-
-def insert(doc, symbol_id: str, view: Optional[str], at: Tuple[float, float], scale: float = 1.0, layer: Optional[str] = None, attribs: Optional[dict] = None):
-    """Places the symbol as a block reference (INSERT) in the modelspace of an ezdxf document, importing the block definition once. Returns the INSERT entity."""
-    path, block = dxf_block(symbol_id, view)
-    if block not in doc.blocks:
-        _import(doc, path, block)
-    extra = {"layer": layer} if layer else {}
-    ref = doc.modelspace().add_blockref(block, at, dxfattribs=dict(extra, xscale=scale, yscale=scale, zscale=scale))
-    tags = [a.dxf.tag for a in doc.blocks.get(block).query("ATTDEF")]
-    ref.add_auto_attribs({tag: (attribs or {}).get(tag, "") for tag in tags})
-    return ref
-
-
-def _import(doc, path: Path, block: str) -> None:
-    import ezdxf
-    from ezdxf.addons import importer
-    imp = importer.Importer(ezdxf.readfile(str(path)), doc)
-    imp.import_block(block)
-    imp.finalize()

@@ -52,24 +52,29 @@ class TestResolve(unittest.TestCase):
         self.assertEqual(R.svg_fragment("lv_mccb_basic", "sld").get("id"), "lv_mccb_basic")
 
 
-class TestInsert(unittest.TestCase):
-    def test_insert_places_one_block_reference_per_call_and_one_definition(self):
-        import ezdxf
-        doc = ezdxf.new("R2013")
-        R.insert(doc, "lv_mccb_basic", "sld", (10, 20), scale=0.5, layer="0", attribs={"TAG": "-Q1"})
-        ref = R.insert(doc, "lv_mccb_basic", "sld", (30, 20), scale=0.5)
-        inserts = list(doc.modelspace().query("INSERT"))
-        self.assertEqual(len(inserts), 2)
-        self.assertEqual(inserts[0].dxf.name, R.resolve("lv_mccb_basic", "sld").block)
-        self.assertEqual(ref.dxf.xscale, 0.5)
-        self.assertEqual([b.name for b in doc.blocks if not b.name.startswith("*")], [inserts[0].dxf.name])
+class TestEdges(unittest.TestCase):
+    def test_an_id_that_exists_in_two_views_asks_for_the_view(self):
+        import dataclasses
+        from unittest import mock
+        sld = R.resolve("lv_mccb_basic", "sld")
+        mld = dataclasses.replace(sld, view="mld")
+        with mock.patch.object(R, "_index", return_value=((sld, mld), {"twin": (sld, mld)})):
+            with self.assertRaises(R.AmbiguousSymbol) as caught:
+                R.resolve("twin")
+            self.assertIn("give the view", str(caught.exception))
+            self.assertIn("indique la vista", str(caught.exception))
+            self.assertEqual(R.resolve("twin", "mld").view, "mld")
 
-    def test_insert_of_an_unknown_symbol_raises_and_adds_nothing(self):
-        import ezdxf
-        doc = ezdxf.new("R2013")
-        with self.assertRaises(R.UnknownSymbol):
-            R.insert(doc, "lv_does_not_exist", "sld", (0, 0))
-        self.assertEqual(len(doc.modelspace()), 0)
+    def test_a_symbol_without_a_dxf_block_says_so_in_both_languages(self):
+        import dataclasses
+        from unittest import mock
+        bare = dataclasses.replace(R.resolve("lv_mccb_basic", "sld"), dxf=None)
+        with mock.patch.object(R, "resolve", return_value=bare):
+            with self.assertRaises(R.UnknownSymbol) as caught:
+                R.dxf_block("lv_mccb_basic", "sld")
+        self.assertIn("has no DXF block", str(caught.exception))
+        self.assertIn("no tiene bloque DXF", str(caught.exception))
+        self.assertIsNone(bare.block)
 
 
 class TestCatalogueSchema(unittest.TestCase):
