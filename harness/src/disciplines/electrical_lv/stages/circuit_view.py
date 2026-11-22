@@ -4,15 +4,16 @@ The cable list, the terminal list, the bill of quantities and the report used to
 calculation in one place only. The assembly of the board (`cable_list.board_diagram_assembly`) is the hand-over of the diagram flow; this view is the one reader of the calculation behind it."""
 
 
-def circuit_view(ch):
-    """{tag: view} of every sized circuit, in the order of the engine result."""
+def circuit_view(ch, strict=True):
+    """{tag: view} of every sized circuit, in the order of the engine result. The documents read it strict (a circuit without phases or section is an error); the assembly of the board reads it
+    with `strict=False`, where a missing value stays None and is never invented."""
     out = {}
     for tag, data in ch["calc"]["datos"].items():
         detail = ch["calc"]["detalle"][tag]
         head = (detail.get("cadena") or [{}])[0]
-        out[tag] = {"tag": tag, "parent": detail.get("padre") or None, "description": detail.get("descripcion") or "", "phases": detail["fases"],
+        out[tag] = {"tag": tag, "parent": detail.get("padre") or None, "description": detail.get("descripcion") or "", "phases": detail["fases"] if strict else detail.get("fases"),
                     "material": detail.get("material"), "insulation": detail.get("aislacion"), "method": detail.get("metodo"),
-                    "s_mm2": data["S"], "neutral_mm2": detail.get("neutro_mm2"), "pe_mm2": detail.get("pe_mm2"), "length_m": detail.get("largo_m"),
+                    "s_mm2": data["S"] if strict else data.get("S"), "neutral_mm2": detail.get("neutro_mm2"), "pe_mm2": detail.get("pe_mm2"), "length_m": detail.get("largo_m"),
                     "ib_a": detail.get("ib_a"), "in_a": data.get("In"), "du_pct": data.get("dU"), "icu_ka": data.get("icu"), "compliant": detail.get("cumple"),
-                    "device": data.get("disp") or "", "device_kind": head.get("short"), "poles": head.get("poles")}
+                    "type": detail.get("tipo"), "chain": detail.get("cadena"), "device": data.get("disp") or "", "device_kind": head.get("short"), "poles": head.get("poles")}
     return out
