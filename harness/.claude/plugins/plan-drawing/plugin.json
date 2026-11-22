@@ -51,6 +51,7 @@
     "arch",
     "dxf",
     "plan",
+    "symbols",
     "titleblock"
   ]
 }
