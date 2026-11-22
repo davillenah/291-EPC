@@ -41,3 +41,4 @@ Format: `ADR-NNNN-title.md` with Status, Context, Decision, Consequences. A deci
 | [0035](ADR-0035-run-modes-production-and-edit.md) | Run modes: production (strict, the default) and edit (norm records not verified do not stop approve and issue; the package is marked not for production) | Accepted |
 | [0036](ADR-0036-photovoltaic-engine.md) | Photovoltaic engine: hourly yield and string layout, validated against pvlib, no dependencies | Accepted |
 | [0037](ADR-0037-relational-diagram-model.md) | Relational diagram model per board: devices, loads, wires and circuits linked by stable ids; the netlist holds no values; templates plus a builder | Accepted |
+| [0038](ADR-0038-engines-are-called-functions.md) | Engines are called functions: the caller hands over all data, the engine never reads files or environment variables or searches for work; converted one by one, SLD first | Accepted |
