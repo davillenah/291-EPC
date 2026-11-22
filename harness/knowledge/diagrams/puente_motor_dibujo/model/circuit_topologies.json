@@ -113,10 +113,32 @@
     "mccb"
    ],
    "load_symbol": "lv_inverter"
+  },
+  "pv_string_optimized": {
+   "chain": [
+    "pv_power_optimizer",
+    "fuse_gpv",
+    "pv_dc_switch_load_break"
+   ],
+   "load_symbol": "lv_pv_module"
+  },
+  "pv_combiner_dc": {
+   "chain": [
+    "pv_string_combiner_box",
+    "pv_dc_switch_load_break"
+   ],
+   "load_symbol": null
+  },
+  "pv_inverter_ac_rcmu": {
+   "chain": [
+    "mccb",
+    "pv_rcmu"
+   ],
+   "load_symbol": "lv_inverter"
   }
  },
  "notes": {
-  "en": "star-delta: main, star and delta contactors in series order of the chain (the real wiring of the three contactors is functional, DGM-10); ats_feeder: only the first source port is linked, the second source is another circuit; every kind here is typical and unverified. pv_string: DC string fuse and DC load-break switch ahead of the module string; pv_inverter_ac: AC protection ahead of the inverter (the optimizer, combiner, DC surge protection, rapid shutdown and RCMU of the full PV chain need real symbols, DGM-03, and are not in these typical chains; DGM-14).",
-  "es": "estrella-triangulo: contactores principal, estrella y triangulo en el orden de la cadena (el cableado real de los tres contactores es funcional, DGM-10); ats_feeder: solo se enlaza el puerto de la primera fuente, la segunda fuente es otro circuito; todos los tipos son tipicos y sin verificar. pv_string: fusible de string DC y seccionador bajo carga DC antes del string de modulos; pv_inverter_ac: proteccion AC antes del inversor (el optimizador, la caja combinadora, el SPD DC, el apagado rapido y el RCMU de la cadena PV completa necesitan simbolos reales, DGM-03, y no estan en estas cadenas tipicas; DGM-14)."
+  "en": "star-delta: main, star and delta contactors in series order of the chain (the real wiring of the three contactors is functional, DGM-10); ats_feeder: only the first source port is linked, the second source is another circuit; every kind here is typical and unverified. pv_string: DC string fuse and DC load-break switch ahead of the module string; pv_inverter_ac: AC protection ahead of the inverter (the optimizer, combiner, DC surge protection, rapid shutdown and RCMU of the full PV chain need real symbols, DGM-03, and are not in these typical chains; DGM-14). pv_string_optimized, pv_combiner_dc, pv_inverter_ac_rcmu: the optimizer, combiner box and RCMU use block placeholders (DGM-03); their order in the chain follows the PV chain of the PRD and is typical and unverified.",
+  "es": "estrella-triangulo: contactores principal, estrella y triangulo en el orden de la cadena (el cableado real de los tres contactores es funcional, DGM-10); ats_feeder: solo se enlaza el puerto de la primera fuente, la segunda fuente es otro circuito; todos los tipos son tipicos y sin verificar. pv_string: fusible de string DC y seccionador bajo carga DC antes del string de modulos; pv_inverter_ac: proteccion AC antes del inversor (el optimizador, la caja combinadora, el SPD DC, el apagado rapido y el RCMU de la cadena PV completa necesitan simbolos reales, DGM-03, y no estan en estas cadenas tipicas; DGM-14). pv_string_optimized, pv_combiner_dc, pv_inverter_ac_rcmu: el optimizador, la caja combinadora y el RCMU usan bloques provisionales (DGM-03); su orden en la cadena sigue la cadena PV del PRD y es tipico y sin verificar."
  }
 }
