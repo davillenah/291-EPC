@@ -28,7 +28,7 @@ class TestDrawingDate(unittest.TestCase):
 
     def test_the_stage_passes_the_date_to_the_engine_and_nothing_without_it(self):
         stage = OS.DrawingsStage(mock.Mock())
-        chain = {"form": {"board": {"name": "T1"}}, "criteria": {}}
+        chain = {"form": {"board": {"name": "T1"}}, "criteria": {}, "data": {}, "calc": {}, "memo": {}}
         for given, expected in (({"drawings": {"date": "2026-03-04"}}, "2026-03-04"), ({}, None)):
             with self.subTest(expected=expected), mock.patch.object(OS.EC, "chain", return_value=chain), mock.patch.object(OS.DrawingsStage, "_target", return_value="/x"), \
                     mock.patch("epc_drawing.board_design.design", return_value={"ok": False, "error": "stop"}) as design, mock.patch.object(OS.Stage, "result"):
@@ -37,7 +37,7 @@ class TestDrawingDate(unittest.TestCase):
 
     def test_an_invalid_date_makes_the_stage_blocked_not_failed(self):
         stage = OS.DrawingsStage(mock.Mock())
-        with mock.patch.object(OS.EC, "chain", return_value={"form": {"board": {"name": "T1"}}, "criteria": {}}), mock.patch.object(OS.DrawingsStage, "_target", return_value="/x"), \
+        with mock.patch.object(OS.EC, "chain", return_value={"form": {"board": {"name": "T1"}}, "criteria": {}, "data": {}, "calc": {}, "memo": {}}), mock.patch.object(OS.DrawingsStage, "_target", return_value="/x"), \
                 mock.patch.object(OS.Stage, "_blocked", return_value="blocked") as blocked:
             outcome = stage._guarded(types.SimpleNamespace(engine_inputs={"drawings": {"date": "soon"}}))
         self.assertEqual(outcome, "blocked")

@@ -18,6 +18,7 @@ Writes in DIR/out: <NAME>_sizing.json (contract of aea_export), SLD_<NAME>*/MLD_
 """
 import argparse
 import concurrent.futures
+import copy
 import datetime as dt
 import json
 import os
@@ -268,8 +269,9 @@ def _layout_env(data: dict, out_dir: Path, env: dict) -> None:
 
 
 def design(data: dict, out_dir: Path, name: str, criteria: Optional[dict] = None, logos: Optional[Dict[str, Path]] = None, maxl: int = 18,
-           diagrams=("sld",), drawing_date=None) -> dict:
-    """Calculate the board and draw its diagrams into `out_dir`. `drawing_date` (optional, ISO date) pins everything that carries a time: the title block dates, the DXF creation and update
+           diagrams=("sld",), drawing_date=None, precomputed=None) -> dict:
+    """Calculate the board and draw its diagrams into `out_dir`. `precomputed` = (data, calculation, memo) as `calculate` and `board_memo.build` gave them for the same input and criteria (the pipeline
+    calculates once per run and hands that result over); the board is then not calculated again and the files are the same. `drawing_date` (optional, ISO date) pins everything that carries a time: the title block dates, the DXF creation and update
     times and GUIDs, the properties of `input_for_sld.xlsx`; with the same inputs and date the files are byte-identical. Without it the clock and random GUIDs are used."""
     day = drawing_day(drawing_date)
     out_dir = Path(out_dir)
@@ -277,8 +279,11 @@ def design(data: dict, out_dir: Path, name: str, criteria: Optional[dict] = None
     if out.exists():
         shutil.rmtree(out)
     out.mkdir(parents=True)
-    data = groups_in(data, criteria)                          # circuits without a differential are put behind one where the standard solutions ask for it
-    res = calculate(data, criteria)
+    if precomputed is not None:
+        data, res, memo_given = copy.deepcopy(precomputed[0]), precomputed[1], precomputed[2]
+    else:
+        data = groups_in(data, criteria)                      # circuits without a differential are put behind one where the standard solutions ask for it
+        res, memo_given = calculate(data, criteria), None
     tablero, circuitos = excel_rows(data)
     xlsx = out_dir / "input_for_sld.xlsx"
     write_excel(xlsx, tablero, circuitos, day)
@@ -300,8 +305,8 @@ def design(data: dict, out_dir: Path, name: str, criteria: Optional[dict] = None
     if "calc" in diagrams:                                    # the calculation alone (sections, protections, drops): no memo, no figures, no diagrams
         return _finish(out, _summary(name, avisos, [], res, data, diagrams, None, None))
     from epc_aea90364 import board_memo as BM                 # memoria de cálculo y síntesis del tablero: mismos números que el unifilar (fuente única)
-    memo = BM.build(data["board"], data["circuits"], res["datos"], res["detalle"], res["limites"], res["conductor"], res["rcd_ma"],
-                    upstream=data.get("upstream"), validated=bool(data.get("validated", True)), feeders=res["acometidas"])
+    memo = memo_given or BM.build(data["board"], data["circuits"], res["datos"], res["detalle"], res["limites"], res["conductor"], res["rcd_ma"],
+                                  upstream=data.get("upstream"), validated=bool(data.get("validated", True)), feeders=res["acometidas"])
     (out / f"{name}_calculation_memo.json").write_text(json.dumps(memo, ensure_ascii=False, indent=1) + "\n", encoding="utf-8", newline="\n")
     (out / f"{name}_calculation_memorandum.md").write_text(BM.memoria_md(memo), encoding="utf-8", newline="\n")
     (out / f"{name}_project_summary.md").write_text(BM.sintesis_md(memo), encoding="utf-8", newline="\n")
