@@ -5,6 +5,7 @@ All notable changes. Format: Keep a Changelog; versions follow `harness/docs/BRA
 ## [Unreleased]
 
 ### Changed
+- PRD for one symbol engine (`docs/prsad/PRD-symbols.md`) and backlog items SYM-00 to SYM-07; SYM-00 (DXF blocks in the SLD) is blocked on the golden files, not applied.
 - The SLD is drawn in process: `epc_sld.sld_paginate.paginate` is a function and stage 10 calls it instead of spawning a subprocess per sheet; same files byte for byte (ADR-0038).
 - ADR-0038: engines are functions called with all their data (no reading files, workbooks or environment variables, no searching for work); converted one by one, SLD first (BACKLOG DGM-16).
 - Stage 10 no longer calculates the board a second time: `board_design.design` takes the calculation, the grouped data and the memo the pipeline already computed (`precomputed`), and a test shows the files are byte-identical and that nothing is calculated again (DGM-12).
