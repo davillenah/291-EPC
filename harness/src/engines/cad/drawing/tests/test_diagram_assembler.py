@@ -82,6 +82,11 @@ class ModelAndAssembler(unittest.TestCase):
         self.assertEqual({"lv_pv_module", "lv_inverter"}, {x["symbol"] for x in m["loads"]})
         self.assertIn(K.audit(m)["verdict"], ("ok", "not_ok"))
 
+    def test_pv_chain_kinds_use_the_placeholder_devices(self):
+        m = DM.build_board_model("PV1", {"S-1": {"disp": None, "kind": "pv_string_optimized"}, "CB-1": {"disp": None, "kind": "pv_combiner_dc"}, "I-1": {"disp": None, "kind": "pv_inverter_ac_rcmu"}})
+        devices = {d["device_id"] for d in m["devices"]}
+        self.assertTrue({"pv_power_optimizer", "pv_string_combiner_box", "pv_rcmu"} <= devices)
+
 
 if __name__ == "__main__":
     unittest.main()
