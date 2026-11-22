@@ -5,6 +5,8 @@ routed the floors (`routing` slice) the row also names the room and the trays an
 """
 import copy
 
+from disciplines.electrical_lv.stages.circuit_view import circuit_view
+
 def raceway_of(load_id, routing):
     """{"circuit": tag, "containers": [{tag, kind, cables}]} of a branch-circuit load (the trays and conduits that carry it, from the schedule of the plan engine); None when the load is not a routed circuit."""
     for data in ((routing or {}).get("floors") or {}).values():
@@ -19,12 +21,11 @@ def cable_rows(ch, loads, routing=None):
     """The rows of the cable list, in the order of the engine result."""
     by_id = {x["id"]: x for x in loads}
     rows = []
-    for tag, data in ch["calc"]["datos"].items():
-        detail = ch["calc"]["detalle"][tag]
+    for tag, v in circuit_view(ch).items():
         load = by_id.get(tag)
-        row = {"circuit": tag, "from": detail.get("padre") or ch["form"]["board"]["name"], "to": detail.get("descripcion") or "", "phases": detail["fases"], "material": detail.get("material"),
-               "insulation": detail.get("aislacion"), "s_mm2": data["S"], "neutral_mm2": detail.get("neutro_mm2"), "pe_mm2": detail.get("pe_mm2"), "method": detail.get("metodo"),
-               "length_m": detail.get("largo_m"), "ib_a": detail.get("ib_a"), "in_a": data.get("In"), "du_pct": data.get("dU"), "compliant": detail.get("cumple")}
+        row = {"circuit": tag, "from": v["parent"] or ch["form"]["board"]["name"], "to": v["description"], "phases": v["phases"], "material": v["material"],
+               "insulation": v["insulation"], "s_mm2": v["s_mm2"], "neutral_mm2": v["neutral_mm2"], "pe_mm2": v["pe_mm2"], "method": v["method"],
+               "length_m": v["length_m"], "ib_a": v["ib_a"], "in_a": v["in_a"], "du_pct": v["du_pct"], "compliant": v["compliant"]}
         if load is not None and load.get("area"):
             row["area"] = load["area"]
             row["raceway"] = raceway_of(tag, routing)
