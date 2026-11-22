@@ -83,7 +83,8 @@ class DrawingsStage(Stage):
         ch = EC.chain(context)
         name = ch["form"]["board"]["name"]
         target = self._target(context, name)
-        summary = board_design.design(copy.deepcopy(ch["form"]), target, name, ch["criteria"], None, diagrams=self._diagrams(context), drawing_date=drawing_date(context))
+        summary = board_design.design(copy.deepcopy(ch["form"]), target, name, ch["criteria"], None, diagrams=self._diagrams(context), drawing_date=drawing_date(context),
+                                      precomputed=(ch["data"], ch["calc"], ch["memo"]))
         calls = [EC.record_for("cad/drawing", DESIGN)]
         if not summary["ok"]:
             return self.result("failed", message=f"drawing engine: {summary['error']}", reason="engine", engine_calls=calls)
