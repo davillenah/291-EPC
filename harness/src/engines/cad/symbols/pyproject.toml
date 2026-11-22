@@ -13,4 +13,4 @@ dependencies = []
 where = ["src"]
 
 [tool.setuptools.package-data]
-epc_symbols = ["library/**/*"]
+epc_symbols = ["library/**/*", "schema/*.json"]

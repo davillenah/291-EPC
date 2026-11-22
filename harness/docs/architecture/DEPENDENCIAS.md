@@ -77,7 +77,7 @@ Lo declarado en `pyproject.toml` frente a lo que el código importa de verdad.
 | `short_circuit` | — | `epc-calc-common`, `epc-feeder-sizing` | — |
 | `sld` | `cairosvg`, `lxml`, `openpyxl` | `cairosvg`, `epc-aea90364`, `epc-dxf`, `epc-symbols`, `epc-titleblock`, `lxml`, `openpyxl` | — |
 | `standards` | `engines`, `jsonschema`, `pypdf`, `pypdfium2` | `jsonschema`, `pillow`, `pypdf`, `pypdfium2` | `engines` |
-| `symbols` | — | — | — |
+| `symbols` | `ezdxf` | — | `ezdxf` |
 | `terminal_blocks` | — | — | — |
 | `titleblock` | — | `epc-dxf` | — |
 | `transformer_sizing` | — | `epc-short-circuit` | — |
