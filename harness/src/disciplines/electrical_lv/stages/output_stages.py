@@ -16,6 +16,7 @@ from disciplines.electrical_lv.stages import engine_calls as EC
 from disciplines.electrical_lv.stages.base import Stage, StageInputError
 from disciplines.electrical_lv.stages import rendering, specification, studies
 from disciplines.electrical_lv.stages.cable_list import board_diagram_assembly, cable_list_document
+from disciplines.electrical_lv.stages.circuit_view import circuit_view
 from disciplines.electrical_lv.stages.plan_drawings import FUNCTION as PLAN_FUNCTION, ENGINE as PLAN_ENGINE, place_on_sheets, sheet_options, write_floor_plans
 from disciplines.electrical_lv.stages.mappings import ENGINE_CHAIN, PENDING_DOCUMENTS
 
@@ -158,12 +159,8 @@ TERMINAL_ENGINE = "quality/terminal_blocks"
 
 def terminal_circuits(ch):
     """The terminal-list input of each circuit, selected from the engine result of stages 6 and 8 (no arithmetic)."""
-    rows = []
-    for tag, data in ch["calc"]["datos"].items():
-        detail = ch["calc"]["detalle"][tag]
-        rows.append({"tag": tag, "phases": detail["fases"], "s_mm2": data["S"], "pe_mm2": detail.get("pe_mm2"), "neutral_mm2": detail.get("neutro_mm2"),
-                     "description": detail.get("descripcion") or "", "device": data.get("disp") or "", "in_a": data.get("In")})
-    return rows
+    return [{"tag": v["tag"], "phases": v["phases"], "s_mm2": v["s_mm2"], "pe_mm2": v["pe_mm2"], "neutral_mm2": v["neutral_mm2"], "description": v["description"],
+             "device": v["device"], "in_a": v["in_a"]} for v in circuit_view(ch).values()]
 
 
 CABLE_LIST_PENDING_NAME = "cable list"
@@ -177,14 +174,9 @@ NO_ALLOWANCE = "no_allowance_pct"
 
 def boq_circuits(ch):
     """The bill-of-quantities input of each circuit, selected from the engine result of stages 6 and 8 (no arithmetic). The first element of the device chain is the protective device."""
-    rows = []
-    for tag, data in ch["calc"]["datos"].items():
-        detail = ch["calc"]["detalle"][tag]
-        head = (detail.get("cadena") or [{}])[0]
-        rows.append({"tag": tag, "phases": detail["fases"], "s_mm2": data["S"], "neutral_mm2": detail.get("neutro_mm2"), "pe_mm2": detail.get("pe_mm2"),
-                     "length_m": detail.get("largo_m"), "material": detail.get("material"), "insulation": detail.get("aislacion"),
-                     "device_kind": head.get("short"), "in_a": data.get("In"), "poles": head.get("poles"), "breaking_capacity_ka": data.get("icu")})
-    return rows
+    return [{"tag": v["tag"], "phases": v["phases"], "s_mm2": v["s_mm2"], "neutral_mm2": v["neutral_mm2"], "pe_mm2": v["pe_mm2"], "length_m": v["length_m"],
+             "material": v["material"], "insulation": v["insulation"], "device_kind": v["device_kind"], "in_a": v["in_a"], "poles": v["poles"],
+             "breaking_capacity_ka": v["icu_ka"]} for v in circuit_view(ch).values()]
 
 
 def pv_equipment(context):
