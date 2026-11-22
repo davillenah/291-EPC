@@ -155,6 +155,17 @@ class SolutionChainFeedsTheNetlist(unittest.TestCase):
             self.assertEqual([d["id"] for d in by_text["devices"]], [d["id"] for d in by_chain["devices"]], tag)
             self.assertEqual(by_text["unmapped"], by_chain["unmapped"], tag)
 
+    def test_the_sld_chain_and_the_assembly_draw_the_same_symbols(self):
+        """The single-line diagram draws `detalle.cadena` and the assembly reads the same chain: the symbols of both agree, so the drawing and the netlist cannot diverge (DGM-12 step 7)."""
+        from epc_aea90364 import solutions as S
+        from epc_drawing import diagram_assembler as A
+        cases = [("G-02", "feeder", "feeder", "3F+N", "seccional", 63, 50, True, False), ("M-01", "motor", "dol", "3F", "motor", 25, 20, False, True),
+                 ("L-1", "lighting", "single", "1F", "iluminacion", 10, 7, False, False), ("T-1", "sockets", "single", "1F", "tomacorrientes", 16, 10, False, False)]
+        for tag, kind, top, phase, tipo, in_a, ib, kids, motor in cases:
+            sol = S.resolve(S.facts(tag, "", "", top, kind, phase, tipo, in_a, ib, 10, 30, kids, motor))
+            circuit = A.assemble_board("TS1", {tag: {"chain": sol["chain"], "kind": kind}}, {tag: {}})["circuits"][0]
+            self.assertEqual([i["symbol"] for i in sol["chain"]], [d["symbol"] for d in circuit["devices"]], tag)
+
 
 class DesignConstraints(unittest.TestCase):
     """Design rules are constraints on the connections (no 4P MCB behind a 2P RCCB), not symbols; a constraint without its data is not applied."""
