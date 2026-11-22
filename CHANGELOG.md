@@ -5,6 +5,8 @@ All notable changes. Format: Keep a Changelog; versions follow `harness/docs/BRA
 ## [Unreleased]
 
 ### Changed
+- The SLD is drawn in process: `epc_sld.sld_paginate.paginate` is a function and stage 10 calls it instead of spawning a subprocess per sheet; same files byte for byte (ADR-0038).
+- ADR-0038: engines are functions called with all their data (no reading files, workbooks or environment variables, no searching for work); converted one by one, SLD first (BACKLOG DGM-16).
 - Stage 10 no longer calculates the board a second time: `board_design.design` takes the calculation, the grouped data and the memo the pipeline already computed (`precomputed`), and a test shows the files are byte-identical and that nothing is calculated again (DGM-12).
 - The netlist, the audit and the assembly of a board run in one call of the drawing engine (`diagram_assembler.assemble_board`); stage 10 only selects the circuits and values from the one circuit view (DGM-13).
 - One view of the circuits (`stages/circuit_view.py`): the cable list, terminal list, BOQ and report inputs derive from one selection of the calculation instead of four, results unchanged (DGM-13).

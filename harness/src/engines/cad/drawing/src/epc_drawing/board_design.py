@@ -320,34 +320,49 @@ def design(data: dict, out_dir: Path, name: str, criteria: Optional[dict] = None
     _layout_env(data, out_dir, env)
     if day is not None:
         env["EPC_STAMP_DATE"] = day.isoformat()      # the sheet generators (separate processes) read it
-    log, error = _run_sheet_generators(diagrams, env, xlsx, out, name, maxl, out_dir, calc_json, detail_json)
+    log, error = _run_sheet_generators(diagrams, env, xlsx, out, name, maxl, out_dir, calc_json, detail_json, day)
     _package_index(out, name, error)
     return _finish(out, _summary(name, avisos, log, res, data, diagrams, memo, error))
 
 
-def _sheet_commands(diagrams, xlsx, out, name, maxl, out_dir, calc_json, detail_json):
-    """The sheet generators to run, in report order: the single-line diagram and the multi-line diagram (separate processes, independent files)."""
-    cmds = []
-    if "sld" in diagrams:
-        cmds.append([sys.executable, "-m", "epc_sld.sld_paginate", "default", str(xlsx), str(out), f"SLD_{name}", "default", "default", str(maxl)])
-    if "mld" in diagrams:
-        cmds.append([sys.executable, "-m", "epc_mld.mld_generator", "--input", str(out_dir / "input_design.json"), "--calc", str(calc_json),
-                     "--detail", str(detail_json), "--out", str(out), "--name", f"MLD_{name}"])
-    return cmds
+def _run_sld(env, xlsx, out, name, maxl, day):
+    """The single-line diagram, drawn in process as a function call (ADR-0038): the data come in `env`, nothing is read from the process. -> (log lines, error or None)."""
+    import contextlib
+    import io
+    from epc_sld import sld_paginate
+    seen = io.StringIO()
+    try:
+        with contextlib.redirect_stdout(seen), contextlib.redirect_stderr(seen):
+            sld_paginate.paginate("default", str(xlsx), str(out), f"SLD_{name}", "default", "default", maxl, environ=env, stamp_date=day.isoformat() if day else None)
+    except Exception as exc:                                  # the generator reports a failure by raising
+        return [ln for ln in seen.getvalue().splitlines() if ln.startswith(("OK", "AVISO"))], f"{type(exc).__name__}: {exc}"[-600:]
+    return [ln for ln in seen.getvalue().splitlines() if ln.startswith(("OK", "AVISO"))], None
 
 
-def _run_sheet_generators(diagrams, env, xlsx, out, name, maxl, out_dir, calc_json, detail_json):
+def _run_mld(env, out, name, out_dir, calc_json, detail_json):
+    """The multi-line diagram (a separate process: it has its own command line). -> (log lines, error or None)."""
+    run = subprocess.run([sys.executable, "-m", "epc_mld.mld_generator", "--input", str(out_dir / "input_design.json"), "--calc", str(calc_json),
+                          "--detail", str(detail_json), "--out", str(out), "--name", f"MLD_{name}"], env=env, capture_output=True, text=True)
+    log = [ln for ln in (run.stdout.splitlines() + run.stderr.splitlines()) if ln.startswith(("OK", "AVISO"))]
+    return log, ((run.stderr or run.stdout).strip()[-600:] if run.returncode != 0 else None)
+
+
+def _run_sheet_generators(diagrams, env, xlsx, out, name, maxl, out_dir, calc_json, detail_json, day=None):
     """(log lines, first error or None). The generators run at the same time: they write different files and read the same inputs."""
-    cmds = _sheet_commands(diagrams, xlsx, out, name, maxl, out_dir, calc_json, detail_json)
-    if not cmds:
+    jobs = []
+    if "sld" in diagrams:
+        jobs.append(lambda: _run_sld(env, xlsx, out, name, maxl, day))
+    if "mld" in diagrams:
+        jobs.append(lambda: _run_mld(env, out, name, out_dir, calc_json, detail_json))
+    if not jobs:
         return [], None
-    with concurrent.futures.ThreadPoolExecutor(max_workers=len(cmds)) as pool:
-        runs = list(pool.map(lambda cmd: subprocess.run(cmd, env=env, capture_output=True, text=True), cmds))
+    with concurrent.futures.ThreadPoolExecutor(max_workers=len(jobs)) as pool:
+        runs = list(pool.map(lambda job: job(), jobs))
     log, error = [], None
-    for run in runs:
-        log += [ln for ln in (run.stdout.splitlines() + run.stderr.splitlines()) if ln.startswith(("OK", "AVISO"))]
-        if run.returncode != 0 and error is None:
-            error = (run.stderr or run.stdout).strip()[-600:]
+    for lines, err in runs:
+        log += lines
+        if err and error is None:
+            error = err
     return log, error
 
 
