@@ -75,6 +75,13 @@ class ModelAndAssembler(unittest.TestCase):
         v = K.audit(m)
         self.assertEqual(("ok", ["dc-02"]), (v["verdict"], [f["constraint"] for f in v["findings"]]))
 
+    def test_pv_string_and_inverter_kinds_build_devices_and_loads(self):
+        m = DM.build_board_model("PV1", {"STR-1": {"disp": None, "kind": "pv_string"}, "INV-1": {"disp": None, "kind": "pv_inverter_ac"}})
+        devices = {d["device_id"] for d in m["devices"]}
+        self.assertTrue({"fuse_gpv", "pv_dc_switch_load_break", "mccb"} <= devices)
+        self.assertEqual({"lv_pv_module", "lv_inverter"}, {x["symbol"] for x in m["loads"]})
+        self.assertIn(K.audit(m)["verdict"], ("ok", "not_ok"))
+
 
 if __name__ == "__main__":
     unittest.main()
