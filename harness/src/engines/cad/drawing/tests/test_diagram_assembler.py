@@ -87,6 +87,11 @@ class ModelAndAssembler(unittest.TestCase):
         devices = {d["device_id"] for d in m["devices"]}
         self.assertTrue({"pv_power_optimizer", "pv_string_combiner_box", "pv_rcmu"} <= devices)
 
+    def test_assemble_board_runs_netlist_audit_and_assembly_together(self):
+        out = A.assemble_board("TS1", {"M-1": {"disp": "MCB > KM", "kind": "motor"}}, {"M-1": {"in_a": 16}})
+        self.assertEqual("TS1", out["board"])
+        self.assertEqual("ok", out["verdict"]["verdict"])
+
 
 if __name__ == "__main__":
     unittest.main()

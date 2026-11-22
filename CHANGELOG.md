@@ -5,6 +5,7 @@ All notable changes. Format: Keep a Changelog; versions follow `harness/docs/BRA
 ## [Unreleased]
 
 ### Changed
+- The netlist, the audit and the assembly of a board run in one call of the drawing engine (`diagram_assembler.assemble_board`); stage 10 only selects the circuits and values from the one circuit view (DGM-13).
 - One view of the circuits (`stages/circuit_view.py`): the cable list, terminal list, BOQ and report inputs derive from one selection of the calculation instead of four, results unchanged (DGM-13).
 - `calc_check` is the only role that states the verdict of a board: it reads the `verdict` of the assembly and reports its findings, it never recomputes it (DGM-15).
 - Cable types before the section: `epc_aea90364.cable_types` decides material, insulation, cores and installation method of each circuit (row first, then role, then design criteria) with no cross-section; the pipeline uses it and results are unchanged (DGM-12).

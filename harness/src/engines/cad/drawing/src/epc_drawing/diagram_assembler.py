@@ -9,6 +9,7 @@ Nothing is calculated and nothing is drawn here. The result lists, per circuit, 
 """
 
 from epc_drawing import diagram_knowledge as K
+from epc_drawing import diagram_model as M
 
 PROTECTIVE = {"mcb", "mccb", "acb", "rccb", "rcbo", "mpcb"}                       # devices that show the rating of the calculation
 LABELS = {"in_a": "rated_current", "icu_ka": "breaking_capacity"}      # value of the calculation -> label slot of the symbol library
@@ -42,3 +43,10 @@ def assemble(model: dict, values: dict, cable_rows: list = None, symbols=None, v
     index = {key: {x["id"]: x for x in model[key]} for key in ("devices", "wires", "loads")}
     out = [_assemble_circuit(c, index, values.get(c["name"]["en"], {}), rows, symbols) for c in model["circuits"]]
     return {"board": model["board"], "circuits": out, "verdict": verdict, "violations": list(verdict["findings"]), "unmapped": list(model["unmapped"])}
+
+
+def assemble_board(board: str, circuits: dict, values: dict, cable_rows: list = None, symbols=None) -> dict:
+    """The whole path of one board: the netlist from `circuits` (see `diagram_model.build_board_model`), the audit verdict of that netlist, and the assembly with the calculation `values` and the cable-list rows.
+    The caller selects the circuits and values from its calculation; nothing is calculated here."""
+    model = dict(M.build_board_model(board, circuits), board=board)
+    return assemble(model, values, cable_rows, symbols, verdict=K.audit(model))
