@@ -72,15 +72,18 @@
       "version": "0.1.0",
       "kind": "generator",
       "status": "active",
-      "requires": {},
+      "requires": {
+        "iec-symbols": "^0.4.19"
+      },
       "skills": [],
       "engine": [
         "arch",
         "dxf",
         "plan",
+        "symbols",
         "titleblock"
       ],
-      "hash": "a5c743b42b11c929"
+      "hash": "70c959b5fa93c5bf"
     },
     "equipment-catalog": {
       "version": "0.1.0",
@@ -100,7 +103,7 @@
       "engine": [
         "symbols"
       ],
-      "hash": "92cfa8045849aa77"
+      "hash": "c02f02f88be4e10f"
     },
     "intake-analysis": {
       "version": "0.1.0",
@@ -125,9 +128,10 @@
         "arch",
         "dxf",
         "plan",
+        "symbols",
         "titleblock"
       ],
-      "hash": "c5652c3a20757b9a"
+      "hash": "e8e1a60165d8cf81"
     },
     "mld": {
       "version": "0.2.2",
@@ -170,9 +174,10 @@
         "arch",
         "dxf",
         "plan",
+        "symbols",
         "titleblock"
       ],
-      "hash": "cb1a80d07d516fe6"
+      "hash": "bfa430cc627d7a12"
     },
     "pm2-docs": {
       "version": "0.1.0",

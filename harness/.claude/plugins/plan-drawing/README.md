@@ -8,7 +8,7 @@ The platform uses it through the layout module; it installs and updates on its o
 
 | | |
 |---|---|
-| Incluye (motor) | `arch`, `dxf`, `plan`, `titleblock` |
+| Incluye (motor) | `arch`, `dxf`, `plan`, `symbols`, `titleblock` |
 | Es dueño de | `plan` |
 | Necesita (plugins) | `dxf-output` |
 | Lo necesitan | — |

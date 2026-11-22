@@ -90,13 +90,13 @@ Lo declarado en `pyproject.toml` frente a lo que el código importa de verdad.
 | `aea-calc` | `aea90364`, `calc_common`, `feeder_sizing`, `grounding`, `load_balance`, `selectivity`, `short_circuit`, `voltage_drop` | — | `board-design`, `mld`, `sld` |
 | `board-design` | `aea90364`, `arch`, `calc_common`, `drawing`, `dxf`, `feeder_sizing`, `grounding`, `load_balance`, `mld`, `plan`, `pv`, `selectivity`, `short_circuit`, `sld`, `symbols`, `titleblock`, `voltage_drop` | `aea-calc`, `dxf-output`, `iec-symbols`, `iram-titleblock`, `mld`, `sld` | — |
 | `doc-quality` | `documents` | — | `pm2-docs`, `spec-writer` |
-| `dxf-output` | `arch`, `dxf`, `plan`, `titleblock` | — | `board-design`, `iram-titleblock`, `mld`, `plan-drawing`, `sld` |
+| `dxf-output` | `arch`, `dxf`, `plan`, `symbols`, `titleblock` | `iec-symbols` | `board-design`, `iram-titleblock`, `mld`, `plan-drawing`, `sld` |
 | `equipment-catalog` | — | — | `procurement` |
-| `iec-symbols` | `symbols` | — | `board-design`, `mld`, `sld` |
+| `iec-symbols` | `symbols` | — | `board-design`, `dxf-output`, `mld`, `sld` |
 | `intake-analysis` | — | — | — |
-| `iram-titleblock` | `arch`, `dxf`, `plan`, `titleblock` | `dxf-output` | `board-design`, `mld`, `sld` |
+| `iram-titleblock` | `arch`, `dxf`, `plan`, `symbols`, `titleblock` | `dxf-output` | `board-design`, `mld`, `sld` |
 | `mld` | `aea90364`, `arch`, `calc_common`, `dxf`, `feeder_sizing`, `grounding`, `load_balance`, `mld`, `plan`, `selectivity`, `short_circuit`, `symbols`, `titleblock`, `voltage_drop` | `aea-calc`, `dxf-output`, `iec-symbols`, `iram-titleblock` | `board-design` |
-| `plan-drawing` | `arch`, `dxf`, `plan`, `titleblock` | `dxf-output` | — |
+| `plan-drawing` | `arch`, `dxf`, `plan`, `symbols`, `titleblock` | `dxf-output` | — |
 | `pm2-docs` | `documents` | `doc-quality` | — |
 | `procurement` | — | `equipment-catalog` | — |
 | `sld` | `aea90364`, `arch`, `calc_common`, `dxf`, `feeder_sizing`, `grounding`, `load_balance`, `plan`, `selectivity`, `short_circuit`, `sld`, `symbols`, `titleblock`, `voltage_drop` | `aea-calc`, `dxf-output`, `iec-symbols`, `iram-titleblock` | `board-design` |
