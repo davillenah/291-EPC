@@ -40,6 +40,22 @@ class TestDrawingDay(unittest.TestCase):
                 B.drawing_day(bad)
 
 
+class TestPrecomputed(unittest.TestCase):
+    def test_a_precomputed_calculation_gives_the_same_files_and_is_not_calculated_again(self):
+        from unittest import mock
+        data = B.groups_in(json.loads(json.dumps(DATA)), None)
+        res = B.calculate(data, None)
+        from epc_aea90364 import board_memo as BM
+        memo = BM.build(data["board"], data["circuits"], res["datos"], res["detalle"], res["limites"], res["conductor"], res["rcd_ma"], upstream=data.get("upstream"),
+                        validated=bool(data.get("validated", True)), feeders=res["acometidas"])
+        with tempfile.TemporaryDirectory() as a, tempfile.TemporaryDirectory() as b:
+            design(a, DAY)
+            with mock.patch.object(B, "calculate", side_effect=AssertionError("calculated again")), mock.patch.object(B, "groups_in", side_effect=AssertionError("grouped again")):
+                summary = B.design(json.loads(json.dumps(DATA)), Path(b), "T1", None, None, 18, ("sld",), DAY, precomputed=(data, res, memo))
+            self.assertTrue(summary["ok"], summary["error"])
+            self.assertEqual(files_of(a), files_of(b))
+
+
 class TestWorkbook(unittest.TestCase):
     rows = ({"NOMBRE": "T1", "TENSION_V": 380}, [{"TAG": "C-01", "CARGA": 10}])
 
