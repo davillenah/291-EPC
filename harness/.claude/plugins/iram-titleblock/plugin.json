@@ -54,6 +54,7 @@
     "arch",
     "dxf",
     "plan",
+    "symbols",
     "titleblock"
   ],
   "owns": [

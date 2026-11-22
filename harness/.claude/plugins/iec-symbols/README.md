@@ -29,9 +29,9 @@ This plugin is packaging only. The code lives in `harness/src/engines/cad/drawin
 | Incluye (motor) | `symbols` |
 | Es dueño de | `symbols` |
 | Necesita (plugins) | — |
-| Lo necesitan | `board-design`, `mld`, `sld` |
+| Lo necesitan | `board-design`, `dxf-output`, `mld`, `sld` |
 | Paquetes de Python | — |
-| Si lo modificas, revisa | plugins `board-design`, `mld`, `sld`; módulos del backend — |
+| Si lo modificas, revisa | plugins `board-design`, `dxf-output`, `iram-titleblock`, `mld`, `plan-drawing`, `sld`; módulos del backend — |
 
 Generado por `python harness/tools/build/regen_plugins.py`; el mapa completo está en `harness/docs/architecture/DEPENDENCIAS.md`.
 <!-- deps:end -->

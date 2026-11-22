@@ -5,6 +5,7 @@ All notable changes. Format: Keep a Changelog; versions follow `harness/docs/BRA
 ## [Unreleased]
 
 ### Changed
+- `epc_symbols.registry` (SYM-01): one API to resolve, list and connect symbols by id and view (`epc_dxf.symbol_blocks.insert` places the block in a DXF), with aliases of the old names and a catalogue schema; nothing draws through it yet (SYM-02).
 - Backlog order of work now includes the symbols plan (SYM-01 and SYM-02 next, golden review before the phases that change DXF bytes).
 - PRD for one symbol engine (`docs/prsad/PRD-symbols.md`) and backlog items SYM-00 to SYM-07; SYM-00 (DXF blocks in the SLD) is blocked on the golden files, not applied.
 - The SLD is drawn in process: `epc_sld.sld_paginate.paginate` is a function and stage 10 calls it instead of spawning a subprocess per sheet; same files byte for byte (ADR-0038).
