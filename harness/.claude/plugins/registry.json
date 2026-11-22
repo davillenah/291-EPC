@@ -55,7 +55,7 @@
         "titleblock",
         "voltage_drop"
       ],
-      "hash": "891065e5edaf59dc"
+      "hash": "f9038e5b4c49afbc"
     },
     "doc-quality": {
       "version": "0.1.0",
@@ -229,7 +229,7 @@
         "titleblock",
         "voltage_drop"
       ],
-      "hash": "58623ac060e5e083"
+      "hash": "d6e2f3fdc238920c"
     },
     "spec-writer": {
       "version": "0.1.0",
