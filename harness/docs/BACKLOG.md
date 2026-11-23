@@ -123,11 +123,11 @@ Needs the engine contracts of phase 3. DGM-12 and DGM-15 first (the flow and who
 
 Build on the traceable flow of phase 5 and the reference projects of phase 1.
 
-- [ ] **GEN-01 · Pending-norm view (was D).** One generated view of every value still `pending review`, ordered by how many deliverables depend on it, so the owner approves first what unblocks most. Agents never approve a value (P: approval).
+- [x] **GEN-01 · Pending-norm view (was D).** Done 2026-11-23: `REVISION_NORMAS.md` lists the review units ordered by how many engines change if the unit changes (from the generated dependency map), with a new column; the unit-to-engine table is `UNIT_ENGINE` in `review_list.py`. Original goal: One generated view of every value still `pending review`, ordered by how many deliverables depend on it, so the owner approves first what unblocks most. Agents never approve a value (P: approval).
 - [ ] **PRO-01 · Decision register per project.** Every assumption the harness makes (a default, a norm chosen between two) listed for the engineer of record to review before signing.
 - [ ] **GEN-04 · Traceability in every deliverable (was B).** Each number shown with its engine, version and norm record.
 - [ ] **GEN-03 · Independent cross-check before sign-off (was A).** A second path recalculates the critical values (voltage drop, cross-section, protection) and flags differences; `calc_check` keeps the only verdict.
-- [ ] **OPT-13 · Property tests for the calculation engines** (invariants, for example more load never lowers the cable section); no norm values touched.
+- [ ] **OPT-13 · Property tests for the calculation engines** (first part done 2026-11-23: `voltage_drop` and the commercial-section choice of `feeder_sizing`, seeded, standard library only, no new dependency; the other engines are left) (invariants, for example more load never lowers the cable section); no norm values touched.
 - [ ] **PRO-02 · Outdated-norm alerts.** A notice when a norm edition in the register has a newer one; a person decides whether to update (P).
 - [ ] **COD-10 · Gradual static typing:** annotations on the public entries and `mypy` on those modules only, widening slowly.
 - [ ] **COD-09 · Lower complexity per module touched** (OPT-15), never raise the baseline.
@@ -152,7 +152,7 @@ After the flow is stable. Related items adjacent: delivery and revisions, then s
 - [ ] **GEN-11 · More disciplines on the same method (was L).** Lighting, HVAC and control on the relational model and the symbol engine, after SYM (see DGM-11).
 - [ ] **PRO-11 · Lessons from simulations:** each simulation finding creates its draft lesson (only the owner makes it `standard`).
 - [ ] **PRO-12 · Onboarding guide** for another engineer, generated.
-- [ ] **PRO-13 · Harness metrics:** projects, failures per stage, time per stage.
+- [x] **PRO-13 · Harness metrics:** projects, failures per stage, time per stage. Done 2026-11-23: `python harness/tools/ci/harness_metrics.py --root <projects folder>` reads each project's stage statuses and the stage timings of its runs (`EPC_TIMINGS=1`); terminal or `--json`, nothing stored.
 
 ### Block 8 · Needs a person (P), parallel from the start
 
