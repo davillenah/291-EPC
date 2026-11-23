@@ -85,7 +85,7 @@ Same code (the SLD and MLD generators), so done together: SYM-01 (done) and SYM-
 - [~] **COD-01 · No subprocess calls between engines** (done 2026-11-23 for the MLD in `board_design`; others pending) (MLD and the rest): call the function in process (DGM-16).
 - [ ] **OPT-03 · End the Excel round trip inside the SLD** (DGM-16 step 4): the model already holds the data.
 - [ ] **OPT-11 · Read the project once:** one loader builds the data package and hands it to each function.
-- [ ] **SYM-02 · SLD and MLD generators use the API** (no engine builds a symbol file name).
+- [~] **SYM-02 · SLD and MLD generators use the API** (no engine builds a symbol file name). Done 2026-11-23: both generators resolve the symbol file through `epc_symbols.resolve` for the default library. Pending: placing symbols as DXF `INSERT` blocks (SYM-00, golden review by the owner), the other drawing engines (SYM-03 to SYM-05).
 - [ ] **OPT-05 · One symbol engine** (SYM-02 to SYM-07).
 - [ ] **COD-03 · One source per symbol and device table** (DGM-13a, ADR-0012).
 - [ ] **SYM-03 · `photovoltaic` domain and PV drawings insert library symbols;** the silent box fallback in `pv_diagrams._symbol` is removed.

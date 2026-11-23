@@ -46,6 +46,22 @@ def _notice(line: str) -> None:
     print(line, file=sys.stderr)
 
 
+def _registry_file(sid: str) -> Optional[str]:
+    from epc_symbols import resolve, UnknownSymbol
+    try:
+        return str(resolve(sid, "mld").svg)
+    except UnknownSymbol:
+        return None
+
+
+def _symbol_path(lib: str, row: Optional[dict], sid: str) -> Optional[str]:
+    """The SVG of a symbol: from `epc_symbols` for its own library (SYM-02), from the catalogue row for a library given by path."""
+    if row and lib == library_dir():
+        return _registry_file(sid)
+    f = os.path.join(lib, row["file"]) if row else None
+    return f if f and os.path.isfile(f) else None
+
+
 class Sheet:
     """Elementos SVG de una hoja y utilidades de dibujo."""
 
@@ -76,9 +92,7 @@ class Sheet:
 
     # ---- símbolos
     def symbol_file(self, sid: str) -> Optional[str]:
-        s = self.cat.get(sid)
-        f = os.path.join(self.lib, s["file"]) if s else None
-        return f if f and os.path.isfile(f) else None
+        return _symbol_path(self.lib, self.cat.get(sid), sid)
 
     def bottom(self, sid: str) -> float:
         s = self.cat.get(sid)
