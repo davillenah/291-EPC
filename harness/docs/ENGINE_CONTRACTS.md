@@ -359,6 +359,34 @@ Schema: `harness/src/engines/procurement/rfq/src/epc_rfq/schema/input.schema.jso
 | `datasheets` | object or null |  |  | The structure of epc_datasheets.build_datasheets as a plain dict. |
 | `requestable_categories` | array or null |  | minItems 1 |  |
 
+## epc_descriptive_report
+
+### Input
+
+Schema: `harness/src/engines/quality/descriptive_report/src/epc_descriptive_report/schema/input.schema.json` (epc_descriptive_report input)
+
+| Field | Type | Required | Limits | Notes |
+|---|---|---|---|---|
+| `design_basis` | object | yes |  | The output of epc_design_basis.build_design_basis_document. |
+| `design_basis.sections` | array | yes |  |  |
+| `design_basis.sections[].id` | string | yes |  |  |
+| `design_basis.sections[].title` | string |  |  |  |
+| `design_basis.sections[].items` | array | yes |  |  |
+| `design_basis.open_items` | array |  |  |  |
+| `circuits` | array | yes | minItems 1 |  |
+| `circuits[].tag` | string | yes | minLength 1, pattern \S |  |
+| `circuits[].kind` | string |  |  |  |
+| `circuits[].phases` | one of `1`, `3` |  |  |  |
+| `circuits[].device_kind` | string |  |  |  |
+| `circuits[].s_mm2` | number or null |  | exclusiveMinimum 0 |  |
+| `circuits[].material` | string |  |  |  |
+| `circuits[].insulation` | string |  |  |  |
+| `circuits[].length_m` | number or null |  |  |  |
+| `terminals` | object or null |  |  | The structure of epc_terminal_blocks.build_terminal_list. |
+| `boq` | object or null |  |  | The structure of epc_boq.build_boq. |
+| `pending_documents` | array or null |  |  |  |
+| `unreviewed_norm_records` | integer or null |  | minimum 0 |  |
+
 ## epc_design_basis
 
 ### Input
@@ -445,7 +473,6 @@ These engines do not yet validate their input against a schema at the entry poin
 - `epc_short_circuit`
 - `epc_transformer_sizing`
 - `epc_voltage_drop`
-- `epc_descriptive_report`
 - `epc_documents`
 - `epc_calc_check`
 - `epc_rules`

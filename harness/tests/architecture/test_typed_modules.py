@@ -24,6 +24,7 @@ TYPED_MODULES = (
     "harness/src/engines/calculation/short_circuit/src/epc_short_circuit/api.py",
     "harness/src/engines/calculation/selectivity/src/epc_selectivity/api.py",
     "harness/src/engines/calculation/feeder_sizing/src/epc_feeder_sizing/api.py",
+    "harness/src/engines/calculation/selectivity/src/epc_selectivity/aea_protection.py",
 )
 FLAGS = ("--disallow-untyped-defs", "--disallow-incomplete-defs", "--ignore-missing-imports", "--follow-imports=silent", "--no-error-summary", "--cache-dir=" + str(REPO / "tmp" / ".mypy_cache"))
 

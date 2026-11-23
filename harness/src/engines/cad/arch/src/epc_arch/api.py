@@ -11,6 +11,7 @@ from epc_arch import (
     recognize,
     review,
 )  # noqa: F401
+from epc_arch.contract import ElevationInput, FloorInput, building_solids, draw_elevation  # noqa: F401
 from epc_arch.sheets import template_from_svg  # noqa: F401
 
-__all__ = ["ArchError", "Architecture", "Opening", "Options", "Result", "Wall", "kinds", "pdf_to_png", "recognize", "review", "template_from_svg"]
+__all__ = ["ArchError", "Architecture", "ElevationInput", "FloorInput", "Opening", "Options", "Result", "Wall", "building_solids", "draw_elevation", "kinds", "pdf_to_png", "recognize", "review", "template_from_svg"]
