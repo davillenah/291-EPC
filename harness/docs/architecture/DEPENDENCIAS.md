@@ -25,7 +25,7 @@ Cómo leerlo: **Usa** = de qué depende la unidad; **Lo usan** = quién se rompe
 | `lighting` | `aea90364` | — | — |
 | `load_balance` | `aea90364`, `calc_common` | `aea90364`, `design_basis`, `selectivity` | `aea90364`, `calc_check`, `calc_common`, `design_basis`, `drawing`, `feeder_sizing`, `grounding`, `lighting`, `mld`, `selectivity`, `short_circuit`, `sld`, `transformer_sizing`, `voltage_drop` |
 | `mld` | `aea90364`, `dxf`, `symbols`, `titleblock` | `drawing` | `drawing` |
-| `plan` | `arch`, `dxf` | `arch` | `arch`, `drawing`, `dxf`, `mld`, `sld`, `titleblock` |
+| `plan` | `arch`, `dxf`, `symbols` | `arch` | `arch`, `drawing`, `dxf`, `mld`, `sld`, `titleblock` |
 | `pv` | — | `boq`, `drawing` | `boq`, `drawing`, `rfq` |
 | `receptacles` | — | — | — |
 | `rfq` | `boq`, `datasheets` | — | — |
@@ -34,7 +34,7 @@ Cómo leerlo: **Usa** = de qué depende la unidad; **Lo usan** = quién se rompe
 | `short_circuit` | `aea90364`, `calc_common`, `feeder_sizing` | `aea90364`, `design_basis`, `transformer_sizing` | `aea90364`, `calc_check`, `calc_common`, `design_basis`, `drawing`, `feeder_sizing`, `grounding`, `lighting`, `load_balance`, `mld`, `selectivity`, `sld`, `transformer_sizing`, `voltage_drop` |
 | `sld` | `aea90364`, `dxf`, `symbols`, `titleblock` | `drawing` | `drawing` |
 | `standards` | — | — | — |
-| `symbols` | — | `drawing`, `dxf`, `mld`, `sld` | `arch`, `drawing`, `dxf`, `mld`, `plan`, `sld`, `titleblock` |
+| `symbols` | — | `drawing`, `dxf`, `mld`, `plan`, `sld` | `arch`, `drawing`, `dxf`, `mld`, `plan`, `sld`, `titleblock` |
 | `terminal_blocks` | — | — | — |
 | `titleblock` | `dxf` | `arch`, `drawing`, `mld`, `sld` | `arch`, `drawing`, `dxf`, `mld`, `plan`, `sld` |
 | `transformer_sizing` | `short_circuit` | — | — |
@@ -68,7 +68,7 @@ Lo declarado en `pyproject.toml` frente a lo que el código importa de verdad.
 | `lighting` | `engines` | — | `engines` |
 | `load_balance` | — | `epc-calc-common` | — |
 | `mld` | `lxml` | `epc-aea90364`, `epc-dxf`, `epc-symbols`, `epc-titleblock`, `lxml` | — |
-| `plan` | `ezdxf` | `epc-dxf`, `ezdxf` | — |
+| `plan` | `ezdxf` | `epc-dxf`, `epc-symbols`, `ezdxf` | — |
 | `pv` | `timezonefinder` | `timezonefinder` | — |
 | `receptacles` | — | — | — |
 | `rfq` | — | — | — |
@@ -92,11 +92,11 @@ Lo declarado en `pyproject.toml` frente a lo que el código importa de verdad.
 | `doc-quality` | `documents` | — | `pm2-docs`, `spec-writer` |
 | `dxf-output` | `arch`, `dxf`, `plan`, `symbols`, `titleblock` | `iec-symbols` | `board-design`, `iram-titleblock`, `mld`, `plan-drawing`, `sld` |
 | `equipment-catalog` | — | — | `procurement` |
-| `iec-symbols` | `symbols` | — | `board-design`, `dxf-output`, `mld`, `sld` |
+| `iec-symbols` | `symbols` | — | `board-design`, `dxf-output`, `mld`, `plan-drawing`, `sld` |
 | `intake-analysis` | — | — | — |
 | `iram-titleblock` | `arch`, `dxf`, `plan`, `symbols`, `titleblock` | `dxf-output` | `board-design`, `mld`, `sld` |
 | `mld` | `aea90364`, `arch`, `calc_common`, `dxf`, `feeder_sizing`, `grounding`, `load_balance`, `mld`, `plan`, `selectivity`, `short_circuit`, `symbols`, `titleblock`, `voltage_drop` | `aea-calc`, `dxf-output`, `iec-symbols`, `iram-titleblock` | `board-design` |
-| `plan-drawing` | `arch`, `dxf`, `plan`, `symbols`, `titleblock` | `dxf-output` | — |
+| `plan-drawing` | `arch`, `dxf`, `plan`, `symbols`, `titleblock` | `dxf-output`, `iec-symbols` | — |
 | `pm2-docs` | `documents` | `doc-quality` | — |
 | `procurement` | — | `equipment-catalog` | — |
 | `sld` | `aea90364`, `arch`, `calc_common`, `dxf`, `feeder_sizing`, `grounding`, `load_balance`, `plan`, `selectivity`, `short_circuit`, `sld`, `symbols`, `titleblock`, `voltage_drop` | `aea-calc`, `dxf-output`, `iec-symbols`, `iram-titleblock` | `board-design` |
