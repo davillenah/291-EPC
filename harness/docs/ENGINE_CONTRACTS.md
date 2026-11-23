@@ -328,6 +328,83 @@ Schema: `harness/src/engines/procurement/datasheets/src/epc_datasheets/schema/in
 | `circuits[].device` | string or null |  |  |  |
 | `voltage_v` | number or null |  | exclusiveMinimum 0 |  |
 
+## epc_rfq
+
+### Input
+
+Schema: `harness/src/engines/procurement/rfq/src/epc_rfq/schema/input.schema.json` (epc_rfq input)
+
+| Field | Type | Required | Limits | Notes |
+|---|---|---|---|---|
+| `board_name` | string | yes | minLength 1, pattern \S | Name of the board the request is for. |
+| `boq` | object | yes |  | The structure of epc_boq.build_boq as a plain dict; unknown keys are ignored. |
+| `boq.items` | array | yes | minItems 1 |  |
+| `boq.items[].item_id` | string | yes | minLength 1 |  |
+| `boq.items[].category` | string | yes | minLength 1 |  |
+| `boq.items[].description` | string | yes | minLength 1 |  |
+| `boq.items[].unit` | string | yes | minLength 1 |  |
+| `boq.items[].quantity` | number or null |  | exclusiveMinimum 0 | A line without quantity is carried and flagged. |
+| `boq.items[].source` | array |  |  |  |
+| `boq.items[].issues` | array |  |  |  |
+| `boq.items[].spec` | object |  |  |  |
+| `suppliers` | array | yes | minItems 1 | Names are unique, case-insensitive (a rule of the engine). |
+| `suppliers[].name` | string | yes | minLength 1, pattern \S |  |
+| `suppliers[].contact` | string or null |  |  |  |
+| `currency` | string | yes | minLength 1, pattern \S |  |
+| `response_deadline` | string | yes | pattern ^\d{4}-\d{2}-\d{2}$ | ISO calendar date YYYY-MM-DD. |
+| `delivery_site` | string | yes | minLength 1, pattern \S |  |
+| `validity_days` | integer | yes | minimum 1 |  |
+| `payment_terms` | string or null |  |  |  |
+| `notes` | string or null |  |  |  |
+| `datasheets` | object or null |  |  | The structure of epc_datasheets.build_datasheets as a plain dict. |
+| `requestable_categories` | array or null |  | minItems 1 |  |
+
+## epc_design_basis
+
+### Input
+
+Schema: `harness/src/engines/quality/design_basis/src/epc_design_basis/schema/input.schema.json` (epc_design_basis input)
+
+| Field | Type | Required | Limits | Notes |
+|---|---|---|---|---|
+| `profile` | object | yes |  | The project profile (D24). |
+| `profile.project_code` | string |  |  |  |
+| `profile.language` | string |  |  |  |
+| `profile.client` | object |  |  |  |
+| `profile.client.name` | string |  |  |  |
+| `profile.site` | object |  |  |  |
+| `profile.site.address` | string |  |  |  |
+| `profile.site.country` | string |  |  |  |
+| `profile.site.installation_type` | string |  |  |  |
+| `profile.supply` | object | yes |  |  |
+| `profile.supply.source` | string |  |  |  |
+| `profile.supply.voltage` | object |  |  |  |
+| `profile.supply.voltage.value` | number |  |  |  |
+| `profile.supply.voltage.unit` | string |  |  |  |
+| `profile.supply.earthing_system` | string | yes | minLength 1 | TT, TN or IT. |
+| `profile.supply.short_circuit_level` | object | yes |  |  |
+| `profile.supply.short_circuit_level.value` | number |  |  |  |
+| `profile.supply.short_circuit_level.unit` | string |  |  |  |
+| `profile.supply.short_circuit_level.origin` | string |  |  | Where the level comes from; missing, the document carries an issue. |
+| `profile.normative_profile` | object |  |  |  |
+| `profile.normative_profile.jurisdiction` | string |  |  |  |
+| `profile.normative_profile.revisions` | object |  |  |  |
+| `profile.criteria` | object |  |  |  |
+| `profile.criteria.set` | string |  |  |  |
+| `profile.criteria.exceptions` | array |  |  |  |
+| `criteria` | object or null |  |  |  |
+| `criteria.set` | string |  |  |  |
+| `criteria.exceptions` | array |  |  |  |
+| `assumptions` | array or null |  |  |  |
+| `requirements` | object or null |  |  |  |
+| `requirements.items` | array |  |  |  |
+| `requirements.items[].id` | string |  |  |  |
+| `requirements.items[].text` | string |  |  |  |
+| `requirements.items[].source` | string |  |  |  |
+| `requirements.items[].status` | string |  |  |  |
+| `norm_status` | object or null |  |  |  |
+| `insulation_rules` | object or null |  |  |  |
+
 ## epc_terminal_blocks
 
 ### Input
@@ -368,9 +445,7 @@ These engines do not yet validate their input against a schema at the entry poin
 - `epc_short_circuit`
 - `epc_transformer_sizing`
 - `epc_voltage_drop`
-- `epc_rfq`
 - `epc_descriptive_report`
-- `epc_design_basis`
 - `epc_documents`
 - `epc_calc_check`
 - `epc_rules`

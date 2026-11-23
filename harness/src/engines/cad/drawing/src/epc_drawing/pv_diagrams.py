@@ -30,8 +30,9 @@ def _t(key: str, language: str) -> str:
 
 def _new_doc(insunits: int):
     import ezdxf
+    from epc_dxf import new_document
     from epc_dxf import textstyle
-    doc = ezdxf.new("R2018", setup=True)
+    doc = new_document("R2018", setup=True)
     doc.units = insunits
     doc.styles.get("Standard").dxf.font = "arial.ttf"
     textstyle.add_styles(doc)

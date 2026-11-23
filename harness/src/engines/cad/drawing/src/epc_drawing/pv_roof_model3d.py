@@ -21,9 +21,10 @@ LAYERS = {**m3.LAYERS, LAYER_ROOF: 8, "PV-3D-OBSTACULOS": 1}
 def build(roof: Dict[str, Any], result: Dict[str, Any]):
     """The ezdxf document of the roof model."""
     import ezdxf
+    from epc_dxf import new_document
     if not roof.get("planes"):
         raise DrawingError("err_roof_no_planes")
-    doc = ezdxf.new("R2018", setup=True)
+    doc = new_document("R2018", setup=True)
     doc.units = 6
     for name, colour in LAYERS.items():
         doc.layers.add(name, color=colour)

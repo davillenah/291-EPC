@@ -85,6 +85,15 @@ def new(version: str = "R2010", stamp: Optional[Stamp] = None):
     return doc
 
 
+def new_document(version: str = "R2018", *, setup: bool = False, stamp: Optional[Stamp] = None):
+    """The one way the engines create a DXF document (OPT-02, drawing base stage 2): `ezdxf.new(version, setup=setup)`, with the stamp pinned when one is given.
+    Every engine asks for its document here, so a change to how a drawing starts (units, styles, the stamp) is made once."""
+    doc = ezdxf.new(version, setup=setup)
+    if stamp is not None:
+        pin(doc, stamp)
+    return doc
+
+
 def save(doc, path, stamp: Optional[Stamp] = None) -> None:
     """`doc.saveas(path)`; with a stamp the pinned values are written (ezdxf renews them inside the write, so they are put back right after it does)."""
     if stamp is None:

@@ -98,9 +98,10 @@ def _save(doc, path: Path, stamp_date: Optional[str]) -> None:
 def write_dxf(scene: Dict[str, Any], path: Path, version: str = "", params: Dict[str, Any] = core.PARAMS, stamp_date: Optional[str] = None) -> int:
     """A 3D DXF of the scene in metres: every face as a 3DFACE on the layer of its solid. Returns how many faces were written."""
     import ezdxf
+    from epc_dxf import new_document
     from epc_plan.dxfout import _dxf_version
     check(scene)
-    doc = ezdxf.new(dxfversion=_dxf_version(params["dxf"], version), setup=True)
+    doc = new_document(_dxf_version(params["dxf"], version), setup=True)
     doc.units = 6
     msp = doc.modelspace()
     faces = 0
@@ -321,10 +322,11 @@ def write_section_dxf(section: Dict[str, Any], path: Path, version: str = "", pa
     size, the level of its middle and the one of its bottom ("BN-001 300x100 +2.60 (BOT +2.55)"), and over it all a chain of dimensions between the services and the ends of the building.
     Returns how many outlines, lines, tags and dimensions were written."""
     import ezdxf
+    from epc_dxf import new_document
     from epc_plan.dxfout import _dxf_version
     if not isinstance(section, dict) or section.get("kind") != "section":
         raise core.PlanError("err_section_not_cut")
-    doc = ezdxf.new(dxfversion=_dxf_version(params["dxf"], version), setup=True)
+    doc = new_document(_dxf_version(params["dxf"], version), setup=True)
     doc.units = 6
     msp = doc.modelspace()
     count = {"outlines": 0, "lines": _add_seen(doc, msp, section), "tags": 0, "dimensions": _add_dimensions(doc, msp, section, params)}
