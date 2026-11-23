@@ -306,15 +306,17 @@ def _entry(path, root):
     return {"name": Path(path).stem + "_" + Path(path).suffix.lstrip("."), "path": Path(path).relative_to(root).as_posix(), "bytes": len(data), "sha256": hashlib.sha256(data).hexdigest()}
 
 
-def _render_one(name, report, out_dir, formats):
-    """The files of one document in the formats asked (the report renderers of the drawing engine)."""
+def _render_files(reports, out_dir, formats):
+    """The files of every document, in the order of the documents (PDF then DOCX of each): the PDFs are drawn by several processes at once (OPT-06), the DOCX files here meanwhile."""
     from epc_drawing.export import report_docx, report_pdf
-    done = []
-    if "pdf" in formats:
-        done.append(_entry(report_pdf.render(report, out_dir / f"{name}.pdf"), out_dir.parent))
-    if "docx" in formats:
-        done.append(_entry(report_docx.render(report, out_dir / f"{name}.docx"), out_dir.parent))
-    return done
+    pdfs = iter(report_pdf.render_many([(report, out_dir / f"{name}.pdf") for name, report in reports]) if "pdf" in formats else [])
+    files = []
+    for name, report in reports:
+        if "pdf" in formats:
+            files.append(_entry(next(pdfs), out_dir.parent))
+        if "docx" in formats:
+            files.append(_entry(report_docx.render(report, out_dir / f"{name}.docx"), out_dir.parent))
+    return files
 
 
 def _review_text(records, mode, status="draft", signed=None):
@@ -381,7 +383,7 @@ def render_all(docs, project, out_dir, formats, mode="production", language="en"
     out_dir = Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
     reports, skipped = _reports(docs, project, mode, language)
-    files = [f for name, report in reports for f in _render_one(name, report, out_dir, formats)]
+    files = _render_files(reports, out_dir, formats)
     book = out_dir / f"{project or 'documents'}_tables.xlsx"
     if "xlsx" in formats and tables_xlsx.write_tables(book, _sheets(reports)):
         files.append(_entry(book, out_dir.parent))
