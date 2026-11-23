@@ -10,7 +10,8 @@ from epc_symbols.registry import (
     dxf_block,
     svg_fragment,
     plan_symbols,
+    arch_symbols,
 )  # noqa: F401
 from epc_symbols.errors import SymbolsError  # noqa: F401
 
-__all__ = ["AmbiguousSymbol", "SymbolRecord", "SymbolsError", "UnknownSymbol", "dxf_block", "library_dir", "list_ids", "plan_symbols", "resolve", "svg_fragment", "terminals"]
+__all__ = ["AmbiguousSymbol", "SymbolRecord", "SymbolsError", "UnknownSymbol", "dxf_block", "library_dir", "arch_symbols", "list_ids", "plan_symbols", "resolve", "svg_fragment", "terminals"]

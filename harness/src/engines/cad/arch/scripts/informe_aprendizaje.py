@@ -210,9 +210,9 @@ def informe(filas) -> str:
         h.append(f"<div class='pair'><img src='{f['img']}' alt=''><div class='svgbox'>{f['svg']}</div></div>")
         h.append(f"<div class='meta'>{f['estilo']} · {c['walls']} muros · {c['doors']} puertas · {c['windows']} ventanas · {c['openings']} huecos · grosor {f['T']:.1f}</div></div>" if f["T"] else "</div>")
 
-    lib = RAIZ / "biblioteca" / "hoja-contacto.svg"
+    lib = RAIZ.parent / "symbols" / "src" / "epc_symbols" / "library" / "arch-symbol" / "hoja-contacto.svg"
     if lib.exists():
-        h.append("<h2>Biblioteca de símbolos</h2><p class='sub'>25 símbolos de planta en <code>biblioteca/svg/</code> (1 unidad = 1 cm), para cuando se reconozcan muebles.</p>")
+        h.append("<h2>Biblioteca de símbolos</h2><p class='sub'>25 símbolos de planta en <code>epc_symbols/library/arch-symbol/svg/</code> (1 unidad = 1 cm), para cuando se reconozcan muebles.</p>")
         h.append("<div class='card lib'><img alt='' src='data:image/svg+xml;base64," + base64.b64encode(lib.read_bytes()).decode() + "'></div>")
 
     h.append("<h2>Lo que todavía falla</h2><ul class='learn'>")
