@@ -52,7 +52,7 @@ The owner authorized, for every thread, committing, pushing, opening the pull re
 
 Always, before closing a thread and before the owner is told it can be closed (and again whenever the owner asks to close it, which also triggers the release and sync of "Standing release authorization without asking"), verify everything. Nothing is closed on "it looked fine":
 
-1. The full gate passes: `python harness/tools/ci/run_gate.py` (48 of 48 checks; a failure is fixed at its root, never by weakening a test or a check).
+1. The full gate passes: `python harness/tools/ci/run_gate.py` (49 of 49 checks; a failure is fixed at its root, never by weakening a test or a check).
 2. GitHub CI is **green** on the pull request and on `dev` and `main` after the merges. Read the real result (check runs), do not assume it.
 2b. If the work is a feature, follow "Feature release" below to the end (the owner's OK for the feature, in words, authorizes it).
 3. The working tree is clean, the local clone and the remote are identical, and `dev` and `main` are in sync (`dev` edit, `main` production).

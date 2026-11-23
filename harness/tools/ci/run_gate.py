@@ -25,6 +25,7 @@ Checks
   engine-documents  document verifiers, CCPM, exporters (environment-dependent tests are skipped)
   intake            customer-input pipeline tests
   norm-register-report  harness/docs/NORM_REGISTER.md equals what norm_register.py --report generates
+  engine-contracts  harness/docs/ENGINE_CONTRACTS.md equals what the engine schemas give (engine_contracts.py --check)
   agents            the five product agent files equal what the roster and the bodies generate (regen_agents.py --check)
   harness-tests     tests under harness/tests (architecture, unit) with harness/src and every engine on PYTHONPATH
   sld-smoke         single-line diagram generated from the example through the engine, no warnings
@@ -153,6 +154,7 @@ def main():
     run("agents", [py, str(REPO / "harness" / "tools" / "build" / "regen_agents.py"), "--check"], REPO)
     run("plugins-generated", [py, str(REPO / "harness" / "tools" / "build" / "regen_plugins.py"), "--check"], REPO)
     run("norm-register-report", [py, str(REPO / "harness" / "tools" / "build" / "norm_register.py"), "--report", "--check"], REPO)
+    run("engine-contracts", [py, str(REPO / "harness" / "tools" / "build" / "engine_contracts.py"), "--check"], REPO)
 
     example = P.engine_dir("sld") / "examples" / "sld"
     if example.is_dir():
