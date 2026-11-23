@@ -6,6 +6,8 @@ All notable changes. Format: Keep a Changelog; versions follow `harness/docs/BRA
 
 ### Changed
 - Block 2, rules and contracts: characterization tests per engine and three more reference projects (COD-13, GEN-02); every engine fails with its own error built from a code in English and Spanish, and `ERROR_CATALOGUE.md` is generated (COD-21, GEN-08, ADR-0039 proposed); a public door `api.py` per engine with a ratchet on internal imports (COD-02); input schemas for the BOQ, terminal-block and datasheet engines (OPT-09, first part); frozen stage and run results (COD-22, first part). The gate has 50 checks.
+- The incremental gate no longer fails the coverage check when no engine suite is affected (a documentation-only change).
+- ADR-0039 (proposed): one bilingual, code-based error pattern per engine and a generated error catalogue (COD-21, GEN-08, OPT-09).
 - Engine contracts generated from the schemas (GEN-09): `harness/docs/ENGINE_CONTRACTS.md`, kept fresh by `regen_all.py` and checked by the gate (`engine-contracts`, 49 checks).
 - The gate checks that every GitHub workflow file parses (COD-16); `pyyaml` joins `requirements-dev.txt`.
 - No error is swallowed in silence (COD-11): an architecture test forbids a silent catch-all unless its line says why, and six of them now catch only the error they expect. `ci.yml` step names are quoted (the workflow had stopped parsing).
