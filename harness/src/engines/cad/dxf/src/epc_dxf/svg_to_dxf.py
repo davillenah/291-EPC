@@ -319,7 +319,7 @@ def convertir(svg_path, dxf_path=None, stamp=None):
                 for (x1, y1), (x2, y2) in zip(pts, pts[1:] + ([pts[0]] if cerr else [])):
                     if abs(y1 - y2) < 0.05 and abs(x1 - x2) > 0.5:
                         lineas.append(((y1 + y2) / 2, min(x1, x2), max(x1, x2)))
-        except Exception:
+        except (ValueError, TypeError, AttributeError, ZeroDivisionError):   # a shape svgelements cannot turn into a path adds no cell line (COD-11)
             pass
     centrados = _centrar_en_celda(lineas, textos)
     centrados.update(_separar_titulos(textos))

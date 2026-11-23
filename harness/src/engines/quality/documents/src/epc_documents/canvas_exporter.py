@@ -562,7 +562,7 @@ def _actualizar_seal(raiz, nombre_archivo, sello):
         os.makedirs(os.path.dirname(seal_path), exist_ok=True)
         with open(seal_path, "w", encoding="utf-8") as fh:
             json.dump(data, fh, ensure_ascii=False, indent=2)
-    except Exception:
+    except (OSError, ValueError):     # the seal is a convenience record: a folder that cannot be written or a damaged SEAL.json do not stop the export (COD-11)
         pass
 
 

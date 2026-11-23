@@ -87,7 +87,7 @@ def insertar(dxf_path, lib, instancias, alto_mm, catalog=None, stamp=None):
         if capa in doc.layers:
             try:
                 doc.layers.remove(capa)
-            except Exception:
+            except ezdxf.DXFValueError:      # a protected layer, or one still in use: it stays (COD-11: only this error is expected)
                 pass
     for i in instancias:
         k = i['k']

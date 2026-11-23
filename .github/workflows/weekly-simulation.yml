@@ -1,0 +1,22 @@
+name: weekly-simulation
+
+# GEN-10: a weekly run of the fictional reference project (invented data only). The job fails, and so GitHub reports it, when the run
+# cannot finish. The per-stage times are printed in the log; nothing is committed or stored.
+on:
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+jobs:
+  simulate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install
+        run: pip install -r requirements-dev.txt
+      - name: Reference run
+        run: python harness/tools/ci/reference_run.py --out tmp/reference

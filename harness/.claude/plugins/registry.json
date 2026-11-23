@@ -55,7 +55,7 @@
         "titleblock",
         "voltage_drop"
       ],
-      "hash": "5e22fdc3f9d4a049"
+      "hash": "de41f91cc5a6675d"
     },
     "doc-quality": {
       "version": "0.1.0",
@@ -66,7 +66,7 @@
       "engine": [
         "documents"
       ],
-      "hash": "20014ddaa9e2c528"
+      "hash": "09c291d08202ec69"
     },
     "dxf-output": {
       "version": "0.1.0",
@@ -83,7 +83,7 @@
         "symbols",
         "titleblock"
       ],
-      "hash": "70c959b5fa93c5bf"
+      "hash": "c665ab2fb52e9624"
     },
     "equipment-catalog": {
       "version": "0.1.0",
@@ -131,7 +131,7 @@
         "symbols",
         "titleblock"
       ],
-      "hash": "e8e1a60165d8cf81"
+      "hash": "dcb9f41b2f2faeef"
     },
     "mld": {
       "version": "0.2.2",
@@ -160,7 +160,7 @@
         "titleblock",
         "voltage_drop"
       ],
-      "hash": "3be64dadb6beca38"
+      "hash": "f85f23206539cead"
     },
     "plan-drawing": {
       "version": "0.1.0",
@@ -177,7 +177,7 @@
         "symbols",
         "titleblock"
       ],
-      "hash": "bfa430cc627d7a12"
+      "hash": "4c191a2da263d8b1"
     },
     "pm2-docs": {
       "version": "0.1.0",
@@ -192,7 +192,7 @@
       "engine": [
         "documents"
       ],
-      "hash": "567cf21fc92edab3"
+      "hash": "079c82baf09275d5"
     },
     "procurement": {
       "version": "0.1.0",
@@ -234,7 +234,7 @@
         "titleblock",
         "voltage_drop"
       ],
-      "hash": "1b8367fbb55f202d"
+      "hash": "a016e37a38efe962"
     },
     "spec-writer": {
       "version": "0.1.0",
@@ -249,7 +249,7 @@
       "engine": [
         "documents"
       ],
-      "hash": "1c0fd1e1f102f131"
+      "hash": "d7e349035afe4063"
     },
     "standard-ingest": {
       "version": "0.1.0",

@@ -333,7 +333,7 @@ def aplicar(dxf_path, catalog=None, stamp=None):
         if nombre in doc.layers:
             try:
                 doc.layers.remove(nombre)
-            except Exception:
+            except ezdxf.DXFValueError:      # a protected layer, or one still in use: it stays (COD-11: only this error is expected)
                 pass
     _stamp.save(doc, dxf_path, stamp)
     return sorted(_L.name(r, cat) for r in ROLES)

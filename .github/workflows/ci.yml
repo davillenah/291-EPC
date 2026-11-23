@@ -12,11 +12,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
           cache: pip
       - name: Install
         run: pip install -r requirements-dev.txt
-      - name: Gate (the same battery as on a developer machine)
+      - name: "Gate on a pull request into dev (only the engine suites the change can affect; every other check runs)"
+        if: github.event_name == 'pull_request' && github.base_ref == 'dev'
+        run: python harness/tools/ci/run_gate.py --changed origin/dev
+      - name: "Gate (full battery: pushes, and pull requests into main, the release)"
+        if: github.event_name != 'pull_request' || github.base_ref != 'dev'
         run: python harness/tools/ci/run_gate.py
