@@ -8,6 +8,13 @@ All notable changes. Format: Keep a Changelog; versions follow `harness/docs/BRA
 - PRO-13: `harness/tools/ci/harness_metrics.py` shows projects, runs, failures per stage and time per stage from the projects on disk.
 
 ### Changed
+- OPT-13: property tests over generated documents for `lighting`, `receptacles`, `hvac` and `pv` (monotonicity, totals, determinism); no norm value used.
+- COD-10 (second part): 14 more modules annotated and checked by mypy (`calc_common`, the `errors` of grounding and short circuit, the `api` doors of four calculation engines).
+- OPT-02 (ADR-0040, accepted): `epc_mld.draw(MldInput)`, `epc_plan.draw_plan(PlanInput)` and `epc_drawing.draw_pv(PvDrawInput)` are the single entry points of the MLD, the plan and the PV drawings; the stages call them. Same bytes.
+- COD-04: `epc_dxf.capas_dxf` no longer reads `SLD_FORMATO`; the sheet format is the `a3` argument.
+- DRW-01 (stage 2): `epc_dxf.new_document` creates every DXF document of `epc_plan` and `epc_drawing`. Same bytes. Stages 1 and 3 wait for the owner (BACKLOG).
+- OPT-09: input schemas for `epc_rfq` and `epc_design_basis`, listed in `ENGINE_CONTRACTS.md`.
+- DGM-10/11: ADR-0041 (proposed) designs the functional and control scheme drawing.
 - COD-10 (first part): `epc_transformer_sizing.sizing`, `epc_voltage_drop.voltage_drop` and `epc_load_balance.current_and_loads` are fully annotated; a test runs mypy on the listed modules (`mypy` joins `requirements-dev.txt`).
 - OPT-10: the charter and canvas seal times (`ahora=`) and the `epc_arch` run manifest time (`now=`) can be handed in; the clock is only the default.
 - OPT-13: invariant tests for `load_balance`, `grounding`, `short_circuit`, `transformer_sizing`, `selectivity` and `calc_common`.
