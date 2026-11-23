@@ -451,19 +451,18 @@ def view_drawing(view: View, arch: Architecture, style=None, sheet: Optional[str
     return d
 
 
-def view_dxf(view: View, arch: Architecture, sheet: str = "A1", scale: Optional[int] = None, fields: Optional[Dict[str, str]] = None) -> str:
-    """The view on an IRAM sheet, as DXF text (real metres, like the plan)."""
+def view_dxf(view: View, arch: Architecture, sheet: str = "A1", scale: Optional[int] = None, fields: Optional[Dict[str, str]] = None, template=None) -> str:
+    """The view on an IRAM sheet, as DXF text (real metres, like the plan). `template` is the sheet as data (`epc_arch.sheets.template_from_svg`); none = the engine's own frame."""
     from epc_arch.drawing import load_style
     from epc_arch.export.export_dxf import to_dxf
-    from epc_arch.sheets import iram_template
     style = load_style()
-    return to_dxf(view_drawing(view, arch, style, sheet, scale, iram_template(sheet), dict({"denominacion": view.title}, **(fields or {}))), style)
+    return to_dxf(view_drawing(view, arch, style, sheet, scale, template, dict({"denominacion": view.title}, **(fields or {}))), style)
 
 
-def write_view_dxf(view: View, arch: Architecture, path, sheet: str = "A1", scale: Optional[int] = None, fields: Optional[Dict[str, str]] = None) -> str:
+def write_view_dxf(view: View, arch: Architecture, path, sheet: str = "A1", scale: Optional[int] = None, fields: Optional[Dict[str, str]] = None, template=None) -> str:
     """The view on its IRAM sheet written to `path` as a DXF; returns the file name."""
     from pathlib import Path
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(view_dxf(view, arch, sheet, scale, fields), encoding="utf-8")
+    path.write_text(view_dxf(view, arch, sheet, scale, fields, template), encoding="utf-8")
     return path.name

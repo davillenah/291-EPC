@@ -117,3 +117,23 @@ def svg_fragment(symbol_id: str, view: Optional[str] = None):
     rec = resolve(symbol_id, view)
     root = ElementTree.parse(rec.svg).getroot()
     return next((el for el in root.iter() if el.get("id") == rec.catalog_id), root)
+
+
+def plan_symbols() -> Dict[str, dict]:
+    """The unit symbols of the electrical plan (SYM-04): id -> {"disciplina", "prims" | "svg", ...}; an `svg` entry is the absolute path of its file.
+
+    A fresh copy each call, so the caller may complete it (for example with the primitives read from the SVG) without changing the library.
+    """
+    folder = library_dir("plan-symbol")
+    data = json.loads((folder / "plan_symbols.json").read_text(encoding="utf-8"))["symbols"]
+    for entry in data.values():
+        if "svg" in entry:
+            entry["svg"] = str(folder / entry["svg"])
+    return data
+
+
+def arch_symbols() -> List[dict]:
+    """The symbols of the architecture plan (SYM-05): one record per symbol with `nombre`, `categoria`, `ancho_cm`, `alto_cm`, `descripcion` and `archivo`, the absolute path of its SVG (1 unit = 1 cm)."""
+    folder = library_dir("arch-symbol")
+    rows = json.loads((folder / "catalogo.json").read_text(encoding="utf-8"))["simbolos"]
+    return [{**row, "archivo": str(folder / row["archivo"])} for row in rows]

@@ -120,12 +120,15 @@ def build(given, routing):
 def _elevations(given, routing, out_dir, board):
     """Writes the elevations asked for: `{"<floor>_<side>": path}` of the files, each on its IRAM sheet at the scale that fits."""
     from epc_arch import model3d, sections
+    from epc_arch import template_from_svg
+    from epc_titleblock import build as iram_sheet
+    template = template_from_svg(iram_sheet("A1", False, None, False, None)["svg"]) if given.get("elevations") else None      # the IRAM sheet goes to the engine as data
     done = {}
     for e in given.get("elevations", []):
         floor = e["floor"]
         arch = model3d.from_backdrop(routing[floor]["backdrop"], floor)
         path = out_dir / f"{board}_elevation_{floor}_{e['side']}.dxf"
-        done[f"{floor}_{e['side']}"] = sections.write_view_dxf(sections.elevation(arch, e["side"], given["floors"][floor]), arch, path)
+        done[f"{floor}_{e['side']}"] = sections.write_view_dxf(sections.elevation(arch, e["side"], given["floors"][floor]), arch, path, template=template)
     return done
 
 

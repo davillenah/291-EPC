@@ -11,7 +11,8 @@
     "AR"
   ],
   "requires": {
-    "dxf-output": "^0.1.0"
+    "dxf-output": "^0.1.0",
+    "iec-symbols": "^0.4.19"
   },
   "consumes": [
     "PlanDrawing"
