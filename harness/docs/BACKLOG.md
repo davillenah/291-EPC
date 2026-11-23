@@ -50,9 +50,9 @@ Cheap, change no drawing, and make every later change measurable and safe. Do fi
 - [x] (2026-11-23) **COD-14 · Fast and slow tests separated** with markers.
 - [x] (2026-11-23) **OPT-07 · Faster gate:** run only the tests the impact map says are affected on pull requests; the full battery stays for the release. No check is weakened.
 - [ ] **COD-13 · Characterization tests per engine,** not only for drawings, before each conversion.
-- [ ] **GEN-02 · Reference projects (was C).** A fixed set of fictional projects (dwelling, shed, PV plant) run at every release and compared with the previous run; stored in `tmp/`-style fictional data only.
-- [ ] **OPT-14 · Automatic simulation report:** one command runs a fictional simulation in `tmp/` and gathers times, warnings and the difference with the previous one.
-- [ ] **GEN-10 · Scheduled simulation (was K).** A weekly fictional run in `tmp/` that reports when something breaks.
+- [~] **GEN-02 · Reference projects (was C).** Started 2026-11-23: `python harness/tools/ci/reference_run.py` runs the fictional `synthetic_lv_small` and compares it with the previous run (the dwelling, shed and PV plant projects are still to add). A fixed set of fictional projects (dwelling, shed, PV plant) run at every release and compared with the previous run; stored in `tmp/`-style fictional data only.
+- [x] (2026-11-23) **OPT-14 · Automatic simulation report:** one command runs a fictional simulation in `tmp/` and gathers times, warnings and the difference with the previous one.
+- [x] (2026-11-23) **GEN-10 · Scheduled simulation (was K).** A weekly fictional run in `tmp/` that reports when something breaks.
 
 ### Block 2 · Rules and contracts for every engine (A)
 
