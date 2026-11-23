@@ -8,6 +8,7 @@ All notable changes. Format: Keep a Changelog; versions follow `harness/docs/BRA
 - PRO-13: `harness/tools/ci/harness_metrics.py` shows projects, runs, failures per stage and time per stage from the projects on disk.
 
 ### Changed
+- COD-10 (first part): `epc_transformer_sizing.sizing` is fully annotated; a test runs mypy on the listed modules (`mypy` joins `requirements-dev.txt`).
 - OPT-10: the charter and canvas seal times (`ahora=`) and the `epc_arch` run manifest time (`now=`) can be handed in; the clock is only the default.
 - OPT-13: invariant tests for `load_balance`, `grounding`, `short_circuit`, `transformer_sizing`, `selectivity` and `calc_common`.
 - OPT-02: ADR-0040 (proposed) designs one entry point for the MLD, the plan, the architecture reader and the PV drawings; nothing converted.

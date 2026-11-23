@@ -4,3 +4,4 @@ pytest-cov>=4.1
 coverage>=7.6       # coverage floor in the gate (Apache-2.0)
 radon>=6.0          # complexity ratchet in the gate (MIT)
 pyyaml>=6.0          # the gate reads the GitHub workflow files (COD-16) (MIT)
+mypy>=1.8           # gradual typing of the annotated modules, test_typed_modules (COD-10) (MIT)
