@@ -207,7 +207,7 @@ class TextTests(unittest.TestCase):
 
 class PackageTests(unittest.TestCase):
     def test_public_api(self):
-        self.assertEqual(sorted(epc_descriptive_report.__all__), ["build_descriptive_report", "descriptive_report_to_text"])
+        self.assertEqual(sorted(epc_descriptive_report.__all__), ["DescriptiveReportError", "build_descriptive_report", "descriptive_report_to_text"])
         self.assertEqual(epc_descriptive_report.__version__, "0.1.0")
         self.assertIs(importlib.import_module("epc_descriptive_report.build"), build)
 

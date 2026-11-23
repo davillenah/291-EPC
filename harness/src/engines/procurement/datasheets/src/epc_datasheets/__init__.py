@@ -5,6 +5,7 @@ gives a folder. Nothing is calculated and no winner is chosen: a product is a ca
 """
 from epc_datasheets.build import build_datasheets, render_rows, requirements_from_circuits
 from epc_datasheets.catalog import load_catalog_dir
+from epc_datasheets.errors import DatasheetsError
 
-__all__ = ["build_datasheets", "load_catalog_dir", "render_rows", "requirements_from_circuits"]
+__all__ = ["build_datasheets", "load_catalog_dir", "render_rows", "requirements_from_circuits", "DatasheetsError"]
 __version__ = "0.1.0"

@@ -6,6 +6,7 @@ a default. The engine owns no data and does not read the norm register: the call
 """
 from epc_design_basis.build import build_design_basis_document
 from epc_design_basis.text import design_basis_to_text
+from epc_design_basis.errors import DesignBasisError
 
-__all__ = ["build_design_basis_document", "design_basis_to_text"]
+__all__ = ["build_design_basis_document", "design_basis_to_text", "DesignBasisError"]
 __version__ = "0.1.0"

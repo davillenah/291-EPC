@@ -5,6 +5,7 @@ with no defaults. The engine never sets a price or a commercial value, never con
 """
 from epc_rfq.build import build_rfq, render_rows
 from epc_rfq.text import rfq_to_text
+from epc_rfq.errors import RfqError
 
-__all__ = ["build_rfq", "render_rows", "rfq_to_text"]
+__all__ = ["build_rfq", "render_rows", "rfq_to_text", "RfqError"]
 __version__ = "0.1.0"

@@ -39,6 +39,7 @@ NORMA DE REFERENCIA
 import math
 from epc_calc_common._validate import num as _num
 from epc_calc_common import aea_tables as T
+from epc_short_circuit.errors import ShortCircuitError
 
 __version__ = "0.1.0"
 
@@ -143,7 +144,7 @@ def factor_q(ib_motor_a, mu, ik_motor_a):
 def constante_tiempo_mu_q(t_min, mu, q):
     """T_μq = −t_min/ln(μ·q) [s] (requiere 0 < μ·q < 1)."""
     if not 0.0 < mu * q < 1.0:
-        raise ValueError("se requiere 0 < μ·q < 1")
+        raise ShortCircuitError("err_mu_q_range")
     return -t_min / math.log(mu * q)
 
 
@@ -151,7 +152,7 @@ def constante_aperiodica_s(kappa, f_hz):
     """[96c] T_aN ≈ −1/(2f·ln(κ−1)), válido con 1 < κ < 2."""
     _num(f_hz, "f_hz", 0.0, True)
     if not 1.0 < kappa < 2.0:
-        raise ValueError("κ debe estar entre 1 y 2")
+        raise ShortCircuitError("err_kappa_range")
     return -1.0 / (2.0 * f_hz * math.log(kappa - 1.0))
 
 
@@ -160,7 +161,7 @@ def factor_m(kappa, f_hz, t_k_s):
     _num(f_hz, "f_hz", 0.0, True)
     _num(t_k_s, "t_k_s", 0.0, True)
     if not 1.0 < kappa < 2.0:
-        raise ValueError("κ debe estar entre 1 y 2")
+        raise ShortCircuitError("err_kappa_range")
     a = 2.0 * f_hz * t_k_s * math.log(kappa - 1.0)
     return (math.exp(2.0 * a) - 1.0) / a
 

@@ -96,11 +96,11 @@ def _checked(arch: Architecture, heights: Any) -> float:
     """Metres per plan unit; an ArchError when the heights are not valid or the plan does not know its units."""
     bad = heights_errors(heights)
     if bad:
-        raise ArchError("the view cannot be drawn: " + "; ".join(bad))
+        raise ArchError("err_view_not_drawable", reason='; '.join(bad))
     if not arch.units_per_metre:
-        raise ArchError("the view cannot be drawn: the plan does not say its units or scale")
+        raise ArchError("err_view_no_units")
     if not arch.walls:
-        raise ArchError("the view cannot be drawn: the plan has no walls")
+        raise ArchError("err_view_no_walls")
     return 1.0 / arch.units_per_metre
 
 
@@ -297,7 +297,7 @@ def _level_name(arch: Architecture) -> str:
 def elevation(arch: Architecture, side: str, heights: Dict[str, float]) -> View:
     """The floor seen from outside, from the north, south, east or west."""
     if side not in SIDES:
-        raise ArchError("the side of an elevation is one of N, S, E, W")
+        raise ArchError("err_elevation_side")
     k = _checked(arch, heights)
     view = View("elevation", f"ELEVATION {side}")
     walls, gaps = _plan_in_metres(arch, k, view.warnings)
@@ -364,9 +364,9 @@ def _room_labels(view: View, arch: Architecture, k: float, plane: str, at: float
 
 def _check_plane(plane: str, at_m: Any, look: str) -> None:
     if plane not in LOOKS or look not in LOOKS[plane]:
-        raise ArchError("a section is cut by an x plane seen to the E or W, or by a y plane seen to the N or S")
+        raise ArchError("err_section_plane")
     if not _num(at_m):
-        raise ArchError("the place of the section plane is a number of metres")
+        raise ArchError("err_section_position")
 
 
 def _cuts(walls: List["_W"], plane: str, at: float) -> bool:
@@ -382,7 +382,7 @@ def section(arch: Architecture, plane: str, at_m: float, look: str, heights: Dic
     view = View("section", f"SECTION {plane.upper()} = {at_m:g} m ({look})")
     walls, gaps = _plan_in_metres(arch, k, view.warnings)
     if not _cuts(walls, plane, at_m):
-        raise ArchError(f"the plane {plane} = {at_m:g} m does not cut the building")
+        raise ArchError("err_section_no_cut", plane=plane, at_m=at_m)
     sign, sight = LOOKS[plane][look]
     in_plane = _in_plane(walls, plane, at_m)
     _front(view, [w for w in walls if w not in in_plane], gaps, "y" if plane == "x" else "x", sign, sight, at_m, heights)
@@ -402,12 +402,12 @@ def _raised(item, dz: float):
 def stack(views: List[Tuple[View, float]]) -> View:
     """The views of several floors (each with the level of its floor in metres) as one, every floor at its height. The floors must share one frame (the plans of one sheet do: `reference`)."""
     if not views:
-        raise ArchError("no views to stack")
+        raise ArchError("err_no_views")
     first = views[0][0]
     out = View(first.kind, first.title)
     for view, level in sorted(views, key=lambda v: v[1]):
         if view.kind != first.kind:
-            raise ArchError("only views of one kind are stacked")
+            raise ArchError("err_views_mixed")
         out.items += [_raised(i, level) for i in view.items]
         out.warnings += [w for w in view.warnings if w not in out.warnings]
     return out

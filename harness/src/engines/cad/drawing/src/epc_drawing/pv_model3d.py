@@ -13,6 +13,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
 from epc_drawing import pv_parts
+from epc_drawing.errors import DrawingError
 
 Point = Tuple[float, float, float]
 LAYERS = {"PV-3D-SUELO": 8, "PV-3D-MODULOS": 5, "PV-3D-ESTRUCTURA": 9, "PV-3D-CIMENTACION": 30, "PV-3D-INVERSORES": 7, "PV-3D-ESTACION": 4, "PV-3D-VALLADO": 1, **pv_parts.REF_LAYERS}
@@ -133,7 +134,7 @@ def build(geometry: Dict[str, Any], result: Dict[str, Any], parts: Optional[Dict
     parts = parts or {}
     import ezdxf
     if not geometry.get("tables"):
-        raise ValueError("the layout has no tables to raise in 3D")
+        raise DrawingError("err_layout_no_tables")
     doc = ezdxf.new("R2018", setup=True)
     doc.units = 6
     for name, colour in LAYERS.items():
@@ -284,7 +285,7 @@ def write_assembly(geometry: Dict[str, Any], result: Dict[str, Any], out_dir, na
     external references (same folder, relative names). Each part is saved and released before the next one is built. Returns {"master": path, "parts": [paths], "sectors": n}."""
     from epc_dxf import deliverable
     if not geometry.get("tables"):
-        raise ValueError("the layout has no tables to raise in 3D")
+        raise DrawingError("err_layout_no_tables")
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
     stem = f"{name}_pv_model_3d"

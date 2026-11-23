@@ -46,12 +46,12 @@ def detect_kind(data: bytes, name: str = "") -> str:
         return "svg"
     if name.lower().endswith(".dxf") or b"section" in text or head.startswith(b"AutoCAD Binary DXF"):
         return "dxf"
-    raise ArchError("the file is not a DXF, a PDF or an image")
+    raise ArchError("err_file_kind")
 
 
 def read(data: bytes, name: str = "", options: Options = Options()) -> Primitives:
     _load()
     kind = options.kind or detect_kind(data, name)
     if kind not in _READERS:
-        raise ArchError(f"no reader for {kind!r}: the kinds are {', '.join(kinds())}")
+        raise ArchError("err_no_reader", kind=kind, kinds=', '.join(kinds()))
     return _READERS[kind].read(data, options)

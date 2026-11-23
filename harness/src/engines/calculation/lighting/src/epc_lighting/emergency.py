@@ -9,6 +9,7 @@ from typing import Any, Dict, Iterator, List, Sequence, Tuple
 
 from epc_lighting.config import PARAMS
 from epc_lighting.model import Emergency, Estimate, LightingError, Luminaire, rnd
+from epc_lighting.model import LightingError
 
 Point = Tuple[float, float]
 _TOL = 1e-9
@@ -32,9 +33,9 @@ def illuminance_at(positions: Sequence[Point], flux_lm: float, height_m: float, 
 def evaluate(length_m: float, width_m: float, positions: Sequence[Point], flux_lm: float, height_m: float, band_m: float, step_m: float) -> Dict[str, float]:
     """Illuminance on a grid of points over the floor, leaving out a band along the walls: lowest, average and highest lux, and the ratio between the highest and the lowest."""
     if band_m < 0:
-        raise LightingError("the band left out along the walls cannot be negative")
+        raise LightingError("err_band_negative")
     if 2 * band_m >= length_m or 2 * band_m >= width_m:
-        raise LightingError("the band left out along the walls takes the whole room: make it smaller")
+        raise LightingError("err_band_too_wide")
     nx = int(math.floor((length_m - 2 * band_m) / step_m + _TOL)) + 1
     ny = int(math.floor((width_m - 2 * band_m) / step_m + _TOL)) + 1
     values = [illuminance_at(positions, flux_lm, height_m, band_m + i * step_m, band_m + j * step_m) for i in range(nx) for j in range(ny)]
@@ -69,7 +70,7 @@ def route_axis(positions: Sequence[Point], flux_lm: float, height_m: float, star
     """Illuminance along the axis of an escape route (a segment from `start` to `end`, the end included): lowest, average and highest lux."""
     length = math.hypot(end[0] - start[0], end[1] - start[1])
     if length <= 0:
-        raise LightingError("the axis of an escape route has no length: give two different points")
+        raise LightingError("err_axis_zero")
     n = int(math.floor(length / step_m + _TOL)) + 1
     along = [(start[0] + (end[0] - start[0]) * k * step_m / length, start[1] + (end[1] - start[1]) * k * step_m / length) for k in range(n)]
     if length - (n - 1) * step_m > _TOL:

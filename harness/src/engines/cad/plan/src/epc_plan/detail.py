@@ -17,6 +17,7 @@ from typing import Any, Dict, List, Optional, Tuple
 
 from epc_plan import core
 from epc_plan import solid as S
+from epc_plan.core import PlanError
 
 V3 = Tuple[float, float, float]
 TOUCH = 0.02                               # metres: two ends this close are joined
@@ -200,7 +201,7 @@ def _setting(spec: Optional[Dict[str, Any]], key: str) -> float:
     """A drawing size of the parts: what `spec` says, else the one of `params.json`."""
     value = (spec or {}).get(key, core.PARAMS["detail"][key])
     if not isinstance(value, (int, float)) or isinstance(value, bool) or value <= 0:
-        raise core.PlanError(f"detail: {key} must be a number above 0")
+        raise core.PlanError("err_detail_number", key=key)
     return float(value)
 
 
@@ -267,7 +268,7 @@ def supports(solids: List[Dict[str, Any]], spec: Dict[str, Any]) -> List[Dict[st
     `channel_m` and `overhang_m` override the sizes the supports are drawn with. A run of a level that has no slab given, or that is not under it, gets none."""
     bad = _spec_errors(spec)
     if bad:
-        raise core.PlanError("; ".join(bad))
+        raise core.PlanError("err_supports_spec_invalid", details="; ".join(bad))
     sizes = {k: _setting(spec, k) for k in ("rod_m", "channel_m", "overhang_m")}
     out = []
     for s in solids:

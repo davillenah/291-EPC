@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Regenerate every generated file in one command (OPT-08), or check that none is stale (COD-15).
 
-  python harness/tools/build/regen_all.py           rewrite: registry, plugins, agents, impact map, engine contracts, norm register report
+  python harness/tools/build/regen_all.py           rewrite: registry, plugins, agents, impact map, engine contracts, error catalogue, norm register report
   python harness/tools/build/regen_all.py --check   fail when any generated file is out of date (use it as a pre-commit check)
 
 Order matters: the registry reads the plugins, so plugins go first.
@@ -20,6 +20,7 @@ STEPS = [
     ("impact-map", ["impact_map.py"], ["impact_map.py", "--check"]),
     ("registry", ["epc_build.py", "registry"], ["epc_build.py", "registry", "--check"]),
     ("engine-contracts", ["engine_contracts.py"], ["engine_contracts.py", "--check"]),
+    ("error-catalogue", ["error_catalogue.py"], ["error_catalogue.py", "--check"]),
     ("norm-register", ["norm_register.py", "--report"], ["norm_register.py", "--report", "--check"]),
 ]
 

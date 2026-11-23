@@ -26,8 +26,9 @@ def names() -> List[str]:
 
 def get(kind: str) -> Method:
     if kind not in REGISTRY:
-        raise LightingError(f"method '{kind}' is not available: choose one of {names()}")
+        raise LightingError("err_method_unavailable", kind=kind, names=names())
     return REGISTRY[kind]
 
 
 from epc_lighting.methods import lumen, zonal  # noqa: E402,F401  (importing registers them)
+from epc_lighting.model import LightingError

@@ -1,0 +1,135 @@
+{
+  "schema_version": "1.0",
+  "areas": [
+    {
+      "id": "A1",
+      "name": "Invented shed, storage hall"
+    },
+    {
+      "id": "A2",
+      "name": "Invented shed, workshop"
+    }
+  ],
+  "loads": [
+    {
+      "id": "L-01",
+      "description": "High-bay lighting, hall",
+      "area": "A1",
+      "kind": "lighting",
+      "power": {
+        "value": 3.2,
+        "unit": "kW"
+      },
+      "phases": 3,
+      "length": {
+        "value": 60,
+        "unit": "m"
+      }
+    },
+    {
+      "id": "L-02",
+      "description": "Lighting, workshop",
+      "area": "A2",
+      "kind": "lighting",
+      "power": {
+        "value": 1.2,
+        "unit": "kW"
+      },
+      "phases": 1,
+      "length": {
+        "value": 35,
+        "unit": "m"
+      }
+    },
+    {
+      "id": "T-01",
+      "description": "Receptacles, hall",
+      "area": "A1",
+      "kind": "receptacles",
+      "power": {
+        "value": 3.3,
+        "unit": "kW"
+      },
+      "phases": 1,
+      "length": {
+        "value": 45,
+        "unit": "m"
+      }
+    },
+    {
+      "id": "T-02",
+      "description": "Receptacles, workshop",
+      "area": "A2",
+      "kind": "receptacles",
+      "power": {
+        "value": 4.4,
+        "unit": "kW"
+      },
+      "phases": 1,
+      "length": {
+        "value": 38,
+        "unit": "m"
+      }
+    },
+    {
+      "id": "M-01",
+      "description": "Conveyor motor",
+      "area": "A1",
+      "kind": "motor",
+      "power": {
+        "value": 7.5,
+        "unit": "kW"
+      },
+      "phases": 3,
+      "length": {
+        "value": 55,
+        "unit": "m"
+      }
+    },
+    {
+      "id": "M-02",
+      "description": "Ventilation fan",
+      "area": "A1",
+      "kind": "motor",
+      "power": {
+        "value": 4.0,
+        "unit": "kW"
+      },
+      "phases": 3,
+      "length": {
+        "value": 48,
+        "unit": "m"
+      }
+    },
+    {
+      "id": "M-03",
+      "description": "Compressor",
+      "area": "A2",
+      "kind": "motor",
+      "power": {
+        "value": 15,
+        "unit": "kW"
+      },
+      "phases": 3,
+      "length": {
+        "value": 30,
+        "unit": "m"
+      }
+    },
+    {
+      "id": "E-01",
+      "description": "Battery charger bank",
+      "area": "A2",
+      "kind": "special",
+      "power": {
+        "value": 8,
+        "unit": "kVA"
+      },
+      "phases": 3,
+      "length": {
+        "value": 25,
+        "unit": "m"
+      }
+    }
+  ]
+}

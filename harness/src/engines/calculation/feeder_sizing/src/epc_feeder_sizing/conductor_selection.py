@@ -56,6 +56,7 @@ import os
 import sys
 
 from epc_voltage_drop import voltage_drop  # noqa: E402  (CAL-002)
+from epc_feeder_sizing.errors import FeederSizingError
 
 __version__ = "0.1.0"
 
@@ -64,15 +65,15 @@ NO_VERIFICABLE = "NO VERIFICABLE"
 
 def _num(v, nombre, estricto=True):
     if isinstance(v, bool) or not isinstance(v, (int, float)) or not math.isfinite(v):
-        raise ValueError(f"{nombre} debe ser un número finito (recibido: {v!r})")
+        raise FeederSizingError("err_not_finite_number", nombre=nombre, v=v)
     if (estricto and v <= 0) or (not estricto and v < 0):
-        raise ValueError(f"{nombre} debe ser {'>' if estricto else '≥'} 0 (recibido: {v})")
+        raise FeederSizingError("err_out_of_range", nombre=nombre, relacion='>' if estricto else '≥', v=v)
 
 
 def _factor(v, nombre):
     _num(v, nombre)
     if v > 1:
-        raise ValueError(f"{nombre} debe estar en (0, 1] (recibido: {v})")
+        raise FeederSizingError("err_not_fraction", nombre=nombre, v=v)
 
 
 def cargar_tabla(origen):
@@ -83,16 +84,16 @@ def cargar_tabla(origen):
             with open(origen, "r", encoding="utf-8") as f:
                 origen = json.load(f)
         except json.JSONDecodeError as e:
-            raise ValueError(f"JSON inválido en la tabla: {e}") from None
+            raise FeederSizingError("err_table_json", e=e) from None
     if not isinstance(origen, dict) or not isinstance(origen.get("conductores"), list) or not origen["conductores"]:
-        raise ValueError("La tabla debe ser un objeto con la lista no vacía 'conductores'")
+        raise FeederSizingError("err_table_shape")
     filas, advertencias = [], []
     for k, c in enumerate(origen["conductores"]):
         if not isinstance(c, dict):
-            raise ValueError(f"conductores[{k}] debe ser un objeto")
+            raise FeederSizingError("err_conductor_not_object", k=k)
         for campo in ("seccion_mm2", "i_adm_a", "r_ohm_km"):
             if campo not in c:
-                raise ValueError(f"conductores[{k}]: falta '{campo}'")
+                raise FeederSizingError("err_conductor_field", k=k, campo=campo)
             _num(c[campo], f"conductores[{k}].{campo}")
         x = c.get("x_ohm_km")
         if x is None:
@@ -105,7 +106,7 @@ def cargar_tabla(origen):
     filas.sort(key=lambda f: f["seccion_mm2"])
     secs = [f["seccion_mm2"] for f in filas]
     if len(set(secs)) != len(secs):
-        raise ValueError("La tabla tiene secciones repetidas")
+        raise FeederSizingError("err_sections_repeated")
     enc = str(origen.get("_encabezado", ""))
     if "FICTICI" in enc.upper():
         advertencias.append("TABLA FICTICIA (" + enc + "): el resultado NO es válido para el proyecto.")
@@ -117,7 +118,7 @@ def _serie(serie_in):
     if serie_in is None:
         return None
     if not isinstance(serie_in, (list, tuple)) or not serie_in:
-        raise ValueError("serie_in debe ser una lista no vacía de corrientes asignadas [A]")
+        raise FeederSizingError("err_series_invalid")
     for v in serie_in:
         _num(v, "serie_in[]")
     return sorted(set(float(v) for v in serie_in))

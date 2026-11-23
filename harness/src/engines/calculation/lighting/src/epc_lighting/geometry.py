@@ -9,23 +9,19 @@ from typing import Any, Dict, List
 
 from epc_lighting.config import PARAMS, data
 from epc_lighting.model import Estimate, LightingError, Room
+from epc_lighting.model import LightingError
 
 
 def mounting_height(room: Room, system: Dict[str, Any], warnings: List[str]) -> Estimate:
     """Height h of the luminaire plane over the work plane."""
     available = room.height_m - room.work_plane_m
     if available <= 0:
-        raise LightingError(
-            f"room '{room.id}': work_plane_height_m ({room.work_plane_m}) must be lower than height_m ({room.height_m})"
-        )
+        raise LightingError("err_work_plane_height", id=room.id, work_plane_m=room.work_plane_m, height_m=room.height_m)
     if room.suspension_mode:
         return _auto_height(room, system, available)
     h = available - room.suspension_m
     if h <= 0:
-        raise LightingError(
-            f"room '{room.id}': suspension_m ({room.suspension_m}) leaves no height between the luminaires and the work plane; "
-            f"it must be lower than {round(available, 3)} m (height_m - work_plane_height_m)"
-        )
+        raise LightingError("err_suspension_too_long", id=room.id, suspension_m=room.suspension_m, limit=round(available, 3))
     reason = "luminaires as high as possible (UPV table 1)" if room.suspension_m == 0 else f"given suspension d' = {room.suspension_m} m"
     return Estimate(h, reason, 1.0)
 
@@ -35,10 +31,7 @@ def _auto_height(room: Room, system: Dict[str, Any], available: float) -> Estima
     rules = data("lighting_systems")["suspension_rules"]
     if group is None:
         usable = sorted(k for k, v in data("lighting_systems")["systems"].items() if v.get("suspension_group"))
-        raise LightingError(
-            f"room '{room.id}': suspension_mode '{room.suspension_mode}' is not defined for lighting_system '{room.system}' "
-            f"(UPV table 2 covers {usable}); give suspension_m instead"
-        )
+        raise LightingError("err_suspension_mode", id=room.id, suspension_mode=room.suspension_mode, system=room.system, usable=usable)
     fraction = rules[group][room.suspension_mode]["h_fraction"]
     note = rules[group][room.suspension_mode]["note"]
     return Estimate(fraction * available, f"UPV table 2 ({group} lighting, {room.suspension_mode}): {note}", 0.8)

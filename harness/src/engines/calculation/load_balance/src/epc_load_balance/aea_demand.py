@@ -39,6 +39,7 @@ NORMA DE REFERENCIA
 import math
 from epc_calc_common import aea_tables as T
 from epc_calc_common._validate import num as _num
+from epc_load_balance.errors import LoadBalanceError
 
 __version__ = "0.1.0"
 
@@ -90,7 +91,7 @@ def grade_electrification_771(tipo, superficie_m2):
     _num(superficie_m2, "superficie_m2", 0.0, True)
     grados = _g("_GRADOS_771")
     if tipo not in grados:
-        raise ValueError(f"tipo debe ser uno de {sorted(grados)} (recibido: {tipo!r})")
+        raise LoadBalanceError("err_type_invalid", opciones=sorted(grados), tipo=tipo)
     for limite, grado, kva in grados[tipo]:
         if superficie_m2 <= limite:
             return {"grado": grado, "dpms_ref_kva": kva}
@@ -111,7 +112,7 @@ def coef_simultaneity_771(grado):
     """Tabla 771.9.II: Mínimo 1; Medio 0,9; Elevado 0,8; Superior 0,7."""
     coef = _g("COEF_GRADO_771")
     if grado not in coef:
-        raise ValueError(f"grado debe ser uno de {sorted(coef)}")
+        raise LoadBalanceError("err_grade_invalid", opciones=sorted(coef))
     return coef[grado]
 
 
@@ -128,7 +129,7 @@ def coef_simultaneidad_conjunto(n_unidades, grado):
     """Tabla 771.9.III para conjuntos de viviendas/locales: columna Mín/Medio o Elev/Sup."""
     _num(n_unidades, "n_unidades", 2)
     if grado not in _g("COEF_GRADO_771"):
-        raise ValueError(f"grado debe ser uno de {sorted(_g('COEF_GRADO_771'))}")
+        raise LoadBalanceError("err_grade_invalid", opciones=sorted(_g('COEF_GRADO_771')))
     alto = grado in ("elevado", "superior")
     for n_min, bajo, hi in _g("_CONJUNTOS_771_III"):
         if n_unidades >= n_min:
@@ -142,7 +143,7 @@ def msd_lighting_general(n_bocas, norma="771", tipo="vivienda"):
         fr = T.value("770.8.I_fraccion_iluminacion")
         return n_bocas * _g("VA_BOCA_770") * fr["numerador"] / fr["denominador"]
     if norma != "771":
-        raise ValueError("norma debe ser '771' o '770'")
+        raise LoadBalanceError("err_standard_invalid")
     fr = T.value("771.9.1_fraccion_iluminacion")
     return n_bocas * _g("VA_BOCA_VIVIENDA") * (fr["vivienda"] if tipo == "vivienda" else fr["otros"])
 
@@ -169,7 +170,7 @@ def current_msd(dpms_va, fases):
         return dpms_va / _g("U_MONO_V")
     if fases == 3:
         return dpms_va / (math.sqrt(3) * _g("U_TRI_V"))
-    raise ValueError("fases debe ser 1 o 3")
+    raise LoadBalanceError("err_phases_invalid")
 
 
 def requiere_trifasico(dpms_va, i_a=None):
@@ -181,7 +182,7 @@ def requiere_trifasico(dpms_va, i_a=None):
 def imbalance_phases(currents_to):
     """(Imax − Imin)/Imax en %; cumple si ≤ 30 % (770.8.3.4)."""
     if len(currents_to) < 2:
-        raise ValueError("se requieren al menos 2 corrientes")
+        raise LoadBalanceError("err_currents_too_few")
     for i in currents_to:
         _num(i, "corriente")
     mx, mn = max(currents_to), min(currents_to)
@@ -192,7 +193,7 @@ def imbalance_phases(currents_to):
 def corriente_alimentador_motores(in_motores_a, fs_resto=1.0):
     """I ≥ 1,25·In(mayor) + Σ In(resto)·fs."""
     if not in_motores_a:
-        raise ValueError("in_motores_a vacío")
+        raise LoadBalanceError("err_motors_empty")
     for i in in_motores_a:
         _num(i, "In motor", 0.0, True)
     _num(fs_resto, "fs_resto", 0.0, True)

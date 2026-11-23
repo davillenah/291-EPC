@@ -1,0 +1,4338 @@
+{
+ "epc_arch": {
+  "flat": {
+   "annotation_counts": {
+    "axes": 0,
+    "dimensions": 0,
+    "labels": 0
+   },
+   "counts": {
+    "doors": 1,
+    "openings": 0,
+    "walls": 6,
+    "windows": 1
+   },
+   "drawing_scale": null,
+   "level": null,
+   "openings": [
+    {
+     "angle": 0.0,
+     "at": [
+      1800.0,
+      50.0
+     ],
+     "confidence": 0.8,
+     "id": "v1",
+     "kind": "window",
+     "reason": "2 lines across the gap",
+     "wall": "w1",
+     "width": 600.0
+    },
+    {
+     "angle": 0.0,
+     "at": [
+      1225.0,
+      1950.0
+     ],
+     "confidence": 0.95,
+     "hinge": [
+      1000.0,
+      1950.0
+     ],
+     "id": "d1",
+     "kind": "door",
+     "reason": "arc and leaf in a gap",
+     "swing": [
+      1000.0,
+      1500.0
+     ],
+     "wall": "w5",
+     "width": 450.0
+    }
+   ],
+   "reference": null,
+   "rooms": [
+    {
+     "area": 4994100.0,
+     "area_m2": 19.98,
+     "at": [
+      1505.0,
+      1005.0
+     ],
+     "box_m": [
+      0.22,
+      0.22,
+      5.8,
+      3.8
+     ],
+     "code": "",
+     "id": "r1",
+     "key": "",
+     "name": "",
+     "size_m": [
+      5.58,
+      3.58
+     ],
+     "written_m2": null
+    }
+   ],
+   "scale_hint": null,
+   "schema_version": "1.0",
+   "size": [
+    3000.0,
+    2400.0
+   ],
+   "source": "dxf",
+   "units_per_metre": 500.0,
+   "wall_thickness": 100.0,
+   "walls": [
+    {
+     "a": [
+      50.0,
+      50.0
+     ],
+     "b": [
+      1500.0,
+      50.0
+     ],
+     "confidence": 0.9,
+     "id": "w1",
+     "reason": "pair",
+     "thickness": 100.0
+    },
+    {
+     "a": [
+      50.0,
+      50.0
+     ],
+     "b": [
+      50.0,
+      1950.0
+     ],
+     "confidence": 0.9,
+     "id": "w2",
+     "reason": "pair",
+     "thickness": 100.0
+    },
+    {
+     "a": [
+      2100.0,
+      50.0
+     ],
+     "b": [
+      2950.0,
+      50.0
+     ],
+     "confidence": 0.85,
+     "id": "w3",
+     "reason": "pair",
+     "thickness": 100.0
+    },
+    {
+     "a": [
+      2950.0,
+      50.0
+     ],
+     "b": [
+      2950.0,
+      1950.0
+     ],
+     "confidence": 0.9,
+     "id": "w4",
+     "reason": "pair",
+     "thickness": 100.0
+    },
+    {
+     "a": [
+      50.0,
+      1950.0
+     ],
+     "b": [
+      1000.0,
+      1950.0
+     ],
+     "confidence": 0.87,
+     "id": "w5",
+     "reason": "pair",
+     "thickness": 100.0
+    },
+    {
+     "a": [
+      1450.0,
+      1950.0
+     ],
+     "b": [
+      2950.0,
+      1950.0
+     ],
+     "confidence": 0.9,
+     "id": "w6",
+     "reason": "pair",
+     "thickness": 100.0
+    }
+   ],
+   "warnings": []
+  },
+  "flat_in_millimetres": {
+   "annotation_counts": {
+    "axes": 0,
+    "dimensions": 0,
+    "labels": 0
+   },
+   "counts": {
+    "doors": 1,
+    "openings": 0,
+    "walls": 6,
+    "windows": 1
+   },
+   "drawing_scale": null,
+   "level": null,
+   "openings": [
+    {
+     "angle": 0.0,
+     "at": [
+      1800.0,
+      50.0
+     ],
+     "confidence": 0.8,
+     "id": "v1",
+     "kind": "window",
+     "reason": "2 lines across the gap",
+     "wall": "w1",
+     "width": 600.0
+    },
+    {
+     "angle": 0.0,
+     "at": [
+      1225.0,
+      1950.0
+     ],
+     "confidence": 0.95,
+     "hinge": [
+      1000.0,
+      1950.0
+     ],
+     "id": "d1",
+     "kind": "door",
+     "reason": "arc and leaf in a gap",
+     "swing": [
+      1000.0,
+      1500.0
+     ],
+     "wall": "w5",
+     "width": 450.0
+    }
+   ],
+   "reference": null,
+   "rooms": [
+    {
+     "area": 4994100.0,
+     "area_m2": 19.98,
+     "at": [
+      1505.0,
+      1005.0
+     ],
+     "box_m": [
+      0.22,
+      0.22,
+      5.8,
+      3.8
+     ],
+     "code": "",
+     "id": "r1",
+     "key": "",
+     "name": "",
+     "size_m": [
+      5.58,
+      3.58
+     ],
+     "written_m2": null
+    }
+   ],
+   "scale_hint": null,
+   "schema_version": "1.0",
+   "size": [
+    3000.0,
+    2400.0
+   ],
+   "source": "dxf",
+   "units_per_metre": 500.0,
+   "wall_thickness": 100.0,
+   "walls": [
+    {
+     "a": [
+      50.0,
+      50.0
+     ],
+     "b": [
+      1500.0,
+      50.0
+     ],
+     "confidence": 0.9,
+     "id": "w1",
+     "reason": "pair",
+     "thickness": 100.0
+    },
+    {
+     "a": [
+      2100.0,
+      50.0
+     ],
+     "b": [
+      2950.0,
+      50.0
+     ],
+     "confidence": 0.85,
+     "id": "w2",
+     "reason": "pair",
+     "thickness": 100.0
+    },
+    {
+     "a": [
+      50.0,
+      50.0
+     ],
+     "b": [
+      50.0,
+      1950.0
+     ],
+     "confidence": 0.9,
+     "id": "w3",
+     "reason": "pair",
+     "thickness": 100.0
+    },
+    {
+     "a": [
+      2950.0,
+      50.0
+     ],
+     "b": [
+      2950.0,
+      1950.0
+     ],
+     "confidence": 0.9,
+     "id": "w4",
+     "reason": "pair",
+     "thickness": 100.0
+    },
+    {
+     "a": [
+      50.0,
+      1950.0
+     ],
+     "b": [
+      1000.0,
+      1950.0
+     ],
+     "confidence": 0.87,
+     "id": "w5",
+     "reason": "pair",
+     "thickness": 100.0
+    },
+    {
+     "a": [
+      1450.0,
+      1950.0
+     ],
+     "b": [
+      2950.0,
+      1950.0
+     ],
+     "confidence": 0.9,
+     "id": "w6",
+     "reason": "pair",
+     "thickness": 100.0
+    }
+   ],
+   "warnings": []
+  },
+  "not_a_plan": {
+   "error": "ArchError: the DXF cannot be read: it is not a valid DXF file"
+  }
+ },
+ "epc_boq": {
+  "build_boq": {
+   "allowance_pct": 10,
+   "assumptions": [
+    "quantities only: this engine holds no price and no cost; the cost engine is planned for a later phase",
+    "cable length per specification = sum of the circuit lengths x (1 + allowance_pct / 100); the allowance is given explicitly by the caller (0 is allowed), never defaulted",
+    "a cable specification is the material, the insulation and the conductors of the circuit (phase conductors, and the neutral and PE sections when reported)",
+    "the cable length of a circuit is the one the calculation used; no extra length for terminations, bends or drops is added except the stated allowance",
+    "one protective device is counted per circuit, taken from the device the calculation selected for it (kind, rated current, poles and breaking capacity); the other elements of a chain (contactors, relays) are not counted",
+    "the enclosure is one item per board; its sizing is not modelled",
+    "the bill is a draft (D21): descriptions are generated from the specification values and translated by the document builders",
+    "terminal blocks are not included: no terminal-block totals were given"
+   ],
+   "board": "TG-1",
+   "issues": [],
+   "items": [
+    {
+     "basis": "sum of circuit lengths (10 m) x (1 + 10 %)",
+     "category": "cable",
+     "description": "Cu PVC cable 1x1.5 mm2 + N 1.5 mm2 + PE 1.5 mm2 (3 cores)",
+     "issues": [],
+     "item_id": "CAB-001",
+     "quantity": 11.0,
+     "source": [
+      "C4"
+     ],
+     "spec": {
+      "cores": 3,
+      "insulation": "pvc",
+      "material": "cu",
+      "neutral_mm2": 1.5,
+      "pe_mm2": 1.5,
+      "phase_conductors": 1,
+      "s_mm2": 1.5
+     },
+     "unit": "m"
+    },
+    {
+     "basis": "sum of circuit lengths (32.5 m) x (1 + 10 %)",
+     "category": "cable",
+     "description": "Cu PVC cable 1x2.5 mm2 + N 2.5 mm2 + PE 2.5 mm2 (3 cores)",
+     "issues": [],
+     "item_id": "CAB-002",
+     "quantity": 35.75,
+     "source": [
+      "C1",
+      "C2"
+     ],
+     "spec": {
+      "cores": 3,
+      "insulation": "pvc",
+      "material": "cu",
+      "neutral_mm2": 2.5,
+      "pe_mm2": 2.5,
+      "phase_conductors": 1,
+      "s_mm2": 2.5
+     },
+     "unit": "m"
+    },
+    {
+     "basis": "sum of circuit lengths (10 m) x (1 + 10 %)",
+     "category": "cable",
+     "description": "Cu PVC cable 3x10 mm2 + N 10 mm2 + PE 10 mm2 (5 cores)",
+     "issues": [],
+     "item_id": "CAB-003",
+     "quantity": 11.0,
+     "source": [
+      "C3"
+     ],
+     "spec": {
+      "cores": 5,
+      "insulation": "pvc",
+      "material": "cu",
+      "neutral_mm2": 10,
+      "pe_mm2": 10,
+      "phase_conductors": 3,
+      "s_mm2": 10
+     },
+     "unit": "m"
+    },
+    {
+     "basis": "one device per circuit, as selected by the calculation",
+     "category": "protective_device",
+     "description": "MCB protective device, 10 A, 2 poles, 6 kA breaking capacity",
+     "issues": [],
+     "item_id": "DEV-001",
+     "quantity": 1,
+     "source": [
+      "C4"
+     ],
+     "spec": {
+      "breaking_capacity_ka": 6,
+      "in_a": 10,
+      "kind": "mcb",
+      "poles": 2
+     },
+     "unit": "un"
+    },
+    {
+     "basis": "one device per circuit, as selected by the calculation",
+     "category": "protective_device",
+     "description": "MCB protective device, 16 A, 2 poles, 6 kA breaking capacity",
+     "issues": [],
+     "item_id": "DEV-002",
+     "quantity": 2,
+     "source": [
+      "C1",
+      "C2"
+     ],
+     "spec": {
+      "breaking_capacity_ka": 6,
+      "in_a": 16,
+      "kind": "mcb",
+      "poles": 2
+     },
+     "unit": "un"
+    },
+    {
+     "basis": "one device per circuit, as selected by the calculation",
+     "category": "protective_device",
+     "description": "MCCB protective device, 100 A, 3 poles, 25 kA breaking capacity",
+     "issues": [],
+     "item_id": "DEV-003",
+     "quantity": 1,
+     "source": [
+      "C3"
+     ],
+     "spec": {
+      "breaking_capacity_ka": 25,
+      "in_a": 100,
+      "kind": "mccb",
+      "poles": 3
+     },
+     "unit": "un"
+    },
+    {
+     "basis": "one enclosure per board",
+     "category": "enclosure",
+     "description": "Enclosure/board TG-1 (sizing not modelled)",
+     "issues": [],
+     "item_id": "ENC-001",
+     "quantity": 1,
+     "source": [
+      "C1",
+      "C2",
+      "C3",
+      "C4"
+     ],
+     "spec": {
+      "board": "TG-1"
+     },
+     "unit": "un"
+    }
+   ],
+   "norm_records": [],
+   "round_up_m": false,
+   "totals": {
+    "cable_m": 57.75,
+    "devices": 4,
+    "lines": 7
+   }
+  },
+  "no_allowance": {
+   "error": "BoqError: allowance_pct is required: give the wastage/allowance percentage of the cable lengths explicitly (0 is allowed)"
+  },
+  "render_rows": [
+   {
+    "basis": "sum of circuit lengths (10 m) x (1 + 10 %)",
+    "board": "TG-1",
+    "category": "cable",
+    "description": "Cu PVC cable 1x1.5 mm2 + N 1.5 mm2 + PE 1.5 mm2 (3 cores)",
+    "issue": "",
+    "item_id": "CAB-001",
+    "quantity": 11.0,
+    "source": "C4",
+    "unit": "m"
+   },
+   {
+    "basis": "sum of circuit lengths (32.5 m) x (1 + 10 %)",
+    "board": "TG-1",
+    "category": "cable",
+    "description": "Cu PVC cable 1x2.5 mm2 + N 2.5 mm2 + PE 2.5 mm2 (3 cores)",
+    "issue": "",
+    "item_id": "CAB-002",
+    "quantity": 35.75,
+    "source": "C1, C2",
+    "unit": "m"
+   },
+   {
+    "basis": "sum of circuit lengths (10 m) x (1 + 10 %)",
+    "board": "TG-1",
+    "category": "cable",
+    "description": "Cu PVC cable 3x10 mm2 + N 10 mm2 + PE 10 mm2 (5 cores)",
+    "issue": "",
+    "item_id": "CAB-003",
+    "quantity": 11.0,
+    "source": "C3",
+    "unit": "m"
+   },
+   {
+    "basis": "one device per circuit, as selected by the calculation",
+    "board": "TG-1",
+    "category": "protective_device",
+    "description": "MCB protective device, 10 A, 2 poles, 6 kA breaking capacity",
+    "issue": "",
+    "item_id": "DEV-001",
+    "quantity": 1,
+    "source": "C4",
+    "unit": "un"
+   },
+   {
+    "basis": "one device per circuit, as selected by the calculation",
+    "board": "TG-1",
+    "category": "protective_device",
+    "description": "MCB protective device, 16 A, 2 poles, 6 kA breaking capacity",
+    "issue": "",
+    "item_id": "DEV-002",
+    "quantity": 2,
+    "source": "C1, C2",
+    "unit": "un"
+   },
+   {
+    "basis": "one device per circuit, as selected by the calculation",
+    "board": "TG-1",
+    "category": "protective_device",
+    "description": "MCCB protective device, 100 A, 3 poles, 25 kA breaking capacity",
+    "issue": "",
+    "item_id": "DEV-003",
+    "quantity": 1,
+    "source": "C3",
+    "unit": "un"
+   },
+   {
+    "basis": "one enclosure per board",
+    "board": "TG-1",
+    "category": "enclosure",
+    "description": "Enclosure/board TG-1 (sizing not modelled)",
+    "issue": "",
+    "item_id": "ENC-001",
+    "quantity": 1,
+    "source": "C1, C2, C3, C4",
+    "unit": "un"
+   }
+  ]
+ },
+ "epc_calc_common": {
+  "frac(1.5, 'x')": {
+   "error": "CalcCommonError: x debe estar en (0, 1] (recibido: 1.5)"
+  },
+  "num(-1, 'x')": {
+   "error": "CalcCommonError: x debe ser ≥ 0.0 (recibido: -1)"
+  },
+  "num(5, 'x')": null,
+  "pos(0, 'x')": {
+   "error": "CalcCommonError: x debe ser > 0 (recibido: 0)"
+  },
+  "round_down_2(3.14159)": 3.14,
+  "round_up_2(3.14159)": 3.15
+ },
+ "epc_datasheets": {
+  "build_datasheets": {
+   "assumptions": [
+    "the datasheet records are drafts (D21): every candidate carries the catalog status verbatim and the record stays pending review because catalog values are unverified manufacturer data",
+    "no product is chosen: the candidates are all the catalog products that satisfy the requirement by comparison, in the order manufacturer, family, id",
+    "a protective-device candidate has the requested type, a rated-current range containing the requested In, and a catalog breaking capacity at a voltage >= the required voltage that is >= the required kA",
+    "a requirement the catalog cannot answer (no rated-current or breaking-capacity data) is not satisfied: requirements are never relaxed",
+    "poles are compared only when the catalog lists them; otherwise the candidate says `poles` is unconfirmed",
+    "a cable candidate must mention the required insulation in its catalog text; the catalog carries no material, section or conductor count, so those stay unconfirmed",
+    "the engine reads no file: the catalog is an argument"
+   ],
+   "board": "TG-1",
+   "datasheets": [
+    {
+     "candidates": [],
+     "issues": [
+      "DS-CAB-001: no catalog product satisfies the requirement"
+     ],
+     "item_id": "DS-CAB-001",
+     "kind": "cable",
+     "requirement": {
+      "circuits": [
+       "C4"
+      ],
+      "cores": 3,
+      "insulation": "pvc",
+      "item_id": "DS-CAB-001",
+      "kind": "cable",
+      "material": "cu",
+      "neutral_mm2": 1.5,
+      "pe_mm2": 1.5,
+      "phase_conductors": 1,
+      "s_mm2": 1.5
+     },
+     "review_reason": "catalog values are unverified manufacturer data",
+     "review_status": "pending review"
+    },
+    {
+     "candidates": [],
+     "issues": [
+      "DS-CAB-002: no catalog product satisfies the requirement"
+     ],
+     "item_id": "DS-CAB-002",
+     "kind": "cable",
+     "requirement": {
+      "circuits": [
+       "C1",
+       "C2"
+      ],
+      "cores": 3,
+      "insulation": "pvc",
+      "item_id": "DS-CAB-002",
+      "kind": "cable",
+      "material": "cu",
+      "neutral_mm2": 2.5,
+      "pe_mm2": 2.5,
+      "phase_conductors": 1,
+      "s_mm2": 2.5
+     },
+     "review_reason": "catalog values are unverified manufacturer data",
+     "review_status": "pending review"
+    },
+    {
+     "candidates": [],
+     "issues": [
+      "DS-CAB-003: no catalog product satisfies the requirement"
+     ],
+     "item_id": "DS-CAB-003",
+     "kind": "cable",
+     "requirement": {
+      "circuits": [
+       "C3"
+      ],
+      "cores": 5,
+      "insulation": "pvc",
+      "item_id": "DS-CAB-003",
+      "kind": "cable",
+      "material": "cu",
+      "neutral_mm2": 10,
+      "pe_mm2": 10,
+      "phase_conductors": 3,
+      "s_mm2": 10
+     },
+     "review_reason": "catalog values are unverified manufacturer data",
+     "review_status": "pending review"
+    },
+    {
+     "candidates": [],
+     "issues": [
+      "DS-DEV-001: no catalog product satisfies the requirement"
+     ],
+     "item_id": "DS-DEV-001",
+     "kind": "protective_device",
+     "requirement": {
+      "breaking_capacity_ka": 6,
+      "circuits": [
+       "C4"
+      ],
+      "device_kind": "mcb",
+      "in_a": 10,
+      "item_id": "DS-DEV-001",
+      "kind": "protective_device",
+      "poles": 2,
+      "voltage_v": 400
+     },
+     "review_reason": "catalog values are unverified manufacturer data",
+     "review_status": "pending review"
+    },
+    {
+     "candidates": [],
+     "issues": [
+      "DS-DEV-002: no catalog product satisfies the requirement"
+     ],
+     "item_id": "DS-DEV-002",
+     "kind": "protective_device",
+     "requirement": {
+      "breaking_capacity_ka": 6,
+      "circuits": [
+       "C1",
+       "C2"
+      ],
+      "device_kind": "mcb",
+      "in_a": 16,
+      "item_id": "DS-DEV-002",
+      "kind": "protective_device",
+      "poles": 2,
+      "voltage_v": 400
+     },
+     "review_reason": "catalog values are unverified manufacturer data",
+     "review_status": "pending review"
+    },
+    {
+     "candidates": [
+      {
+       "breaking_capacity": [
+        {
+         "class": "N",
+         "icu_ka": 25,
+         "voltage_v": 400
+        },
+        {
+         "class": "H",
+         "icu_ka": 36,
+         "voltage_v": 400
+        }
+       ],
+       "catalog_status": "unverified",
+       "category": "breakers",
+       "family": "Fam p1",
+       "manufacturer": "m1",
+       "matched": {
+        "breaking_capacity": [
+         {
+          "class": "N",
+          "icu_ka": 25,
+          "voltage_v": 400
+         },
+         {
+          "class": "H",
+          "icu_ka": 36,
+          "voltage_v": 400
+         }
+        ],
+        "in_a": 100
+       },
+       "product_id": "p1",
+       "rated_current_a": {
+        "max": 160,
+        "min": 16
+       },
+       "source": "https://example.test/p1",
+       "standards": [
+        "IEC 60947-2"
+       ],
+       "type": "mccb",
+       "unconfirmed": [
+        "poles"
+       ]
+      }
+     ],
+     "issues": [],
+     "item_id": "DS-DEV-003",
+     "kind": "protective_device",
+     "requirement": {
+      "breaking_capacity_ka": 25,
+      "circuits": [
+       "C3"
+      ],
+      "device_kind": "mccb",
+      "in_a": 100,
+      "item_id": "DS-DEV-003",
+      "kind": "protective_device",
+      "poles": 3,
+      "voltage_v": 400
+     },
+     "review_reason": "catalog values are unverified manufacturer data",
+     "review_status": "pending review"
+    }
+   ],
+   "issues": [
+    "DS-CAB-001: no catalog product satisfies the requirement",
+    "DS-CAB-002: no catalog product satisfies the requirement",
+    "DS-CAB-003: no catalog product satisfies the requirement",
+    "DS-DEV-001: no catalog product satisfies the requirement",
+    "DS-DEV-002: no catalog product satisfies the requirement"
+   ],
+   "norm_records": [
+    {
+     "catalog_status": "unverified",
+     "category": "breakers",
+     "manufacturer": "m1",
+     "reason": "catalog values are unverified manufacturer data",
+     "review_status": "pending review"
+    }
+   ],
+   "totals": {
+    "items": 6,
+    "items_without_candidate": 5
+   }
+  },
+  "render_rows": [
+   {
+    "board": "TG-1",
+    "catalog_status": "",
+    "circuits": "C4",
+    "family": "",
+    "issue": "DS-CAB-001: no catalog product satisfies the requirement",
+    "item_id": "DS-CAB-001",
+    "kind": "cable",
+    "manufacturer": "",
+    "product_id": "",
+    "requirement": "cu PVC cable 1x1.5 mm2 (3 cores)",
+    "review_status": "pending review",
+    "source": ""
+   },
+   {
+    "board": "TG-1",
+    "catalog_status": "",
+    "circuits": "C1, C2",
+    "family": "",
+    "issue": "DS-CAB-002: no catalog product satisfies the requirement",
+    "item_id": "DS-CAB-002",
+    "kind": "cable",
+    "manufacturer": "",
+    "product_id": "",
+    "requirement": "cu PVC cable 1x2.5 mm2 (3 cores)",
+    "review_status": "pending review",
+    "source": ""
+   },
+   {
+    "board": "TG-1",
+    "catalog_status": "",
+    "circuits": "C3",
+    "family": "",
+    "issue": "DS-CAB-003: no catalog product satisfies the requirement",
+    "item_id": "DS-CAB-003",
+    "kind": "cable",
+    "manufacturer": "",
+    "product_id": "",
+    "requirement": "cu PVC cable 3x10 mm2 (5 cores)",
+    "review_status": "pending review",
+    "source": ""
+   },
+   {
+    "board": "TG-1",
+    "catalog_status": "",
+    "circuits": "C4",
+    "family": "",
+    "issue": "DS-DEV-001: no catalog product satisfies the requirement",
+    "item_id": "DS-DEV-001",
+    "kind": "protective_device",
+    "manufacturer": "",
+    "product_id": "",
+    "requirement": "MCB, 10 A, 2 poles, 6 kA, at 400 V",
+    "review_status": "pending review",
+    "source": ""
+   },
+   {
+    "board": "TG-1",
+    "catalog_status": "",
+    "circuits": "C1, C2",
+    "family": "",
+    "issue": "DS-DEV-002: no catalog product satisfies the requirement",
+    "item_id": "DS-DEV-002",
+    "kind": "protective_device",
+    "manufacturer": "",
+    "product_id": "",
+    "requirement": "MCB, 16 A, 2 poles, 6 kA, at 400 V",
+    "review_status": "pending review",
+    "source": ""
+   },
+   {
+    "board": "TG-1",
+    "catalog_status": "unverified",
+    "circuits": "C3",
+    "family": "Fam p1",
+    "issue": "",
+    "item_id": "DS-DEV-003",
+    "kind": "protective_device",
+    "manufacturer": "m1",
+    "product_id": "p1",
+    "requirement": "MCCB, 100 A, 3 poles, 25 kA, at 400 V",
+    "review_status": "pending review",
+    "source": "https://example.test/p1"
+   }
+  ],
+  "requirements_from_circuits": [
+   {
+    "breaking_capacity_ka": 6,
+    "circuits": [
+     "C4"
+    ],
+    "device_kind": "mcb",
+    "in_a": 10,
+    "item_id": "DS-DEV-001",
+    "kind": "protective_device",
+    "poles": 2,
+    "voltage_v": 400
+   },
+   {
+    "breaking_capacity_ka": 6,
+    "circuits": [
+     "C1",
+     "C2"
+    ],
+    "device_kind": "mcb",
+    "in_a": 16,
+    "item_id": "DS-DEV-002",
+    "kind": "protective_device",
+    "poles": 2,
+    "voltage_v": 400
+   },
+   {
+    "breaking_capacity_ka": 25,
+    "circuits": [
+     "C3"
+    ],
+    "device_kind": "mccb",
+    "in_a": 100,
+    "item_id": "DS-DEV-003",
+    "kind": "protective_device",
+    "poles": 3,
+    "voltage_v": 400
+   },
+   {
+    "circuits": [
+     "C4"
+    ],
+    "cores": 3,
+    "insulation": "pvc",
+    "item_id": "DS-CAB-001",
+    "kind": "cable",
+    "material": "cu",
+    "neutral_mm2": 1.5,
+    "pe_mm2": 1.5,
+    "phase_conductors": 1,
+    "s_mm2": 1.5
+   },
+   {
+    "circuits": [
+     "C1",
+     "C2"
+    ],
+    "cores": 3,
+    "insulation": "pvc",
+    "item_id": "DS-CAB-002",
+    "kind": "cable",
+    "material": "cu",
+    "neutral_mm2": 2.5,
+    "pe_mm2": 2.5,
+    "phase_conductors": 1,
+    "s_mm2": 2.5
+   },
+   {
+    "circuits": [
+     "C3"
+    ],
+    "cores": 5,
+    "insulation": "pvc",
+    "item_id": "DS-CAB-003",
+    "kind": "cable",
+    "material": "cu",
+    "neutral_mm2": 10,
+    "pe_mm2": 10,
+    "phase_conductors": 3,
+    "s_mm2": 10
+   }
+  ]
+ },
+ "epc_descriptive_report": {
+  "build_descriptive_report": {
+   "assumptions": [
+    "Counting is the only arithmetic: the numbers of circuits, of circuits by type, by phases, by device kind and by cable specification are counts of the given circuits list.",
+    "A cable specification is the combination of material, insulation and phase-conductor section reported for a circuit; a field not reported is shown as 'not specified'.",
+    "Values copied from the design basis keep the source and the review status they have there; this report adds no value of its own.",
+    "The numbers of the calculation (currents, voltage drops, short-circuit levels per circuit) belong to the calculation report, not to this descriptive report."
+   ],
+   "issues": [],
+   "norm_records": [],
+   "sections": [
+    {
+     "id": "object_scope",
+     "items": [
+      {
+       "key": "project_code",
+       "label": "Project code",
+       "review_status": null,
+       "source": "design_basis.identification.project_code",
+       "unit": null,
+       "value": "P-1"
+      },
+      {
+       "key": "client_name",
+       "label": "Client",
+       "review_status": null,
+       "source": "design_basis.identification.client_name",
+       "unit": null,
+       "value": "Cliente SA"
+      },
+      {
+       "key": "site_address",
+       "label": "Site",
+       "review_status": null,
+       "source": "design_basis.identification.site_address",
+       "unit": null,
+       "value": "Calle 1"
+      },
+      {
+       "key": "site_country",
+       "label": "Country",
+       "review_status": null,
+       "source": "design_basis.identification.site_country",
+       "unit": null,
+       "value": "AR"
+      },
+      {
+       "key": "site_installation_type",
+       "label": "Installation type",
+       "review_status": null,
+       "source": "design_basis.identification.site_installation_type",
+       "unit": null,
+       "value": "dwelling"
+      },
+      {
+       "key": "language",
+       "label": "Language",
+       "review_status": null,
+       "source": "design_basis.identification.language",
+       "unit": null,
+       "value": "es"
+      }
+     ],
+     "title": "Object and scope"
+    },
+    {
+     "id": "supply_earthing",
+     "items": [
+      {
+       "key": "supply_source",
+       "label": "Supply source",
+       "review_status": null,
+       "source": "design_basis.supply.supply_source",
+       "unit": null,
+       "value": "utility"
+      },
+      {
+       "key": "supply_voltage",
+       "label": "Supply voltage",
+       "review_status": null,
+       "source": "design_basis.supply.supply_voltage",
+       "unit": "V",
+       "value": 400
+      },
+      {
+       "key": "earthing_system",
+       "label": "Earthing system",
+       "review_status": null,
+       "source": "design_basis.supply.earthing_system",
+       "unit": null,
+       "value": "TN"
+      },
+      {
+       "key": "short_circuit_level",
+       "label": "Short-circuit level",
+       "review_status": null,
+       "source": "design_basis.supply.short_circuit_level",
+       "unit": "kA",
+       "value": 10
+      },
+      {
+       "key": "short_circuit_origin",
+       "label": "Origin of the short-circuit level",
+       "review_status": null,
+       "source": "design_basis.supply.short_circuit_origin",
+       "unit": null,
+       "value": "utility letter"
+      }
+     ],
+     "title": "Supply and earthing"
+    },
+    {
+     "id": "board_organisation",
+     "items": [
+      {
+       "key": "circuits_total",
+       "label": "Circuits",
+       "review_status": null,
+       "source": "count of the circuits given",
+       "unit": "circuits",
+       "value": 4
+      },
+      {
+       "key": "circuits_by_type.not specified",
+       "label": "Circuits of type not specified",
+       "review_status": null,
+       "source": "count of the circuits given",
+       "unit": "circuits",
+       "value": 4
+      },
+      {
+       "key": "circuits_by_phases.1",
+       "label": "Circuits with phases 1",
+       "review_status": null,
+       "source": "count of the circuits given",
+       "unit": "circuits",
+       "value": 3
+      },
+      {
+       "key": "circuits_by_phases.3",
+       "label": "Circuits with phases 3",
+       "review_status": null,
+       "source": "count of the circuits given",
+       "unit": "circuits",
+       "value": 1
+      }
+     ],
+     "title": "Board organisation"
+    },
+    {
+     "id": "cables_installation",
+     "items": [
+      {
+       "key": "cable_specs_distinct",
+       "label": "Distinct cable specifications",
+       "review_status": null,
+       "source": "count of the circuits given",
+       "unit": "specifications",
+       "value": 3
+      },
+      {
+       "key": "cable_spec.cu|pvc|1.5",
+       "label": "cu / pvc / 1.5",
+       "review_status": null,
+       "source": "count of the circuits given",
+       "spec": {
+        "insulation": "pvc",
+        "material": "cu",
+        "section": "1.5",
+        "section_unit": "mm2"
+       },
+       "unit": "circuits",
+       "value": 1
+      },
+      {
+       "key": "cable_spec.cu|pvc|10",
+       "label": "cu / pvc / 10",
+       "review_status": null,
+       "source": "count of the circuits given",
+       "spec": {
+        "insulation": "pvc",
+        "material": "cu",
+        "section": "10",
+        "section_unit": "mm2"
+       },
+       "unit": "circuits",
+       "value": 1
+      },
+      {
+       "key": "cable_spec.cu|pvc|2.5",
+       "label": "cu / pvc / 2.5",
+       "review_status": null,
+       "source": "count of the circuits given",
+       "spec": {
+        "insulation": "pvc",
+        "material": "cu",
+        "section": "2.5",
+        "section_unit": "mm2"
+       },
+       "unit": "circuits",
+       "value": 2
+      },
+      {
+       "key": "terminals_total",
+       "label": "Terminals in the terminal-block list",
+       "review_status": null,
+       "source": "terminal-block list totals",
+       "unit": "terminals",
+       "value": 12
+      },
+      {
+       "key": "boq_lines",
+       "label": "Lines of the bill of quantities",
+       "review_status": null,
+       "source": "boq.totals.lines",
+       "unit": "lines",
+       "value": 7
+      },
+      {
+       "key": "boq_devices",
+       "label": "Protective devices in the bill of quantities",
+       "review_status": null,
+       "source": "boq.totals.devices",
+       "unit": "devices",
+       "value": 4
+      },
+      {
+       "key": "boq_cable_m",
+       "label": "Cable length in the bill of quantities",
+       "review_status": null,
+       "source": "boq.totals.cable_m",
+       "unit": "m",
+       "value": 55.5
+      }
+     ],
+     "title": "Cables and installation"
+    },
+    {
+     "id": "protection_earthing",
+     "items": [
+      {
+       "key": "protective_device.mcb",
+       "label": "Circuits protected by mcb",
+       "review_status": null,
+       "source": "count of the circuits given",
+       "unit": "circuits",
+       "value": 3
+      },
+      {
+       "key": "protective_device.mccb",
+       "label": "Circuits protected by mccb",
+       "review_status": null,
+       "source": "count of the circuits given",
+       "unit": "circuits",
+       "value": 1
+      },
+      {
+       "key": "earthing_system",
+       "label": "Earthing system",
+       "review_status": null,
+       "source": "design_basis.supply.earthing_system",
+       "unit": null,
+       "value": "TN"
+      },
+      {
+       "key": "disconnection_time.sectional.TN",
+       "label": "Maximum disconnection time, sectional circuits, TN",
+       "review_status": "pending review",
+       "source": "design_basis.design_criteria.disconnection_time.sectional.TN",
+       "unit": "s",
+       "value": 2.0
+      },
+      {
+       "key": "disconnection_time.sectional.TN_selectivity",
+       "label": "Maximum disconnection time, sectional circuits, TN, when selectivity justifies it",
+       "review_status": "pending review",
+       "source": "design_basis.design_criteria.disconnection_time.sectional.TN_selectivity",
+       "unit": "s",
+       "value": 5.0
+      },
+      {
+       "key": "disconnection_time.sectional.TT",
+       "label": "Maximum disconnection time, sectional circuits, TT",
+       "review_status": "pending review",
+       "source": "design_basis.design_criteria.disconnection_time.sectional.TT",
+       "unit": "s",
+       "value": 1.0
+      },
+      {
+       "key": "disconnection_time.table.TN",
+       "label": "Maximum disconnection time by voltage, TN, alternating current",
+       "review_status": "pending review",
+       "source": "design_basis.design_criteria.disconnection_time.table.TN",
+       "unit": "s",
+       "value": 0.2
+      }
+     ],
+     "title": "Protection and earthing"
+    },
+    {
+     "id": "standards",
+     "items": [
+      {
+       "key": "jurisdiction",
+       "label": "Jurisdiction",
+       "review_status": null,
+       "source": "design_basis.normative_profile.jurisdiction",
+       "unit": null,
+       "value": "AR"
+      },
+      {
+       "key": "revision.90364-7-771",
+       "label": "Revision of 90364-7-771",
+       "review_status": null,
+       "source": "design_basis.normative_profile.revision.90364-7-771",
+       "unit": null,
+       "value": "2006"
+      },
+      {
+       "key": "revision.parts_4_and_5",
+       "label": "Revision of parts_4_and_5",
+       "review_status": null,
+       "source": "design_basis.normative_profile.revision.parts_4_and_5",
+       "unit": null,
+       "value": null
+      },
+      {
+       "key": "criteria_set",
+       "label": "Design criteria set",
+       "review_status": null,
+       "source": "design_basis.design_criteria.criteria_set",
+       "unit": null,
+       "value": "default"
+      }
+     ],
+     "title": "Applicable standards"
+    },
+    {
+     "id": "status_limitations",
+     "items": [
+      {
+       "key": "draft_notice",
+       "label": "Status of this document",
+       "review_status": null,
+       "source": "D21",
+       "unit": null,
+       "value": "This document is a draft and cannot be approved for construction while any norm value is unreviewed (D21)."
+      },
+      {
+       "key": "pending_documents_total",
+       "label": "Pending documents",
+       "review_status": null,
+       "source": "count of the pending documents given",
+       "unit": "documents",
+       "value": 1
+      },
+      {
+       "key": "pending.specification",
+       "label": "Pending document specification",
+       "review_status": null,
+       "source": "pending_documents",
+       "unit": null,
+       "value": "planned"
+      },
+      {
+       "key": "unreviewed_norm_records",
+       "label": "Norm records not reviewed",
+       "review_status": null,
+       "source": "unreviewed_norm_records",
+       "unit": "records",
+       "value": 9
+      },
+      {
+       "key": "open_requirements",
+       "label": "Open requirements of the design basis",
+       "review_status": null,
+       "source": "count of design_basis.open_items",
+       "unit": "requirements",
+       "value": 1
+      }
+     ],
+     "title": "Status and limitations of this draft"
+    }
+   ],
+   "status": "draft"
+  },
+  "text": "MEMORIA DESCRIPTIVA (borrador)\n\n1. Objeto y alcance\nEsta memoria describe la instalacion del proyecto P-1, del cliente Cliente SA, ubicada en Calle 1 (AR). Tipo de instalacion: dwelling.\n\n2. Alimentacion y puesta a tierra\nLa instalacion se alimenta desde utility. La tension de alimentacion es 400 V. El esquema de puesta a tierra es TN. El nivel de cortocircuito disponible es 10 kA, segun utility letter.\n\n3. Organizacion del tablero\nEl tablero esta compuesto por 4 circuitos. Segun su tipo: sin especificar: 4. Segun sus fases: 1: 3; 3: 1.\n\n4. Cables e instalacion\nSe emplean 3 especificaciones de cable distintas: cu, pvc, seccion 1.5 mm2: 1 circuitos; cu, pvc, seccion 10 mm2: 1 circuitos; cu, pvc, seccion 2.5 mm2: 2 circuitos.\n\n5. Proteccion y puesta a tierra\nLos dispositivos de proteccion presentes son: mcb: 3; mccb: 1. El esquema de puesta a tierra es TN. Tiempos de desconexion considerados: Maximum disconnection time, sectional circuits, TN: 2.0 s; Maximum disconnection time, sectional circuits, TN, when selectivity justifies it: 5.0 s; Maximum disconnection time, sectional circuits, TT: 1.0 s; Maximum disconnection time by voltage, TN, alternating current: 0.2 s.\n\n6. Normas aplicables\nLa jurisdiccion normativa es AR. Revisiones aplicables: Revision of 90364-7-771: 2006. Conjunto de criterios de diseno: default.\n\n7. Estado y limitaciones de este borrador\nEste documento es un borrador y no puede aprobarse para construccion mientras algun valor de norma este sin revisar (D21). Requisitos abiertos de la base de diseno: 1.\n\nLos valores copiados conservan su fuente y su estado de revision; ninguna persona verifico un valor marcado como pendiente de revision.\n\nObservaciones\n- not provided: terminals\n- not provided: boq\n- not provided: pending_documents\n- not provided: unreviewed_norm_records\n"
+ },
+ "epc_design_basis": {
+  "build_design_basis_document": {
+   "assumptions": [
+    {
+     "id": "A-01",
+     "reason": "r",
+     "text": "t"
+    }
+   ],
+   "issues": [],
+   "norm_records": [
+    "aea90364.constant.771-19-limites-caida-pct",
+    "aea90364.constant.771-18-t-seccional-s",
+    "aea90364.code.aea_earthing.tiempo_seccional_max_s.selectividad",
+    "aea90364.code.aea_pipeline.c_min_bt",
+    "aea90364.code.system_voltage.u0_380",
+    "aea90364.code.board_memo.u0_v",
+    "aea90364.constant.771-18-iii-tiempos-desconexion-s"
+   ],
+   "open_items": [
+    "R-001"
+   ],
+   "sections": [
+    {
+     "id": "identification",
+     "items": [
+      {
+       "key": "project_code",
+       "label": "Project code",
+       "review_status": null,
+       "source": "profile.project_code",
+       "unit": null,
+       "value": "P-1"
+      },
+      {
+       "key": "client_name",
+       "label": "Client",
+       "review_status": null,
+       "source": "profile.client.name",
+       "unit": null,
+       "value": "Cliente SA"
+      },
+      {
+       "key": "site_address",
+       "label": "Site",
+       "review_status": null,
+       "source": "profile.site.address",
+       "unit": null,
+       "value": "Calle 1"
+      },
+      {
+       "key": "site_country",
+       "label": "Country",
+       "review_status": null,
+       "source": "profile.site.country",
+       "unit": null,
+       "value": "AR"
+      },
+      {
+       "key": "site_installation_type",
+       "label": "Installation type",
+       "review_status": null,
+       "source": "profile.site.installation_type",
+       "unit": null,
+       "value": "dwelling"
+      },
+      {
+       "key": "language",
+       "label": "Language",
+       "review_status": null,
+       "source": "profile.language",
+       "unit": null,
+       "value": "es"
+      }
+     ],
+     "title": "Project identification"
+    },
+    {
+     "id": "supply",
+     "items": [
+      {
+       "key": "supply_source",
+       "label": "Supply source",
+       "review_status": null,
+       "source": "profile.supply.source",
+       "unit": null,
+       "value": "utility"
+      },
+      {
+       "key": "supply_voltage",
+       "label": "Supply voltage",
+       "review_status": null,
+       "source": "profile.supply.voltage",
+       "unit": "V",
+       "value": 400
+      },
+      {
+       "key": "earthing_system",
+       "label": "Earthing system",
+       "review_status": null,
+       "source": "profile.supply.earthing_system",
+       "unit": null,
+       "value": "TN"
+      },
+      {
+       "key": "short_circuit_level",
+       "label": "Short-circuit level",
+       "review_status": null,
+       "source": "profile.supply.short_circuit_level",
+       "unit": "kA",
+       "value": 10
+      },
+      {
+       "key": "short_circuit_origin",
+       "label": "Origin of the short-circuit level",
+       "review_status": null,
+       "source": "profile.supply.short_circuit_level.origin",
+       "unit": null,
+       "value": "utility letter"
+      }
+     ],
+     "title": "Supply data"
+    },
+    {
+     "id": "normative_profile",
+     "items": [
+      {
+       "key": "jurisdiction",
+       "label": "Jurisdiction",
+       "review_status": null,
+       "source": "profile.normative_profile.jurisdiction",
+       "unit": null,
+       "value": "AR"
+      },
+      {
+       "key": "revision.90364-7-771",
+       "label": "Revision of 90364-7-771",
+       "review_status": null,
+       "source": "profile.normative_profile.revisions.90364-7-771",
+       "unit": null,
+       "value": "2006"
+      },
+      {
+       "key": "revision.parts_4_and_5",
+       "label": "Revision of parts_4_and_5",
+       "review_status": null,
+       "source": "profile.normative_profile.revisions.parts_4_and_5",
+       "unit": null,
+       "value": null
+      }
+     ],
+     "title": "Normative profile"
+    },
+    {
+     "id": "design_criteria",
+     "items": [
+      {
+       "key": "criteria_set",
+       "label": "Design criteria set",
+       "review_status": null,
+       "source": "profile.criteria.set",
+       "unit": null,
+       "value": "default"
+      },
+      {
+       "key": "criteria_exceptions",
+       "label": "Exceptions to the criteria",
+       "review_status": null,
+       "source": "profile.criteria.exceptions",
+       "unit": null,
+       "value": [
+        "E1",
+        "E2"
+       ]
+      },
+      {
+       "key": "voltage_drop_limit.iluminacion",
+       "label": "Voltage drop limit, iluminacion",
+       "review_status": "pending review",
+       "source": "epc_voltage_drop.aea_voltage_drop.limite_caida_pct",
+       "unit": "%",
+       "value": 3.0
+      },
+      {
+       "key": "voltage_drop_limit.tomacorrientes",
+       "label": "Voltage drop limit, tomacorrientes",
+       "review_status": "pending review",
+       "source": "epc_voltage_drop.aea_voltage_drop.limite_caida_pct",
+       "unit": "%",
+       "value": 3.0
+      },
+      {
+       "key": "voltage_drop_limit.seccional",
+       "label": "Voltage drop limit, seccional",
+       "review_status": "pending review",
+       "source": "epc_voltage_drop.aea_voltage_drop.limite_caida_pct",
+       "unit": "%",
+       "value": 1.0
+      },
+      {
+       "key": "voltage_drop_limit.motor_regimen",
+       "label": "Voltage drop limit, motor_regimen",
+       "review_status": "pending review",
+       "source": "epc_voltage_drop.aea_voltage_drop.limite_caida_pct",
+       "unit": "%",
+       "value": 5.0
+      },
+      {
+       "key": "voltage_drop_limit.motor_arranque",
+       "label": "Voltage drop limit, motor_arranque",
+       "review_status": "pending review",
+       "source": "epc_voltage_drop.aea_voltage_drop.limite_caida_pct",
+       "unit": "%",
+       "value": 15.0
+      },
+      {
+       "key": "disconnection_time.sectional.TT",
+       "label": "Maximum disconnection time, sectional circuits, TT",
+       "review_status": "pending review",
+       "source": "epc_grounding.aea_earthing.tiempo_seccional_max_s",
+       "unit": "s",
+       "value": 1.0
+      },
+      {
+       "key": "disconnection_time.sectional.TN",
+       "label": "Maximum disconnection time, sectional circuits, TN",
+       "review_status": "pending review",
+       "source": "epc_grounding.aea_earthing.tiempo_seccional_max_s",
+       "unit": "s",
+       "value": 2.0
+      },
+      {
+       "key": "disconnection_time.sectional.TN_selectivity",
+       "label": "Maximum disconnection time, sectional circuits, TN, when selectivity justifies it",
+       "review_status": "pending review",
+       "source": "epc_grounding.aea_earthing.tiempo_seccional_max_s",
+       "unit": "s",
+       "value": 5.0
+      },
+      {
+       "key": "c_min",
+       "label": "Voltage factor c_min for the minimum short-circuit current, low voltage",
+       "review_status": "pending review",
+       "source": "epc_short_circuit.short_circuit.C_MIN_BT",
+       "unit": null,
+       "value": 0.95
+      },
+      {
+       "key": "system_voltage_to_earth",
+       "label": "Phase-to-earth voltage U0 of the declared system",
+       "review_status": "pending review",
+       "source": "epc_load_balance.system_voltage.system_u0",
+       "unit": "V",
+       "value": 230.0
+      },
+      {
+       "key": "disconnection_time.table.TN",
+       "label": "Maximum disconnection time by voltage, TN, alternating current",
+       "review_status": "pending review",
+       "source": "epc_grounding.aea_earthing.tiempo_desconexion_max_s",
+       "unit": "s",
+       "value": 0.2
+      }
+     ],
+     "title": "Design criteria and limits"
+    },
+    {
+     "id": "assumptions",
+     "items": [
+      {
+       "key": "A-01",
+       "label": "Assumption",
+       "review_status": null,
+       "source": "r",
+       "unit": null,
+       "value": "t"
+      }
+     ],
+     "title": "Assumptions"
+    },
+    {
+     "id": "requirements",
+     "items": [
+      {
+       "key": "R-001",
+       "label": "Requirement",
+       "review_status": null,
+       "source": "client",
+       "status": "open",
+       "unit": null,
+       "value": "x"
+      }
+     ],
+     "title": "Requirements and open items"
+    },
+    {
+     "id": "values_note",
+     "items": [
+      {
+       "key": "what_the_values_mean",
+       "label": "Note",
+       "review_status": null,
+       "source": null,
+       "unit": null,
+       "value": "The limits in the design-criteria section are the values the calculation engines will apply, read from the engines' own data, each with its source and its norm-register status. A status of pending review means that no person has verified the value against the standard yet. This document is a draft and does not approve any value."
+      }
+     ],
+     "title": "What the values mean"
+    }
+   ],
+   "status": "draft"
+  },
+  "text": "BASE DE DISENO (borrador)\n\n1. Identificacion del proyecto\n- Codigo de proyecto: P-1 (fuente: profile.project_code)\n- Cliente: Cliente SA (fuente: profile.client.name)\n- Sitio: Calle 1 (fuente: profile.site.address)\n- Pais: AR (fuente: profile.site.country)\n- Tipo de instalacion: dwelling (fuente: profile.site.installation_type)\n- Idioma: es (fuente: profile.language)\n\n2. Datos de alimentacion\n- Fuente de alimentacion: utility (fuente: profile.supply.source)\n- Tension de alimentacion: 400 V (fuente: profile.supply.voltage)\n- Esquema de puesta a tierra: TN (fuente: profile.supply.earthing_system)\n- Nivel de cortocircuito: 10 kA (fuente: profile.supply.short_circuit_level)\n- Origen del nivel de cortocircuito: utility letter (fuente: profile.supply.short_circuit_level.origin)\n\n3. Perfil normativo\n- Jurisdiccion: AR (fuente: profile.normative_profile.jurisdiction)\n- Revision de 90364-7-771: 2006 (fuente: profile.normative_profile.revisions.90364-7-771)\n- Revision de parts_4_and_5: sin dato (fuente: profile.normative_profile.revisions.parts_4_and_5)\n\n4. Criterios de diseno y limites\n- Conjunto de criterios de diseno: default (fuente: profile.criteria.set)\n- Excepciones a los criterios: E1, E2 (fuente: profile.criteria.exceptions)\n- Limite de caida de tension: iluminacion: 3.0 % (fuente: epc_voltage_drop.aea_voltage_drop.limite_caida_pct; estado: pendiente de revision)\n- Limite de caida de tension: tomacorrientes: 3.0 % (fuente: epc_voltage_drop.aea_voltage_drop.limite_caida_pct; estado: pendiente de revision)\n- Limite de caida de tension: seccional: 1.0 % (fuente: epc_voltage_drop.aea_voltage_drop.limite_caida_pct; estado: pendiente de revision)\n- Limite de caida de tension: motor_regimen: 5.0 % (fuente: epc_voltage_drop.aea_voltage_drop.limite_caida_pct; estado: pendiente de revision)\n- Limite de caida de tension: motor_arranque: 15.0 % (fuente: epc_voltage_drop.aea_voltage_drop.limite_caida_pct; estado: pendiente de revision)\n- Tiempo maximo de desconexion de seccionales: TT: 1.0 s (fuente: epc_grounding.aea_earthing.tiempo_seccional_max_s; estado: pendiente de revision)\n- Tiempo maximo de desconexion de seccionales: TN: 2.0 s (fuente: epc_grounding.aea_earthing.tiempo_seccional_max_s; estado: pendiente de revision)\n- Tiempo maximo de desconexion de seccionales: TN_selectivity: 5.0 s (fuente: epc_grounding.aea_earthing.tiempo_seccional_max_s; estado: pendiente de revision)\n- Factor de tension c minimo: 0.95 (fuente: epc_short_circuit.short_circuit.C_MIN_BT; estado: pendiente de revision)\n- Tension fase-tierra del sistema: 230.0 V (fuente: epc_load_balance.system_voltage.system_u0; estado: pendiente de revision)\n- Tiempo maximo de desconexion segun tension: TN: 0.2 s (fuente: epc_grounding.aea_earthing.tiempo_desconexion_max_s; estado: pendiente de revision)\n\n5. Supuestos\n\n6. Requisitos y puntos abiertos\n\n7. Que significan los valores\n- Nota: Los limites listados son los que aplicaran los motores de calculo, leidos de sus propios datos. Un estado pendiente de revision indica que ninguna persona verifico el valor. Este documento es un borrador.\n"
+ },
+ "epc_feeder_sizing": {
+  "current_neutral_harmonics(100, 30)": 90.0,
+  "factor_harmonics(22)": {
+   "aplicado_a": "linea",
+   "factor": 0.86
+  },
+  "iz_admisible(16)": 59,
+  "k_material('cu', 'pvc')": 115.0,
+  "neutral_section(70)": 35,
+  "pe_section(35)": 16,
+  "resistencia_cu_ohm_km(16)": 1.375975,
+  "seccion_comercial_superior(13.2, [1.5, 2.5, 4, 6, 10, 16, 25])": 16,
+  "seccion_minima_mm2(10000, 0.5, 115)": 61.48754619,
+  "section_min_circuit('tomacorrientes')": 2.5,
+  "thd_pct({1: 100, 3: 20, 5: 10})": 21.821789024,
+  "tiempo_maximo_s(10000, 115, 16)": 0.033856,
+  "verificar_i2t(10000, 0.5, 115, 16)": {
+   "advertencias": [],
+   "cumple": false,
+   "i2t": 50000000.0,
+   "i_max_a": 2602.152954766,
+   "k2s2": 3385600,
+   "margen": 0.067712,
+   "s_min_mm2": 61.48754619,
+   "t_max_s": 0.033856
+  }
+ },
+ "epc_grounding": {
+  "ra_maxima(0.03)": {
+   "adoptada": 40.0,
+   "col1_50v": 1666.666666667,
+   "col2_24v": 800.0
+  },
+  "resistance_parallel([10, 20, 30])": 5.454545455,
+  "resistance_rod(100, 2.4, 0.016)": 40.386076343,
+  "seccion_pe_mm2(35)": 16,
+  "tiempo_desconexion_max_s('TN', 230)": 0.2,
+  "tiempo_seccional_max_s('TN')": 2.0,
+  "verifica_ra(20, 0.03)": true,
+  "zs_maxima(230, 160)": 1.365625
+ },
+ "epc_hvac": {
+  "conduction_w(0.35, 40, 12)": 168.0,
+  "infiltration_ls(150, 0.5)": 20.833333333,
+  "internal_w(60, 12)": 720.0,
+  "people_w(10)": {
+   "latent": 550.0,
+   "sensible": 750.0
+  },
+  "run": {
+   "spaces": [
+    {
+     "area_m2": 50.0,
+     "id": "S1",
+     "latent_w": 1924.8,
+     "name": "Office",
+     "parts_w": {
+      "conduction": 349.8,
+      "equipment": 750.0,
+      "infiltration": 496.5,
+      "lighting": 500.0,
+      "people": 1300.0,
+      "solar": 1200.0,
+      "ventilation": 1588.7
+     },
+     "sensible_w": 4260.1,
+     "supply_ls": 346.4,
+     "total_tr": 1.76,
+     "total_w": 6184.9,
+     "ventilation_ls": 40.0
+    }
+   ],
+   "totals": {
+    "latent_w": 1924.8,
+    "sensible_w": 4260.1,
+    "supply_ls": 346.4,
+    "total_tr": 1.76,
+    "total_w": 6184.9,
+    "ventilation_ls": 40.0
+   },
+   "warnings": [
+    "Typical values not yet confirmed by the owner: do not use the result to size equipment."
+   ]
+  },
+  "run_bad": {
+   "error": "HvacError: the input needs a non-empty list `spaces`"
+  },
+  "solar_w(6, 0.4, 'W')": 1200.0
+ },
+ "epc_lighting": {
+  "run": {
+   "areas": [
+    {
+     "area_m2": 800.0,
+     "energy": {
+      "annual_energy_kwh": null,
+      "installed_power_w": 1290.0,
+      "power_density_w_m2": 1.613,
+      "power_density_w_m2_per_100lx": 2.625
+     },
+     "factors": {
+      "beam_utilisation": {
+       "confidence": 1.0,
+       "reason": "given in the document",
+       "value": 0.7
+      },
+      "maintenance": {
+       "confidence": 0.8,
+       "reason": "Open fixture: UNAC chapter III, section 5",
+       "value": 0.65
+      }
+     },
+     "flux": {
+      "beam_flux_per_luminaire_lm": 36000.0,
+      "luminaires_exact": 2.442,
+      "luminaires_required": 3
+     },
+     "id": "A1",
+     "luminaire": {
+      "flux_lm": 36000.0,
+      "id": "F1",
+      "lamp_flux_lm": 36000.0,
+      "lamps": 1,
+      "name": "Floodlight, 1 x 400 W metal halide, 36000 lm (illustrative)"
+     },
+     "method": "floodlight",
+     "name": "Yard",
+     "tags": [
+      "LU-005",
+      "LU-006",
+      "LU-007"
+     ],
+     "target": {
+      "confidence": 1.0,
+      "reason": "given in the document",
+      "value": 50.0
+     },
+     "verification": {
+      "average_lux": 61.425,
+      "complies": true,
+      "margin_pct": 22.85,
+      "target_lux": 50.0
+     }
+    }
+   ],
+   "emergency": [],
+   "rooms": [
+    {
+     "energy": {
+      "annual_energy_kwh": 230.4,
+      "installed_power_w": 128.0,
+      "power_density_w_m2": 5.333,
+      "power_density_w_m2_per_100lx": 1.718
+     },
+     "factors": {
+      "cu": {
+       "confidence": 1.0,
+       "reason": "given in the room (project or manufacturer value)",
+       "value": 0.97
+      },
+      "maintenance": {
+       "confidence": 0.8,
+       "reason": "Clean environment: UPV article, table 6",
+       "value": 0.8
+      }
+     },
+     "flux": {
+      "luminaires_exact": 1.933,
+      "luminaires_required": 2,
+      "required_installed_lm": 9278.351,
+      "required_lm": 9278.351
+     },
+     "geometry": {
+      "area_m2": 24.0,
+      "height_m": 2.6,
+      "index_formula": "direct",
+      "length_m": 6.0,
+      "mounting_height_m": {
+       "confidence": 1.0,
+       "reason": "luminaires as high as possible (UPV table 1)",
+       "value": 1.75
+      },
+      "room_index_k": 1.371,
+      "width_m": 4.0,
+      "work_plane_height_m": 0.85
+     },
+     "id": "R1",
+     "layout": {
+      "columns_along_length": 2,
+      "installed": 2,
+      "max_spacing": {
+       "confidence": 0.9,
+       "reason": "UPV table 7, Extensive (<= 4 m), room height 2.6 m",
+       "value": 1.6
+      },
+      "positions": [
+       {
+        "tag": "LU-001",
+        "x_m": 1.5,
+        "y_m": 2.0,
+        "z_m": 2.6
+       },
+       {
+        "tag": "LU-002",
+        "x_m": 4.5,
+        "y_m": 2.0,
+        "z_m": 2.6
+       }
+      ],
+      "required": 2,
+      "rows_across_width": 1,
+      "spacing_check": {
+       "across_width": {
+        "checked": false,
+        "reason": "a single luminaire on this axis: no spacing to check (UNAC 2.6)"
+       },
+       "along_length": {
+        "checked": true,
+        "max_spacing_m": 2.8,
+        "ratio_used": 1.714,
+        "spacing_m": 3.0,
+        "status": "within_tolerance"
+       }
+      },
+      "spacing_x_m": 3.0,
+      "spacing_y_m": 4.0,
+      "wall_distance_x_m": 1.5,
+      "wall_distance_y_m": 2.0
+     },
+     "lighting_system": "direct",
+     "luminaire": {
+      "efficiency": 1.0,
+      "flux_lm": 4800.0,
+      "id": "L1",
+      "lamp_flux_lm": 2400.0,
+      "lamps": 2,
+      "name": "Recessed downlight, 2 x 32 W compact fluorescent, 2400 lm per lamp (UPV article example; the intensity curve is illustrative and keeps only the article reading of 525 cd/klm at 25.64 deg)"
+     },
+     "method": "lumen",
+     "name": "Classroom (UPV article: CU as printed there)",
+     "points": {
+      "avg_lux": 252.54,
+      "component": "direct only (inter-reflections not included)",
+      "computed": true,
+      "grid_points": 96,
+      "maintenance_factor": 0.8,
+      "max_lux": 635.561,
+      "max_over_avg": 2.517,
+      "max_over_min": 18.116,
+      "min_lux": 35.083,
+      "min_over_avg": 0.139,
+      "photometry_output_ratio": 0.863,
+      "plane_height_m": 0.85,
+      "points": []
+     },
+     "reflectances": {
+      "ceiling": {
+       "confidence": 0.7,
+       "reason": "material 'white_acoustic_ceiling' (UPV table 4, range 0.5-0.65), midpoint taken",
+       "value": 0.575
+      },
+      "floor": {
+       "confidence": 0.7,
+       "reason": "material 'dark_grey' (UPV table 4, range 0.1-0.2), midpoint taken",
+       "value": 0.15
+      },
+      "walls": {
+       "confidence": 0.7,
+       "reason": "material 'white_paint' (UPV table 4, range 0.7-0.85), midpoint taken",
+       "value": 0.775
+      }
+     },
+     "target": {
+      "activity": "education.classroom",
+      "confidence": 0.9,
+      "ra_min": 80,
+      "reason": "activity 'education.classroom': UNE-EN 12464-1:2003 table 6.2.1, as quoted in the UPV lumen-method article (fig. 2)",
+      "ugr_l_max": 19,
+      "value": 300.0
+     },
+     "ugr": {
+      "calculated": null,
+      "complies": null,
+      "limit": 19,
+      "reason": "UGR needs the photometry of the luminaires and an external calculation: give 'ugr_calculated' to compare it with the limit of the activity",
+      "result": "not_verifiable"
+     },
+     "verification": {
+      "average_lux": 310.4,
+      "complies": true,
+      "direct_check": {
+       "complies": false,
+       "direct_factor": 0.9,
+       "direct_min_acceptable_lux": 270.0,
+       "direct_ok": false,
+       "flux_ok": true
+      },
+      "margin_pct": 3.467,
+      "method": "average illuminance E_m = N * n * Phi_L * C_u * C_m / S",
+      "target_lux": 300.0
+     }
+    },
+    {
+     "energy": {
+      "annual_energy_kwh": null,
+      "installed_power_w": 128.0,
+      "power_density_w_m2": 5.333,
+      "power_density_w_m2_per_100lx": 1.725
+     },
+     "factors": {
+      "cu": {
+       "confidence": 0.4,
+       "reason": "generic illustrative table, interpolated between reflectance columns of the table (inverse-distance weighting) (k = 1.371, ceiling/walls/floor = 0.600/0.750/0.280)",
+       "value": 0.966
+      },
+      "maintenance": {
+       "confidence": 0.8,
+       "reason": "Clean environment: UPV article, table 6",
+       "value": 0.8
+      }
+     },
+     "flux": {
+      "luminaires_exact": 1.94,
+      "luminaires_required": 2,
+      "required_installed_lm": 9313.854,
+      "required_lm": 9313.854
+     },
+     "geometry": {
+      "area_m2": 24.0,
+      "ceiling_cavity_ratio": 0.0,
+      "effective_ceiling_reflectance": 0.6,
+      "effective_floor_reflectance": 0.28,
+      "floor_cavity_ratio": 1.771,
+      "height_m": 2.6,
+      "length_m": 6.0,
+      "mounting_height_m": {
+       "confidence": 1.0,
+       "reason": "luminaires as high as possible (UPV table 1)",
+       "value": 1.75
+      },
+      "room_cavity_ratio": 3.646,
+      "width_m": 4.0,
+      "work_plane_height_m": 0.85
+     },
+     "id": "R2",
+     "layout": {
+      "columns_along_length": 2,
+      "installed": 2,
+      "max_spacing": {
+       "confidence": 0.9,
+       "reason": "UPV table 7, Extensive (<= 4 m), room height 2.6 m",
+       "value": 1.6
+      },
+      "positions": [
+       {
+        "tag": "LU-003",
+        "x_m": 1.5,
+        "y_m": 2.0,
+        "z_m": 2.6
+       },
+       {
+        "tag": "LU-004",
+        "x_m": 4.5,
+        "y_m": 2.0,
+        "z_m": 2.6
+       }
+      ],
+      "required": 2,
+      "rows_across_width": 1,
+      "spacing_check": {
+       "across_width": {
+        "checked": false,
+        "reason": "a single luminaire on this axis: no spacing to check (UNAC 2.6)"
+       },
+       "along_length": {
+        "checked": true,
+        "max_spacing_m": 2.8,
+        "ratio_used": 1.714,
+        "spacing_m": 3.0,
+        "status": "within_tolerance"
+       }
+      },
+      "spacing_x_m": 3.0,
+      "spacing_y_m": 4.0,
+      "wall_distance_x_m": 1.5,
+      "wall_distance_y_m": 2.0
+     },
+     "lighting_system": "direct",
+     "luminaire": {
+      "efficiency": 1.0,
+      "flux_lm": 4800.0,
+      "id": "L1",
+      "lamp_flux_lm": 2400.0,
+      "lamps": 2,
+      "name": "Recessed downlight, 2 x 32 W compact fluorescent, 2400 lm per lamp (UPV article example; the intensity curve is illustrative and keeps only the article reading of 525 cd/klm at 25.64 deg)"
+     },
+     "method": "zonal",
+     "name": "Classroom by the zonal cavity method (CU from the generic table)",
+     "points": {
+      "avg_lux": 252.54,
+      "component": "direct only (inter-reflections not included)",
+      "computed": true,
+      "grid_points": 96,
+      "maintenance_factor": 0.8,
+      "max_lux": 635.561,
+      "max_over_avg": 2.517,
+      "max_over_min": 18.116,
+      "min_lux": 35.083,
+      "min_over_avg": 0.139,
+      "photometry_output_ratio": 0.863,
+      "plane_height_m": 0.85,
+      "points": []
+     },
+     "reflectances": {
+      "ceiling": {
+       "confidence": 1.0,
+       "reason": "given",
+       "value": 0.6
+      },
+      "floor": {
+       "confidence": 1.0,
+       "reason": "given",
+       "value": 0.15
+      },
+      "walls": {
+       "confidence": 1.0,
+       "reason": "given",
+       "value": 0.75
+      }
+     },
+     "target": {
+      "confidence": 1.0,
+      "reason": "given in the document",
+      "value": 300.0
+     },
+     "ugr": {
+      "calculated": null,
+      "complies": null,
+      "limit": null,
+      "reason": "UGR needs the photometry of the luminaires and an external calculation: give 'ugr_calculated' to compare it with the limit of the activity",
+      "result": "not_verifiable"
+     },
+     "verification": {
+      "average_lux": 309.217,
+      "complies": true,
+      "direct_check": {
+       "complies": false,
+       "direct_factor": 0.9,
+       "direct_min_acceptable_lux": 270.0,
+       "direct_ok": false,
+       "flux_ok": true
+      },
+      "margin_pct": 3.072,
+      "method": "average illuminance E_m = N * n * Phi_L * C_u * C_m / S",
+      "target_lux": 300.0
+     }
+    }
+   ],
+   "warnings": [
+    "room 'R1': spacing along the length (3.0 m) is above the maximum 2.8 m (1.6 x h) but within the 10% tolerance (the UPV article accepts 3 m against 2.8 m); acceptable",
+    "room 'R1': min/avg illuminance 0.139 is below 0.333: the darkest zone is too dark",
+    "room 'R1': max/min illuminance is above 10.0: strong contrast between zones",
+    "room 'R2': luminaire 'L1' has no cu or cu_table: an illustrative table from the UPV article was used; give the manufacturer's CU table for a reliable result",
+    "room 'R2': spacing along the length (3.0 m) is above the maximum 2.8 m (1.6 x h) but within the 10% tolerance (the UPV article accepts 3 m against 2.8 m); acceptable",
+    "room 'R2': min/avg illuminance 0.139 is below 0.333: the darkest zone is too dark",
+    "room 'R2': max/min illuminance is above 10.0: strong contrast between zones"
+   ]
+  },
+  "run_bad": {
+   "areas": [],
+   "emergency": [],
+   "rooms": [],
+   "warnings": [
+    "the document has no rooms, areas or emergency rooms, so nothing was calculated: add at least one entry to 'rooms', 'areas' or 'emergency'"
+   ]
+  }
+ },
+ "epc_load_balance": {
+  "coef_simultaneity_770(8)": 0.6,
+  "coef_simultaneity_771('elevado')": 0.8,
+  "corriente_monofasica(2300, 230, 0.95)": 10.526315789,
+  "corriente_trifasica(15000, 400, 0.9)": 24.056261216,
+  "dpms_total(8000, 0.8, 2000)": 8400.0,
+  "grade_electrification_771('vivienda', 80)": {
+   "dpms_ref_kva": 7.0,
+   "grado": "medio"
+  },
+  "imbalance_phases([20, 30, 25])": {
+   "cumple": false,
+   "desequilibrio_pct": 33.333333333
+  },
+  "msd_lighting_general(12)": 1188.0
+ },
+ "epc_plan": {
+  "process": {
+   "circuits": {
+    "C-01": {
+     "cable_length_m": 120.0,
+     "destination_distance_m": 60.0,
+     "distance_to_load_m": {},
+     "found": true,
+     "from": "n1",
+     "length_m": 60.0,
+     "lines": [
+      "l1",
+      "l2"
+     ],
+     "loads": 0,
+     "loads_detail": [
+      {
+       "distance_m": 60.0,
+       "power_w": null,
+       "tag": "CP-001"
+      }
+     ],
+     "max_distance_m": 60.0,
+     "moment_length_m": 60.0,
+     "plenums": [],
+     "rise_m": 0,
+     "stretches": [
+      "BN-001/1",
+      "BN-001/2",
+      "BN-001/3",
+      "BN-001/4",
+      "CN-001"
+     ],
+     "ternas": 2,
+     "to": "n3",
+     "unreached": []
+    },
+    "C-05": {
+     "cable_length_m": 30.0,
+     "destination_distance_m": null,
+     "distance_to_load_m": {
+      "LU-001": 20.0,
+      "TG-001": 30.0
+     },
+     "found": true,
+     "from": "n1",
+     "length_m": 30.0,
+     "lines": [
+      "l1"
+     ],
+     "loads": 2,
+     "loads_detail": [
+      {
+       "distance_m": 20.0,
+       "power_w": null,
+       "tag": "LU-001"
+      },
+      {
+       "distance_m": 30.0,
+       "power_w": null,
+       "tag": "TG-001"
+      }
+     ],
+     "max_distance_m": 30.0,
+     "moment_length_m": 25.0,
+     "plenums": [],
+     "rise_m": 0,
+     "stretches": [
+      "BN-001/1",
+      "BN-001/2",
+      "BN-001/3"
+     ],
+     "ternas": 1,
+     "to": "",
+     "unreached": []
+    }
+   },
+   "discipline": "electrica_BT",
+   "network": null,
+   "nodes": [
+    {
+     "attrs": {},
+     "id": "n1",
+     "kind": "TB",
+     "placed": true,
+     "tag": "TB-001",
+     "x_m": 0.0,
+     "y_m": 0.0
+    },
+    {
+     "attrs": {},
+     "id": "n2",
+     "kind": "CM",
+     "placed": true,
+     "tag": "CM-001",
+     "x_m": 40.0,
+     "y_m": 0.0
+    },
+    {
+     "attrs": {},
+     "id": "n3",
+     "kind": "CP",
+     "placed": true,
+     "tag": "CP-001",
+     "x_m": 40.0,
+     "y_m": 20.0
+    },
+    {
+     "attrs": {},
+     "circuit": "C-05",
+     "id": "n4",
+     "kind": "LU",
+     "placed": true,
+     "tag": "LU-001",
+     "x_m": 20.0,
+     "y_m": 0.0
+    },
+    {
+     "attrs": {},
+     "circuit": "C-05",
+     "id": "n5",
+     "kind": "TG",
+     "placed": true,
+     "tag": "TG-001",
+     "x_m": 30.0,
+     "y_m": 0.0
+    },
+    {
+     "attrs": {},
+     "id": "n6",
+     "kind": "HV",
+     "placed": true,
+     "tag": "HV-001",
+     "x_m": 10.0,
+     "y_m": 0.0
+    },
+    {
+     "attrs": {},
+     "id": "auto:E1",
+     "kind": "E",
+     "placed": false,
+     "tag": "E-001",
+     "x_m": 20.0,
+     "y_m": 15.0
+    },
+    {
+     "attrs": {},
+     "id": "auto:E2",
+     "kind": "E",
+     "placed": false,
+     "tag": "E-002",
+     "x_m": 5.0,
+     "y_m": 5.0
+    },
+    {
+     "attrs": {},
+     "id": "auto:E3",
+     "kind": "E",
+     "placed": false,
+     "tag": "E-003",
+     "x_m": 15.0,
+     "y_m": -5.0
+    }
+   ],
+   "plan": {
+    "id": "PLAN-L0",
+    "level": "L0",
+    "level_number": 0,
+    "metres_per_unit": 0.1,
+    "origin": [
+     100,
+     300
+    ]
+   },
+   "rules_used": [],
+   "schedule": {
+    "circuit_routes": {
+     "C-01": {
+      "length_m": 60.0,
+      "stretches": [
+       "BN-001/1",
+       "BN-001/2",
+       "BN-001/3",
+       "BN-001/4",
+       "CN-001"
+      ]
+     },
+     "C-02": {
+      "length_m": 15.0,
+      "stretches": [
+       "CN-002"
+      ]
+     }
+    },
+    "containers": [
+     {
+      "cables": 3,
+      "circuits": [
+       "C-01",
+       "C-05"
+      ],
+      "kind": "BN",
+      "line": "l1",
+      "tag": "BN-001/1"
+     },
+     {
+      "cables": 3,
+      "circuits": [
+       "C-01",
+       "C-05"
+      ],
+      "kind": "BN",
+      "line": "l1",
+      "tag": "BN-001/2"
+     },
+     {
+      "cables": 3,
+      "circuits": [
+       "C-01",
+       "C-05"
+      ],
+      "kind": "BN",
+      "line": "l1",
+      "tag": "BN-001/3"
+     },
+     {
+      "cables": 2,
+      "circuits": [
+       "C-01"
+      ],
+      "kind": "BN",
+      "line": "l1",
+      "tag": "BN-001/4"
+     },
+     {
+      "cables": 2,
+      "circuits": [
+       "C-01"
+      ],
+      "fill": {
+       "cable_mm": 14.0,
+       "limit_pct": 31.0,
+       "status": "ok",
+       "used_pct": 9.9
+      },
+      "kind": "CN",
+      "line": "l2",
+      "tag": "CN-001"
+     }
+    ],
+    "length_by_line_m": {
+     "BN-001": 40.0,
+     "CN-001": 20.0,
+     "CN-002": 15.0,
+     "CN-003": 14.1422
+    },
+    "lines": {
+     "BN": {
+      "length_m": 40.0,
+      "lines": 1,
+      "stretches": 4
+     },
+     "CA": {
+      "length_m": 0,
+      "lines": 0,
+      "stretches": 0
+     },
+     "CD": {
+      "length_m": 0,
+      "lines": 0,
+      "stretches": 0
+     },
+     "CN": {
+      "length_m": 49.1422,
+      "lines": 3,
+      "stretches": 4
+     },
+     "CR": {
+      "length_m": 0,
+      "lines": 0,
+      "stretches": 0
+     },
+     "MT": {
+      "length_m": 0,
+      "lines": 0,
+      "stretches": 0
+     }
+    },
+    "loads": {
+     "by_circuit": {
+      "C-05": {
+       "LU": 1,
+       "TG": 1
+      }
+     },
+     "unassigned": [
+      "HV-001"
+     ]
+    },
+    "nodes": {
+     "CE": 0,
+     "CM": 1,
+     "CP": 1,
+     "CT": 0,
+     "HV": 1,
+     "IN": 0,
+     "LE": 0,
+     "LU": 1,
+     "MO": 0,
+     "PL": 0,
+     "PT": 0,
+     "TB": 1,
+     "TE": 0,
+     "TG": 1,
+     "TR": 0
+    },
+    "total_length_m": 89.1422
+   },
+   "schema_version": "1.0",
+   "stretches": [
+    {
+     "attrs": {
+      "ancho_mm": 300
+     },
+     "cables": 3,
+     "carries": [
+      {
+       "circuit": "C-01",
+       "ternas": 2
+      },
+      {
+       "circuit": "C-05",
+       "ternas": 1
+      }
+     ],
+     "circuit": "C-01",
+     "from": "n1",
+     "kind": "BN",
+     "length_m": 10.0,
+     "line": "l1",
+     "line_tag": "BN-001",
+     "points_m": [
+      [
+       0.0,
+       0.0
+      ],
+      [
+       10.0,
+       0.0
+      ]
+     ],
+     "tag": "BN-001/1",
+     "to": "n6"
+    },
+    {
+     "attrs": {
+      "ancho_mm": 300
+     },
+     "cables": 3,
+     "carries": [
+      {
+       "circuit": "C-01",
+       "ternas": 2
+      },
+      {
+       "circuit": "C-05",
+       "ternas": 1
+      }
+     ],
+     "circuit": "C-01",
+     "from": "n6",
+     "kind": "BN",
+     "length_m": 10.0,
+     "line": "l1",
+     "line_tag": "BN-001",
+     "points_m": [
+      [
+       10.0,
+       0.0
+      ],
+      [
+       20.0,
+       0.0
+      ]
+     ],
+     "tag": "BN-001/2",
+     "to": "n4"
+    },
+    {
+     "attrs": {
+      "ancho_mm": 300
+     },
+     "cables": 3,
+     "carries": [
+      {
+       "circuit": "C-01",
+       "ternas": 2
+      },
+      {
+       "circuit": "C-05",
+       "ternas": 1
+      }
+     ],
+     "circuit": "C-01",
+     "from": "n4",
+     "kind": "BN",
+     "length_m": 10.0,
+     "line": "l1",
+     "line_tag": "BN-001",
+     "points_m": [
+      [
+       20.0,
+       0.0
+      ],
+      [
+       30.0,
+       0.0
+      ]
+     ],
+     "tag": "BN-001/3",
+     "to": "n5"
+    },
+    {
+     "attrs": {
+      "ancho_mm": 300
+     },
+     "cables": 2,
+     "carries": [
+      {
+       "circuit": "C-01",
+       "ternas": 2
+      }
+     ],
+     "circuit": "C-01",
+     "from": "n5",
+     "kind": "BN",
+     "length_m": 10.0,
+     "line": "l1",
+     "line_tag": "BN-001",
+     "points_m": [
+      [
+       30.0,
+       0.0
+      ],
+      [
+       40.0,
+       0.0
+      ]
+     ],
+     "tag": "BN-001/4",
+     "to": "n2"
+    },
+    {
+     "attrs": {
+      "diametro_mm": 63
+     },
+     "cables": 2,
+     "carries": [
+      {
+       "circuit": "C-01",
+       "ternas": 2
+      }
+     ],
+     "circuit": "C-01",
+     "from": "n2",
+     "kind": "CN",
+     "length_m": 20.0,
+     "line": "l2",
+     "line_tag": "CN-001",
+     "points_m": [
+      [
+       40.0,
+       0.0
+      ],
+      [
+       40.0,
+       20.0
+      ]
+     ],
+     "tag": "CN-001",
+     "to": "n3"
+    },
+    {
+     "attrs": {},
+     "circuit": "C-02",
+     "from": "n4",
+     "kind": "CN",
+     "length_m": 15.0,
+     "line": "l3",
+     "line_tag": "CN-002",
+     "points_m": [
+      [
+       20.0,
+       0.0
+      ],
+      [
+       20.0,
+       15.0
+      ]
+     ],
+     "tag": "CN-002",
+     "to": "auto:E1"
+    },
+    {
+     "attrs": {},
+     "circuit": null,
+     "from": "auto:E2",
+     "kind": "CN",
+     "length_m": 7.0711,
+     "line": "l4",
+     "line_tag": "CN-003",
+     "points_m": [
+      [
+       5.0,
+       5.0
+      ],
+      [
+       10.0,
+       0.0
+      ]
+     ],
+     "tag": "CN-003/1",
+     "to": "n6"
+    },
+    {
+     "attrs": {},
+     "circuit": null,
+     "from": "n6",
+     "kind": "CN",
+     "length_m": 7.0711,
+     "line": "l4",
+     "line_tag": "CN-003",
+     "points_m": [
+      [
+       10.0,
+       0.0
+      ],
+      [
+       15.0,
+       -5.0
+      ]
+     ],
+     "tag": "CN-003/2",
+     "to": "auto:E3"
+    }
+   ],
+   "warnings": [
+    "line l3 has a free end at (20.00, 15.00) m",
+    "line l4 has a free end at (5.00, 5.00) m",
+    "line l4 has a free end at (15.00, -5.00) m",
+    "1 load(s) have no circuit yet: HV-001"
+   ]
+  },
+  "process_bad": {
+   "error": "PlanError: the scale needs two points (p1, p2) and the real distance between them (distance_m)"
+  }
+ },
+ "epc_pv": {
+  "run": {
+   "arrays": [
+    {
+     "ac_kw": 500.0,
+     "ac_kwh": 6571.189,
+     "capacity_factor": 0.18253,
+     "clipping_kwh": 0.0,
+     "dc_ac_ratio": 1.1088,
+     "dc_kwh": 6853.882,
+     "dc_kwp": 554.4,
+     "id": "A1",
+     "inverter_ac_kw": 100.0,
+     "inverters": 5,
+     "modules": 1008,
+     "monthly_ac_kwh": [
+      6571.189,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ],
+     "name": "A1",
+     "peak_ac_kw": 345.495,
+     "performance_ratio": 0.78257,
+     "poa_kwh_m2": 15.146,
+     "specific_yield_kwh_kwp": 11.853,
+     "strings": {
+      "n_series": 14,
+      "series_range": {
+       "s_max": 20,
+       "s_min": 5
+      },
+      "strings": 72,
+      "strings_per_inverter": 15,
+      "strings_per_mppt": 2,
+      "strings_per_mppt_limit": 2
+     }
+    }
+   ],
+   "hours": 72,
+   "totals": {
+    "ac_kw": 500.0,
+    "ac_kwh": 6571.189,
+    "clipping_kwh": 0.0,
+    "dc_kwh": 6853.882,
+    "dc_kwp": 554.4,
+    "monthly_ac_kwh": [
+     6571.189,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "specific_yield_kwh_kwp": 11.853
+   },
+   "warnings": [
+    {
+     "code": "typical_values",
+     "en": "Typical values not yet confirmed by the owner: do not use the result to size or to sell a plant.",
+     "es": "Valores típicos aún no confirmados por el dueño: no usar el resultado para dimensionar ni para vender una planta."
+    },
+    {
+     "code": "wind_proxy",
+     "en": "The temperature coefficient of the maximum-power voltage is taken equal to that of the open-circuit voltage.",
+     "es": "El coeficiente de temperatura de la tensión de máxima potencia se toma igual al de la tensión de circuito abierto."
+    }
+   ]
+  },
+  "run_bad": {
+   "error": "PvError: the input is missing: weather, arrays"
+  }
+ },
+ "epc_receptacles": {
+  "run": {
+   "rooms": [
+    {
+     "area_m2": 40.0,
+     "basis": "area",
+     "checks": [
+      {
+       "id": "mounting_height",
+       "message": "mounting height 0.3 m (complies: at least 0.15 m, AEA 90364-7-771; typical value to verify)",
+       "ok": true
+      }
+     ],
+     "circuits_min": 1,
+     "estimate": {
+      "confidence": 0.9,
+      "reason": "one outlet per 9 m² of 40.0 m², at least 2",
+      "source": "AEA 90364-7-771 (2006), Tabla 771.8.VI (oficinas y locales): una boca cada 9 m² o fracción, mínimo dos"
+     },
+     "family": "TUG",
+     "id": "R1",
+     "installed": 5,
+     "layout": {
+      "mode": "proposed",
+      "positions": [
+       {
+        "tag": "R1",
+        "wall": "south",
+        "x_m": 2.6,
+        "y_m": 0.0,
+        "z_m": 0.3
+       },
+       {
+        "tag": "R2",
+        "wall": "south",
+        "x_m": 7.7,
+        "y_m": 0.0,
+        "z_m": 0.3
+       },
+       {
+        "tag": "R3",
+        "wall": "north",
+        "x_m": 7.7,
+        "y_m": 5.0,
+        "z_m": 0.3
+       },
+       {
+        "tag": "R4",
+        "wall": "north",
+        "x_m": 2.8,
+        "y_m": 5.0,
+        "z_m": 0.3
+       },
+       {
+        "tag": "R5",
+        "wall": "west",
+        "x_m": 0.0,
+        "y_m": 2.6,
+        "z_m": 0.3
+       }
+      ]
+     },
+     "load_va": 500.0,
+     "name": "Open office",
+     "perimeter_m": 26.0,
+     "power_va_each": 100.0,
+     "receptacle": "tug",
+     "required": 5,
+     "use": "office"
+    },
+    {
+     "area_m2": 240.0,
+     "basis": "perimeter",
+     "checks": [
+      {
+       "id": "mounting_height",
+       "message": "mounting height 0.3 m (complies: at least 0.15 m, AEA 90364-7-771; typical value to verify)",
+       "ok": true
+      }
+     ],
+     "circuits_min": 1,
+     "estimate": {
+      "confidence": 0.7,
+      "reason": "one outlet per 9 m of a perimeter of 64.0 m, at least 2",
+      "source": "AEA 90364-7-771, rule tomacorrientes.deposito_perimetro (one outlet per 9 m of perimeter, at least 2)"
+     },
+     "family": "TUG",
+     "id": "R2",
+     "installed": 8,
+     "layout": {
+      "mode": "proposed",
+      "positions": [
+       {
+        "tag": "R1",
+        "wall": "south",
+        "x_m": 4.0,
+        "y_m": 0.0,
+        "z_m": 0.3
+       },
+       {
+        "tag": "R2",
+        "wall": "south",
+        "x_m": 12.0,
+        "y_m": 0.0,
+        "z_m": 0.3
+       },
+       {
+        "tag": "R3",
+        "wall": "east",
+        "x_m": 20.0,
+        "y_m": 0.3,
+        "z_m": 0.3
+       },
+       {
+        "tag": "R4",
+        "wall": "east",
+        "x_m": 20.0,
+        "y_m": 8.0,
+        "z_m": 0.3
+       },
+       {
+        "tag": "R5",
+        "wall": "north",
+        "x_m": 16.0,
+        "y_m": 12.0,
+        "z_m": 0.3
+       },
+       {
+        "tag": "R6",
+        "wall": "north",
+        "x_m": 8.0,
+        "y_m": 12.0,
+        "z_m": 0.3
+       },
+       {
+        "tag": "R7",
+        "wall": "west",
+        "x_m": 0.0,
+        "y_m": 11.7,
+        "z_m": 0.3
+       },
+       {
+        "tag": "R8",
+        "wall": "west",
+        "x_m": 0.0,
+        "y_m": 4.0,
+        "z_m": 0.3
+       }
+      ]
+     },
+     "load_va": 800.0,
+     "name": "Warehouse",
+     "perimeter_m": 64.0,
+     "power_va_each": 100.0,
+     "receptacle": "tug",
+     "required": 8,
+     "use": "warehouse"
+    },
+    {
+     "area_m2": 9.0,
+     "basis": "fixed",
+     "checks": [
+      {
+       "id": "mounting_height",
+       "message": "mounting height 1.1 m (complies: at least 0.15 m, AEA 90364-7-771; typical value to verify)",
+       "ok": true
+      },
+      {
+       "id": "wet_room_height",
+       "message": "room cleaned by washing or with water nearby: the box goes at least 0.2 m up; check the IP rating",
+       "ok": true
+      }
+     ],
+     "circuits_min": 1,
+     "estimate": {
+      "confidence": 0.9,
+      "reason": "a fixed number for this use, at least 5",
+      "source": "AEA 90364-7-771 (2006), Tabla 771.8.III (viviendas): tres bocas más dos tomacorrientes (grado mínimo y medio)"
+     },
+     "family": "TUG",
+     "id": "R3",
+     "installed": 5,
+     "layout": {
+      "mode": "proposed",
+      "positions": [
+       {
+        "tag": "R1",
+        "wall": "south",
+        "x_m": 1.2,
+        "y_m": 0.0,
+        "z_m": 1.1
+       },
+       {
+        "tag": "R2",
+        "wall": "east",
+        "x_m": 3.0,
+        "y_m": 0.6,
+        "z_m": 1.1
+       },
+       {
+        "tag": "R3",
+        "wall": "north",
+        "x_m": 2.7,
+        "y_m": 3.0,
+        "z_m": 1.1
+       },
+       {
+        "tag": "R4",
+        "wall": "north",
+        "x_m": 0.6,
+        "y_m": 3.0,
+        "z_m": 1.1
+       },
+       {
+        "tag": "R5",
+        "wall": "west",
+        "x_m": 0.0,
+        "y_m": 1.2,
+        "z_m": 1.1
+       }
+      ]
+     },
+     "load_va": 500.0,
+     "name": "Kitchen",
+     "perimeter_m": 12.0,
+     "power_va_each": 100.0,
+     "receptacle": "tug",
+     "required": 5,
+     "use": "kitchen"
+    },
+    {
+     "area_m2": 12.0,
+     "basis": "area",
+     "checks": [
+      {
+       "id": "mounting_height",
+       "message": "mounting height 1.2 m (complies: at least 0.15 m, AEA 90364-7-771; typical value to verify)",
+       "ok": true
+      }
+     ],
+     "circuits_min": 2,
+     "estimate": {
+      "confidence": 0.4,
+      "reason": "the number was chosen by the person",
+      "source": "typical value, to verify"
+     },
+     "family": "TUE",
+     "id": "R4",
+     "installed": 2,
+     "layout": {
+      "mode": "proposed",
+      "positions": [
+       {
+        "tag": "R1",
+        "wall": "south",
+        "x_m": 3.5,
+        "y_m": 0.0,
+        "z_m": 1.2
+       },
+       {
+        "tag": "R2",
+        "wall": "north",
+        "x_m": 0.5,
+        "y_m": 3.0,
+        "z_m": 1.2
+       }
+      ]
+     },
+     "load_va": 4400.0,
+     "name": "Server room",
+     "perimeter_m": 14.0,
+     "power_va_each": 2200.0,
+     "receptacle": "tue",
+     "required": 2,
+     "use": "general"
+    }
+   ],
+   "warnings": []
+  },
+  "run_bad": {
+   "rooms": [],
+   "warnings": []
+  }
+ },
+ "epc_rfq": {
+  "build_rfq": {
+   "assumptions": [
+    "the request is a draft (D21): it is a document, nothing is sent and no supplier is contacted by this engine",
+    "the commercial terms (suppliers, currency, response deadline, delivery site, validity, payment terms) are explicit inputs of the caller; none has a default",
+    "the engine sets no price and no commercial value: every supplier response field of every line is left empty",
+    "the requested quantity, unit and description of each line are copied from the bill of quantities; nothing is recalculated",
+    "the acceptable references of a line are the datasheet candidates whose requirement equals the line specification, copied verbatim with their catalog status; they are not a selection",
+    "a line without quantity or with open issues in the bill of quantities is carried and flagged incomplete: it is never dropped",
+    "the request identifier is derived from the board name and the supplier list only (no clock, no random value)"
+   ],
+   "board": "TG-1",
+   "comparison_template": {
+    "columns": [
+     "line_no",
+     "item_id",
+     "description",
+     "unit",
+     "quantity",
+     "Alfa: unit_price",
+     "Alfa: delivery_days",
+     "Alfa: brand_offered",
+     "Alfa: remarks",
+     "Beta: unit_price",
+     "Beta: delivery_days",
+     "Beta: brand_offered",
+     "Beta: remarks"
+    ],
+    "response_fields": [
+     "unit_price",
+     "delivery_days",
+     "brand_offered",
+     "remarks"
+    ],
+    "rows": [
+     {
+      "item_id": "CAB-001",
+      "line_no": 1,
+      "quotes": {
+       "Alfa": {
+        "brand_offered": null,
+        "delivery_days": null,
+        "remarks": null,
+        "unit_price": null
+       },
+       "Beta": {
+        "brand_offered": null,
+        "delivery_days": null,
+        "remarks": null,
+        "unit_price": null
+       }
+      }
+     },
+     {
+      "item_id": "CAB-002",
+      "line_no": 2,
+      "quotes": {
+       "Alfa": {
+        "brand_offered": null,
+        "delivery_days": null,
+        "remarks": null,
+        "unit_price": null
+       },
+       "Beta": {
+        "brand_offered": null,
+        "delivery_days": null,
+        "remarks": null,
+        "unit_price": null
+       }
+      }
+     },
+     {
+      "item_id": "CAB-003",
+      "line_no": 3,
+      "quotes": {
+       "Alfa": {
+        "brand_offered": null,
+        "delivery_days": null,
+        "remarks": null,
+        "unit_price": null
+       },
+       "Beta": {
+        "brand_offered": null,
+        "delivery_days": null,
+        "remarks": null,
+        "unit_price": null
+       }
+      }
+     },
+     {
+      "item_id": "DEV-001",
+      "line_no": 4,
+      "quotes": {
+       "Alfa": {
+        "brand_offered": null,
+        "delivery_days": null,
+        "remarks": null,
+        "unit_price": null
+       },
+       "Beta": {
+        "brand_offered": null,
+        "delivery_days": null,
+        "remarks": null,
+        "unit_price": null
+       }
+      }
+     },
+     {
+      "item_id": "DEV-002",
+      "line_no": 5,
+      "quotes": {
+       "Alfa": {
+        "brand_offered": null,
+        "delivery_days": null,
+        "remarks": null,
+        "unit_price": null
+       },
+       "Beta": {
+        "brand_offered": null,
+        "delivery_days": null,
+        "remarks": null,
+        "unit_price": null
+       }
+      }
+     },
+     {
+      "item_id": "DEV-003",
+      "line_no": 6,
+      "quotes": {
+       "Alfa": {
+        "brand_offered": null,
+        "delivery_days": null,
+        "remarks": null,
+        "unit_price": null
+       },
+       "Beta": {
+        "brand_offered": null,
+        "delivery_days": null,
+        "remarks": null,
+        "unit_price": null
+       }
+      }
+     },
+     {
+      "item_id": "ENC-001",
+      "line_no": 7,
+      "quotes": {
+       "Alfa": {
+        "brand_offered": null,
+        "delivery_days": null,
+        "remarks": null,
+        "unit_price": null
+       },
+       "Beta": {
+        "brand_offered": null,
+        "delivery_days": null,
+        "remarks": null,
+        "unit_price": null
+       }
+      }
+     }
+    ],
+    "suppliers": [
+     "Alfa",
+     "Beta"
+    ]
+   },
+   "issued_for": [
+    {
+     "contact": "alfa@example.test",
+     "name": "Alfa"
+    },
+    {
+     "contact": null,
+     "name": "Beta"
+    }
+   ],
+   "issues": [],
+   "lines": [
+    {
+     "category": "cable",
+     "description": "Cu PVC cable 1x1.5 mm2 + N 1.5 mm2 + PE 1.5 mm2 (3 cores)",
+     "incomplete": false,
+     "issues": [],
+     "item_id": "CAB-001",
+     "line_no": 1,
+     "quantity": 11.0,
+     "references": [],
+     "response": {
+      "brand_offered": null,
+      "delivery_days": null,
+      "remarks": null,
+      "unit_price": null
+     },
+     "source": [
+      "C4"
+     ],
+     "spec": {
+      "cores": 3,
+      "insulation": "pvc",
+      "material": "cu",
+      "neutral_mm2": 1.5,
+      "pe_mm2": 1.5,
+      "phase_conductors": 1,
+      "s_mm2": 1.5
+     },
+     "unit": "m"
+    },
+    {
+     "category": "cable",
+     "description": "Cu PVC cable 1x2.5 mm2 + N 2.5 mm2 + PE 2.5 mm2 (3 cores)",
+     "incomplete": false,
+     "issues": [],
+     "item_id": "CAB-002",
+     "line_no": 2,
+     "quantity": 35.75,
+     "references": [],
+     "response": {
+      "brand_offered": null,
+      "delivery_days": null,
+      "remarks": null,
+      "unit_price": null
+     },
+     "source": [
+      "C1",
+      "C2"
+     ],
+     "spec": {
+      "cores": 3,
+      "insulation": "pvc",
+      "material": "cu",
+      "neutral_mm2": 2.5,
+      "pe_mm2": 2.5,
+      "phase_conductors": 1,
+      "s_mm2": 2.5
+     },
+     "unit": "m"
+    },
+    {
+     "category": "cable",
+     "description": "Cu PVC cable 3x10 mm2 + N 10 mm2 + PE 10 mm2 (5 cores)",
+     "incomplete": false,
+     "issues": [],
+     "item_id": "CAB-003",
+     "line_no": 3,
+     "quantity": 11.0,
+     "references": [],
+     "response": {
+      "brand_offered": null,
+      "delivery_days": null,
+      "remarks": null,
+      "unit_price": null
+     },
+     "source": [
+      "C3"
+     ],
+     "spec": {
+      "cores": 5,
+      "insulation": "pvc",
+      "material": "cu",
+      "neutral_mm2": 10,
+      "pe_mm2": 10,
+      "phase_conductors": 3,
+      "s_mm2": 10
+     },
+     "unit": "m"
+    },
+    {
+     "category": "protective_device",
+     "description": "MCB protective device, 10 A, 2 poles, 6 kA breaking capacity",
+     "incomplete": false,
+     "issues": [],
+     "item_id": "DEV-001",
+     "line_no": 4,
+     "quantity": 1,
+     "references": [],
+     "response": {
+      "brand_offered": null,
+      "delivery_days": null,
+      "remarks": null,
+      "unit_price": null
+     },
+     "source": [
+      "C4"
+     ],
+     "spec": {
+      "breaking_capacity_ka": 6,
+      "in_a": 10,
+      "kind": "mcb",
+      "poles": 2
+     },
+     "unit": "un"
+    },
+    {
+     "category": "protective_device",
+     "description": "MCB protective device, 16 A, 2 poles, 6 kA breaking capacity",
+     "incomplete": false,
+     "issues": [],
+     "item_id": "DEV-002",
+     "line_no": 5,
+     "quantity": 2,
+     "references": [],
+     "response": {
+      "brand_offered": null,
+      "delivery_days": null,
+      "remarks": null,
+      "unit_price": null
+     },
+     "source": [
+      "C1",
+      "C2"
+     ],
+     "spec": {
+      "breaking_capacity_ka": 6,
+      "in_a": 16,
+      "kind": "mcb",
+      "poles": 2
+     },
+     "unit": "un"
+    },
+    {
+     "category": "protective_device",
+     "description": "MCCB protective device, 100 A, 3 poles, 25 kA breaking capacity",
+     "incomplete": false,
+     "issues": [],
+     "item_id": "DEV-003",
+     "line_no": 6,
+     "quantity": 1,
+     "references": [],
+     "response": {
+      "brand_offered": null,
+      "delivery_days": null,
+      "remarks": null,
+      "unit_price": null
+     },
+     "source": [
+      "C3"
+     ],
+     "spec": {
+      "breaking_capacity_ka": 25,
+      "in_a": 100,
+      "kind": "mccb",
+      "poles": 3
+     },
+     "unit": "un"
+    },
+    {
+     "category": "enclosure",
+     "description": "Enclosure/board TG-1 (sizing not modelled)",
+     "incomplete": false,
+     "issues": [],
+     "item_id": "ENC-001",
+     "line_no": 7,
+     "quantity": 1,
+     "references": [],
+     "response": {
+      "brand_offered": null,
+      "delivery_days": null,
+      "remarks": null,
+      "unit_price": null
+     },
+     "source": [
+      "C1",
+      "C2",
+      "C3",
+      "C4"
+     ],
+     "spec": {
+      "board": "TG-1"
+     },
+     "unit": "un"
+    }
+   ],
+   "norm_records": [],
+   "requestable_categories": [
+    "cable",
+    "enclosure",
+    "protective_device"
+   ],
+   "rfq_id": "RFQ-67DEC8E9B5D2",
+   "terms": {
+    "currency": "ARS",
+    "delivery_site": "Obra Central",
+    "notes": null,
+    "payment_terms": null,
+    "response_deadline": "2026-12-15",
+    "validity_days": 30
+   },
+   "totals": {
+    "incomplete_lines": 0,
+    "lines": 7
+   }
+  },
+  "no_terms": {
+   "error": "RfqError: missing required commercial field(s): suppliers, currency, response_deadline, delivery_site, validity_days"
+  },
+  "render_rows": [
+   {
+    "Alfa: brand_offered": "",
+    "Alfa: delivery_days": "",
+    "Alfa: remarks": "",
+    "Alfa: unit_price": "",
+    "Beta: brand_offered": "",
+    "Beta: delivery_days": "",
+    "Beta: remarks": "",
+    "Beta: unit_price": "",
+    "board": "TG-1",
+    "category": "cable",
+    "description": "Cu PVC cable 1x1.5 mm2 + N 1.5 mm2 + PE 1.5 mm2 (3 cores)",
+    "incomplete": false,
+    "issue": "",
+    "item_id": "CAB-001",
+    "line_no": 1,
+    "quantity": 11.0,
+    "references": "",
+    "rfq_id": "RFQ-67DEC8E9B5D2",
+    "unit": "m"
+   },
+   {
+    "Alfa: brand_offered": "",
+    "Alfa: delivery_days": "",
+    "Alfa: remarks": "",
+    "Alfa: unit_price": "",
+    "Beta: brand_offered": "",
+    "Beta: delivery_days": "",
+    "Beta: remarks": "",
+    "Beta: unit_price": "",
+    "board": "TG-1",
+    "category": "cable",
+    "description": "Cu PVC cable 1x2.5 mm2 + N 2.5 mm2 + PE 2.5 mm2 (3 cores)",
+    "incomplete": false,
+    "issue": "",
+    "item_id": "CAB-002",
+    "line_no": 2,
+    "quantity": 35.75,
+    "references": "",
+    "rfq_id": "RFQ-67DEC8E9B5D2",
+    "unit": "m"
+   },
+   {
+    "Alfa: brand_offered": "",
+    "Alfa: delivery_days": "",
+    "Alfa: remarks": "",
+    "Alfa: unit_price": "",
+    "Beta: brand_offered": "",
+    "Beta: delivery_days": "",
+    "Beta: remarks": "",
+    "Beta: unit_price": "",
+    "board": "TG-1",
+    "category": "cable",
+    "description": "Cu PVC cable 3x10 mm2 + N 10 mm2 + PE 10 mm2 (5 cores)",
+    "incomplete": false,
+    "issue": "",
+    "item_id": "CAB-003",
+    "line_no": 3,
+    "quantity": 11.0,
+    "references": "",
+    "rfq_id": "RFQ-67DEC8E9B5D2",
+    "unit": "m"
+   },
+   {
+    "Alfa: brand_offered": "",
+    "Alfa: delivery_days": "",
+    "Alfa: remarks": "",
+    "Alfa: unit_price": "",
+    "Beta: brand_offered": "",
+    "Beta: delivery_days": "",
+    "Beta: remarks": "",
+    "Beta: unit_price": "",
+    "board": "TG-1",
+    "category": "protective_device",
+    "description": "MCB protective device, 10 A, 2 poles, 6 kA breaking capacity",
+    "incomplete": false,
+    "issue": "",
+    "item_id": "DEV-001",
+    "line_no": 4,
+    "quantity": 1,
+    "references": "",
+    "rfq_id": "RFQ-67DEC8E9B5D2",
+    "unit": "un"
+   },
+   {
+    "Alfa: brand_offered": "",
+    "Alfa: delivery_days": "",
+    "Alfa: remarks": "",
+    "Alfa: unit_price": "",
+    "Beta: brand_offered": "",
+    "Beta: delivery_days": "",
+    "Beta: remarks": "",
+    "Beta: unit_price": "",
+    "board": "TG-1",
+    "category": "protective_device",
+    "description": "MCB protective device, 16 A, 2 poles, 6 kA breaking capacity",
+    "incomplete": false,
+    "issue": "",
+    "item_id": "DEV-002",
+    "line_no": 5,
+    "quantity": 2,
+    "references": "",
+    "rfq_id": "RFQ-67DEC8E9B5D2",
+    "unit": "un"
+   },
+   {
+    "Alfa: brand_offered": "",
+    "Alfa: delivery_days": "",
+    "Alfa: remarks": "",
+    "Alfa: unit_price": "",
+    "Beta: brand_offered": "",
+    "Beta: delivery_days": "",
+    "Beta: remarks": "",
+    "Beta: unit_price": "",
+    "board": "TG-1",
+    "category": "protective_device",
+    "description": "MCCB protective device, 100 A, 3 poles, 25 kA breaking capacity",
+    "incomplete": false,
+    "issue": "",
+    "item_id": "DEV-003",
+    "line_no": 6,
+    "quantity": 1,
+    "references": "",
+    "rfq_id": "RFQ-67DEC8E9B5D2",
+    "unit": "un"
+   },
+   {
+    "Alfa: brand_offered": "",
+    "Alfa: delivery_days": "",
+    "Alfa: remarks": "",
+    "Alfa: unit_price": "",
+    "Beta: brand_offered": "",
+    "Beta: delivery_days": "",
+    "Beta: remarks": "",
+    "Beta: unit_price": "",
+    "board": "TG-1",
+    "category": "enclosure",
+    "description": "Enclosure/board TG-1 (sizing not modelled)",
+    "incomplete": false,
+    "issue": "",
+    "item_id": "ENC-001",
+    "line_no": 7,
+    "quantity": 1,
+    "references": "",
+    "rfq_id": "RFQ-67DEC8E9B5D2",
+    "unit": "un"
+   }
+  ],
+  "text": "PEDIDO DE COTIZACIÓN RFQ-67DEC8E9B5D2\nTablero: TG-1\nDirigido a: Alfa, Beta\n\nSe solicita cotizar los siguientes ítems, con las condiciones indicadas.\n\nCondiciones\n- Moneda de la oferta: ARS\n- Fecha límite de respuesta: 2026-12-15\n- Lugar de entrega: Obra Central\n- Validez de la oferta: 30 días\n\nÍtems solicitados\n1. Cu PVC cable 1x1.5 mm2 + N 1.5 mm2 + PE 1.5 mm2 (3 cores) - cantidad: 11 m\n2. Cu PVC cable 1x2.5 mm2 + N 2.5 mm2 + PE 2.5 mm2 (3 cores) - cantidad: 35.75 m\n3. Cu PVC cable 3x10 mm2 + N 10 mm2 + PE 10 mm2 (5 cores) - cantidad: 11 m\n4. MCB protective device, 10 A, 2 poles, 6 kA breaking capacity - cantidad: 1 un\n5. MCB protective device, 16 A, 2 poles, 6 kA breaking capacity - cantidad: 2 un\n6. MCCB protective device, 100 A, 3 poles, 25 kA breaking capacity - cantidad: 1 un\n7. Enclosure/board TG-1 (sizing not modelled) - cantidad: 1 un\n\nPara cada ítem indique: precio unitario, plazo de entrega en días, marca ofrecida y observaciones.\nBorrador sujeto a revisión del ingeniero responsable.\n"
+ },
+ "epc_rules": {
+  "check": {
+   "findings": [
+    {
+     "actual": 10,
+     "clause": "1.2",
+     "derived_check": false,
+     "expected": 20,
+     "field": "reserve_pct",
+     "message": "Reserva minima",
+     "passed": false,
+     "reason": "",
+     "rule_id": "tray.reserve",
+     "source_status": "verified",
+     "standard": "TEST-1",
+     "type": "mandatory"
+    },
+    {
+     "actual": true,
+     "clause": "1.4",
+     "derived_check": false,
+     "expected": true,
+     "field": "diagonal",
+     "message": "Sin diagonal",
+     "passed": false,
+     "reason": "",
+     "rule_id": "no.diag",
+     "source_status": "verified",
+     "standard": "TEST-1",
+     "type": "prohibited"
+    }
+   ]
+  },
+  "compare": [
+   true,
+   false,
+   {
+    "error": "KeyError: '??'"
+   }
+  ],
+  "lookup": [
+   {
+    "ampacity": 21,
+    "size": 2.5
+   }
+  ],
+  "match_when": [
+   true,
+   false
+  ],
+  "param": 20,
+  "query": [
+   "tray.reserve"
+  ]
+ },
+ "epc_selectivity": {
+  "corriente_falla_tt(230, 20, 10)": 7.666666667,
+  "i2_convencional(16)": 23.2,
+  "in_max_por_iz(40)": 40,
+  "verifica_tn(0.8, 160, u0_v=230)": {
+   "cumple": true,
+   "limite_v": 218.5,
+   "zs_ia_v": 128.0,
+   "zs_max_ohm": 1.365625
+  },
+  "verifica_tt(20, 0.03)": {
+   "cumple": true,
+   "limite_v": 1.2,
+   "ra_ia_v": 0.6,
+   "ra_max_ohm": 40.0
+  }
+ },
+ "epc_short_circuit": {
+  "aporte_motor(50000, 400, 6, 1.0)": 433.012701892,
+  "corriente_asignada_trafo(630000, 400)": 909.326673974,
+  "corriente_pico(20000, 0.001, 0.005)": 44062.239107877,
+  "factor_c(6)": 1.05,
+  "factor_kappa(0.001, 0.005)": 1.557835403,
+  "ik_aguas_abajo(400, 20000, 35, 40)": 9009.813394844,
+  "ik_desde_impedancia(400, 1.0, 0.001, 0.005)": 45291.081365784,
+  "impedance_cable(0.727, 0.08, 30)": [
+   0.02181,
+   0.0024
+  ],
+  "impedancia_red(400, 1.0, sk_va=250000000.0)": [
+   6.3682e-05,
+   0.000636824
+  ],
+  "impedancia_transformador(630000, 400, 6)": [
+   0.0,
+   0.015238095
+  ]
+ },
+ "epc_standards": {
+  "convert_table('t1', '1.1', [{'size': 1.5, 'i': 15}, {'size': 2.5, 'i': 21}])": {
+   "clause": "1.1",
+   "columns": [
+    "size",
+    "i"
+   ],
+   "id": "t1",
+   "rows": [
+    [
+     1.5,
+     15
+    ],
+    [
+     2.5,
+     21
+    ]
+   ]
+  },
+  "convert_table('t2', '1.2', {'columnas': ['a', 'b'], 'filas': [[1, 2], [3]], 'notas': 'n'})": {
+   "clause": "1.2",
+   "columns": [
+    "a",
+    "b"
+   ],
+   "id": "t2",
+   "notes": "n",
+   "rows": [
+    [
+     1,
+     2
+    ],
+    [
+     3,
+     null
+    ]
+   ]
+  },
+  "norm_words('Sección mínima del conductor 2,5 mm²')": [
+   "seccion",
+   "minima",
+   "del",
+   "conductor",
+   "2",
+   "5",
+   "mm2"
+  ],
+  "shingles(['a', 'b', 'c', 'd', 'e', 'f'])": []
+ },
+ "epc_terminal_blocks": {
+  "build_terminal_list": {
+   "assumptions": [
+    "pending review: terminal sizes are generic values to be verified against the chosen manufacturer catalog",
+    "one terminal per conductor to terminate; the neutral is terminated when the calculation reports a neutral section, and the PE when it reports a PE section",
+    "terminals are numbered in the order of the circuits given, conductors in the order L (L1, L2, L3), N, PE, on one strip",
+    "the smallest listed terminal size that accepts the conductor section is assigned; no size is guessed when none accepts it",
+    "conductor sections and currents are inputs from the calculation engines; this engine calculates nothing",
+    "not modelled: strip splitting, spare terminals, marshalling, terminal accessories, shared terminals and grouping by voltage level"
+   ],
+   "board": "TS",
+   "issues": [],
+   "norm_records": [
+    "terminal_blocks.params.terminal_sizes"
+   ],
+   "strips": [
+    {
+     "rows": [
+      {
+       "circuit": "C1",
+       "conductors": 3,
+       "description": "",
+       "device": "",
+       "in_a": null,
+       "issues": [],
+       "phases": 1,
+       "terminals": [
+        {
+         "id": "X1:1",
+         "issues": [],
+         "role": "L",
+         "section_mm2": 2.5,
+         "terminal_rated_a": 24,
+         "terminal_size_mm2": 2.5
+        },
+        {
+         "id": "X1:2",
+         "issues": [],
+         "role": "N",
+         "section_mm2": 2.5,
+         "terminal_rated_a": 24,
+         "terminal_size_mm2": 2.5
+        },
+        {
+         "id": "X1:3",
+         "issues": [],
+         "role": "PE",
+         "section_mm2": 2.5,
+         "terminal_rated_a": 24,
+         "terminal_size_mm2": 2.5
+        }
+       ]
+      },
+      {
+       "circuit": "C2",
+       "conductors": 3,
+       "description": "",
+       "device": "",
+       "in_a": null,
+       "issues": [],
+       "phases": 1,
+       "terminals": [
+        {
+         "id": "X1:4",
+         "issues": [],
+         "role": "L",
+         "section_mm2": 2.5,
+         "terminal_rated_a": 24,
+         "terminal_size_mm2": 2.5
+        },
+        {
+         "id": "X1:5",
+         "issues": [],
+         "role": "N",
+         "section_mm2": 2.5,
+         "terminal_rated_a": 24,
+         "terminal_size_mm2": 2.5
+        },
+        {
+         "id": "X1:6",
+         "issues": [],
+         "role": "PE",
+         "section_mm2": 2.5,
+         "terminal_rated_a": 24,
+         "terminal_size_mm2": 2.5
+        }
+       ]
+      },
+      {
+       "circuit": "C3",
+       "conductors": 5,
+       "description": "",
+       "device": "",
+       "in_a": null,
+       "issues": [],
+       "phases": 3,
+       "terminals": [
+        {
+         "id": "X1:7",
+         "issues": [],
+         "role": "L1",
+         "section_mm2": 10,
+         "terminal_rated_a": 57,
+         "terminal_size_mm2": 10
+        },
+        {
+         "id": "X1:8",
+         "issues": [],
+         "role": "L2",
+         "section_mm2": 10,
+         "terminal_rated_a": 57,
+         "terminal_size_mm2": 10
+        },
+        {
+         "id": "X1:9",
+         "issues": [],
+         "role": "L3",
+         "section_mm2": 10,
+         "terminal_rated_a": 57,
+         "terminal_size_mm2": 10
+        },
+        {
+         "id": "X1:10",
+         "issues": [],
+         "role": "N",
+         "section_mm2": 10,
+         "terminal_rated_a": 57,
+         "terminal_size_mm2": 10
+        },
+        {
+         "id": "X1:11",
+         "issues": [],
+         "role": "PE",
+         "section_mm2": 10,
+         "terminal_rated_a": 57,
+         "terminal_size_mm2": 10
+        }
+       ]
+      },
+      {
+       "circuit": "C4",
+       "conductors": 3,
+       "description": "",
+       "device": "",
+       "in_a": null,
+       "issues": [],
+       "phases": 1,
+       "terminals": [
+        {
+         "id": "X1:12",
+         "issues": [],
+         "role": "L",
+         "section_mm2": 1.5,
+         "terminal_rated_a": 24,
+         "terminal_size_mm2": 2.5
+        },
+        {
+         "id": "X1:13",
+         "issues": [],
+         "role": "N",
+         "section_mm2": 1.5,
+         "terminal_rated_a": 24,
+         "terminal_size_mm2": 2.5
+        },
+        {
+         "id": "X1:14",
+         "issues": [],
+         "role": "PE",
+         "section_mm2": 1.5,
+         "terminal_rated_a": 24,
+         "terminal_size_mm2": 2.5
+        }
+       ]
+      }
+     ],
+     "strip": "X1"
+    }
+   ],
+   "totals": {
+    "by_section": {
+     "1.5": 3,
+     "10": 5,
+     "2.5": 6
+    },
+    "by_terminal_size": {
+     "10": 5,
+     "2.5": 9
+    },
+    "terminals": 14
+   }
+  },
+  "render_rows": [
+   {
+    "board": "TS",
+    "circuit": "C1",
+    "conductors": 3,
+    "description": "",
+    "device": "",
+    "issue": "",
+    "role": "L",
+    "section_mm2": 2.5,
+    "strip": "X1",
+    "terminal": "X1:1",
+    "terminal_rated_a": 24,
+    "terminal_size_mm2": 2.5
+   },
+   {
+    "board": "TS",
+    "circuit": "C1",
+    "conductors": 3,
+    "description": "",
+    "device": "",
+    "issue": "",
+    "role": "N",
+    "section_mm2": 2.5,
+    "strip": "X1",
+    "terminal": "X1:2",
+    "terminal_rated_a": 24,
+    "terminal_size_mm2": 2.5
+   },
+   {
+    "board": "TS",
+    "circuit": "C1",
+    "conductors": 3,
+    "description": "",
+    "device": "",
+    "issue": "",
+    "role": "PE",
+    "section_mm2": 2.5,
+    "strip": "X1",
+    "terminal": "X1:3",
+    "terminal_rated_a": 24,
+    "terminal_size_mm2": 2.5
+   },
+   {
+    "board": "TS",
+    "circuit": "C2",
+    "conductors": 3,
+    "description": "",
+    "device": "",
+    "issue": "",
+    "role": "L",
+    "section_mm2": 2.5,
+    "strip": "X1",
+    "terminal": "X1:4",
+    "terminal_rated_a": 24,
+    "terminal_size_mm2": 2.5
+   },
+   {
+    "board": "TS",
+    "circuit": "C2",
+    "conductors": 3,
+    "description": "",
+    "device": "",
+    "issue": "",
+    "role": "N",
+    "section_mm2": 2.5,
+    "strip": "X1",
+    "terminal": "X1:5",
+    "terminal_rated_a": 24,
+    "terminal_size_mm2": 2.5
+   },
+   {
+    "board": "TS",
+    "circuit": "C2",
+    "conductors": 3,
+    "description": "",
+    "device": "",
+    "issue": "",
+    "role": "PE",
+    "section_mm2": 2.5,
+    "strip": "X1",
+    "terminal": "X1:6",
+    "terminal_rated_a": 24,
+    "terminal_size_mm2": 2.5
+   },
+   {
+    "board": "TS",
+    "circuit": "C3",
+    "conductors": 5,
+    "description": "",
+    "device": "",
+    "issue": "",
+    "role": "L1",
+    "section_mm2": 10,
+    "strip": "X1",
+    "terminal": "X1:7",
+    "terminal_rated_a": 57,
+    "terminal_size_mm2": 10
+   },
+   {
+    "board": "TS",
+    "circuit": "C3",
+    "conductors": 5,
+    "description": "",
+    "device": "",
+    "issue": "",
+    "role": "L2",
+    "section_mm2": 10,
+    "strip": "X1",
+    "terminal": "X1:8",
+    "terminal_rated_a": 57,
+    "terminal_size_mm2": 10
+   },
+   {
+    "board": "TS",
+    "circuit": "C3",
+    "conductors": 5,
+    "description": "",
+    "device": "",
+    "issue": "",
+    "role": "L3",
+    "section_mm2": 10,
+    "strip": "X1",
+    "terminal": "X1:9",
+    "terminal_rated_a": 57,
+    "terminal_size_mm2": 10
+   },
+   {
+    "board": "TS",
+    "circuit": "C3",
+    "conductors": 5,
+    "description": "",
+    "device": "",
+    "issue": "",
+    "role": "N",
+    "section_mm2": 10,
+    "strip": "X1",
+    "terminal": "X1:10",
+    "terminal_rated_a": 57,
+    "terminal_size_mm2": 10
+   },
+   {
+    "board": "TS",
+    "circuit": "C3",
+    "conductors": 5,
+    "description": "",
+    "device": "",
+    "issue": "",
+    "role": "PE",
+    "section_mm2": 10,
+    "strip": "X1",
+    "terminal": "X1:11",
+    "terminal_rated_a": 57,
+    "terminal_size_mm2": 10
+   },
+   {
+    "board": "TS",
+    "circuit": "C4",
+    "conductors": 3,
+    "description": "",
+    "device": "",
+    "issue": "",
+    "role": "L",
+    "section_mm2": 1.5,
+    "strip": "X1",
+    "terminal": "X1:12",
+    "terminal_rated_a": 24,
+    "terminal_size_mm2": 2.5
+   },
+   {
+    "board": "TS",
+    "circuit": "C4",
+    "conductors": 3,
+    "description": "",
+    "device": "",
+    "issue": "",
+    "role": "N",
+    "section_mm2": 1.5,
+    "strip": "X1",
+    "terminal": "X1:13",
+    "terminal_rated_a": 24,
+    "terminal_size_mm2": 2.5
+   },
+   {
+    "board": "TS",
+    "circuit": "C4",
+    "conductors": 3,
+    "description": "",
+    "device": "",
+    "issue": "",
+    "role": "PE",
+    "section_mm2": 1.5,
+    "strip": "X1",
+    "terminal": "X1:14",
+    "terminal_rated_a": 24,
+    "terminal_size_mm2": 2.5
+   }
+  ]
+ },
+ "epc_transformer_sizing": {
+  "loading_pct(400, 630)": 63.492063492,
+  "rated_current_a(630, 400)": 909.326673974,
+  "required_apparent_power_kva(400, 25)": 500.0,
+  "select_rating(520)": 630,
+  "size_transformer(400, 400, 25)": {
+   "assumptions": [
+    "reserve of 25 % given by the caller (no reserve criterion decided)",
+    "standard rating series from the data file, pending review: values to be verified by the owner against the supply authority / manufacturer catalog",
+    "impedance (uk %), losses and short-circuit contribution not modelled",
+    "single unit; paralleling not modelled"
+   ],
+   "loading_pct": 80.0,
+   "norm_records": [
+    "transformer_sizing.params.standard_ratings"
+   ],
+   "rated_current_a": 721.687836487,
+   "rating_kva": 500,
+   "required_kva": 500.0,
+   "series_used": [
+    25,
+    50,
+    63,
+    100,
+    160,
+    250,
+    315,
+    400,
+    500,
+    630,
+    800,
+    1000,
+    1250,
+    1600,
+    2000,
+    2500
+   ]
+  },
+  "size_transformer(400, 400, None)": {
+   "error": "TransformerSizingError: reserve_pct is required: no default growth/reserve criterion has been decided; provide it explicitly"
+  }
+ },
+ "epc_voltage_drop": {
+  "caida_tension(1, 16, 25, 7.41, 0.1, 0.9, 230)": {
+   "delta_u_pct": 2.334813562,
+   "delta_u_v": 5.370071192,
+   "fases": 1,
+   "un_v": 230
+  },
+  "caida_tension(3, 50, 80, 1.15, 0.09, 0.85, 400)": {
+   "delta_u_pct": 1.775196959,
+   "delta_u_v": 7.100787834,
+   "fases": 3,
+   "un_v": 400
+  },
+  "drop_unit_table(16)": 2.4,
+  "limite_caida_pct('seccional')": 1.0,
+  "longitud_maxima_m(3, 12, 50, 1.15, 0.09, 0.85)": 135.196265881,
+  "porcentaje(8, 400)": 2.0
+ },
+ "pipeline": {
+  "delivered": {
+   "deliverables/TR-001/01_SLD/SLD_TS-SYNTH.dxf": "45ddda4e01550a74f1f3e27d9abc4f8a7ac2ca9cebdb99ba0204af363a521818",
+   "deliverables/TR-001/01_SLD/SLD_TS-SYNTH_TABLA.dxf": "f30929edc2e197827f12a202f57745e8316d157777bc1425176346db680f4e97"
+  },
+  "engines_by_stage": {
+   "board_structure": [
+    "epc_load_balance"
+   ],
+   "cable_sizing": [
+    "epc_feeder_sizing",
+    "epc_voltage_drop",
+    "epc_aea90364"
+   ],
+   "calc_check": [
+    "epc_calc_check",
+    "epc_rules"
+   ],
+   "documents": [
+    "epc_documents",
+    "epc_boq",
+    "epc_datasheets",
+    "epc_rfq",
+    "epc_terminal_blocks",
+    "epc_descriptive_report",
+    "epc_design_basis"
+   ],
+   "drawings": [
+    "epc_sld",
+    "epc_mld",
+    "epc_dxf",
+    "epc_symbols",
+    "epc_titleblock",
+    "epc_drawing"
+   ],
+   "earthing": [
+    "epc_grounding"
+   ],
+   "intake": [
+    "epc_calc_common"
+   ],
+   "loads_demand": [
+    "epc_load_balance",
+    "epc_calc_common"
+   ],
+   "package_issue": [
+    "epc_documents"
+   ],
+   "requirements_inputs": [
+    "epc_design_basis"
+   ],
+   "selectivity": [
+    "epc_selectivity"
+   ],
+   "supply_transformer": [
+    "epc_transformer_sizing",
+    "epc_short_circuit"
+   ]
+  },
+  "exit_code": 0,
+  "stage_files": {
+   "stage_01_intake.json": "e9dc0c0323c583284aa793dc7b515883d2a4e09c5bb081e47e896d893995c797",
+   "stage_02_requirements_inputs.json": "d0e5daa6d1a8110d877b9bcdb9bfea867e7ef9f62a6007a97f0e01494fba33c7",
+   "stage_03_loads_demand.json": "b5675816757784ea79831e086e5cfd94e116173ed2609653200b12836392559c",
+   "stage_04_supply_transformer.json": "0d33eaa895d335129ea4bd2c9bdfa1a2b02931baf03e4829c8ff677412e16fad",
+   "stage_05_board_structure.json": "62a9a5f77ca0cc02ab5b5162276f9c7b4aa5252c2d5dba7e3716209a9f06f731",
+   "stage_06_cable_sizing.json": "29a4896f16a00ebd7365f1e37aeaff7da0d17a07cd9d3b19ab314e3492e7b9c7",
+   "stage_07_selectivity.json": "f351598444dcd01293482324dc14507886c0699c363a051555254430cb54ab74",
+   "stage_08_earthing.json": "1b041b0f2856a2296fa565c3ac35e25deb01323d357cda53cabb011a0e919a7e",
+   "stage_09_calc_check.json": "55630b4fdeebff968621225f56c4149be0a4807823da9f3b1cdf816de2e8fd6b",
+   "stage_10_drawings.json": "258c15426d8dfe6527bd784d148c8712f7050c5be96369b30ef3ad424365603f",
+   "stage_11_documents.json": "c6a3539b2dbf8fbd32c4e947460293e48e8fd094b70ce41d3862958e966ea692",
+   "stage_12_package_issue.json": "53a88eedd620f2e0ec73e66b0917805a41a6a3de401f0bad3fab512da77f5d63"
+  }
+ }
+}

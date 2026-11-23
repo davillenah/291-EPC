@@ -7,7 +7,7 @@ engine gives with the simultaneity of the project criteria (`board_feeders.head`
 value makes it `blocked` with the engine's message. Every assumption of the engine becomes a `note` finding. The outputs are drafts (D21).
 """
 from disciplines.electrical_lv.stages import engine_calls as EC
-from disciplines.electrical_lv.stages.base import Stage, StageInputError
+from disciplines.electrical_lv.stages.base import Stage, StageInputError, reason
 
 ENGINE = "calculation/transformer_sizing"
 ENGINE_CHAIN = "calculation/aea90364"
@@ -63,7 +63,7 @@ class SupplyTransformerStage(Stage):
             demand, calls, extra = self._demand(context, section, TS)
             result = TS.size_transformer(demand, section.get("secondary_v"), section.get("reserve_pct"))
         except ValueError as exc:
-            raise StageInputError([str(exc)]) from exc
+            raise StageInputError([reason(exc)]) from exc
         findings = [assumption_finding(n, context.pipeline_run_id, self.spec.slug, a) for n, a in enumerate(result["assumptions"] + extra, start=1)]
         outputs = {**result, "inputs": {k: section.get(k) for k in KEYS if k != "demand" or k in section}}
         return self.result("ok", outputs=outputs, findings=findings, engine_calls=[EC.record_for(ENGINE, FUNCTION)] + calls,

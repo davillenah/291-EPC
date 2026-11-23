@@ -14,6 +14,7 @@ from typing import Optional, Union
 import ezdxf
 from ezdxf.document import CREATED_BY_EZDXF, WRITTEN_BY_EZDXF
 from ezdxf.tools import juliandate
+from epc_dxf.errors import DxfError
 
 NAMESPACE = uuid.UUID("5d0d1c6e-0291-4e6b-9a47-8c1f5f3a1b10")  # fixed: the GUIDs are uuid5 of (kind, moment, seed) under it
 DateLike = Union[str, datetime.date, datetime.datetime, None]
@@ -43,7 +44,7 @@ def moment_of(value: DateLike) -> Optional[datetime.datetime]:
     elif isinstance(value, str):
         moment = datetime.datetime.fromisoformat(value.strip())
     else:
-        raise ValueError(f"stamp date must be an ISO date or datetime, not {type(value).__name__}")
+        raise DxfError("err_stamp_date_type", type_name=type(value).__name__)
     if moment.tzinfo is not None:
         moment = moment.astimezone(datetime.timezone.utc).replace(tzinfo=None)
     return moment

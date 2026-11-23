@@ -24,5 +24,5 @@ def pdf_to_png(data: bytes, page: int = 0, max_side: int = 3000, max_scale: floa
 def render_or_fail(data: bytes, page: int, max_side: int) -> bytes:
     png = pdf_to_png(data, page, max_side)
     if png is None:
-        raise ArchError("the PDF cannot be read: it may be damaged or protected")
+        raise ArchError("err_pdf_unreadable")
     return png

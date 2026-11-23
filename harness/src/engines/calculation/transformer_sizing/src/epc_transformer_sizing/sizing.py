@@ -4,6 +4,7 @@ import math
 from epc_short_circuit.short_circuit import corriente_asignada_trafo
 
 from epc_transformer_sizing import ratings
+from epc_transformer_sizing.errors import TransformerSizingError
 
 NO_PARALLEL = "no single unit; paralleling not modelled"
 PENDING = "pending review: values to be verified by the owner against the supply authority / manufacturer catalog"
@@ -11,9 +12,9 @@ PENDING = "pending review: values to be verified by the owner against the supply
 
 def _check(value, name, minimum=0.0, strict=True):
     if not isinstance(value, (int, float)) or isinstance(value, bool) or not math.isfinite(value):
-        raise ValueError(f"{name} must be a finite number (got {value!r})")
+        raise TransformerSizingError("err_not_finite_number", name=name, value=value)
     if (strict and value <= minimum) or (not strict and value < minimum):
-        raise ValueError(f"{name} must be {'>' if strict else '>='} {minimum} (got {value})")
+        raise TransformerSizingError("err_out_of_range", name=name, relation='>' if strict else '>=', minimum=minimum, got=value)
 
 
 def rated_current_a(sn_kva, un_v):
@@ -33,7 +34,7 @@ def apparent_power_kva(i_a, un_v):
 def required_apparent_power_kva(demand_kva, reserve_pct):
     """Demand x (1 + reserve / 100). `reserve_pct` is required: no growth or reserve criterion has been decided."""
     if reserve_pct is None:
-        raise ValueError("reserve_pct is required: no default growth/reserve criterion has been decided; provide it explicitly")
+        raise TransformerSizingError("err_reserve_required")
     _check(demand_kva, "demand_kva")
     _check(reserve_pct, "reserve_pct", strict=False)
     return demand_kva * (1.0 + reserve_pct / 100.0)
@@ -42,7 +43,7 @@ def required_apparent_power_kva(demand_kva, reserve_pct):
 def _series_of(series):
     values = tuple(sorted(series)) if series is not None else ratings.standard_ratings_kva()
     if not values:
-        raise ValueError("the rating series is empty")
+        raise TransformerSizingError("err_series_empty")
     return values
 
 
@@ -53,7 +54,7 @@ def select_rating(required_kva, series=None):
     for rating in values:
         if rating >= required_kva:
             return rating
-    raise ValueError(f"required {required_kva:g} kVA exceeds the largest rating ({values[-1]:g} kVA): {NO_PARALLEL}")
+    raise TransformerSizingError("err_above_largest_rating", required_kva=required_kva, largest=values[-1], note=NO_PARALLEL)
 
 
 def loading_pct(demand_kva, rating_kva):

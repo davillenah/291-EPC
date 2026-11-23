@@ -27,6 +27,7 @@ NORMA DE REFERENCIA
 from epc_grounding import aea_earthing as E
 from epc_calc_common import aea_rounding as RND
 from epc_calc_common import policy; from epc_load_balance import system_voltage as SV
+from epc_selectivity.errors import SelectivityError
 
 __version__ = "0.1.0"
 
@@ -35,9 +36,9 @@ def i2_convencional(in_a, tipo="mcb"):
     """Corriente convencional de funcionamiento I2 = k2·In [A]."""
     k2 = policy.k2_convencional()
     if tipo not in k2:
-        raise ValueError(f"tipo {tipo} desconocido: {sorted(k2)}")
+        raise SelectivityError("err_type_unknown", tipo=tipo, tipos=sorted(k2))
     if in_a <= 0:
-        raise ValueError("In debe ser positiva")
+        raise SelectivityError("err_rated_current")
     return k2[tipo] * in_a
 
 

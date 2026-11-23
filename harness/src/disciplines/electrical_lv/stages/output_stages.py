@@ -13,7 +13,7 @@ from pathlib import Path
 
 from disciplines.electrical_lv.norm_records import VERIFIED, read_norm_records
 from disciplines.electrical_lv.stages import engine_calls as EC
-from disciplines.electrical_lv.stages.base import Stage, StageInputError
+from disciplines.electrical_lv.stages.base import Stage, StageInputError, reason
 from disciplines.electrical_lv.stages import rendering, specification, studies
 from disciplines.electrical_lv.stages.cable_list import board_diagram_assembly, cable_list_document
 from disciplines.electrical_lv.stages.circuit_view import circuit_view
@@ -133,7 +133,7 @@ class DrawingsStage(Stage):
         try:
             fmt, scale = sheet_options(EC.inputs_of(context).get("drawings"))
         except ValueError as exc:
-            raise StageInputError([str(exc)]) from exc
+            raise StageInputError([reason(exc)]) from exc
         calls.append(EC.record_for(PLAN_ENGINE, PLAN_FUNCTION))
         notes, written = write_floor_plans(routing, target / "out", name)
         try:
@@ -435,7 +435,7 @@ class DocumentsStage(Stage):
         try:
             formats = rendering.formats_of(context)
         except ValueError as exc:
-            raise StageInputError([str(exc)]) from exc
+            raise StageInputError([reason(exc)]) from exc
         if not formats or not context.work_dir:
             return {}
         done, used = rendering.render_all(docs, (context.profile or {}).get("project_code") or "", Path(context.work_dir) / "documents", formats, getattr(context, "mode", "production"), (context.profile or {}).get("language") or "en")

@@ -49,6 +49,7 @@ NORMA DE REFERENCIA (por designación)
 
 import math
 from epc_aea90364._validate import nonneg as _nonneg, pos as _pos
+from epc_aea90364.errors import Aea90364Error
 
 __version__ = "0.1.0"
 
@@ -79,7 +80,7 @@ def velocidad_m_s(q_lmin, d_mm):
 def presion_estatica_bar(dz_m, rho=RHO_AGUA, g=G):
     """Δp_z [bar] = ρ·g·Δz/1e5 (Δz > 0 sube; Δz < 0 baja y resta pérdida)."""
     if not isinstance(dz_m, (int, float)) or isinstance(dz_m, bool) or not math.isfinite(dz_m):
-        raise ValueError(f"dz_m debe ser un número finito (recibido: {dz_m!r})")
+        raise Aea90364Error("err_dz_invalid", dz_m=dz_m)
     _pos(rho, "rho")
     _pos(g, "g")
     return rho * g * dz_m / 1e5

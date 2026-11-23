@@ -176,8 +176,16 @@ class ResultTests(unittest.TestCase):
         self.assertEqual(rows[2]["source"], "A")
 
     def test_package_exports(self):
-        self.assertEqual(epc_boq.__all__, ["build_boq", "render_rows"])
+        self.assertEqual(sorted(epc_boq.__all__), ["BoqError", "build_boq", "render_rows"])
         self.assertEqual(epc_boq.__version__, "0.1.0")
+
+    def test_public_door(self):
+        """COD-02: `epc_boq.api` offers exactly what the package exports."""
+        import importlib
+        api = importlib.import_module("epc_boq.api")
+        self.assertEqual(sorted(api.__all__), sorted(epc_boq.__all__))
+        for name in api.__all__:
+            self.assertIs(getattr(api, name), getattr(epc_boq, name))
 
 
 class ValidationTests(unittest.TestCase):

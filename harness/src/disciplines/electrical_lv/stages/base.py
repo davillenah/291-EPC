@@ -13,6 +13,12 @@ PHASE1_MESSAGE = "not available in Phase 1"
 WIRING_MESSAGE = "engine wiring: MIG-30c"
 
 
+def reason(exc):
+    """What an engine refused, in both languages: `English | Español` for an engine error that carries a code (ADR-0039), the plain text for anything else."""
+    en, es = getattr(exc, "en", None), getattr(exc, "es", None)
+    return f"{en} | {es}" if en and es and en != es else str(exc)
+
+
 class StageInputError(ValueError):
     """The inputs of a stage are incomplete or wrong; the stage is `blocked`. `errors` lists every reason."""
 
@@ -46,9 +52,9 @@ class PipelineContext:
     engine_cache: dict = field(default_factory=dict)   # raw engine results of this run (filled by the first stage that needs them)
 
 
-@dataclass
+@dataclass(frozen=True)
 class StageResult:
-    """Outcome of one stage. A `not_available` result carries no outputs and no engine calls."""
+    """Outcome of one stage (COD-22: frozen, no field can be reassigned; a stage returns a new one). A `not_available` result carries no outputs and no engine calls."""
 
     stage: int
     status: str

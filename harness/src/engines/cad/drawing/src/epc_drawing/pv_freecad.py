@@ -12,6 +12,7 @@ from pathlib import Path
 from typing import Any, Dict, Optional
 
 from epc_drawing import pv_model3d
+from epc_drawing.errors import DrawingError
 
 # ACI colour index of each layer -> RGB (0..1); a layer of the reference status family not listed here is drawn grey.
 ACI_RGB = {1: (0.9, 0.1, 0.1), 4: (0.0, 0.8, 0.8), 5: (0.1, 0.1, 0.85), 7: (0.85, 0.85, 0.85), 8: (0.45, 0.45, 0.45), 9: (0.65, 0.65, 0.65), 30: (0.8, 0.45, 0.1)}
@@ -148,7 +149,7 @@ def write(geometry: Dict[str, Any], result: Dict[str, Any], out_dir, name: str, 
           sector_modules: int = pv_model3d.SECTOR_MODULES) -> Dict[str, Any]:
     """Writes `<name>_pv_model_3d_freecad.FCMacro` in `out_dir`. Returns {"macro": path, "blocks": n, "instances": n}."""
     if not geometry.get("tables"):
-        raise ValueError("the layout has no tables to raise in 3D")
+        raise DrawingError("err_layout_no_tables")
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
     path = out / f"{name}_pv_model_3d_freecad.FCMacro"

@@ -17,7 +17,7 @@ from epc_hvac.model import HvacError
 def _pos(value, name: str, allow_zero: bool = True) -> float:
     v = float(value)
     if v < 0 or (v == 0 and not allow_zero):
-        raise HvacError(f"{name} must be {'>= 0' if allow_zero else '> 0'} (got {value})")
+        raise HvacError("err_out_of_range", name=name, relation='>= 0' if allow_zero else '> 0', got=value)
     return v
 
 
@@ -30,9 +30,9 @@ def solar_w(area_m2: float, shgc: float, orientation: str) -> float:
     """Solar gain of a window: area · solar heat gain coefficient · peak irradiance of its orientation (N, NE, E, SE, S, SW, W, NW or H for a horizontal one)."""
     peak = config.solar_peak_w_m2()
     if orientation not in peak:
-        raise HvacError(f"orientation must be one of {sorted(peak)} (got {orientation!r})")
+        raise HvacError("err_orientation_invalid", allowed=sorted(peak), orientation=orientation)
     if not 0 <= float(shgc) <= 1:
-        raise HvacError(f"shgc must be between 0 and 1 (got {shgc})")
+        raise HvacError("err_shgc_range", shgc=shgc)
     return _pos(area_m2, "area_m2") * float(shgc) * peak[orientation]
 
 
@@ -68,7 +68,7 @@ def ventilation_ls(use: str, occupants: float, area_m2: float) -> float:
 def supply_flow_ls(sensible_w: float, supply_delta_t_k: float) -> float:
     """Supply air flow (L/s) that removes `sensible_w` with a supply air `supply_delta_t_k` colder than the room."""
     if float(supply_delta_t_k) <= 0:
-        raise HvacError("supply_delta_t_k must be > 0")
+        raise HvacError("err_supply_delta_t")
     return max(0.0, float(sensible_w)) / (config.AIR_SENSIBLE_W_PER_LS_K * float(supply_delta_t_k))
 
 

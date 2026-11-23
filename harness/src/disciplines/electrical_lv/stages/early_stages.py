@@ -5,7 +5,7 @@ from disciplines.electrical_lv.intake.loads import LoadListError, check_load_lis
 from disciplines.electrical_lv.intake.profile import build_profile
 from disciplines.electrical_lv.requirements.design_basis import build_design_basis
 from disciplines.electrical_lv.requirements.verify_inputs import verify_inputs
-from disciplines.electrical_lv.stages.base import Stage, StageInputError
+from disciplines.electrical_lv.stages.base import Stage, StageInputError, reason
 from disciplines.electrical_lv.stages.grouped import GroupedStage
 
 
@@ -46,7 +46,7 @@ class RequirementsStage(Stage):
         except IntakeError as exc:
             raise StageInputError(exc.errors) from exc
         except ValueError as exc:
-            raise StageInputError([str(exc)]) from exc
+            raise StageInputError([reason(exc)]) from exc
         context.design_basis = basis
         return self.result("ok", outputs={"design_basis": basis})
 

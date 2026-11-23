@@ -13,9 +13,9 @@ def _document(doc: Union[dict, str, bytes]) -> dict:
         try:
             doc = json.loads(doc)
         except ValueError as e:
-            raise HvacError(f"the input is not valid JSON: {e}") from e
+            raise HvacError("err_input_not_json", e=e) from e
     if not isinstance(doc, dict) or not isinstance(doc.get("spaces"), list) or not doc["spaces"]:
-        raise HvacError("the input needs a non-empty list `spaces`")
+        raise HvacError("err_spaces_empty")
     return doc
 
 
@@ -23,7 +23,7 @@ def _design(doc: dict) -> Dict[str, float]:
     d = doc.get("design") or {}
     missing = [k for k in DESIGN_KEYS if k not in d]
     if missing:
-        raise HvacError(f"design is missing: {', '.join(missing)}")
+        raise HvacError("err_design_missing", missing=', '.join(missing))
     return {k: float(d[k]) for k in DESIGN_KEYS}
 
 
@@ -64,7 +64,7 @@ def run(doc: Union[dict, str, bytes], options: Optional[Options] = None) -> Resu
     spaces: List[Dict[str, Any]] = []
     for s in document["spaces"]:
         if "id" not in s or "area_m2" not in s:
-            raise HvacError("every space needs `id` and `area_m2`")
+            raise HvacError("err_space_incomplete")
         spaces.append(_space(s, d))
     totals = {k: round(sum(s[k] for s in spaces), 1) for k in ("sensible_w", "latent_w", "total_w", "supply_ls", "ventilation_ls")}
     totals["total_tr"] = round(loads.refrigeration_tons(totals["total_w"]), 2)

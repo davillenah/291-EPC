@@ -20,6 +20,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
 from epc_plan import core
+from epc_plan.core import PlanError
 
 def _box_of(solids: List[Dict[str, Any]]) -> Optional[List[List[float]]]:
     points = [v for s in solids for v in s["mesh"]["vertices"]]
@@ -31,13 +32,13 @@ def _box_of(solids: List[Dict[str, Any]]) -> Optional[List[List[float]]]:
 def check(scene: Any) -> None:
     """Raises `core.PlanError` when the data is not a scene this module can show."""
     if not isinstance(scene, dict) or scene.get("schema_version") != "1.0" or not isinstance(scene.get("solids"), list):
-        raise core.PlanError("a scene is an object with schema_version 1.0 and its solids")
+        raise core.PlanError("err_scene_shape")
     for s in scene["solids"]:
         mesh = s.get("mesh") if isinstance(s, dict) else None
         if not isinstance(mesh, dict) or not isinstance(mesh.get("vertices"), list) or not isinstance(mesh.get("faces"), list):
-            raise core.PlanError("every solid of a scene has a mesh with vertices and faces")
+            raise core.PlanError("err_solid_no_mesh")
         if any(not 0 <= i < len(mesh["vertices"]) for f in mesh["faces"] for i in f):
-            raise core.PlanError(f"solid {s.get('id')!r}: a face names a vertex that does not exist")
+            raise core.PlanError("err_face_vertex", solid=s.get('id'))
 
 
 def merge(scenes: List[Dict[str, Any]]) -> Dict[str, Any]:
@@ -122,7 +123,7 @@ EPS = 1e-7
 def _plane_frame(axis: str, look: str):
     """For a vertical plane on `axis` seen towards `look`: the index of the axis, the index of the other horizontal axis and the sign that turns it into `u` (left to right for the viewer)."""
     if axis not in ("x", "y") or look not in LOOKS:
-        raise core.PlanError("a section is cut by a plane x or y, seen towards + or - of that axis")
+        raise core.PlanError("err_section_plane")
     i = 0 if axis == "x" else 1
     sign = 1.0 if (axis == "y") == (look == "+") else -1.0
     return i, 1 - i, sign
@@ -246,7 +247,7 @@ def cut(scene: Dict[str, Any], axis: str, at_m: float, look: str = "+", depth_m:
     (everything when None). `{"cut": [...], "seen": [...], "box": [u0, z0, u1, z1]}` in metres: `u` to the right, `z` up."""
     check(scene)
     if not isinstance(at_m, (int, float)) or isinstance(at_m, bool):
-        raise core.PlanError("the place of the section plane is a number of metres")
+        raise core.PlanError("err_section_position")
     i, j, sign = _plane_frame(axis, look)
     direction = 1.0 if look == "+" else -1.0
     cuts = list(filter(None, (_cut_solid(s, i, j, sign, at_m) for s in scene["solids"])))
@@ -322,7 +323,7 @@ def write_section_dxf(section: Dict[str, Any], path: Path, version: str = "", pa
     import ezdxf
     from epc_plan.dxfout import _dxf_version
     if not isinstance(section, dict) or section.get("kind") != "section":
-        raise core.PlanError("a section is what `cut` gives")
+        raise core.PlanError("err_section_not_cut")
     doc = ezdxf.new(dxfversion=_dxf_version(params["dxf"], version), setup=True)
     doc.units = 6
     msp = doc.modelspace()

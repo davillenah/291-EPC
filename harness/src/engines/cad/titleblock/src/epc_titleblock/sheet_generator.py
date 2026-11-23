@@ -35,6 +35,7 @@ import types
 import xml.etree.ElementTree as ET
 
 from epc_titleblock import layout
+from epc_titleblock.errors import TitleblockError
 
 # formato: (ancho, alto, margen izq., margen sup./der./inf., columnas, filas)
 # A0: margen 20 en los 4 lados (archivado con banda adhesiva, fig. 16).
@@ -169,7 +170,7 @@ def build(fmt: str = "A0", modifications: bool = False, logos=None, iram: bool =
         with open(path, "rb") as f:
             cab = f.read(24)
         if cab[:8] != b"\x89PNG\r\n\x1a\n" or cab[12:16] != b"IHDR":
-            raise ValueError(f"{os.path.basename(path)} no es un PNG válido")
+            raise TitleblockError("err_png_invalid", basename=os.path.basename(path))
         return struct.unpack(">II", cab[16:24])
 
 
@@ -194,7 +195,7 @@ def build(fmt: str = "A0", modifications: bool = False, logos=None, iram: bool =
                 vx, vy = 0.0, 0.0
                 vw, vh = (float(re.sub(r"[^0-9.]", "", root.get(a))) for a in ("width", "height"))
             else:
-                raise ValueError(f"{os.path.basename(path)} no tiene viewBox ni width/height")
+                raise TitleblockError("err_svg_no_size", basename=os.path.basename(path))
 
             def limpiar(el):
                 for hijo in list(el):

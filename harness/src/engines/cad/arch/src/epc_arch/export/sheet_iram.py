@@ -56,7 +56,7 @@ def _free_area(root) -> Box:
     """The usable zone less the title block and the list of modifications: the zone above them, with a clear gap all round."""
     zone = _box(root.attrib.get("data-zona-util"))
     if zone is None:
-        raise ArchError("the sheet SVG does not say its usable zone (data-zona-util): it is not an IRAM sheet of epc_titleblock")
+        raise ArchError("err_sheet_no_zone")
     blocks = [b for b in (_box(root.attrib.get("data-rotulo")), _box(root.attrib.get("data-modificaciones"))) if b]
     bottom = min([b[1] for b in blocks] + [zone[3]])
     return zone[0] + GAP, zone[1] + GAP, zone[2] - GAP, bottom - GAP
@@ -156,10 +156,10 @@ def load_template(svg: str) -> SheetTemplate:
     try:
         root = ET.fromstring(svg)
     except ET.ParseError:
-        raise ArchError("the sheet SVG cannot be read: it is not well-formed XML")
+        raise ArchError("err_sheet_not_xml")
     view = _nums(root.attrib.get("viewBox", ""))
     if len(view) != 4:
-        raise ArchError("the sheet SVG has no viewBox")
+        raise ArchError("err_sheet_no_viewbox")
     r = _Reader()
     r.walk(root, IDENTITY, {})
     return SheetTemplate(root.attrib.get("data-format", "A?"), (view[2], view[3]), _free_area(root), r.items, r.keys, r.placeholders)

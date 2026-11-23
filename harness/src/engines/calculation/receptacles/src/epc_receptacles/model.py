@@ -3,13 +3,19 @@ from dataclasses import dataclass, field
 from typing import Any, Dict, List
 
 from epc_receptacles.config import VERSION
+from epc_receptacles.messages import text
 
 SCHEMA_VERSION = "1.0"
 NORMS = ("771", "770")                       # the section of AEA 90364 that gives the mounting height: 771 offices and premises, 770 housing
 
 
 class ReceptaclesError(ValueError):
-    """The document cannot be used: the message says what to correct."""
+    """The document cannot be used: `str(error)` is the English text, `es` the Spanish one, `code` the stable code (ADR-0039)."""
+
+    def __init__(self, code: str, **params):
+        t = text(code, **params)
+        super().__init__(t["en"])
+        self.code, self.en, self.es = code, t["en"], t["es"]
 
 
 @dataclass(frozen=True)

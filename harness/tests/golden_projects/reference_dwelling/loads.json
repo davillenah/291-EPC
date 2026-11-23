@@ -1,0 +1,105 @@
+{
+  "schema_version": "1.0",
+  "areas": [
+    {
+      "id": "A1",
+      "name": "Invented dwelling, ground floor"
+    },
+    {
+      "id": "A2",
+      "name": "Invented dwelling, first floor"
+    }
+  ],
+  "loads": [
+    {
+      "id": "L-01",
+      "description": "Lighting, living and kitchen",
+      "area": "A1",
+      "kind": "lighting",
+      "power": {
+        "value": 0.6,
+        "unit": "kW"
+      },
+      "phases": 1,
+      "length": {
+        "value": 18,
+        "unit": "m"
+      }
+    },
+    {
+      "id": "L-02",
+      "description": "Lighting, bedrooms",
+      "area": "A2",
+      "kind": "lighting",
+      "power": {
+        "value": 0.5,
+        "unit": "kW"
+      },
+      "phases": 1,
+      "length": {
+        "value": 22,
+        "unit": "m"
+      }
+    },
+    {
+      "id": "T-01",
+      "description": "Receptacles, living and kitchen",
+      "area": "A1",
+      "kind": "receptacles",
+      "power": {
+        "value": 2.2,
+        "unit": "kW"
+      },
+      "phases": 1,
+      "length": {
+        "value": 16,
+        "unit": "m"
+      }
+    },
+    {
+      "id": "T-02",
+      "description": "Receptacles, bedrooms",
+      "area": "A2",
+      "kind": "receptacles",
+      "power": {
+        "value": 2.2,
+        "unit": "kW"
+      },
+      "phases": 1,
+      "length": {
+        "value": 24,
+        "unit": "m"
+      }
+    },
+    {
+      "id": "E-01",
+      "description": "Air conditioner, living",
+      "area": "A1",
+      "kind": "special",
+      "power": {
+        "value": 2.6,
+        "unit": "kW"
+      },
+      "phases": 1,
+      "length": {
+        "value": 14,
+        "unit": "m"
+      }
+    },
+    {
+      "id": "E-02",
+      "description": "Electric water heater",
+      "area": "A2",
+      "kind": "special",
+      "power": {
+        "value": 1.5,
+        "unit": "kW"
+      },
+      "phases": 1,
+      "length": {
+        "value": 12,
+        "unit": "m"
+      }
+    }
+  ]
+}

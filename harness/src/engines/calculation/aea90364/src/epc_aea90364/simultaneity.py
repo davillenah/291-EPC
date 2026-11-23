@@ -11,6 +11,7 @@ import json
 from pathlib import Path
 
 from epc_aea90364 import aea_demand as DEM
+from epc_aea90364.errors import Aea90364Error
 
 _FILE = Path(__file__).resolve().parent / "data" / "installation_types.json"
 _CACHE = {}
@@ -35,14 +36,14 @@ def installation_kind(value):
 def _valid_factor(value):
     f = float(value)
     if not 0.0 < f <= 1.0:
-        raise ValueError(f"simultaneity_factor must be in (0, 1], got {value!r}")
+        raise Aea90364Error("err_simultaneity_range", value=value)
     return f
 
 
 def _valid_grade(value):
     grade = str(value or "").strip().lower()
     if grade and grade not in DEM.COEF_GRADO_771:
-        raise ValueError(f"electrification_grade must be one of {sorted(DEM.COEF_GRADO_771)}, got {value!r}")
+        raise Aea90364Error("err_grade_invalid", allowed=sorted(DEM.COEF_GRADO_771), got=value)
     return grade or None
 
 

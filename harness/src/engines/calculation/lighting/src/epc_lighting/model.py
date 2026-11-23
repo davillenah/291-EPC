@@ -6,16 +6,22 @@ from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Tuple
 
 from epc_lighting.config import PARAMS, VERSION
+from epc_lighting.messages import text
 
 
-class LightingError(Exception):
-    """The input cannot be processed: the message says what to fix."""
+class LightingError(ValueError):
+    """The input cannot be processed: `str(error)` is the English text, `es` the Spanish one, `code` the stable code (ADR-0039)."""
+
+    def __init__(self, code: str, **params):
+        t = text(code, **params)
+        super().__init__(t["en"])
+        self.code, self.en, self.es = code, t["en"], t["es"]
 
 
 def rnd(x: float) -> float:
     """Round for output; refuses NaN/inf so a bad number never reaches the JSON."""
     if not math.isfinite(x):
-        raise LightingError("a non-finite number was produced: check the dimensions and factors in the input")
+        raise LightingError("err_not_finite")
     value = round(float(x), PARAMS["rounding_digits"])
     return 0.0 if value == 0 else value
 

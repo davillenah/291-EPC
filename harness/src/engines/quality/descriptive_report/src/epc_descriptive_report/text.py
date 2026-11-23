@@ -1,3 +1,4 @@
+from epc_descriptive_report.errors import DescriptiveReportError
 """Spanish plain text of the descriptive report: string templates and the document's values only (no number is written in a template).
 
 A sentence whose values are missing is left out; nothing is invented.
@@ -158,7 +159,7 @@ WRITERS = {"object_scope": object_text, "supply_earthing": supply_text, "board_o
 def descriptive_report_to_text(doc):
     """Spanish plain text of a document built by `build_descriptive_report`."""
     if not isinstance(doc, dict) or not isinstance(doc.get("sections"), list):
-        raise ValueError("a descriptive-report document with sections is required")
+        raise DescriptiveReportError("err_report_document_required")
     lines = [HEADER, ""]
     for n, section in enumerate(doc["sections"], start=1):
         body = WRITERS.get(section["id"], lambda _s: "")(section).strip()
