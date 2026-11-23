@@ -123,7 +123,7 @@ Needs the engine contracts of phase 3. DGM-12 and DGM-15 first (the flow and who
 
 Build on the traceable flow of phase 5 and the reference projects of phase 1.
 
-- [ ] **GEN-01 · Pending-norm view (was D).** One generated view of every value still `pending review`, ordered by how many deliverables depend on it, so the owner approves first what unblocks most. Agents never approve a value (P: approval).
+- [x] **GEN-01 · Pending-norm view (was D).** Done 2026-11-23: `REVISION_NORMAS.md` lists the review units ordered by how many engines change if the unit changes (from the generated dependency map), with a new column; the unit-to-engine table is `UNIT_ENGINE` in `review_list.py`. Original goal: One generated view of every value still `pending review`, ordered by how many deliverables depend on it, so the owner approves first what unblocks most. Agents never approve a value (P: approval).
 - [ ] **PRO-01 · Decision register per project.** Every assumption the harness makes (a default, a norm chosen between two) listed for the engineer of record to review before signing.
 - [ ] **GEN-04 · Traceability in every deliverable (was B).** Each number shown with its engine, version and norm record.
 - [ ] **GEN-03 · Independent cross-check before sign-off (was A).** A second path recalculates the critical values (voltage drop, cross-section, protection) and flags differences; `calc_check` keeps the only verdict.
