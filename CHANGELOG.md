@@ -5,6 +5,7 @@ All notable changes. Format: Keep a Changelog; versions follow `harness/docs/BRA
 ## [Unreleased]
 
 ### Changed
+- The incremental gate no longer fails the coverage check when no engine suite is affected (a documentation-only change).
 - ADR-0039 (proposed): one bilingual, code-based error pattern per engine and a generated error catalogue (COD-21, GEN-08, OPT-09).
 - Engine contracts generated from the schemas (GEN-09): `harness/docs/ENGINE_CONTRACTS.md`, kept fresh by `regen_all.py` and checked by the gate (`engine-contracts`, 49 checks).
 - The gate checks that every GitHub workflow file parses (COD-16); `pyyaml` joins `requirements-dev.txt`.
