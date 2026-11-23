@@ -23,32 +23,50 @@ def _json(path):
         return None
 
 
+def _new_row():
+    return {"slug": "", "runs": 0, "failed": 0, "seconds": []}
+
+
+def _add_states(stages, epc):
+    """Count, per stage, how many times it was seen and how many did not finish well, from the project's state file."""
+    for entry in (_json(epc / "master_project_state.json") or {}).get("stages", []):
+        row = stages[entry.get("number")]
+        row["slug"] = entry.get("slug", row["slug"])
+        row["runs"] += 1
+        row["failed"] += entry.get("status") not in NOT_FAILURES
+
+
+def _add_timings(stages, epc) -> tuple:
+    """Add the seconds of every timed run of the project; returns (runs, timed runs)."""
+    run_dirs = sorted((epc / "runs").glob("*")) if (epc / "runs").is_dir() else []
+    timed = 0
+    for run_dir in run_dirs:
+        timing = _json(run_dir / "stage_timings.json")
+        timed += bool(timing)
+        for entry in (timing or {}).get("stages", []):
+            row = stages[entry.get("stage")]
+            row["slug"] = entry.get("slug", "")
+            row["seconds"].append(entry.get("seconds", 0.0))
+    return len(run_dirs), timed
+
+
+def _summary(number, row) -> dict:
+    secs = row["seconds"]
+    return {"stage": number, "slug": row["slug"], "projects_seen": row["runs"], "failed": row["failed"],
+            "mean_seconds": round(sum(secs) / len(secs), 3) if secs else None, "max_seconds": max(secs) if secs else None}
+
+
 def collect(root) -> dict:
     """Metrics of every project under `root` (a folder of projects, each with a hidden `.epc/`)."""
-    stages = defaultdict(lambda: {"slug": "", "runs": 0, "failed": 0, "seconds": []})
-    projects = runs = timed_runs = 0
-    for epc in sorted(Path(root).glob("*/.epc")):
-        projects += 1
-        for entry in (_json(epc / "master_project_state.json") or {}).get("stages", []):
-            row = stages[entry.get("number")]
-            row["slug"] = entry.get("slug", row["slug"])
-            row["runs"] += 1
-            row["failed"] += entry.get("status") not in NOT_FAILURES
-        for run_dir in sorted((epc / "runs").glob("*")) if (epc / "runs").is_dir() else []:
-            runs += 1
-            timing = _json(run_dir / "stage_timings.json")
-            if timing:
-                timed_runs += 1
-                for entry in timing.get("stages", []):
-                    stages[entry.get("stage")]["slug"] = entry.get("slug", "")
-                    stages[entry.get("stage")]["seconds"].append(entry.get("seconds", 0.0))
-    rows = []
-    for number in sorted(k for k in stages if k is not None):
-        row = stages[number]
-        secs = row["seconds"]
-        rows.append({"stage": number, "slug": row["slug"], "projects_seen": row["runs"], "failed": row["failed"],
-                     "mean_seconds": round(sum(secs) / len(secs), 3) if secs else None, "max_seconds": max(secs) if secs else None})
-    return {"projects": projects, "runs": runs, "runs_with_timings": timed_runs, "stages": rows}
+    stages = defaultdict(_new_row)
+    epcs = sorted(Path(root).glob("*/.epc"))
+    runs = timed_runs = 0
+    for epc in epcs:
+        _add_states(stages, epc)
+        n, timed = _add_timings(stages, epc)
+        runs, timed_runs = runs + n, timed_runs + timed
+    rows = [_summary(number, stages[number]) for number in sorted(k for k in stages if k is not None)]
+    return {"projects": len(epcs), "runs": runs, "runs_with_timings": timed_runs, "stages": rows}
 
 
 def render(metrics) -> str:
