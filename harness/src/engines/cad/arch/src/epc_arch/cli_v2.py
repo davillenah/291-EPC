@@ -79,10 +79,15 @@ def fields_of(a) -> dict:
     return dict(f.split("=", 1) for f in a.field if "=" in f)
 
 
+def _run_time(now=None) -> str:
+    """The run time written in the manifest: the one handed in (OPT-10), else the clock."""
+    return (now or datetime.now(timezone.utc)).isoformat(timespec="seconds")
+
+
 def _manifest(src: Path, data: bytes, a, formats, outputs, out: Path, sheet_source: str = "engine-frame", now=None) -> dict:
     """What a run was: the engine, the input and the files that set how it was read and drawn (params, style) by hash, the options, and each output by hash."""
     here = Path(__file__).parent
-    return {"engine": "epc_arch", "version": __version__, "run_at": (now or datetime.now(timezone.utc)).isoformat(timespec="seconds"),
+    return {"engine": "epc_arch", "version": __version__, "run_at": _run_time(now),
             "input": {"name": src.name, "sha256": hashlib.sha256(data).hexdigest()}, "params_sha256": _sha(here / "params.json"), "style_sha256": _sha(STYLE_PATH),
             "options": {"formats": formats, "sheet": a.sheet, "sheet_source": sheet_source, "scale": a.scale, "dpi": a.dpi, "page": a.page, "sheet_svg_sha256": _sha(Path(a.sheet_svg)) if a.sheet_svg else None, "fields": fields_of(a)}, "outputs": [{"file": n, "sha256": _sha(out / n)} for n in outputs]}
 
