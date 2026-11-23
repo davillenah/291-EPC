@@ -162,15 +162,14 @@ SYMBOL_SCALE = 0.55      # the library symbols are drawn about 30 units wide; th
 
 
 def _symbol(pen: Pen, name: str, x: float, y: float, scale: float = SYMBOL_SCALE) -> bool:
-    """Inserts the IEC 60617 symbol `name` of the SLD library (`epc_symbols`, SVG source converted to DXF blocks) at (x, y); False when the library has no such symbol (the caller keeps its plain box)."""
-    from pathlib import Path as P
+    """Inserts the IEC 60617 symbol `lv_<name>` of the SLD library (`epc_symbols`, SVG source converted to DXF blocks) at (x, y); False when the library has no such symbol (the caller keeps its plain box)."""
     import ezdxf
     from ezdxf.addons.importer import Importer
-    from epc_symbols import library_dir
-    path = P(str(library_dir("sld-lv-symbol"))) / f"291_E_LV_SLD_IEC60617_{name}.dxf"
-    if not path.is_file():
+    from epc_symbols import dxf_block, UnknownSymbol
+    try:
+        path, block = dxf_block(f"lv_{name}", "sld")          # the file and the block come from the symbol API, no file name is built here (SYM-02)
+    except UnknownSymbol:
         return False
-    block = f"291_E_LV_SLD_IEC60617_{name}"
     doc = pen.msp.doc
     if block not in doc.blocks:
         source = ezdxf.readfile(str(path))
