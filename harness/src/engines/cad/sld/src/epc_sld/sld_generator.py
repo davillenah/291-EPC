@@ -6,7 +6,7 @@ la tabla, las referencias, el rótulo, y entregar (SVG y DXF). El dibujo no calc
 """
 import sys, os, math, json, textwrap, datetime, re
 from xml.sax.saxutils import escape as xesc
-import openpyxl
+from epc_sld import board_table
 from lxml import etree
 try:
     import cairosvg  # optional: only needed for PNG previews; requires the Cairo DLL on Windows
@@ -82,10 +82,10 @@ def _num(x):
     return float(x) if x not in (None, '') else None
 
 
-def _board_header(wb, env):
+def _board_header(rows, env):
     """Los datos del tablero de la plantilla; el nombre lleva el sufijo de la hoja (el nombre base es el del rótulo)."""
     tb = {}
-    for row in wb['TABLERO'].iter_rows(values_only=True):
+    for row in rows:
         if row and row[0] in BOARD_KEYS:
             tb[row[0]] = row[1]
     tb['NOMBRE_BASE'] = tb['NOMBRE']   # nombre sin sufijo de hoja: es el que va al rótulo (el número de hoja está en Página)
@@ -109,9 +109,8 @@ def _circuit(tag, d):
                 tipo=str(d.get('CABLE_TIPO') or 'tetra_sep').strip().lower())
 
 
-def _circuits(wb):
+def _circuits(rows):
     """Los circuitos de la plantilla por tag, y su orden."""
-    rows = list(wb['CIRCUITOS'].iter_rows(values_only=True))
     hi = next(i for i, r in enumerate(rows) if r and r[0] == 'TAG')
     hdr = [str(h).strip() if h is not None else '' for h in rows[hi]]
     C, order = {}, []
@@ -220,10 +219,10 @@ class _Sheet:
 
     # ---------- entrada y cifras ----------
     def read_board(self):
-        wb = openpyxl.load_workbook(self.xlsx, data_only=True)
-        self.tb = _board_header(wb, self.env)
+        board_rows, circuit_rows = board_table.load(self.xlsx)
+        self.tb = _board_header(board_rows, self.env)
         self.v, self.icc, self.fpdef = float(self.tb['TENSION_V']), float(self.tb['ICC_KA']), float(self.tb.get('FP_DEFAULT') or 0.85)
-        self.c, self.order = _circuits(wb)
+        self.c, self.order = _circuits(circuit_rows)
         self.read_structure()
         self.prev_h, self.next_h = self.env.get('SLD_PREV', ''), self.env.get('SLD_NEXT', '')
         self.read_figures()

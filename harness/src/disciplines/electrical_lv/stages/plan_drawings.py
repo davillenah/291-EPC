@@ -65,11 +65,8 @@ def sheet_options(given):
     return fmt or "A1", scale
 
 
-def place_on_sheets(plans, request_path, fmt, scale):
-    """Puts each plan DXF of `plans` ({name: path}) on the IRAM sheet of the project (`epc_drawing.export.plan_sheet.compose`, with the title block request of stage 10) as `<plan>_sheet.dxf`; returns {name: result}."""
-    import json
-    from pathlib import Path
+def place_on_sheets(plans, request, fmt, scale):
+    """Puts each plan DXF of `plans` ({name: path}) on the IRAM sheet of the project (`epc_drawing.export.plan_sheet.compose`, with `request`, the title block request of stage 10 as data) as `<plan>_sheet.dxf`; returns {name: result}."""
     from epc_drawing.export import plan_sheet
-    request = json.loads(Path(request_path).read_text(encoding="utf-8"))
     asked = lambda name: scale.get(name) if isinstance(scale, dict) else scale                                        # noqa: E731 - one scale for all, or one for each plan
     return {name: plan_sheet.compose(path, request, path.with_name(path.stem + "_sheet.dxf"), fmt, asked(name), name) for name, path in sorted(plans.items())}

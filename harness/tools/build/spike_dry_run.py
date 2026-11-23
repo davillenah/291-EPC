@@ -356,8 +356,8 @@ def c3(run):
 
 # ------------------------------------------------------------------ C5
 def classify_difference(S, rel, one, two):
-    """'stamped' (DXF or the xlsx the drawing engine writes), 'embedded' (JSON that differs only in the DXF hashes) or 'unexplained'."""
-    if rel.endswith(".dxf") or rel.rsplit("/", 1)[-1] == "input_for_sld.xlsx":
+    """'stamped' (a DXF), 'embedded' (JSON that differs only in the DXF hashes) or 'unexplained'."""
+    if rel.endswith(".dxf"):
         return "stamped"
     try:
         same = S.normalise_dxf_hashes(json.loads(one.read_bytes())) == S.normalise_dxf_hashes(json.loads(two.read_bytes()))
@@ -399,10 +399,10 @@ def c5(run):
              "unpinned_files": plain["files"], "unpinned_differ_stamped": len(plain["kinds"]["stamped"]), "unpinned_differ_embedded_hash": len(plain["kinds"]["embedded"]),
              "unpinned_differ_unexplained": len(plain["kinds"]["unexplained"]), "unpinned_deliverables_identical": plain["deliverables"] - len(plain["deliverable_diffs"])}
     evidence = [f"Dos corridas del mismo proyecto con las mismas entradas, el mismo reloj y la fecha del dibujo fijada (engine_inputs.drawings.date): de {facts['files']} archivos, "
-                f"{facts['files_identical']} son idénticos byte a byte (los planos DXF y la planilla de entrada del dibujo incluidos).",
+                f"{facts['files_identical']} son idénticos byte a byte (los planos DXF incluidos).",
                 f"{facts['deliverables_identical']} de {facts['deliverables']} entregables tienen el mismo hash de salida en sus manifiestos."]
     evidence.append(f"Nota: sin fijar la fecha del dibujo (comportamiento por defecto, sin cambios) de {facts['unpinned_files']} archivos difieren {facts['unpinned_differ_stamped']} que llevan hora o "
-                    f"identificadores aleatorios (DXF y la planilla de entrada del dibujo) y {facts['unpinned_differ_embedded_hash']} JSON que solo difieren en el hash de esos DXF; "
+                    f"identificadores aleatorios (DXF) y {facts['unpinned_differ_embedded_hash']} JSON que solo difieren en el hash de esos DXF; "
                     f"sin explicación: {facts['unpinned_differ_unexplained']}; {facts['unpinned_deliverables_identical']} de {plain['deliverables']} entregables con el mismo hash.")
     gaps = []
     if diff or pinned["deliverable_diffs"] or not pinned["names_equal"]:

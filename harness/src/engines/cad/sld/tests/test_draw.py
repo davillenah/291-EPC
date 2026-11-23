@@ -66,5 +66,49 @@ class TestDraw(unittest.TestCase):
         self.assertEqual((fake.call_args.kwargs["maxl"], fake.call_args.kwargs["stamp_date"]), (5, "2026-01-02"))
 
 
+class TestBoardTable(unittest.TestCase):
+    """The board comes as data or as a workbook and gives the same rows (DGM-16 step 4)."""
+
+    BOARD = {"tablero": {"NOMBRE": "TGBT", "TENSION_V": 380}, "circuitos": [{"TAG": "C1", "CARGA": 5.5, "PARENT_TAG": None}, {"TAG": "C2", "CARGA": 7}], "columnas": ["TAG", "CARGA", "PARENT_TAG"]}
+
+    def test_data_and_workbook_give_the_same_rows(self):
+        import openpyxl
+        from epc_sld import board_table
+        with tempfile.TemporaryDirectory() as t:
+            wb = openpyxl.Workbook()
+            ws = wb.active
+            ws.title = "TABLERO"
+            ws.append(["DATOS DEL TABLERO"])
+            ws.append(["CAMPO", "VALOR"])
+            for k, v in self.BOARD["tablero"].items():
+                ws.append([k, v])
+            cs = wb.create_sheet("CIRCUITOS")
+            cs.append(["CIRCUITOS"])
+            cs.append(self.BOARD["columnas"])
+            for row in self.BOARD["circuitos"]:
+                cs.append([row.get(c) for c in self.BOARD["columnas"]])
+            path = Path(t) / "b.xlsx"
+            wb.save(path)
+            def trimmed(rows):
+                return [tuple(rows_[:len([v for v in rows_ if v is not None]) or 1]) for rows_ in rows]
+            self.assertEqual(trimmed(board_table.load(self.BOARD)[0]), trimmed(board_table.load(str(path))[0]))
+            self.assertEqual(trimmed(board_table.load(self.BOARD)[1][1:]), trimmed(board_table.load(str(path))[1][1:]))
+
+    def test_an_empty_board_keeps_its_header(self):
+        from epc_sld import board_table
+        rows = board_table.load({"tablero": {}, "circuitos": [], "columnas": ["TAG"]})[1]
+        self.assertEqual(rows[1], ("TAG",))
+
+    def test_one_of_board_or_workbook_is_required(self):
+        with tempfile.TemporaryDirectory() as t:
+            f = {k: str(Path(t) / f"{k}.dat") for k in ("calc_json", "detail_json", "figures_json")}
+            for p in f.values():
+                Path(p).write_text("x")
+            with self.assertRaises(SldError) as ctx:
+                draw(SldInput(**f), t, "SLD_X")
+            self.assertEqual(ctx.exception.code, "err_sld_field_missing")
+            self.assertIn("board", ctx.exception.en)
+
+
 if __name__ == "__main__":
     unittest.main()

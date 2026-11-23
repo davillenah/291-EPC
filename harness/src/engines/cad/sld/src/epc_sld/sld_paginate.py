@@ -2,13 +2,13 @@
 `paginate(lib, xlsx, out, name, lamina, modblock, maxl=18, environ=None, stamp_date=None)` splits the roots (and their descendants) into sheets of up to `maxl` leaf circuits and
 draws each one in process with `sld_generator.generate`; if all fit in one sheet only <NAME> is drawn. The calculation and the sheet options come in `environ`, never from the process.
 Command line (thin adapter): python -m epc_sld.sld_paginate <lib> <input.xlsx> <out_dir> <NAME> <lamina.svg> <mod_block.svg> [max_salidas=18]"""
-import sys, os, openpyxl
-from epc_sld import sld_generator
+import sys, os
+from epc_sld import board_table, sld_generator
 
 
 def _circuits(xlsx):
     """(rows, index of the PARENT_TAG column) of the CIRCUITOS sheet, header excluded."""
-    rows = list(openpyxl.load_workbook(xlsx)['CIRCUITOS'].iter_rows(values_only=True))
+    rows = board_table.load(xlsx)[1]
     hi = next(i for i, r in enumerate(rows) if r and r[0] == 'TAG')
     return [r for r in rows[hi+1:] if r and r[0]], list(rows[hi]).index('PARENT_TAG')
 
