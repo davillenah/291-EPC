@@ -46,9 +46,9 @@ Cheap, change no drawing, and make every later change measurable and safe. Do fi
 - [x] (2026-11-23) **OPT-08 · One command that regenerates every generated file** (registry, plugins, agents, impact map) before a commit; stale generated files caused most CI failures.
 - [x] (2026-11-23) **COD-15 · Pre-commit check for stale generated files** (with OPT-08).
 - [x] (2026-11-23) **OPT-01 · Time every stage.** A stopwatch per pipeline stage (calculation, netlist, SLD, MLD, DXF, documents) written to the project log, so each later change is judged with measured data.
-- [ ] **COD-05 · Profile first** (cProfile on an example run); fix only the three most expensive points.
-- [ ] **COD-14 · Fast and slow tests separated** with markers.
-- [ ] **OPT-07 · Faster gate:** run only the tests the impact map says are affected on pull requests; the full battery stays for the release. No check is weakened.
+- [~] **COD-05 · Profile first** (cProfile on an example run); fix only the three most expensive points. Profile done 2026-11-23 on the whole-building run (about 13 s): (1) PDF text layout in matplotlib, 8.7 s of the 13 (`backend_pdf.draw_text`); (2) DXF files read again and again, `ezdxf.readfile` 50 times for 3.7 s (`epc_dxf.deliverable.convert`, `_finish`, `capas_dxf.colorear`, 8 calls each); (3) the plan sheets, 2.5 s (`plan_sheet.compose`). Left for Block 4: each fix can change DXF or PDF bytes, so it needs the characterization tests of COD-13 first.
+- [x] (2026-11-23) **COD-14 · Fast and slow tests separated** with markers.
+- [x] (2026-11-23) **OPT-07 · Faster gate:** run only the tests the impact map says are affected on pull requests; the full battery stays for the release. No check is weakened.
 - [ ] **COD-13 · Characterization tests per engine,** not only for drawings, before each conversion.
 - [ ] **GEN-02 · Reference projects (was C).** A fixed set of fictional projects (dwelling, shed, PV plant) run at every release and compared with the previous run; stored in `tmp/`-style fictional data only.
 - [ ] **OPT-14 · Automatic simulation report:** one command runs a fictional simulation in `tmp/` and gathers times, warnings and the difference with the previous one.

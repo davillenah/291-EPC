@@ -5,6 +5,8 @@ All notable changes. Format: Keep a Changelog; versions follow `harness/docs/BRA
 ## [Unreleased]
 
 ### Changed
+- Fast and slow tests (COD-14): the modules that run whole pipelines carry the `slow` marker; `python -m pytest harness/tests -m "not slow"` takes about 50 s instead of 200 s. The gate and the CI still run everything.
+- Faster CI on pull requests into `dev` (OPT-07): only the engine suites the change can affect run (`run_gate.py --changed origin/dev`; every other check always runs). Pushes and pull requests into `main` run the full battery.
 - Every pipeline stage is timed (OPT-01): `context.timings` holds the seconds per stage, and with `EPC_TIMINGS=1` the run writes `runs/<id>/stage_timings.json`. Off by default so a run's files stay byte-identical.
 - One command regenerates every generated file (`python harness/tools/build/regen_all.py`; `--check` fails when any is stale, for pre-commit use) (OPT-08, COD-15). The gate gains the check `norm-register-report` (48 checks), because `NORM_REGISTER.md` had drifted without any check noticing.
 - `epc_symbols.registry` (SYM-01): one API to resolve, list and connect symbols by id and view (`epc_dxf.symbol_blocks.insert` places the block in a DXF), with aliases of the old names and a catalogue schema; nothing draws through it yet (SYM-02).
