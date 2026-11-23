@@ -149,11 +149,11 @@ def aci_hex(aci: int) -> str:
 
 def by_discipline(catalog: Optional[Dict[str, dict]] = None) -> List[dict]:
     """The catalog grouped by discipline, in the order of `disciplines()`: each with its layers (role, name, colour as the index and as hex, line type and weight, state, description).
-    A layer goes to the discipline whose prefix its name starts with; one that matches none is left out."""
+    A layer goes to the discipline whose prefix (or one of its `also_prefixes`) its name starts with; one that matches none is left out."""
     cat = resolve(catalog)
     out = []
     for d in disciplines():
         mine = [{"role": role, "name": a["name"], "color": a["color"], "hex": aci_hex(a["color"]), "linetype": a.get("linetype", "CONTINUOUS"), "lineweight": a.get("lineweight"),
-                 "on": a.get("on", True), "description": a.get("description", {})} for role, a in cat.items() if str(a.get("name", "")).startswith(d["prefix"])]
+                 "on": a.get("on", True), "description": a.get("description", {})} for role, a in cat.items() if str(a.get("name", "")).startswith((d["prefix"], *d.get("also_prefixes", [])))]
         out.append({**d, "layers": sorted(mine, key=lambda x: x["name"])})
     return out

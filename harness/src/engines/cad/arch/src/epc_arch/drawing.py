@@ -16,6 +16,8 @@ from epc_arch.svgout import _clean_walls, _extent, _joined, _unit
 Pt = Tuple[float, float]
 PAPER = "#FFFFFF"
 STYLE_PATH = Path(__file__).with_name("epc_style.json")
+LAYERS_PATH = Path(__file__).resolve().parents[6] / "config" / "dxf" / "layers.json"      # harness/config/dxf: the one catalog of layers; epc_arch reads its `arch.*` roles as data, it imports no other engine
+ROLE_PREFIX = "arch."
 NOTE_KINDS = (("axes", "A-GRID"), ("dimensions", "A-DIM"), ("labels", "A-ANNO"))
 
 
@@ -48,9 +50,25 @@ def _style_of(raw: dict) -> Style:
     return Style(layers, raw["pens"], raw["linetypes"], raw["text_styles"], raw["font"], raw["sheet"])
 
 
+def _pen_name(width: float) -> str:
+    """`pen_050` for 0.5 mm: a pen is named by its width in hundredths of a millimetre."""
+    return f"pen_{round(width * 100):03d}"
+
+
+def _raw_style(layers_file: Optional[Path] = None) -> dict:
+    """The style as the raw dict `_style_of` reads: the sizes, text styles, font and sheet of `epc_style.json`, and the layers and pens of the `arch.*` roles of the catalog
+    (`lineweight` is the pen, `color` the AutoCAD index, `hex` the colour of the SVG, PDF and PNG; a role with no `lineweight` draws no outline)."""
+    raw = json.loads(STYLE_PATH.read_text(encoding="utf-8"))
+    roles = json.loads((layers_file or LAYERS_PATH).read_text(encoding="utf-8-sig")).get("layers", {})
+    arch = [a for role, a in roles.items() if role.startswith(ROLE_PREFIX)]
+    raw["pens"] = {_pen_name(a["lineweight"]): a["lineweight"] for a in sorted(arch, key=lambda a: -(a["lineweight"] or 0)) if a["lineweight"]}
+    raw["layers"] = [{"name": a["name"], "pen": _pen_name(a["lineweight"]) if a["lineweight"] else None, "linetype": a["linetype"], "aci": a["color"], "hex": a["hex"]} for a in arch]
+    return raw
+
+
 @lru_cache(maxsize=1)
 def load_style() -> Style:
-    return _style_of(json.loads(STYLE_PATH.read_text(encoding="utf-8")))
+    return _style_of(_raw_style())
 
 
 def _range_errors(overrides: dict, name: str, known: dict, limits: Tuple[float, float]) -> Dict[str, str]:
@@ -84,7 +102,7 @@ def style_errors(overrides: Optional[dict]) -> Dict[str, str]:
         return {}
     if not isinstance(overrides, dict):
         return {"style": "an object"}
-    raw = json.loads(STYLE_PATH.read_text(encoding="utf-8"))
+    raw = _raw_style()
     errors = {k: "unknown: pens, layer_pens, text_styles" for k in overrides if k not in ("pens", "layer_pens", "text_styles")}
     errors.update(_range_errors(overrides, "pens", raw["pens"], PEN_RANGE))
     errors.update(_range_errors(overrides, "text_styles", raw["text_styles"], TEXT_RANGE))
@@ -99,7 +117,7 @@ def style_with(overrides: Optional[dict]) -> Style:
     errors = style_errors(overrides)
     if errors:
         raise ArchError("err_style_invalid", details="; ".join(f"{k}: {v}" for k, v in errors.items()))
-    raw = json.loads(STYLE_PATH.read_text(encoding="utf-8"))
+    raw = _raw_style()
     raw["pens"] = {**raw["pens"], **(overrides.get("pens") or {})}
     raw["text_styles"] = {**raw["text_styles"], **(overrides.get("text_styles") or {})}
     chosen = overrides.get("layer_pens") or {}

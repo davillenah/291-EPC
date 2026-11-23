@@ -1470,6 +1470,261 @@
         "es": "Mapa de lux: valores de las curvas y lectura del ambiente",
         "en": "Lux map: values of the lines and reading of the room"
       }
+    },
+    "arch.BACKGROUND": {
+      "name": "A-BACKGROUND",
+      "color": 9,
+      "lineweight": 0.13,
+      "linetype": "CONTINUOUS",
+      "hex": "#B4B4B4",
+      "on": true,
+      "frozen": false,
+      "locked": false,
+      "plot": true,
+      "description": {
+        "es": "Fondo tenue: la línea original del plano leído",
+        "en": "Faint background: the original linework of the plan read"
+      }
+    },
+    "arch.ROOM": {
+      "name": "A-ROOM",
+      "color": 254,
+      "lineweight": null,
+      "linetype": "CONTINUOUS",
+      "hex": "#EDEDED",
+      "on": true,
+      "frozen": false,
+      "locked": false,
+      "plot": true,
+      "description": {
+        "es": "Relleno de los ambientes",
+        "en": "Room fill"
+      }
+    },
+    "arch.WALL-FILL": {
+      "name": "A-WALL-FILL",
+      "color": 253,
+      "lineweight": 0.13,
+      "linetype": "CONTINUOUS",
+      "hex": "#8C8C8C",
+      "on": true,
+      "frozen": false,
+      "locked": false,
+      "plot": true,
+      "description": {
+        "es": "Relleno de muros",
+        "en": "Wall fill"
+      }
+    },
+    "arch.WALL-CUT": {
+      "name": "A-WALL-CUT",
+      "color": 7,
+      "lineweight": 0.5,
+      "linetype": "CONTINUOUS",
+      "hex": "#111111",
+      "on": true,
+      "frozen": false,
+      "locked": false,
+      "plot": true,
+      "description": {
+        "es": "Muros cortados (contorno)",
+        "en": "Cut walls (outline)"
+      }
+    },
+    "arch.ELEV": {
+      "name": "A-ELEV",
+      "color": 251,
+      "lineweight": 0.25,
+      "linetype": "CONTINUOUS",
+      "hex": "#333333",
+      "on": true,
+      "frozen": false,
+      "locked": false,
+      "plot": true,
+      "description": {
+        "es": "Elevaciones y cortes: lo visto más allá del plano",
+        "en": "Elevations and sections: what is seen beyond the plane"
+      }
+    },
+    "arch.OPENING": {
+      "name": "A-OPENING",
+      "color": 252,
+      "lineweight": 0.18,
+      "linetype": "HIDDEN",
+      "hex": "#555555",
+      "on": true,
+      "frozen": false,
+      "locked": false,
+      "plot": true,
+      "description": {
+        "es": "Huecos sin hoja",
+        "en": "Openings without a leaf"
+      }
+    },
+    "arch.DOOR-SWING": {
+      "name": "A-DOOR-SWING",
+      "color": 250,
+      "lineweight": 0.18,
+      "linetype": "DASHED",
+      "hex": "#333333",
+      "on": true,
+      "frozen": false,
+      "locked": false,
+      "plot": true,
+      "description": {
+        "es": "Arco de giro de puertas",
+        "en": "Door swing arc"
+      }
+    },
+    "arch.DOOR": {
+      "name": "A-DOOR",
+      "color": 250,
+      "lineweight": 0.35,
+      "linetype": "CONTINUOUS",
+      "hex": "#333333",
+      "on": true,
+      "frozen": false,
+      "locked": false,
+      "plot": true,
+      "description": {
+        "es": "Puertas",
+        "en": "Doors"
+      }
+    },
+    "arch.WINDOW": {
+      "name": "A-WINDOW",
+      "color": 250,
+      "lineweight": 0.35,
+      "linetype": "CONTINUOUS",
+      "hex": "#222222",
+      "on": true,
+      "frozen": false,
+      "locked": false,
+      "plot": true,
+      "description": {
+        "es": "Ventanas: marco",
+        "en": "Windows: frame"
+      }
+    },
+    "arch.WINDOW-GLASS": {
+      "name": "A-WINDOW-GLASS",
+      "color": 253,
+      "lineweight": 0.13,
+      "linetype": "CONTINUOUS",
+      "hex": "#777777",
+      "on": true,
+      "frozen": false,
+      "locked": false,
+      "plot": true,
+      "description": {
+        "es": "Ventanas: vidrio",
+        "en": "Windows: glass"
+      }
+    },
+    "arch.FURN": {
+      "name": "A-FURN",
+      "color": 252,
+      "lineweight": 0.18,
+      "linetype": "CONTINUOUS",
+      "hex": "#6F6F6F",
+      "on": true,
+      "frozen": false,
+      "locked": false,
+      "plot": true,
+      "description": {
+        "es": "Mobiliario",
+        "en": "Furniture"
+      }
+    },
+    "arch.GRID": {
+      "name": "A-GRID",
+      "color": 8,
+      "lineweight": 0.13,
+      "linetype": "CENTER",
+      "hex": "#8A8A8A",
+      "on": true,
+      "frozen": false,
+      "locked": false,
+      "plot": true,
+      "description": {
+        "es": "Ejes y grilla",
+        "en": "Grid axes"
+      }
+    },
+    "arch.DIM": {
+      "name": "A-DIM",
+      "color": 251,
+      "lineweight": 0.18,
+      "linetype": "CONTINUOUS",
+      "hex": "#444444",
+      "on": true,
+      "frozen": false,
+      "locked": false,
+      "plot": true,
+      "description": {
+        "es": "Cotas",
+        "en": "Dimensions"
+      }
+    },
+    "arch.ANNO": {
+      "name": "A-ANNO",
+      "color": 251,
+      "lineweight": 0.18,
+      "linetype": "CONTINUOUS",
+      "hex": "#444444",
+      "on": true,
+      "frozen": false,
+      "locked": false,
+      "plot": true,
+      "description": {
+        "es": "Anotaciones y etiquetas",
+        "en": "Annotations and labels"
+      }
+    },
+    "arch.ROOM-TAG": {
+      "name": "A-ROOM-TAG",
+      "color": 7,
+      "lineweight": 0.25,
+      "linetype": "CONTINUOUS",
+      "hex": "#1A1A1A",
+      "on": true,
+      "frozen": false,
+      "locked": false,
+      "plot": true,
+      "description": {
+        "es": "Código, nombre y área del ambiente",
+        "en": "Room code, name and area"
+      }
+    },
+    "arch.TITLE": {
+      "name": "A-TITLE",
+      "color": 7,
+      "lineweight": 0.25,
+      "linetype": "CONTINUOUS",
+      "hex": "#111111",
+      "on": true,
+      "frozen": false,
+      "locked": false,
+      "plot": true,
+      "description": {
+        "es": "Rótulo IRAM de la lámina",
+        "en": "IRAM title block of the sheet"
+      }
+    },
+    "arch.WIPEOUT": {
+      "name": "A-WIPEOUT",
+      "color": 7,
+      "lineweight": null,
+      "linetype": "CONTINUOUS",
+      "hex": "#FFFFFF",
+      "on": true,
+      "frozen": false,
+      "locked": false,
+      "plot": true,
+      "description": {
+        "es": "Máscara que limpia el muro detrás de puertas y ventanas",
+        "en": "Mask that cleans the wall behind doors and windows"
+      }
     }
   }
 }
