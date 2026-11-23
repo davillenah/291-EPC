@@ -1,4 +1,4 @@
-"""Genera la biblioteca de símbolos de planta (muebles, sanitarios, artefactos, aberturas) en `biblioteca/svg/` y su catálogo `biblioteca/catalogo.json`.
+"""Genera la biblioteca de símbolos de planta (muebles, sanitarios, artefactos, aberturas) en `epc_symbols/library/arch-symbol/svg/` y su catálogo `catalogo.json`.
 
 Convenciones: 1 unidad del SVG = 1 cm, origen arriba a la izquierda, y hacia abajo (el mismo marco que el plan space del motor, ver `epc_arch.model`); el símbolo se dibuja mirando
 hacia arriba (cabecera de cama, respaldo de sillón y fondo de mueble en el borde superior). Solo trazos, sin relleno de color: el color lo pone quien los use.
@@ -11,7 +11,7 @@ import math
 from pathlib import Path
 
 RAIZ = Path(__file__).resolve().parent.parent
-SALIDA = RAIZ / "biblioteca"
+SALIDA = RAIZ.parent / "symbols" / "src" / "epc_symbols" / "library" / "arch-symbol"   # the symbol engine owns the library (SYM-05)
 STROKE = 'fill="none" stroke="#111" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"'
 
 

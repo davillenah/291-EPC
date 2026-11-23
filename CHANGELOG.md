@@ -5,6 +5,7 @@ All notable changes. Format: Keep a Changelog; versions follow `harness/docs/BRA
 ## [Unreleased]
 
 ### Changed
+- SYM-05 (first part): the 25 architecture plan symbols moved from `epc_arch/biblioteca` to `epc_symbols` (`arch_symbols()`). Same files.
 - SYM-04 (first part): the 31 electrical-plan symbols moved from `epc_plan` to `epc_symbols` (`plan_symbols()`); `epc_plan` no longer holds symbol data. Same drawings.
 - `epc_arch` takes the IRAM sheet as data (`template=` on `plan_dxf`, `building_views`, `view_dxf`, `write_view_dxf`; `epc_arch.sheets.template_from_svg`) and starts no process: the command line (`cli_v2.iram_template`, `author.main`) and the electrical stage 3D model fetch the sheet from `epc_titleblock` and hand it over (COD-01, owner decision 2026-11-23). Without a sheet the engine draws on its own frame.
 - PV diagrams take their library symbols (inverter, module, DC isolator, meter) from `epc_symbols.dxf_block` instead of building the file name; a new architecture test (`test_symbol_access`, SYM-07 first part) lets no other file build a symbol path, with a list of the two generators that may only shrink.
