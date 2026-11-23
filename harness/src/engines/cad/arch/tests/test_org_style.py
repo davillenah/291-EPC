@@ -20,7 +20,8 @@ from epc_arch import Options, recognize                          # noqa: E402
 from epc_arch.drawing import build_drawing, load_style, style_errors, style_with   # noqa: E402
 from epc_arch.export.export_dxf import to_dxf                     # noqa: E402
 from epc_arch.export.export_svg import to_svg                     # noqa: E402
-from epc_arch.sheets import iram_template                         # noqa: E402
+from epc_arch import cli_v2                                       # noqa: E402
+iram_template = cli_v2.iram_template
 import helpers                                                    # noqa: E402
 
 

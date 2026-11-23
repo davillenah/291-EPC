@@ -240,14 +240,13 @@ def architecture_of(floor: Dict[str, Any], source: str = "") -> Architecture:
                         rooms=[_room(r, T, f) for r in rooms], level=level)
 
 
-def plan_dxf(arch: Architecture, sheet: str = "A1", fields: Optional[Dict[str, str]] = None) -> str:
-    """The plan of an architecture on an IRAM sheet, as DXF text: the layers and the typeface of `epc_style.json`; `fields` fills the title block (client, project, revision...)."""
+def plan_dxf(arch: Architecture, sheet: str = "A1", fields: Optional[Dict[str, str]] = None, template=None) -> str:
+    """The plan of an architecture on an IRAM sheet, as DXF text: the layers and the typeface of `epc_style.json`; `fields` fills the title block (client, project, revision...); `template` is the IRAM sheet as data (`epc_arch.sheets.template_from_svg`), none = the engine's own frame."""
     from epc_arch.drawing import build_drawing, load_style
     from epc_arch.export.export_dxf import to_dxf
-    from epc_arch.sheets import iram_template
     style = load_style()
     title = arch.level.name if arch.level else ""
-    drawing = build_drawing(arch, style=style, sheet=sheet, template=iram_template(sheet), document=arch.source, fields=dict({"denominacion": title}, **(fields or {})), presentation=True)
+    drawing = build_drawing(arch, style=style, sheet=sheet, template=template, document=arch.source, fields=dict({"denominacion": title}, **(fields or {})), presentation=True)
     return to_dxf(drawing, style)
 
 
@@ -257,7 +256,7 @@ def _origin(floor: Dict[str, Any]) -> Tuple[float, float]:
     return (min(r["box_m"][0] for r in floor["rooms"]) - pad, max(r["box_m"][3] for r in floor["rooms"]) + pad)
 
 
-def building_views(floors: List[Dict[str, Any]], archs: List[Architecture], sheet: str = "A1", fields: Optional[Dict[str, str]] = None) -> Dict[str, str]:
+def building_views(floors: List[Dict[str, Any]], archs: List[Architecture], sheet: str = "A1", fields: Optional[Dict[str, str]] = None, template=None) -> Dict[str, str]:
     """The views the heights allow, as DXF text by file name: the isometric of the building, and the south elevation and the section A of each floor. Empty when a floor has no `heights_m`."""
     if not floors or any("heights_m" not in f for f in floors):
         return {}
@@ -265,17 +264,16 @@ def building_views(floors: List[Dict[str, Any]], archs: List[Architecture], shee
     from epc_arch.export.export_dxf import to_dxf
     from epc_arch.isometric import isometric_drawing
     from epc_arch.sections import elevation, section, view_dxf
-    from epc_arch.sheets import iram_template
     corner = (min(_origin(f)[0] for f in floors), max(_origin(f)[1] for f in floors))
     parts = [(a, f["heights_m"], (_origin(f)[0] - corner[0], _origin(f)[1] - corner[1])) for f, a in zip(floors, archs)]
     style = load_style()
-    out = {"ISO.dxf": to_dxf(isometric_drawing(parts, style, sheet, None, iram_template(sheet), fields), style)}
+    out = {"ISO.dxf": to_dxf(isometric_drawing(parts, style, sheet, None, template, fields), style)}
     for f, a in zip(floors, archs):
         stem = _stem(f)
         h = f["heights_m"]
-        out[f"ELEV_S_{stem}.dxf"] = view_dxf(elevation(a, "S", h), a, sheet, FIT, fields)
+        out[f"ELEV_S_{stem}.dxf"] = view_dxf(elevation(a, "S", h), a, sheet, FIT, fields, template)
         mid = (min(r["box_m"][0] for r in f["rooms"]) + max(r["box_m"][2] for r in f["rooms"])) / 2 - _origin(f)[0]
-        out[f"SEC_A_{stem}.dxf"] = view_dxf(section(a, "x", mid, "E", h), a, sheet, FIT, fields)
+        out[f"SEC_A_{stem}.dxf"] = view_dxf(section(a, "x", mid, "E", h), a, sheet, FIT, fields, template)
     return out
 
 
@@ -302,14 +300,16 @@ def main(argv=None) -> int:
         fields = json.loads(Path(a.fields).read_text(encoding="utf-8")) if a.fields else None
         out = Path(a.out)
         out.mkdir(parents=True, exist_ok=True)
+        from epc_arch.cli_v2 import iram_template                      # the command line is the adapter: it fetches the sheet and hands it to the engine as data
+        template = iram_template(a.sheet)
         archs = []
         for floor in floors:
             name = f"{_stem(floor)}.dxf"
             arch = architecture_of(floor, name)
             archs.append(arch)
-            (out / name).write_text(plan_dxf(arch, a.sheet, fields), encoding="utf-8")
+            (out / name).write_text(plan_dxf(arch, a.sheet, fields, template), encoding="utf-8")
             print(f"OK {name}: {len(arch.rooms)} rooms, {len(arch.walls)} walls, {arch.counts()['doors']} doors, {arch.counts()['windows']} windows")
-        views = building_views(floors, archs, a.sheet, fields)
+        views = building_views(floors, archs, a.sheet, fields, template)
         for name, text in views.items():
             (out / name).write_text(text, encoding="utf-8")
             print(f"OK {name}")

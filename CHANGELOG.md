@@ -5,6 +5,7 @@ All notable changes. Format: Keep a Changelog; versions follow `harness/docs/BRA
 ## [Unreleased]
 
 ### Changed
+- `epc_arch` takes the IRAM sheet as data (`template=` on `plan_dxf`, `building_views`, `view_dxf`, `write_view_dxf`; `epc_arch.sheets.template_from_svg`) and starts no process: the command line (`cli_v2.iram_template`, `author.main`) and the electrical stage 3D model fetch the sheet from `epc_titleblock` and hand it over (COD-01, owner decision 2026-11-23). Without a sheet the engine draws on its own frame.
 - PV diagrams take their library symbols (inverter, module, DC isolator, meter) from `epc_symbols.dxf_block` instead of building the file name; a new architecture test (`test_symbol_access`, SYM-07 first part) lets no other file build a symbol path, with a list of the two generators that may only shrink.
 - OPT-11 (first part): the title block request that stage 10 writes is read once per run and handed as data to the plan and PV sheets (`engine_calls.titleblock_request`), instead of each one reading the file.
 - The SLD no longer goes through an Excel file (DGM-16 step 4, OPT-03): `SldInput.board` carries the board as data and `epc_sld.board_table` gives the generator the same rows a workbook gave; stage 10 stops writing `input_for_sld.xlsx`. The drawings are byte-identical to the workbook path (checked on SVG and DXF of SLD and MLD). The workbook path stays for the command line and the example.
