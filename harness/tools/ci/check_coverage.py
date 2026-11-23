@@ -56,6 +56,9 @@ def main(argv=None) -> int:
     ap.add_argument("--update", action="store_true")
     ap.add_argument("--areas", help="comma-separated areas to check (incremental gate: only the suites that ran); default: all")
     a = ap.parse_args(argv)
+    if a.areas is not None and not a.areas.strip() and not a.update:     # incremental gate with no engine suite affected: no suite ran, so no area to check
+        print("no engine suite ran (incremental gate): no coverage area to check")
+        return 0
     now = combine()
     if not now:
         return 1
