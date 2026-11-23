@@ -4,16 +4,17 @@ from epc_symbols.errors import SymbolsError
 
 LIBRARY = Path(__file__).resolve().parent / "library"
 KINDS = ("sld-lv-symbol", "sld-mv-symbol", "mld-lv-symbol", "mld-mv-symbol", "ssd-mv-symbol")
+PLAN = "plan-symbol"     # the electrical-plan symbols (SYM-04): not a catalogue library, see `plan_symbols`
 
 
 def library_dir(kind: str = "sld-lv-symbol") -> Path:
     """Folder with `_catalog.json` and the symbol files of one library."""
-    if kind not in KINDS:
+    if kind not in KINDS + (PLAN,):
         raise SymbolsError("err_unknown_library", kind=kind, kinds=KINDS)
     return LIBRARY / kind
 __version__ = "0.1.0"
 
-__all__ = ["AmbiguousSymbol", "SymbolRecord", "SymbolsError", "UnknownSymbol", "dxf_block", "library_dir", "list_ids", "resolve", "svg_fragment", "terminals"]
+__all__ = ["AmbiguousSymbol", "SymbolRecord", "SymbolsError", "UnknownSymbol", "dxf_block", "library_dir", "list_ids", "plan_symbols", "resolve", "svg_fragment", "terminals"]
 
 
 def __getattr__(name):

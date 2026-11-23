@@ -10,7 +10,7 @@ The platform uses it through the layout module; it installs and updates on its o
 |---|---|
 | Incluye (motor) | `arch`, `dxf`, `plan`, `symbols`, `titleblock` |
 | Es dueño de | `plan` |
-| Necesita (plugins) | `dxf-output` |
+| Necesita (plugins) | `dxf-output`, `iec-symbols` |
 | Lo necesitan | — |
 | Paquetes de Python | `ezdxf`, `lxml`, `numpy`, `pillow`, `pypdfium2`, `shapely`, `svgelements`, `vtracer` |
 | Si lo modificas, revisa | plugins —; módulos del backend — |
