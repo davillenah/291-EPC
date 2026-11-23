@@ -100,7 +100,7 @@ Same code (the SLD and MLD generators), so done together: SYM-01 (done) and SYM-
 Needs the stopwatch and profile of phase 1, the deterministic output of phase 3 and the value objects of phase 2.
 
 - [ ] **COD-06 · Load once and cache:** symbol catalogue, schemas, templates, norm records.
-- [ ] **COD-07 · Parse each SVG and DXF block once per run** and reuse it.
+- [~] **COD-07 · Parse each SVG and DXF block once per run** and reuse it. Done 2026-11-23 (first part): `epc_dxf.bloques_dxf` reads each library symbol file once per run (cached by path and modification time); the importer only reads from it. Left: the three re-reads of the drawing between conversion, layer assignment, colouring and block insertion (needs a shared in-memory document and byte comparisons), and the SVG parsed twice.
 - [ ] **OPT-12 · Load drawing templates once per run:** title block, symbol blocks and styles.
 - [ ] **COD-08 · Batch DXF writing,** only if the profile confirms it.
 - [ ] **OPT-04 · Cache by input hash.** Generalize the stage 10 reuse of the calculation to netlist, diagrams and documents; redo only the sheets whose inputs changed.
