@@ -43,8 +43,8 @@ Dependency summary: Block 1 (measure and protect) → Block 2 (engine rules and 
 
 Cheap, change no drawing, and make every later change measurable and safe. Do first.
 
-- [ ] **OPT-08 · One command that regenerates every generated file** (registry, plugins, agents, impact map) before a commit; stale generated files caused most CI failures.
-- [ ] **COD-15 · Pre-commit check for stale generated files** (with OPT-08).
+- [x] (2026-11-23) **OPT-08 · One command that regenerates every generated file** (registry, plugins, agents, impact map) before a commit; stale generated files caused most CI failures.
+- [x] (2026-11-23) **COD-15 · Pre-commit check for stale generated files** (with OPT-08).
 - [ ] **OPT-01 · Time every stage.** A stopwatch per pipeline stage (calculation, netlist, SLD, MLD, DXF, documents) written to the project log, so each later change is judged with measured data.
 - [ ] **COD-05 · Profile first** (cProfile on an example run); fix only the three most expensive points.
 - [ ] **COD-14 · Fast and slow tests separated** with markers.
