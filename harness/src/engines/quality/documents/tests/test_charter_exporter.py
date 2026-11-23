@@ -293,5 +293,17 @@ class TestExportador(unittest.TestCase):
             self.assertEqual(X.verificar(md)["estado"], "DESACTUALIZADO")
 
 
+class TestSealTime(unittest.TestCase):
+    def test_the_seal_time_can_be_handed_in_so_the_file_repeats(self):
+        import json
+        from epc_documents import canvas_exporter as C
+        for module in (X, C):
+            with tempfile.TemporaryDirectory() as root:
+                module._actualizar_seal(root, "a.md", "abc123", "2026-01-02T03:04:05Z")
+                seal = os.path.join(root, ".project", "SEAL.json")
+                with open(seal, encoding="utf-8") as fh:
+                    self.assertEqual(json.load(fh)["files"]["a.md"], {"sha256_16": "abc123", "updated": "2026-01-02T03:04:05Z"})
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -32,6 +32,20 @@ class TestRunManifest(unittest.TestCase):
             for k in ("params_sha256", "style_sha256", "run_at"):
                 self.assertTrue(m[k])
 
+    def test_the_run_time_can_be_handed_in_so_the_manifest_repeats(self):
+        from datetime import datetime, timezone
+        from epc_arch.cli_v2 import _manifest
+        import argparse
+        a = argparse.Namespace(sheet="A4", scale=None, dpi=None, page=None, sheet_svg=None, field=[])
+        moment = datetime(2026, 1, 2, 3, 4, 5, tzinfo=timezone.utc)
+        with tempfile.TemporaryDirectory() as tmp:
+            src = Path(tmp) / "flat.dxf"
+            src.write_bytes(b"x")
+            first = _manifest(src, b"x", a, ["svg"], [], Path(tmp), now=moment)
+            second = _manifest(src, b"x", a, ["svg"], [], Path(tmp), now=moment)
+        self.assertEqual(first, second)
+        self.assertEqual(first["run_at"], "2026-01-02T03:04:05+00:00")
+
     def test_an_unknown_format_is_refused(self):
         self.assertEqual(main(["x.dxf", "--formats", "gif"]), 1)
 

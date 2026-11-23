@@ -544,7 +544,7 @@ def _pdf_con_chromium(html_texto, pdf_ruta, sello, titulo):
     return sobrantes
 
 
-def _actualizar_seal(raiz, nombre_archivo, sello):
+def _actualizar_seal(raiz, nombre_archivo, sello, ahora=None):
     if not raiz:
         return
     seal_path = os.path.join(raiz, ".project", "SEAL.json")
@@ -557,7 +557,7 @@ def _actualizar_seal(raiz, nombre_archivo, sello):
         import datetime
         data.setdefault("files", {})[nombre_archivo] = {
             "sha256_16": sello,
-            "updated": datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "updated": ahora or datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
         }
         os.makedirs(os.path.dirname(seal_path), exist_ok=True)
         with open(seal_path, "w", encoding="utf-8") as fh:
@@ -574,7 +574,7 @@ TIPOS = {
 }
 
 
-def exportar_canvas(tipo, md_ruta, pdf_ruta=None, html_ruta=None, docx_ruta=None, sin_docx=False):
+def exportar_canvas(tipo, md_ruta, pdf_ruta=None, html_ruta=None, docx_ruta=None, sin_docx=False, ahora=None):
     if tipo not in TIPOS:
         raise ValueError(f"tipo debe ser: {', '.join(TIPOS)}")
     cfg = TIPOS[tipo]
@@ -624,7 +624,7 @@ def exportar_canvas(tipo, md_ruta, pdf_ruta=None, html_ruta=None, docx_ruta=None
         except Exception as ex:
             res["avisos"].append(f"Word no generado ({type(ex).__name__}: {ex}). pip install python-docx")
 
-    _actualizar_seal(raiz, nombre_md, sello)
+    _actualizar_seal(raiz, nombre_md, sello, ahora)
     return res
 
 
