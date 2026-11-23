@@ -158,6 +158,17 @@ def _run(form, criteria):
     return data, res, memo
 
 
+def titleblock_request(context, target):
+    """The title block request stage 10 wrote (`<target>/titleblock-request.json`), read once per run and handed to every sheet that needs it (OPT-11); a rewritten file is read again."""
+    import json
+    from pathlib import Path
+    path = Path(target) / "titleblock-request.json"
+    key = ("titleblock_request", str(path), path.stat().st_mtime_ns)
+    if key not in context.engine_cache:
+        context.engine_cache[key] = json.loads(path.read_text(encoding="utf-8"))
+    return context.engine_cache[key]
+
+
 def chain(context):
     """The raw engine result of the whole board calculation, computed once per run: form, data, calc, memo, tags, kinds, calls."""
     if "chain" not in context.engine_cache:
