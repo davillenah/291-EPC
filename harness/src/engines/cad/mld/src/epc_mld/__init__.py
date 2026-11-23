@@ -1,7 +1,7 @@
 """Multi-line diagram data and templates (generator pending)."""
 __version__ = "0.1.0"
 
-__all__ = ["Generator", "Sheet", "chain_of", "generate", "library_dir", "main", "nxt", "pole_id", "poles_of"]
+__all__ = ["Generator", "MldInput", "Sheet", "chain_of", "draw", "generate", "library_dir", "main", "nxt", "pole_id", "poles_of"]
 
 
 def __getattr__(name):

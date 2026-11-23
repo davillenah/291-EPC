@@ -55,7 +55,7 @@
         "titleblock",
         "voltage_drop"
       ],
-      "hash": "e070de0e721f0f1d"
+      "hash": "8b5e0e04661e0766"
     },
     "doc-quality": {
       "version": "0.1.0",
@@ -83,7 +83,7 @@
         "symbols",
         "titleblock"
       ],
-      "hash": "43ef7831327b15d7"
+      "hash": "4a0aa62a5c691d83"
     },
     "equipment-catalog": {
       "version": "0.1.0",
@@ -131,7 +131,7 @@
         "symbols",
         "titleblock"
       ],
-      "hash": "adf31c9559945191"
+      "hash": "e655d7810d70274b"
     },
     "mld": {
       "version": "0.2.2",
@@ -141,7 +141,8 @@
         "aea-calc": "^1.8.0",
         "dxf-output": "^0.1.0",
         "iec-symbols": "^0.4.19",
-        "iram-titleblock": "^0.5.4"
+        "iram-titleblock": "^0.5.4",
+        "sld": "^0.1.4"
       },
       "skills": [],
       "engine": [
@@ -156,11 +157,12 @@
         "plan",
         "selectivity",
         "short_circuit",
+        "sld",
         "symbols",
         "titleblock",
         "voltage_drop"
       ],
-      "hash": "9bfa338109d92225"
+      "hash": "7b5cc72e879b3825"
     },
     "plan-drawing": {
       "version": "0.1.0",
@@ -178,7 +180,7 @@
         "symbols",
         "titleblock"
       ],
-      "hash": "c27a018d757c2a37"
+      "hash": "9a93ecefa9fa49f2"
     },
     "pm2-docs": {
       "version": "0.1.0",
@@ -235,7 +237,7 @@
         "titleblock",
         "voltage_drop"
       ],
-      "hash": "fbb00851138fa0c9"
+      "hash": "276ba4198f59ca2d"
     },
     "spec-writer": {
       "version": "0.1.0",

@@ -10,5 +10,6 @@ from epc_mld.mld_generator import (
     generate,
     main,
 )  # noqa: F401
+from epc_mld.contract import MldInput, draw  # noqa: F401
 
-__all__ = ["Generator", "Sheet", "chain_of", "generate", "library_dir", "main", "nxt", "pole_id", "poles_of"]
+__all__ = ["Generator", "MldInput", "Sheet", "chain_of", "draw", "generate", "library_dir", "main", "nxt", "pole_id", "poles_of"]

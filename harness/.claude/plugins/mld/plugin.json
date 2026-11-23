@@ -10,7 +10,8 @@
     "aea-calc": "^1.8.0",
     "dxf-output": "^0.1.0",
     "iec-symbols": "^0.4.19",
-    "iram-titleblock": "^0.5.4"
+    "iram-titleblock": "^0.5.4",
+    "sld": "^0.1.4"
   },
   "consumes": [
     "CircuitCalculation",
@@ -61,6 +62,7 @@
     "plan",
     "selectivity",
     "short_circuit",
+    "sld",
     "symbols",
     "titleblock",
     "voltage_drop"
