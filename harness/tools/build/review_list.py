@@ -23,11 +23,31 @@ def _comment_text(t: str) -> str:
     return re.sub(r"^#\s*", "", t)[:150]
 
 
+# Which engine each review unit feeds (by the start of its id); the units of one norm family all feed the same engine.
+UNIT_ENGINE = (("lighting-rule:", "lighting"), ("rule:aea", "aea90364"), ("table:aea", "aea90364"), ("table:plan", "plan"),
+               ("table:receptacles", "receptacles"), ("table:hvac", "hvac"), ("criterion:ar-electrical", "design_basis"))
+
+
+def _engine_of(unit_id: str) -> str:
+    return next((engine for prefix, engine in UNIT_ENGINE if unit_id.startswith(prefix)), "")
+
+
+def _impact() -> dict:
+    """{engine: number of engines that change when it changes, itself included}, from the generated dependency map (never typed by hand)."""
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import impact_map
+    edges, _ = impact_map.scan()
+    users = impact_map.dependents(edges)
+    return {u: 1 + len(impact_map.closure(u, users)) for u in impact_map.engine_units()}
+
+
 def _norm_units() -> list:
-    """The units of the norms review: [(name, total, pending)]. Read from the engines' data and `review.json`, no backend (MIG-38b)."""
+    """The units of the norms review, most-depended-on first: [(name, total, pending, engines_affected)]. Read from the engines' data and `review.json`, no backend (MIG-38b)."""
     sys.path[:0] = [str(REPO / "harness" / "src")] + [str(P.engine_src(n)) for n in P.engine_names()]
     from disciplines.electrical_lv import norm_review
-    return [(u["name"], u["counts"]["total"], u["counts"]["pending"] + u["counts"]["stale"]) for u in norm_review.units()]
+    impact = _impact()
+    rows = [(u["name"], u["counts"]["total"], u["counts"]["pending"] + u["counts"]["stale"], impact.get(_engine_of(u["id"]), 0)) for u in norm_review.units()]
+    return sorted(rows, key=lambda r: (-r[3], -r[2], r[0]))
 
 
 def _marks() -> dict:
@@ -43,13 +63,13 @@ def _marks() -> dict:
 
 def text() -> str:
     units, marks = _norm_units(), _marks()
-    pending = sum(p for _, _, p in units)
+    pending = sum(r[2] for r in units)
     lines = ["# Valores de normas que el dueño tiene que revisar", "",
              "Generado por `python harness/tools/build/review_list.py`; no se edita a mano. Un valor **sin revisar** se usa para calcular pero el resultado lo avisa; solo el dueño lo aprueba.", "",
              "## 1. En la página de normas", "",
-             f"Se revisan en la pantalla de normas (aprobar, corregir o rechazar cada punto). Pendientes: **{pending}**.", "",
-             "| Unidad | Puntos | Pendientes |", "|---|---:|---:|"]
-    lines += [f"| {name} | {total} | {p} |" for name, total, p in units]
+             f"Se revisan en la pantalla de normas (aprobar, corregir o rechazar cada punto). Pendientes: **{pending}**. Orden: primero lo que más motores arrastra si cambia (columna *Motores afectados*, de `DEPENDENCIAS.md`), así se aprueba antes lo que más destraba.", "",
+             "| Unidad | Puntos | Pendientes | Motores afectados |", "|---|---:|---:|---:|"]
+    lines += [f"| {name} | {total} | {p} | {n} |" for name, total, p, n in units]
     lines += ["", "## 2. Marcas `[VERIFICAR]` en el código de los motores", "",
               f"Cada una es una fórmula, un valor o una cláusula que hay que contrastar con la norma. Total: **{sum(len(v) for v in marks.values())}** en {len(marks)} archivos.", ""]
     for path, hits in marks.items():

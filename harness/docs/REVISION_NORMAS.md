@@ -4,25 +4,25 @@ Generado por `python harness/tools/build/review_list.py`; no se edita a mano. Un
 
 ## 1. En la página de normas
 
-Se revisan en la pantalla de normas (aprobar, corregir o rechazar cada punto). Pendientes: **341**.
+Se revisan en la pantalla de normas (aprobar, corregir o rechazar cada punto). Pendientes: **341**. Orden: primero lo que más motores arrastra si cambia (columna *Motores afectados*, de `DEPENDENCIAS.md`), así se aprueba antes lo que más destraba.
 
-| Unidad | Puntos | Pendientes |
-|---|---:|---:|
-| D351-79 · iluminación (valores por revisar) | 23 | 23 |
-| AEA 90364-4-41 (2006) | 8 | 8 |
-| AEA 90364-4-43 (2006) | 8 | 8 |
-| AEA 90364-5-51 (2006) | 4 | 4 |
-| AEA 90364-5-52 (2006) | 13 | 13 |
-| AEA 90364-5-54 (2006) | 38 | 38 |
-| AEA 90364-7-701 (2012) | 12 | 12 |
-| AEA 90364-7-722 (2018) | 6 | 6 |
-| AEA 90364-7-770 (2017) | 6 | 6 |
-| AEA 90364-7-771 (2006) | 82 | 82 |
-| Tablas y constantes de cálculo (AEA 90364-7-771, 2006) | 93 | 93 |
-| Cables, canalizaciones y diseño automático · valores típicos (a confirmar) | 7 | 7 |
-| Tomacorrientes · valores típicos (a confirmar) | 18 | 18 |
-| Climatización · valores típicos (a confirmar) | 20 | 20 |
-| Criterios de diseño · valores base (AR, eléctrica) | 18 | 3 |
+| Unidad | Puntos | Pendientes | Motores afectados |
+|---|---:|---:|---:|
+| Tablas y constantes de cálculo (AEA 90364-7-771, 2006) | 93 | 93 | 15 |
+| AEA 90364-7-771 (2006) | 82 | 82 | 15 |
+| AEA 90364-5-54 (2006) | 38 | 38 | 15 |
+| AEA 90364-5-52 (2006) | 13 | 13 | 15 |
+| AEA 90364-7-701 (2012) | 12 | 12 | 15 |
+| AEA 90364-4-41 (2006) | 8 | 8 | 15 |
+| AEA 90364-4-43 (2006) | 8 | 8 | 15 |
+| AEA 90364-7-722 (2018) | 6 | 6 | 15 |
+| AEA 90364-7-770 (2017) | 6 | 6 | 15 |
+| AEA 90364-5-51 (2006) | 4 | 4 | 15 |
+| Cables, canalizaciones y diseño automático · valores típicos (a confirmar) | 7 | 7 | 7 |
+| D351-79 · iluminación (valores por revisar) | 23 | 23 | 1 |
+| Climatización · valores típicos (a confirmar) | 20 | 20 | 1 |
+| Tomacorrientes · valores típicos (a confirmar) | 18 | 18 | 1 |
+| Criterios de diseño · valores base (AR, eléctrica) | 18 | 3 | 1 |
 
 ## 2. Marcas `[VERIFICAR]` en el código de los motores
 
@@ -79,11 +79,11 @@ Cada una es una fórmula, un valor o una cláusula que hay que contrastar con la
 - línea 22: h_f/L = 10,67 · Q^1,852 / (C^1,852 · d^4,8704)   [m de columna de agua por m]  [VERIFICAR]
 - línea 41: diámetros pequeños (< 50 mm aprox.) la exactitud decrece. [VERIFICAR]
 - línea 47: NFPA 13 (rociadores) [VERIFICAR] — sin cláusulas. La forma y constante provienen de memoria.
-- línea 55: : Constante de Hazen-Williams (Q [L/min], d [mm] -> bar/m). [VERIFICAR]
-- línea 56: CONSTANTE_HW = 6.05e5   # [VERIFICAR]
-- línea 57: EXP_Q = 1.85            # [VERIFICAR]
-- línea 58: EXP_D = 4.87            # [VERIFICAR]
-- línea 60: G = 9.80665             # m/s²  [VERIFICAR]
+- línea 56: : Constante de Hazen-Williams (Q [L/min], d [mm] -> bar/m). [VERIFICAR]
+- línea 57: CONSTANTE_HW = 6.05e5   # [VERIFICAR]
+- línea 58: EXP_Q = 1.85            # [VERIFICAR]
+- línea 59: EXP_D = 4.87            # [VERIFICAR]
+- línea 61: G = 9.80665             # m/s²  [VERIFICAR]
 
 ### `harness/src/engines/calculation/aea90364/src/epc_aea90364/hvac_airflow.py` (4)
 
@@ -120,7 +120,7 @@ Cada una es una fórmula, un valor o una cláusula que hay que contrastar con la
 ### `harness/src/engines/calculation/feeder_sizing/src/epc_feeder_sizing/aea_conductors.py` (2)
 
 - línea 31: AEA 90364-7-771 §13, §16, §19, Anexo H; AEA 90364-7-770 §11.  [VERIFICAR]
-- línea 47: ALFA_CU            coeficiente de temperatura del cobre [1/°C]         X_CABLE_OHM_KM  reactancia típica de cable en cañería [Ω/km]  [VERIFICAR]
+- línea 48: ALFA_CU            coeficiente de temperatura del cobre [1/°C]         X_CABLE_OHM_KM  reactancia típica de cable en cañería [Ω/km]  [VERIFICAR]
 
 ### `harness/src/engines/calculation/feeder_sizing/src/epc_feeder_sizing/aea_route.py` (3)
 
@@ -139,7 +139,7 @@ Cada una es una fórmula, un valor o una cláusula que hay que contrastar con la
 ### `harness/src/engines/calculation/feeder_sizing/src/epc_feeder_sizing/conductor_selection.py` (2)
 
 - línea 45: local. [VERIFICAR]
-- línea 136: "estado_validacion": "[VERIFICAR] — BORRADOR; válido solo con tabla de norma validada"}
+- línea 137: "estado_validacion": "[VERIFICAR] — BORRADOR; válido solo con tabla de norma validada"}
 
 ### `harness/src/engines/calculation/short_circuit/src/epc_short_circuit/aea_icc_decay.py` (1)
 
@@ -158,20 +158,20 @@ Cada una es una fórmula, un valor o una cláusula que hay que contrastar con la
 - línea 35: κ = 1,02 + 0,98 · exp(−3 · R/X) ;  i_p = κ · √2 · Ik''   [VERIFICAR]
 - línea 50: - No calcula Ik mínima (c_min = 0,95 [VERIFICAR] y R a temperatura final no están incluidos),
 - línea 55: - IEC 60909-0 (corrientes de cortocircuito en redes trifásicas de c.a.). [VERIFICAR] los
-- línea 66: y se renuevan con `aea_tables.limpiar_cache_tablas()`. Todos [VERIFICAR]. Forma de cada uno:
-- línea 165: """K_T = 0,95·c/(1 + 0,6·x_T), x_T = X_T/Z_nominal en p.u. [VERIFICAR]."""
-- línea 209: adv.append(f"Se aplicó K_T = {kt:.4f} al transformador [VERIFICAR].")
-- línea 226: máxima: c_max (6 %) y R del cobre a 20 °C; mínima: c_min y R a TEMP_MIN_C. Devuelve {ik_a, ip_a, r_ohm, x_ohm, c}. [VERIFICAR]"""
-- línea 239: R del cobre a 20 °C (valor máximo de Ik) y X típica del cable; una sección que no esté tabulada da ValueError. El aluminio da una Ik menor: usar cobre
-- línea 245: """Aporte inicial [A] de un motor asíncrono: Ik''_M = c·(I_LR/I_rM)·I_rM. [VERIFICAR]
-- línea 255: """True si el aporte de motores ≤ 5 % de Ik'' sin motores. [VERIFICAR] umbral."""
-- línea 262: """κ = 1,02 + 0,98·exp(−3·R/X). [VERIFICAR]"""
-- línea 274: """i_p [A] = κ·√2·Ik''. [VERIFICAR]"""
+- línea 67: y se renuevan con `aea_tables.limpiar_cache_tablas()`. Todos [VERIFICAR]. Forma de cada uno:
+- línea 166: """K_T = 0,95·c/(1 + 0,6·x_T), x_T = X_T/Z_nominal en p.u. [VERIFICAR]."""
+- línea 210: adv.append(f"Se aplicó K_T = {kt:.4f} al transformador [VERIFICAR].")
+- línea 227: máxima: c_max (6 %) y R del cobre a 20 °C; mínima: c_min y R a TEMP_MIN_C. Devuelve {ik_a, ip_a, r_ohm, x_ohm, c}. [VERIFICAR]"""
+- línea 240: R del cobre a 20 °C (valor máximo de Ik) y X típica del cable; una sección que no esté tabulada da ValueError. El aluminio da una Ik menor: usar cobre
+- línea 246: """Aporte inicial [A] de un motor asíncrono: Ik''_M = c·(I_LR/I_rM)·I_rM. [VERIFICAR]
+- línea 256: """True si el aporte de motores ≤ 5 % de Ik'' sin motores. [VERIFICAR] umbral."""
+- línea 263: """κ = 1,02 + 0,98·exp(−3·R/X). [VERIFICAR]"""
+- línea 275: """i_p [A] = κ·√2·Ik''. [VERIFICAR]"""
 
 ### `harness/src/engines/calculation/grounding/src/epc_grounding/aea_earthing.py` (2)
 
 - línea 27: AEA 90364-7-771 §3, §18, Anexo C.10 y C.II.  [VERIFICAR]
-- línea 195: """R de una malla de tierra [Ω] (fórmula de Sverak, IEEE 80): ρ·[1/L + 1/√(20·A)·(1 + 1/(1 + h·√(20/A)))], con L el largo total de conductor enterrado
+- línea 196: """R de una malla de tierra [Ω] (fórmula de Sverak, IEEE 80): ρ·[1/L + 1/√(20·A)·(1 + 1/(1 + h·√(20/A)))], con L el largo total de conductor enterrado
 
 ### `harness/src/engines/calculation/selectivity/src/epc_selectivity/aea_protection.py` (1)
 
