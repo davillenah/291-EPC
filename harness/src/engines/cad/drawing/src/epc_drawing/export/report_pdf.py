@@ -307,6 +307,28 @@ def render(rep: dict, dst: Path) -> Path:
     return Path(dst)
 
 
+def _render_job(job):
+    report, dst = job
+    return render(report, Path(dst))
+
+
+def render_many(jobs, workers=None) -> List[Path]:
+    """The PDFs of several reports, `jobs` = [(report, dst)], returned in the same order (OPT-06).
+
+    matplotlib is not thread-safe, so the reports go to separate processes (started with `spawn`, the same on every system); one report, one worker or one core renders in this
+    process. Every file is the one `render` would write: a process only changes who draws it.
+    """
+    import os
+    jobs = [(report, str(dst)) for report, dst in jobs]
+    count = min(workers or 4, os.cpu_count() or 1, len(jobs))
+    if count < 2:
+        return [_render_job(job) for job in jobs]
+    import concurrent.futures
+    import multiprocessing
+    with concurrent.futures.ProcessPoolExecutor(max_workers=count, mp_context=multiprocessing.get_context("spawn")) as pool:
+        return list(pool.map(_render_job, jobs))
+
+
 if __name__ == "__main__":
     if len(sys.argv) != 3:
         raise SystemExit(__doc__)

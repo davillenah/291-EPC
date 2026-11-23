@@ -40,6 +40,21 @@ class TestReportPdf(unittest.TestCase):
         self.assertIn(f"Página {len(doc)} de {len(doc)}", doc[len(doc) - 1].get_textpage().get_text_range())
 
 
+class TestRenderMany(unittest.TestCase):
+    """OPT-06: several reports drawn by several processes give the files, in the same order, that `render` gives one by one."""
+
+    def test_the_processes_write_the_same_files_in_the_same_order(self):
+        import os
+        from unittest import mock
+        from epc_drawing.export.report_pdf import render, render_many
+        reports = [{**REPORT, "subtitle": f"DOC-{n}"} for n in range(3)]
+        with tempfile.TemporaryDirectory() as t, mock.patch.dict(os.environ, {"SOURCE_DATE_EPOCH": "1768435200"}):
+            one = [render(r, Path(t) / f"one{n}.pdf") for n, r in enumerate(reports)]
+            many = render_many([(r, Path(t) / f"many{n}.pdf") for n, r in enumerate(reports)], workers=3)
+            self.assertEqual([p.name for p in many], ["many0.pdf", "many1.pdf", "many2.pdf"])
+            self.assertEqual([p.read_bytes() for p in one], [p.read_bytes() for p in many])
+
+
 if __name__ == "__main__":
     unittest.main()
 
