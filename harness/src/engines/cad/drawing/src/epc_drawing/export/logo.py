@@ -123,5 +123,5 @@ def image(path) -> Optional[object]:
         from PIL import Image
         with Image.open(path) as im:
             return im.convert("RGBA")
-    except Exception:                                                                    # noqa: BLE001
+    except (OSError, ValueError):                       # a file Pillow cannot identify or decode is left out, as a missing logo (COD-11)
         return None

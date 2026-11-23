@@ -46,20 +46,21 @@ Cheap, change no drawing, and make every later change measurable and safe. Do fi
 - [x] (2026-11-23) **OPT-08 · One command that regenerates every generated file** (registry, plugins, agents, impact map) before a commit; stale generated files caused most CI failures.
 - [x] (2026-11-23) **COD-15 · Pre-commit check for stale generated files** (with OPT-08).
 - [x] (2026-11-23) **OPT-01 · Time every stage.** A stopwatch per pipeline stage (calculation, netlist, SLD, MLD, DXF, documents) written to the project log, so each later change is judged with measured data.
-- [ ] **COD-05 · Profile first** (cProfile on an example run); fix only the three most expensive points.
-- [ ] **COD-14 · Fast and slow tests separated** with markers.
-- [ ] **OPT-07 · Faster gate:** run only the tests the impact map says are affected on pull requests; the full battery stays for the release. No check is weakened.
+- [~] **COD-05 · Profile first** (cProfile on an example run); fix only the three most expensive points. Profile done 2026-11-23 on the whole-building run (about 13 s): (1) PDF text layout in matplotlib, 8.7 s of the 13 (`backend_pdf.draw_text`); (2) DXF files read again and again, `ezdxf.readfile` 50 times for 3.7 s (`epc_dxf.deliverable.convert`, `_finish`, `capas_dxf.colorear`, 8 calls each); (3) the plan sheets, 2.5 s (`plan_sheet.compose`). Left for Block 4: each fix can change DXF or PDF bytes, so it needs the characterization tests of COD-13 first.
+- [x] (2026-11-23) **COD-14 · Fast and slow tests separated** with markers.
+- [x] (2026-11-23) **OPT-07 · Faster gate:** run only the tests the impact map says are affected on pull requests; the full battery stays for the release. No check is weakened.
 - [ ] **COD-13 · Characterization tests per engine,** not only for drawings, before each conversion.
-- [ ] **GEN-02 · Reference projects (was C).** A fixed set of fictional projects (dwelling, shed, PV plant) run at every release and compared with the previous run; stored in `tmp/`-style fictional data only.
-- [ ] **OPT-14 · Automatic simulation report:** one command runs a fictional simulation in `tmp/` and gathers times, warnings and the difference with the previous one.
-- [ ] **GEN-10 · Scheduled simulation (was K).** A weekly fictional run in `tmp/` that reports when something breaks.
+- [~] **GEN-02 · Reference projects (was C).** Started 2026-11-23: `python harness/tools/ci/reference_run.py` runs the fictional `synthetic_lv_small` and compares it with the previous run (the dwelling, shed and PV plant projects are still to add). A fixed set of fictional projects (dwelling, shed, PV plant) run at every release and compared with the previous run; stored in `tmp/`-style fictional data only.
+- [x] (2026-11-23) **OPT-14 · Automatic simulation report:** one command runs a fictional simulation in `tmp/` and gathers times, warnings and the difference with the previous one.
+- [x] (2026-11-23) **GEN-10 · Scheduled simulation (was K).** A weekly fictional run in `tmp/` that reports when something breaks.
+- [x] (2026-11-23) **COD-16 · Check the GitHub workflow files in the gate.** Done: architecture test `test_workflows_parse` (pyyaml in `requirements-dev.txt`). A YAML error in `ci.yml` (2026-11-23, an unquoted `: ` in a step name) left a pull request with no CI at all and no local check noticed; parse every `.github/workflows/*.yml` in the gate (needs a YAML reader in `requirements-dev.txt`).
 
 ### Block 2 · Rules and contracts for every engine (A)
 
 The patterns the conversions of phase 3 follow; do before converting more engines. Errors and results first because the contracts use them.
 
 - [ ] **COD-21 · Explicit result type** (success, warnings, bilingual errors) instead of exceptions or silences.
-- [ ] **COD-11 · No generic `except` and no silent fallback** (for example the box fallback of `pv_diagrams`): every failure with a message in English and Spanish.
+- [~] **COD-11 · No generic `except` and no silent fallback** (for example the box fallback of `pv_diagrams`): every failure with a message in English and Spanish. Done 2026-11-23: the architecture test `test_no_silent_catch_all` forbids a silent `except:` / `except Exception:` unless its line states why (`# noqa: BLE001 - <reason>`); six silent catch-alls in `epc_dxf`, `epc_documents` and `epc_drawing.export.logo` now catch only the expected error. Left: the documented fallbacks (`epc_arch` backdrop and PDF readers, logo drawing, hidden folder on Windows) still answer None without a bilingual message, and the `pv_diagrams` box fallback is SYM-03.
 - [ ] **GEN-08 · Error catalogue (was I).** Stable error codes with messages in English and Spanish saying what happened and what to do.
 - [ ] **COD-22 · Immutable value objects between stages,** which makes the input-hash cache and parallel runs safe.
 - [ ] **COD-12 · Frozen dataclasses or schemas** for what travels between stages, instead of dicts with loose keys.
