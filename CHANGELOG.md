@@ -5,6 +5,7 @@ All notable changes. Format: Keep a Changelog; versions follow `harness/docs/BRA
 ## [Unreleased]
 
 ### Changed
+- Every pipeline stage is timed (OPT-01): `context.timings` holds the seconds per stage, and with `EPC_TIMINGS=1` the run writes `runs/<id>/stage_timings.json`. Off by default so a run's files stay byte-identical.
 - One command regenerates every generated file (`python harness/tools/build/regen_all.py`; `--check` fails when any is stale, for pre-commit use) (OPT-08, COD-15). The gate gains the check `norm-register-report` (48 checks), because `NORM_REGISTER.md` had drifted without any check noticing.
 - `epc_symbols.registry` (SYM-01): one API to resolve, list and connect symbols by id and view (`epc_dxf.symbol_blocks.insert` places the block in a DXF), with aliases of the old names and a catalogue schema; nothing draws through it yet (SYM-02).
 - Backlog order of work now includes the symbols plan (SYM-01 and SYM-02 next, golden review before the phases that change DXF bytes).

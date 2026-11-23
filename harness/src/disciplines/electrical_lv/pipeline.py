@@ -8,6 +8,9 @@ the only write session of the store and records the run in the project folder: s
 """
 import contextlib
 import copy
+import json
+import os
+import time
 import uuid
 from dataclasses import asdict, dataclass, field
 
@@ -15,6 +18,7 @@ from disciplines.electrical_lv.recorder import RunRecorder
 from disciplines.electrical_lv.stages import STAGE_TABLE, STAGES, PipelineContext, StageResult
 
 STOP_STATUSES = ("failed", "blocked")
+TIMINGS_ENV = "EPC_TIMINGS"   # set to 1 to write runs/<id>/stage_timings.json (off by default: a run's files stay byte-identical)
 DRAWINGS = 10          # the stage that writes files (drawings/) under the run folder
 
 
@@ -146,11 +150,14 @@ def _recording(context, clock):
 
 def _execute(context, stage, recorder):
     """(raw result, result kept in the run). With a recorder the result is also persisted."""
+    timer = time.perf_counter()
     if recorder is None:
         res = stage.run(context)
+        context.timings[stage.number] = round(time.perf_counter() - timer, 3)
         return res, res
     started = recorder.now()
     res = recorder.check_inputs(stage) or stage.run(context)
+    context.timings[stage.number] = round(time.perf_counter() - timer, 3)
     return res, recorder.record(context, stage, res, started)
 
 
@@ -174,7 +181,16 @@ def _start(context, stages, stop_after, run_id, from_stage):
     context.pipeline_run_id = run_id or str(uuid.uuid4())
     context.results = {}
     context.engine_cache = {}
+    context.timings = {}
     return _reuse(context, stages, from_stage) if from_stage is not None else []
+
+
+def _write_timings(context, recorder, stages):
+    """OPT-01: seconds per stage of this run, in `runs/<id>/stage_timings.json`; written only when EPC_TIMINGS=1 because times differ on every run."""
+    names = {s.number: s.spec.slug for s in stages}
+    rows = [{"stage": n, "slug": names.get(n, ""), "seconds": sec} for n, sec in sorted(context.timings.items())]
+    data = {"pipeline_run_id": recorder.run_id, "total_seconds": round(sum(context.timings.values()), 3), "stages": rows}
+    recorder.store.write_run_file(recorder.token, recorder.run_id, "stage_timings.json", (json.dumps(data, indent=2) + "\n").encode("utf-8"))
 
 
 def _record_all(context, stages, reused, stop_after, stop_on, clock):
@@ -185,6 +201,8 @@ def _record_all(context, stages, reused, stop_after, stop_on, clock):
         results, stopped_at = _run_stages(context, stages[len(reused):], stop_after, stop_on, recorder)
         if recorder:
             recorder.finish(stages[-1].number)
+            if os.environ.get(TIMINGS_ENV) == "1":
+                _write_timings(context, recorder, stages)
     return results, stopped_at
 
 

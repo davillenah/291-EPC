@@ -45,7 +45,7 @@ Cheap, change no drawing, and make every later change measurable and safe. Do fi
 
 - [x] (2026-11-23) **OPT-08 · One command that regenerates every generated file** (registry, plugins, agents, impact map) before a commit; stale generated files caused most CI failures.
 - [x] (2026-11-23) **COD-15 · Pre-commit check for stale generated files** (with OPT-08).
-- [ ] **OPT-01 · Time every stage.** A stopwatch per pipeline stage (calculation, netlist, SLD, MLD, DXF, documents) written to the project log, so each later change is judged with measured data.
+- [x] (2026-11-23) **OPT-01 · Time every stage.** A stopwatch per pipeline stage (calculation, netlist, SLD, MLD, DXF, documents) written to the project log, so each later change is judged with measured data.
 - [ ] **COD-05 · Profile first** (cProfile on an example run); fix only the three most expensive points.
 - [ ] **COD-14 · Fast and slow tests separated** with markers.
 - [ ] **OPT-07 · Faster gate:** run only the tests the impact map says are affected on pull requests; the full battery stays for the release. No check is weakened.
