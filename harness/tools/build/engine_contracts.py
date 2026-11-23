@@ -47,16 +47,24 @@ def limits(node):
     return ", ".join(f"{k} {node[k]}" for k in LIMITS if k in node)
 
 
-def rows(node, path="", required=True, out=None):
-    out = [] if out is None else out
-    if path:
-        out.append((path, kind(node), "yes" if required else "", limits(node), (node.get("description") or "")))
-    props, need = node.get("properties", {}), set(node.get("required", []))
-    for name in props:
-        rows(props[name], f"{path}.{name}" if path else name, name in need, out)
-    if node.get("type") == "array" and isinstance(node.get("items"), dict) and node["items"].get("properties"):
-        for name, sub in node["items"]["properties"].items():
-            rows(sub, f"{path}[].{name}", name in set(node["items"].get("required", [])), out)
+def row(node, path, required):
+    return (path, kind(node), "yes" if required else "", limits(node), node.get("description") or "")
+
+
+def children(node, path):
+    """(child node, its dotted path, required) of an object's properties and of the properties of a list's items."""
+    found = [(sub, f"{path}.{name}" if path else name, name in set(node.get("required", []))) for name, sub in node.get("properties", {}).items()]
+    items = node.get("items") if node.get("type") == "array" else None
+    if isinstance(items, dict):
+        need = set(items.get("required", []))
+        found += [(sub, f"{path}[].{name}", name in need) for name, sub in items.get("properties", {}).items()]
+    return found
+
+
+def rows(node, path="", required=True):
+    out = [row(node, path, required)] if path else []
+    for sub, sub_path, need in children(node, path):
+        out += rows(sub, sub_path, need)
     return out
 
 

@@ -24,22 +24,26 @@ STEPS = [
 ]
 
 
+def run_step(name, args):
+    """True when the step's script exits 0; prints its tail when it does not."""
+    r = subprocess.run([sys.executable, str(HERE / args[0])] + args[1:], cwd=REPO, capture_output=True, text=True)
+    if r.returncode != 0:
+        print((r.stdout + r.stderr).strip()[-600:])
+    return r.returncode == 0
+
+
 def main(argv=None) -> int:
     argv = sys.argv[1:] if argv is None else argv
     check = "--check" in argv
     failed = []
     for name, write, chk in STEPS:
-        cmd = [sys.executable, str(HERE / (chk if check else write)[0])] + (chk if check else write)[1:]
-        r = subprocess.run(cmd, cwd=REPO, capture_output=True, text=True)
-        status = "ok" if r.returncode == 0 else "STALE" if check else "FAILED"
-        print(f"{status:7} {name}")
-        if r.returncode != 0:
-            failed.append(name)
-            print((r.stdout + r.stderr).strip()[-600:])
-    if failed:
-        print(("Out of date: " if check else "Failed: ") + ", ".join(failed) + ("  (run regen_all.py without --check)" if check else ""))
-        return 1
-    return 0
+        ok = run_step(name, chk if check else write)
+        print(f"{'ok' if ok else 'STALE' if check else 'FAILED':7} {name}")
+        failed += [] if ok else [name]
+    if not failed:
+        return 0
+    print(("Out of date: " if check else "Failed: ") + ", ".join(failed) + ("  (run regen_all.py without --check)" if check else ""))
+    return 1
 
 
 if __name__ == "__main__":
