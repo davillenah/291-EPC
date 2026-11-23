@@ -110,6 +110,11 @@ class TestDraftDxf(unittest.TestCase):
             self.assertEqual((insert.dxf.layer, insert.attribs[0].dxf.layer, doc.layers.get("LUMINARIAS").color), ("LUMINARIAS", "LUMINARIAS", 3))
             self.assertEqual((done["layers"], done["blocks"]), ({"LUMINARIAS": 1, "PLAN-TAG": 1}, 1))
 
+    def test_the_counts_of_the_document_in_memory_match_the_file_that_was_written(self):
+        with tempfile.TemporaryDirectory() as t:
+            done = deliverable.finish_draft(self.draft(), Path(t) / "plan.dxf")
+            self.assertEqual((done["layers"], done["blocks"]), deliverable.inspect(Path(done["dxf"])))
+
     def test_the_index_of_a_native_drawing_lists_its_layers_and_roles(self):
         with tempfile.TemporaryDirectory() as t:
             done = deliverable.finish_draft(self.draft(), Path(t) / "plan.dxf")

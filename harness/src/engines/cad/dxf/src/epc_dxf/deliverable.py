@@ -27,15 +27,15 @@ def _prepare(text: str, symbol_library, tmp_svg: Path) -> list:
     return instances
 
 
-def _finish(tmp_dxf: Path, tmp_svg: Path, instances: list, symbol_library, height_mm: float, catalog: Dict[str, dict], a3: Optional[bool], stamp=None) -> int:
-    """Layers, colours and symbol blocks on the converted drawing: the file is read once, the three steps work on that one document and it is written once (COD-07)."""
+def _finish(tmp_dxf: Path, tmp_svg: Path, instances: list, symbol_library, height_mm: float, catalog: Dict[str, dict], a3: Optional[bool], stamp=None) -> tuple:
+    """(symbols inserted as blocks, entities per layer). Layers, colours and symbol blocks on the converted drawing: the file is read once, the three steps work on that one document and it is written once (COD-07)."""
     from epc_dxf import bloques_dxf, capas_dxf
     doc = ezdxf.readfile(str(tmp_dxf))
     capas_dxf.aplicar(str(tmp_dxf), catalog, stamp, doc=doc, write=False)
     capas_dxf.colorear(str(tmp_svg), str(tmp_dxf), catalog, a3, stamp, doc=doc, write=False)       # colour, line weight and the layer of each entity by its role
     blocks = bloques_dxf.insertar(str(tmp_dxf), symbol_library, instances, height_mm, catalog, stamp, doc=doc, write=False)[0] if instances else 0
     _stamp.save(doc, str(tmp_dxf), stamp)
-    return blocks
+    return blocks, count_entities(doc)[0]
 
 
 def _retarget(entity, name: str) -> None:
@@ -66,18 +66,23 @@ def finish_draft(doc, dxf_path, layers_file=None, stamp_date=None, seed=None) ->
             doc.layers.remove(role)
     Path(dxf_path).parent.mkdir(parents=True, exist_ok=True)
     _stamp.save(doc, str(dxf_path), _stamp.parse(stamp_date, seed if seed is not None else Path(dxf_path).stem))
-    layers, blocks = inspect(Path(dxf_path))
+    layers, blocks = count_entities(doc)                       # the document that was just written: no need to read the file again
     return {"dxf": str(dxf_path), "layers": layers, "blocks": blocks}
 
 
-def inspect(dxf: Path) -> tuple:
-    """(entities per layer, symbols inserted as blocks) of the model space of a DXF."""
+def count_entities(doc) -> tuple:
+    """(entities per layer, symbols inserted as blocks) of the model space of a drawing already in memory."""
     counts: Dict[str, int] = {}
     blocks = 0
-    for e in ezdxf.readfile(str(dxf)).modelspace():
+    for e in doc.modelspace():
         counts[e.dxf.layer] = counts.get(e.dxf.layer, 0) + 1
         blocks += e.dxftype() == "INSERT"
     return dict(sorted(counts.items())), blocks
+
+
+def inspect(dxf: Path) -> tuple:
+    """(entities per layer, symbols inserted as blocks) of the model space of a DXF file."""
+    return count_entities(ezdxf.readfile(str(dxf)))
 
 
 def layers_used(dxf: Path) -> Dict[str, int]:
@@ -101,11 +106,11 @@ def convert(svg_path, dxf_path=None, *, symbol_library=None, layers_file=None, a
         instances = _prepare(text, symbol_library, tmp_svg)
         svg_to_dxf.convertir(str(tmp_svg), None, stamp)
         height = float(re.search(r'height="([\d.]+)mm"', text).group(1)) if instances else 0.0
-        blocks = _finish(tmp_dxf, tmp_svg, instances, symbol_library, height, catalog, a3, stamp)
+        blocks, layers = _finish(tmp_dxf, tmp_svg, instances, symbol_library, height, catalog, a3, stamp)
         os.replace(tmp_dxf, dxf)
     except PermissionError:
         return {"dxf": None, "blocks": 0, "layers": {}, "messages": [f"AVISO no se pudo escribir {dxf.name}: está abierto en otro programa (cerrarlo y volver a generar)"]}
     finally:
         tmp_svg.unlink(missing_ok=True)
     msgs: List[str] = [f"DXF {svg.stem}: {blocks} símbolos como bloques"] if blocks else []
-    return {"dxf": str(dxf), "blocks": blocks, "layers": layers_used(dxf), "messages": msgs}
+    return {"dxf": str(dxf), "blocks": blocks, "layers": layers, "messages": msgs}
