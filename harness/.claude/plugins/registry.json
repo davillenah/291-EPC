@@ -17,7 +17,7 @@
         "short_circuit",
         "voltage_drop"
       ],
-      "hash": "617d4fe506b0e8bd"
+      "hash": "3c1b660dcbd57b58"
     },
     "board-design": {
       "version": "0.2.1",
@@ -55,7 +55,7 @@
         "titleblock",
         "voltage_drop"
       ],
-      "hash": "25811c02753120d3"
+      "hash": "e070de0e721f0f1d"
     },
     "doc-quality": {
       "version": "0.1.0",
@@ -160,7 +160,7 @@
         "titleblock",
         "voltage_drop"
       ],
-      "hash": "4ea858089282e408"
+      "hash": "9bfa338109d92225"
     },
     "plan-drawing": {
       "version": "0.1.0",
@@ -235,7 +235,7 @@
         "titleblock",
         "voltage_drop"
       ],
-      "hash": "d375aef4cf62cabe"
+      "hash": "fbb00851138fa0c9"
     },
     "spec-writer": {
       "version": "0.1.0",
