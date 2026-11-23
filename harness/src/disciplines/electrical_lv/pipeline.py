@@ -28,7 +28,7 @@ class ResumeError(ValueError):
 __all__ = ["STAGES", "STAGE_TABLE", "PipelineContext", "ResumeError", "RunResult", "StageResult", "run"]
 
 
-@dataclass
+@dataclass(frozen=True)
 class RunResult:
     pipeline_run_id: str
     results: list = field(default_factory=list)

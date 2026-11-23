@@ -52,9 +52,9 @@ class PipelineContext:
     engine_cache: dict = field(default_factory=dict)   # raw engine results of this run (filled by the first stage that needs them)
 
 
-@dataclass
+@dataclass(frozen=True)
 class StageResult:
-    """Outcome of one stage. A `not_available` result carries no outputs and no engine calls."""
+    """Outcome of one stage (COD-22: frozen, no field can be reassigned; a stage returns a new one). A `not_available` result carries no outputs and no engine calls."""
 
     stage: int
     status: str

@@ -4,6 +4,7 @@ Pure functions, standard library only, no data tables. Lengths, sections and cur
 except sums, counts and the explicit wastage factor the caller gives.
 """
 from epc_boq.build import build_boq, render_rows
+from epc_boq.errors import BoqError
 
-__all__ = ["build_boq", "render_rows"]
+__all__ = ["build_boq", "render_rows", "BoqError"]
 __version__ = "0.1.0"

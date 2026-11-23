@@ -5,6 +5,7 @@ engines: nothing is calculated here.
 """
 from epc_terminal_blocks.build import build_terminal_list, conductors, render_rows
 from epc_terminal_blocks.sizes import accepting_size, clear_cache, terminal_sizes
+from epc_terminal_blocks.errors import TerminalBlocksError
 
-__all__ = ["build_terminal_list", "render_rows", "conductors", "terminal_sizes", "accepting_size", "clear_cache"]
+__all__ = ["build_terminal_list", "render_rows", "conductors", "terminal_sizes", "accepting_size", "clear_cache", "TerminalBlocksError"]
 __version__ = "0.1.0"
