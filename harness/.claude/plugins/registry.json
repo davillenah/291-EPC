@@ -55,7 +55,7 @@
         "titleblock",
         "voltage_drop"
       ],
-      "hash": "f7fa53bb81625122"
+      "hash": "d177eaa0d2d370db"
     },
     "doc-quality": {
       "version": "0.1.0",
@@ -160,7 +160,7 @@
         "titleblock",
         "voltage_drop"
       ],
-      "hash": "a0380f6c90675109"
+      "hash": "75099e641d73494a"
     },
     "plan-drawing": {
       "version": "0.1.0",
@@ -234,7 +234,7 @@
         "titleblock",
         "voltage_drop"
       ],
-      "hash": "96d409a2750f955c"
+      "hash": "b70caf7a55e47885"
     },
     "spec-writer": {
       "version": "0.1.0",

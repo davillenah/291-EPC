@@ -1,7 +1,7 @@
 """Single-line diagram generator for boards (SVG and DXF per sheet)."""
 __version__ = "0.1.0"
 
-__all__ = ["main", "paginate"]
+__all__ = ["SldError", "SldInput", "draw", "main", "paginate"]
 
 
 def __getattr__(name):

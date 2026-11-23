@@ -13,7 +13,7 @@ try:
 except (ImportError, OSError):
     cairosvg = None
 from epc_dxf import roles as ROLES
-from epc_symbols import library_dir
+from epc_symbols import library_dir, resolve, UnknownSymbol
 
 from epc_aea90364.aea_pipeline import TOPOLOGIAS_MOTOR         # which topologies are motors (the choice of symbols); the numbers come from the calculation
 
@@ -178,6 +178,15 @@ def _symbol_texts(tree, typed):
     return ''.join(etree.tostring(t_, encoding='unicode') for t_ in texts)
 
 
+def _file_in(lib, sid):
+    """iec-symbols >= 0.4.14 names files 291_E_LV_SLD_IEC60617_<id without 'lv_'>.svg; older libraries used <id>.svg: try both."""
+    for name in (sid + '.svg', f"291_E_LV_SLD_IEC60617_{sid[3:] if sid.startswith('lv_') else sid}.svg"):
+        f = os.path.join(lib, name)
+        if os.path.exists(f):
+            return f
+    return os.path.join(lib, sid + '.svg')
+
+
 class _SheetLabels:
     @staticmethod
     def annotate(frag):
@@ -192,7 +201,8 @@ class _Sheet:
     def __init__(self, lib, xlsx, out, name, lamina, modblock, env):
         self.env, self.xlsx, self.out, self.name, self.lamina, self.modblock = env, xlsx, out, name, lamina, modblock
         self.stamp_date = env.get('EPC_STAMP_DATE') or None    # opcional: la fecha del plano (ISO) fija la emisión del rótulo y los sellos del DXF; sin ella, la de hoy
-        self.lib = str(library_dir('sld-lv-symbol')) if lib == 'default' else lib       # símbolos: epc_symbols
+        self.default_lib = lib == 'default'
+        self.lib = str(library_dir('sld-lv-symbol')) if self.default_lib else lib       # símbolos: epc_symbols
         os.makedirs(out, exist_ok=True)
         self.cat = {i['id']: i for i in json.load(open(os.path.join(self.lib, '_catalog.json'), encoding='utf-8-sig'))['symbols']}
         self.pre, self.det, self.fig = (_calculo(env, v) for v in ('SLD_CALC_JSON', 'SLD_CALC_DETAIL', 'SLD_FIGURES_JSON'))
@@ -316,13 +326,14 @@ class _Sheet:
 
     # ---------- helpers SVG ----------
     def sym_file(self, sid):
-        """Symbol SVG path. iec-symbols >= 0.4.14 names files 291_E_LV_SLD_IEC60617_<id without 'lv_'>.svg;
-        older libraries used <id>.svg. The catalog 'file' key is not reliable, so try both."""
-        for name in (sid + '.svg', f"291_E_LV_SLD_IEC60617_{sid[3:] if sid.startswith('lv_') else sid}.svg"):
-            f = os.path.join(self.lib, name)
-            if os.path.exists(f):
-                return f
-        return os.path.join(self.lib, sid + '.svg')
+        """Symbol SVG path. With the default library the file comes from `epc_symbols.resolve` (no engine builds a symbol file name, SYM-02); a library given by path keeps the file-name rule."""
+        return self._registry_file(sid) if self.default_lib else _file_in(self.lib, sid)
+
+    def _registry_file(self, sid):
+        try:
+            return str(resolve(sid, 'sld').svg)
+        except UnknownSymbol:
+            return os.path.join(self.lib, sid + '.svg')
 
     def fragment(self, sid, typed=False):
         """El símbolo como árbol listo para rellenar (el SVG se lee una vez por símbolo); `typed`: con la etiqueta del tipo de dispositivo (MCB, MCCB, KM...) que el símbolo lleva fuera de su grupo."""

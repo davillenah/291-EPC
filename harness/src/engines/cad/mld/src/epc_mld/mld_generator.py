@@ -42,6 +42,26 @@ def library_dir() -> str:
     return str(lib("mld-lv-symbol"))
 
 
+def _notice(line: str) -> None:
+    print(line, file=sys.stderr)
+
+
+def _registry_file(sid: str) -> Optional[str]:
+    from epc_symbols import resolve, UnknownSymbol
+    try:
+        return str(resolve(sid, "mld").svg)
+    except UnknownSymbol:
+        return None
+
+
+def _symbol_path(lib: str, row: Optional[dict], sid: str) -> Optional[str]:
+    """The SVG of a symbol: from `epc_symbols` for its own library (SYM-02), from the catalogue row for a library given by path."""
+    if row and lib == library_dir():
+        return _registry_file(sid)
+    f = os.path.join(lib, row["file"]) if row else None
+    return f if f and os.path.isfile(f) else None
+
+
 class Sheet:
     """Elementos SVG de una hoja y utilidades de dibujo."""
 
@@ -50,6 +70,7 @@ class Sheet:
         self.cat = {s["id"]: s for s in json.load(open(os.path.join(lib, "_catalog.json"), encoding="utf-8-sig"))["symbols"]}
         self.d: List[str] = []
         self.used: set = set()
+        self.say = _notice       # where the notices go (the generator replaces it with its own log)
         self._cache: Dict[str, str] = {}
 
     # ---- primitivas
@@ -71,9 +92,7 @@ class Sheet:
 
     # ---- símbolos
     def symbol_file(self, sid: str) -> Optional[str]:
-        s = self.cat.get(sid)
-        f = os.path.join(self.lib, s["file"]) if s else None
-        return f if f and os.path.isfile(f) else None
+        return _symbol_path(self.lib, self.cat.get(sid), sid)
 
     def bottom(self, sid: str) -> float:
         s = self.cat.get(sid)
@@ -86,7 +105,7 @@ class Sheet:
         f = self.symbol_file(sid)
         self.used.add(sid)
         if not f:
-            print("AVISO: falta símbolo", sid, "-> recuadro ??", file=sys.stderr)
+            self.say(f"AVISO: falta símbolo {sid} -> recuadro ??")
             self.rect(x - 5, y, 30, 12)
             self.text(x + 8, y + 7, "??", anchor="middle")
             return
@@ -153,6 +172,8 @@ class Generator:
         self.calc = calc["datos"]
         self.detail = calc.get("detalle", {})
         self.lib = lib or library_dir()
+        self.log: Optional[List[str]] = None    # notices (OK, AVISO) are appended here; None: they are printed to stderr (command line)
+        self.titleblock_request: Optional[dict] = None   # the request to the title block service (the project's data and logos); None: built from the title block of the input
         self.stamp_date = None      # optional ISO date of the drawing: issue date of the title block and stamps of the DXF (None: today's date, the clock and random GUIDs)
         self.circuits = {c["tag"]: c for c in data["circuits"]}
         self.order = [c["tag"] for c in data["circuits"]]
@@ -182,6 +203,7 @@ class Generator:
 
     def draw_sheet(self, roots: List[str], idx: int, total: int) -> tuple:
         sh = Sheet(self.lib)
+        sh.say = self.say
         self.sh = sh
         self.phase_n = 0
         self.leaf_bottoms: List[tuple] = []
@@ -335,12 +357,11 @@ class Generator:
     def title_block_sheet(self, index: int, name: str) -> str:
         """The IRAM sheet of this diagram with its title block filled in, asked to epc_titleblock (the project's data: EPC_TITLEBLOCK_JSON, else the title block of the input)."""
         from epc_titleblock import service
-        file = os.environ.get("EPC_TITLEBLOCK_JSON")
-        request = json.loads(Path(file).read_text(encoding="utf-8")) if file else service.project_request(self.data.get("titleblock", {}))
+        request = self.titleblock_request or service.project_request(self.data.get("titleblock", {}))
         fields = {"denominacion": self.board.get("name"), "denominacion_2": "DIAGRAMA MULTIFILAR BT", "proyecto": self.board.get("project"), "pagina": f"{index + 1} / {len(self.names)}"}
         result = service.render({**request, "sheets": [{"name": name, "format": "A1", "fields": fields}]})
         for w in result["warnings"]:
-            print("AVISO", w, file=sys.stderr)
+            self.say(f"AVISO {w}")
         return result["sheets"][0]["svg"]
 
     def write_sheet(self, sh: Sheet, index: int, name: str, out_dir: Path) -> tuple:
@@ -366,26 +387,44 @@ class Generator:
         etree.fromstring(final.encode("utf-8"))
         svg_path = out_dir / f"{name}.svg"
         svg_path.write_text(final, encoding="utf-8", newline="\n")
-        dxf_path = self.to_dxf(svg_path, final, out_dir, name, self.stamp_date)
+        dxf_path = self.to_dxf(svg_path, final, out_dir, name, self.stamp_date, self.say)
         return str(svg_path), str(dxf_path) if dxf_path else None
 
     @staticmethod
-    def to_dxf(svg_path: Path, final: str, out_dir: Path, name: str, stamp_date=None):
+    def to_dxf(svg_path: Path, final: str, out_dir: Path, name: str, stamp_date=None, say=_notice):
         """DXF por el mismo convertidor del paquete (trazos) y las capas 291-* del unifilar."""
         from epc_dxf import deliverable
         done = deliverable.convert(svg_path, stamp_date=stamp_date, seed=name)
         for line in done["messages"]:
-            print(line, file=sys.stderr)
+            say(line)
         return done["dxf"]
 
+    def say(self, line: str) -> None:
+        if self.log is None:
+            print(line, file=sys.stderr)
+        else:
+            self.log.append(line)
 
-def generate(data: dict, calc: dict, out_dir, name: str, lib: Optional[str] = None, maxw: float = XMAX - X0, stamp_date=None) -> List[dict]:
+
+def generate(data: dict, calc: dict, out_dir, name: str, lib: Optional[str] = None, maxw: float = XMAX - X0, stamp_date=None,
+             titleblock_request: Optional[dict] = None, log: Optional[List[str]] = None) -> List[dict]:
+    """Draws the multi-line diagram of a board (SVG and DXF per sheet) and returns the sheets made. A function (DGM-16): nothing is read from the process. `stamp_date` (ISO) fixes every date;
+    `titleblock_request` is the request to the title block service (None: built from `data["titleblock"]`); the notices (OK, AVISO) are appended to `log` (None: printed to stderr)."""
     g = Generator(data, calc, lib)
-    g.stamp_date = stamp_date or os.environ.get("EPC_STAMP_DATE") or None
+    g.stamp_date = stamp_date or None
+    g.titleblock_request = titleblock_request
+    g.log = log
     made = g.build(Path(out_dir), name, maxw)
     for m in made:
-        print("OK", m["name"], "circuitos", len(g.order), file=sys.stderr)
+        g.say(f"OK {m['name']} circuitos {len(g.order)}")
     return made
+
+
+def _options_from_environment() -> dict:
+    """The command line is the adapter: it reads the environment and hands the values over as data."""
+    file = os.environ.get("EPC_TITLEBLOCK_JSON")
+    return {"stamp_date": os.environ.get("EPC_STAMP_DATE") or None,
+            "titleblock_request": json.loads(Path(file).read_text(encoding="utf-8")) if file else None}
 
 
 def main(argv=None) -> int:
@@ -400,7 +439,7 @@ def main(argv=None) -> int:
     data = json.loads(Path(a.input).read_text(encoding="utf-8"))
     calc = {"datos": json.loads(Path(a.calc).read_text(encoding="utf-8")),
             "detalle": json.loads(Path(a.detail).read_text(encoding="utf-8")) if a.detail else {}}
-    made = generate(data, calc, a.out, a.name)
+    made = generate(data, calc, a.out, a.name, **_options_from_environment())
     print("OK", ", ".join(m["name"] for m in made))
     return 0
 
