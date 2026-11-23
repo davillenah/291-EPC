@@ -5,6 +5,7 @@ from pathlib import Path
 import ezdxf
 from ezdxf.addons.drawing import Frontend, RenderContext, layout, svg
 from ezdxf.addons.drawing.config import BackgroundPolicy, ColorPolicy, Configuration
+from epc_plan.core import PlanError
 
 
 def dxf_to_svg(data: bytes) -> str:
@@ -15,7 +16,7 @@ def dxf_to_svg(data: bytes) -> str:
         try:
             doc = ezdxf.readfile(str(path))
         except (ezdxf.DXFError, OSError, UnicodeDecodeError):
-            raise ValueError("the DXF cannot be read: it is not a valid DXF file")
+            raise PlanError("err_dxf_unreadable")
         backend = svg.SVGBackend()
         Frontend(RenderContext(doc), backend, config=Configuration(color_policy=ColorPolicy.BLACK, background_policy=BackgroundPolicy.WHITE)).draw_layout(doc.modelspace())
         return backend.get_string(layout.Page(0, 0))

@@ -14,6 +14,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
 from epc_plan import core
+from epc_plan.core import PlanError
 
 HERE = Path(__file__).resolve().parent
 Point = Tuple[float, float]
@@ -175,7 +176,7 @@ def detect(items: List[Dict[str, Any]], rules: Optional[List[Dict[str, Any]]] = 
     params = params or core.PARAMS
     rules = default_rules() if rules is None else rules
     if len(items) > params["coordination"]["max_items"]:
-        raise core.PlanError(f"too many elements to compare ({len(items)}): the limit is {params['coordination']['max_items']}")
+        raise core.PlanError("err_too_many_elements", count=len(items), limit=params['coordination']['max_items'])
     margin = max([r.get("clearance_m", 0.0) for r in rules] + [0.0]) + 2 * max([it["clear_m"] for it in items] + [0.0]) + 0.01
     found: List[Dict[str, Any]] = []
     for a, b in _candidates(items, margin):

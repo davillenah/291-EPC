@@ -27,6 +27,7 @@ NORMA DE REFERENCIA
 import os
 
 from epc_aea90364 import norm_data
+from epc_aea90364.errors import Aea90364Error
 
 __version__ = "0.1.0"
 # `CARPETA` (module attribute, read lazily below): folder `rules/` in the normative folder (MIG-37a).
@@ -71,7 +72,7 @@ def reglas(grupo=None):
     salida = []
     for g in nombres:
         if g not in indice()["grupos"]:
-            raise ValueError(f"grupo {g!r} inexistente: {grupos()}")
+            raise Aea90364Error("err_group_unknown", g=g, grupos=grupos())
         salida += _leer(indice()["grupos"][g]["archivo"])["reglas"]
     return salida
 
@@ -81,14 +82,14 @@ def regla(id_):
     for r in reglas(id_.split(".")[0]):
         if r["id"] == id_:
             return r
-    raise ValueError(f"regla {id_!r} inexistente")
+    raise Aea90364Error("err_rule_unknown", id=id_)
 
 
 def valor(id_, parametro):
     """Valor de un parámetro de una regla, p. ej. valor('bandejas.reserva_20pct', 'reserva_min_pct') = 20."""
     p = regla(id_)["parametros"]
     if parametro not in p:
-        raise ValueError(f"{id_} no tiene el parámetro {parametro!r}: {sorted(p)}")
+        raise Aea90364Error("err_parameter_unknown", id=id_, parametro=parametro, opciones=sorted(p))
     return p[parametro]
 
 

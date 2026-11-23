@@ -13,4 +13,4 @@ dependencies = []
 where = ["src"]
 
 [tool.setuptools.package-data]
-epc_terminal_blocks = ["data/*.json", "norm_register/*.json"]
+epc_terminal_blocks = ["data/*.json", "norm_register/*.json", "schema/*.json"]

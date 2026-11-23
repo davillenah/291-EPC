@@ -12,6 +12,7 @@ import sys
 import tempfile
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
+from epc_drawing.errors import DrawingError
 
 STANDARD_SCALES = (1, 2, 5, 10, 20, 25, 50, 75, 100, 125, 150, 200, 250, 500, 750, 1000, 1500, 2000, 5000)
 FORMATS = ("A0", "A1", "A2", "A3", "A4")
@@ -30,7 +31,7 @@ def free_area(svg: str) -> Tuple[Box, float]:
     head = re.search(r"<svg[^>]*>", svg).group(0)
     zone = _box(re.search(r'data-zona-util="([^"]+)"', head).group(1) if "data-zona-util" in head else None)
     if zone is None:
-        raise ValueError("the sheet does not say its usable zone: it is not an IRAM sheet of epc_titleblock")
+        raise DrawingError("err_sheet_no_zone")
     height = float(re.search(r'height="([\d.]+)mm"', head).group(1))
     blocks = [b for b in (_box(re.search(r'data-rotulo="([^"]+)"', head).group(1) if "data-rotulo" in head else None),
                           _box(re.search(r'data-modificaciones="([^"]+)"', head).group(1) if "data-modificaciones" in head else None)) if b]
@@ -64,7 +65,7 @@ def _sheet_dxf(request: dict, fmt: str, name: str, scale: int, tmp: Path) -> Tup
     svg_path.write_text(result["sheets"][0]["svg"], encoding="utf-8")
     done = deliverable.convert(svg_path, tmp / "sheet.dxf")
     if not done.get("dxf"):
-        raise RuntimeError("the sheet could not be made as a DXF: " + "; ".join(done.get("messages") or []))
+        raise DrawingError("err_sheet_not_dxf", reason='; '.join(done.get('messages') or []))
     return Path(done["dxf"]), result["sheets"][0]["svg"]
 
 
@@ -74,11 +75,11 @@ def compose(plan_dxf: Path, request: dict, out_dxf: Path, fmt: str = "A1", scale
     from ezdxf.addons.importer import Importer
     from ezdxf.math import Matrix44
     if fmt not in FORMATS:
-        raise ValueError(f"the format must be one of {', '.join(FORMATS)}")
+        raise DrawingError("err_format_invalid", formats=', '.join(FORMATS))
     plan = ezdxf.readfile(str(plan_dxf))
     ext = _extents(plan.modelspace())
     if ext is None:
-        raise ValueError("the plan has nothing drawn")
+        raise DrawingError("err_plan_empty")
     mm_per_unit = UNIT_MM.get(int(plan.header.get("$INSUNITS", 6)), 1000.0)
     with tempfile.TemporaryDirectory() as tmp:
         first, svg = _sheet_dxf(request, fmt, name, scale or 100, Path(tmp))

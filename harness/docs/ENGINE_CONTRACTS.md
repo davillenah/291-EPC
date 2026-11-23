@@ -274,6 +274,80 @@ Schema: `harness/src/engines/calculation/receptacles/src/epc_receptacles/schema/
 | `rooms[].estimate.confidence` | number | yes |  |  |
 | `rooms[].estimate.source` | string | yes |  |  |
 
+## epc_boq
+
+### Input
+
+Schema: `harness/src/engines/procurement/boq/src/epc_boq/schema/input.schema.json` (bill of quantities (input))
+
+| Field | Type | Required | Limits | Notes |
+|---|---|---|---|---|
+| `board_name` | string | yes | minLength 1, pattern \S |  |
+| `circuits` | array | yes | minItems 1 | tags must be unique |
+| `circuits[].tag` | string | yes | minLength 1, pattern \S |  |
+| `circuits[].phases` | one of `1`, `3` | yes |  |  |
+| `circuits[].s_mm2` | number | yes | exclusiveMinimum 0 |  |
+| `circuits[].neutral_mm2` | number or null |  | exclusiveMinimum 0 |  |
+| `circuits[].pe_mm2` | number or null |  | exclusiveMinimum 0 |  |
+| `circuits[].length_m` | number or null |  | exclusiveMinimum 0 |  |
+| `circuits[].material` | string or null |  |  |  |
+| `circuits[].insulation` | string or null |  |  |  |
+| `circuits[].in_a` | number or null |  | exclusiveMinimum 0 |  |
+| `circuits[].device_kind` | string or null |  |  |  |
+| `circuits[].poles` | one of `1`, `2`, `3`, `4`, `None` |  |  |  |
+| `circuits[].breaking_capacity_ka` | number or null |  | exclusiveMinimum 0 |  |
+| `circuits[].description` | string or null |  |  |  |
+| `circuits[].device` | string or null |  |  |  |
+| `allowance_pct` | number | yes | minimum 0 | required, no default; 0 allowed |
+| `terminal_totals` | object or null |  |  |  |
+| `round_up_m` | boolean |  |  |  |
+| `equipment` | array or null |  |  |  |
+
+## epc_datasheets
+
+### Input
+
+Schema: `harness/src/engines/procurement/datasheets/src/epc_datasheets/schema/input.schema.json` (datasheet requirements from circuits (input))
+
+| Field | Type | Required | Limits | Notes |
+|---|---|---|---|---|
+| `circuits` | array | yes | minItems 1 | tags must be unique |
+| `circuits[].tag` | string | yes | minLength 1, pattern \S |  |
+| `circuits[].phases` | one of `1`, `3` | yes |  |  |
+| `circuits[].s_mm2` | number | yes | exclusiveMinimum 0 |  |
+| `circuits[].neutral_mm2` | number or null |  | exclusiveMinimum 0 |  |
+| `circuits[].pe_mm2` | number or null |  | exclusiveMinimum 0 |  |
+| `circuits[].length_m` | number or null |  | exclusiveMinimum 0 |  |
+| `circuits[].material` | string or null |  |  |  |
+| `circuits[].insulation` | string or null |  |  |  |
+| `circuits[].in_a` | number or null |  | exclusiveMinimum 0 |  |
+| `circuits[].device_kind` | string or null |  |  |  |
+| `circuits[].poles` | one of `1`, `2`, `3`, `4`, `None` |  |  |  |
+| `circuits[].breaking_capacity_ka` | number or null |  | exclusiveMinimum 0 |  |
+| `circuits[].description` | string or null |  |  |  |
+| `circuits[].device` | string or null |  |  |  |
+| `voltage_v` | number or null |  | exclusiveMinimum 0 |  |
+
+## epc_terminal_blocks
+
+### Input
+
+Schema: `harness/src/engines/quality/terminal_blocks/src/epc_terminal_blocks/schema/input.schema.json` (terminal-block list (input))
+
+| Field | Type | Required | Limits | Notes |
+|---|---|---|---|---|
+| `board_name` | string | yes | minLength 1, pattern \S |  |
+| `circuits` | array | yes | minItems 1 | tags must be unique |
+| `circuits[].tag` | string | yes | minLength 1, pattern \S |  |
+| `circuits[].phases` | one of `1`, `3` | yes |  |  |
+| `circuits[].s_mm2` | number | yes | exclusiveMinimum 0 |  |
+| `circuits[].pe_mm2` | number or null |  | exclusiveMinimum 0 |  |
+| `circuits[].neutral_mm2` | number or null |  | exclusiveMinimum 0 |  |
+| `circuits[].in_a` | number or null |  | exclusiveMinimum 0 |  |
+| `circuits[].description` | string or null |  |  |  |
+| `circuits[].device` | string or null |  |  |  |
+| `start_strip` | string |  | pattern ^[A-Za-z][A-Za-z0-9_-]{0,15}$ |  |
+
 ## Engines without a schema contract
 
 These engines do not yet validate their input against a schema at the entry point (OPT-09):
@@ -294,13 +368,10 @@ These engines do not yet validate their input against a schema at the entry poin
 - `epc_short_circuit`
 - `epc_transformer_sizing`
 - `epc_voltage_drop`
-- `epc_boq`
-- `epc_datasheets`
 - `epc_rfq`
 - `epc_descriptive_report`
 - `epc_design_basis`
 - `epc_documents`
-- `epc_terminal_blocks`
 - `epc_calc_check`
 - `epc_rules`
 - `epc_standards`

@@ -391,7 +391,15 @@ class MatchTests(unittest.TestCase):
         self.assertFalse(match.mentions("PVCX", "pvc"))
 
     def test_public_surface(self):
-        self.assertEqual(sorted(epc_datasheets.__all__), ["build_datasheets", "load_catalog_dir", "render_rows", "requirements_from_circuits"])
+        self.assertEqual(sorted(epc_datasheets.__all__), ["DatasheetsError", "build_datasheets", "load_catalog_dir", "render_rows", "requirements_from_circuits"])
+
+    def test_public_door(self):
+        """COD-02: `epc_datasheets.api` offers exactly what the package exports."""
+        import importlib
+        api = importlib.import_module("epc_datasheets.api")
+        self.assertEqual(sorted(api.__all__), sorted(epc_datasheets.__all__))
+        for name in api.__all__:
+            self.assertIs(getattr(api, name), getattr(epc_datasheets, name))
 
 
 if __name__ == "__main__":

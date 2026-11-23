@@ -17,6 +17,7 @@ from epc_arch.model import Arc, ArchError, Line, Options, Primitives, Text
 from epc_arch.sources import register
 from epc_arch.sources.raster import read_image
 from epc_arch.sources.render import render_or_fail
+from epc_arch.model import ArchError
 
 SCALES = (20, 25, 50, 75, 100, 125, 150, 200, 250, 500)        # the scales a plan is drawn at
 POINTS_PER_METRE = 72 / 0.0254
@@ -257,7 +258,7 @@ def page_texts(page) -> List[Text]:
 
 def _check_size(drawn: List[Tuple[bool, Primitives]]) -> None:
     if sum(len(q.lines) + len(q.arcs) for _, q in drawn) > PARAMS["plan"]["hard_max_primitives"]:
-        raise ArchError("the PDF has too many strokes to read: export the plan with fewer layers or without hatching")
+        raise ArchError("err_pdf_too_many_strokes")
 
 
 def _read_paths(page, prims: Primitives, skipped: List[int]) -> None:
@@ -284,7 +285,7 @@ def read_vector(data: bytes, options: Options) -> Primitives:
     try:
         page = pdfium.PdfDocument(data)[options.page]
     except Exception:                                         # noqa: BLE001 - damaged, protected or no such page
-        raise ArchError("the PDF cannot be read: it may be damaged or protected")
+        raise ArchError("err_pdf_unreadable")
     units = options.units_per_metre
     scale = None if units else written_scale(page)
     if scale:

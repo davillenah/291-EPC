@@ -47,6 +47,7 @@ import math
 from epc_calc_common._validate import pos as _pos
 from epc_feeder_sizing import aea_conductors as CO
 from epc_calc_common import aea_tables as T
+from epc_feeder_sizing.errors import FeederSizingError
 
 __version__ = "0.1.0"
 
@@ -81,8 +82,7 @@ def k_material(material, aislacion, seccion_mm2=None):
     try:
         return CO.k_adiabatico_771(aislacion, material, seccion_mm2)
     except ValueError:
-        raise ValueError(f"Combinación ({material!r}, {aislacion!r}) sin k predefinido; "
-                         f"disponibles: {sorted(_g('K_ADIABATICO'))}. Ingresar k explícito.") from None
+        raise FeederSizingError("err_no_predefined_k", material=material, aislacion=aislacion, disponibles=sorted(_g('K_ADIABATICO'))) from None
 
 
 def _advertencias_tiempo(t_s):
@@ -128,12 +128,12 @@ def seccion_comercial_superior(s_min_mm2, secciones_disponibles_mm2):
     """Menor sección de la lista (dato del usuario/norma) que sea ≥ S_min. ValueError si ninguna."""
     _pos(s_min_mm2, "s_min_mm2")
     if not secciones_disponibles_mm2:
-        raise ValueError("La lista de secciones disponibles está vacía")
+        raise FeederSizingError("err_sections_empty")
     for s in secciones_disponibles_mm2:
         _pos(s, "sección disponible")
     candidatas = [s for s in secciones_disponibles_mm2 if s >= s_min_mm2]
     if not candidatas:
-        raise ValueError(f"Ninguna sección disponible ≥ {s_min_mm2:.2f} mm²")
+        raise FeederSizingError("err_no_section_available", s_min_mm2=s_min_mm2)
     return min(candidatas)
 
 

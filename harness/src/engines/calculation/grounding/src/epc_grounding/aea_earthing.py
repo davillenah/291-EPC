@@ -31,6 +31,7 @@ from epc_calc_common._validate import num as _num
 from epc_feeder_sizing import aea_conductors as CO
 from epc_calc_common import aea_rounding as RND
 from epc_calc_common import aea_tables as T
+from epc_grounding.errors import GroundingError
 
 __version__ = "0.1.0"
 
@@ -79,7 +80,7 @@ def tiempo_desconexion_max_s(esquema, un_v, corriente="ca"):
     """Tabla 771.18.III (el número oficial de la tabla está por verificar). esquema 'TN'|'TT'; un_v entre 50 y 400; corriente 'ca'|'cc'."""
     tabla = _g("TIEMPOS_DESCONEXION_S")
     if esquema not in tabla:
-        raise ValueError("esquema 'TN' o 'TT'")
+        raise GroundingError("err_scheme")
     _num(un_v, "un_v", 50.0)
     for lim, t_ca, t_cc in tabla[esquema]:
         if un_v <= lim:
@@ -87,10 +88,10 @@ def tiempo_desconexion_max_s(esquema, un_v, corriente="ca"):
                 return t_ca
             if corriente == "cc":
                 if t_cc is None:
-                    raise ValueError("sin valor cc en ese rango")
+                    raise GroundingError("err_no_dc_value")
                 return t_cc
-            raise ValueError("corriente 'ca' o 'cc'")
-    raise ValueError("un_v fuera de la tabla (≤ 400 V)")
+            raise GroundingError("err_current_kind")
+    raise GroundingError("err_voltage_outside_table")
 
 
 def tiempo_seccional_max_s(esquema, selectividad=False):
@@ -112,7 +113,7 @@ def resistance_rod(rho, largo_m, diametro_m, simplificada=False):
     if simplificada:
         r = largo_m / diametro_m
         if r < 25 or r > 3000:
-            raise ValueError("L/d fuera de 25–3000")
+            raise GroundingError("err_ratio_range")
         k = 0.75 if r <= 100 else (1.0 if r <= 600 else 1.2)
         return k * rho / largo_m
     return rho / (2 * math.pi * largo_m) * (math.log(8 * largo_m / diametro_m) - 1)
@@ -141,7 +142,7 @@ def resistencia_placa_circular(rho, diametro_m, prof_m):
 def resistance_parallel(resistencias_ohm):
     """Electrodos suficientemente separados: 1/R = Σ 1/Ri."""
     if not resistencias_ohm:
-        raise ValueError("lista vacía")
+        raise GroundingError("err_empty_list")
     for r in resistencias_ohm:
         _num(r, "R", 0.0, True)
     return 1.0 / sum(1.0 / r for r in resistencias_ohm)

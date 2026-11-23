@@ -3,6 +3,7 @@ from typing import Optional, Tuple
 
 from epc_arch.config import PARAMS
 from epc_arch.model import Arc, ArchError, Block, Line, Primitives, Text
+from epc_arch.model import ArchError
 
 Size = Tuple[float, float]
 
@@ -49,7 +50,7 @@ def normalize(prims: Primitives) -> Tuple[Primitives, Size]:
         return prims, prims.extent
     box = bounds(prims)
     if box is None or max(box[2] - box[0], box[3] - box[1]) <= 0:
-        raise ArchError("the plan has no lines to read")
+        raise ArchError("err_plan_empty")
     x0, y0, x1, y1 = box
     scale = PARAMS["plan"]["target_side"] / max(x1 - x0, y1 - y0) if prims.fit else 1.0
     fn = (lambda p: ((p[0] - x0) * scale, (y1 - p[1]) * scale)) if prims.y_up else (lambda p: ((p[0] - x0) * scale, (p[1] - y0) * scale))

@@ -1,0 +1,51 @@
+{
+  "board": {
+    "name": "TS-DWELL",
+    "fp_default": 0.9
+  },
+  "circuits": {
+    "L-01": {
+      "kind": "rcbo"
+    },
+    "L-02": {
+      "kind": "rcbo"
+    },
+    "T-01": {
+      "kind": "rcbo"
+    },
+    "T-02": {
+      "kind": "rcbo"
+    },
+    "E-01": {
+      "kind": "rcbo"
+    },
+    "E-02": {
+      "kind": "rcbo"
+    }
+  },
+  "transformer": {
+    "demand_kva": 15,
+    "reserve_pct": 20,
+    "secondary_v": 400
+  },
+  "boq": {
+    "allowance_pct": 5
+  },
+  "datasheets": {
+    "catalog_dir": "../synthetic_lv_small/synthetic_catalog"
+  },
+  "rfq": {
+    "suppliers": [
+      {
+        "name": "Invented Electrical Supply Co."
+      },
+      {
+        "name": "Fictional Switchgear Distributors"
+      }
+    ],
+    "currency": "USD",
+    "response_deadline": "2027-01-31",
+    "delivery_site": "2 Invented Lane, Nowhere",
+    "validity_days": 30
+  }
+}

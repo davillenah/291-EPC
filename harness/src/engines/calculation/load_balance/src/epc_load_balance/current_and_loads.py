@@ -48,6 +48,7 @@ NORMA DE REFERENCIA (por designación)
 
 import math
 from epc_calc_common._validate import frac as _frac, nonneg as _nonneg, pos as _pos
+from epc_load_balance.errors import LoadBalanceError
 
 __version__ = "0.1.0"
 
@@ -104,14 +105,14 @@ def balance_cargas(cargas, fs=1.0, v_linea_v=None):
     Devuelve dict: p_w, q_var, s_va, fp, p_instalada_w, i_a (o None).
     """
     if not cargas:
-        raise ValueError("La lista de cargas está vacía")
+        raise LoadBalanceError("err_loads_empty")
     _frac(fs, "fs")
     p_inst = 0.0
     p_sum = 0.0
     q_sum = 0.0
     for k, c in enumerate(cargas):
         if not isinstance(c, dict) or "p_w" not in c:
-            raise ValueError(f"La carga #{k} debe ser un dict con la clave 'p_w'")
+            raise LoadBalanceError("err_load_shape", k=k)
         nombre = c.get("nombre", f"#{k}")
         p = c["p_w"]
         fp = c.get("fp", 1.0)
@@ -121,7 +122,7 @@ def balance_cargas(cargas, fs=1.0, v_linea_v=None):
             _frac(fp, "fp")
             _frac(fu, "fu")
         except ValueError as e:
-            raise ValueError(f"Carga '{nombre}': {e}") from None
+            raise LoadBalanceError("err_load_failed", nombre=nombre, e=e) from None
         tan_phi = math.sqrt(1.0 - fp * fp) / fp
         p_inst += p
         p_sum += fu * p
@@ -164,15 +165,15 @@ def split_phases(circuitos, n_fases=3):
         corrientes (A por fase), desbalance_pct = 100·(I_max − I_media)/I_media.
     """
     if not isinstance(n_fases, int) or isinstance(n_fases, bool) or n_fases < 1:
-        raise ValueError(f"n_fases debe ser entero ≥ 1 (recibido: {n_fases!r})")
+        raise LoadBalanceError("err_phase_count", n_fases=n_fases)
     if not circuitos:
-        raise ValueError("La lista de circuitos está vacía")
+        raise LoadBalanceError("err_circuits_empty")
     items = []
     for k, c in enumerate(circuitos):
         try:
             nombre, i = c
         except (TypeError, ValueError):
-            raise ValueError(f"El circuito #{k} debe ser una tupla (nombre, corriente_A)") from None
+            raise LoadBalanceError("err_circuit_shape", k=k) from None
         _nonneg(i, f"corriente del circuito '{nombre}'")
         items.append((nombre, i))
     orden = sorted(items, key=lambda t: -t[1])  # sorted es estable: empates conservan el orden de entrada

@@ -1,6 +1,7 @@
 """The descriptive report: sections of items built by copying values of the design basis and by counting the given circuits (no other arithmetic)."""
 import copy
 from collections import Counter
+from epc_descriptive_report.errors import DescriptiveReportError
 
 STATUS = "draft"
 NOT_SPECIFIED = "not specified"
@@ -30,33 +31,33 @@ def _section(section_id, items):
 
 def check_design_basis(design_basis):
     if not isinstance(design_basis, dict) or not isinstance(design_basis.get("sections"), list):
-        raise ValueError("design_basis must be a design-basis document (a dict with a list of sections)")
+        raise DescriptiveReportError("err_design_basis_invalid")
 
 
 def check_circuits(circuits):
     if not isinstance(circuits, list) or not circuits:
-        raise ValueError("circuits must be a non-empty list")
+        raise DescriptiveReportError("err_circuits_empty")
     seen = set()
     for n, row in enumerate(circuits, start=1):
         tag = row.get("tag") if isinstance(row, dict) else None
         if not isinstance(tag, str) or not tag.strip():
-            raise ValueError(f"circuit {n}: a tag (non-empty text) is required")
+            raise DescriptiveReportError("err_circuit_tag_missing", n=n)
         if tag in seen:
-            raise ValueError(f"circuit {n}: duplicate tag {tag}")
+            raise DescriptiveReportError("err_circuit_tag_duplicate", n=n, tag=tag)
         seen.add(tag)
         section = row.get("s_mm2")
         if section is not None and (isinstance(section, bool) or not isinstance(section, (int, float)) or section <= 0):
-            raise ValueError(f"circuit {tag}: s_mm2 must be a number greater than zero")
+            raise DescriptiveReportError("err_circuit_section_invalid", tag=tag)
 
 
 def check_optional(terminals, boq, pending, unreviewed):
     for name, value in (("terminals", terminals), ("boq", boq)):
         if value is not None and not isinstance(value, dict):
-            raise ValueError(f"{name} must be a dict when given")
+            raise DescriptiveReportError("err_not_dict", name=name)
     if pending is not None and (not isinstance(pending, list) or not all(isinstance(p, dict) and p.get("name") for p in pending)):
-        raise ValueError("pending_documents must be a list of dicts with a name")
+        raise DescriptiveReportError("err_pending_documents_invalid")
     if unreviewed is not None and (isinstance(unreviewed, bool) or not isinstance(unreviewed, int) or unreviewed < 0):
-        raise ValueError("unreviewed_norm_records must be a whole number, zero or more")
+        raise DescriptiveReportError("err_unreviewed_records_invalid")
 
 
 def design_basis_items(design_basis):

@@ -1,0 +1,61 @@
+{
+  "board": {
+    "name": "TS-SHED",
+    "fp_default": 0.85
+  },
+  "circuits": {
+    "M-01": {
+      "topology": "dol",
+      "fp": 0.85,
+      "efficiency": 0.9,
+      "kind": "rcbo"
+    },
+    "M-02": {
+      "topology": "dol",
+      "fp": 0.85,
+      "efficiency": 0.88,
+      "kind": "rcbo"
+    },
+    "M-03": {
+      "topology": "dol",
+      "fp": 0.86,
+      "efficiency": 0.92,
+      "kind": "rcbo"
+    },
+    "E-01": {
+      "fp": 0.9,
+      "kind": "rcbo"
+    },
+    "T-01": {
+      "kind": "rcbo"
+    },
+    "T-02": {
+      "kind": "rcbo"
+    }
+  },
+  "transformer": {
+    "demand_kva": 63,
+    "reserve_pct": 20,
+    "secondary_v": 400
+  },
+  "boq": {
+    "allowance_pct": 8
+  },
+  "datasheets": {
+    "catalog_dir": "../synthetic_lv_small/synthetic_catalog"
+  },
+  "rfq": {
+    "suppliers": [
+      {
+        "name": "Invented Electrical Supply Co."
+      },
+      {
+        "name": "Fictional Switchgear Distributors"
+      }
+    ],
+    "currency": "USD",
+    "response_deadline": "2027-01-31",
+    "delivery_site": "3 Invented Road, Nowhere",
+    "validity_days": 30
+  }
+}

@@ -23,6 +23,7 @@ from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional
 
 from epc_aea90364 import norm_data
+from epc_aea90364.errors import Aea90364Error
 
 ENV_VAR = "EPC_SOLUTIONS_JSON"
 # `DEFAULT_FILE` (module attribute, read lazily below): standard-solutions.json in the normative folder (MIG-37a).
@@ -125,7 +126,6 @@ _FUNCTIONS = {"ceil": math.ceil, "floor": math.floor, "max": max, "min": min, "r
 
 
 _BINARY = {ast.Add: lambda a, b: a + b, ast.Sub: lambda a, b: a - b, ast.Mult: lambda a, b: a * b, ast.Div: lambda a, b: a / b, ast.FloorDiv: lambda a, b: a // b, ast.Mod: lambda a, b: a % b}
-_ALLOWED = "only numbers, the facts of the circuit, + - * / // % and ceil, floor, max, min, round are allowed"
 
 
 def _is_number(value: Any) -> bool:
@@ -137,13 +137,13 @@ def _calc_leaf(node: ast.AST, f: dict) -> float:
         return node.value
     if isinstance(node, ast.Name) and _is_number(f.get(node.id)):
         return f[node.id]
-    raise ValueError(_ALLOWED)
+    raise Aea90364Error("err_expression_not_allowed")
 
 
 def _calc_call(node: ast.Call, f: dict) -> float:
     if isinstance(node.func, ast.Name) and node.func.id in _FUNCTIONS and not node.keywords:
         return _FUNCTIONS[node.func.id](*[_calc(a, f) for a in node.args])
-    raise ValueError(_ALLOWED)
+    raise Aea90364Error("err_expression_not_allowed")
 
 
 def _calc(node: ast.AST, f: dict) -> float:
@@ -187,7 +187,7 @@ def _winner(doc: dict, f: dict) -> tuple:
     """(id, solution) of the enabled solution that matches with the highest priority (file order breaks ties)."""
     enabled = [(i, s) for i, s in doc.get("solutions", {}).items() if s.get("enabled", True) and matches(s.get("when", {}), f)]
     if not enabled:
-        raise ValueError(f"no standard solution matches circuit {f['tag']}: the document needs one with an empty 'when' as the last resort")
+        raise Aea90364Error("err_no_solution_matches", f=f['tag'])
     return max(enumerate(enabled), key=lambda p: (p[1][1].get("priority", 0), -p[0]))[1]
 
 

@@ -34,6 +34,7 @@ import math
 from epc_calc_common._validate import num as _num
 from epc_calc_common import aea_tables as T
 from epc_calc_common import policy
+from epc_feeder_sizing.errors import FeederSizingError
 
 __version__ = "0.1.0"
 
@@ -72,7 +73,7 @@ def section_min_circuit(tipo):
     """Tabla 771.13.I [mm²]."""
     tabla = _g("SECCIONES_MIN_MM2")
     if tipo not in tabla:
-        raise ValueError(f"tipo debe ser uno de {sorted(tabla)}")
+        raise FeederSizingError("err_type_invalid", opciones=sorted(tabla))
     return tabla[tipo]
 
 
@@ -80,9 +81,9 @@ def iz_admisible(seccion_mm2, cargados=3):
     """Tabla 771.16.I [A]: Cu/PVC, 40 °C, método B1. cargados = 2 (monofásico) o 3 (trifásico)."""
     tabla = _g("IZ_771_16_I")
     if seccion_mm2 not in tabla:
-        raise ValueError(f"sección {seccion_mm2} fuera de la Tabla 771.16.I: {sorted(tabla)}")
+        raise FeederSizingError("err_section_outside_table", seccion_mm2=seccion_mm2, opciones=sorted(tabla))
     if cargados not in (2, 3):
-        raise ValueError("cargados debe ser 2 o 3")
+        raise FeederSizingError("err_loaded_conductors")
     return tabla[seccion_mm2][0 if cargados == 2 else 1]
 
 
@@ -126,7 +127,7 @@ def resistencia_cu_ohm_km(seccion_mm2, temp_c=70.0):
     """R(θ) = R20·(1 + 0,00393·(θ − 20)) [Ω/km]; 70 °C = temperatura máxima del PVC en servicio."""
     r20 = _g("R20_CU_OHM_KM")
     if seccion_mm2 not in r20:
-        raise ValueError(f"sección {seccion_mm2} sin resistencia tabulada")
+        raise FeederSizingError("err_no_resistance", seccion_mm2=seccion_mm2)
     return r20[seccion_mm2] * (1.0 + _g("ALFA_CU") * (temp_c - 20.0))
 
 
@@ -138,7 +139,7 @@ def k_adiabatico_771(aislacion, material, seccion_mm2=None):
     clave = (ais, material.lower())
     tabla = _g("K_TABLA_771")
     if clave not in tabla:
-        raise ValueError(f"sin valor k para {(aislacion, material.lower())}")
+        raise FeederSizingError("err_no_k_value", clave=(aislacion, material.lower()))
     return tabla[clave]
 
 
@@ -178,7 +179,7 @@ def verifica_poder_corte(pdc_a, i_k_a):
 def thd_pct(armonicos):
     """THD [%] respecto del valor eficaz. armonicos = {n: h_n} (n=1 fundamental, cualquier unidad común)."""
     if 1 not in armonicos:
-        raise ValueError("falta la fundamental (n=1)")
+        raise FeederSizingError("err_no_fundamental")
     sup = sum(h ** 2 for n, h in armonicos.items() if n >= 2)
     h_ef = math.sqrt(sum(h ** 2 for h in armonicos.values()))
     _num(h_ef, "h_ef", 0.0, True)
@@ -188,7 +189,7 @@ def thd_pct(armonicos):
 def distorsion_d_pct(armonicos):
     """D [%] respecto de la fundamental."""
     if 1 not in armonicos:
-        raise ValueError("falta la fundamental (n=1)")
+        raise FeederSizingError("err_no_fundamental")
     _num(armonicos[1], "h1", 0.0, True)
     return 100.0 * math.sqrt(sum(h ** 2 for n, h in armonicos.items() if n >= 2)) / armonicos[1]
 
@@ -203,7 +204,7 @@ def d_desde_thd(thd_pu):
     """D² = THD²/(1−THD²) (p.u.)."""
     _num(thd_pu, "thd_pu")
     if thd_pu >= 1:
-        raise ValueError("THD debe ser < 1 p.u.")
+        raise FeederSizingError("err_thd_range")
     return thd_pu / math.sqrt(1.0 - thd_pu ** 2)
 
 

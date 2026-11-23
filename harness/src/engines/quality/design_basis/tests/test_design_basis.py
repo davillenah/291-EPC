@@ -224,7 +224,7 @@ class TextTests(unittest.TestCase):
 
 class PackageTests(unittest.TestCase):
     def test_public_api(self):
-        self.assertEqual(sorted(epc_design_basis.__all__), ["build_design_basis_document", "design_basis_to_text"])
+        self.assertEqual(sorted(epc_design_basis.__all__), ["DesignBasisError", "build_design_basis_document", "design_basis_to_text"])
         self.assertEqual(epc_design_basis.__version__, "0.1.0")
         self.assertIs(importlib.import_module("epc_design_basis.build"), build)
 

@@ -7,6 +7,7 @@ never guessed: the line carries an issue `<tag>: missing <field>`.
 import math
 
 from epc_boq import inputs
+from epc_boq.errors import BoqError
 
 UNSPECIFIED = "unspecified"
 PREFIX = {"cable": "CAB", "protective_device": "DEV", "terminal_block": "TRM", "enclosure": "ENC", "pv_equipment": "PVE"}
@@ -163,7 +164,7 @@ def _equipment_lines(equipment):
     lines = []
     for e in equipment or []:
         if not isinstance(e, dict) or not e.get("description") or isinstance(e.get("quantity"), bool) or not isinstance(e.get("quantity"), (int, float)) or e["quantity"] < 0:
-            raise ValueError(f"equipment line needs a description and a quantity of zero or more (got {e!r})")
+            raise BoqError("err_equipment_line", e=e)
         lines.append(("pv_equipment", str(e["description"]), str(e.get("unit") or "un"), e["quantity"], list(e.get("source") or []), "counted by the plant engine (epc_pv)", {}, []))
     return lines
 
@@ -179,7 +180,7 @@ def build_boq(board_name, circuits, *, allowance_pct=None, terminal_totals=None,
     allowance = inputs.allowance(allowance_pct)
     inputs.text(board_name, "board_name")
     if not isinstance(round_up_m, bool):
-        raise ValueError(f"round_up_m must be true or false (got {round_up_m!r})")
+        raise BoqError("err_round_up_not_boolean", round_up_m=round_up_m)
     checked = inputs.circuits(circuits)
     by_size = inputs.terminal_totals(terminal_totals)
     cables, cable_issues = _cables(checked, allowance, round_up_m)

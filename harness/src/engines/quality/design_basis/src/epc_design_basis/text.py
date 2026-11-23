@@ -1,3 +1,4 @@
+from epc_design_basis.errors import DesignBasisError
 """Spanish plain text of the design-basis document: string templates and the document's values only (no number is written in a template)."""
 
 HEADER = "BASE DE DISENO (borrador)"
@@ -58,7 +59,7 @@ def item_line(entry):
 def design_basis_to_text(doc):
     """Spanish plain text of a document built by `build_design_basis_document`."""
     if not isinstance(doc, dict) or "sections" not in doc:
-        raise ValueError("a design-basis document with sections is required")
+        raise DesignBasisError("err_document_required")
     lines = [HEADER, ""]
     for n, section in enumerate(doc["sections"], start=1):
         lines += [f"{n}. {SECTION_TITLES.get(section['id'], section['title'])}"] + [item_line(i) for i in section["items"]] + [""]

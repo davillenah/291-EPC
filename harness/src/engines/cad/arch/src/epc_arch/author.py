@@ -228,7 +228,7 @@ def architecture_of(floor: Dict[str, Any], source: str = "") -> Architecture:
     """The architecture of a described floor; an `ArchError` lists what is wrong with the description."""
     bad = errors_of(floor)
     if bad:
-        raise ArchError("the description of the floor cannot be drawn: " + "; ".join(bad))
+        raise ArchError("err_description_not_drawable", reason='; '.join(bad))
     T, rooms = float(floor["wall_thickness_m"]), floor["rooms"]
     f = _Frame(rooms, T)
     walls, lines = _walls(rooms, T, f)

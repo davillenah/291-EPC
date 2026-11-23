@@ -317,7 +317,7 @@ def read_image(img: Image.Image, options: Options) -> Primitives:
     if inverted:
         ink = gray > level
     elif ((gray > 50) & (gray < 205)).mean() > cfg["max_midtones"]:
-        raise ArchError("the picture is a render or a photo, not a drawing in lines: send the plan as a line drawing, a vector PDF or a DXF")
+        raise ArchError("err_image_not_drawing")
     min_len = max(8, int(cfg["min_run_factor"] * max(gray.shape)))
     tol = cfg["merge_tolerance"]
     solid = close_gaps(ink)
@@ -371,7 +371,7 @@ def read_image(img: Image.Image, options: Options) -> Primitives:
         prims.warnings.append("image: light strokes on a dark ground (a blueprint), read inverted")
     prims.warnings.append("image: only horizontal and vertical strokes are read; door swings are looked for in the picture around the gaps of the walls")
     if len(scaled) > PARAMS["plan"]["max_primitives"]:
-        raise ArchError("the image has too many strokes to read: send a cleaner or smaller one")
+        raise ArchError("err_image_too_many_strokes")
     return prims
 
 
@@ -384,6 +384,6 @@ class RasterReader:
             img = Image.open(io.BytesIO(data))
             img.load()
         except (OSError, ValueError, Image.DecompressionBombError):
-            raise ArchError("the image cannot be read")
+            raise ArchError("err_image_unreadable")
         return read_image(img, options)
 

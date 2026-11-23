@@ -295,8 +295,16 @@ class IdentifierAndStructureTests(unittest.TestCase):
         self.assertEqual(sorted(template["rows"][0]["quotes"]), ["Alfa", "Beta"])
 
     def test_package_exports(self):
-        self.assertEqual(sorted(epc_rfq.__all__), ["build_rfq", "render_rows", "rfq_to_text"])
+        self.assertEqual(sorted(epc_rfq.__all__), ["RfqError", "build_rfq", "render_rows", "rfq_to_text"])
         self.assertEqual(epc_rfq.__version__, "0.1.0")
+
+    def test_public_door(self):
+        """COD-02: `epc_rfq.api` offers exactly what the package exports."""
+        import importlib
+        api = importlib.import_module("epc_rfq.api")
+        self.assertEqual(sorted(api.__all__), sorted(epc_rfq.__all__))
+        for name in api.__all__:
+            self.assertIs(getattr(api, name), getattr(epc_rfq, name))
 
 
 class RenderRowsTests(unittest.TestCase):

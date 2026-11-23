@@ -47,13 +47,13 @@ def envelope(root, *argv):
     return code, json.loads(out if out.strip() else err)
 
 
-def resolved_engine_inputs(work_dir, drawing_date=None):
+def resolved_engine_inputs(work_dir, drawing_date=None, folder=GOLDEN):
     """`engine_inputs.json` with the catalog folder turned into an absolute path, written to `work_dir`; returns (file path, the document).
     With `drawing_date` (ISO date) the document also carries `drawings.date`, which pins the dates, times and GUIDs of the drawings (MIG-3Z)."""
-    doc = read_json(GOLDEN / "engine_inputs.json")
+    doc = read_json(folder / "engine_inputs.json")
     if drawing_date:
         doc["drawings"] = {"date": drawing_date}
-    doc["datasheets"]["catalog_dir"] = str(GOLDEN / doc["datasheets"]["catalog_dir"])
+    doc["datasheets"]["catalog_dir"] = str((folder / doc["datasheets"]["catalog_dir"]).resolve())
     path = Path(work_dir) / "engine_inputs.resolved.json"
     path.write_text(json.dumps(doc, indent=2, sort_keys=True) + "\n", encoding="utf-8", newline="\n")
     return path, doc
@@ -62,7 +62,9 @@ def resolved_engine_inputs(work_dir, drawing_date=None):
 class SyntheticRun:
     """A project in its own temp projects root: `init`, the intake inputs, and (`run`) the pipeline, all through the CLI."""
 
-    def __init__(self, run_id=RUN_ID, drawing_date=None):
+    def __init__(self, run_id=RUN_ID, drawing_date=None, folder=GOLDEN):
+        self.folder = Path(folder)                      # a reference project (GEN-02) has the same four input files as `synthetic_lv_small`
+        self.code = read_json(self.folder / "intake_answers.json")["project_code"]
         self.holder = tempfile.TemporaryDirectory()
         self.base = Path(self.holder.name)
         self.root = self.base / "projects"
@@ -70,9 +72,9 @@ class SyntheticRun:
         self.work = self.base / "work"
         self.work.mkdir()
         self.run_id = run_id
-        self.project = self.root / CODE
+        self.project = self.root / self.code
         self.drawing_date = drawing_date
-        self.engine_inputs_file, self.engine_inputs = resolved_engine_inputs(self.work, drawing_date)
+        self.engine_inputs_file, self.engine_inputs = resolved_engine_inputs(self.work, drawing_date, self.folder)
         self.init_result = None
         self.run_result = None
 
@@ -81,22 +83,22 @@ class SyntheticRun:
 
     def init(self):
         """`epc init` with the intake answers, then the project inputs (load list, engine inputs) are added to `inputs/` before the freeze."""
-        self.init_result = envelope(self.root, "init", CODE, "--answers", str(GOLDEN / "intake_answers.json"), *ORCHESTRATOR)
+        self.init_result = envelope(self.root, "init", self.code, "--answers", str(self.folder / "intake_answers.json"), *ORCHESTRATOR)
         store = ProjectStore(self.project)
-        store.write_input("loads/loads.json", (GOLDEN / "loads.json").read_bytes())
+        store.write_input("loads/loads.json", (self.folder / "loads.json").read_bytes())
         store.write_input("engine_inputs.json", self.frozen_engine_inputs())
         return self.init_result
 
     def frozen_engine_inputs(self):
         """The bytes of the engine inputs frozen in `inputs/`: the golden file, plus `drawings.date` when the run pins the drawing date."""
         if not self.drawing_date:
-            return (GOLDEN / "engine_inputs.json").read_bytes()
-        doc = read_json(GOLDEN / "engine_inputs.json")
+            return (self.folder / "engine_inputs.json").read_bytes()
+        doc = read_json(self.folder / "engine_inputs.json")
         doc["drawings"] = {"date": self.drawing_date}
         return (json.dumps(doc, indent=2, sort_keys=True) + "\n").encode("utf-8")
 
     def run(self, run_id=None, revision="R0"):
-        self.run_result = envelope(self.root, "run", CODE, "--loads", str(GOLDEN / "loads.json"), "--engine-inputs", str(self.engine_inputs_file),
+        self.run_result = envelope(self.root, "run", self.code, "--loads", str(self.folder / "loads.json"), "--engine-inputs", str(self.engine_inputs_file),
                                    "--run-id", run_id or self.run_id, "--revision", revision, "--detail", *ORCHESTRATOR)
         return self.run_result
 

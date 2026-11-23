@@ -29,6 +29,7 @@ NORMA DE REFERENCIA
 import math
 from epc_aea90364 import aea_tables as T
 from epc_aea90364._validate import num as _num
+from epc_aea90364.errors import Aea90364Error
 
 __version__ = "0.1.0"
 
@@ -90,7 +91,7 @@ def potencia_disipada_polo_w(i_n_a):
     for lim, p in _g("_PD_POLO"):
         if i_n_a <= lim:
             return p
-    raise ValueError("In > 125 A: usar dato del fabricante")
+    raise Aea90364Error("err_rated_over_125")
 
 
 def potencia_disipada_aparato_w(i_n_a, polos, k=1.0):
@@ -120,4 +121,4 @@ def poder_corte_minimo_diferencial_a(i_n_a):
     for lim, pdc in _g("_PDC_DIF"):
         if i_n_a <= lim:
             return pdc
-    raise ValueError("In > 100 A fuera de la Tabla 770-B.X")
+    raise Aea90364Error("err_rated_over_100")

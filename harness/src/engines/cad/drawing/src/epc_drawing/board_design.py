@@ -28,6 +28,7 @@ import sys
 import zipfile
 from pathlib import Path
 from typing import Dict, List, Optional
+from epc_drawing.errors import DrawingError
 
 BOARD_ROWS = [("NOMBRE", "name"), ("TENSION_V", "voltage_v"), ("SISTEMA", "system"), ("ICC_KA", "icc_ka"), ("FP_DEFAULT", "fp_default"),
               ("FRECUENCIA_HZ", "frequency_hz"), ("PROYECTO", "project"), ("LONG_ACOMETIDA_m", "feeder_length_m")]
@@ -126,7 +127,7 @@ def drawing_day(value) -> Optional[dt.date]:
         return value
     if isinstance(value, str):
         return dt.datetime.fromisoformat(value.strip()).date()
-    raise ValueError(f"drawing date must be an ISO date, not {type(value).__name__}")
+    raise DrawingError("err_drawing_date_type", type_name=type(value).__name__)
 
 
 class _FixedTimeZip(zipfile.ZipFile):

@@ -11,13 +11,14 @@ from epc_lighting import methods
 from epc_lighting.config import PARAMS, data
 from epc_lighting.model import Area, Emergency, Estimate, LightingError, Luminaire, PointSpec, Project, Room, Route
 from epc_lighting.tables import number, parse_cu_table, parse_photometry
+from epc_lighting.model import LightingError
 
 SCHEMA_VERSION = "1.0"
 DEFAULTS = PARAMS["defaults"]
 
 
-def _fail(path: str, message: str) -> None:
-    raise LightingError(f"{path}: {message}")
+def _fail(path: str, code: str, **params) -> None:
+    raise LightingError(code, path=path, **params)
 
 
 def load_document(source: Any) -> Dict[str, Any]:
@@ -28,54 +29,54 @@ def load_document(source: Any) -> Dict[str, Any]:
         try:
             source = bytes(source).decode("utf-8-sig")
         except UnicodeDecodeError:
-            raise LightingError("the input is not UTF-8 text: save the JSON document as UTF-8")
+            raise LightingError("err_input_not_utf8")
     if not isinstance(source, str):
-        raise LightingError("the input must be a JSON document (a dict, a str or bytes)")
+        raise LightingError("err_input_type")
     if not source.strip():
-        raise LightingError("the input is empty")
+        raise LightingError("err_input_empty")
     try:
         doc = json.loads(source)
     except json.JSONDecodeError as exc:
-        raise LightingError(f"the input is not valid JSON: {exc}")
+        raise LightingError("err_input_not_json", exc=exc)
     if not isinstance(doc, dict):
-        raise LightingError("the JSON document must be an object with luminaires, rooms and/or areas")
+        raise LightingError("err_document_shape")
     return doc
 
 
 def _object(raw: Any, path: str) -> Dict[str, Any]:
     if not isinstance(raw, dict):
-        _fail(path, "must be an object")
+        _fail(path, "err_not_object")
     return raw
 
 
 def _text(raw: Dict[str, Any], key: str, path: str, required: bool = False, default: Optional[str] = None) -> Optional[str]:
     if raw.get(key) is None:
         if required:
-            _fail(path, f"'{key}' is required (a text)")
+            _fail(path, "err_text_required", key=key)
         return default
     if not isinstance(raw[key], str) or not raw[key].strip():
-        _fail(f"{path}.{key}", f"must be a non-empty text, got {raw[key]!r}")
+        _fail(f'{path}.{key}', "err_text_empty", raw=raw[key])
     return raw[key]
 
 
 def _num(raw: Dict[str, Any], key: str, path: str, required: bool = False, default: Optional[float] = None, **limits: Any) -> Optional[float]:
     if raw.get(key) is None:
         if required:
-            _fail(path, f"'{key}' is required (a number)")
+            _fail(path, "err_number_required", key=key)
         return default
     return number(raw[key], f"{path}.{key}", **limits)
 
 
 def _choice(value: Any, allowed: Sequence[str], path: str) -> str:
     if value not in allowed:
-        _fail(path, f"'{value}' is not valid: choose one of {sorted(allowed)}")
+        _fail(path, "err_choice_invalid", given=value, allowed=sorted(allowed))
     return value
 
 
 def _items(doc: Dict[str, Any], key: str) -> List[Any]:
     raw = doc.get(key, [])
     if not isinstance(raw, list):
-        _fail(key, "must be a list")
+        _fail(key, "err_not_list")
     return raw
 
 
@@ -83,7 +84,7 @@ def _check_unique(ids: List[str], where: str) -> None:
     seen = set()
     for i in ids:
         if i in seen:
-            _fail(where, f"id '{i}' appears more than once: ids must be unique")
+            _fail(where, "err_id_repeated", i=i)
         seen.add(i)
 
 
@@ -93,7 +94,7 @@ def parse_luminaire(raw: Any, path: str) -> Luminaire:
     here = f"{path} ('{lid}')"
     lamps = _num(raw, "lamps", here, default=1, minimum=1)
     if lamps != int(lamps):
-        _fail(f"{here}.lamps", f"must be a whole number, got {lamps}")
+        _fail(f'{here}.lamps', "err_not_whole_number", lamps=lamps)
     cu_table = parse_cu_table(raw["cu_table"], f"{here}.cu_table") if raw.get("cu_table") is not None else None
     photometry = parse_photometry(raw["photometry"], f"{here}.photometry") if raw.get("photometry") is not None else None
     distribution = raw.get("distribution")
@@ -119,7 +120,7 @@ def parse_reflectances(raw: Any, path: str) -> Tuple[Estimate, Estimate, Estimat
     keys = ("ceiling", "walls", "floor")
     unknown = sorted(set(given) - set(keys))
     if unknown:
-        _fail(path, f"unknown surface(s) {unknown}: use {list(keys)}")
+        _fail(path, "err_surfaces_unknown", unknown=unknown, allowed=list(keys))
     return tuple(_one_reflectance(given.get(k), k, f"{path}.{k}") for k in keys)  # type: ignore[return-value]
 
 
@@ -137,7 +138,7 @@ def _material_reflectance(spec: Dict[str, Any], path: str, conf: Dict[str, float
     materials = data("reflectances")["materials"]
     name = spec.get("material")
     if name not in materials:
-        _fail(path, f"material '{name}' is not valid: choose one of {sorted(materials)} or give a number between 0 and 1")
+        _fail(path, "err_material_invalid", name=name, allowed=sorted(materials))
     low, high = materials[name]["range"]
     return Estimate((low + high) / 2, f"material '{name}' (UPV table 4, range {low}-{high}), midpoint taken", conf["material_midpoint"])
 
@@ -146,11 +147,11 @@ def _parse_normal(raw: Any, path: str) -> Tuple[float, float, float]:
     if raw is None or raw == "horizontal":
         return (0.0, 0.0, 1.0)
     if not isinstance(raw, list) or len(raw) != 3:
-        _fail(path, "must be 'horizontal' or a vector [nx, ny, nz]")
+        _fail(path, "err_normal_shape")
     vec = [number(v, f"{path}[{i}]") for i, v in enumerate(raw)]
     norm = math.sqrt(sum(v * v for v in vec))
     if norm == 0:
-        _fail(path, "the normal vector cannot be [0, 0, 0]")
+        _fail(path, "err_normal_zero")
     return (vec[0] / norm, vec[1] / norm, vec[2] / norm)
 
 
@@ -159,9 +160,9 @@ def _parse_positions(raw: Any, width: float, length: float, path: str) -> Tuple[
     if raw is None:
         return ()
     if not isinstance(raw, list) or not raw:
-        _fail(path, "must be a non-empty list of luminaires {x_m, y_m}")
+        _fail(path, "err_luminaires_empty")
     if len(raw) > 2000:
-        _fail(path, f"has {len(raw)} luminaires: up to 2000")
+        _fail(path, "err_luminaires_too_many", count=len(raw))
     found = []
     for i, p in enumerate(raw):
         here = f"{path}[{i}]"
@@ -174,7 +175,7 @@ def _parse_points(raw: Any, width: float, length: float, path: str) -> Tuple[Poi
     if raw is None:
         return ()
     if not isinstance(raw, list):
-        _fail(path, "must be a list of points")
+        _fail(path, "err_points_not_list")
     points = []
     for i, p in enumerate(raw):
         here = f"{path}[{i}]"
@@ -193,7 +194,7 @@ def _parse_target(raw: Dict[str, Any], path: str) -> Tuple[Optional[float], Opti
         ids = [a["id"] for a in data("levels")["activities"]]
         _choice(activity, ids, f"{path}.activity")
     if target is None and activity is None and rule is None:
-        _fail(path, "'target_lux', 'activity' or 'target_rule' is required: give the maintained illuminance in lux, one of the activity ids " + str(sorted(a["id"] for a in data("levels")["activities"])) + ", or the id of an approved rule of a norm")
+        _fail(path, "err_target_required", activities=str(sorted((a['id'] for a in data('levels')['activities']))))
     return target, activity, rule
 
 
@@ -238,7 +239,7 @@ def parse_room(raw: Any, path: str, luminaire_ids: Sequence[str]) -> Room:
 def _luminaire_ref(raw: Dict[str, Any], path: str, luminaire_ids: Sequence[str]) -> str:
     ref = _text(raw, "luminaire", path, required=True)
     if ref not in luminaire_ids:
-        _fail(f"{path}.luminaire", f"'{ref}' is not defined in 'luminaires': defined ids are {sorted(luminaire_ids)}")
+        _fail(f'{path}.luminaire', "err_luminaire_undefined", ref=ref, defined=sorted(luminaire_ids))
     return ref
 
 
@@ -264,7 +265,7 @@ def parse_area(raw: Any, path: str, luminaire_ids: Sequence[str]) -> Area:
 
 def _parse_xy(raw: Any, width: float, length: float, path: str) -> Tuple[float, float]:
     if not isinstance(raw, list) or len(raw) != 2:
-        _fail(path, "must be a point [x_m, y_m] in metres from the corner of the room")
+        _fail(path, "err_point_shape")
     return (number(raw[0], f"{path}[0]", minimum=0, maximum=length), number(raw[1], f"{path}[1]", minimum=0, maximum=width))
 
 
@@ -272,7 +273,7 @@ def _parse_routes(raw: Any, width: float, length: float, path: str) -> Tuple[Rou
     if raw is None:
         return ()
     if not isinstance(raw, list):
-        _fail(path, "must be a list of escape routes")
+        _fail(path, "err_routes_not_list")
     routes = []
     for i, r in enumerate(raw):
         here = f"{path}[{i}]"
@@ -311,7 +312,7 @@ def _parse_list(doc: Dict[str, Any], key: str, parser: Callable[..., Any], *extr
 def parse_project(doc: Dict[str, Any]) -> Project:
     """Validate the whole document and return the project it describes."""
     if doc.get("schema_version") != SCHEMA_VERSION:
-        _fail("schema_version", f"must be '{SCHEMA_VERSION}', got {doc.get('schema_version')!r}")
+        _fail('schema_version', "err_schema_version", schema_version=SCHEMA_VERSION, got=doc.get('schema_version'))
     luminaires = _parse_list(doc, "luminaires", parse_luminaire)
     _check_unique([lum.id for lum in luminaires], "luminaires")
     ids = [lum.id for lum in luminaires]
