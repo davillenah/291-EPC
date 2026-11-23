@@ -547,7 +547,13 @@ def _docx_con_python_docx(d, docx_ruta, sello, titulo):
 
 
 # --- SEAL.json -----------------------------------------------------------------------------------------
-def _actualizar_seal(raiz, nombre_archivo, sello):
+def _seal_time(ahora=None):
+    """The time written in the seal: the one handed in (OPT-10), else the clock."""
+    import datetime
+    return ahora or datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def _actualizar_seal(raiz, nombre_archivo, sello, ahora=None):
     """Registra el sello en .project/SEAL.json."""
     if not raiz:
         return
@@ -561,7 +567,7 @@ def _actualizar_seal(raiz, nombre_archivo, sello):
         import datetime
         data.setdefault("files", {})[nombre_archivo] = {
             "sha256_16": sello,
-            "updated": datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "updated": _seal_time(ahora),
         }
         os.makedirs(os.path.dirname(seal_path), exist_ok=True)
         with open(seal_path, "w", encoding="utf-8") as fh:
@@ -571,7 +577,7 @@ def _actualizar_seal(raiz, nombre_archivo, sello):
 
 
 # --- Exportación principal -----------------------------------------------------------------------------
-def exportar(md_ruta, pdf_ruta=None, html_ruta=None, docx_ruta=None, solo_html=False, sin_docx=False):
+def exportar(md_ruta, pdf_ruta=None, html_ruta=None, docx_ruta=None, solo_html=False, sin_docx=False, ahora=None):
     with open(md_ruta, encoding="utf-8") as f:
         texto = f.read()
     d = parsear(texto)
@@ -617,7 +623,7 @@ def exportar(md_ruta, pdf_ruta=None, html_ruta=None, docx_ruta=None, solo_html=F
                     "Instalá python-docx: pip install python-docx"
                 )
 
-    _actualizar_seal(raiz, nombre_base, sello)
+    _actualizar_seal(raiz, nombre_base, sello, ahora)
     return res
 
 
