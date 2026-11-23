@@ -5,6 +5,7 @@ All notable changes. Format: Keep a Changelog; versions follow `harness/docs/BRA
 ## [Unreleased]
 
 ### Changed
+- COD-07 (second part): `epc_dxf.deliverable` reads the converted drawing once and writes it once while it assigns layers, colours and symbol blocks. Same bytes, about 5% faster on the example board.
 - COD-07 (first part): `epc_dxf` reads each library symbol DXF once per run instead of once per drawing.
 - SYM-05 (first part): the 25 architecture plan symbols moved from `epc_arch/biblioteca` to `epc_symbols` (`arch_symbols()`). Same files.
 - SYM-04 (first part): the 31 electrical-plan symbols moved from `epc_plan` to `epc_symbols` (`plan_symbols()`); `epc_plan` no longer holds symbol data. Same drawings.

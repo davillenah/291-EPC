@@ -73,9 +73,9 @@ def _library_block(path: str, mtime_ns: int):
     return ezdxf.readfile(path)
 
 
-def insertar(dxf_path, lib, instancias, alto_mm, catalog=None, stamp=None):
+def insertar(dxf_path, lib, instancias, alto_mm, catalog=None, stamp=None, doc=None, write=True):
     cat = _L.resolve(catalog)
-    doc = ezdxf.readfile(dxf_path)
+    doc = _stamp.document(dxf_path, doc)
     msp = doc.modelspace()
     sids = sorted({i['sid'] for i in instancias})
     nombres = []
@@ -105,5 +105,5 @@ def insertar(dxf_path, lib, instancias, alto_mm, catalog=None, stamp=None):
         ref.add_auto_attribs({t: i['valores'].get(t, '') for t in tags})
         for a in ref.attribs:
             a.dxf.layer = _L.name('sld.text', cat)
-    _stamp.save(doc, dxf_path, stamp)
+    _stamp.save_if(doc, dxf_path, stamp, write)
     return len(instancias), len(sids)
