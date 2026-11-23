@@ -47,6 +47,8 @@ NORMA DE REFERENCIA (por designación)
 """
 
 import math
+from typing import Any, Dict, Iterable, List, Optional, Tuple
+
 from epc_calc_common._validate import frac as _frac, nonneg as _nonneg, pos as _pos
 from epc_load_balance.errors import LoadBalanceError
 
@@ -55,7 +57,7 @@ __version__ = "0.1.0"
 _RAIZ3 = math.sqrt(3.0)
 
 
-def corriente_monofasica(p_w, v_v, fp=1.0, eta=1.0):
+def corriente_monofasica(p_w: float, v_v: float, fp: float = 1.0, eta: float = 1.0) -> float:
     """I [A] = P / (V·cosφ·η)."""
     _nonneg(p_w, "p_w")
     _pos(v_v, "v_v")
@@ -64,7 +66,7 @@ def corriente_monofasica(p_w, v_v, fp=1.0, eta=1.0):
     return p_w / (v_v * fp * eta)
 
 
-def corriente_trifasica(p_w, v_linea_v, fp=1.0, eta=1.0):
+def corriente_trifasica(p_w: float, v_linea_v: float, fp: float = 1.0, eta: float = 1.0) -> float:
     """I [A] = P / (√3·V·cosφ·η)."""
     _nonneg(p_w, "p_w")
     _pos(v_linea_v, "v_linea_v")
@@ -73,28 +75,28 @@ def corriente_trifasica(p_w, v_linea_v, fp=1.0, eta=1.0):
     return p_w / (_RAIZ3 * v_linea_v * fp * eta)
 
 
-def potencia_aparente_desde_p(p_w, fp):
+def potencia_aparente_desde_p(p_w: float, fp: float) -> float:
     """S [VA] = P / cosφ."""
     _nonneg(p_w, "p_w")
     _frac(fp, "fp")
     return p_w / fp
 
 
-def power_apparent_single_phase(v_v, i_a):
+def power_apparent_single_phase(v_v: float, i_a: float) -> float:
     """S [VA] = V·I."""
     _pos(v_v, "v_v")
     _nonneg(i_a, "i_a")
     return v_v * i_a
 
 
-def power_apparent_three_phase(v_linea_v, i_a):
+def power_apparent_three_phase(v_linea_v: float, i_a: float) -> float:
     """S [VA] = √3·V·I."""
     _pos(v_linea_v, "v_linea_v")
     _nonneg(i_a, "i_a")
     return _RAIZ3 * v_linea_v * i_a
 
 
-def balance_cargas(cargas, fs=1.0, v_linea_v=None):
+def balance_cargas(cargas: Iterable[Dict[str, Any]], fs: float = 1.0, v_linea_v: Optional[float] = None) -> Dict[str, Any]:
     """Balance de potencia con factores de utilización y simultaneidad.
 
     cargas: lista de dicts con claves
@@ -139,7 +141,7 @@ def balance_cargas(cargas, fs=1.0, v_linea_v=None):
             "fp": fp_glob, "i_a": i_dem}
 
 
-def reserve_breaker(i_diseno_a, i_interruptor_a, reserva_min_pct=None):
+def reserve_breaker(i_diseno_a: float, i_interruptor_a: float, reserva_min_pct: Optional[float] = None) -> Dict[str, Any]:
     """Reserva frente a un interruptor de corriente asignada I_n.
 
     Devuelve dict: reserva_a, reserva_pct (sobre I_n), uso_pct, cumple (None si no se da mínimo).
@@ -157,7 +159,7 @@ def reserve_breaker(i_diseno_a, i_interruptor_a, reserva_min_pct=None):
             "uso_pct": 100.0 * i_diseno_a / i_interruptor_a, "cumple": cumple}
 
 
-def split_phases(circuitos, n_fases=3):
+def split_phases(circuitos: Iterable[Tuple[str, float]], n_fases: int = 3) -> Dict[str, Any]:
     """Asigna circuitos monofásicos a fases minimizando el desbalance (voraz LPT).
 
     circuitos: lista de tuplas (nombre, corriente_A).
@@ -178,7 +180,7 @@ def split_phases(circuitos, n_fases=3):
         items.append((nombre, i))
     orden = sorted(items, key=lambda t: -t[1])  # sorted es estable: empates conservan el orden de entrada
     corr = [0.0] * n_fases
-    asig = [[] for _ in range(n_fases)]
+    asig: List[List[str]] = [[] for _ in range(n_fases)]
     for nombre, i in orden:
         f = min(range(n_fases), key=lambda k: (corr[k], k))
         corr[f] += i

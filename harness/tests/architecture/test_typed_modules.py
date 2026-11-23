@@ -10,6 +10,8 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[3]
 TYPED_MODULES = (
     "harness/src/engines/calculation/transformer_sizing/src/epc_transformer_sizing/sizing.py",
+    "harness/src/engines/calculation/voltage_drop/src/epc_voltage_drop/voltage_drop.py",
+    "harness/src/engines/calculation/load_balance/src/epc_load_balance/current_and_loads.py",
 )
 FLAGS = ("--disallow-untyped-defs", "--disallow-incomplete-defs", "--ignore-missing-imports", "--follow-imports=silent", "--no-error-summary", "--cache-dir=" + str(REPO / "tmp" / ".mypy_cache"))
 
