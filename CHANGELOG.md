@@ -4,6 +4,9 @@ All notable changes. Format: Keep a Changelog; versions follow `harness/docs/BRA
 
 ## [Unreleased]
 
+### Added
+- PRO-13: `harness/tools/ci/harness_metrics.py` shows projects, runs, failures per stage and time per stage from the projects on disk.
+
 ### Changed
 - OPT-13 (first part): invariant tests over 300 generated inputs each for the voltage-drop formulas and the commercial-section choice.
 - GEN-01: `REVISION_NORMAS.md` orders the norm review units by how many engines depend on them and shows that count.

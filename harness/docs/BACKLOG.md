@@ -152,7 +152,7 @@ After the flow is stable. Related items adjacent: delivery and revisions, then s
 - [ ] **GEN-11 · More disciplines on the same method (was L).** Lighting, HVAC and control on the relational model and the symbol engine, after SYM (see DGM-11).
 - [ ] **PRO-11 · Lessons from simulations:** each simulation finding creates its draft lesson (only the owner makes it `standard`).
 - [ ] **PRO-12 · Onboarding guide** for another engineer, generated.
-- [ ] **PRO-13 · Harness metrics:** projects, failures per stage, time per stage.
+- [x] **PRO-13 · Harness metrics:** projects, failures per stage, time per stage. Done 2026-11-23: `python harness/tools/ci/harness_metrics.py --root <projects folder>` reads each project's stage statuses and the stage timings of its runs (`EPC_TIMINGS=1`); terminal or `--json`, nothing stored.
 
 ### Block 8 · Needs a person (P), parallel from the start
 
