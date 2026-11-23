@@ -128,7 +128,8 @@ def _extent(layers: Dict[str, List[Quad]]) -> Tuple[float, float, float, float]:
 def build(records: List[Dict[str, Any]]):
     """(ezdxf document, {record id: skipped ids}): one block per record that has something to draw, laid out in a row."""
     import ezdxf
-    doc = ezdxf.new("R2018", setup=True)
+    from epc_dxf import new_document
+    doc = new_document("R2018", setup=True)
     doc.units = 6
     for name, colour in LAYERS.items():
         doc.layers.add(name, color=colour)

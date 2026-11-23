@@ -339,15 +339,15 @@ def _run_sld(entrada, out, name, maxl, day):
 
 
 def _run_mld(out, name, out_dir, calc_json, detail_json, titleblock_json, day):
-    """The multi-line diagram, drawn in process through `epc_mld.generate` (DGM-16, COD-01): its notices come back in a list, so it can run at the same time as the single-line diagram.
+    """The multi-line diagram, drawn in process through `epc_mld.draw` (DGM-16, COD-01, OPT-02): its notices come back in a list, so it can run at the same time as the single-line diagram.
     -> (log lines, error or None)."""
-    from epc_mld import generate
+    from epc_mld import MldInput, draw
     log, notices = [], []
     try:
         data = json.loads((out_dir / "input_design.json").read_text(encoding="utf-8"))
         calc = {"datos": json.loads(Path(calc_json).read_text(encoding="utf-8")), "detalle": json.loads(Path(detail_json).read_text(encoding="utf-8"))}
         request = json.loads(Path(titleblock_json).read_text(encoding="utf-8")) if titleblock_json else None
-        made = generate(data, calc, out, f"MLD_{name}", stamp_date=day.isoformat() if day else None, titleblock_request=request, log=notices)
+        made = draw(MldInput(data=data, calc=calc, stamp_date=day.isoformat() if day else None, titleblock_request=request), out, f"MLD_{name}", log=notices)
     except Exception as exc:                                  # the generator reports a failure by raising
         return [ln for ln in notices if ln.startswith(("OK", "AVISO"))], f"{type(exc).__name__}: {exc}"[-600:]
     log = ["OK " + ", ".join(m["name"] for m in made)] + notices

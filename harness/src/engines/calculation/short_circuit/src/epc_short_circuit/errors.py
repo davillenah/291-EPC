@@ -5,7 +5,7 @@ from epc_short_circuit.messages import text
 class ShortCircuitError(ValueError):
     """The input or a calculation step is not valid: `str(error)` is the Spanish text (as before), `en` the English one, `code` the stable code."""
 
-    def __init__(self, code: str, **params):
+    def __init__(self, code: str, **params: object) -> None:
         t = text(code, **params)
         super().__init__(t["es"])        # this engine's messages were Spanish first and pinned that way by golden files: `str(error)` stays Spanish, `.en` is the English text
         self.code, self.en, self.es = code, t["en"], t["es"]

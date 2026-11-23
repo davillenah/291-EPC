@@ -8,7 +8,6 @@
  "harness/src/disciplines/electrical_lv/stages/model3d.py::epc_arch.sections",
  "harness/src/disciplines/electrical_lv/stages/plan_drawings.py::epc_drawing.export",
  "harness/src/disciplines/electrical_lv/stages/plan_drawings.py::epc_plan.core",
- "harness/src/disciplines/electrical_lv/stages/plan_drawings.py::epc_plan.dxfout",
  "harness/src/disciplines/electrical_lv/stages/pv_drawings.py::epc_drawing.export.plan_sheet",
  "harness/src/disciplines/electrical_lv/stages/pv_stage.py::epc_pv.catalog",
  "harness/src/disciplines/electrical_lv/stages/pv_stage.py::epc_pv.flatroof",

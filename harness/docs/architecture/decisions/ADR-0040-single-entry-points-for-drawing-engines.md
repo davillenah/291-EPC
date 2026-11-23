@@ -1,6 +1,6 @@
 # ADR-0040: One public entry point for the MLD, the plan, the architecture reader and the PV drawings
 
-Status: proposed (written by Claude for the owner to accept, change or reject; nothing here is implemented). Applies ADR-0038 (engines are called functions) to the four engines it left for later (OPT-02, DGM-16).
+Status: accepted under the owner's standing authorization of 2026-11-23 (verbs `draw`, `draw_plan`, `draw_pv`; the PV drawings stay in `epc_drawing`; golden drawings are never re-recorded). Implemented for the MLD, the plan and the PV drawings; the architecture 3D calls are pending (BACKLOG OPT-02). Applies ADR-0038 (engines are called functions) to the four engines it left for later (OPT-02, DGM-16).
 
 ## Context
 ADR-0038 asks every engine for one public entry point that receives all its data and answers. The SLD has it (`epc_sld.draw` with `SldInput`). The others, as they stand today:
@@ -26,4 +26,4 @@ Each of them has an `api.py` door (COD-02), so what is missing is not a door but
 ## Consequences
 - The pipeline calls four functions instead of a dozen module paths, and the engine contracts (GEN-09) can list their inputs from the dataclass.
 - The cost is a typed input per engine and the aliases during the move.
-- Nothing is converted until this is accepted.
+- Converted so far: the MLD, the plan and the PV drawings (same bytes, characterization tests unchanged).

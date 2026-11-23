@@ -10,7 +10,6 @@ Asignación por región (mm sobre lámina A1 841 x 594):
   Pendiente: separar símbolos de conductores (requiere etiquetar el SVG).
 """
 import math
-import os
 import ezdxf
 import xml.etree.ElementTree as ET
 
@@ -57,7 +56,8 @@ def _catalogo(catalog):
 
 
 def _formato_a3(a3):
-    return (os.environ.get('SLD_FORMATO', 'A1') == 'A3') if a3 is None else a3
+    """The sheet format travels as data (COD-04): `a3` True for A3, anything else A1. The process environment is no longer read."""
+    return bool(a3)
 
 
 def _poner_grosor(doc, ent, tipo, ancho):
