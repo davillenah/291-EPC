@@ -89,7 +89,7 @@ class TestDesign(unittest.TestCase):
             self.assertEqual(sorted(one), sorted(two))
             self.assertTrue(any(name.endswith(".dxf") for name in one))
             self.assertTrue(any("MLD_" in name and name.endswith(".dxf") for name in one))
-            self.assertIn("input_for_sld.xlsx", one)
+            self.assertNotIn("input_for_sld.xlsx", one)              # the SLD draws from data: no workbook is written for it (DGM-16 step 4)
             self.assertEqual([name for name in one if one[name] != two[name]], [])
 
     def test_the_date_reaches_the_title_block_and_the_sheets(self):

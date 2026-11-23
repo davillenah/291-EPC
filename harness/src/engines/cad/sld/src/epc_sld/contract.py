@@ -14,10 +14,11 @@ FORMATS = ("A1", "A3")
 @dataclass(frozen=True)
 class SldInput:
     """Everything the diagram needs. Paths are files on disk; `layout_json` and `titleblock_json` are optional."""
-    xlsx: str                          # the board workbook (sheets TABLERO and CIRCUITOS)
     calc_json: str                     # {TAG: {In, Ib, icu, S, dU, disp}} (aea_export)
     detail_json: str                   # {TAG: {limite_pct, du_propia_pct, ...}}
     figures_json: str                  # bar, feeder, checks and notes (board_figures)
+    board: Optional[dict] = None       # the board as data: {"tablero": {field: value}, "circuitos": [{column: value}]} (no workbook needed)
+    xlsx: Optional[str] = None         # or the board workbook (sheets TABLERO and CIRCUITOS): one of the two is required
     titleblock_json: Optional[str] = None
     layout_json: Optional[str] = None  # positions the person moved by hand
     formato: str = "A1"                # "A1" or "A3"
@@ -27,9 +28,11 @@ class SldInput:
 
 
 def _check_files(entrada: SldInput) -> None:
-    for field in ("xlsx", "calc_json", "detail_json", "figures_json"):
+    for field in ("calc_json", "detail_json", "figures_json"):
         if not getattr(entrada, field):
             raise SldError("err_sld_field_missing", field=field)
+    if not entrada.xlsx and entrada.board is None:
+        raise SldError("err_sld_field_missing", field="board")
     for field in ("xlsx", "calc_json", "detail_json", "figures_json", "titleblock_json", "layout_json"):
         value = getattr(entrada, field)
         if value and not os.path.isfile(value):
@@ -59,4 +62,4 @@ def draw(entrada: SldInput, out_dir, name: str, maxl: int = 18, stamp_date: Opti
     `stamp_date` (an ISO date) fixes every date in the files, so the same input gives the same bytes. Raises `SldError` when the input is not valid."""
     _check(entrada, maxl)
     from epc_sld import sld_paginate
-    return sld_paginate.paginate(entrada.lib, entrada.xlsx, str(out_dir), name, entrada.lamina, entrada.modblock, maxl=maxl, environ=environ_of(entrada), stamp_date=stamp_date)
+    return sld_paginate.paginate(entrada.lib, entrada.board if entrada.board is not None else entrada.xlsx, str(out_dir), name, entrada.lamina, entrada.modblock, maxl=maxl, environ=environ_of(entrada), stamp_date=stamp_date)
