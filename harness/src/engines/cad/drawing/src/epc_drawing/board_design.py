@@ -272,7 +272,7 @@ def design(data: dict, out_dir: Path, name: str, criteria: Optional[dict] = None
            diagrams=("sld",), drawing_date=None, precomputed=None) -> dict:
     """Calculate the board and draw its diagrams into `out_dir`. `precomputed` = (data, calculation, memo) as `calculate` and `board_memo.build` gave them for the same input and criteria (the pipeline
     calculates once per run and hands that result over); the board is then not calculated again and the files are the same. `drawing_date` (optional, ISO date) pins everything that carries a time: the title block dates, the DXF creation and update
-    times and GUIDs, the properties of `input_for_sld.xlsx`; with the same inputs and date the files are byte-identical. Without it the clock and random GUIDs are used."""
+    times and GUIDs, the DXF stamps; with the same inputs and date the files are byte-identical. Without it the clock and random GUIDs are used."""
     day = drawing_day(drawing_date)
     out_dir = Path(out_dir)
     out = out_dir / "out"
@@ -285,8 +285,7 @@ def design(data: dict, out_dir: Path, name: str, criteria: Optional[dict] = None
         data = groups_in(data, criteria)                      # circuits without a differential are put behind one where the standard solutions ask for it
         res, memo_given = calculate(data, criteria), None
     tablero, circuitos = excel_rows(data)
-    xlsx = out_dir / "input_for_sld.xlsx"
-    write_excel(xlsx, tablero, circuitos, day)
+    board_table = {"tablero": tablero, "circuitos": [{c: row.get(c) for c, _ in CIRCUIT_COLS} for row in circuitos], "columnas": [c for c, _ in CIRCUIT_COLS]}   # what the SLD draws from: no workbook in between
     (out_dir / "input_design.json").write_text(json.dumps(data, ensure_ascii=False, indent=1) + "\n", encoding="utf-8", newline="\n")
     from epc_titleblock import service as titleblock
     request_json = out_dir / "titleblock-request.json"                  # what the diagrams ask the title block service for: the project's data and logos
@@ -320,7 +319,7 @@ def design(data: dict, out_dir: Path, name: str, criteria: Optional[dict] = None
     _layout_env(data, out_dir, env)
     if day is not None:
         env["EPC_STAMP_DATE"] = day.isoformat()      # the sheet generators (separate processes) read it
-    log, error = _run_sheet_generators(diagrams, env, xlsx, out, name, maxl, out_dir, calc_json, detail_json, day)
+    log, error = _run_sheet_generators(diagrams, env, board_table, out, name, maxl, out_dir, calc_json, detail_json, day)
     _package_index(out, name, error)
     return _finish(out, _summary(name, avisos, log, res, data, diagrams, memo, error))
 
@@ -355,12 +354,12 @@ def _run_mld(out, name, out_dir, calc_json, detail_json, titleblock_json, day):
     return [ln for ln in log if ln.startswith(("OK", "AVISO"))], None
 
 
-def _run_sheet_generators(diagrams, env, xlsx, out, name, maxl, out_dir, calc_json, detail_json, day=None):
+def _run_sheet_generators(diagrams, env, board_table, out, name, maxl, out_dir, calc_json, detail_json, day=None):
     """(log lines, first error or None). The generators run at the same time: they write different files and read the same inputs."""
     jobs = []
     if "sld" in diagrams:
         from epc_sld import SldInput
-        entrada = SldInput(xlsx=str(xlsx), calc_json=str(calc_json), detail_json=str(detail_json), figures_json=env["SLD_FIGURES_JSON"], titleblock_json=env.get("EPC_TITLEBLOCK_JSON"),
+        entrada = SldInput(board=board_table, calc_json=str(calc_json), detail_json=str(detail_json), figures_json=env["SLD_FIGURES_JSON"], titleblock_json=env.get("EPC_TITLEBLOCK_JSON"),
                            layout_json=env.get("SLD_LAYOUT_JSON"))
         jobs.append(lambda: _run_sld(entrada, out, name, maxl, day))
     if "mld" in diagrams:
