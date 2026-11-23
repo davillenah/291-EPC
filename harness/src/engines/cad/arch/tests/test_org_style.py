@@ -31,10 +31,10 @@ class TestOrgStyle(unittest.TestCase):
         cls.arch = recognize(helpers.room_dxf(), "flat.dxf", Options()).architecture
 
     def test_a_pen_a_layer_and_a_text_style_can_be_changed(self):
-        style = style_with({"pens": {"pen_050": 0.7}, "layer_pens": {"A-DOOR": "pen_050"}, "text_styles": {"TXT_25": 3.0}})
+        style = style_with({"pens": {"pen_050": 0.7}, "layer_pens": {"291-A-DOOR-N": "pen_050"}, "text_styles": {"TXT_25": 3.0}})
         self.assertEqual(style.pens["pen_050"], 0.7)
-        self.assertEqual(style.layers["A-WALL-CUT"].width, 0.7)
-        self.assertEqual(style.layers["A-DOOR"].width, 0.7)
+        self.assertEqual(style.layers["291-A-WALL-FULL-N"].width, 0.7)
+        self.assertEqual(style.layers["291-A-DOOR-N"].width, 0.7)
         self.assertEqual(style.text_styles["TXT_25"], 3.0)
         standard = load_style()
         self.assertEqual(standard.pens["pen_050"], 0.5)                                # the standard one is not touched
@@ -51,8 +51,8 @@ class TestOrgStyle(unittest.TestCase):
         self.assertTrue(any(e.dxf.lineweight == 80 for e in doc.layers))                # the wall cut at 0,8 mm
 
     def test_what_is_not_valid_is_said_field_by_field(self):
-        errors = style_errors({"pens": {"pen_050": 9, "pen_99": 1}, "text_styles": {"TXT_25": "big"}, "layer_pens": {"A-NOPE": "pen_050", "A-DOOR": "pen_7"}, "colour": "red"})
-        for key in ("pens.pen_050", "pens.pen_99", "text_styles.TXT_25", "layer_pens.A-NOPE", "layer_pens.A-DOOR", "colour"):
+        errors = style_errors({"pens": {"pen_050": 9, "pen_99": 1}, "text_styles": {"TXT_25": "big"}, "layer_pens": {"A-NOPE": "pen_050", "291-A-DOOR-N": "pen_7"}, "colour": "red"})
+        for key in ("pens.pen_050", "pens.pen_99", "text_styles.TXT_25", "layer_pens.A-NOPE", "layer_pens.291-A-DOOR-N", "colour"):
             self.assertIn(key, errors)
         with self.assertRaises(ValueError):
             style_with({"pens": {"pen_050": 9}})

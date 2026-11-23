@@ -62,14 +62,14 @@ class TestAnnotations(unittest.TestCase):
 
     def test_the_svg_has_a_layer_for_each_kind_so_that_they_can_be_hidden(self):
         svg = recognize(_flat_with_notes(), "flat.dxf").svg
-        for gid in ("ARQ-EJES", "ARQ-COTAS", "ARQ-ETIQUETAS"):
+        for gid in ("291-A-GRID", "291-A-ANNO-DIMS", "291-A-ANNO-IDEN"):
             self.assertIn(f'<g id="{gid}"', svg)
         self.assertIn(">V-01<", svg)
-        self.assertNotIn("ARQ-EJES", recognize(helpers.room_dxf(), "flat.dxf").svg)
+        self.assertNotIn("291-A-GRID", recognize(helpers.room_dxf(), "flat.dxf").svg)
 
     def test_the_faint_background_does_not_repeat_what_has_its_own_layer(self):
         svg = recognize(_flat_with_notes(), "flat.dxf").svg
-        background = svg.split('<g id="ARQ-FONDO"')[1].split("</g>")[0]
+        background = svg.split('<g id="291-A-ANNO-REFR"')[1].split("</g>")[0]
         self.assertLess(background.count("<line"), 40)                         # the flat's own strokes only: the 8 dashes, the dimension and the tag are in their layers
 
     def test_the_result_counts_them(self):

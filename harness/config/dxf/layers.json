@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "layers": {
     "sld.diagram": {
-      "name": "291-E-DIAGRAMA",
+      "name": "291-E-DIAG",
       "color": 5,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -13,10 +13,11 @@
       "description": {
         "es": "Símbolos y conductores del unifilar y el multifilar",
         "en": "Symbols and conductors of the single-line and multi-line"
-      }
+      },
+      "ncs_match": "official_combination"
     },
     "sld.text": {
-      "name": "291-E-TEXTOS",
+      "name": "291-E-DIAG-TEXT",
       "color": 7,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -27,10 +28,11 @@
       "description": {
         "es": "Textos del diagrama, referencias y cálculos",
         "en": "Diagram texts, references and calculations"
-      }
+      },
+      "ncs_match": "official_combination"
     },
     "sld.titleblock": {
-      "name": "291-G-ROTULO",
+      "name": "0-Titleblock",
       "color": 7,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -41,11 +43,12 @@
       "description": {
         "es": "Rótulo IRAM y logos",
         "en": "IRAM title block and logos"
-      }
+      },
+      "ncs_match": "outside_standard"
     },
     "sld.sheet": {
-      "name": "291-A-LAMINA",
-      "color": 8,
+      "name": "0-Titleblock",
+      "color": 7,
       "lineweight": null,
       "linetype": "CONTINUOUS",
       "on": true,
@@ -55,10 +58,11 @@
       "description": {
         "es": "Marco y zona útil de la lámina",
         "en": "Sheet frame and drawing area"
-      }
+      },
+      "ncs_match": "outside_standard"
     },
     "plan.ELEC-CABLE": {
-      "name": "ELEC-CABLE",
+      "name": "291-E-POWR-CABL-N",
       "color": 1,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -69,10 +73,11 @@
       "description": {
         "es": "Cables (plano)",
         "en": "Cables (plan)"
-      }
+      },
+      "ncs_match": "official"
     },
     "plan.ELEC-CANAL": {
-      "name": "ELEC-CANAL",
+      "name": "291-E-POWR-CNDT-N",
       "color": 2,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -83,10 +88,11 @@
       "description": {
         "es": "Canales y cañerías (plano)",
         "en": "Conduits (plan)"
-      }
+      },
+      "ncs_match": "official"
     },
     "plan.ELEC-BANDEJA": {
-      "name": "ELEC-BANDEJA",
+      "name": "291-E-CABL-TRAY-N",
       "color": 3,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -97,10 +103,11 @@
       "description": {
         "es": "Bandejas (plano)",
         "en": "Trays (plan)"
-      }
+      },
+      "ncs_match": "official"
     },
     "plan.ELEC-CRUCE": {
-      "name": "ELEC-CRUCE",
+      "name": "291-E-ANNO-MARK",
       "color": 4,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -111,10 +118,11 @@
       "description": {
         "es": "Cruces (plano)",
         "en": "Crossings (plan)"
-      }
+      },
+      "ncs_match": "proposal"
     },
     "plan.ELEC-CAMARA": {
-      "name": "ELEC-CAMARA",
+      "name": "291-E-POWR-MHOL-N",
       "color": 5,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -125,10 +133,11 @@
       "description": {
         "es": "Cámaras eléctricas (plano)",
         "en": "Electrical chambers (plan)"
-      }
+      },
+      "ncs_match": "official_combination"
     },
     "plan.ELEC-CAJA": {
-      "name": "ELEC-CAJA",
+      "name": "291-E-POWR-JBOX-N",
       "color": 6,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -139,10 +148,11 @@
       "description": {
         "es": "Cajas (plano)",
         "en": "Boxes (plan)"
-      }
+      },
+      "ncs_match": "official"
     },
     "plan.ELEC-TABLERO": {
-      "name": "ELEC-TABLERO",
+      "name": "291-E-POWR-PANL-N",
       "color": 7,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -153,10 +163,11 @@
       "description": {
         "es": "Tableros (plano)",
         "en": "Boards (plan)"
-      }
+      },
+      "ncs_match": "official"
     },
     "plan.ELEC-LUM": {
-      "name": "ELEC-LUM",
+      "name": "291-E-LITE-EQPM-N",
       "color": 40,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -167,10 +178,11 @@
       "description": {
         "es": "Luminarias (plano)",
         "en": "Luminaires (plan)"
-      }
+      },
+      "ncs_match": "official"
     },
     "plan.ELEC-TUG": {
-      "name": "ELEC-TUG",
+      "name": "291-E-POWR-WALL-N",
       "color": 30,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -181,10 +193,11 @@
       "description": {
         "es": "Tomacorrientes de uso general (plano)",
         "en": "General-use sockets (plan)"
-      }
+      },
+      "ncs_match": "official_combination"
     },
     "plan.ELEC-TUE": {
-      "name": "ELEC-TUE",
+      "name": "291-E-POWR-DEVC-N",
       "color": 50,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -195,10 +208,11 @@
       "description": {
         "es": "Tomacorrientes de uso especial (plano)",
         "en": "Special-use sockets (plan)"
-      }
+      },
+      "ncs_match": "official_combination"
     },
     "plan.ELEC-HVAC": {
-      "name": "ELEC-HVAC",
+      "name": "291-E-POWR-EQPM-N",
       "color": 150,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -209,10 +223,11 @@
       "description": {
         "es": "Climatización (plano)",
         "en": "HVAC (plan)"
-      }
+      },
+      "ncs_match": "official_combination"
     },
     "plan.SAN-CLOACA": {
-      "name": "SAN-CLOACA",
+      "name": "291-P-SSWR-PIPE-N",
       "color": 3,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -223,10 +238,11 @@
       "description": {
         "es": "Cañerías cloacales (plano)",
         "en": "Sewer pipes (plan)"
-      }
+      },
+      "ncs_match": "official"
     },
     "plan.SAN-CAMARA": {
-      "name": "SAN-CAMARA",
+      "name": "291-P-SSWR-MHOL-N",
       "color": 5,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -237,10 +253,11 @@
       "description": {
         "es": "Cámaras de inspección (plano)",
         "en": "Inspection chambers (plan)"
-      }
+      },
+      "ncs_match": "official"
     },
     "plan.SAN-BOCA": {
-      "name": "SAN-BOCA",
+      "name": "291-P-SSWR-FLDR-N",
       "color": 4,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -251,10 +268,11 @@
       "description": {
         "es": "Bocas de registro (plano)",
         "en": "Manholes (plan)"
-      }
+      },
+      "ncs_match": "official_combination"
     },
     "plan.PLAN-TAG": {
-      "name": "PLAN-TAG",
+      "name": "291-E-ANNO-IDEN",
       "color": 7,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -265,10 +283,11 @@
       "description": {
         "es": "Etiquetas del plano",
         "en": "Plan tags"
-      }
+      },
+      "ncs_match": "official_combination"
     },
     "plan.PLAN-NODO": {
-      "name": "PLAN-NODO",
+      "name": "291-E-ANNO-NPLT",
       "color": 8,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -279,10 +298,11 @@
       "description": {
         "es": "Nodos de unión del plano",
         "en": "Plan junction nodes"
-      }
+      },
+      "ncs_match": "proposal"
     },
     "plan.ELEC-PLENO": {
-      "name": "ELEC-PLENO",
+      "name": "291-E-POWR-FEED-N",
       "color": 6,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -293,12 +313,13 @@
       "description": {
         "es": "Plenos entre niveles (plano)",
         "en": "Plenums between levels (plan)"
-      }
+      },
+      "ncs_match": "proposal"
     },
     "plan.ARQ-FONDO": {
-      "name": "ARQ-FONDO",
-      "color": 253,
-      "lineweight": null,
+      "name": "291-A-ANNO-REFR",
+      "color": 9,
+      "lineweight": 0.13,
       "linetype": "CONTINUOUS",
       "on": true,
       "frozen": false,
@@ -307,12 +328,13 @@
       "description": {
         "es": "Fondo del plano de arquitectura",
         "en": "Architecture plan background"
-      }
+      },
+      "ncs_match": "official_combination"
     },
     "plan.ARQ-MUROS": {
-      "name": "ARQ-MUROS",
-      "color": 8,
-      "lineweight": null,
+      "name": "291-A-WALL-FULL-N",
+      "color": 7,
+      "lineweight": 0.5,
       "linetype": "CONTINUOUS",
       "on": true,
       "frozen": false,
@@ -321,12 +343,13 @@
       "description": {
         "es": "Muros reconocidos",
         "en": "Recognized walls"
-      }
+      },
+      "ncs_match": "official"
     },
     "plan.ARQ-PUERTAS": {
-      "name": "ARQ-PUERTAS",
-      "color": 30,
-      "lineweight": null,
+      "name": "291-A-DOOR-N",
+      "color": 250,
+      "lineweight": 0.35,
       "linetype": "CONTINUOUS",
       "on": true,
       "frozen": false,
@@ -335,12 +358,13 @@
       "description": {
         "es": "Puertas reconocidas",
         "en": "Recognized doors"
-      }
+      },
+      "ncs_match": "official"
     },
     "plan.ARQ-VENTANAS": {
-      "name": "ARQ-VENTANAS",
-      "color": 5,
-      "lineweight": null,
+      "name": "291-A-GLAZ-N",
+      "color": 250,
+      "lineweight": 0.35,
       "linetype": "CONTINUOUS",
       "on": true,
       "frozen": false,
@@ -349,13 +373,14 @@
       "description": {
         "es": "Ventanas reconocidas",
         "en": "Recognized windows"
-      }
+      },
+      "ncs_match": "official"
     },
     "plan.ARQ-HUECOS": {
-      "name": "ARQ-HUECOS",
-      "color": 9,
-      "lineweight": null,
-      "linetype": "CONTINUOUS",
+      "name": "291-A-WALL-JAMB-N",
+      "color": 252,
+      "lineweight": 0.18,
+      "linetype": "HIDDEN",
       "on": true,
       "frozen": false,
       "locked": false,
@@ -363,13 +388,14 @@
       "description": {
         "es": "Huecos reconocidos",
         "en": "Recognized openings"
-      }
+      },
+      "ncs_match": "proposal"
     },
     "plan.ARQ-EJES": {
-      "name": "ARQ-EJES",
+      "name": "291-A-GRID",
       "color": 8,
-      "lineweight": null,
-      "linetype": "CONTINUOUS",
+      "lineweight": 0.13,
+      "linetype": "CENTER",
       "on": true,
       "frozen": false,
       "locked": false,
@@ -377,12 +403,13 @@
       "description": {
         "es": "Ejes de la grilla con sus burbujas",
         "en": "Grid axes with their bubbles"
-      }
+      },
+      "ncs_match": "official_combination"
     },
     "plan.ARQ-COTAS": {
-      "name": "ARQ-COTAS",
-      "color": 1,
-      "lineweight": null,
+      "name": "291-A-ANNO-DIMS",
+      "color": 251,
+      "lineweight": 0.18,
       "linetype": "CONTINUOUS",
       "on": true,
       "frozen": false,
@@ -391,10 +418,11 @@
       "description": {
         "es": "Cotas: líneas, marcas y cifras",
         "en": "Dimensions: lines, ticks and figures"
-      }
+      },
+      "ncs_match": "official"
     },
     "plan.ARQ-ETIQUETAS": {
-      "name": "ARQ-ETIQUETAS",
+      "name": "291-A-ANNO-IDEN",
       "color": 5,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -405,10 +433,11 @@
       "description": {
         "es": "Etiquetas de locales, puertas, ventanas y muros",
         "en": "Labels of rooms, doors, windows and walls"
-      }
+      },
+      "ncs_match": "official"
     },
     "plan.HVAC-DUCTO": {
-      "name": "HVAC-DUCTO",
+      "name": "291-M-HVAC-DUCT-N",
       "color": 140,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -419,10 +448,11 @@
       "description": {
         "es": "Conductos de aire (plano)",
         "en": "Air ducts (plan)"
-      }
+      },
+      "ncs_match": "official"
     },
     "plan.HVAC-REJILLA": {
-      "name": "HVAC-REJILLA",
+      "name": "291-M-HVAC-GRIL-N",
       "color": 130,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -433,10 +463,11 @@
       "description": {
         "es": "Rejillas y difusores (plano)",
         "en": "Grilles and diffusers (plan)"
-      }
+      },
+      "ncs_match": "official"
     },
     "plan.HVAC-EQUIPO": {
-      "name": "HVAC-EQUIPO",
+      "name": "291-M-HVAC-EQPM-N",
       "color": 160,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -447,10 +478,11 @@
       "description": {
         "es": "Equipos de climatización (plano)",
         "en": "HVAC equipment (plan)"
-      }
+      },
+      "ncs_match": "official"
     },
     "plan.HVAC-TUBERIA": {
-      "name": "HVAC-TUBERIA",
+      "name": "291-M-HVAC-PIPE-N",
       "color": 120,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -461,10 +493,11 @@
       "description": {
         "es": "Cañerías de refrigerante y agua (plano)",
         "en": "Refrigerant and water pipes (plan)"
-      }
+      },
+      "ncs_match": "official"
     },
     "plan.PCI-ROCIADOR": {
-      "name": "PCI-ROCIADOR",
+      "name": "291-F-SPKL-N",
       "color": 1,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -475,10 +508,11 @@
       "description": {
         "es": "Rociadores (plano)",
         "en": "Sprinklers (plan)"
-      }
+      },
+      "ncs_match": "official"
     },
     "plan.PCI-TUBERIA": {
-      "name": "PCI-TUBERIA",
+      "name": "291-F-SPKL-PIPE-N",
       "color": 10,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -489,10 +523,11 @@
       "description": {
         "es": "Cañerías de incendio (plano)",
         "en": "Fire pipes (plan)"
-      }
+      },
+      "ncs_match": "official_combination"
     },
     "plan.PCI-DETECTOR": {
-      "name": "PCI-DETECTOR",
+      "name": "291-F-PROT-SMOK-N",
       "color": 6,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -503,10 +538,11 @@
       "description": {
         "es": "Detectores y pulsadores (plano)",
         "en": "Detectors and call points (plan)"
-      }
+      },
+      "ncs_match": "official_combination"
     },
     "plan.PCI-HIDRANTE": {
-      "name": "PCI-HIDRANTE",
+      "name": "291-F-PROT-HYDT-N",
       "color": 12,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -517,10 +553,11 @@
       "description": {
         "es": "Hidrantes y bocas de incendio (plano)",
         "en": "Hydrants and hose cabinets (plan)"
-      }
+      },
+      "ncs_match": "official"
     },
     "plan.PCI-EXTINTOR": {
-      "name": "PCI-EXTINTOR",
+      "name": "291-F-PROT-EXTI-N",
       "color": 14,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -531,10 +568,11 @@
       "description": {
         "es": "Extintores (plano)",
         "en": "Extinguishers (plan)"
-      }
+      },
+      "ncs_match": "official"
     },
     "plan.COM-CABLE": {
-      "name": "COM-CABLE",
+      "name": "291-T-COMM-CABL-N",
       "color": 4,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -545,10 +583,11 @@
       "description": {
         "es": "Cables de datos y voz (plano)",
         "en": "Data and voice cables (plan)"
-      }
+      },
+      "ncs_match": "official_combination"
     },
     "plan.COM-BANDEJA": {
-      "name": "COM-BANDEJA",
+      "name": "291-T-CABL-TRAY-N",
       "color": 3,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -559,10 +598,11 @@
       "description": {
         "es": "Bandejas de comunicaciones (plano)",
         "en": "Communications trays (plan)"
-      }
+      },
+      "ncs_match": "official"
     },
     "plan.COM-RACK": {
-      "name": "COM-RACK",
+      "name": "291-T-COMM-EQPM-N",
       "color": 5,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -573,10 +613,11 @@
       "description": {
         "es": "Racks y gabinetes (plano)",
         "en": "Racks and cabinets (plan)"
-      }
+      },
+      "ncs_match": "official"
     },
     "plan.COM-BOCA": {
-      "name": "COM-BOCA",
+      "name": "291-T-COMM-WALL-N",
       "color": 6,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -587,10 +628,11 @@
       "description": {
         "es": "Bocas de datos y voz (plano)",
         "en": "Data and voice outlets (plan)"
-      }
+      },
+      "ncs_match": "official_combination"
     },
     "plan.CIV-ESTRUCTURA": {
-      "name": "CIV-ESTRUCTURA",
+      "name": "291-S-STRC-N",
       "color": 30,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -601,10 +643,11 @@
       "description": {
         "es": "Estructura: columnas y vigas (plano)",
         "en": "Structure: columns and beams (plan)"
-      }
+      },
+      "ncs_match": "official_combination"
     },
     "plan.CIV-FUNDACION": {
-      "name": "CIV-FUNDACION",
+      "name": "291-S-FNDN-N",
       "color": 34,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -615,10 +658,11 @@
       "description": {
         "es": "Fundaciones (plano)",
         "en": "Foundations (plan)"
-      }
+      },
+      "ncs_match": "official"
     },
     "plan.CIV-ZANJA": {
-      "name": "CIV-ZANJA",
+      "name": "291-C-DTCH-N",
       "color": 52,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -629,10 +673,11 @@
       "description": {
         "es": "Zanjas y canalizaciones de obra civil (plano)",
         "en": "Trenches and civil conduits (plan)"
-      }
+      },
+      "ncs_match": "proposal"
     },
     "plan.MEC-EQUIPO": {
-      "name": "MEC-EQUIPO",
+      "name": "291-Q-MAJQ-N",
       "color": 150,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -643,10 +688,11 @@
       "description": {
         "es": "Equipos mecánicos (plano)",
         "en": "Mechanical equipment (plan)"
-      }
+      },
+      "ncs_match": "official"
     },
     "plan.MEC-TUBERIA": {
-      "name": "MEC-TUBERIA",
+      "name": "291-M-MPIP-PIPE-N",
       "color": 170,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -657,10 +703,11 @@
       "description": {
         "es": "Cañerías de proceso (plano)",
         "en": "Process piping (plan)"
-      }
+      },
+      "ncs_match": "official"
     },
     "plan.MEC-SOPORTE": {
-      "name": "MEC-SOPORTE",
+      "name": "291-S-FSTN-N",
       "color": 190,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -671,10 +718,11 @@
       "description": {
         "es": "Soportes y apoyos (plano)",
         "en": "Supports (plan)"
-      }
+      },
+      "ncs_match": "proposal"
     },
     "plan.INS-INSTRUMENTO": {
-      "name": "INS-INSTRUMENTO",
+      "name": "291-E-INST-N",
       "color": 200,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -685,10 +733,11 @@
       "description": {
         "es": "Instrumentos de campo (plano)",
         "en": "Field instruments (plan)"
-      }
+      },
+      "ncs_match": "official"
     },
     "plan.INS-CABLE": {
-      "name": "INS-CABLE",
+      "name": "291-E-INST-CABL-N",
       "color": 210,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -699,10 +748,11 @@
       "description": {
         "es": "Cables de señal (plano)",
         "en": "Signal cables (plan)"
-      }
+      },
+      "ncs_match": "official_combination"
     },
     "plan.INS-BANDEJA": {
-      "name": "INS-BANDEJA",
+      "name": "291-E-INST-CABL-TRAY-N",
       "color": 220,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -713,10 +763,11 @@
       "description": {
         "es": "Bandejas de instrumentación (plano)",
         "en": "Instrumentation trays (plan)"
-      }
+      },
+      "ncs_match": "official_combination"
     },
     "plan.ELEC-INT": {
-      "name": "ELEC-INT",
+      "name": "291-E-LITE-SWCH-N",
       "color": 40,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -727,10 +778,11 @@
       "description": {
         "es": "Interruptores (plano)",
         "en": "Switches (plan)"
-      }
+      },
+      "ncs_match": "official"
     },
     "plan.ELEC-TRAFO": {
-      "name": "ELEC-TRAFO",
+      "name": "291-E-POWR-XFMR-N",
       "color": 6,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -741,10 +793,11 @@
       "description": {
         "es": "Transformadores y celdas de media tensión (plano)",
         "en": "Transformers and MV cells (plan)"
-      }
+      },
+      "ncs_match": "official_combination"
     },
     "plan.ELEC-MT": {
-      "name": "ELEC-MT",
+      "name": "291-E-POWR-SWBD-N",
       "color": 1,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -755,10 +808,11 @@
       "description": {
         "es": "Cables y canalizaciones de media tensión (plano)",
         "en": "Medium-voltage cables and conduits (plan)"
-      }
+      },
+      "ncs_match": "proposal"
     },
     "plan.PCI-PULSADOR": {
-      "name": "PCI-PULSADOR",
+      "name": "291-F-PROT-ALRM-N",
       "color": 10,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -769,10 +823,11 @@
       "description": {
         "es": "Pulsadores y sirenas (plano)",
         "en": "Pull stations and sirens (plan)"
-      }
+      },
+      "ncs_match": "official_combination"
     },
     "plan.COM-CCTV": {
-      "name": "COM-CCTV",
+      "name": "291-T-CCTV-N",
       "color": 30,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -783,10 +838,11 @@
       "description": {
         "es": "Cámaras y puntos de acceso (plano)",
         "en": "Cameras and access points (plan)"
-      }
+      },
+      "ncs_match": "official"
     },
     "plan.ELEC-MOTOR": {
-      "name": "ELEC-MOTOR",
+      "name": "291-Q-POWR-N",
       "color": 30,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -797,10 +853,11 @@
       "description": {
         "es": "Motores (plano)",
         "en": "Motors (plan)"
-      }
+      },
+      "ncs_match": "official_combination"
     },
     "plan.ELEC-CAPTOR": {
-      "name": "ELEC-CAPTOR",
+      "name": "291-E-LTNG-EQPM-N",
       "color": 10,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -811,10 +868,11 @@
       "description": {
         "es": "Captores de pararrayos (plano)",
         "en": "Air terminals (plan)"
-      }
+      },
+      "ncs_match": "official"
     },
     "plan.ELEC-TIERRA": {
-      "name": "ELEC-TIERRA",
+      "name": "291-E-GRND-N",
       "color": 94,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -825,10 +883,11 @@
       "description": {
         "es": "Puestas a tierra (plano)",
         "en": "Earthing electrodes (plan)"
-      }
+      },
+      "ncs_match": "official"
     },
     "plan.ELEC-PARARRAYOS": {
-      "name": "ELEC-PARARRAYOS",
+      "name": "291-E-LTNG-N",
       "color": 12,
       "lineweight": null,
       "linetype": "DASHED",
@@ -839,10 +898,11 @@
       "description": {
         "es": "Conductores de bajada y equipotenciales (plano)",
         "en": "Down and bonding conductors (plan)"
-      }
+      },
+      "ncs_match": "official"
     },
     "plan.PLU-TUBERIA": {
-      "name": "PLU-TUBERIA",
+      "name": "291-P-STRM-PIPE-N",
       "color": 4,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -853,10 +913,11 @@
       "description": {
         "es": "Cañerías y bajadas pluviales (plano)",
         "en": "Storm pipes and downpipes (plan)"
-      }
+      },
+      "ncs_match": "official"
     },
     "plan.PLU-CANALETA": {
-      "name": "PLU-CANALETA",
+      "name": "291-P-ROOF-N",
       "color": 4,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -867,10 +928,11 @@
       "description": {
         "es": "Canaletas (plano)",
         "en": "Gutters (plan)"
-      }
+      },
+      "ncs_match": "official_combination"
     },
     "plan.PLU-BOCA": {
-      "name": "PLU-BOCA",
+      "name": "291-P-STRM-RFDR-N",
       "color": 5,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -881,10 +943,11 @@
       "description": {
         "es": "Embudos, bocas y rejillas pluviales (plano)",
         "en": "Roof drains, yard drains and gratings (plan)"
-      }
+      },
+      "ncs_match": "official"
     },
     "plan.PLU-CAMARA": {
-      "name": "PLU-CAMARA",
+      "name": "291-P-STRM-MHOL-N",
       "color": 5,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -895,10 +958,11 @@
       "description": {
         "es": "Cámaras pluviales (plano)",
         "en": "Storm chambers (plan)"
-      }
+      },
+      "ncs_match": "official_combination"
     },
     "plan.AGU-TUBERIA": {
-      "name": "AGU-TUBERIA",
+      "name": "291-P-DOMW-CPIP-N",
       "color": 5,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -909,10 +973,11 @@
       "description": {
         "es": "Cañerías y montantes de agua fría (plano)",
         "en": "Cold water pipes and risers (plan)"
-      }
+      },
+      "ncs_match": "official"
     },
     "plan.AGU-TUBERIA-AC": {
-      "name": "AGU-TUBERIA-AC",
+      "name": "291-P-DOMW-HPIP-N",
       "color": 1,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -923,10 +988,11 @@
       "description": {
         "es": "Cañerías de agua caliente (plano)",
         "en": "Hot water pipes (plan)"
-      }
+      },
+      "ncs_match": "official"
     },
     "plan.AGU-EQUIPO": {
-      "name": "AGU-EQUIPO",
+      "name": "291-P-DOMW-EQPM-N",
       "color": 5,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -937,10 +1003,11 @@
       "description": {
         "es": "Tanques, bombas y termotanques (plano)",
         "en": "Tanks, pumps and heaters (plan)"
-      }
+      },
+      "ncs_match": "official"
     },
     "plan.AGU-VALVULA": {
-      "name": "AGU-VALVULA",
+      "name": "291-P-DOMW-VALV-N",
       "color": 5,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -951,10 +1018,11 @@
       "description": {
         "es": "Válvulas de agua (plano)",
         "en": "Water valves (plan)"
-      }
+      },
+      "ncs_match": "official_combination"
     },
     "plan.AGU-ARTEFACTO": {
-      "name": "AGU-ARTEFACTO",
+      "name": "291-P-DOMW-FIXT-N",
       "color": 8,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -965,10 +1033,11 @@
       "description": {
         "es": "Artefactos sanitarios (plano)",
         "en": "Sanitary fixtures (plan)"
-      }
+      },
+      "ncs_match": "official_combination"
     },
     "plan.GAS-TUBERIA": {
-      "name": "GAS-TUBERIA",
+      "name": "291-M-NGAS-PIPE-N",
       "color": 2,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -979,10 +1048,11 @@
       "description": {
         "es": "Cañerías y montantes de gas (plano)",
         "en": "Gas pipes and risers (plan)"
-      }
+      },
+      "ncs_match": "official"
     },
     "plan.GAS-EQUIPO": {
-      "name": "GAS-EQUIPO",
+      "name": "291-M-NGAS-EQPM-N",
       "color": 2,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -993,10 +1063,11 @@
       "description": {
         "es": "Medidores y reguladores de gas (plano)",
         "en": "Gas meters and regulators (plan)"
-      }
+      },
+      "ncs_match": "official"
     },
     "plan.GAS-VALVULA": {
-      "name": "GAS-VALVULA",
+      "name": "291-M-NGAS-VALV-N",
       "color": 2,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -1007,10 +1078,11 @@
       "description": {
         "es": "Llaves de paso de gas (plano)",
         "en": "Gas shut-off valves (plan)"
-      }
+      },
+      "ncs_match": "official_combination"
     },
     "plan.GAS-ARTEFACTO": {
-      "name": "GAS-ARTEFACTO",
+      "name": "291-M-NGAS-FIXT-N",
       "color": 30,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -1021,10 +1093,11 @@
       "description": {
         "es": "Artefactos a gas (plano)",
         "en": "Gas appliances (plan)"
-      }
+      },
+      "ncs_match": "official_combination"
     },
     "plan.SAN-VENTILACION": {
-      "name": "SAN-VENTILACION",
+      "name": "291-P-SSWR-VENT-N",
       "color": 3,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -1035,10 +1108,11 @@
       "description": {
         "es": "Ventilaciones cloacales (plano)",
         "en": "Sewer vents (plan)"
-      }
+      },
+      "ncs_match": "official"
     },
     "plan.PCI-EQUIPO": {
-      "name": "PCI-EQUIPO",
+      "name": "291-F-PROT-EQPM-N",
       "color": 1,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -1049,10 +1123,11 @@
       "description": {
         "es": "Bombas y tanques de incendio (plano)",
         "en": "Fire pumps and tanks (plan)"
-      }
+      },
+      "ncs_match": "official"
     },
     "plan.PCI-VALVULA": {
-      "name": "PCI-VALVULA",
+      "name": "291-F-PROT-VALV-N",
       "color": 1,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -1063,10 +1138,11 @@
       "description": {
         "es": "Válvulas y estaciones de control de incendio (plano)",
         "en": "Fire valves and control stations (plan)"
-      }
+      },
+      "ncs_match": "official_combination"
     },
     "plan.PCI-CENTRAL": {
-      "name": "PCI-CENTRAL",
+      "name": "291-F-PROT-ALRM-PANL-N",
       "color": 6,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -1077,10 +1153,11 @@
       "description": {
         "es": "Central de incendio (plano)",
         "en": "Fire alarm panel (plan)"
-      }
+      },
+      "ncs_match": "official_combination"
     },
     "plan.HVAC-DUCTO-RETORNO": {
-      "name": "HVAC-DUCTO-RETORNO",
+      "name": "291-M-HVAC-RETN-DUCT-N",
       "color": 4,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -1091,10 +1168,11 @@
       "description": {
         "es": "Conductos de retorno (plano)",
         "en": "Return ducts (plan)"
-      }
+      },
+      "ncs_match": "official_combination"
     },
     "plan.HVAC-DUCTO-EXTRACCION": {
-      "name": "HVAC-DUCTO-EXTRACCION",
+      "name": "291-M-EXHS-DUCT-N",
       "color": 30,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -1105,10 +1183,11 @@
       "description": {
         "es": "Conductos de extracción (plano)",
         "en": "Exhaust ducts (plan)"
-      }
+      },
+      "ncs_match": "official"
     },
     "plan.HVAC-TUBERIA-AGUA": {
-      "name": "HVAC-TUBERIA-AGUA",
+      "name": "291-M-CWTR-PIPE-N",
       "color": 5,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -1119,10 +1198,11 @@
       "description": {
         "es": "Cañerías de agua helada y caliente (plano)",
         "en": "Chilled and hot water pipes (plan)"
-      }
+      },
+      "ncs_match": "proposal"
     },
     "plan.HVAC-COMPUERTA": {
-      "name": "HVAC-COMPUERTA",
+      "name": "291-M-HVAC-DUCT-EQPM-N",
       "color": 1,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -1133,10 +1213,11 @@
       "description": {
         "es": "Compuertas cortafuego (plano)",
         "en": "Fire dampers (plan)"
-      }
+      },
+      "ncs_match": "proposal"
     },
     "plan.MEC-PARRAL": {
-      "name": "MEC-PARRAL",
+      "name": "291-S-FRAM-N",
       "color": 8,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -1147,10 +1228,11 @@
       "description": {
         "es": "Parrales de cañerías (plano)",
         "en": "Pipe racks (plan)"
-      }
+      },
+      "ncs_match": "proposal"
     },
     "plan.MEC-VALVULA": {
-      "name": "MEC-VALVULA",
+      "name": "291-M-MPIP-VALV-N",
       "color": 6,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -1161,10 +1243,11 @@
       "description": {
         "es": "Válvulas de proceso (plano)",
         "en": "Process valves (plan)"
-      }
+      },
+      "ncs_match": "official_combination"
     },
     "plan.MEC-TRANSPORTE": {
-      "name": "MEC-TRANSPORTE",
+      "name": "291-A-CONV-N",
       "color": 30,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -1175,10 +1258,11 @@
       "description": {
         "es": "Cintas y puentes grúa (plano)",
         "en": "Conveyors and cranes (plan)"
-      }
+      },
+      "ncs_match": "official"
     },
     "plan.MEC-ASCENSOR": {
-      "name": "MEC-ASCENSOR",
+      "name": "291-A-FLOR-EVTR-N",
       "color": 6,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -1189,10 +1273,11 @@
       "description": {
         "es": "Ascensores, montacargas y escaleras mecánicas (plano)",
         "en": "Lifts and escalators (plan)"
-      }
+      },
+      "ncs_match": "official_combination"
     },
     "pv.SITE": {
-      "name": "PV-PREDIO",
+      "name": "291-WC-PROP-N",
       "color": 8,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -1203,10 +1288,11 @@
       "description": {
         "es": "Predio, cerco y retiros (planta fotovoltaica)",
         "en": "Site, fence and setbacks (PV plant)"
-      }
+      },
+      "ncs_match": "official_combination"
     },
     "pv.ROAD": {
-      "name": "PV-CAMINO",
+      "name": "291-WC-ROAD-N",
       "color": 9,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -1217,10 +1303,11 @@
       "description": {
         "es": "Camino interno (planta fotovoltaica)",
         "en": "Internal road (PV plant)"
-      }
+      },
+      "ncs_match": "official"
     },
     "pv.TABLE": {
-      "name": "PV-MESAS",
+      "name": "291-WS-MNTG-N",
       "color": 5,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -1231,10 +1318,11 @@
       "description": {
         "es": "Mesas de módulos (planta fotovoltaica)",
         "en": "Module tables (PV plant)"
-      }
+      },
+      "ncs_match": "official_combination"
     },
     "pv.ROOF": {
-      "name": "PV-CUBIERTA",
+      "name": "291-W-ROOF-N",
       "color": 8,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -1245,10 +1333,11 @@
       "description": {
         "es": "Faldones de cubierta (planta fotovoltaica)",
         "en": "Roof planes (PV plant)"
-      }
+      },
+      "ncs_match": "official"
     },
     "pv.ROOF_OBSTACLE": {
-      "name": "PV-CUBIERTA-OBST",
+      "name": "291-W-OBST-ROOF-N",
       "color": 8,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -1259,10 +1348,11 @@
       "description": {
         "es": "Obstáculos de cubierta: chimeneas, tanques, claraboyas (planta fotovoltaica)",
         "en": "Roof obstacles: chimneys, tanks, skylights (PV plant)"
-      }
+      },
+      "ncs_match": "official_combination"
     },
     "pv.ROOF_DATA": {
-      "name": "PV-CUBIERTA-DATOS",
+      "name": "291-W-ROOF-NOTE",
       "color": 7,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -1273,10 +1363,11 @@
       "description": {
         "es": "Inclinación y azimut de cada faldón, como texto dentro del faldón (planta fotovoltaica)",
         "en": "Tilt and azimuth of each roof plane, as text inside the plane (PV plant)"
-      }
+      },
+      "ncs_match": "proposal"
     },
     "pv.MODULE": {
-      "name": "PV-MODULOS",
+      "name": "291-WP-PVMD-N",
       "color": 5,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -1287,10 +1378,11 @@
       "description": {
         "es": "Módulos sobre la cubierta (planta fotovoltaica)",
         "en": "Modules on the roof (PV plant)"
-      }
+      },
+      "ncs_match": "official"
     },
     "pv.CONDUIT": {
-      "name": "PV-CANALIZACION",
+      "name": "291-WP-POWR-CNDT-N",
       "color": 4,
       "lineweight": null,
       "linetype": "DASHED",
@@ -1301,10 +1393,11 @@
       "description": {
         "es": "Canalizaciones de los strings en cubierta, referenciales (planta fotovoltaica)",
         "en": "String raceways on the roof, reference (PV plant)"
-      }
+      },
+      "ncs_match": "official"
     },
     "pv.INVERTER": {
-      "name": "PV-INVERSORES",
+      "name": "291-WP-POWR-EQPM-N",
       "color": 30,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -1315,10 +1408,11 @@
       "description": {
         "es": "Inversores (planta fotovoltaica)",
         "en": "Inverters (PV plant)"
-      }
+      },
+      "ncs_match": "official"
     },
     "pv.STATION": {
-      "name": "PV-ESTACION",
+      "name": "291-WP-POWR-XFMR-PADM-N",
       "color": 6,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -1329,10 +1423,11 @@
       "description": {
         "es": "Estación de media y baja tensión (planta fotovoltaica)",
         "en": "Medium and low voltage station (PV plant)"
-      }
+      },
+      "ncs_match": "proposal"
     },
     "pv.DC": {
-      "name": "PV-CABLE-CC",
+      "name": "291-WP-POWR-CABL-DCCB-N",
       "color": 1,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -1343,10 +1438,11 @@
       "description": {
         "es": "Cables de corriente continua (planta fotovoltaica)",
         "en": "DC cables (PV plant)"
-      }
+      },
+      "ncs_match": "proposal"
     },
     "pv.AC": {
-      "name": "PV-CABLE-CA",
+      "name": "291-WP-POWR-CABL-ACCB-N",
       "color": 3,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -1357,10 +1453,11 @@
       "description": {
         "es": "Cables de corriente alterna (planta fotovoltaica)",
         "en": "AC cables (PV plant)"
-      }
+      },
+      "ncs_match": "proposal"
     },
     "pv.TEXT": {
-      "name": "PV-TEXTOS",
+      "name": "291-WP-ANNO-TEXT",
       "color": 7,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -1371,10 +1468,11 @@
       "description": {
         "es": "Textos y etiquetas (planta fotovoltaica)",
         "en": "Texts and tags (PV plant)"
-      }
+      },
+      "ncs_match": "official_combination"
     },
     "pv.DIAGRAM": {
-      "name": "PV-DIAGRAMA",
+      "name": "291-WP-DIAG",
       "color": 5,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -1385,10 +1483,11 @@
       "description": {
         "es": "Símbolos y líneas del unifilar (planta fotovoltaica)",
         "en": "Symbols and lines of the single-line (PV plant)"
-      }
+      },
+      "ncs_match": "official_combination"
     },
     "pv.DETAIL": {
-      "name": "PV-DETALLE",
+      "name": "291-WP-DETL",
       "color": 5,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -1399,10 +1498,11 @@
       "description": {
         "es": "Contorno del equipo en las vistas de detalle (módulo, inversor, perfil del poste)",
         "en": "Equipment outline in the detail views (module, inverter, post profile)"
-      }
+      },
+      "ncs_match": "official_combination"
     },
     "pv.DETAIL_REF": {
-      "name": "PV-DETALLE-REF",
+      "name": "291-WP-DETL-MARK",
       "color": 6,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -1413,10 +1513,11 @@
       "description": {
         "es": "Geometría de referencia en los detalles: el dato no está en el registro, se dibuja un valor de referencia",
         "en": "Reference geometry in the details: the record gives no value, a reference one is drawn"
-      }
+      },
+      "ncs_match": "official_combination"
     },
     "pv.DETAIL_DIM": {
-      "name": "PV-DETALLE-COTAS",
+      "name": "291-WP-DETL-DIMS",
       "color": 3,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -1427,10 +1528,11 @@
       "description": {
         "es": "Cotas y rótulos de las vistas de detalle",
         "en": "Dimensions and labels of the detail views"
-      }
+      },
+      "ncs_match": "official_combination"
     },
     "plan.ELEC-LUX-MAPA": {
-      "name": "ELEC-LUX-MAPA",
+      "name": "291-E-LITE-PATT-N",
       "color": 3,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -1441,10 +1543,11 @@
       "description": {
         "es": "Mapa de lux: celdas de color según el nivel exigido",
         "en": "Lux map: cells coloured by the required level"
-      }
+      },
+      "ncs_match": "proposal"
     },
     "plan.ELEC-LUX-CURVAS": {
-      "name": "ELEC-LUX-CURVAS",
+      "name": "291-E-LITE-MARK-N",
       "color": 7,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -1455,10 +1558,11 @@
       "description": {
         "es": "Mapa de lux: curvas de igual nivel",
         "en": "Lux map: lines of equal level"
-      }
+      },
+      "ncs_match": "proposal"
     },
     "plan.ELEC-LUX-TEXTO": {
-      "name": "ELEC-LUX-TEXTO",
+      "name": "291-E-LITE-TEXT",
       "color": 7,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -1469,10 +1573,11 @@
       "description": {
         "es": "Mapa de lux: valores de las curvas y lectura del ambiente",
         "en": "Lux map: values of the lines and reading of the room"
-      }
+      },
+      "ncs_match": "official_combination"
     },
     "arch.BACKGROUND": {
-      "name": "A-BACKGROUND",
+      "name": "291-A-ANNO-REFR",
       "color": 9,
       "lineweight": 0.13,
       "linetype": "CONTINUOUS",
@@ -1484,10 +1589,11 @@
       "description": {
         "es": "Fondo tenue: la línea original del plano leído",
         "en": "Faint background: the original linework of the plan read"
-      }
+      },
+      "ncs_match": "official_combination"
     },
     "arch.ROOM": {
-      "name": "A-ROOM",
+      "name": "291-A-AREA",
       "color": 254,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -1499,10 +1605,11 @@
       "description": {
         "es": "Relleno de los ambientes",
         "en": "Room fill"
-      }
+      },
+      "ncs_match": "official"
     },
     "arch.WALL-FILL": {
-      "name": "A-WALL-FILL",
+      "name": "291-A-WALL-PATT-N",
       "color": 253,
       "lineweight": 0.13,
       "linetype": "CONTINUOUS",
@@ -1514,10 +1621,11 @@
       "description": {
         "es": "Relleno de muros",
         "en": "Wall fill"
-      }
+      },
+      "ncs_match": "official"
     },
     "arch.WALL-CUT": {
-      "name": "A-WALL-CUT",
+      "name": "291-A-WALL-FULL-N",
       "color": 7,
       "lineweight": 0.5,
       "linetype": "CONTINUOUS",
@@ -1529,10 +1637,11 @@
       "description": {
         "es": "Muros cortados (contorno)",
         "en": "Cut walls (outline)"
-      }
+      },
+      "ncs_match": "official"
     },
     "arch.ELEV": {
-      "name": "A-ELEV",
+      "name": "291-A-ELEV-N",
       "color": 251,
       "lineweight": 0.25,
       "linetype": "CONTINUOUS",
@@ -1544,10 +1653,11 @@
       "description": {
         "es": "Elevaciones y cortes: lo visto más allá del plano",
         "en": "Elevations and sections: what is seen beyond the plane"
-      }
+      },
+      "ncs_match": "official"
     },
     "arch.OPENING": {
-      "name": "A-OPENING",
+      "name": "291-A-WALL-JAMB-N",
       "color": 252,
       "lineweight": 0.18,
       "linetype": "HIDDEN",
@@ -1559,10 +1669,11 @@
       "description": {
         "es": "Huecos sin hoja",
         "en": "Openings without a leaf"
-      }
+      },
+      "ncs_match": "proposal"
     },
     "arch.DOOR-SWING": {
-      "name": "A-DOOR-SWING",
+      "name": "291-A-DOOR-FULL-N",
       "color": 250,
       "lineweight": 0.18,
       "linetype": "DASHED",
@@ -1574,10 +1685,11 @@
       "description": {
         "es": "Arco de giro de puertas",
         "en": "Door swing arc"
-      }
+      },
+      "ncs_match": "official"
     },
     "arch.DOOR": {
-      "name": "A-DOOR",
+      "name": "291-A-DOOR-N",
       "color": 250,
       "lineweight": 0.35,
       "linetype": "CONTINUOUS",
@@ -1589,10 +1701,11 @@
       "description": {
         "es": "Puertas",
         "en": "Doors"
-      }
+      },
+      "ncs_match": "official"
     },
     "arch.WINDOW": {
-      "name": "A-WINDOW",
+      "name": "291-A-GLAZ-N",
       "color": 250,
       "lineweight": 0.35,
       "linetype": "CONTINUOUS",
@@ -1604,10 +1717,11 @@
       "description": {
         "es": "Ventanas: marco",
         "en": "Windows: frame"
-      }
+      },
+      "ncs_match": "official"
     },
     "arch.WINDOW-GLASS": {
-      "name": "A-WINDOW-GLASS",
+      "name": "291-A-GLAZ-FULL-N",
       "color": 253,
       "lineweight": 0.13,
       "linetype": "CONTINUOUS",
@@ -1619,10 +1733,11 @@
       "description": {
         "es": "Ventanas: vidrio",
         "en": "Windows: glass"
-      }
+      },
+      "ncs_match": "official"
     },
     "arch.FURN": {
-      "name": "A-FURN",
+      "name": "291-A-FURN-N",
       "color": 252,
       "lineweight": 0.18,
       "linetype": "CONTINUOUS",
@@ -1634,10 +1749,11 @@
       "description": {
         "es": "Mobiliario",
         "en": "Furniture"
-      }
+      },
+      "ncs_match": "official"
     },
     "arch.GRID": {
-      "name": "A-GRID",
+      "name": "291-A-GRID",
       "color": 8,
       "lineweight": 0.13,
       "linetype": "CENTER",
@@ -1649,10 +1765,11 @@
       "description": {
         "es": "Ejes y grilla",
         "en": "Grid axes"
-      }
+      },
+      "ncs_match": "official_combination"
     },
     "arch.DIM": {
-      "name": "A-DIM",
+      "name": "291-A-ANNO-DIMS",
       "color": 251,
       "lineweight": 0.18,
       "linetype": "CONTINUOUS",
@@ -1664,10 +1781,11 @@
       "description": {
         "es": "Cotas",
         "en": "Dimensions"
-      }
+      },
+      "ncs_match": "official"
     },
     "arch.ANNO": {
-      "name": "A-ANNO",
+      "name": "291-A-ANNO",
       "color": 251,
       "lineweight": 0.18,
       "linetype": "CONTINUOUS",
@@ -1679,10 +1797,11 @@
       "description": {
         "es": "Anotaciones y etiquetas",
         "en": "Annotations and labels"
-      }
+      },
+      "ncs_match": "official"
     },
     "arch.ROOM-TAG": {
-      "name": "A-ROOM-TAG",
+      "name": "291-A-AREA-IDEN",
       "color": 7,
       "lineweight": 0.25,
       "linetype": "CONTINUOUS",
@@ -1694,12 +1813,13 @@
       "description": {
         "es": "Código, nombre y área del ambiente",
         "en": "Room code, name and area"
-      }
+      },
+      "ncs_match": "official_combination"
     },
     "arch.TITLE": {
-      "name": "A-TITLE",
+      "name": "0-Titleblock",
       "color": 7,
-      "lineweight": 0.25,
+      "lineweight": null,
       "linetype": "CONTINUOUS",
       "hex": "#111111",
       "on": true,
@@ -1709,10 +1829,11 @@
       "description": {
         "es": "Rótulo IRAM de la lámina",
         "en": "IRAM title block of the sheet"
-      }
+      },
+      "ncs_match": "outside_standard"
     },
     "arch.WIPEOUT": {
-      "name": "A-WIPEOUT",
+      "name": "291-A-ANNO-NPLT",
       "color": 7,
       "lineweight": null,
       "linetype": "CONTINUOUS",
@@ -1724,7 +1845,8 @@
       "description": {
         "es": "Máscara que limpia el muro detrás de puertas y ventanas",
         "en": "Mask that cleans the wall behind doors and windows"
-      }
+      },
+      "ncs_match": "proposal"
     }
   }
 }

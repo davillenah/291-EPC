@@ -32,9 +32,9 @@ class TestDeliverable(unittest.TestCase):
             done = deliverable.convert(self.sheet(Path(t)))
             self.assertTrue(done["dxf"])
             layers = done["layers"]
-            self.assertEqual(layers.get("291-E-DIAGRAMA"), 1)
-            self.assertEqual(layers.get("291-A-LAMINA", 0) >= 1, True)               # the frame group of the IRAM template
-            self.assertGreaterEqual(layers.get("291-E-TEXTOS", 0), 2)                # an annotation line and its text
+            self.assertEqual(layers.get("291-E-DIAG"), 1)
+            self.assertEqual(layers.get("0-Titleblock", 0) >= 1, True)               # the frame group of the IRAM template
+            self.assertGreaterEqual(layers.get("291-E-DIAG-TEXT", 0), 2)                # an annotation line and its text
             self.assertFalse(list(Path(t).glob("*_trazos.*")))                       # nothing of the work in progress is left behind
 
     def test_the_catalog_renames_the_layers_of_the_deliverable(self):
@@ -43,7 +43,7 @@ class TestDeliverable(unittest.TestCase):
             f.write_text(json.dumps({"layers": {"sld.diagram": {"name": "MI-DIAGRAMA", "color": 3}}}), encoding="utf-8")
             done = deliverable.convert(self.sheet(Path(t)), layers_file=f)
             self.assertIn("MI-DIAGRAMA", done["layers"])
-            self.assertNotIn("291-E-DIAGRAMA", done["layers"])
+            self.assertNotIn("291-E-DIAG", done["layers"])
             self.assertEqual(ezdxf.readfile(done["dxf"]).layers.get("MI-DIAGRAMA").color, 3)
 
     def test_the_weight_of_the_layer_governs_when_the_catalog_sets_one_and_the_stroke_when_it_does_not(self):
@@ -56,10 +56,10 @@ class TestDeliverable(unittest.TestCase):
             def weights(path):
                 doc = ezdxf.readfile(path)
                 return {e.dxf.layer: e.dxf.get("lineweight", -1) for e in doc.modelspace() if e.dxftype() == "LINE"}
-            self.assertEqual(weights(plain)["291-E-DIAGRAMA"], 25)                       # the stroke of the SVG (0.25 mm)
-            self.assertEqual(weights(fixed)["291-E-DIAGRAMA"], -1)                      # by layer: the catalog says 0.5 mm
-            self.assertEqual(ezdxf.readfile(fixed).layers.get("291-E-DIAGRAMA").dxf.lineweight, 50)
-            self.assertEqual(weights(fixed)["291-E-TEXTOS"], 25)                        # a layer without a weight in the catalog keeps the strokes
+            self.assertEqual(weights(plain)["291-E-DIAG"], 25)                       # the stroke of the SVG (0.25 mm)
+            self.assertEqual(weights(fixed)["291-E-DIAG"], -1)                      # by layer: the catalog says 0.5 mm
+            self.assertEqual(ezdxf.readfile(fixed).layers.get("291-E-DIAG").dxf.lineweight, 50)
+            self.assertEqual(weights(fixed)["291-E-DIAG-TEXT"], 25)                        # a layer without a weight in the catalog keeps the strokes
 
     def test_the_sheet_template_is_marked_once(self):
         tagged = roles.tag_iram_sheet(SVG)
@@ -73,7 +73,7 @@ class TestDeliverable(unittest.TestCase):
             index = package.deliver(sheets, tmp / "out", "PAQ")
             self.assertEqual([s["sheet"] for s in index["sheets"]], ["H1", "H2"])
             self.assertTrue((tmp / "out" / "H1.dxf").is_file() and (tmp / "out" / "PAQ_entregable.json").is_file())
-            self.assertEqual(index["sheets"][0]["layers"]["291-E-DIAGRAMA"], {"entities": 1, "role": "sld.diagram"})
+            self.assertEqual(index["sheets"][0]["layers"]["291-E-DIAG"], {"entities": 1, "role": "sld.diagram"})
             again = package.deliver(sheets, tmp / "out", "PAQ")
             self.assertEqual(again, index)                                              # the same drawing gives the same index
             self.assertNotIn("dxf_sha256", json.dumps(index))
@@ -104,11 +104,11 @@ class TestDraftDxf(unittest.TestCase):
             done = deliverable.finish_draft(self.draft(), Path(t) / "plan.dxf", f)
             doc = ezdxf.readfile(done["dxf"])
             names = {lay.dxf.name for lay in doc.layers}
-            self.assertTrue({"LUMINARIAS", "PLAN-TAG"} <= names)
+            self.assertTrue({"LUMINARIAS", "291-E-ANNO-IDEN"} <= names)
             self.assertFalse({"plan.ELEC-LUM", "plan.PLAN-TAG"} & names)                              # no draft layer is left
             insert = next(e for e in doc.modelspace() if e.dxftype() == "INSERT")
             self.assertEqual((insert.dxf.layer, insert.attribs[0].dxf.layer, doc.layers.get("LUMINARIAS").color), ("LUMINARIAS", "LUMINARIAS", 3))
-            self.assertEqual((done["layers"], done["blocks"]), ({"LUMINARIAS": 1, "PLAN-TAG": 1}, 1))
+            self.assertEqual((done["layers"], done["blocks"]), ({"LUMINARIAS": 1, "291-E-ANNO-IDEN": 1}, 1))
 
     def test_the_counts_of_the_document_in_memory_match_the_file_that_was_written(self):
         with tempfile.TemporaryDirectory() as t:
@@ -120,5 +120,5 @@ class TestDraftDxf(unittest.TestCase):
             done = deliverable.finish_draft(self.draft(), Path(t) / "plan.dxf")
             index = package.describe_dxf([done["dxf"]], Path(t), "PLAN")
             sheet = index["sheets"][0]
-            self.assertEqual((sheet["svg"], sheet["blocks"], sheet["layers"]["ELEC-LUM"]), (None, 1, {"entities": 1, "role": "plan.ELEC-LUM"}))
+            self.assertEqual((sheet["svg"], sheet["blocks"], sheet["layers"]["291-E-LITE-EQPM-N"]), (None, 1, {"entities": 1, "role": "plan.ELEC-LUM"}))
             self.assertTrue((Path(t) / "PLAN_entregable.json").is_file())

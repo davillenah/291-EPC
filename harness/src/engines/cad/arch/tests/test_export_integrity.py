@@ -42,8 +42,8 @@ class TestExportIntegrity(unittest.TestCase):
 
     def test_layers_of_the_dxf_carry_the_style(self):
         doc = ezdxf.read(io.StringIO(self.dxf))
-        self.assertEqual(doc.layers.get("A-WALL-CUT").dxf.lineweight, 50)
-        self.assertEqual(doc.layers.get("A-DOOR-SWING").dxf.linetype, "DASHED")
+        self.assertEqual(doc.layers.get("291-A-WALL-FULL-N").dxf.lineweight, 50)
+        self.assertEqual(doc.layers.get("291-A-DOOR-FULL-N").dxf.linetype, "DASHED")
 
     def test_the_svg_is_in_paper_millimetres(self):
         self.assertIn('width="420mm" height="297mm"', self.svg)

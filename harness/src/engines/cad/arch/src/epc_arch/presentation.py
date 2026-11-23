@@ -14,7 +14,7 @@ from epc_arch.geometry import axis_of
 from epc_arch.model import Architecture, Opening, Room
 
 Pt = Tuple[float, float]
-LAYER_DIM, LAYER_NOTE, LAYER_FRAME = "A-DIM", "A-ANNO", "A-TITLE"
+LAYER_DIM, LAYER_NOTE, LAYER_FRAME = "291-A-ANNO-DIMS", "291-A-ANNO", "0-Titleblock"
 KIND_NAMES = {"door": ("Door", "Puerta"), "window": ("Window", "Ventana")}
 
 

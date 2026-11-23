@@ -35,7 +35,7 @@
         "material"
       ],
       "simbolo_2d": "linea_simple",
-      "capa_dxf": "GAS-TUBERIA",
+      "capa_dxf": "291-M-NGAS-PIPE-N",
       "geom": {
         "z_m": 2.6,
         "ancho_m": 0.025,
@@ -55,7 +55,7 @@
         "tipo"
       ],
       "simbolo_2d": "instrumento",
-      "capa_dxf": "GAS-EQUIPO",
+      "capa_dxf": "291-M-NGAS-EQPM-N",
       "geom": {
         "z_m": 1.0,
         "ancho_m": 0.4,
@@ -73,7 +73,7 @@
         "tipo"
       ],
       "simbolo_2d": "instrumento",
-      "capa_dxf": "GAS-EQUIPO",
+      "capa_dxf": "291-M-NGAS-EQPM-N",
       "geom": {
         "z_m": 1.2,
         "ancho_m": 0.2,
@@ -91,7 +91,7 @@
         "diametro_mm"
       ],
       "simbolo_2d": "instrumento",
-      "capa_dxf": "GAS-VALVULA",
+      "capa_dxf": "291-M-NGAS-VALV-N",
       "geom": {
         "z_m": 1.2,
         "ancho_m": 0.08,
@@ -110,7 +110,7 @@
         "tipo"
       ],
       "simbolo_2d": "equipo_mec",
-      "capa_dxf": "GAS-ARTEFACTO",
+      "capa_dxf": "291-M-NGAS-FIXT-N",
       "geom": {
         "z_m": 0.5,
         "ancho_m": 0.6,
@@ -129,7 +129,7 @@
         "material"
       ],
       "simbolo_2d": "caja_pase",
-      "capa_dxf": "GAS-TUBERIA",
+      "capa_dxf": "291-M-NGAS-PIPE-N",
       "geom": {
         "z_m": 0.0,
         "ancho_m": 0.05,

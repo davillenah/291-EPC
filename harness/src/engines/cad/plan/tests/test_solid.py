@@ -28,7 +28,7 @@ BOARD = {"id": "n1", "kind": "TB", "x": 0, "y": 0}
 class Solids(unittest.TestCase):
     def test_a_tray_is_a_rectangle_swept_at_its_height(self):
         s = solid.solids(sheet(lines=[TRAY]), "E1")[0]
-        self.assertEqual((s["shape"], s["section"], s["width_m"], s["height_m"], s["layer"]), ("run", "rect", 0.3, 0.1, "ELEC-BANDEJA"))
+        self.assertEqual((s["shape"], s["section"], s["width_m"], s["height_m"], s["layer"]), ("run", "rect", 0.3, 0.1, "291-E-CABL-TRAY-N"))
         self.assertEqual(s["path"], [[0.0, 0.0, 2.6], [10.0, 0.0, 2.6], [10.0, 5.0, 2.6]])
 
     def test_a_conduit_and_a_pipe_are_round(self):
@@ -70,7 +70,7 @@ class Meshes(unittest.TestCase):
         self.assertTrue(all(0 <= i < len(m["vertices"]) for f in m["faces"] for i in f))
 
     def test_a_vertical_run_has_its_section_in_the_plan(self):
-        riser = {"id": "r", "tag": "R", "kind": "BN", "discipline": "electrica_BT", "level": "L0", "sheet": "E1", "layer": "ELEC-BANDEJA", "shape": "run", "section": "rect",
+        riser = {"id": "r", "tag": "R", "kind": "BN", "discipline": "electrica_BT", "level": "L0", "sheet": "E1", "layer": "291-E-CABL-TRAY-N", "shape": "run", "section": "rect",
                  "width_m": 0.3, "height_m": 0.1, "path": [[1.0, 1.0, 0.0], [1.0, 1.0, 3.0]]}
         m = solid.mesh(riser)
         self.assertEqual((min(v[2] for v in m["vertices"]), max(v[2] for v in m["vertices"])), (0.0, 3.0))

@@ -24,7 +24,7 @@ class TestBackdrop(unittest.TestCase):
     def test_the_walls_are_closed_outlines_of_their_thickness_and_the_names_text(self):
         warnings, msp = self.write(BACKDROP)
         self.assertEqual(warnings, [])
-        walls = [e for e in msp.query("LWPOLYLINE") if e.dxf.layer.endswith("ARQ-MUROS")]
+        walls = [e for e in msp.query("LWPOLYLINE") if e.dxf.layer.endswith("291-A-WALL-FULL-N")]
         self.assertEqual(len(walls), 2)                        # the wall of length zero is left out
         xs = sorted({round(p[0], 3) for p in walls[0].get_points()})
         ys = sorted({round(p[1], 3) for p in walls[0].get_points()})
@@ -36,7 +36,7 @@ class TestBackdrop(unittest.TestCase):
 
     def test_without_a_backdrop_nothing_is_added(self):
         _, msp = self.write(None)
-        self.assertFalse([e for e in msp if e.dxf.layer.endswith(("ARQ-MUROS", "ARQ-LOCALES"))])
+        self.assertFalse([e for e in msp if e.dxf.layer.endswith(("291-A-WALL-FULL-N", "ARQ-LOCALES"))])
 
 
 if __name__ == "__main__":

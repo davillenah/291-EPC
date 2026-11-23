@@ -34,11 +34,11 @@ class DoorsAndWindowsAreBlocks(unittest.TestCase):
     def test_every_door_and_window_is_an_insert_of_a_block(self):
         kinds = sorted(i.dxf.name.split("_")[1] for i in self.inserts)
         self.assertEqual(kinds, ["DOOR"] * 7 + ["WINDOW"] * 6)
-        self.assertEqual({i.dxf.layer for i in self.inserts}, {"A-DOOR", "A-WINDOW"})
+        self.assertEqual({i.dxf.layer for i in self.inserts}, {"291-A-DOOR-N", "291-A-GLAZ-N"})
 
     def test_no_loose_door_or_window_lines_are_left_in_the_model_space(self):
         loose = {e.dxf.layer for e in self.doc.modelspace() if e.dxftype() != "INSERT"}
-        self.assertFalse(loose & {"A-DOOR", "A-DOOR-SWING", "A-WINDOW", "A-WINDOW-GLASS", "A-WIPEOUT"})
+        self.assertFalse(loose & {"291-A-DOOR-N", "291-A-DOOR-FULL-N", "291-A-GLAZ-N", "291-A-GLAZ-FULL-N", "291-A-ANNO-NPLT"})
 
     def test_each_block_starts_with_a_wipeout_and_equal_openings_share_a_block(self):
         names = {i.dxf.name for i in self.inserts}
@@ -46,13 +46,13 @@ class DoorsAndWindowsAreBlocks(unittest.TestCase):
         for n in names:
             blk = self.doc.blocks.get(n)
             self.assertEqual(blk[0].dxftype(), "WIPEOUT", n)
-            self.assertEqual(blk[0].dxf.layer, "A-WIPEOUT")
+            self.assertEqual(blk[0].dxf.layer, "291-A-ANNO-NPLT")
             self.assertTrue(any(e.dxftype() in ("LWPOLYLINE", "ARC") for e in blk))
 
     def test_a_door_block_keeps_its_swing_and_a_window_block_its_glass(self):
         for i in self.inserts:
             layers = {e.dxf.layer for e in self.doc.blocks.get(i.dxf.name)}
-            self.assertIn("A-DOOR-SWING" if "DOOR" in i.dxf.name else "A-WINDOW-GLASS", layers)
+            self.assertIn("291-A-DOOR-FULL-N" if "DOOR" in i.dxf.name else "291-A-GLAZ-FULL-N", layers)
 
     def test_the_dxf_audits_clean(self):
         self.assertEqual(len(self.doc.audit().errors), 0)
@@ -69,22 +69,22 @@ class TheSheetOfAPresentation(unittest.TestCase):
         cls.arch, cls.doc = doc_of()
 
     def test_dimension_chains_hold_the_measures_between_wall_axes_and_the_overall_one(self):
-        figures = sorted(set(texts(self.doc, "A-DIM")))
+        figures = sorted(set(texts(self.doc, "291-A-ANNO-DIMS")))
         self.assertIn("24.00", figures)                                   # overall width: 0 to 24 m
         self.assertIn("14.00", figures)                                   # overall depth
         self.assertIn("8.00", figures)
 
     def test_the_chains_are_south_and_east_so_the_plan_keeps_its_origin_at_the_building_corner(self):
-        walls = [e for e in self.doc.modelspace().query("LWPOLYLINE") if e.dxf.layer == "A-WALL-CUT"]
+        walls = [e for e in self.doc.modelspace().query("LWPOLYLINE") if e.dxf.layer == "291-A-WALL-FULL-N"]
         left = min(p[0] for e in walls for p in e.get_points("xy"))
         top = max(p[1] for e in walls for p in e.get_points("xy"))
-        dims = [p for e in self.doc.modelspace().query("LWPOLYLINE") if e.dxf.layer == "A-DIM" for p in e.get_points("xy")]
+        dims = [p for e in self.doc.modelspace().query("LWPOLYLINE") if e.dxf.layer == "291-A-ANNO-DIMS" for p in e.get_points("xy")]
         self.assertTrue(dims)
         self.assertGreaterEqual(min(p[0] for p in dims), left - 1e-6)
         self.assertLessEqual(max(p[1] for p in dims), top + 1e-6)
 
     def test_every_door_and_window_has_a_tag_and_a_width(self):
-        notes = texts(self.doc, "A-ANNO")
+        notes = texts(self.doc, "291-A-ANNO")
         for o in self.arch.openings:
             self.assertIn(tag_name(o), notes)
         self.assertIn("1.20", notes)
@@ -99,7 +99,7 @@ class TheSheetOfAPresentation(unittest.TestCase):
         self.assertIn("Ventana", everything)
 
     def test_every_title_of_the_panel_and_every_note_has_english_and_spanish(self):
-        notes = [t for t in texts(self.doc, "A-ANNO") if re.match(r"^\d\. ", t) or t == "GENERAL NOTES / NOTAS GENERALES"]
+        notes = [t for t in texts(self.doc, "291-A-ANNO") if re.match(r"^\d\. ", t) or t == "GENERAL NOTES / NOTAS GENERALES"]
         self.assertGreaterEqual(len(notes), 5)
         for t in notes:
             self.assertIn(" / ", t)
@@ -115,8 +115,8 @@ class TheSheetOfAPresentation(unittest.TestCase):
 
     def test_a_plan_that_is_not_authored_gets_no_presentation(self):
         d = build_drawing(self.arch, sheet="A1")
-        self.assertFalse([i for i in d.items if i.layer in ("A-DIM",)])
-        self.assertFalse([i for i in d.items if i.layer == "A-ANNO" and getattr(i, "value", "").startswith("GENERAL")])
+        self.assertFalse([i for i in d.items if i.layer in ("291-A-ANNO-DIMS",)])
+        self.assertFalse([i for i in d.items if i.layer == "291-A-ANNO" and getattr(i, "value", "").startswith("GENERAL")])
 
     def test_the_plan_is_drawn_at_the_biggest_scale_that_fits_beside_the_panel(self):
         d = build_drawing(self.arch, sheet="A1", presentation=True)
@@ -138,10 +138,10 @@ class ViewsOfTheBuilding(unittest.TestCase):
 
     def test_the_isometric_is_filled_faces_with_the_level_named_and_no_roof(self):
         doc = ezdxf.read(io.StringIO(self.views["ISO.dxf"]))
-        faces = [e for e in doc.modelspace().query("HATCH") if e.dxf.layer in ("A-WALL-CUT", "A-WALL-FILL", "A-WINDOW-GLASS", "A-ROOM")]
+        faces = [e for e in doc.modelspace().query("HATCH") if e.dxf.layer in ("291-A-WALL-FULL-N", "291-A-WALL-PATT-N", "291-A-GLAZ-FULL-N", "291-A-AREA")]
         self.assertGreater(len(faces), 50)
-        self.assertTrue(any("PLANTA BAJA" in t for t in texts(doc, "A-ANNO")))
-        slab = [e for e in doc.modelspace().query("LWPOLYLINE") if e.dxf.layer == "A-WALL-FILL"]
+        self.assertTrue(any("PLANTA BAJA" in t for t in texts(doc, "291-A-ANNO")))
+        slab = [e for e in doc.modelspace().query("LWPOLYLINE") if e.dxf.layer == "291-A-WALL-PATT-N"]
         self.assertLessEqual(len(slab), 3)                                 # only the floor slab: at most its top, south and east faces (a roof slab would add three more)
 
     def test_the_isometric_title_has_english_and_spanish(self):
@@ -164,7 +164,7 @@ class TwoFloors(unittest.TestCase):
         lower = dict(floor(), heights_m=HEIGHTS)
         views = building_views([lower, upper], [architecture_of(lower), architecture_of(upper)])
         doc = ezdxf.read(io.StringIO(views["ISO.dxf"]))
-        labels = texts(doc, "A-ANNO")
+        labels = texts(doc, "291-A-ANNO")
         self.assertTrue(any("PLANTA ALTA" in t and "3.20" in t for t in labels))
         self.assertTrue(any("PLANTA BAJA" in t for t in labels))
         self.assertIn("ELEV_S_P1.dxf", views)

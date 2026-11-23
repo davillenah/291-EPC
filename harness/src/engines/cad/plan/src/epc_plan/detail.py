@@ -21,7 +21,7 @@ from epc_plan.core import PlanError
 
 V3 = Tuple[float, float, float]
 TOUCH = 0.02                               # metres: two ends this close are joined
-SUPPORT_LAYER = "MEC-SOPORTE"
+SUPPORT_LAYER = "291-S-FSTN-N"
 
 
 # ---------------------------------------------------------------- vectors

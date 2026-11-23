@@ -89,8 +89,8 @@ class TestDxfConfig(unittest.TestCase):
         with tempfile.TemporaryDirectory() as t, Env(t):
             (Path(t) / "text.json").write_text(json.dumps({"font": {"regular": "calibri.ttf"}}))
             (Path(t) / "unify.json").write_text(json.dumps({"elec_elements": {"BANDEJA": "BANDEJA-FINAL"}}))
-            self.assertEqual(style_unify.new_layer_name("ELEC-BANDEJA"), "E-BANDEJA-FINAL")
-            self.assertEqual(style_unify.new_layer_name("ELEC-LUM"), "E-LIGHT")
+            self.assertEqual(style_unify.new_layer_name("291-E-CABL-TRAY-N"), "E-BANDEJA-FINAL")
+            self.assertEqual(style_unify.new_layer_name("291-E-LITE-EQPM-N"), "E-LIGHT")
             path = Path(t) / "t.dxf"
             dxfout.write_dxf(core.process(TRAYS), path)
             style_unify.unify(path)

@@ -27,20 +27,20 @@ class AutomaticNames(unittest.TestCase):
 class LayerNames(unittest.TestCase):
     def test_one_convention(self):
         from epc_dxf import style_unify as U
-        self.assertEqual([U.new_layer_name(n) for n in ("ARQ-MUROS", "ELEC-LUM", "ELEC-TUG", "PLAN-NODO", "291-G-ROTULO", "291-E-TEXTOS", "A-ROOM", "0", "ELEC-X")],
-                         ["A-WALL-CUT", "E-LIGHT", "E-SOCKET", "E-NODE", "A-TITLE", "E-TEXT", "A-ROOM", "0", "E-X"])
+        self.assertEqual([U.new_layer_name(n) for n in ("291-A-WALL-FULL-N", "291-E-LITE-EQPM-N", "291-E-POWR-WALL-N", "291-E-ANNO-NPLT", "0-Titleblock", "291-E-DIAG-TEXT", "291-A-AREA", "0", "ELEC-X")],
+                         ["291-A-WALL-FULL-N", "E-LIGHT", "E-SOCKET", "E-NODE", "0-Titleblock", "E-TEXT", "291-A-AREA", "0", "E-X"])
 
     def test_a_file_is_rewritten_with_the_new_names_and_one_typeface(self):
         import ezdxf
         from epc_dxf import style_unify as U
         doc = ezdxf.new("R2010")
-        doc.layers.add("ELEC-LUM")
+        doc.layers.add("291-E-LITE-EQPM-N")
         doc.styles.add("OTRO", font="OpenSans-Regular.ttf")
-        doc.modelspace().add_line((0, 0), (1, 1), dxfattribs={"layer": "ELEC-LUM"})
+        doc.modelspace().add_line((0, 0), (1, 1), dxfattribs={"layer": "291-E-LITE-EQPM-N"})
         with tempfile.TemporaryDirectory() as t:
             path = Path(t) / "a.dxf"
             doc.saveas(path)
-            self.assertEqual(U.unify(path), {"ELEC-LUM": "E-LIGHT"})
+            self.assertEqual(U.unify(path), {"291-E-LITE-EQPM-N": "E-LIGHT"})
             out = ezdxf.readfile(path)
             self.assertEqual([e.dxf.layer for e in out.modelspace()], ["E-LIGHT"])
             self.assertEqual({s.dxf.font for s in out.styles}, {"arial.ttf"})

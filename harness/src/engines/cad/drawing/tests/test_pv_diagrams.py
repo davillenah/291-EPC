@@ -25,14 +25,14 @@ class TestPvDiagrams(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             paths = pv_diagrams.write_all(PLANT["geometry"], PLANT["result"], Path(tmp), "PVT", stamp_date="2026-11-18")
             used = {e.dxf.layer for e in ezdxf.readfile(str(paths["PVT_layout"])).modelspace()}
-            self.assertTrue({"PV-PREDIO", "PV-MESAS"} <= used)
+            self.assertTrue({"291-WC-PROP-N", "291-WS-MNTG-N"} <= used)
             sld = {e.dxf.layer for e in ezdxf.readfile(str(paths["PVT_sld"])).modelspace()}
-            self.assertIn("PV-DIAGRAMA", sld)
+            self.assertIn("291-WP-DIAG", sld)
 
     def test_the_tables_are_drawn_where_the_engine_put_them(self):
         with tempfile.TemporaryDirectory() as tmp:
             paths = pv_diagrams.write_all(PLANT["geometry"], PLANT["result"], Path(tmp), "PVT", stamp_date="2026-11-18")
-            boxes = [e for e in ezdxf.readfile(str(paths["PVT_layout"])).modelspace() if e.dxf.layer == "PV-MESAS" and e.dxftype() == "LWPOLYLINE"]
+            boxes = [e for e in ezdxf.readfile(str(paths["PVT_layout"])).modelspace() if e.dxf.layer == "291-WS-MNTG-N" and e.dxftype() == "LWPOLYLINE"]
             self.assertGreaterEqual(len(boxes), len(PLANT["geometry"]["tables"]))
 
 

@@ -127,13 +127,13 @@ class Sheets(unittest.TestCase):
         d = view_drawing(section(arch(), "y", 2.7, "N", H), arch(), sheet="A3")
         self.assertEqual(d.scale, 100)
         self.assertTrue({i.layer for i in d.items} <= set(load_style().layers))
-        self.assertTrue(d.of("A-WALL-CUT") and d.of("A-ELEV") and d.of("A-ROOM-TAG"))
+        self.assertTrue(d.of("291-A-WALL-FULL-N") and d.of("291-A-ELEV-N") and d.of("291-A-AREA-IDEN"))
 
     def test_the_dxf_is_in_real_metres(self):
         import io
         import ezdxf
         doc = ezdxf.read(io.StringIO(view_dxf(elevation(arch(), "S", H), arch(), "A3")))
-        boxes = [list(e.get_points("xy")) for e in doc.modelspace() if e.dxftype() == "LWPOLYLINE" and e.dxf.layer == "A-WINDOW"]
+        boxes = [list(e.get_points("xy")) for e in doc.modelspace() if e.dxftype() == "LWPOLYLINE" and e.dxf.layer == "291-A-GLAZ-N"]
         self.assertEqual(len(boxes), 1)
         xs, ys = [p[0] for p in boxes[0]], [p[1] for p in boxes[0]]
         self.assertAlmostEqual(max(xs) - min(xs), 2.0, places=3)                # the window is 2 m wide...

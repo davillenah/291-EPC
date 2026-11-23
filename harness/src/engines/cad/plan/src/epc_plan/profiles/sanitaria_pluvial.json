@@ -45,7 +45,7 @@
         "material"
       ],
       "simbolo_2d": "linea_simple",
-      "capa_dxf": "PLU-TUBERIA",
+      "capa_dxf": "291-P-STRM-PIPE-N",
       "geom": {
         "z_m": -0.5,
         "ancho_m": 0.11,
@@ -64,7 +64,7 @@
         "material"
       ],
       "simbolo_2d": "linea_simple",
-      "capa_dxf": "PLU-CANALETA",
+      "capa_dxf": "291-P-ROOF-N",
       "geom": {
         "z_m": 3.0,
         "ancho_m": 0.15,
@@ -84,7 +84,7 @@
         "tipo"
       ],
       "simbolo_2d": "boca_registro",
-      "capa_dxf": "PLU-BOCA",
+      "capa_dxf": "291-P-STRM-RFDR-N",
       "geom": {
         "z_m": 3.0,
         "ancho_m": 0.2,
@@ -102,7 +102,7 @@
         "dimensiones"
       ],
       "simbolo_2d": "boca_registro",
-      "capa_dxf": "PLU-BOCA",
+      "capa_dxf": "291-P-STRM-RFDR-N",
       "geom": {
         "z_m": -0.3,
         "ancho_m": 0.4,
@@ -120,7 +120,7 @@
         "dimensiones"
       ],
       "simbolo_2d": "camara",
-      "capa_dxf": "PLU-CAMARA",
+      "capa_dxf": "291-P-STRM-MHOL-N",
       "geom": {
         "z_m": -0.5,
         "ancho_m": 0.6,
@@ -138,7 +138,7 @@
         "dimensiones"
       ],
       "simbolo_2d": "caja_pase",
-      "capa_dxf": "PLU-BOCA",
+      "capa_dxf": "291-P-STRM-RFDR-N",
       "geom": {
         "z_m": -0.1,
         "ancho_m": 0.3,
@@ -157,7 +157,7 @@
         "material"
       ],
       "simbolo_2d": "caja_pase",
-      "capa_dxf": "PLU-TUBERIA",
+      "capa_dxf": "291-P-STRM-PIPE-N",
       "geom": {
         "z_m": 0.0,
         "ancho_m": 0.11,

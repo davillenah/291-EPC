@@ -83,7 +83,7 @@ class _Writer:
         """A DXF keeps no picture here: the logos of a title block are left out of it."""
 
 
-WIPEOUT_LAYER = "A-WIPEOUT"
+WIPEOUT_LAYER = "291-A-ANNO-NPLT"
 BLOCK_NAMES = {"door": "EPC_DOOR", "window": "EPC_WINDOW"}
 
 
@@ -129,7 +129,7 @@ def _write_group(doc, msp, d: Drawing, style: Style, group: tuple, items: List[o
             else:
                 {Poly: w.poly, ArcItem: w.arc}[type(it)](it)
     k = d.scale / 1000.0
-    msp.add_blockref(name, ((group[2][0]) * k, (d.size[1] - group[2][1]) * k), dxfattribs={"layer": "A-DOOR" if kind == "door" else "A-WINDOW", "rotation": -group[3]})
+    msp.add_blockref(name, ((group[2][0]) * k, (d.size[1] - group[2][1]) * k), dxfattribs={"layer": "291-A-DOOR-N" if kind == "door" else "291-A-GLAZ-N", "rotation": -group[3]})
 
 
 def _extents(doc, d: Drawing) -> None:

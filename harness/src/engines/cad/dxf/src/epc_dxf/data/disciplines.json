@@ -1,16 +1,18 @@
 {
   "schema_version": "1.0",
-  "note": "How the layers of the catalog are grouped by discipline: a layer belongs to the discipline whose prefix its name starts with. `profile` is the drawing profile of the plan editor (null: no tools of its own yet).",
+  "note": "How the layers of the catalog are grouped by discipline: a role belongs to the discipline whose `prefix` its element name starts with (`plan.ELEC-CABLE` is `ELEC-`), or whose `role_prefixes` its role starts with (`arch.*`, `pv.*`, `sld.*`). The layer names themselves follow the NCS / AIA convention `291-<discipline>-<major>-<minor>-<status>` and say nothing about these groups. `profile` is the drawing profile of the plan editor (null: no tools of its own yet).",
   "disciplines": [
     {
       "id": "arquitectura",
       "prefix": "ARQ-",
-      "also_prefixes": ["A-"],
       "profile": "arquitectura",
       "name": {
         "es": "Arquitectura",
         "en": "Architecture"
-      }
+      },
+      "role_prefixes": [
+        "arch."
+      ]
     },
     {
       "id": "civil",
@@ -127,7 +129,10 @@
       "name": {
         "es": "Fotovoltaica",
         "en": "Photovoltaic"
-      }
+      },
+      "role_prefixes": [
+        "pv."
+      ]
     },
     {
       "id": "diagramas",
@@ -136,7 +141,10 @@
       "name": {
         "es": "Diagramas unifilares y multifilares",
         "en": "Single-line and multi-line diagrams"
-      }
+      },
+      "role_prefixes": [
+        "sld."
+      ]
     }
   ]
 }

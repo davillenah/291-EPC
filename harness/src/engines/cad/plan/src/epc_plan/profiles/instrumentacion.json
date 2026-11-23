@@ -17,7 +17,7 @@
         "dimensiones"
       ],
       "simbolo_2d": "linea_simple",
-      "capa_dxf": "INS-BANDEJA",
+      "capa_dxf": "291-E-INST-CABL-TRAY-N",
       "geom": {
         "z_m": 2.5,
         "ancho_m": 0.2,
@@ -35,7 +35,7 @@
         "tipo"
       ],
       "simbolo_2d": "linea_simple",
-      "capa_dxf": "INS-CABLE",
+      "capa_dxf": "291-E-INST-CABL-N",
       "geom": {
         "z_m": 2.5,
         "ancho_m": 0.02,
@@ -55,7 +55,7 @@
         "tipo"
       ],
       "simbolo_2d": "instrumento",
-      "capa_dxf": "INS-INSTRUMENTO",
+      "capa_dxf": "291-E-INST-N",
       "geom": {
         "z_m": 1.5,
         "ancho_m": 0.2,

@@ -1,6 +1,6 @@
 """The sheet of a drawing from an IRAM sheet SVG (frame, coordinates, title block IRAM 4504 / 4508, logos), as `epc_titleblock` makes it. The engines are independent of one another, so the sheet is
 not asked of `epc_titleblock` from here: the caller gives its SVG (made with `epc_titleblock.service.render` or `python -m epc_titleblock.sheet_generator A3 sheet.svg`). Its marks become items of the
-common drawing, in the layer `A-TITLE` with the widths and sizes the sheet says, so that the four formats show the same sheet; the logos are kept as pictures (an SVG, PNG and PDF show them; a DXF has none).
+common drawing, in the layer `0-Titleblock` with the widths and sizes the sheet says, so that the four formats show the same sheet; the logos are kept as pictures (an SVG, PNG and PDF show them; a DXF has none).
 
 The sheet says where the drawing goes: `data-zona-util` is the usable zone and `data-rotulo` and `data-modificaciones` the boxes of the title block and the list of modifications; the plan is
 laid out in the zone above them. The fields of the title block are the texts with a `data-key`: the caller's values replace them (the engine gives the scale and the name of the plan)."""
@@ -15,7 +15,7 @@ from epc_arch.drawing import ArcItem, ImageItem, Poly, TextItem
 from epc_arch.model import ArchError
 from epc_arch.sources.svg import IDENTITY, Matrix, _apply, _mul, _nums, _style, parse_transform
 
-LAYER = "A-TITLE"
+LAYER = "0-Titleblock"
 TOKEN = re.compile(r"\{(\w+)\}")
 GAP = 5.0                                              # mm of clear paper between the plan and the frame or the title block
 Box = Tuple[float, float, float, float]

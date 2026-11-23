@@ -1,4 +1,4 @@
-"""The recognized plan as an SVG with layers: the original linework faint underneath and, over it, one group per kind of element (`ARQ-MUROS`, `ARQ-PUERTAS`, `ARQ-VENTANAS`, `ARQ-HUECOS`),
+"""The recognized plan as an SVG with layers: the original linework faint underneath and, over it, one group per kind of element (`291-A-WALL-FULL-N`, `291-A-DOOR-N`, `291-A-GLAZ-N`, `291-A-WALL-JAMB-N`),
 each element with its id and confidence. The SVG is the frame of the plan space (see `model`): one unit of the SVG is one unit of the coordinates in the result.
 
 Drawn by the conventions of architectural drawing (Sierra Mejía, *Dibujo técnico arquitectónico: estándares básicos*): the weight of a line says what it is. Cut walls are the heaviest (solid
@@ -12,8 +12,8 @@ from epc_arch.config import PARAMS
 from epc_arch.geometry import arc_point, arc_span, axis_of, segment_distance
 from epc_arch.model import Architecture, Opening, Primitives, Wall
 
-LAYERS = (("ARQ-MUROS", "arq.wall"), ("ARQ-PUERTAS", "arq.door"), ("ARQ-VENTANAS", "arq.window"), ("ARQ-HUECOS", "arq.opening"))
-NOTE_LAYERS = (("axes", "ARQ-EJES", "arq.axes", "#8a94a6"), ("dimensions", "ARQ-COTAS", "arq.dimension", "#c0392b"), ("labels", "ARQ-ETIQUETAS", "arq.label", "#3b6ea5"))     # annotations: apart from the building, in layers that the disciplines other than architecture hide
+LAYERS = (("291-A-WALL-FULL-N", "arq.wall"), ("291-A-DOOR-N", "arq.door"), ("291-A-GLAZ-N", "arq.window"), ("291-A-WALL-JAMB-N", "arq.opening"))
+NOTE_LAYERS = (("axes", "291-A-GRID", "arq.axes", "#8a94a6"), ("dimensions", "291-A-ANNO-DIMS", "arq.dimension", "#c0392b"), ("labels", "291-A-ANNO-IDEN", "arq.label", "#3b6ea5"))     # annotations: apart from the building, in layers that the disciplines other than architecture hide
 INK, PAPER, GLASS, DOOR, HOLE, SWEEP = "#1f2933", "#ffffff", "#3b82c4", "#6b7280", "#9aa5b1", "#f1efe9"
 Pt = Tuple[float, float]
 FONT = "Arial, Helvetica, sans-serif"
@@ -245,7 +245,7 @@ def render(arch: Architecture, prims: Primitives, background: bool = True, limit
     out = [f'<svg xmlns="http://www.w3.org/2000/svg" width="{_f(vw)}" height="{_f(vh)}" viewBox="{_f(vx)} {_f(vy)} {_f(vw)} {_f(vh)}" data-source="{escape(arch.source)}">',
            f'<rect x="{_f(vx)}" y="{_f(vy)}" width="{_f(vw)}" height="{_f(vh)}" fill="{PAPER}"/>']
     if background:
-        out += ['<g id="ARQ-FONDO" data-layer="arq.background" fill="none" stroke="#2b3038" stroke-opacity="0.85">', *_background(prims, limit, hairline(arch)), "</g>"]
+        out += ['<g id="291-A-ANNO-REFR" data-layer="arq.background" fill="none" stroke="#2b3038" stroke-opacity="0.85">', *_background(prims, limit, hairline(arch)), "</g>"]
     walls_svg, doors, windows, holes = _layer_items(arch)
     out += [f'<g id="{LAYERS[0][0]}" data-layer="{LAYERS[0][1]}">', *walls_svg, "</g>"]
     out += ['<g id="ARQ-CORTES" data-layer="arq.cut">', *[_cut(o, T) for o in arch.openings], "</g>"]

@@ -19,7 +19,7 @@
         "material"
       ],
       "simbolo_2d": "linea_simple",
-      "capa_dxf": "ARQ-MUROS",
+      "capa_dxf": "291-A-WALL-FULL-N",
       "geom": {
         "z_m": 0.0,
         "ancho_m": 0.2,
@@ -39,7 +39,7 @@
         "dimensiones"
       ],
       "simbolo_2d": "puerta",
-      "capa_dxf": "ARQ-PUERTAS",
+      "capa_dxf": "291-A-DOOR-N",
       "geom": {
         "z_m": 0.0,
         "ancho_m": 0.9,
@@ -57,7 +57,7 @@
         "dimensiones"
       ],
       "simbolo_2d": "ventana",
-      "capa_dxf": "ARQ-VENTANAS",
+      "capa_dxf": "291-A-GLAZ-N",
       "geom": {
         "z_m": 1.0,
         "ancho_m": 1.2,

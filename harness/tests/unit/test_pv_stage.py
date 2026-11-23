@@ -240,7 +240,7 @@ class PvOrientationAndRoofTests(unittest.TestCase):
 
     def test_the_planes_of_a_roof_dxf_become_one_array_each_and_wind_is_said_pending(self):
         import test_roofdxf as TD
-        content = TD.dxf([TD.rect("PV-CUBIERTA", 0, 0, 10, 5), TD.text("PV-CUBIERTA-DATOS", 1, 1, "tilt=25 az=0"), TD.rect("PV-CUBIERTA", 12, 0, 20, 5), TD.text("PV-CUBIERTA-DATOS", 13, 1, "tilt=20 az=90")])
+        content = TD.dxf([TD.rect("291-W-ROOF-N", 0, 0, 10, 5), TD.text("291-W-ROOF-NOTE", 1, 1, "tilt=25 az=0"), TD.rect("291-W-ROOF-N", 12, 0, 20, 5), TD.text("291-W-ROOF-NOTE", 13, 1, "tilt=20 az=90")])
         document, roof = self._roof_template()
         with tempfile.TemporaryDirectory() as tmp:
             (Path(tmp) / "plans").mkdir()

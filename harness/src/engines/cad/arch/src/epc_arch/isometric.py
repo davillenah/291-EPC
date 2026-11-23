@@ -82,7 +82,7 @@ def _level_labels(floors, per_floor, at, angle: float, right: float) -> List[obj
     for (arch, heights, off), faces in zip(floors, per_floor):
         ys = [_project(v, angle)[1] for f in faces for v in f[1]]
         x, y = at((right, (min(ys) + max(ys)) / 2))
-        out.append(TextItem(f"{arch.level.name if arch.level else '-'}  +{heights['elevation_m']:.2f} m", (x + 4.0, y), "TXT_25", "A-ANNO", bold=True))
+        out.append(TextItem(f"{arch.level.name if arch.level else '-'}  +{heights['elevation_m']:.2f} m", (x + 4.0, y), "TXT_25", "291-A-ANNO", bold=True))
     return out
 
 

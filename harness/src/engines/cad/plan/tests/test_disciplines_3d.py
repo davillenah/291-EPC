@@ -98,7 +98,7 @@ class ThreeDimensions(unittest.TestCase):
         self.assertTrue(all(g["color"] != core.PARAMS["scene"]["default_color"] for g in scene3d.groups(whole)))
         sec = scene3d.cut(whole, "x", 5.0, "+")                                 # across every horizontal run of both floors
         self.assertEqual({c["discipline"] for c in sec["cut"]}, set(BUILDING_SERVICES))
-        water = sorted(c["level_m"] for c in sec["cut"] if c["layer"] == "AGU-TUBERIA")
+        water = sorted(c["level_m"] for c in sec["cut"] if c["layer"] == "291-P-DOMW-CPIP-N")
         self.assertEqual(water, [2.6, 5.6])                                     # the cold water pipe of each storey, a storey (3 m) apart
         with tempfile.TemporaryDirectory() as tmp:
             n = scene3d.write_section_dxf(sec, Path(tmp) / "s.dxf")
