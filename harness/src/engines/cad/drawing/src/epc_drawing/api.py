@@ -37,6 +37,7 @@ from epc_drawing.part_library import (
     write,
     pv_parts_colours,
 )  # noqa: F401
+from epc_drawing.pv_draw import PvDrawInput, draw_pv  # noqa: F401
 from epc_drawing.pv_diagrams import (
     Pen,
     write_all,
@@ -55,4 +56,4 @@ from epc_drawing.pv_model3d import (
 )  # noqa: F401
 from epc_drawing.errors import DrawingError  # noqa: F401
 
-__all__ = ["DrawingError", "Pen", "assemble", "assemble_board", "audit", "box", "build", "build_board_model", "build_common", "build_sector", "calc_note", "calculate", "catalog_defaults", "catalog_file", "check_board", "check_constraints", "constraints", "design", "drawing_day", "embedment_m", "excel_rows", "faces", "groups_in", "iec_60617_for", "main", "matching", "pv_parts_colours", "read_excel", "resolve_criteria", "root", "rules", "sectors", "symbol_for", "tilted_box", "write", "write_all", "write_assembly", "write_document", "write_excel"]
+__all__ = ["DrawingError", "Pen", "PvDrawInput", "assemble", "assemble_board", "audit", "draw_pv", "box", "build", "build_board_model", "build_common", "build_sector", "calc_note", "calculate", "catalog_defaults", "catalog_file", "check_board", "check_constraints", "constraints", "design", "drawing_day", "embedment_m", "excel_rows", "faces", "groups_in", "iec_60617_for", "main", "matching", "pv_parts_colours", "read_excel", "resolve_criteria", "root", "rules", "sectors", "symbol_for", "tilted_box", "write", "write_all", "write_assembly", "write_document", "write_excel"]

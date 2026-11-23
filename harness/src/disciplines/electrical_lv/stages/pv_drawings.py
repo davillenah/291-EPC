@@ -32,21 +32,17 @@ def roof_of(context):
 
 
 def _drafts(context, target, name, stamp_date, language, calls):
-    """The drafts of the plant: those of the layout (if any) and those of the roof planes (if any)."""
+    """The drafts of the plant: those of the layout (if any) and those of the roof planes (if any), drawn by one call of `epc_drawing.draw_pv` (OPT-02)."""
     from disciplines.electrical_lv.stages import engine_calls as EC
-    drafts = {}
+    from epc_drawing import PvDrawInput, draw_pv
     found, roof = layout_of(context), roof_of(context)
-    if found is not None:
-        from epc_drawing import pv_diagrams
-        drafts.update(pv_diagrams.write_all(copy.deepcopy(found[0]), found[1], Path(target) / "pv_drafts", f"{name}_pv", language, stamp_date))
-        calls.append(EC.record_for("cad/drawing", WRITE))
-        drafts.update(_detail(equipment_parts(found[0]), target, name, language, stamp_date, calls))
-    if roof is not None:
-        from epc_drawing import pv_roof
-        drafts.update(pv_roof.write_all(copy.deepcopy(roof[0]), roof[1], Path(target) / "pv_drafts", f"{name}_pv", language, stamp_date))
-        calls.append(EC.record_for("cad/drawing", WRITE_ROOF))
-        if found is None:
-            drafts.update(_detail(roof_parts(roof[0]), target, name, language, stamp_date, calls))
+    if found is None and roof is None:
+        return {}
+    parts = equipment_parts(found[0]) if found is not None else roof_parts(roof[0])
+    result = (found or roof)[1]
+    drafts, ran = draw_pv(PvDrawInput(result=result, layout=found[0] if found else None, roof=roof[0] if roof else None, parts=parts, language=language, stamp_date=stamp_date), target, name)
+    records = {"pv_diagrams.write_all": WRITE, "pv_roof.write_all": WRITE_ROOF, "pv_details.write": WRITE_DETAIL}
+    calls.extend(EC.record_for("cad/drawing", records[r]) for r in ran)
     return drafts
 
 
@@ -57,17 +53,6 @@ def roof_parts(roof):
     outline = sorted((module.get("width_m", 0) * 1000.0, module.get("depth_m", 0) * 1000.0), reverse=True)
     record = equipment.module_format(outline) if all(outline) else None
     return {"module": record} if record else {}
-
-
-def _detail(parts, target, name, language, stamp_date, calls):
-    """The equipment detail draft (module, inverter and post views from the records the layout names); {} when no record is found. `parts` are the records of `equipment_parts` (ground) or `roof_parts` (roof)."""
-    from disciplines.electrical_lv.stages import engine_calls as EC
-    from epc_drawing import pv_details
-    path = pv_details.write(parts, Path(target) / "pv_drafts", f"{name}_pv", language, stamp_date)
-    if path is None:
-        return {}
-    calls.append(EC.record_for("cad/drawing", WRITE_DETAIL))
-    return {f"{name}_pv_equipment_detail": path}
 
 
 def write(context, target, name, stamp_date, language, calls):
