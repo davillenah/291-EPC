@@ -42,6 +42,7 @@ class PipelineContext:
     revision: str = "R0"            # revision label of the deliverables issued by stage 12 (one transmittal `TR-NNN` per revision)
     store: object = None            # optional ProjectStore (store.py): when given, run() records the run in the project folder (MIG-31)
     results: dict = field(default_factory=dict)
+    timings: dict = field(default_factory=dict)        # seconds per stage of this run (OPT-01); never part of a result
     engine_cache: dict = field(default_factory=dict)   # raw engine results of this run (filled by the first stage that needs them)
 
 
