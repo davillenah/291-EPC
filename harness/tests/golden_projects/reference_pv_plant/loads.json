@@ -1,0 +1,71 @@
+{
+  "schema_version": "1.0",
+  "areas": [
+    {
+      "id": "A1",
+      "name": "Invented plant, inverter room"
+    }
+  ],
+  "loads": [
+    {
+      "id": "L-01",
+      "description": "Lighting, inverter room",
+      "area": "A1",
+      "kind": "lighting",
+      "power": {
+        "value": 0.3,
+        "unit": "kW"
+      },
+      "phases": 1,
+      "length": {
+        "value": 15,
+        "unit": "m"
+      }
+    },
+    {
+      "id": "T-01",
+      "description": "Receptacles, inverter room",
+      "area": "A1",
+      "kind": "receptacles",
+      "power": {
+        "value": 1.6,
+        "unit": "kW"
+      },
+      "phases": 1,
+      "length": {
+        "value": 12,
+        "unit": "m"
+      }
+    },
+    {
+      "id": "E-01",
+      "description": "Data logger and monitoring",
+      "area": "A1",
+      "kind": "special",
+      "power": {
+        "value": 0.5,
+        "unit": "kW"
+      },
+      "phases": 1,
+      "length": {
+        "value": 10,
+        "unit": "m"
+      }
+    },
+    {
+      "id": "E-02",
+      "description": "Cooling fan, inverter room",
+      "area": "A1",
+      "kind": "special",
+      "power": {
+        "value": 0.8,
+        "unit": "kW"
+      },
+      "phases": 1,
+      "length": {
+        "value": 14,
+        "unit": "m"
+      }
+    }
+  ]
+}

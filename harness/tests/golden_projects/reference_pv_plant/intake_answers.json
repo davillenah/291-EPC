@@ -1,0 +1,26 @@
+{
+  "project_code": "REF-PV",
+  "client": {
+    "name": "Invented Energy S.A. (fictional)",
+    "contact": "Invented Contact"
+  },
+  "site": {
+    "address": "4 Invented Field, Nowhere",
+    "country": "AR",
+    "installation_type": "photovoltaic plant"
+  },
+  "supply": {
+    "source": "synthetic utility connection (invented)",
+    "voltage": {
+      "value": 380,
+      "unit": "V"
+    },
+    "earthing_system": "TN",
+    "short_circuit_level": {
+      "value": 10,
+      "unit": "kA",
+      "origin": "synthetic, declared"
+    }
+  },
+  "language": "en"
+}
