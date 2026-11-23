@@ -5,6 +5,7 @@ All notable changes. Format: Keep a Changelog; versions follow `harness/docs/BRA
 ## [Unreleased]
 
 ### Changed
+- Engine contracts generated from the schemas (GEN-09): `harness/docs/ENGINE_CONTRACTS.md`, kept fresh by `regen_all.py` and checked by the gate (`engine-contracts`, 49 checks).
 - The gate checks that every GitHub workflow file parses (COD-16); `pyyaml` joins `requirements-dev.txt`.
 - No error is swallowed in silence (COD-11): an architecture test forbids a silent catch-all unless its line says why, and six of them now catch only the error they expect. `ci.yml` step names are quoted (the workflow had stopped parsing).
 - `python harness/tools/ci/reference_run.py` runs the fictional reference project in a temporary root, prints the seconds per stage and the difference with the previous run (OPT-14, first part of GEN-02); a weekly GitHub workflow runs it (GEN-10).

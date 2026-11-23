@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Regenerate every generated file in one command (OPT-08), or check that none is stale (COD-15).
 
-  python harness/tools/build/regen_all.py           rewrite: registry, plugins, agents, impact map, norm register report
+  python harness/tools/build/regen_all.py           rewrite: registry, plugins, agents, impact map, engine contracts, norm register report
   python harness/tools/build/regen_all.py --check   fail when any generated file is out of date (use it as a pre-commit check)
 
 Order matters: the registry reads the plugins, so plugins go first.
@@ -19,8 +19,17 @@ STEPS = [
     ("agents", ["regen_agents.py"], ["regen_agents.py", "--check"]),
     ("impact-map", ["impact_map.py"], ["impact_map.py", "--check"]),
     ("registry", ["epc_build.py", "registry"], ["epc_build.py", "registry", "--check"]),
+    ("engine-contracts", ["engine_contracts.py"], ["engine_contracts.py", "--check"]),
     ("norm-register", ["norm_register.py", "--report"], ["norm_register.py", "--report", "--check"]),
 ]
+
+
+def run_step(name, args):
+    """True when the step's script exits 0; prints its tail when it does not."""
+    r = subprocess.run([sys.executable, str(HERE / args[0])] + args[1:], cwd=REPO, capture_output=True, text=True)
+    if r.returncode != 0:
+        print((r.stdout + r.stderr).strip()[-600:])
+    return r.returncode == 0
 
 
 def main(argv=None) -> int:
@@ -28,17 +37,13 @@ def main(argv=None) -> int:
     check = "--check" in argv
     failed = []
     for name, write, chk in STEPS:
-        cmd = [sys.executable, str(HERE / (chk if check else write)[0])] + (chk if check else write)[1:]
-        r = subprocess.run(cmd, cwd=REPO, capture_output=True, text=True)
-        status = "ok" if r.returncode == 0 else "STALE" if check else "FAILED"
-        print(f"{status:7} {name}")
-        if r.returncode != 0:
-            failed.append(name)
-            print((r.stdout + r.stderr).strip()[-600:])
-    if failed:
-        print(("Out of date: " if check else "Failed: ") + ", ".join(failed) + ("  (run regen_all.py without --check)" if check else ""))
-        return 1
-    return 0
+        ok = run_step(name, chk if check else write)
+        print(f"{'ok' if ok else 'STALE' if check else 'FAILED':7} {name}")
+        failed += [] if ok else [name]
+    if not failed:
+        return 0
+    print(("Out of date: " if check else "Failed: ") + ", ".join(failed) + ("  (run regen_all.py without --check)" if check else ""))
+    return 1
 
 
 if __name__ == "__main__":
