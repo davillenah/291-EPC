@@ -127,7 +127,7 @@ Build on the traceable flow of phase 5 and the reference projects of phase 1.
 - [ ] **PRO-01 · Decision register per project.** Every assumption the harness makes (a default, a norm chosen between two) listed for the engineer of record to review before signing.
 - [ ] **GEN-04 · Traceability in every deliverable (was B).** Each number shown with its engine, version and norm record.
 - [ ] **GEN-03 · Independent cross-check before sign-off (was A).** A second path recalculates the critical values (voltage drop, cross-section, protection) and flags differences; `calc_check` keeps the only verdict.
-- [ ] **OPT-13 · Property tests for the calculation engines** (invariants, for example more load never lowers the cable section); no norm values touched.
+- [ ] **OPT-13 · Property tests for the calculation engines** (first part done 2026-11-23: `voltage_drop` and the commercial-section choice of `feeder_sizing`, seeded, standard library only, no new dependency; the other engines are left) (invariants, for example more load never lowers the cable section); no norm values touched.
 - [ ] **PRO-02 · Outdated-norm alerts.** A notice when a norm edition in the register has a newer one; a person decides whether to update (P).
 - [ ] **COD-10 · Gradual static typing:** annotations on the public entries and `mypy` on those modules only, widening slowly.
 - [ ] **COD-09 · Lower complexity per module touched** (OPT-15), never raise the baseline.

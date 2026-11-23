@@ -5,6 +5,7 @@ All notable changes. Format: Keep a Changelog; versions follow `harness/docs/BRA
 ## [Unreleased]
 
 ### Changed
+- OPT-13 (first part): invariant tests over 300 generated inputs each for the voltage-drop formulas and the commercial-section choice.
 - GEN-01: `REVISION_NORMAS.md` orders the norm review units by how many engines depend on them and shows that count.
 - OPT-06: the documents stage draws the report PDFs in up to four processes (`epc_drawing.export.report_pdf.render_many`): documents 6.1 s to 3.0 s on a house run, same files.
 - COD-07 (third part): `epc_dxf.convert` and `finish_draft` count entities per layer on the document in memory, not by reading the written file again. Same bytes.
