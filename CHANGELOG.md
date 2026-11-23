@@ -5,6 +5,7 @@ All notable changes. Format: Keep a Changelog; versions follow `harness/docs/BRA
 ## [Unreleased]
 
 ### Changed
+- COD-07 (third part): `epc_dxf.convert` and `finish_draft` count entities per layer on the document in memory, not by reading the written file again. Same bytes.
 - COD-05: the DXF to PDF export skips matplotlib's per-patch limit computation (the limits come from the drawing extents): 13.1 s to 5.1 s for the four PDFs of the example board, same bytes.
 - COD-07 (second part): `epc_dxf.deliverable` reads the converted drawing once and writes it once while it assigns layers, colours and symbol blocks. Same bytes, about 5% faster on the example board.
 - COD-07 (first part): `epc_dxf` reads each library symbol DXF once per run instead of once per drawing.
