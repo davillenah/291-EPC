@@ -43,16 +43,17 @@ NORMA DE REFERENCIA (por designación)
 """
 
 import math
+from epc_voltage_drop.errors import VoltageDropError
 
 __version__ = "0.1.0"
 
 
 def _num(valor, nombre, minimo=0.0, estricto=False):
     if not isinstance(valor, (int, float)) or isinstance(valor, bool) or not math.isfinite(valor):
-        raise ValueError(f"{nombre} debe ser un número finito (recibido: {valor!r})")
+        raise VoltageDropError("err_not_finite_number", nombre=nombre, valor=valor)
     if (estricto and valor <= minimo) or (not estricto and valor < minimo):
         op = ">" if estricto else "≥"
-        raise ValueError(f"{nombre} debe ser {op} {minimo} (recibido: {valor})")
+        raise VoltageDropError("err_out_of_range", nombre=nombre, op=op, minimo=minimo, valor=valor)
 
 
 def _factor_z(r_ohm_km, x_ohm_km, fp, capacitiva):
@@ -61,7 +62,7 @@ def _factor_z(r_ohm_km, x_ohm_km, fp, capacitiva):
     _num(x_ohm_km, "x_ohm_km")
     _num(fp, "fp")
     if fp > 1:
-        raise ValueError(f"fp debe estar en [0, 1] (recibido: {fp})")
+        raise VoltageDropError("err_power_factor", fp=fp)
     sen = math.sqrt(max(0.0, 1.0 - fp * fp))
     if capacitiva:
         sen = -sen
@@ -101,7 +102,7 @@ def caida_tension(fases, i_a, longitud_m, r_ohm_km, x_ohm_km, fp, un_v, capaciti
     elif fases == 1:
         du = drop_voltage_single_phase_v(i_a, longitud_m, r_ohm_km, x_ohm_km, fp, capacitiva)
     else:
-        raise ValueError(f"fases debe ser 1 o 3 (recibido: {fases!r})")
+        raise VoltageDropError("err_phases_invalid", fases=fases)
     return {"delta_u_v": du, "delta_u_pct": porcentaje(du, un_v), "fases": fases, "un_v": un_v}
 
 
@@ -121,10 +122,10 @@ def longitud_maxima_m(fases, delta_u_max_v, i_a, r_ohm_km, x_ohm_km, fp, capacit
     elif fases == 1:
         k = 2.0
     else:
-        raise ValueError(f"fases debe ser 1 o 3 (recibido: {fases!r})")
+        raise VoltageDropError("err_phases_invalid", fases=fases)
     z = _factor_z(r_ohm_km, x_ohm_km, fp, capacitiva)
     if z <= 0:
-        raise ValueError("R·cosφ + X·senφ ≤ 0: la caída no es positiva, longitud máxima indefinida")
+        raise VoltageDropError("err_drop_not_positive")
     return 1000.0 * delta_u_max_v / (k * i_a * z)
 
 

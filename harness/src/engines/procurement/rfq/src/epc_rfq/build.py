@@ -7,6 +7,7 @@ import hashlib
 import json
 
 from epc_rfq import inputs
+from epc_rfq.errors import RfqError
 
 RESPONSE_FIELDS = ("unit_price", "delivery_days", "brand_offered", "remarks")
 FIXED_COLUMNS = ("line_no", "item_id", "description", "unit", "quantity")
@@ -109,7 +110,7 @@ def build_rfq(board_name, boq, *, suppliers=None, currency=None, response_deadli
     sheets = inputs.datasheets(datasheets)
     chosen = _filtered(items, requested)
     if not chosen:
-        raise ValueError("no bill-of-quantities line is requestable with the given categories")
+        raise RfqError("err_no_requestable_line")
     lines = _lines(chosen, _index(sheets))
     supplier_list = checked["suppliers"]
     return {"rfq_id": _identifier(board_name, [s["name"] for s in supplier_list]), "board": board_name, "issued_for": supplier_list, "terms": checked["terms"],

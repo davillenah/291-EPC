@@ -28,6 +28,7 @@ NORMA DE REFERENCIA
 """
 from epc_feeder_sizing import aea_conductors as CO
 from epc_calc_common import aea_tables as T
+from epc_feeder_sizing.errors import FeederSizingError
 
 __version__ = "0.1.0"
 
@@ -85,7 +86,7 @@ def _metodo(v):
     for cod, desc in METODOS_DESCRIPCION.items():
         if t == cod.lower() or t == _norm(desc):
             return cod
-    raise ValueError(f"METODO {v!r} inválido: use uno de {list(METODOS_DESCRIPCION.values())}")
+    raise FeederSizingError("err_method_invalid", v=v, opciones=list(METODOS_DESCRIPCION.values()))
 
 
 def _txt(v, defecto):
@@ -97,7 +98,7 @@ def _num(v, defecto):
     try:
         return float(v) if v not in (None, "") else defecto
     except (TypeError, ValueError):
-        raise ValueError(f"valor numérico inválido: {v!r}")
+        raise FeederSizingError("err_number_invalid", v=v)
 
 
 def _opt_text(v):
@@ -122,11 +123,11 @@ def parametros(c):
         "separacion": _opt_text(c.get("SEPARACION_CABLES")),
     }
     if p["aislacion"] not in AISLACIONES:
-        raise ValueError(f"AISLACION {p['aislacion']!r} inválida: {AISLACIONES}")
+        raise FeederSizingError("err_insulation_invalid", p=p['aislacion'], aislaciones=AISLACIONES)
     if p["material"] not in MATERIALES:
-        raise ValueError(f"MATERIAL {p['material']!r} inválido: {MATERIALES}")
+        raise FeederSizingError("err_material_invalid", p=p['material'], materiales=MATERIALES)
     if p["clase"] not in (2, 5) or p["ternas"] < 1 or p["agrup"] < 1:
-        raise ValueError("CLASE debe ser 2 o 5; N_TERNAS y AGRUP_CIRCUITOS ≥ 1")
+        raise FeederSizingError("err_class_or_counts")
     return p
 
 
@@ -150,7 +151,7 @@ def resistencia_ohm_km(s, material, temp_c):
         return CO.R20_CU_OHM_KM[s] * (1.0 + _g("ALFA")["cu"] * (temp_c - 20.0))
     r20_al = _g("R20_AL_OHM_KM")
     if s not in r20_al:
-        raise ValueError(f"sección {s} sin resistencia tabulada para Al")
+        raise FeederSizingError("err_no_resistance_al", s=s)
     return r20_al[s] * (1.0 + _g("ALFA")["al"] * (temp_c - 20.0))
 
 
@@ -168,9 +169,7 @@ def _columna_explicita(p, tabla, cargados):
     dada = (p.get("columna_d2") or "").lower()
     if dada not in [k for k, _ in opciones]:
         detalle = "; ".join(f"{k} = {d}" for k, d in opciones)
-        raise T.MissingNormDataError(
-            f"método {p['metodo']} (directamente enterrado) con {cargados} conductores cargados: falta o no corresponde COLUMNA_D2 ({p.get('columna_d2')!r}); "
-            f"indique la columna de la Tabla {tabla} según la instalación: {detalle}. No hay columna por defecto")
+        raise T.MissingNormDataError("err_d2_column_missing", metodo=p["metodo"], cargados=cargados, columna=p.get("columna_d2"), tabla=tabla, detalle=detalle)
     return dada
 
 
@@ -180,7 +179,7 @@ def _fuente_de_mapa(metodo, aislacion, cargados):
     spec = mapa.get(metodo, mapa["por_defecto"])
     solo = spec.get("solo_aislacion")
     if solo is not None and aislacion != solo:
-        raise ValueError(f"{metodo} con XLPE no tiene tabla en {spec['tabla']}: use B2 o C")
+        raise FeederSizingError("err_xlpe_method", metodo=metodo, spec=spec['tabla'])
     col = spec["columna_n2"] if cargados == 2 and "columna_n2" in spec else spec["columna"].format(n=cargados)
     return spec["tabla"], spec["grupo"], col
 

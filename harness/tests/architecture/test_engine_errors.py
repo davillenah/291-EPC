@@ -7,6 +7,7 @@
 Run: python -m unittest discover -s harness/tests/architecture
 """
 import ast
+import functools
 import re
 import sys
 import unittest
@@ -18,32 +19,47 @@ import error_catalogue as EC  # noqa: E402
 
 ENGINES = REPO / "harness" / "src" / "engines"
 PLAIN = {"ValueError", "RuntimeError", "Exception"}
+# epc_documents is still plain: its golden file (tests/golden) pins the class name of every error as `ValueError`, and golden files are only recorded again when the owner asks (BACKLOG COD-21).
 UNCONVERTED = {
-    "epc_aea90364", "epc_arch", "epc_boq", "epc_calc_common", "epc_datasheets", "epc_descriptive_report", "epc_design_basis", "epc_documents", "epc_drawing", "epc_dxf", "epc_feeder_sizing", "epc_grounding", "epc_hvac", "epc_lighting", "epc_load_balance", "epc_plan", "epc_receptacles", "epc_rfq", "epc_selectivity", "epc_short_circuit", "epc_symbols", "epc_terminal_blocks", "epc_titleblock", "epc_transformer_sizing", "epc_voltage_drop",
+    "epc_documents",
 }      # engines whose raises are still plain text (shrinks as COD-21 / GEN-08 converts them)
 
 
-def packages():
+@functools.lru_cache(maxsize=None)
+def tree_of(path):
+    return ast.parse(path.read_text(encoding="utf-8-sig"))
+
+
+@functools.lru_cache(maxsize=None)
+def packages_cached():
     return {p.name: p for p in sorted(ENGINES.glob("*/*/src/epc_*")) if p.is_dir()}
 
 
+def packages():
+    return packages_cached()
+
+
+@functools.lru_cache(maxsize=None)
 def raises(package):
     """[(file, line, class name, first argument node or None)] of every `raise Name(...)` in the package (a bare `raise` or `raise e` is not one)."""
     found = []
     for path in sorted(package.rglob("*.py")):
-        for node in ast.walk(ast.parse(path.read_text(encoding="utf-8-sig"))):
-            if isinstance(node, ast.Raise) and isinstance(node.exc, ast.Call) and isinstance(node.exc.func, ast.Name):
+        for node in ast.walk(tree_of(path)):
+            if isinstance(node, ast.Raise) and isinstance(node.exc, ast.Call) and isinstance(node.exc.func, (ast.Name, ast.Attribute)):
                 args = node.exc.args
-                found.append((path.relative_to(REPO).as_posix(), node.lineno, node.exc.func.id, args[0] if args else None))
+                func = node.exc.func
+                found.append((path.relative_to(REPO).as_posix(), node.lineno, func.id if isinstance(func, ast.Name) else func.attr, args[0] if args else None))
     return found
 
 
+@functools.lru_cache(maxsize=None)
+def all_error_names():
+    return frozenset(n.name for pkg in packages().values() for path in pkg.rglob("*.py") for n in ast.walk(tree_of(path)) if isinstance(n, ast.ClassDef) and n.name.endswith("Error"))
+
+
 def own_errors(package):
-    """The names of the error classes the package defines."""
-    names = set()
-    for path in package.rglob("*.py"):
-        names |= {n.name for n in ast.walk(ast.parse(path.read_text(encoding="utf-8-sig"))) if isinstance(n, ast.ClassDef) and n.name.endswith("Error")}
-    return names
+    """The names of the error classes the engines define (an engine may raise another engine's error, for example the `MissingNormDataError` of the shared tables)."""
+    return all_error_names()
 
 
 def loose(package):
@@ -51,7 +67,8 @@ def loose(package):
     mine = own_errors(package)
     found = []
     for file, line, cls, first in raises(package):
-        sentence = isinstance(first, ast.JoinedStr) or (isinstance(first, ast.Constant) and isinstance(first.value, str) and not re.fullmatch(r"err_[a-z0-9_]+", first.value))
+        # a code is a literal `err_...` or a variable that holds one; anything else (an f-string, a call, a concatenation, a sentence) is text
+        sentence = first is not None and not isinstance(first, (ast.Name, ast.Attribute)) and not (isinstance(first, ast.Constant) and isinstance(first.value, str) and re.fullmatch(r"err_[a-z0-9_]+", first.value))
         if (cls in PLAIN and first is not None) or (cls in mine and sentence):
             found.append(f"{file}:{line}")
     return found
@@ -69,14 +86,18 @@ class MessageTables(unittest.TestCase):
 
     def test_every_literal_code_raised_exists(self):
         tables = {name: EC.read_messages(path) for name, path in EC.message_files()}
+        home = {}                                            # error class -> the engine that defines it (and so owns the message table)
         for name, package in packages().items():
-            if name not in tables:
-                continue
-            mine = own_errors(package)
+            for path in package.rglob("*.py"):
+                for n in ast.walk(tree_of(path)):
+                    if isinstance(n, ast.ClassDef) and n.name.endswith("Error"):
+                        home[n.name] = name
+        for name, package in packages().items():
             for file, line, cls, first in raises(package):
-                if cls in mine and isinstance(first, ast.Constant) and isinstance(first.value, str):
+                owner = home.get(cls)
+                if owner in tables and isinstance(first, ast.Constant) and isinstance(first.value, str):
                     with self.subTest(where=f"{file}:{line}"):
-                        self.assertIn(first.value, tables[name], f"{cls}({first.value!r}) has no entry in {name}/messages.py")
+                        self.assertIn(first.value, tables[owner], f"{cls}({first.value!r}) has no entry in {owner}/messages.py")
 
     def test_an_error_code_is_not_a_sentence(self):
         for name, package in packages().items():

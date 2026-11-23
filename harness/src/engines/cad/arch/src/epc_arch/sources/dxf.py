@@ -11,6 +11,7 @@ from ezdxf.math import bulge_to_arc
 
 from epc_arch.model import Arc, ArchError, Block, Line, Options, Primitives, Text
 from epc_arch.sources import register
+from epc_arch.model import ArchError
 
 SKIPPED = ("DIMENSION", "SPLINE", "ELLIPSE", "IMAGE", "LEADER", "POINT", "SOLID", "TRACE")
 MAX_DEPTH = 3
@@ -152,7 +153,7 @@ def _open(data: bytes):
         try:
             return ezdxf.readfile(str(path))
         except Exception:                                    # noqa: BLE001 - the parser fails in many ways on a file that is not a DXF (StopIteration, struct errors, ...)
-            raise ArchError("the DXF cannot be read: it is not a valid DXF file")
+            raise ArchError("err_dxf_unreadable")
 
 
 @register

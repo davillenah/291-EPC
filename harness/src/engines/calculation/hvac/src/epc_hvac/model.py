@@ -3,10 +3,16 @@ from dataclasses import dataclass, field
 from typing import Any, Dict, List
 
 from epc_hvac.config import SCHEMA_VERSION
+from epc_hvac.messages import text
 
 
 class HvacError(ValueError):
-    """The input is not valid: the message says what to correct."""
+    """The input is not valid: `str(error)` is the English text, `es` the Spanish one, `code` the stable code (ADR-0039)."""
+
+    def __init__(self, code: str, **params):
+        t = text(code, **params)
+        super().__init__(t["en"])
+        self.code, self.en, self.es = code, t["en"], t["es"]
 
 
 @dataclass

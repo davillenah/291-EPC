@@ -36,6 +36,7 @@ NORMA DE REFERENCIA
 import math
 from epc_calc_common import aea_tables as T
 from epc_calc_common._validate import num as _num
+from epc_voltage_drop.errors import VoltageDropError
 
 __version__ = "0.1.0"
 
@@ -84,7 +85,7 @@ def drop_unit_table(seccion_mm2):
     """V/(A·km) de la Tabla 771.19.IV (monofásico, cosφ 0,8)."""
     tabla = _g("VA_KM_TABLA")
     if seccion_mm2 not in tabla:
-        raise ValueError(f"sección {seccion_mm2} no está en la Tabla 771.19.IV: {sorted(tabla)}")
+        raise VoltageDropError("err_section_not_in_table", seccion_mm2=seccion_mm2, tabla=sorted(tabla))
     return tabla[seccion_mm2]
 
 
@@ -103,13 +104,13 @@ def coeficiente_gdc(material, fases, arranque=False, seccion_mm2=None):
     clave = (material.lower(), fases)
     comun = _g("GDC_COMUN")
     if clave not in comun:
-        raise ValueError("material 'cu'|'al' y fases 1|3")
+        raise VoltageDropError("err_material_phases")
     if not arranque:
         return comun[clave]
     _num(seccion_mm2, "seccion_mm2", 0.0, True)
     maximo = _g("GDC_ARRANQUE_MAX_MM2")
     if seccion_mm2 > maximo:
-        raise ValueError(f"GDC de arranque definido hasta {maximo} mm²")
+        raise VoltageDropError("err_starting_gdc", maximo=maximo)
     return _g("GDC_ARRANQUE")[clave][0 if seccion_mm2 <= _g("GDC_ARRANQUE_CORTE_MM2") else 1]
 
 
@@ -146,7 +147,7 @@ def limite_caida_pct(tipo):
     """Límite [%] por tipo: iluminacion, tomacorrientes, motor_regimen, motor_arranque, seccional."""
     limites = _g("LIMITES_PCT")
     if tipo not in limites:
-        raise ValueError(f"tipo debe ser uno de {sorted(limites)}")
+        raise VoltageDropError("err_type_invalid", opciones=sorted(limites))
     return limites[tipo]
 
 
@@ -157,7 +158,7 @@ def corriente_extremo(i_total_a, tipo, norma="771"):
         return i_total_a * (_g("FRACCION_ILUM_770") if norma == "770" else _g("FRACCION_ILUM_771"))
     if tipo == "tomacorrientes":
         return i_total_a
-    raise ValueError("tipo debe ser 'iluminacion' o 'tomacorrientes'")
+    raise VoltageDropError("err_type_lighting_or_receptacles")
 
 
 def caida_disponible_terminal_pct(limite_total_pct, caida_seccional_pct):

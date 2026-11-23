@@ -12,6 +12,7 @@ from importlib import resources
 from pathlib import Path
 
 from .model import LightingError
+from epc_lighting.model import LightingError
 
 _PACKAGE = "epc_lighting"
 RULES_DIR = Path(__file__).resolve().parent / "rules"          # where a reviewer's correction is written (the reading above also works from a zip)
@@ -21,7 +22,7 @@ def _read(folder: str, name: str) -> dict:
     try:
         text = resources.files(_PACKAGE).joinpath(folder, name).read_text("utf-8")
     except FileNotFoundError as exc:
-        raise LightingError(f"unknown norm file {folder}/{name}") from exc
+        raise LightingError("err_norm_file_unknown", folder=folder, name=name) from exc
     return json.loads(text)
 
 
@@ -58,7 +59,7 @@ def rule(norm_id: str, rule_id: str, include_pending: bool = False) -> dict:
     for item in rules(norm_id, include_pending):
         if item["id"] == rule_id:
             return item
-    raise LightingError(f"rule {rule_id} of {norm_id} not found or not approved")
+    raise LightingError("err_rule_not_found", rule_id=rule_id, norm_id=norm_id)
 
 
 def illuminance_rule(rule_id: str) -> dict:
@@ -68,8 +69,8 @@ def illuminance_rule(rule_id: str) -> dict:
             if item["id"] != rule_id:
                 continue
             if item.get("review") != "approved":
-                raise LightingError(f"rule {rule_id} of {norm_id} is not approved: approve it in the norms review, or give 'target_lux'")
+                raise LightingError("err_rule_not_approved", rule_id=rule_id, norm_id=norm_id)
             if item.get("unit") != "lx" or not isinstance(item.get("value"), (int, float)) or isinstance(item.get("value"), bool) or item["value"] <= 0:
-                raise LightingError(f"rule {rule_id} of {norm_id} is not an illuminance level in lux: choose a rule that is, or give 'target_lux'")
+                raise LightingError("err_rule_not_lux", rule_id=rule_id, norm_id=norm_id)
             return {**item, "norm": norm_id}
-    raise LightingError(f"rule {rule_id} is not in any norm of the engine ({', '.join(norms())})")
+    raise LightingError("err_rule_in_no_norm", rule_id=rule_id, norms=', '.join(norms()))

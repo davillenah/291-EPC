@@ -12,6 +12,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
 from epc_plan import occupancy, svgsymbol
+from epc_plan.messages import text
 
 HERE = Path(__file__).resolve().parent
 TYPICAL = HERE / "typical-values.json"         # the values the engineer confirms (cable diameters, commercial sizes, fill limits, limits per circuit): reviewed once, in the norms review
@@ -43,16 +44,21 @@ from epc_plan import routing   # noqa: E402
 
 
 class PlanError(ValueError):
-    """The drawing cannot be processed: the message says what to fix."""
+    """The drawing cannot be processed: `str(error)` is the English text, `es` the Spanish one, `code` the stable code (ADR-0039)."""
+
+    def __init__(self, code: str, **params):
+        t = text(code, **params)
+        super().__init__(t["en"])
+        self.code, self.en, self.es = code, t["en"], t["es"]
 
 
 # ---------------------------------------------------------------- data files
 def load_profile(profile_id: str) -> Dict[str, Any]:
     if not re.fullmatch(r"[A-Za-z0-9_]+", profile_id or ""):
-        raise PlanError(f"discipline {profile_id!r} is not valid")
+        raise PlanError("err_discipline_invalid", profile_id=profile_id)
     path = HERE / "profiles" / f"{profile_id}.json"
     if not path.is_file():
-        raise PlanError(f"unknown discipline {profile_id!r}: profiles are {', '.join(profiles())}")
+        raise PlanError("err_discipline_unknown", profile_id=profile_id, profiles=', '.join(profiles()))
     return json.loads(path.read_text(encoding="utf-8"))
 
 
@@ -71,7 +77,7 @@ def load_rules() -> List[Dict[str, Any]]:
 def parse_level(level: str, params: Dict[str, Any] = PARAMS) -> int:
     """`L0` is the ground level, `L1`, `L2`... go up, `L-1`, `L-2`... go down."""
     if not isinstance(level, str) or not re.fullmatch(params["levels"]["pattern"], level):
-        raise PlanError(f"level {level!r} is not valid: use L0 for the ground level, L1, L2... upwards and L-1, L-2... downwards")
+        raise PlanError("err_level_invalid", level=level)
     return int(level[1:])
 
 
@@ -81,12 +87,12 @@ def metres_per_unit(scale: Dict[str, Any], params: Dict[str, Any] = PARAMS) -> f
         (x1, y1), (x2, y2) = scale["p1"], scale["p2"]
         real = float(scale["distance_m"])
     except (KeyError, TypeError, ValueError):
-        raise PlanError("the scale needs two points (p1, p2) and the real distance between them (distance_m)")
+        raise PlanError("err_scale_incomplete")
     drawn = math.hypot(x2 - x1, y2 - y1)
     if drawn < params["geometry"]["min_calibration_units"]:
-        raise PlanError("the two calibration points are the same point")
+        raise PlanError("err_scale_same_point")
     if real < params["geometry"]["min_scale_distance_m"]:
-        raise PlanError("the real distance of the scale must be greater than zero")
+        raise PlanError("err_scale_distance")
     return real / drawn
 
 
@@ -194,16 +200,16 @@ def _kinds(profile) -> Tuple[Dict[str, Any], Dict[str, Any]]:
 
 def _check_document(doc: Dict[str, Any], params) -> None:
     if not isinstance(doc, dict) or doc.get("schema_version") != "1.0":
-        raise PlanError("the drawing must be an object with schema_version 1.0")
+        raise PlanError("err_drawing_shape")
     lim = params["limits"]
     if len(doc.get("lines", [])) > lim["max_lines"] or len(doc.get("nodes", [])) > lim["max_nodes"]:
-        raise PlanError(f"the drawing is too big: up to {lim['max_lines']} lines and {lim['max_nodes']} nodes")
+        raise PlanError("err_drawing_too_big", max_lines=lim['max_lines'], max_nodes=lim['max_nodes'])
     for ln in doc.get("lines", []):
         pts = ln.get("points", [])
         if len(pts) < 2:
-            raise PlanError(f"line {ln.get('id', '?')} needs at least two points")
+            raise PlanError("err_line_too_short", line=ln.get('id', '?'))
         if len(pts) > lim["max_points_per_line"]:
-            raise PlanError(f"line {ln.get('id', '?')} has too many points (up to {lim['max_points_per_line']})")
+            raise PlanError("err_line_too_long", line=ln.get('id', '?'), max_points=lim['max_points_per_line'])
 
 
 class _Graph:
@@ -356,7 +362,7 @@ def orient_from_outlet(gnodes, stretches, outlet: str, warnings: List[str]) -> D
     """Walk the network from its outlet: every stretch gets the node it drains to and the node it comes from, and every node its distance to the outlet."""
     ids = {g["id"] for g in gnodes}
     if outlet not in ids:
-        raise PlanError(f"the outlet {outlet!r} is not a node of the drawing")
+        raise PlanError("err_outlet_not_node", outlet=outlet)
     info, reached = _walk_from(outlet, stretches, ids)
     for st in stretches:
         if id(st) not in reached and st["from"] in info and st["to"] in info:
@@ -417,7 +423,7 @@ def _read_nodes(doc, node_kinds, profile_id: str, origin, k: float) -> List[Dict
     nodes = []
     for n in doc.get("nodes", []):
         if n.get("kind") not in node_kinds:
-            raise PlanError(f"node {n.get('id', '?')}: kind {n.get('kind')!r} does not exist in the discipline {profile_id}")
+            raise PlanError("err_node_kind_unknown", node=n.get('id', '?'), kind=n.get('kind'), profile_id=profile_id)
         x, y = to_world((n["x"], n["y"]), origin, k)
         nodes.append({"id": n["id"], "kind": n["kind"], "x": x, "y": y, "attrs": n.get("attrs", {}), "tag": n.get("tag"), "circuit": n.get("circuit")})
     return nodes
@@ -427,7 +433,7 @@ def _read_lines(doc, line_kinds, profile_id: str, origin, k: float) -> List[Dict
     lines = []
     for ln in doc.get("lines", []):
         if ln.get("kind") not in line_kinds:
-            raise PlanError(f"line {ln.get('id', '?')}: kind {ln.get('kind')!r} does not exist in the discipline {profile_id}")
+            raise PlanError("err_line_kind_unknown", line=ln.get('id', '?'), kind=ln.get('kind'), profile_id=profile_id)
         lines.append({"id": ln["id"], "kind": ln["kind"], "points": [to_world(p, origin, k) for p in ln["points"]], "attrs": ln.get("attrs", {}), "tag": ln.get("tag"), "circuit": ln.get("circuit")})
     return lines
 
@@ -440,7 +446,7 @@ def _read_circuits(doc) -> List[Dict[str, Any]]:
 def _check_unique_ids(nodes, lines) -> None:
     ids = [x["id"] for x in nodes] + [x["id"] for x in lines]
     for dup in sorted({i for i in ids if ids.count(i) > 1}):
-        raise PlanError(f"the id {dup!r} is used twice: ids must be unique")
+        raise PlanError("err_id_duplicate", dup=dup)
 
 
 def _reserve_node_tags(gnodes, tagger) -> None:

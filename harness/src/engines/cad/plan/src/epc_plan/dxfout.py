@@ -10,6 +10,7 @@ import ezdxf
 from epc_dxf import deliverable, textstyle
 
 from epc_plan import core
+from epc_plan.core import PlanError
 
 _UNITS = {"m": (6, 1.0), "mm": (4, 1000.0)}          # DXF $INSUNITS code and the factor from metres
 
@@ -222,7 +223,7 @@ def _dxf_version(cfg, version):
     """The DXF version asked for (the default when empty); refuses one the configuration does not list."""
     version = version or cfg["default_version"]
     if version not in cfg["versions"]:
-        raise core.PlanError(f"DXF version {version!r} is not available: choose one of {', '.join(cfg['versions'])}")
+        raise core.PlanError("err_dxf_version", version=version, versions=', '.join(cfg['versions']))
     return version
 
 

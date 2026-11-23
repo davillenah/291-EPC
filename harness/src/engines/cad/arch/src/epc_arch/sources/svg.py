@@ -9,6 +9,7 @@ from xml.etree import ElementTree as ET
 from epc_arch.model import Arc, ArchError, Line, Options, Primitives, Text
 from epc_arch.sources import register
 from epc_arch.sources.pdf import SCALES, _edge_key as edge_key, weld_arcs
+from epc_arch.model import ArchError
 
 Matrix = Tuple[float, float, float, float, float, float]
 IDENTITY: Matrix = (1.0, 0.0, 0.0, 1.0, 0.0, 0.0)
@@ -343,7 +344,7 @@ def read_svg(data: bytes, options: Options) -> Primitives:
     try:
         root = ET.fromstring(data)
     except ET.ParseError:
-        raise ArchError("the SVG cannot be read: it is not well-formed XML")
+        raise ArchError("err_svg_not_xml")
     prims = Primitives(source="svg", y_up=False, fit=True)
     ctx = _Ctx(prims, root)
     _walk(root, ctx, IDENTITY, "", {})

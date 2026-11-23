@@ -67,6 +67,7 @@ from epc_aea90364 import short_circuit as SC
 from epc_aea90364 import solutions as SOL
 from epc_aea90364 import voltage_drop as VDG
 from epc_aea90364.topology import MOTOR_TOPOLOGIES
+from epc_aea90364.errors import Aea90364Error
 
 __version__ = "0.2.0"
 
@@ -140,7 +141,7 @@ def load_input(ruta):
     h = leer_xlsx(ruta)
     for n in ("TABLERO", "CIRCUITOS"):
         if n not in h:
-            raise ValueError(f"falta la hoja {n} en {ruta}")
+            raise Aea90364Error("err_sheet_missing", n=n, ruta=ruta)
     tablero = {}
     for f in h["TABLERO"]:
         if len(f) > 1 and isinstance(f[0], str) and f[1] is not None and f[0].strip().replace("_", "").isalnum() \
@@ -189,17 +190,17 @@ def convert_load(carga, unidad=None):
     if isinstance(carga, str):
         m = re.fullmatch(r"\s*([0-9]+(?:[.,][0-9]+)?)\s*([A-Za-z]*)\s*", carga)
         if not m:
-            raise ValueError(f"carga no interpretable: {carga!r}")
+            raise Aea90364Error("err_load_uninterpretable", carga=carga)
         carga, u_txt = float(m.group(1).replace(",", ".")), m.group(2)
         if unidad in (None, "") or not str(unidad).strip():
             unidad = u_txt
     if not isinstance(carga, (int, float)) or isinstance(carga, bool) or not math.isfinite(carga) or carga < 0:
-        raise ValueError(f"carga debe ser un número ≥ 0 (recibido: {carga!r})")
+        raise Aea90364Error("err_load_negative", carga=carga)
     clave = re.sub(r"[\s.]", "", str(unidad or "")).lower()
     if not clave:
-        raise ValueError("falta UNIDAD_CARGA (A, W, kW, MW, VA, kVA, MVA, HP)")
+        raise Aea90364Error("err_unit_missing")
     if clave not in _UNIDADES:
-        raise ValueError(f"unidad de carga no reconocida: {unidad!r} (use A, W, kW, MW, VA, kVA, MVA, HP)")
+        raise Aea90364Error("err_unit_unknown", unidad=unidad)
     base, factor = _UNIDADES[clave]
     return carga * factor, base
 
@@ -215,7 +216,7 @@ def corriente_proyecto(c, u_linea, fp_def, eta_motores=False):
     try:
         valor, base = convert_load(bruta, c.get("UNIDAD_CARGA"))
     except ValueError as e:
-        raise ValueError(f"{c['TAG']}: {e}") from None
+        raise Aea90364Error("err_circuit_failed", c=c['TAG'], e=e) from None
     fases = _fases(c)
     fp = _num_opt(c.get("FP"), fp_def)
     eta = _num_opt(c.get("RENDIMIENTO"), 1.0)
@@ -318,7 +319,7 @@ def resolver_criterios(criterios=None):
     material = _MATERIAL.get(str(cr.get("conductor_material", "cobre")).strip().lower(), "cu")
     aislacion = str(cr.get("insulation", "PVC")).strip().lower()
     if aislacion not in AMP.AISLACIONES:
-        raise ValueError(f"insulation {aislacion!r} inválida: {AMP.AISLACIONES}")
+        raise Aea90364Error("err_insulation_invalid", aislacion=aislacion, aislaciones=AMP.AISLACIONES)
     return lim, smin, material, aislacion, float(cr.get("rcd_sensitivity_ma", 30))
 
 
@@ -366,13 +367,13 @@ def calculate(tablero, circuitos, margen_iz=1.0, eta_motores=False, temp_c=70.0,
         icu = SERIE_ICU_KA[-1]
     por_tag = {c["TAG"]: c for c in circuitos}
     if len(por_tag) != len(circuitos):
-        raise ValueError("TAG duplicados en CIRCUITOS")
+        raise Aea90364Error("err_duplicate_tags")
     hijos = {t: [] for t in por_tag}
     for c in circuitos:
         p = str(c.get("PARENT_TAG") or "").strip()
         if p:
             if p not in por_tag:
-                raise ValueError(f"{c['TAG']}: PARENT_TAG {p!r} no existe")
+                raise Aea90364Error("err_parent_unknown", c=c['TAG'], p=p)
             hijos[p].append(c["TAG"])
     sim_policy, sim_issue = SIM.resolve(criterios)
     if sim_issue:
@@ -384,12 +385,12 @@ def calculate(tablero, circuitos, margen_iz=1.0, eta_motores=False, temp_c=70.0,
         if tag in ib:
             return ib[tag]
         if tag in visitando:
-            raise ValueError(f"ciclo en PARENT_TAG en {tag}")
+            raise Aea90364Error("err_parent_cycle", tag=tag)
         visitando.add(tag)
         v = corriente_proyecto(por_tag[tag], u, fp_def, eta_motores)
         if v is None:
             if not hijos[tag]:
-                raise ValueError(f"{tag}: sin CARGA y sin hijos")
+                raise Aea90364Error("err_no_load_no_children", tag=tag)
             v, rec = SIM.parent_current(sim_policy, [_ib(h) for h in hijos[tag]])          # D14: a parent carries its children with simultaneity; a leaf is never reduced
             if rec:
                 sim_rec[tag] = rec
@@ -549,7 +550,7 @@ def _main(argv):
 def _error_of_section(error, tag):
     """Text of a gap in the tables for one section; D18: a missing or out-of-table datum (`MissingNormDataError`) is raised instead, naming the circuit."""
     if isinstance(error, AMP.T.MissingNormDataError):
-        raise AMP.T.MissingNormDataError(f"{tag}: {error}") from None
+        raise AMP.T.MissingNormDataError("err_prefixed", prefix=tag, detail=error) from None
     return str(error)
 
 

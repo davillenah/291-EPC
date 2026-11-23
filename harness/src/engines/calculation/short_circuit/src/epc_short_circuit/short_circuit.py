@@ -59,6 +59,7 @@ NORMA DE REFERENCIA (por designación)
 import math
 from epc_calc_common._validate import nonneg as _nonneg, pos as _pos
 from epc_calc_common import aea_tables as T
+from epc_short_circuit.errors import ShortCircuitError
 
 __version__ = "0.1.0"
 
@@ -100,7 +101,7 @@ def factor_c(tolerancia_pct):
         return _g("C_MAX_BT_TOL_6")
     if tolerancia_pct == 10:
         return _g("C_MAX_BT_TOL_10")
-    raise ValueError(f"Tolerancia {tolerancia_pct!r} % sin c predefinido (solo 6 o 10); ingresar c explícito")
+    raise ShortCircuitError("err_tolerance_without_c", tolerancia_pct=tolerancia_pct)
 
 
 def corriente_asignada_trafo(sn_va, un_v):
@@ -125,7 +126,7 @@ def impedancia_red(un_v, c, sk_va=None, ik_a=None, x_r=None):
 def _grid_impedance(un_v, c, sk_va, ik_a):
     """|Z| [ohm] of the grid from exactly one of sk_va or ik_a."""
     if (sk_va is None) == (ik_a is None):
-        raise ValueError("Indicar exactamente uno de sk_va (potencia de cortocircuito) o ik_a (corriente)")
+        raise ShortCircuitError("err_sk_or_ik")
     if sk_va is not None:
         _pos(sk_va, "sk_va")
         return c * un_v ** 2 / sk_va
@@ -139,14 +140,14 @@ def impedancia_transformador(sn_va, un_v, uk_pct, pcu_w=None):
     _pos(un_v, "un_v")
     _pos(uk_pct, "uk_pct")
     if uk_pct >= 100:
-        raise ValueError("uk_pct debe ser < 100")
+        raise ShortCircuitError("err_uk_range")
     z = (uk_pct / 100.0) * un_v ** 2 / sn_va
     if pcu_w is None:
         return 0.0, z
     _nonneg(pcu_w, "pcu_w")
     r = pcu_w * un_v ** 2 / sn_va ** 2
     if r >= z:
-        raise ValueError("Pcu incompatible con uk: R_T ≥ Z_T (pérdidas en el cobre ≥ uk·Sn)")
+        raise ShortCircuitError("err_pcu_uk")
     return r, math.sqrt(z * z - r * r)
 
 
@@ -156,7 +157,7 @@ def impedance_cable(r_ohm_km, x_ohm_km, longitud_m, n_paralelo=1):
     _nonneg(x_ohm_km, "x_ohm_km")
     _nonneg(longitud_m, "longitud_m")
     if not isinstance(n_paralelo, int) or isinstance(n_paralelo, bool) or n_paralelo < 1:
-        raise ValueError("n_paralelo debe ser entero ≥ 1")
+        raise ShortCircuitError("err_parallel_count")
     k = longitud_m / 1000.0 / n_paralelo
     return r_ohm_km * k, x_ohm_km * k
 
@@ -177,7 +178,7 @@ def ik_desde_impedancia(un_v, c, r_ohm, x_ohm):
     _nonneg(x_ohm, "x_ohm")
     z = math.hypot(r_ohm, x_ohm)
     if z == 0:
-        raise ValueError("Impedancia total nula: Ik'' infinita (agregar red, transformador o cable)")
+        raise ShortCircuitError("err_impedance_zero")
     return c * un_v / (_RAIZ3 * z)
 
 
@@ -210,7 +211,7 @@ def calcular_ik(un_v, c, red=None, trafo=None, cables=None, aplicar_kt=False):
         r_tot += r
         x_tot += x
     elif aplicar_kt:
-        raise ValueError("aplicar_kt requiere un transformador")
+        raise ShortCircuitError("err_kt_needs_transformer")
     for cab in (cables or []):
         r, x = impedance_cable(cab["r_ohm_km"], cab["x_ohm_km"], cab["longitud_m"], cab.get("n_paralelo", 1))
         r_tot += r
@@ -263,7 +264,7 @@ def factor_kappa(r_ohm, x_ohm):
     _nonneg(r_ohm, "r_ohm")
     _nonneg(x_ohm, "x_ohm")
     if r_ohm == 0 and x_ohm == 0:
-        raise ValueError("R y X no pueden ser ambos cero")
+        raise ShortCircuitError("err_r_x_zero")
     k = T.value("icc_factor_kappa")
     if x_ohm == 0:
         return k["base"]

@@ -32,6 +32,7 @@ from typing import Iterable, Optional
 
 from epc_aea90364 import aea_tables as T
 from epc_aea90364._validate import num as _num
+from epc_aea90364.errors import Aea90364Error
 
 __version__ = "0.1.0"
 
@@ -53,7 +54,7 @@ def balance(cargas: Iterable[tuple]) -> dict:
         _num(p_kw, "p_kw", 0.0)
         _num(fp, "fp", 0.0, True)
         if fp > 1.0:
-            raise ValueError("fp entre 0 y 1")
+            raise Aea90364Error("err_fp_range")
         p += p_kw
         q += p_kw * math.tan(math.acos(fp))
     s = math.hypot(p, q)
@@ -67,7 +68,7 @@ def reactiva_a_compensar(p_kw: float, fp_actual: float, fp_objetivo: Optional[fl
     for v, n in ((fp_actual, "fp_actual"), (fp2, "fp_objetivo")):
         _num(v, n, 0.0, True)
         if v > 1.0:
-            raise ValueError(f"{n} entre 0 y 1")
+            raise Aea90364Error("err_fraction_range", n=n)
     if fp_actual >= fp2:
         return 0.0
     return p_kw * (math.tan(math.acos(fp_actual)) - math.tan(math.acos(fp2)))

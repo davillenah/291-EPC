@@ -6,6 +6,8 @@ the recognized elements over the picture with no conversion. An angle in the pla
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Tuple
 
+from epc_arch.messages import text
+
 Pt = Tuple[float, float]
 
 
@@ -194,4 +196,9 @@ class Options:
 
 
 class ArchError(ValueError):
-    """The file cannot be recognized: the message says why."""
+    """The file cannot be recognized: `str(error)` is the English text, `es` the Spanish one, `code` the stable code (ADR-0039)."""
+
+    def __init__(self, code: str, **params):
+        t = text(code, **params)
+        super().__init__(t["en"])
+        self.code, self.en, self.es = code, t["en"], t["es"]

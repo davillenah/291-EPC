@@ -10,6 +10,7 @@ Nothing is calculated and nothing is drawn here. The result lists, per circuit, 
 
 from epc_drawing import diagram_knowledge as K
 from epc_drawing import diagram_model as M
+from epc_drawing.errors import DrawingError
 
 PROTECTIVE = {"mcb", "mccb", "acb", "rccb", "rcbo", "mpcb"}                       # devices that show the rating of the calculation
 LABELS = {"in_a": "rated_current", "icu_ka": "breaking_capacity"}      # value of the calculation -> label slot of the symbol library
@@ -38,7 +39,7 @@ def assemble(model: dict, values: dict, cable_rows: list = None, symbols=None, v
 
     `verdict` is the audit of the board (`diagram_knowledge.audit`): the assembly refuses to run without it (ValueError) and carries it, so a 'not_ok' is never hidden. A wire's `cable_ref` is resolved to its row of the cable list (None when the row is missing: the engine then draws the wire without a cable text). `symbols(device_id) -> {'sld_symbol': ...}` is the symbol provider (default: the library map of `diagram_knowledge`)."""
     if not verdict or verdict.get("verdict") not in ("ok", "not_ok"):
-        raise ValueError("the assembly needs the audit verdict of the board (diagram_knowledge.audit)")
+        raise DrawingError("err_assembly_needs_audit")
     rows, symbols = {r["circuit"]: r for r in (cable_rows or [])}, symbols or K.symbol_for
     index = {key: {x["id"]: x for x in model[key]} for key in ("devices", "wires", "loads")}
     out = [_assemble_circuit(c, index, values.get(c["name"]["en"], {}), rows, symbols) for c in model["circuits"]]

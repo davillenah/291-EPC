@@ -33,6 +33,7 @@ from typing import Dict
 
 from epc_aea90364 import aea_tables as T
 from epc_aea90364._validate import num as _num
+from epc_aea90364.errors import Aea90364Error
 
 __version__ = "0.1.0"
 
@@ -55,7 +56,7 @@ def impactos_directos_anuales(ng: float, ad_m2: float, entorno: str = "aislada")
     _num(ad_m2, "ad_m2", 0.0)
     cd = _c()["entorno_cd"]
     if entorno not in cd:
-        raise ValueError(f"entorno {entorno!r} inexistente: {sorted(cd)}")
+        raise Aea90364Error("err_environment_unknown", entorno=entorno, opciones=sorted(cd))
     return ng * ad_m2 * float(cd[entorno]) * 1e-6
 
 
@@ -65,7 +66,7 @@ def frecuencia_tolerable(estructura: str, contenido: str, ocupacion: str, consec
     prod = 1.0
     for tabla, clave in (("factor_c2_estructura", estructura), ("factor_c3_contenido", contenido), ("factor_c4_ocupacion", ocupacion), ("factor_c5_consecuencias", consecuencias)):
         if clave not in c[tabla]:
-            raise ValueError(f"{tabla}: {clave!r} inexistente: {sorted(c[tabla])}")
+            raise Aea90364Error("err_key_unknown", tabla=tabla, clave=clave, opciones=sorted(c[tabla]))
         prod *= float(c[tabla][clave])
     return float(c["frecuencia_base"]) / prod
 
@@ -84,7 +85,7 @@ def parametros_nivel(nivel: str) -> Dict[str, float]:
     p = _c()["parametros_nivel"]
     clave = "I" if nivel == "I+" else nivel
     if clave not in p:
-        raise ValueError(f"nivel {nivel!r} inexistente: {sorted(p)}")
+        raise Aea90364Error("err_level_unknown", nivel=nivel, opciones=sorted(p))
     return dict(p[clave])
 
 

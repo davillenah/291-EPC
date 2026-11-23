@@ -18,7 +18,7 @@ def ugr(calculated: Optional[float], limit: Optional[float]) -> Dict[str, Any]:
         return {"result": "not_verifiable", "complies": None, "limit": limit, "calculated": calculated,
                 "reason": "UGR needs the photometry of the luminaires and an external calculation: give 'ugr_calculated' to compare it with the limit of the activity"}
     if isinstance(calculated, bool) or not math.isfinite(calculated) or calculated < 0:
-        raise LightingError(f"ugr_calculated must be a finite number from 0 up, got {calculated!r}")
+        raise LightingError("err_ugr_invalid", calculated=calculated)
     ok = calculated <= limit
     return {"result": "meets" if ok else "does_not_meet", "complies": ok, "limit": limit, "calculated": calculated}
 

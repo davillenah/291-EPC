@@ -11,6 +11,7 @@ from pathlib import Path
 from typing import Any, Dict
 
 from epc_drawing import pv_model3d as m3
+from epc_drawing.errors import DrawingError
 
 SLAB_M, STANDOFF_M, MODULE_M, OBSTACLE_M, SPACING_M = 0.2, 0.12, 0.035, 1.0, 3.0
 LAYER_ROOF = "PV-3D-CUBIERTA"
@@ -21,7 +22,7 @@ def build(roof: Dict[str, Any], result: Dict[str, Any]):
     """The ezdxf document of the roof model."""
     import ezdxf
     if not roof.get("planes"):
-        raise ValueError("the roof has no planes to raise in 3D")
+        raise DrawingError("err_roof_no_planes")
     doc = ezdxf.new("R2018", setup=True)
     doc.units = 6
     for name, colour in LAYERS.items():

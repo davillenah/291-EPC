@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import Dict, Iterator, List, Optional, Tuple
 
 from epc_arch.geometry import axis_of
-from epc_arch.model import Architecture, Opening, Wall
+from epc_arch.model import ArchError, Architecture, Opening, Wall
 from epc_arch.svgout import _clean_walls, _extent, _joined, _unit
 
 Pt = Tuple[float, float]
@@ -93,12 +93,12 @@ def style_errors(overrides: Optional[dict]) -> Dict[str, str]:
 
 
 def style_with(overrides: Optional[dict]) -> Style:
-    """The style of the engine with what an organization changed: the width of each pen, the pen each layer draws with and the height of each text style. Raises ValueError when a change is not valid."""
+    """The style of the engine with what an organization changed: the width of each pen, the pen each layer draws with and the height of each text style. Raises ArchError when a change is not valid."""
     if not overrides:
         return load_style()
     errors = style_errors(overrides)
     if errors:
-        raise ValueError("; ".join(f"{k}: {v}" for k, v in errors.items()))
+        raise ArchError("err_style_invalid", details="; ".join(f"{k}: {v}" for k, v in errors.items()))
     raw = json.loads(STYLE_PATH.read_text(encoding="utf-8"))
     raw["pens"] = {**raw["pens"], **(overrides.get("pens") or {})}
     raw["text_styles"] = {**raw["text_styles"], **(overrides.get("text_styles") or {})}

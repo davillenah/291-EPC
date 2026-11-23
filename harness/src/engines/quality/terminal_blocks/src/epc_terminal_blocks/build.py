@@ -7,6 +7,7 @@ import math
 import re
 
 from epc_terminal_blocks import sizes
+from epc_terminal_blocks.errors import TerminalBlocksError
 
 STRIP_NAME = re.compile(r"[A-Za-z][A-Za-z0-9_-]{0,15}")
 CIRCUIT_KEYS = ("tag", "phases", "s_mm2", "pe_mm2", "neutral_mm2", "description", "device", "in_a")
@@ -24,27 +25,27 @@ def _number(value, name, optional=False):
     if value is None and optional:
         return None
     if not isinstance(value, (int, float)) or isinstance(value, bool) or not math.isfinite(value) or value <= 0:
-        raise ValueError(f"{name} must be a positive finite number (got {value!r})")
+        raise TerminalBlocksError("err_not_positive_number", name=name, value=value)
     return value
 
 
 def _text(value, name):
     if not isinstance(value, str) or not value.strip():
-        raise ValueError(f"{name} must be a non-empty string (got {value!r})")
+        raise TerminalBlocksError("err_not_text", name=name, value=value)
     return value
 
 
 def _circuit(raw, n):
     """A validated copy of one input circuit (defaults only for the optional text fields)."""
     if not isinstance(raw, dict):
-        raise ValueError(f"circuit {n}: must be an object (got {type(raw).__name__})")
+        raise TerminalBlocksError("err_circuit_not_object", n=n, got=type(raw).__name__)
     unknown = sorted(set(raw) - set(CIRCUIT_KEYS))
     if unknown:
-        raise ValueError(f"circuit {n}: unknown key(s) {', '.join(unknown)}")
+        raise TerminalBlocksError("err_circuit_unknown_keys", n=n, keys=', '.join(unknown))
     tag = _text(raw.get("tag"), f"circuit {n}: tag")
     where = f"circuit {tag}"
     if raw.get("phases") not in (1, 3) or isinstance(raw.get("phases"), bool):
-        raise ValueError(f"{where}: phases must be 1 or 3 (got {raw.get('phases')!r})")
+        raise TerminalBlocksError("err_phases_not_1_or_3", where=where, value=raw.get('phases'))
     return {"tag": tag, "phases": raw["phases"], "s_mm2": _number(raw.get("s_mm2"), f"{where}: s_mm2"),
             "pe_mm2": _number(raw.get("pe_mm2"), f"{where}: pe_mm2", True), "neutral_mm2": _number(raw.get("neutral_mm2"), f"{where}: neutral_mm2", True),
             "in_a": _number(raw.get("in_a"), f"{where}: in_a", True), "description": str(raw.get("description") or ""), "device": str(raw.get("device") or "")}
@@ -53,14 +54,14 @@ def _circuit(raw, n):
 def _validate(board_name, circuits, start_strip):
     _text(board_name, "board_name")
     if not isinstance(start_strip, str) or not STRIP_NAME.fullmatch(start_strip):
-        raise ValueError(f"start_strip must be a name of letters, digits, - and _ starting with a letter (got {start_strip!r})")
+        raise TerminalBlocksError("err_start_strip_name", start_strip=start_strip)
     if not isinstance(circuits, (list, tuple)) or not circuits:
-        raise ValueError("circuits must be a non-empty list of circuit objects")
+        raise TerminalBlocksError("err_circuits_empty")
     checked = [_circuit(c, n) for n, c in enumerate(circuits, start=1)]
     tags = [c["tag"] for c in checked]
     duplicates = sorted({t for t in tags if tags.count(t) > 1})
     if duplicates:
-        raise ValueError(f"duplicate circuit tag(s): {', '.join(duplicates)}")
+        raise TerminalBlocksError("err_duplicate_tags", tags=', '.join(duplicates))
     return checked
 
 

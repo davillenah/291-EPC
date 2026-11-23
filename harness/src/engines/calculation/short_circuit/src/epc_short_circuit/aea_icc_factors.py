@@ -40,6 +40,7 @@ NORMA DE REFERENCIA
 import math
 from epc_calc_common._validate import num as _num
 from epc_calc_common import aea_tables as T
+from epc_short_circuit.errors import ShortCircuitError
 
 __version__ = "0.1.0"
 
@@ -125,7 +126,7 @@ def k_ts(c_max, x_t_pu, x_d_pu=None, sen_fi_rg=None):
         _num(x_d_pu, "x_d_pu", 0.0, True)
         return c_max / (1.0 + x_t_pu / x_d_pu)
     if sen_fi_rg is None:
-        raise ValueError("indicar x_d_pu ([43]) o sen_fi_rg ([45b])")
+        raise ShortCircuitError("err_xd_or_sin_phi")
     return c_max / (1.0 - x_t_pu * sen_fi_rg)
 
 

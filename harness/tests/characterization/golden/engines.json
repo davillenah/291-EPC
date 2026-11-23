@@ -513,7 +513,7 @@
    }
   },
   "no_allowance": {
-   "error": "ValueError: allowance_pct is required: give the wastage/allowance percentage of the cable lengths explicitly (0 is allowed)"
+   "error": "BoqError: allowance_pct is required: give the wastage/allowance percentage of the cable lengths explicitly (0 is allowed)"
   },
   "render_rows": [
    {
@@ -597,14 +597,14 @@
  },
  "epc_calc_common": {
   "frac(1.5, 'x')": {
-   "error": "ValueError: x debe estar en (0, 1] (recibido: 1.5)"
+   "error": "CalcCommonError: x debe estar en (0, 1] (recibido: 1.5)"
   },
   "num(-1, 'x')": {
-   "error": "ValueError: x debe ser ≥ 0.0 (recibido: -1)"
+   "error": "CalcCommonError: x debe ser ≥ 0.0 (recibido: -1)"
   },
   "num(5, 'x')": null,
   "pos(0, 'x')": {
-   "error": "ValueError: x debe ser > 0 (recibido: 0)"
+   "error": "CalcCommonError: x debe ser > 0 (recibido: 0)"
   },
   "round_down_2(3.14159)": 3.14,
   "round_up_2(3.14159)": 3.15
@@ -3515,7 +3515,7 @@
    }
   },
   "no_terms": {
-   "error": "ValueError: missing required commercial field(s): suppliers, currency, response_deadline, delivery_site, validity_days"
+   "error": "RfqError: missing required commercial field(s): suppliers, currency, response_deadline, delivery_site, validity_days"
   },
   "render_rows": [
    {
@@ -4239,7 +4239,7 @@
    ]
   },
   "size_transformer(400, 400, None)": {
-   "error": "ValueError: reserve_pct is required: no default growth/reserve criterion has been decided; provide it explicitly"
+   "error": "TransformerSizingError: reserve_pct is required: no default growth/reserve criterion has been decided; provide it explicitly"
   }
  },
  "epc_voltage_drop": {

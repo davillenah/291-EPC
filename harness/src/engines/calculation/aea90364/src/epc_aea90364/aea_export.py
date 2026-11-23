@@ -32,6 +32,7 @@ import math
 import os
 import re
 import sys
+from epc_aea90364.errors import Aea90364Error
 
 __version__ = "0.1.0"
 
@@ -100,10 +101,10 @@ def export_calculation(datos, ruta):
     """Valida y escribe el JSON (UTF-8, sin BOM, sangría 1). Rechaza rutas .pdf/.docx/.md.
     Lanza ValueError si hay errores; devuelve los avisos."""
     if os.path.splitext(ruta)[1].lower() != ".json":
-        raise ValueError("el cálculo se exporta solo como .json (sin PDF)")
+        raise Aea90364Error("err_export_json_only")
     v = validate_calculation(datos)
     if v["errores"]:
-        raise ValueError("cálculo inválido: " + "; ".join(v["errores"]))
+        raise Aea90364Error("err_calculation_invalid", errors='; '.join(v['errores']))
     with open(ruta, "w", encoding="utf-8", newline="\n") as f:
         json.dump(datos, f, ensure_ascii=False, indent=1)
         f.write("\n")
@@ -116,7 +117,7 @@ def load_calculation(ruta):
         datos = json.load(f)
     v = validate_calculation(datos)
     if v["errores"]:
-        raise ValueError("cálculo inválido: " + "; ".join(v["errores"]))
+        raise Aea90364Error("err_calculation_invalid", errors='; '.join(v['errores']))
     return datos
 
 

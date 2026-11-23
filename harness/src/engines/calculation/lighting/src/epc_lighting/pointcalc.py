@@ -116,7 +116,7 @@ def calculate(
 ) -> Tuple[Dict[str, Any], List[str]]:
     """Grid statistics (maintained lux) plus any requested points; returns (report, warnings)."""
     if step_m <= 0:
-        raise LightingError("point step must be greater than 0 m")
+        raise LightingError("err_point_step")
     grid = grid_points(width_m, length_m, step_m)
     values = [illuminance_at(sources, (x, y, plane_m)) for x, y in grid]
     stats = _stats(values, maintenance)

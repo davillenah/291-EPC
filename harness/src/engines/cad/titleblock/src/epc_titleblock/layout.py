@@ -19,6 +19,7 @@ import math
 import re
 import xml.etree.ElementTree as ET
 from typing import Any, Dict, List, Optional
+from epc_titleblock.errors import TitleblockError
 
 SCHEMA_VERSION = "1.0"
 PEN_ROLES = ("cut", "frame", "zone", "outline", "cell", "fine")
@@ -195,10 +196,10 @@ def resolve(config: Optional[dict], default_frame: Dict[str, float]) -> Dict[str
 
 
 def prepare(config: Optional[dict], default_frame: Dict[str, float]) -> Dict[str, Any]:
-    """The configuration checked and with what it did not say filled in from the standard; raises ValueError (what is wrong, field by field) when it is not valid."""
+    """The configuration checked and with what it did not say filled in from the standard; raises TitleblockError (what is wrong, field by field) when it is not valid."""
     errors = validate(config)
     if errors:
-        raise ValueError("; ".join(f"{k}: {v}" for k, v in errors.items()))
+        raise TitleblockError("err_config_invalid", details="; ".join(f"{k}: {v}" for k, v in errors.items()))
     return resolve(config, default_frame)
 
 

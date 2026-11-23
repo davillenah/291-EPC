@@ -16,6 +16,7 @@ from epc_aea90364 import aea_voltage_drop as VD
 from epc_aea90364 import short_circuit as SC, system_voltage as SV
 from epc_aea90364.fmt import mm as _mm, p1 as _p1, sig2 as _sig2
 from epc_aea90364 import voltage_drop as VDG
+from epc_aea90364.errors import Aea90364Error
 
 NORMA_MARCO = (
     "AEA 90364-7-771 (ed. 2006): instalaciones en viviendas y similares",
@@ -36,12 +37,12 @@ def alimentador_principal(circuitos, tag=None):
         for c in circuitos:
             if c["TAG"] == tag:
                 return c
-        raise ValueError(f"alimentador {tag!r} no existe en CIRCUITOS")
+        raise Aea90364Error("err_feeder_unknown", tag=tag)
     for c in circuitos:
         sin_padre = not str(c.get("PARENT_TAG") or "").strip()
         if sin_padre and str(c.get("KIND") or "").strip().lower() == "mccb":
             return c
-    raise ValueError("no hay alimentador principal: se requiere un circuito sin PARENT_TAG y con KIND 'mccb'")
+    raise Aea90364Error("err_no_main_feeder")
 
 
 def _with_default_method(c):

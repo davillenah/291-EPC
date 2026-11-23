@@ -113,7 +113,7 @@ def isometric_drawing(floors: List[Tuple[Architecture, Dict[str, float], Tuple[f
                       fields: Optional[dict] = None, title: str = "ISOMÉTRICO / ISOMETRIC") -> Drawing:
     """The building as an isometric view on a sheet, at the smallest standard scale denominator that fits it unless `scale` is given."""
     if not floors:
-        raise ArchError("no floors to draw")
+        raise ArchError("err_no_floors")
     style = style or D.load_style()
     p = settings()
     angle = float(p["iso_angle_deg"])

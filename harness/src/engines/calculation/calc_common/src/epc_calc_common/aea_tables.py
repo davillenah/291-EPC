@@ -26,6 +26,7 @@ NORMA DE REFERENCIA
 import unicodedata
 
 from epc_calc_common import norm_data
+from epc_calc_common.errors import CalcCommonError
 
 __version__ = "0.1.0"
 # `RUTA_JSON` (module attribute, read lazily below): path of `aea_tables.json` in the normative folder (MIG-37a). A test may assign another path.
@@ -69,7 +70,7 @@ def _tabla(tabla):
     try:
         return cargar()["tablas_capacidad"][tabla]
     except KeyError:
-        raise ValueError(f"tabla {tabla} inexistente: {sorted(cargar()['tablas_capacidad'])}")
+        raise CalcCommonError("err_table_unknown", tabla=tabla, tablas=sorted(cargar()['tablas_capacidad']))
 
 
 def _bloque(tabla, aislacion, grupo=None, material=None):
@@ -77,7 +78,7 @@ def _bloque(tabla, aislacion, grupo=None, material=None):
         if b["aislacion"] == aislacion and (grupo is None or b.get("grupo_metodos") == grupo):
             if material is None or material in b["filas"]:
                 return b
-    raise ValueError(f"sin bloque {aislacion}/{grupo} en {tabla}")
+    raise CalcCommonError("err_table_block_missing", aislacion=aislacion, grupo=grupo, tabla=tabla)
 
 
 def iz_tabla(tabla, aislacion, material, seccion_mm2, columna, grupo=None):
@@ -88,27 +89,27 @@ def iz_tabla(tabla, aislacion, material, seccion_mm2, columna, grupo=None):
     b = _bloque(tabla, aislacion, grupo, material)
     claves = [c["clave"] for c in b["columnas"]]
     if columna not in claves:
-        raise ValueError(f"columna {columna} inexistente; use una de {claves}")
+        raise CalcCommonError("err_column_unknown", columna=columna, claves=claves)
     fila = b["filas"][material].get(_clave_seccion(seccion_mm2))
     if fila is None:
-        raise ValueError(f"sección {seccion_mm2} mm² fuera de {tabla}/{aislacion}/{material}")
+        raise CalcCommonError("err_section_outside_table", seccion_mm2=seccion_mm2, tabla=tabla, aislacion=aislacion, material=material)
     v = fila[claves.index(columna)]
     if v is None:
-        raise ValueError(f"sin valor para {seccion_mm2} mm² en columna {columna}")
+        raise CalcCommonError("err_no_value_for_section", seccion_mm2=seccion_mm2, columna=columna)
     return float(v)
 
 
 def _interp(xs, ys, x):
     if x < xs[0] or x > xs[-1]:
-        raise ValueError(f"valor {x} fuera del rango de la tabla [{xs[0]}, {xs[-1]}]")
+        raise CalcCommonError("err_value_outside_range", x=x, xs=xs[0], xs2=xs[-1])
     for i in range(len(xs) - 1):
         if xs[i] <= x <= xs[i + 1]:
             if ys[i] is None or ys[i + 1] is None:
-                raise ValueError(f"sin dato de factor para {x}")
+                raise CalcCommonError("err_no_factor_data", x=x)
             if xs[i + 1] == xs[i]:
                 return float(ys[i])
             return float(ys[i] + (ys[i + 1] - ys[i]) * (x - xs[i]) / (xs[i + 1] - xs[i]))
-    raise ValueError(f"valor {x} fuera de tabla")
+    raise CalcCommonError("err_value_outside_table", x=x)
 
 
 def factor_temperatura_aire(aislacion, temp_c):
@@ -141,8 +142,7 @@ def factor_agrupamiento_canos(circuitos, trifasicos=True):
     for fila in cargar()["factores_correccion"]["771.16.II.b"]["filas"]:
         if fila["circuitos"] == f"{circuitos} " + ("trifásicos" if trifasicos else "monofásicos"):
             return float(fila["factor"])
-    raise MissingNormDataError(f"agrupamiento de {circuitos} circuitos en un mismo caño fuera de la Tabla 771.16.II.b (solo 2 o 3 circuitos): "
-                               "indique en AGRUP_CIRCUITOS un número cubierto por la tabla o reagrupe los circuitos")
+    raise MissingNormDataError("err_grouping_conduit", circuitos=circuitos)
 
 
 def factor_agrupamiento_aire(item, n_circuitos):
@@ -153,11 +153,9 @@ def factor_agrupamiento_aire(item, n_circuitos):
         if fila["item"] == str(item):
             ns, fs = fila["numero_de_circuitos"], fila["factores"]
             if n_circuitos not in ns:
-                raise MissingNormDataError(
-                    f"agrupamiento de {n_circuitos} circuitos fuera de la Tabla 771.16.IV (ítem {item}): la tabla trae solo {ns[1:]} circuitos; "
-                    "no se interpola ni se repite el último factor. Indique en AGRUP_CIRCUITOS uno de esos números (reagrupe los circuitos o separe las canalizaciones)")
+                raise MissingNormDataError("err_grouping_table_iv", n_circuitos=n_circuitos, item=item, ns=ns[1:])
             return float(fs[ns.index(n_circuitos)])
-    raise ValueError(f"item {item} inexistente en Tabla 771.16.IV")
+    raise CalcCommonError("err_item_unknown", item=item)
 
 
 def factor_agrupamiento_enterrado(tabla, n_circuitos, separacion_idx):
@@ -168,9 +166,7 @@ def factor_agrupamiento_enterrado(tabla, n_circuitos, separacion_idx):
     if n_circuitos <= 1:
         return 1.0
     if str(n_circuitos) not in filas:
-        raise MissingNormDataError(
-            f"agrupamiento enterrado de {n_circuitos} circuitos fuera de la Tabla 771.16.VII.{tabla}: la tabla trae solo {', '.join(filas)} circuitos; "
-            "no hay tope silencioso ni se repite el último factor. Indique en AGRUP_CIRCUITOS uno de esos números (reagrupe los circuitos o separe las canalizaciones)")
+        raise MissingNormDataError("err_grouping_buried", n_circuitos=n_circuitos, tabla=tabla, ns=', '.join(filas))
     return float(filas[str(n_circuitos)][separacion_idx])
 
 
@@ -183,7 +179,7 @@ def constante(nombre):
     """Devuelve una constante del motor (clave de `constantes`, p. ej. '771.19.II_k_adiabatico')."""
     c = cargar()["constantes"]
     if nombre not in c:
-        raise ValueError(f"constante {nombre} inexistente: {sorted(c)}")
+        raise CalcCommonError("err_constant_unknown", nombre=nombre, constantes=sorted(c))
     return c[nombre]
 
 
@@ -205,7 +201,7 @@ def derived(nombre, build):
     return _DERIVED[nombre]
 
 
-class MissingNormDataError(ValueError):
+class MissingNormDataError(CalcCommonError):
     """D18: the calculation is rejected because a datum is outside the normative tables or was not given (the message names it and says how to supply it)."""
 
 
@@ -214,7 +210,7 @@ def separacion_idx(tabla, texto):
     opciones = cargar()["factores_correccion"]["771.16.VII." + tabla]["separacion"]
     claves = [_clave_texto(o) for o in opciones]
     if texto in (None, "") or _clave_texto(texto) not in claves:
-        raise MissingNormDataError(f"falta la separación entre cables (SEPARACION_CABLES) de la Tabla 771.16.VII.{tabla}: indique una de {opciones}; no hay columna por defecto")
+        raise MissingNormDataError("err_spacing_missing", tabla=tabla, opciones=opciones)
     return claves.index(_clave_texto(texto))
 
 

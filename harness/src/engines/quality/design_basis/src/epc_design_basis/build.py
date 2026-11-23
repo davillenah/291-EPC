@@ -2,6 +2,7 @@
 import copy
 
 from epc_design_basis import limits
+from epc_design_basis.errors import DesignBasisError
 
 CRITICAL = (("earthing_system", "earthing scheme (TT, TN or IT)"), ("short_circuit_level", "available short-circuit level with its origin"))
 STATUSES = ("verified", "pending review", "rejected")
@@ -28,18 +29,18 @@ def _get(data, *path):
 def check_profile(profile):
     """ValueError listing every D24 field missing in the profile (the same field names as the discipline)."""
     if not isinstance(profile, dict):
-        raise ValueError("the profile must be an object")
+        raise DesignBasisError("err_profile_not_object")
     supply = profile.get("supply") or {}
     missing = [f"supply.{key} ({label})" for key, label in CRITICAL if supply.get(key) in (None, "", {})]
     if missing:
-        raise ValueError("D24 data missing in the profile: " + "; ".join(missing))
+        raise DesignBasisError("err_d24_missing", missing='; '.join(missing))
 
 
 def check_norm_status(norm_status):
     if norm_status is None:
         return {}
     if not isinstance(norm_status, dict) or any(v not in STATUSES for v in norm_status.values()):
-        raise ValueError(f"norm_status must map register ids to one of {', '.join(STATUSES)}")
+        raise DesignBasisError("err_norm_status_invalid", allowed=', '.join(STATUSES))
     return dict(norm_status)
 
 
@@ -48,7 +49,7 @@ def assumptions_of(items):
     for n, entry in enumerate(items or [], start=1):
         text, reason = str(entry.get("text", "")).strip(), str(entry.get("reason", "")).strip()
         if not text or not reason:
-            raise ValueError(f"assumption {n}: text and reason are both required")
+            raise DesignBasisError("err_assumption_incomplete", n=n)
         out.append({"id": f"A-{n:02d}", "text": text, "reason": reason})
     return out
 
@@ -57,7 +58,7 @@ def insulation_items(rules, norm_status):
     if rules is None:
         return []
     if not isinstance(rules, dict) or not all(isinstance(k, str) and isinstance(v, str) for k, v in rules.items()):
-        raise ValueError("insulation_rules must map a role to an insulation name")
+        raise DesignBasisError("err_insulation_rules_invalid")
     status = limits.review_status((), norm_status)
     return [item(f"insulation_by_role.{role}", f"Insulation for role {role}", rules[role], None, "caller (insulation_rules)", status) for role in sorted(rules)]
 

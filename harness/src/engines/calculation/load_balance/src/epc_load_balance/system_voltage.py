@@ -9,6 +9,7 @@ use, the load side). Both default to the board's `TENSION_V`, so nothing changes
 The same keys exist in lower case for the memo/drawing board (`voltage_v`, `secondary_voltage_v`, `use_voltage_v`)."""
 from epc_load_balance import aea_demand as DEM
 from epc_calc_common import norm_data
+from epc_load_balance.errors import LoadBalanceError
 
 _CACHE = {}
 KEYS_NOMINAL = ("TENSION_V", "voltage_v")
@@ -35,7 +36,7 @@ def system_u0(un_v):
     try:
         return table[float(un_v)]
     except (KeyError, TypeError, ValueError):
-        raise ValueError(f"un_v {un_v!r} is not a project system; expected one of {sorted(table)} V (230/400 or 220/380)") from None
+        raise LoadBalanceError("err_voltage_system", un_v=un_v, systems=sorted(table)) from None
 
 
 def _first(board, keys):
