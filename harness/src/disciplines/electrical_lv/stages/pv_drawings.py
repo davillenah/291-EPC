@@ -78,7 +78,7 @@ def write(context, target, name, stamp_date, language, calls):
         return {}
     import epc_drawing.export.plan_sheet as plan_sheet
     fmt, scale = sheet_options(EC.inputs_of(context).get("drawings"))
-    request = __import__("json").loads((Path(target) / "titleblock-request.json").read_text(encoding="utf-8"))
+    request = EC.titleblock_request(context, target)
     sheets = {}
     for sheet_name, path in sorted(drafts.items()):
         done = plan_sheet.compose(path, request, Path(target) / "out" / f"{sheet_name}_sheet.dxf", fmt, scale, sheet_name)
