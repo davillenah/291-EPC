@@ -5,6 +5,7 @@ All notable changes. Format: Keep a Changelog; versions follow `harness/docs/BRA
 ## [Unreleased]
 
 ### Changed
+- Block 3, engines as functions (DGM-16, COD-01, COD-04, OPT-02 first part): `epc_sld.draw(SldInput, out_dir, name, maxl, stamp_date)` is the public entry point of the single-line diagram, with a frozen input contract and a bilingual `SldError`; `epc_mld.generate` takes the title block request and the date as data and returns its notices in a list, so stage 10 draws the MLD in process too (no subprocess left in `board_design`); only the command lines read the environment.
 - Block 2, rules and contracts: characterization tests per engine and three more reference projects (COD-13, GEN-02); every engine fails with its own error built from a code in English and Spanish, and `ERROR_CATALOGUE.md` is generated (COD-21, GEN-08, ADR-0039 proposed); a public door `api.py` per engine with a ratchet on internal imports (COD-02); input schemas for the BOQ, terminal-block and datasheet engines (OPT-09, first part); frozen stage and run results (COD-22, first part). The gate has 50 checks.
 - The incremental gate no longer fails the coverage check when no engine suite is affected (a documentation-only change).
 - ADR-0039 (proposed): one bilingual, code-based error pattern per engine and a generated error catalogue (COD-21, GEN-08, OPT-09).

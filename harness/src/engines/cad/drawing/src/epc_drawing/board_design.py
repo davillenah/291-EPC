@@ -23,7 +23,6 @@ import datetime as dt
 import json
 import os
 import shutil
-import subprocess
 import sys
 import zipfile
 from pathlib import Path
@@ -326,35 +325,46 @@ def design(data: dict, out_dir: Path, name: str, criteria: Optional[dict] = None
     return _finish(out, _summary(name, avisos, log, res, data, diagrams, memo, error))
 
 
-def _run_sld(env, xlsx, out, name, maxl, day):
-    """The single-line diagram, drawn in process as a function call (ADR-0038): the data come in `env`, nothing is read from the process. -> (log lines, error or None)."""
+def _run_sld(entrada, out, name, maxl, day):
+    """The single-line diagram, drawn in process through its public function `epc_sld.draw` (DGM-16, ADR-0038): the data come in `entrada`, nothing is read from the process. -> (log lines, error or None)."""
     import contextlib
     import io
-    from epc_sld import sld_paginate
+    from epc_sld import draw
     seen = io.StringIO()
     try:
         with contextlib.redirect_stdout(seen), contextlib.redirect_stderr(seen):
-            sld_paginate.paginate("default", str(xlsx), str(out), f"SLD_{name}", "default", "default", maxl, environ=env, stamp_date=day.isoformat() if day else None)
+            draw(entrada, out, f"SLD_{name}", maxl, day.isoformat() if day else None)
     except Exception as exc:                                  # the generator reports a failure by raising
         return [ln for ln in seen.getvalue().splitlines() if ln.startswith(("OK", "AVISO"))], f"{type(exc).__name__}: {exc}"[-600:]
     return [ln for ln in seen.getvalue().splitlines() if ln.startswith(("OK", "AVISO"))], None
 
 
-def _run_mld(env, out, name, out_dir, calc_json, detail_json):
-    """The multi-line diagram (a separate process: it has its own command line). -> (log lines, error or None)."""
-    run = subprocess.run([sys.executable, "-m", "epc_mld.mld_generator", "--input", str(out_dir / "input_design.json"), "--calc", str(calc_json),
-                          "--detail", str(detail_json), "--out", str(out), "--name", f"MLD_{name}"], env=env, capture_output=True, text=True)
-    log = [ln for ln in (run.stdout.splitlines() + run.stderr.splitlines()) if ln.startswith(("OK", "AVISO"))]
-    return log, ((run.stderr or run.stdout).strip()[-600:] if run.returncode != 0 else None)
+def _run_mld(out, name, out_dir, calc_json, detail_json, titleblock_json, day):
+    """The multi-line diagram, drawn in process through `epc_mld.generate` (DGM-16, COD-01): its notices come back in a list, so it can run at the same time as the single-line diagram.
+    -> (log lines, error or None)."""
+    from epc_mld import generate
+    log, notices = [], []
+    try:
+        data = json.loads((out_dir / "input_design.json").read_text(encoding="utf-8"))
+        calc = {"datos": json.loads(Path(calc_json).read_text(encoding="utf-8")), "detalle": json.loads(Path(detail_json).read_text(encoding="utf-8"))}
+        request = json.loads(Path(titleblock_json).read_text(encoding="utf-8")) if titleblock_json else None
+        made = generate(data, calc, out, f"MLD_{name}", stamp_date=day.isoformat() if day else None, titleblock_request=request, log=notices)
+    except Exception as exc:                                  # the generator reports a failure by raising
+        return [ln for ln in notices if ln.startswith(("OK", "AVISO"))], f"{type(exc).__name__}: {exc}"[-600:]
+    log = ["OK " + ", ".join(m["name"] for m in made)] + notices
+    return [ln for ln in log if ln.startswith(("OK", "AVISO"))], None
 
 
 def _run_sheet_generators(diagrams, env, xlsx, out, name, maxl, out_dir, calc_json, detail_json, day=None):
     """(log lines, first error or None). The generators run at the same time: they write different files and read the same inputs."""
     jobs = []
     if "sld" in diagrams:
-        jobs.append(lambda: _run_sld(env, xlsx, out, name, maxl, day))
+        from epc_sld import SldInput
+        entrada = SldInput(xlsx=str(xlsx), calc_json=str(calc_json), detail_json=str(detail_json), figures_json=env["SLD_FIGURES_JSON"], titleblock_json=env.get("EPC_TITLEBLOCK_JSON"),
+                           layout_json=env.get("SLD_LAYOUT_JSON"))
+        jobs.append(lambda: _run_sld(entrada, out, name, maxl, day))
     if "mld" in diagrams:
-        jobs.append(lambda: _run_mld(env, out, name, out_dir, calc_json, detail_json))
+        jobs.append(lambda: _run_mld(out, name, out_dir, calc_json, detail_json, env.get("EPC_TITLEBLOCK_JSON"), day))
     if not jobs:
         return [], None
     with concurrent.futures.ThreadPoolExecutor(max_workers=len(jobs)) as pool:
