@@ -43,12 +43,14 @@ NORMA DE REFERENCIA (por designación)
 """
 
 import math
+from typing import Any, Dict
+
 from epc_voltage_drop.errors import VoltageDropError
 
 __version__ = "0.1.0"
 
 
-def _num(valor, nombre, minimo=0.0, estricto=False):
+def _num(valor: Any, nombre: str, minimo: float = 0.0, estricto: bool = False) -> None:
     if not isinstance(valor, (int, float)) or isinstance(valor, bool) or not math.isfinite(valor):
         raise VoltageDropError("err_not_finite_number", nombre=nombre, valor=valor)
     if (estricto and valor <= minimo) or (not estricto and valor < minimo):
@@ -56,7 +58,7 @@ def _num(valor, nombre, minimo=0.0, estricto=False):
         raise VoltageDropError("err_out_of_range", nombre=nombre, op=op, minimo=minimo, valor=valor)
 
 
-def _factor_z(r_ohm_km, x_ohm_km, fp, capacitiva):
+def _factor_z(r_ohm_km: float, x_ohm_km: float, fp: float, capacitiva: bool) -> float:
     """R·cosφ + X·senφ [Ω/km]."""
     _num(r_ohm_km, "r_ohm_km")
     _num(x_ohm_km, "x_ohm_km")
@@ -69,30 +71,30 @@ def _factor_z(r_ohm_km, x_ohm_km, fp, capacitiva):
     return r_ohm_km * fp + x_ohm_km * sen
 
 
-def _delta_u(k, i_a, longitud_m, r_ohm_km, x_ohm_km, fp, capacitiva):
+def _delta_u(k: float, i_a: float, longitud_m: float, r_ohm_km: float, x_ohm_km: float, fp: float, capacitiva: bool) -> float:
     _num(i_a, "i_a")
     _num(longitud_m, "longitud_m")
     return k * i_a * (longitud_m / 1000.0) * _factor_z(r_ohm_km, x_ohm_km, fp, capacitiva)
 
 
-def drop_voltage_three_phase_v(i_a, longitud_m, r_ohm_km, x_ohm_km, fp, capacitiva=False):
+def drop_voltage_three_phase_v(i_a: float, longitud_m: float, r_ohm_km: float, x_ohm_km: float, fp: float, capacitiva: bool = False) -> float:
     """ΔU [V] trifásica: √3·I·L·(R·cosφ + X·senφ)."""
     return _delta_u(math.sqrt(3.0), i_a, longitud_m, r_ohm_km, x_ohm_km, fp, capacitiva)
 
 
-def drop_voltage_single_phase_v(i_a, longitud_m, r_ohm_km, x_ohm_km, fp, capacitiva=False):
+def drop_voltage_single_phase_v(i_a: float, longitud_m: float, r_ohm_km: float, x_ohm_km: float, fp: float, capacitiva: bool = False) -> float:
     """ΔU [V] monofásica: 2·I·L·(R·cosφ + X·senφ)."""
     return _delta_u(2.0, i_a, longitud_m, r_ohm_km, x_ohm_km, fp, capacitiva)
 
 
-def porcentaje(delta_u_v, un_v):
+def porcentaje(delta_u_v: float, un_v: float) -> float:
     """ΔU% = 100·ΔU/Un."""
     _num(delta_u_v, "delta_u_v")
     _num(un_v, "un_v", estricto=True)
     return 100.0 * delta_u_v / un_v
 
 
-def caida_tension(fases, i_a, longitud_m, r_ohm_km, x_ohm_km, fp, un_v, capacitiva=False):
+def caida_tension(fases: int, i_a: float, longitud_m: float, r_ohm_km: float, x_ohm_km: float, fp: float, un_v: float, capacitiva: bool = False) -> Dict[str, Any]:
     """Caída de tensión en V y %. fases = 1 (monofásica) o 3 (trifásica).
 
     Devuelve dict {"delta_u_v", "delta_u_pct", "fases", "un_v"}.
@@ -106,14 +108,14 @@ def caida_tension(fases, i_a, longitud_m, r_ohm_km, x_ohm_km, fp, un_v, capaciti
     return {"delta_u_v": du, "delta_u_pct": porcentaje(du, un_v), "fases": fases, "un_v": un_v}
 
 
-def complies_limit(delta_u_pct, limite_pct):
+def complies_limit(delta_u_pct: float, limite_pct: float) -> bool:
     """True si ΔU% ≤ límite (el límite es dato del proyecto, no de este módulo)."""
     _num(delta_u_pct, "delta_u_pct")
     _num(limite_pct, "limite_pct", estricto=True)
     return delta_u_pct <= limite_pct
 
 
-def longitud_maxima_m(fases, delta_u_max_v, i_a, r_ohm_km, x_ohm_km, fp, capacitiva=False):
+def longitud_maxima_m(fases: int, delta_u_max_v: float, i_a: float, r_ohm_km: float, x_ohm_km: float, fp: float, capacitiva: bool = False) -> float:
     """Longitud máxima [m] para no superar delta_u_max_v."""
     _num(delta_u_max_v, "delta_u_max_v", estricto=True)
     _num(i_a, "i_a", estricto=True)
