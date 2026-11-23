@@ -326,15 +326,15 @@ def design(data: dict, out_dir: Path, name: str, criteria: Optional[dict] = None
     return _finish(out, _summary(name, avisos, log, res, data, diagrams, memo, error))
 
 
-def _run_sld(env, xlsx, out, name, maxl, day):
-    """The single-line diagram, drawn in process as a function call (ADR-0038): the data come in `env`, nothing is read from the process. -> (log lines, error or None)."""
+def _run_sld(entrada, out, name, maxl, day):
+    """The single-line diagram, drawn in process through its public function `epc_sld.draw` (DGM-16, ADR-0038): the data come in `entrada`, nothing is read from the process. -> (log lines, error or None)."""
     import contextlib
     import io
-    from epc_sld import sld_paginate
+    from epc_sld import draw
     seen = io.StringIO()
     try:
         with contextlib.redirect_stdout(seen), contextlib.redirect_stderr(seen):
-            sld_paginate.paginate("default", str(xlsx), str(out), f"SLD_{name}", "default", "default", maxl, environ=env, stamp_date=day.isoformat() if day else None)
+            draw(entrada, out, f"SLD_{name}", maxl, day.isoformat() if day else None)
     except Exception as exc:                                  # the generator reports a failure by raising
         return [ln for ln in seen.getvalue().splitlines() if ln.startswith(("OK", "AVISO"))], f"{type(exc).__name__}: {exc}"[-600:]
     return [ln for ln in seen.getvalue().splitlines() if ln.startswith(("OK", "AVISO"))], None
@@ -352,7 +352,10 @@ def _run_sheet_generators(diagrams, env, xlsx, out, name, maxl, out_dir, calc_js
     """(log lines, first error or None). The generators run at the same time: they write different files and read the same inputs."""
     jobs = []
     if "sld" in diagrams:
-        jobs.append(lambda: _run_sld(env, xlsx, out, name, maxl, day))
+        from epc_sld import SldInput
+        entrada = SldInput(xlsx=str(xlsx), calc_json=str(calc_json), detail_json=str(detail_json), figures_json=env["SLD_FIGURES_JSON"], titleblock_json=env.get("EPC_TITLEBLOCK_JSON"),
+                           layout_json=env.get("SLD_LAYOUT_JSON"))
+        jobs.append(lambda: _run_sld(entrada, out, name, maxl, day))
     if "mld" in diagrams:
         jobs.append(lambda: _run_mld(env, out, name, out_dir, calc_json, detail_json))
     if not jobs:
