@@ -9,7 +9,8 @@ All notable changes. Format: Keep a Changelog; versions follow `harness/docs/BRA
 
 ### Changed
 - OPT-10: the charter and canvas seal times (`ahora=`) and the `epc_arch` run manifest time (`now=`) can be handed in; the clock is only the default.
-- OPT-13: invariant tests for `load_balance`, `grounding`, `short_circuit` and `transformer_sizing`.
+- OPT-13: invariant tests for `load_balance`, `grounding`, `short_circuit`, `transformer_sizing`, `selectivity` and `calc_common`.
+- OPT-02: ADR-0040 (proposed) designs one entry point for the MLD, the plan, the architecture reader and the PV drawings; nothing converted.
 - OPT-13 (first part): invariant tests over 300 generated inputs each for the voltage-drop formulas and the commercial-section choice.
 - GEN-01: `REVISION_NORMAS.md` orders the norm review units by how many engines depend on them and shows that count.
 - OPT-06: the documents stage draws the report PDFs in up to four processes (`epc_drawing.export.report_pdf.render_many`): documents 6.1 s to 3.0 s on a house run, same files.
