@@ -65,7 +65,7 @@ The patterns the conversions of phase 3 follow; do before converting more engine
 - [ ] **COD-22 · Immutable value objects between stages,** which makes the input-hash cache and parallel runs safe.
 - [ ] **COD-12 · Frozen dataclasses or schemas** for what travels between stages, instead of dicts with loose keys.
 - [ ] **OPT-09 · Validate each engine input** against a schema at its entry point, failing with a clear message in English and Spanish.
-- [ ] **GEN-09 · Engine contracts generated from schemas (was J).** Input and output documented from the schema, not by hand.
+- [x] (2026-11-23) **GEN-09 · Engine contracts generated from schemas (was J).** `harness/docs/ENGINE_CONTRACTS.md` is written by `engine_contracts.py` from the five engines that have schemas (lighting, pv, receptacles, hvac, plan) and lists the 26 that have none (OPT-09); gate check `engine-contracts` (49 checks). Input and output documented from the schema, not by hand.
 - [ ] **OPT-16 · One small versioned example case per engine,** used as test, documentation and call example.
 - [ ] **COD-17 · Functional core, imperative shell:** the engine is a pure function; reading files and environment and writing outputs live in an adapter (ADR-0038).
 - [ ] **COD-04 · Parameters instead of environment variables** inside the engines (the SLD already takes `environ`; stop reading `os.environ` inside).
