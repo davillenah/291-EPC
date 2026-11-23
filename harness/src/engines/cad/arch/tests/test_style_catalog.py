@@ -7,7 +7,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parent / "src"))
 
-from epc_arch.drawing import LAYERS_PATH, load_style, style_with   # noqa: E402
+from epc_arch.api import LAYERS_PATH, load_style, style_with   # noqa: E402
 
 
 class TestStyleCatalog(unittest.TestCase):
