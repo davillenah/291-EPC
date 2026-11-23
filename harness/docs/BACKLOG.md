@@ -88,11 +88,11 @@ Same code (the SLD and MLD generators), so done together: SYM-01 (done) and SYM-
 - [~] **SYM-02 · SLD and MLD generators use the API** (no engine builds a symbol file name). Done 2026-11-23: both generators resolve the symbol file through `epc_symbols.resolve` for the default library. Pending: placing symbols as DXF `INSERT` blocks (SYM-00, golden review by the owner), the other drawing engines (SYM-03 to SYM-05).
 - [ ] **OPT-05 · One symbol engine** (SYM-02 to SYM-07).
 - [ ] **COD-03 · One source per symbol and device table** (DGM-13a, ADR-0012).
-- [ ] **SYM-03 · `photovoltaic` domain and PV drawings insert library symbols;** the silent box fallback in `pv_diagrams._symbol` is removed.
+- [~] **SYM-03 · `photovoltaic` domain and PV drawings insert library symbols;** (done 2026-11-23: `pv_diagrams._symbol` resolves through `epc_symbols`; pending: the `photovoltaic` domain and the end of the box fallback, which need real IEC 60617 geometry supplied by a person) the silent box fallback in `pv_diagrams._symbol` is removed.
 - [ ] **SYM-06 · Complete `electrical-mv`:** DXF blocks for `mld-mv` and `ssd-mv`.
 - [ ] **SYM-04 · `electrical-plan` domain:** the 31 symbols of `epc_plan/symbols.json` move into `epc_symbols` (replaced through a reviewed change, not deleted silently).
 - [ ] **SYM-05 · `architecture` domain:** the 25 `epc_arch/biblioteca` symbols and the door and window drawings.
-- [ ] **SYM-07 · Gate guard:** no drawing engine draws a symbol outside `epc_symbols`; deliverable DXF files of the golden projects have `INSERT` blocks; every symbol id used in the code exists.
+- [~] **SYM-07 · Gate guard** (done 2026-11-23: `test_symbol_access` lets no file outside `epc_symbols` build a symbol file name, and the allowed list only shrinks; pending: deliverable DXF with `INSERT` blocks (needs the golden review), every symbol id used in the code exists): no drawing engine draws a symbol outside `epc_symbols`; deliverable DXF files of the golden projects have `INSERT` blocks; every symbol id used in the code exists.
 - [ ] **OPT-10 · Deterministic output in every engine** (dates, element order, identifiers), so cache and golden comparisons are reliable.
 
 ### Block 4 · Speed, only what phase 1 shows is worth it (A)

@@ -5,6 +5,7 @@ All notable changes. Format: Keep a Changelog; versions follow `harness/docs/BRA
 ## [Unreleased]
 
 ### Changed
+- PV diagrams take their library symbols (inverter, module, DC isolator, meter) from `epc_symbols.dxf_block` instead of building the file name; a new architecture test (`test_symbol_access`, SYM-07 first part) lets no other file build a symbol path, with a list of the two generators that may only shrink.
 - OPT-11 (first part): the title block request that stage 10 writes is read once per run and handed as data to the plan and PV sheets (`engine_calls.titleblock_request`), instead of each one reading the file.
 - The SLD no longer goes through an Excel file (DGM-16 step 4, OPT-03): `SldInput.board` carries the board as data and `epc_sld.board_table` gives the generator the same rows a workbook gave; stage 10 stops writing `input_for_sld.xlsx`. The drawings are byte-identical to the workbook path (checked on SVG and DXF of SLD and MLD). The workbook path stays for the command line and the example.
 - SYM-02 (first part): the SLD and MLD generators take the symbol file from `epc_symbols.resolve` when they use the default library, instead of building file names themselves; a library given by path keeps its own rule. Same files byte for byte.
