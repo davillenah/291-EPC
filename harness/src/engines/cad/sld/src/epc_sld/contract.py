@@ -26,17 +26,18 @@ class SldInput:
     modblock: str = "default"
 
 
-def _check(entrada: SldInput, maxl) -> None:
+def _check_files(entrada: SldInput) -> None:
     for field in ("xlsx", "calc_json", "detail_json", "figures_json"):
-        value = getattr(entrada, field)
-        if not value:
+        if not getattr(entrada, field):
             raise SldError("err_sld_field_missing", field=field)
-        if not os.path.isfile(value):
-            raise SldError("err_sld_file_missing", field=field, path=value)
-    for field in ("titleblock_json", "layout_json"):
+    for field in ("xlsx", "calc_json", "detail_json", "figures_json", "titleblock_json", "layout_json"):
         value = getattr(entrada, field)
         if value and not os.path.isfile(value):
             raise SldError("err_sld_file_missing", field=field, path=value)
+
+
+def _check(entrada: SldInput, maxl) -> None:
+    _check_files(entrada)
     if entrada.formato not in FORMATS:
         raise SldError("err_sld_format_invalid", value=entrada.formato)
     if isinstance(maxl, bool) or not isinstance(maxl, int) or maxl < 1:

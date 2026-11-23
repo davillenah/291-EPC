@@ -23,7 +23,6 @@ import datetime as dt
 import json
 import os
 import shutil
-import subprocess
 import sys
 import zipfile
 from pathlib import Path
@@ -340,12 +339,20 @@ def _run_sld(entrada, out, name, maxl, day):
     return [ln for ln in seen.getvalue().splitlines() if ln.startswith(("OK", "AVISO"))], None
 
 
-def _run_mld(env, out, name, out_dir, calc_json, detail_json):
-    """The multi-line diagram (a separate process: it has its own command line). -> (log lines, error or None)."""
-    run = subprocess.run([sys.executable, "-m", "epc_mld.mld_generator", "--input", str(out_dir / "input_design.json"), "--calc", str(calc_json),
-                          "--detail", str(detail_json), "--out", str(out), "--name", f"MLD_{name}"], env=env, capture_output=True, text=True)
-    log = [ln for ln in (run.stdout.splitlines() + run.stderr.splitlines()) if ln.startswith(("OK", "AVISO"))]
-    return log, ((run.stderr or run.stdout).strip()[-600:] if run.returncode != 0 else None)
+def _run_mld(out, name, out_dir, calc_json, detail_json, titleblock_json, day):
+    """The multi-line diagram, drawn in process through `epc_mld.generate` (DGM-16, COD-01): its notices come back in a list, so it can run at the same time as the single-line diagram.
+    -> (log lines, error or None)."""
+    from epc_mld import generate
+    log, notices = [], []
+    try:
+        data = json.loads((out_dir / "input_design.json").read_text(encoding="utf-8"))
+        calc = {"datos": json.loads(Path(calc_json).read_text(encoding="utf-8")), "detalle": json.loads(Path(detail_json).read_text(encoding="utf-8"))}
+        request = json.loads(Path(titleblock_json).read_text(encoding="utf-8")) if titleblock_json else None
+        made = generate(data, calc, out, f"MLD_{name}", stamp_date=day.isoformat() if day else None, titleblock_request=request, log=notices)
+    except Exception as exc:                                  # the generator reports a failure by raising
+        return [ln for ln in notices if ln.startswith(("OK", "AVISO"))], f"{type(exc).__name__}: {exc}"[-600:]
+    log = ["OK " + ", ".join(m["name"] for m in made)] + notices
+    return [ln for ln in log if ln.startswith(("OK", "AVISO"))], None
 
 
 def _run_sheet_generators(diagrams, env, xlsx, out, name, maxl, out_dir, calc_json, detail_json, day=None):
@@ -357,7 +364,7 @@ def _run_sheet_generators(diagrams, env, xlsx, out, name, maxl, out_dir, calc_js
                            layout_json=env.get("SLD_LAYOUT_JSON"))
         jobs.append(lambda: _run_sld(entrada, out, name, maxl, day))
     if "mld" in diagrams:
-        jobs.append(lambda: _run_mld(env, out, name, out_dir, calc_json, detail_json))
+        jobs.append(lambda: _run_mld(out, name, out_dir, calc_json, detail_json, env.get("EPC_TITLEBLOCK_JSON"), day))
     if not jobs:
         return [], None
     with concurrent.futures.ThreadPoolExecutor(max_workers=len(jobs)) as pool:

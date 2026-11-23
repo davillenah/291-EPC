@@ -36,9 +36,19 @@ class TestGenerateOption(unittest.TestCase):
     def test_the_option_is_set_on_the_generator(self):
         self.assertEqual(self.date_set_on_generator({}, stamp_date="2026-03-04"), "2026-03-04")
 
-    def test_the_environment_variable_is_the_fallback_and_nothing_means_none(self):
-        self.assertEqual(self.date_set_on_generator({"EPC_STAMP_DATE": "2026-03-05"}), "2026-03-05")
+    def test_the_function_does_not_read_the_environment(self):
+        self.assertIsNone(self.date_set_on_generator({"EPC_STAMP_DATE": "2026-03-05"}))
         self.assertIsNone(self.date_set_on_generator({}))
+
+    def test_the_notices_and_the_title_block_request_go_where_the_caller_says(self):
+        made = mock.MagicMock()
+        made.build.return_value = [{"name": "N"}]
+        made.order = ["A"]
+        notes = []
+        with mock.patch.object(M, "Generator", return_value=made):
+            M.generate({"board": {}, "circuits": []}, {"datos": {}}, ".", "N", titleblock_request={"x": 1}, log=notes)
+        self.assertEqual(made.titleblock_request, {"x": 1})
+        self.assertIs(made.log, notes)
 
     def test_a_new_generator_has_no_date(self):
         self.assertIsNone(M.Generator({"board": {}, "circuits": []}, {"datos": {}}, lib="x").stamp_date)
