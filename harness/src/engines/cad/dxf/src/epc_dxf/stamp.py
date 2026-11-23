@@ -103,3 +103,15 @@ def save(doc, path, stamp: Optional[Stamp] = None) -> None:
         doc.saveas(path)
     finally:
         del doc._update_metadata
+
+
+def document(path, doc=None):
+    """The drawing to work on: the one the caller already holds, or the file read once (COD-07)."""
+    import ezdxf
+    return doc if doc is not None else ezdxf.readfile(str(path))
+
+
+def save_if(doc, path, stamp: Optional[Stamp] = None, write: bool = True) -> None:
+    """`save`, unless the caller keeps working on the same document and writes it at the end."""
+    if write:
+        save(doc, path, stamp)

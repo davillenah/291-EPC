@@ -72,7 +72,7 @@ def _poner_rol(ent, extra, cat):
         ent.dxf.layer = _L.name(extra['role'], cat)
 
 
-def colorear(svg_path, dxf_path, catalog=None, a3=None, stamp=None):
+def colorear(svg_path, dxf_path, catalog=None, a3=None, stamp=None, doc=None, write=True):
     """Restituye color y grosor del trazo del SVG en las entidades del DXF.
 
     El convertidor del plugin no conserva el color (todo queda con el color de la capa).
@@ -162,7 +162,7 @@ def colorear(svg_path, dxf_path, catalog=None, a3=None, stamp=None):
         if col_rell and col_rell != (255, 255, 255):
             bucles = [pts for pts, cerr in polis if cerr and len(pts) > 2]
             if bucles: rellenos.append((col_rell, bucles))
-    doc = ezdxf.readfile(dxf_path)
+    doc = _stamp.document(dxf_path, doc)
     ents = [x for x in doc.modelspace() if x.dxftype() in ('TEXT', 'LINE', 'LWPOLYLINE')]
     if len(ents) != len(esperado):
         print(f'AVISO colores DXF: {len(ents)} entidades vs {len(esperado)} formas; no se asignan colores', file=_sys.stderr)
@@ -214,7 +214,7 @@ def colorear(svg_path, dxf_path, catalog=None, a3=None, stamp=None):
                 h.paths.add_polyline_path([(x, alto_mm - y) for x, y in hueco], is_closed=True)
     if textos_diagrama:
         _separar_textos(textos_diagrama)
-    _stamp.save(doc, dxf_path, stamp)
+    _stamp.save_if(doc, dxf_path, stamp, write)
     return True
 
 
@@ -306,8 +306,8 @@ def _separar_textos(textos, pasadas=60):
             break
 
 
-def aplicar(dxf_path, catalog=None, stamp=None):
-    doc = ezdxf.readfile(dxf_path)
+def aplicar(dxf_path, catalog=None, stamp=None, doc=None, write=True):
+    doc = _stamp.document(dxf_path, doc)
     cat = _catalogo(catalog)
     diagrama, textos, rotulo, lamina = (_L.apply(doc, r, cat) for r in ROLES)
     for e in doc.modelspace():
@@ -335,5 +335,5 @@ def aplicar(dxf_path, catalog=None, stamp=None):
                 doc.layers.remove(nombre)
             except ezdxf.DXFValueError:      # a protected layer, or one still in use: it stays (COD-11: only this error is expected)
                 pass
-    _stamp.save(doc, dxf_path, stamp)
+    _stamp.save_if(doc, dxf_path, stamp, write)
     return sorted(_L.name(r, cat) for r in ROLES)

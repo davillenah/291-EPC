@@ -5,6 +5,9 @@ All notable changes. Format: Keep a Changelog; versions follow `harness/docs/BRA
 ## [Unreleased]
 
 ### Changed
+- COD-05: the DXF to PDF export skips matplotlib's per-patch limit computation (the limits come from the drawing extents): 13.1 s to 5.1 s for the four PDFs of the example board, same bytes.
+- COD-07 (second part): `epc_dxf.deliverable` reads the converted drawing once and writes it once while it assigns layers, colours and symbol blocks. Same bytes, about 5% faster on the example board.
+- COD-07 (first part): `epc_dxf` reads each library symbol DXF once per run instead of once per drawing.
 - SYM-05 (first part): the 25 architecture plan symbols moved from `epc_arch/biblioteca` to `epc_symbols` (`arch_symbols()`). Same files.
 - SYM-04 (first part): the 31 electrical-plan symbols moved from `epc_plan` to `epc_symbols` (`plan_symbols()`); `epc_plan` no longer holds symbol data. Same drawings.
 - `epc_arch` takes the IRAM sheet as data (`template=` on `plan_dxf`, `building_views`, `view_dxf`, `write_view_dxf`; `epc_arch.sheets.template_from_svg`) and starts no process: the command line (`cli_v2.iram_template`, `author.main`) and the electrical stage 3D model fetch the sheet from `epc_titleblock` and hand it over (COD-01, owner decision 2026-11-23). Without a sheet the engine draws on its own frame.

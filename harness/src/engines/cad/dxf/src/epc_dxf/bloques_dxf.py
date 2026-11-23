@@ -8,6 +8,7 @@ Flujo (sld_generator.py):
      y coloca un INSERT por aparición con su escala (A3 = escala del grupo) y sus atributos.
 Las capas de los bloques se reasignan a las capas 291-* del SLD.
 """
+import functools
 import os, re
 from lxml import etree
 import ezdxf
@@ -66,14 +67,21 @@ def separar(svg_texto, lib):
     return etree.tostring(raiz, encoding='unicode'), instancias
 
 
-def insertar(dxf_path, lib, instancias, alto_mm, catalog=None, stamp=None):
+@functools.lru_cache(maxsize=256)
+def _library_block(path: str, mtime_ns: int):
+    """The DXF file of one library symbol, read once per run and file version (COD-07): the importer only reads from it, so one parsed copy serves every drawing."""
+    return ezdxf.readfile(path)
+
+
+def insertar(dxf_path, lib, instancias, alto_mm, catalog=None, stamp=None, doc=None, write=True):
     cat = _L.resolve(catalog)
-    doc = ezdxf.readfile(dxf_path)
+    doc = _stamp.document(dxf_path, doc)
     msp = doc.modelspace()
     sids = sorted({i['sid'] for i in instancias})
     nombres = []
     for sid in sids:
-        src = ezdxf.readfile(os.path.join(lib, sid + '.dxf'))
+        block_file = os.path.join(lib, sid + '.dxf')
+        src = _library_block(block_file, os.stat(block_file).st_mtime_ns)
         imp = importer.Importer(src, doc)
         nombres.append(sid.upper())
         if sid.upper() not in doc.blocks:
@@ -97,5 +105,5 @@ def insertar(dxf_path, lib, instancias, alto_mm, catalog=None, stamp=None):
         ref.add_auto_attribs({t: i['valores'].get(t, '') for t in tags})
         for a in ref.attribs:
             a.dxf.layer = _L.name('sld.text', cat)
-    _stamp.save(doc, dxf_path, stamp)
+    _stamp.save_if(doc, dxf_path, stamp, write)
     return len(instancias), len(sids)

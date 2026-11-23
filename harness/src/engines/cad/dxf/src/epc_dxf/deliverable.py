@@ -28,10 +28,14 @@ def _prepare(text: str, symbol_library, tmp_svg: Path) -> list:
 
 
 def _finish(tmp_dxf: Path, tmp_svg: Path, instances: list, symbol_library, height_mm: float, catalog: Dict[str, dict], a3: Optional[bool], stamp=None) -> int:
+    """Layers, colours and symbol blocks on the converted drawing: the file is read once, the three steps work on that one document and it is written once (COD-07)."""
     from epc_dxf import bloques_dxf, capas_dxf
-    capas_dxf.aplicar(str(tmp_dxf), catalog, stamp)
-    capas_dxf.colorear(str(tmp_svg), str(tmp_dxf), catalog, a3, stamp)                # colour, line weight and the layer of each entity by its role
-    return bloques_dxf.insertar(str(tmp_dxf), symbol_library, instances, height_mm, catalog, stamp)[0] if instances else 0
+    doc = ezdxf.readfile(str(tmp_dxf))
+    capas_dxf.aplicar(str(tmp_dxf), catalog, stamp, doc=doc, write=False)
+    capas_dxf.colorear(str(tmp_svg), str(tmp_dxf), catalog, a3, stamp, doc=doc, write=False)       # colour, line weight and the layer of each entity by its role
+    blocks = bloques_dxf.insertar(str(tmp_dxf), symbol_library, instances, height_mm, catalog, stamp, doc=doc, write=False)[0] if instances else 0
+    _stamp.save(doc, str(tmp_dxf), stamp)
+    return blocks
 
 
 def _retarget(entity, name: str) -> None:
