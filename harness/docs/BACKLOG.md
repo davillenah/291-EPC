@@ -29,89 +29,147 @@ Actualizado: 2026-11-08.
 
 ## Diagram knowledge (DGM)
 
-Data in `knowledge/diagrams/` (research of 2026-11-20: LV/MV and PV devices, typical schemes, IEC 60617 symbols, functional circuits). All `unverified`/`typical`/`not_found`; test `tests/unit/test_diagram_knowledge.py`.
+Data in `knowledge/diagrams/` (research of 2026-11-20). The open items of DGM, OPT, GEN, PRO, COD and SYM are in the roadmap below. All `unverified`/`typical`/`not_found`; test `tests/unit/test_diagram_knowledge.py`.
 
-- [x] **DGM-01 · Research data and bridge to the symbol library** (2026-11-21). 57 devices mapped to `epc_symbols` symbols and ports, netlist contract proposal and 18 netlists.
-- [~] **DGM-02 · SLD/MLD read the relational model** (ADR-0037, 2026-11-21). Hecho: model per board (devices, loads, wires, circuits by stable ids; cable data stays in the stage 8 cable list), schemas, typical topologies (`circuit_topologies.json`), builder and CLI `epc_drawing.diagram_model`, skill `diagram-model`, tests; stage 10 hands over the assembled board diagram (`diagram_assembly`: `epc_drawing.diagram_assembler` joins the model, the calculation values and the cable-list rows with the design rules; the calculation does not generate the model; the design rules are constraints checked on the netlist, `violations`). Falta: more constraints (a person confirms each one), showing `violations` as findings, and the swap of the symbol provider to `epc_symbols`. Falta: the optional SLD/MLD input path that reads the model (the board workbook path stays as is). Typical topologies of star-delta, ATS, UPS and the MV intake are done (all unverified); the ATS second source and the real wiring of the star-delta contactors wait for DGM-10.
-- [x] **DGM-08 · Code that reads the diagram knowledge** (2026-11-21). `epc_drawing.diagram_knowledge`: `rules()`, `matching(variables)`, `symbol_for(device_id)` and `check_board(calculo)` (advisory notes EN/ES, never changes a result). Tests: `tests/unit/test_diagram_knowledge_use.py`.
-- [x] **DGM-09 · Stage 9 lists the diagram-rule notes** (2026-11-21). `calc_check_stage.diagram_findings`: where the protective device of a circuit differs from the one the LV rules select for its current, a `note` finding (verifier calc-check, EN and ES text) joins stage 9. Advisory, no result changes; goldens unchanged. Test: `tests/unit/test_diagram_knowledge_use.py`.
-- [ ] **DGM-10 · The harness draws functional and control schemes** (owner, 2026-11-21): power and control circuits (DOL, star-delta, reversing, ATS...) from `funcional_iec60617` and the relational model, with its own drawing path (IEC 60617 symbols, terminal marking, cross-references). Design first, then engine.
-### Order of work (2026-11-22)
+PRD of the symbols: `docs/prsad/PRD-symbols.md` (one `epc_symbols` segmented by domain, migrated in parts; one pull request per phase, gate green before the next; nothing here changes norm values or calculation results).
 
-Read this first; the items below keep their detail. Legend: **A** = an agent can do it now; **P** = needs a person first (norm value, drawing standard, owner decision).
+## Roadmap (organized 2026-11-22, owner request)
 
-1. **A, in progress: DGM-16 engines as called functions** (ADR-0038). SLD runs in process (done); next the formal `epc_sld.draw` contract, the end of the Excel round trip, then the MLD, then audit the other engines.
-1b. **A, next: SYM-01 and SYM-02** (symbols PRD, approved by the owner 2026-11-22 as the plan). SYM-01 (catalogue schema and `epc_symbols` API with aliases) changes no drawing, so no golden is touched; SYM-02 (SLD and MLD use the API) follows. Section "Symbols (SYM)".
-1c. **(Owner) golden review for SYM-00, then SYM-03 to SYM-06.** Any phase that turns strokes into blocks changes DXF bytes and fails `test_characterization_drawings` against the golden files, which agents never edit (D27): SYM-00 (SLD blocks) and the domain moves SYM-04 and SYM-05 wait for the owner to review and request the new golden. SYM-07 (gate guard) last.
-2. **A: DGM-12 remainder.** The flow resolver run before the sizing (structural conditions), the auditor verdict as an agent step, the SLD and MLD reading the assembly (needs the DGM-16 contract), then lists, datasheets and specifications from the assembly (step 7).
-3. **A: DGM-15 roster.** `electrical_lv` takes flow steps 1 and 3; `documentation` and `procurement` read the assembly once the generators do (follows step 2).
-4. **A: DGM-13 (a), (b-done), (e).** One device catalogue for the diagrams, the five speedups (measure only if they pay, owner prefers implementing).
-5. **A then P: DGM-02, DGM-10, DGM-11.** The SLD/MLD reading the model, functional and control schemes, other disciplines: builders and topology kinds are agent work; each new constraint or scheme rule is confirmed by a person.
-6. **P: DGM-03, DGM-04** (real IEC 60617 symbol geometry and the "close" symbol matches), **DGM-13 (c), (d)** (duplicated HVAC and lighting `typical.json`, constraints `dc-03` to `dc-16`), **DGM-05, DGM-06** (source conflicts and standards read only through secondary sources).
-7. **After 1 and 2, with P inputs: DGM-14 and DGM-07** (PV: DC cable types, PV engine feeding the calculation, PV audit constraints from PRD section 4, each confirmed by a person).
+One ordered list. Rules: (1) an item never sits before something it needs; (2) related items are adjacent and share a phase; (3) work that makes later work safe or measurable goes first; (4) items that need a person (**P**) are grouped in their own phase so they do not block agent work. **A** = an agent can do it now. Within a phase, do items in the order listed. Detail stays in each entry.
 
-### Optimizations (OPT, owner accepted 2026-11-22)
+Dependency summary: Block 1 (measure and protect) → Block 2 (engine rules and contracts) → Block 3 (engines as functions and one symbol engine, together because both touch the generators) → Block 4 (speed, needs 1 and 3) → Block 5 (the flow and PV, needs 3) → Block 6 (trust and quality) → Block 7 (new product features) → Block 8 (owner and person decisions, parallel from the start).
 
-All **A** (agent work), none touches a norm value or a golden file. Order: OPT-01 and OPT-08 first, then they run alongside the engine conversion (DGM-16) and SYM-02; OPT-09 and OPT-10 go with each engine converted; OPT-11 and OPT-12 only after OPT-01 shows they pay; OPT-13 to OPT-16 are continuous work.
+### Block 1 · Measure and protect (A, no dependency, first)
 
-- [ ] **OPT-01 · Time every stage.** A stopwatch per pipeline stage (calculation, netlist, SLD, MLD, DXF, documents) written to the project log, so each later change is judged with measured data.
-- [ ] **OPT-02 · All engines as called functions** (ADR-0038): MLD, `pv_diagrams`, `epc_plan`, `epc_arch`, one public entry point each (DGM-16).
-- [ ] **OPT-03 · End the Excel round trip inside the SLD** (DGM-16 step 4): the model already holds the data.
-- [ ] **OPT-04 · Cache by input hash.** Generalize the stage 10 reuse of the calculation to netlist, diagrams and documents; redo only the sheets whose inputs changed.
-- [ ] **OPT-05 · One symbol engine** (SYM-02 to SYM-07).
-- [ ] **OPT-06 · More parallelism:** documents (PDF, DOCX, XLSX) and plan sheets, as MLD and SLD already run in threads.
-- [ ] **OPT-07 · Faster gate:** run only the tests the impact map says are affected on pull requests; the full battery stays for the release. No check is weakened.
+Cheap, change no drawing, and make every later change measurable and safe. Do first.
+
 - [ ] **OPT-08 · One command that regenerates every generated file** (registry, plugins, agents, impact map) before a commit; stale generated files caused most CI failures.
-- [ ] **OPT-09 · Validate each engine input** against a schema at its entry point, failing with a clear message in English and Spanish.
-- [ ] **OPT-10 · Deterministic output in every engine** (dates, element order, identifiers), so cache and golden comparisons are reliable.
-- [ ] **OPT-11 · Read the project once:** one loader builds the data package and hands it to each function.
-- [ ] **OPT-12 · Load drawing templates once per run:** title block, symbol blocks and styles.
-- [ ] **OPT-13 · Property tests for the calculation engines** (invariants, for example more load never lowers the cable section); no norm values touched.
-- [ ] **OPT-14 · Automatic simulation report:** one command runs a fictional simulation in `tmp/` and gathers times, warnings and the difference with the previous one.
-- [ ] **OPT-15 · Lower the complexity baseline** a little at each module touched; never raise it.
-- [ ] **OPT-16 · One small versioned example case per engine,** used as test, documentation and call example.
-
-### General improvements (GEN, owner accepted 2026-11-22, F declined)
-
-Proposed by an agent, unmeasured. Order: GEN-01 and GEN-02 first, then GEN-03 and GEN-04, then the rest. "P" = needs a person.
-
-- [ ] **GEN-01 · Pending-norm view (was D).** One generated view of every value still `pending review`, ordered by how many deliverables depend on it, so the owner approves first what unblocks most. Agents never approve a value (P: approval).
+- [ ] **COD-15 · Pre-commit check for stale generated files** (with OPT-08).
+- [ ] **OPT-01 · Time every stage.** A stopwatch per pipeline stage (calculation, netlist, SLD, MLD, DXF, documents) written to the project log, so each later change is judged with measured data.
+- [ ] **COD-05 · Profile first** (cProfile on an example run); fix only the three most expensive points.
+- [ ] **COD-14 · Fast and slow tests separated** with markers.
+- [ ] **OPT-07 · Faster gate:** run only the tests the impact map says are affected on pull requests; the full battery stays for the release. No check is weakened.
+- [ ] **COD-13 · Characterization tests per engine,** not only for drawings, before each conversion.
 - [ ] **GEN-02 · Reference projects (was C).** A fixed set of fictional projects (dwelling, shed, PV plant) run at every release and compared with the previous run; stored in `tmp/`-style fictional data only.
-- [ ] **GEN-03 · Independent cross-check before sign-off (was A).** A second path recalculates the critical values (voltage drop, cross-section, protection) and flags differences; `calc_check` keeps the only verdict.
-- [ ] **GEN-04 · Traceability in every deliverable (was B).** Each number shown with its engine, version and norm record.
-- [ ] **GEN-05 · Shorter guided form (was E).** `/init` asks only what cannot be deduced and proposes defaults with their basis.
-- [ ] **GEN-06 · One-click delivery package (was G).** Drawings, memo, lists, transmittal and manifest in one numbered folder, with the edit or production mark visible.
-- [ ] **GEN-07 · Change control between revisions (was H).** A readable summary of what changed between revision A and B (circuits, sections, symbols).
-- [ ] **GEN-08 · Error catalogue (was I).** Stable error codes with messages in English and Spanish saying what happened and what to do.
-- [ ] **GEN-09 · Engine contracts generated from schemas (was J).** Input and output documented from the schema, not by hand.
+- [ ] **OPT-14 · Automatic simulation report:** one command runs a fictional simulation in `tmp/` and gathers times, warnings and the difference with the previous one.
 - [ ] **GEN-10 · Scheduled simulation (was K).** A weekly fictional run in `tmp/` that reports when something breaks.
-- [ ] **GEN-11 · More disciplines on the same method (was L).** Lighting, HVAC and control on the relational model and the symbol engine, after SYM (see DGM-11).
+
+### Block 2 · Rules and contracts for every engine (A)
+
+The patterns the conversions of phase 3 follow; do before converting more engines. Errors and results first because the contracts use them.
+
+- [ ] **COD-21 · Explicit result type** (success, warnings, bilingual errors) instead of exceptions or silences.
+- [ ] **COD-11 · No generic `except` and no silent fallback** (for example the box fallback of `pv_diagrams`): every failure with a message in English and Spanish.
+- [ ] **GEN-08 · Error catalogue (was I).** Stable error codes with messages in English and Spanish saying what happened and what to do.
+- [ ] **COD-22 · Immutable value objects between stages,** which makes the input-hash cache and parallel runs safe.
+- [ ] **COD-12 · Frozen dataclasses or schemas** for what travels between stages, instead of dicts with loose keys.
+- [ ] **OPT-09 · Validate each engine input** against a schema at its entry point, failing with a clear message in English and Spanish.
+- [ ] **GEN-09 · Engine contracts generated from schemas (was J).** Input and output documented from the schema, not by hand.
+- [ ] **OPT-16 · One small versioned example case per engine,** used as test, documentation and call example.
+- [ ] **COD-17 · Functional core, imperative shell:** the engine is a pure function; reading files and environment and writing outputs live in an adapter (ADR-0038).
+- [ ] **COD-04 · Parameters instead of environment variables** inside the engines (the SLD already takes `environ`; stop reading `os.environ` inside).
+- [ ] **COD-02 · One public door per engine** (`__all__`, an `api` module); the architecture test fails when another package imports internals.
+- [ ] **COD-18 · Facade with aliases** for each catalogue (symbols as `epc_symbols.resolve`; devices, cables next).
+- [ ] **COD-19 · Strategy chosen by data** for what varies by view or norm, no `if` chains.
+- [ ] **COD-20 · Builder as the only way to assemble the diagram model** (`diagram_model`, stable ids).
+- [ ] **COD-23 · Practices kept:** schema contracts at the engine door, characterization tests before refactors, one small reversible PR per phase, an ADR for each architecture rule, architecture tests for dependency rules. Not adopted for now: a dependency-injection container, deep inheritance, an event bus.
+
+### Block 3 · Engines as functions, and one symbol engine (A)
+
+Same code (the SLD and MLD generators), so done together: SYM-01 (done) and SYM-02 with the SLD contract first, then the MLD, then the other engines. Phases that turn strokes into blocks (SYM-04, SYM-05) wait for the golden review of phase 8.
+
+- [~] **SYM-01 · Catalogue schema and `epc_symbols` API** (`resolve`, `svg_fragment`, `dxf_block`, `terminals`, `list`) with aliases of the old names. Done 2026-11-22: `epc_symbols.registry` over the five libraries (catalogue id, qualified id and file name resolve to one record; a missing symbol raises, in English and Spanish; views are `sld`, `mld`, `ssd`; 227 DXF blocks checked: block name = file name), catalogue schema `schema/symbol_catalog.schema.json`, 14 tests. The library depends on nothing (architecture test), so placing a block in a DXF is `epc_dxf.symbol_blocks.insert(doc, *dxf_block(id, view), ...)`, not `epc_symbols.insert` as the PRD listed. No drawing changes, no golden touched. Pending: the plan, PV and architecture domains (SYM-03 to SYM-05) and the `relates_to` link between views.
+- [ ] **DGM-16 · Engines are called functions** (owner, 2026-11-22, ADR-0038): every engine receives all its data and answers; none reads files, workbooks or environment variables on its own or searches for work. Convert one by one. SLD first: (1) define the input contract of `epc_sld.draw(entrada, out_dir, name, maxl, stamp_date)` (assembly, label slots, board figures, header, title block, layout); (2) make `sld_paginate` a function that calls `sld_generator.generate(..., environ=env)` in process, keeping the CLI as an adapter, with byte-identical output (`test_deterministic_design`, sld tests); (3) stage 10 / `board_design` call `epc_sld.draw`; (4) remove the internal Excel round trip. Then the MLD, then audit the other engines. Done 2026-11-22: step 2 and the in-process call of step 3: `sld_paginate.paginate(...)` is a function (CLI kept as an adapter) and `board_design` draws the SLD in process; the output is byte-identical to the subprocess path (checked on the example board with `--date`). Pending: the formal `epc_sld.draw` entry point and contract (step 1), the Excel round trip (step 4), the MLD.
+- [ ] **OPT-02 · All engines as called functions** (ADR-0038): MLD, `pv_diagrams`, `epc_plan`, `epc_arch`, one public entry point each (DGM-16).
+- [ ] **COD-01 · No subprocess calls between engines** (MLD and the rest): call the function in process (DGM-16).
+- [ ] **OPT-03 · End the Excel round trip inside the SLD** (DGM-16 step 4): the model already holds the data.
+- [ ] **OPT-11 · Read the project once:** one loader builds the data package and hands it to each function.
+- [ ] **SYM-02 · SLD and MLD generators use the API** (no engine builds a symbol file name).
+- [ ] **OPT-05 · One symbol engine** (SYM-02 to SYM-07).
+- [ ] **COD-03 · One source per symbol and device table** (DGM-13a, ADR-0012).
+- [ ] **SYM-03 · `photovoltaic` domain and PV drawings insert library symbols;** the silent box fallback in `pv_diagrams._symbol` is removed.
+- [ ] **SYM-06 · Complete `electrical-mv`:** DXF blocks for `mld-mv` and `ssd-mv`.
+- [ ] **SYM-04 · `electrical-plan` domain:** the 31 symbols of `epc_plan/symbols.json` move into `epc_symbols` (replaced through a reviewed change, not deleted silently).
+- [ ] **SYM-05 · `architecture` domain:** the 25 `epc_arch/biblioteca` symbols and the door and window drawings.
+- [ ] **SYM-07 · Gate guard:** no drawing engine draws a symbol outside `epc_symbols`; deliverable DXF files of the golden projects have `INSERT` blocks; every symbol id used in the code exists.
+- [ ] **OPT-10 · Deterministic output in every engine** (dates, element order, identifiers), so cache and golden comparisons are reliable.
+
+### Block 4 · Speed, only what phase 1 shows is worth it (A)
+
+Needs the stopwatch and profile of phase 1, the deterministic output of phase 3 and the value objects of phase 2.
+
+- [ ] **COD-06 · Load once and cache:** symbol catalogue, schemas, templates, norm records.
+- [ ] **COD-07 · Parse each SVG and DXF block once per run** and reuse it.
+- [ ] **OPT-12 · Load drawing templates once per run:** title block, symbol blocks and styles.
+- [ ] **COD-08 · Batch DXF writing,** only if the profile confirms it.
+- [ ] **OPT-04 · Cache by input hash.** Generalize the stage 10 reuse of the calculation to netlist, diagrams and documents; redo only the sheets whose inputs changed.
+- [ ] **OPT-06 · More parallelism:** documents (PDF, DOCX, XLSX) and plan sheets, as MLD and SLD already run in threads.
+
+### Block 5 · The flow: circuit analysis, netlist, calculation, auditor, assembler (A, with P inputs)
+
+Needs the engine contracts of phase 3. DGM-12 and DGM-15 first (the flow and who owns each step), then the diagrams reading the model, then other disciplines and PV.
 
 - [ ] **DGM-12 · Circuit analysis first, then netlist, then calculation** (owner, 2026-11-21): the order of the flow changes. (1) The circuit analysis lists the devices of each circuit (roles, from the load type, the typical topologies and the design constraints); (2) the netlist organizes how they connect; (3) the cable types are estimated without a cross-section (conductor material, insulation, number of cores, installation method, from the load, the environment and the design criteria); (4) the calculation sizes each device already placed and each cable (In, Icu, poles, sensitivity, cross-section, voltage drop); (5) the auditor, with all the calculations and lists in hand, checks them against the design constraints and gives the verdict (ok or not ok, with the findings); it is the only one that decides, and it runs before the assembly (the existing `calc_check` agent and the advisory `violations` of the assembler are the starting point); (6) the assembler joins everything only once the auditor has given its verdict; (7) the assembly is the single hand-over: the SLD, MLD, lists (cable list, terminal blocks, BOQ), datasheets and specifications are generated from it and none re-reads the calculation. Checked 2026-11-22: the SLD generator (`epc_sld.sld_generator`) takes its device chain from `detalle.cadena`, the same chain the netlist reads, and a test now pins that both give the same symbols; the SLD still reads the workbook and three JSON files of the calculation (`SLD_CALC_JSON`, `SLD_CALC_DETAIL`, `SLD_FIGURES_JSON`), so making it read the assembly needs the assembly to carry the label slots and the board figures first (a change of the SLD input contract, to design with the drawing characterization tests). Found and fixed 2026-11-22: stage 10 ran the whole calculation (grouping, sizing, memo) a second time inside `board_design.design`; it now reuses the one of the run (same files, byte for byte). Today the calculation writes the device text (`disp`) and the netlist reads it, the opposite. PRD: `docs/prsad/PRD-diagram-flow.md`. Found 2026-11-21: the device chain is already chosen by the standard solutions (`epc_aea90364.solutions`, data in `standard-solutions.json`), and the calculation keeps its structured chain in `detalle.cadena`; step 1 of the flow is that resolver run before the sizing for the structural conditions (`in_a` conditions need the value). Done: the netlist now reads the structured chain (devices and poles) and falls back to the `disp` text. Done: the cable type of each circuit (material, insulation, cores, installation method, never a section) is decided by `epc_aea90364.cable_types`, used by the pipeline before the section search (same results) and callable on its own to estimate a board ahead of the calculation. Pending: the resolver called before the sizing for the structural conditions, and the auditor verdict as an agent step. Done: `diagram_knowledge.audit(model)` gives the verdict (ok or not_ok, unverified) from the design constraints, and `diagram_assembler.assemble` refuses to run without it and carries it (`verdict`); `calc_check` still has to own it (DGM-15). Touches stage 3 and the calculation input (other threads, golden files): spike first to measure what it breaks, then design; no norm value changes.
-- [ ] **DGM-14 · Same flow for photovoltaic plants** (owner, 2026-11-21): analysis of the plant (string, optimizer, combiner, fuse, isolator, SPD, inverter, rapid shutdown, RCMU or IMD, AC protection), netlist per array and board, DC and AC cable types without cross-section, calculation with the PV engine, audit with the PV constraints (candidates in `docs/prsad/PRD-diagram-flow.md`, each confirmed by a person), assembly. Depends on DGM-12 and on the real symbols of DGM-03. Done 2026-11-22: typical topologies `pv_string` (DC string fuse, DC load-break switch, module string) and `pv_inverter_ac` (AC protection, inverter) in `circuit_topologies.json`, unverified; the board model builds them. Done 2026-11-22: `pv_string_optimized`, `pv_combiner_dc` and `pv_inverter_ac_rcmu` use the optimizer, combiner box and RCMU with their block placeholders. Pending: DC SPD and rapid shutdown in the chain, real IEC 60617 symbols (DGM-03: drawn only from the standard, which is not stored here; a person supplies or confirms the geometry), DC cable types, PV audit constraints (a person confirms each), and the PV engine feeding the calculation.
 - [ ] **DGM-15 · Discipline leaders and interdisciplinary coordinators** (owner, 2026-11-21): a coordination layer above each discipline flow: discipline leader (owns its flow and verdict), interdisciplinary coordinator (audits the interfaces between disciplines, for example the loads handed to the board and the inverter-to-board connection), multidisciplinary leader (sequences the disciplines and prepares the transmittal for the engineer of record). Open: new roster entries or duties of the orchestrator (`roster.json`, `roster.disciplines.json`). See `docs/prsad/PRD-diagram-flow.md` section 5. Owner decision 2026-11-21: each role has one duty and no duty is duplicated; map and order of work in `docs/prsad/ROLES-single-responsibility.md` (single-owner test, one orchestrator with a scope, `electrical_lv` as discipline leader, `calc_check` as the only verdict, `documentation` and `procurement` from the assembly, duplicated legacy agents out of the flow). Done 2026-11-21: the 35 unused legacy agents were removed (owner decision; `document-writer`, the seven `senior-*-engineer` reviewers named by the reserve discipline leads, and `agents/disciplines/` stay). Done 2026-11-21: every roster entry has one `duty` (schema field) and a test fails when a duty has two owners; one `orchestrator` with a scope (discipline or project, with the interface register); `multidisciplinary_orchestrator` removed. Done 2026-11-21: `calc_check` states the verdict (it reads the assembly `verdict`, never recomputes it) and `documentation` and `procurement` already say they never verify. Next: `electrical_lv` takes flow steps 1 and 3; `documentation` and `procurement` read the assembly once the generators do (DGM-12 step 7).
-- [ ] **DGM-16 · Engines are called functions** (owner, 2026-11-22, ADR-0038): every engine receives all its data and answers; none reads files, workbooks or environment variables on its own or searches for work. Convert one by one. SLD first: (1) define the input contract of `epc_sld.draw(entrada, out_dir, name, maxl, stamp_date)` (assembly, label slots, board figures, header, title block, layout); (2) make `sld_paginate` a function that calls `sld_generator.generate(..., environ=env)` in process, keeping the CLI as an adapter, with byte-identical output (`test_deterministic_design`, sld tests); (3) stage 10 / `board_design` call `epc_sld.draw`; (4) remove the internal Excel round trip. Then the MLD, then audit the other engines. Done 2026-11-22: step 2 and the in-process call of step 3: `sld_paginate.paginate(...)` is a function (CLI kept as an adapter) and `board_design` draws the SLD in process; the output is byte-identical to the subprocess path (checked on the example board with `--date`). Pending: the formal `epc_sld.draw` entry point and contract (step 1), the Excel round trip (step 4), the MLD.
 - [ ] **DGM-13 · Research follow-ups of the assembler flow** (2026-11-21, agent reports, all unverified): (a) one device catalogue for the diagrams (today the symbol tables are duplicated across `sld_generator.py`, `device_symbol_map.json` and the symbol catalog); (b) the netlist builder, the audit and the assembly of one board now run in `epc_drawing` (`diagram_assembler.assemble_board`, done 2026-11-22; stage 10 only selects the circuits and values) and one circuit-view selector is used (done 2026-11-22: `stages/circuit_view.py` replaces the four selectors of terminal, BOQ, report and cable rows); (c) owner decision on the duplicated HVAC and lighting `typical.json` values; (d) candidate constraints `dc-03` to `dc-16`, each to be confirmed by a person before it enters `design_constraints.json`; (e) five speedups listed in the research report.
+- [~] **DGM-02 · SLD/MLD read the relational model** (ADR-0037, 2026-11-21). Hecho: model per board (devices, loads, wires, circuits by stable ids; cable data stays in the stage 8 cable list), schemas, typical topologies (`circuit_topologies.json`), builder and CLI `epc_drawing.diagram_model`, skill `diagram-model`, tests; stage 10 hands over the assembled board diagram (`diagram_assembly`: `epc_drawing.diagram_assembler` joins the model, the calculation values and the cable-list rows with the design rules; the calculation does not generate the model; the design rules are constraints checked on the netlist, `violations`). Falta: more constraints (a person confirms each one), showing `violations` as findings, and the swap of the symbol provider to `epc_symbols`. Falta: the optional SLD/MLD input path that reads the model (the board workbook path stays as is). Typical topologies of star-delta, ATS, UPS and the MV intake are done (all unverified); the ATS second source and the real wiring of the star-delta contactors wait for DGM-10.
+- [ ] **DGM-10 · The harness draws functional and control schemes** (owner, 2026-11-21): power and control circuits (DOL, star-delta, reversing, ATS...) from `funcional_iec60617` and the relational model, with its own drawing path (IEC 60617 symbols, terminal marking, cross-references). Design first, then engine.
 - [ ] **DGM-11 · Same method for the other disciplines and for PV plants** (owner, 2026-11-21): builders and topology kinds for PV strings and combiners, HVAC, lighting and control schemes, same four-file model and id rule (ADR-0037, point 5).
+- [ ] **DGM-14 · Same flow for photovoltaic plants** (owner, 2026-11-21): analysis of the plant (string, optimizer, combiner, fuse, isolator, SPD, inverter, rapid shutdown, RCMU or IMD, AC protection), netlist per array and board, DC and AC cable types without cross-section, calculation with the PV engine, audit with the PV constraints (candidates in `docs/prsad/PRD-diagram-flow.md`, each confirmed by a person), assembly. Depends on DGM-12 and on the real symbols of DGM-03. Done 2026-11-22: typical topologies `pv_string` (DC string fuse, DC load-break switch, module string) and `pv_inverter_ac` (AC protection, inverter) in `circuit_topologies.json`, unverified; the board model builds them. Done 2026-11-22: `pv_string_optimized`, `pv_combiner_dc` and `pv_inverter_ac_rcmu` use the optimizer, combiner box and RCMU with their block placeholders. Pending: DC SPD and rapid shutdown in the chain, real IEC 60617 symbols (DGM-03: drawn only from the standard, which is not stored here; a person supplies or confirms the geometry), DC cable types, PV audit constraints (a person confirms each), and the PV engine feeding the calculation.
+- [ ] **DGM-07 · Feed `epc_pv` and the PV drawings from these criteria** (decision rules for DC protection, grounding, SPD) once the PV equipment loader (audit H1-H3) is in.
+
+### Block 6 · Trust and quality (A)
+
+Build on the traceable flow of phase 5 and the reference projects of phase 1.
+
+- [ ] **GEN-01 · Pending-norm view (was D).** One generated view of every value still `pending review`, ordered by how many deliverables depend on it, so the owner approves first what unblocks most. Agents never approve a value (P: approval).
+- [ ] **PRO-01 · Decision register per project.** Every assumption the harness makes (a default, a norm chosen between two) listed for the engineer of record to review before signing.
+- [ ] **GEN-04 · Traceability in every deliverable (was B).** Each number shown with its engine, version and norm record.
+- [ ] **GEN-03 · Independent cross-check before sign-off (was A).** A second path recalculates the critical values (voltage drop, cross-section, protection) and flags differences; `calc_check` keeps the only verdict.
+- [ ] **OPT-13 · Property tests for the calculation engines** (invariants, for example more load never lowers the cable section); no norm values touched.
+- [ ] **PRO-02 · Outdated-norm alerts.** A notice when a norm edition in the register has a newer one; a person decides whether to update (P).
+- [ ] **COD-10 · Gradual static typing:** annotations on the public entries and `mypy` on those modules only, widening slowly.
+- [ ] **COD-09 · Lower complexity per module touched** (OPT-15), never raise the baseline.
+- [ ] **OPT-15 · Lower the complexity baseline** a little at each module touched; never raise it.
+- [ ] **COD-16 · Remove dead code** guided by the dependency map, one reviewed change per removal (nothing is deleted silently).
+- [ ] **PRO-03 · Backup of the projects** (they live outside the repository): versioned, encrypted copy.
+
+### Block 7 · New product features (A)
+
+After the flow is stable. Related items adjacent: delivery and revisions, then studies and quantities, then inputs, then knowledge and team.
+
+- [ ] **PRO-07 · Project status panel:** stages run, pending reviews, what blocks the issue.
+- [ ] **PRO-10 · Issue checklist** generated from the real project state.
+- [ ] **GEN-06 · One-click delivery package (was G).** Drawings, memo, lists, transmittal and manifest in one numbered folder, with the edit or production mark visible.
+- [ ] **GEN-07 · Change control between revisions (was H).** A readable summary of what changed between revision A and B (circuits, sections, symbols).
+- [ ] **GEN-05 · Shorter guided form (was E).** `/init` asks only what cannot be deduced and proposes defaults with their basis.
+- [ ] **PRO-09 · "What if" mode:** change a load or a cable and see the effect without redoing the project.
+- [ ] **PRO-06 · More studies:** short circuit and protection selectivity on the relational model.
+- [ ] **PRO-05 · Typical Argentine tables from the same model:** load schedule, phase balance, earthing table.
+- [ ] **PRO-04 · Bill of quantities and budget from the assembly,** joining the cable list and the quotation with costs per item.
+- [ ] **PRO-08 · Import architecture plans from other formats** (for example IFC), not only DXF.
+- [ ] **GEN-11 · More disciplines on the same method (was L).** Lighting, HVAC and control on the relational model and the symbol engine, after SYM (see DGM-11).
+- [ ] **PRO-11 · Lessons from simulations:** each simulation finding creates its draft lesson (only the owner makes it `standard`).
+- [ ] **PRO-12 · Onboarding guide** for another engineer, generated.
+- [ ] **PRO-13 · Harness metrics:** projects, failures per stage, time per stage.
+
+### Block 8 · Needs a person (P), parallel from the start
+
+Does not block agent work. SYM-00 and the golden review gate every phase that turns strokes into blocks; the symbols PRD decisions and the norm and symbol confirmations are for the owner or the engineer of record.
+
+- [ ] **SYM-00 · Fix the DXF block lookup in the SLD path** so the deliverables carry `INSERT` blocks. Checked 2026-11-22: the cause is confirmed (`bloques_dxf._bloque_disponible` looks for `<id>.dxf`, the library file is `291_E_LV_SLD_IEC60617_<name>.dxf`; an SLD of the example board has 0 `INSERT`). A trial fix (try both file names, take the block name from the library file) gave 42 `INSERT`, 17 block definitions and no audit errors, but it changes the DXF bytes, so `test_characterization_drawings` (3 cases) fails against the golden files; golden files are never edited (D27), so the trial was reverted and it waits for the owner to review and request the new golden. The MLD does not pass a symbol library to the DXF conversion at all (`mld_generator` calls `deliverable.convert` without `symbol_library`), so it needs its own change.
+- [ ] **(Owner) SYM-OD · Open decisions** of the PRD section 9: ids (keep file names plus aliases, or rename), shared record across views for the same meaning, where the catalogue spreadsheet lives, placement of the architecture symbols.
 - [~] **DGM-03 · Six devices without a library symbol:** IMD, blocking diode, power optimizer, rapid shutdown device, RCMU, string combiner box. Done: each is now a block placeholder (a box with the device name; SVG, DXF block and catalog entry, `origin: placeholder`, made by `tools/symbols/add_block_placeholders.py`). Pending: the real IEC 60617 symbol swapped in later (always a block), and the MLD variants.
 - [ ] **DGM-04 · Confirm the 'close' symbol matches** (e.g. RCD types A/B/F to the RCCB symbol, ANSI relays to the generic relay) and the contactor main-contact symbol (S00286 note says closed at rest). (Owner)
 - [ ] **DGM-05 · Open source conflicts for a person:** string fuse factor (1.5 x Isc vs 1.25 x 1.25 x Isc), RCD type on transformerless inverters (A vs B), rapid shutdown threshold (30 V / 30 s from SMA, not in IEC 60364-7-712), DC/AC shutdown order, RS485 terminator, MV station envelope. (Owner)
 - [ ] **DGM-06 · Standards read only through secondary sources:** IEC 60445 / EN 50005 terminal marking, IEC 81346-2, IEC 62548, AEA 90364-7-712, NEC 690. Read the standards and promote values (pending review).
-- [ ] **DGM-07 · Feed `epc_pv` and the PV drawings from these criteria** (decision rules for DC protection, grounding, SPD) once the PV equipment loader (audit H1-H3) is in.
 
-## Symbols (SYM)
+### Done (kept for history)
 
-PRD: `docs/prsad/PRD-symbols.md` (owner, 2026-11-21: one `epc_symbols` segmented by domain, migrated in parts; priority first). One pull request per phase, gate green before the next; nothing here changes norm values or calculation results.
+- [x] **DGM-01 · Research data and bridge to the symbol library** (2026-11-21). 57 devices mapped to `epc_symbols` symbols and ports, netlist contract proposal and 18 netlists.
+- [x] **DGM-08 · Code that reads the diagram knowledge** (2026-11-21). `epc_drawing.diagram_knowledge`: `rules()`, `matching(variables)`, `symbol_for(device_id)` and `check_board(calculo)` (advisory notes EN/ES, never changes a result). Tests: `tests/unit/test_diagram_knowledge_use.py`.
+- [x] **DGM-09 · Stage 9 lists the diagram-rule notes** (2026-11-21). `calc_check_stage.diagram_findings`: where the protective device of a circuit differs from the one the LV rules select for its current, a `note` finding (verifier calc-check, EN and ES text) joins stage 9. Advisory, no result changes; goldens unchanged. Test: `tests/unit/test_diagram_knowledge_use.py`.
 
-- [ ] **SYM-00 · Fix the DXF block lookup in the SLD path** so the deliverables carry `INSERT` blocks. Checked 2026-11-22: the cause is confirmed (`bloques_dxf._bloque_disponible` looks for `<id>.dxf`, the library file is `291_E_LV_SLD_IEC60617_<name>.dxf`; an SLD of the example board has 0 `INSERT`). A trial fix (try both file names, take the block name from the library file) gave 42 `INSERT`, 17 block definitions and no audit errors, but it changes the DXF bytes, so `test_characterization_drawings` (3 cases) fails against the golden files; golden files are never edited (D27), so the trial was reverted and it waits for the owner to review and request the new golden. The MLD does not pass a symbol library to the DXF conversion at all (`mld_generator` calls `deliverable.convert` without `symbol_library`), so it needs its own change.
-- [~] **SYM-01 · Catalogue schema and `epc_symbols` API** (`resolve`, `svg_fragment`, `dxf_block`, `terminals`, `list`) with aliases of the old names. Done 2026-11-22: `epc_symbols.registry` over the five libraries (catalogue id, qualified id and file name resolve to one record; a missing symbol raises, in English and Spanish; views are `sld`, `mld`, `ssd`; 227 DXF blocks checked: block name = file name), catalogue schema `schema/symbol_catalog.schema.json`, 14 tests. The library depends on nothing (architecture test), so placing a block in a DXF is `epc_dxf.symbol_blocks.insert(doc, *dxf_block(id, view), ...)`, not `epc_symbols.insert` as the PRD listed. No drawing changes, no golden touched. Pending: the plan, PV and architecture domains (SYM-03 to SYM-05) and the `relates_to` link between views.
-- [ ] **SYM-02 · SLD and MLD generators use the API** (no engine builds a symbol file name).
-- [ ] **SYM-03 · `photovoltaic` domain and PV drawings insert library symbols;** the silent box fallback in `pv_diagrams._symbol` is removed.
-- [ ] **SYM-04 · `electrical-plan` domain:** the 31 symbols of `epc_plan/symbols.json` move into `epc_symbols` (replaced through a reviewed change, not deleted silently).
-- [ ] **SYM-05 · `architecture` domain:** the 25 `epc_arch/biblioteca` symbols and the door and window drawings.
-- [ ] **SYM-06 · Complete `electrical-mv`:** DXF blocks for `mld-mv` and `ssd-mv`.
-- [ ] **SYM-07 · Gate guard:** no drawing engine draws a symbol outside `epc_symbols`; deliverable DXF files of the golden projects have `INSERT` blocks; every symbol id used in the code exists.
-- [ ] **(Owner) SYM-OD · Open decisions** of the PRD section 9: ids (keep file names plus aliases, or rename), shared record across views for the same meaning, where the catalogue spreadsheet lives, placement of the architecture symbols.
 
 ## Landing (LND)
 
