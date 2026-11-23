@@ -53,7 +53,6 @@
  "harness/src/engines/cad/arch/tests/test_org_style.py::epc_arch.drawing",
  "harness/src/engines/cad/arch/tests/test_org_style.py::epc_arch.export.export_dxf",
  "harness/src/engines/cad/arch/tests/test_org_style.py::epc_arch.export.export_svg",
- "harness/src/engines/cad/arch/tests/test_org_style.py::epc_arch.sheets",
  "harness/src/engines/cad/arch/tests/test_pdf_text_repair.py::epc_arch.sources.pdf",
  "harness/src/engines/cad/arch/tests/test_presentation.py::epc_arch.author",
  "harness/src/engines/cad/arch/tests/test_presentation.py::epc_arch.drawing",

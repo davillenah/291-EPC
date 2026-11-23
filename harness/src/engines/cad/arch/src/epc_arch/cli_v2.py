@@ -4,8 +4,11 @@ Reads the plan with the current engine and writes it with the v2 exporters, one 
 import argparse
 import hashlib
 import json
+import subprocess
 import sys
+import tempfile
 from datetime import datetime, timezone
+from functools import lru_cache
 from pathlib import Path
 
 from epc_arch import ArchError, Options, __version__
@@ -15,7 +18,7 @@ from epc_arch.export.export_dxf import to_dxf
 from epc_arch.export.export_raster import to_pdf, to_png
 from epc_arch.export.export_svg import to_svg
 from epc_arch.export.sheet_iram import load_template
-from epc_arch.sheets import DEFAULT_FORMAT, iram_template
+from epc_arch.sheets import DEFAULT_FORMAT, FORMATS
 from epc_arch.pipeline import recognize_sheet
 
 WRITERS = {"svg": lambda d, a: to_svg(d, a.style_obj).encode("utf-8"), "dxf": lambda d, a: to_dxf(d, a.style_obj).encode("utf-8"), "png": lambda d, a: to_png(d, a.style_obj, dpi=a.dpi), "pdf": lambda d, a: to_pdf(d, a.style_obj)}
@@ -28,6 +31,34 @@ def _tag(result, position: int) -> str:
 
 def _sha(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+@lru_cache(maxsize=8)
+def _iram_template(sheet_format: str, config_json: str):
+    """The IRAM sheet of a format made by the command line of `epc_titleblock` (the adapter runs it like any tool; the engine itself never does)."""
+    if sheet_format not in FORMATS:
+        return None
+    with tempfile.TemporaryDirectory() as tmp:
+        out = Path(tmp) / "sheet.svg"
+        extra = []
+        if config_json:
+            (Path(tmp) / "config.json").write_text(config_json, encoding="utf-8")
+            extra = ["--config", str(Path(tmp) / "config.json")]
+        try:
+            run = subprocess.run([sys.executable, "-m", "epc_titleblock.sheet_generator", sheet_format, str(out), *extra], capture_output=True, timeout=120)
+        except (OSError, subprocess.SubprocessError):
+            return None
+        if run.returncode != 0 or not out.exists():
+            return None
+        return load_template(out.read_text(encoding="utf-8"))
+
+
+def iram_template(sheet_format: str = DEFAULT_FORMAT, config=None):
+    """The blank IRAM sheet of a format (A0 to A4), or None when `epc_titleblock` cannot make it here. `config` is how the organization changed the sheet."""
+    return _iram_template(sheet_format, json.dumps(config, sort_keys=True) if config else "")
+
+
+iram_template.cache_clear = _iram_template.cache_clear
 
 
 def _template(a):
