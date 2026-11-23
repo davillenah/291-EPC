@@ -4,9 +4,9 @@ Generado por `python harness/tools/build/norm_register.py --report`; no se edita
 
 ## Resumen
 
-- Registros a mano: **300** en 33 archivos.
+- Registros a mano: **301** en 33 archivos.
 - Reglas indexadas automáticamente: **200**.
-- Sin cláusula: **200**.
+- Sin cláusula: **201**.
 - Conflictos o duplicados señalados: **21**.
 
 ### Registros a mano por motor, procedencia y estado
@@ -14,7 +14,7 @@ Generado por `python harness/tools/build/norm_register.py --report`; no se edita
 | Motor | Procedencia | Estado | Registros |
 |---|---|---|---:|
 | src | convention | pending | 23 |
-| src | design-default | pending | 56 |
+| src | design-default | pending | 57 |
 | src | illustrative | pending | 3 |
 | src | norm | pending | 133 |
 | src | physics | pending | 14 |
@@ -396,7 +396,7 @@ Archivo: `harness/src/engines/calculation/lighting/src/epc_lighting/norm_registe
 
 ## lighting / data
 
-Archivo: `harness/src/engines/calculation/lighting/src/epc_lighting/norm_register/data.json` (11 registros)
+Archivo: `harness/src/engines/calculation/lighting/src/epc_lighting/norm_register/data.json` (12 registros)
 
 | id | norma | cláusula | página | valor / ubicación | unidad | procedencia | confianza | estado | problemas |
 |---|---|---|---|---|---|---|---|---|---|
@@ -411,6 +411,7 @@ Archivo: `harness/src/engines/calculation/lighting/src/epc_lighting/norm_registe
 | `lighting.data.lighting_systems.suspension_rules` | UPV lumen-method article | table 2 | - | `lighting_systems.json#/suspension_rules` | fraction | teaching | low | pending | indirect auto_min 0.8 vs auto_optimal 0.75: minimum is larger than optimal, check source |
 | `lighting.data.cu_generic` | UPV lumen-method article | table 5 | - | `cu_generic.json#/cu_table` | percent | illustrative | low | pending | manufacturer table of one luminaire used as generic fallback (warning, confidence 0.4); values above 100 appear; orientation of 'values' (rows by k or by reflectance set) is not stated in the file: verify the engine reads it as in the source |
 | `lighting.data.luminaires` | - | - | - | `luminaires.json#/luminaires` | lm, W, cd/klm | illustrative | low | pending | flux and power are typical of the kind, not of a maker; flagged illustrative |
+| `lighting.data.room_types` | - | - | - | `room_types.json#/rules` | m (default height); activity ids of lighting.data.levels | design-default | low | pending | no clause: which activity a room is lit for, and the 3.0 m ceiling height, are design defaults; adds no illuminance value: the lux are those of lighting.data.levels |
 
 ## lighting / params
 
@@ -436,7 +437,7 @@ Archivo: `harness/src/engines/cad/plan/src/epc_plan/norm_register/params.json` (
 |---|---|---|---|---|---|---|---|---|---|
 | `plan.params.geometry.snap_tolerance_m` | - | - | - | `params.json#/geometry/snap_tolerance_m` | m | design-default | low | pending | algorithm setting, not a norm |
 | `plan.params.coordination.story_height_m` | - | - | - | `params.json#/coordination/story_height_m` | m | design-default | low | pending | no source; project dependent |
-| `plan.params.dxf.text_height_m` | - | - | - | `params.json#/dxf/text_height_m` | m (plan units) | design-default | low | pending | 0.25 m in plan units; no scale link, no IRAM 4503 text height cited |
+| `plan.params.dxf.text_height_m` | - | - | - | `params.json#/dxf/text_height_m` | m (plan units) | design-default | low | pending | 0.15 m in plan units (was 0.25 m: labels ran into each other); no scale link, no IRAM 4503 text height cited |
 | `plan.params.style` | - | - | - | `params.json#/style` | mm | design-default | low | pending | 0.25 mm line and 2.0 mm font; no IRAM 4502/4503 reference; sheet pens are in titleblock |
 
 ## plan / rules
@@ -705,6 +706,7 @@ Archivo: `harness/src/engines/calculation/transformer_sizing/src/epc_transformer
 - `hvac.typical.ventilation.retail` (-; hand)
 - `lighting.data.luminaires` (-; hand)
 - `lighting.data.maintenance.interior_range` (UNAC chapter III; hand)
+- `lighting.data.room_types` (-; hand)
 - `lighting.params.beam_utilisation_range` (-; hand)
 - `lighting.params.cavity.rcr_factor` (-; hand)
 - `lighting.params.conformity.direct_factor` (-; hand)
