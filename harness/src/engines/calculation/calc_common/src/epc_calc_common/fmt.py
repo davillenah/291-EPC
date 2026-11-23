@@ -2,17 +2,17 @@
 import math
 
 
-def p1(x):
+def p1(x: float) -> str:
     """Un decimal, con coma."""
     return f"{x:.1f}".replace(".", ",")
 
 
-def d2(x):
+def d2(x: float) -> str:
     """Dos decimales fijos, con coma (Ra, decisión D11: nunca entero; 12,6 se muestra 12,60)."""
     return f"{x:.2f}".replace(".", ",")
 
 
-def sig2(x):
+def sig2(x: float) -> str:
     """Dos cifras significativas, con coma."""
     if not x:
         return "0"
@@ -21,6 +21,6 @@ def sig2(x):
     return (f"{v:.0f}" if d <= 0 else f"{v:.{d}f}").replace(".", ",")
 
 
-def mm(x):
+def mm(x: float) -> str:
     """Sección en mm² con su valor exacto (sin redondeo)."""
     return f"{x:g}".replace(".", ",")

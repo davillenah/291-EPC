@@ -1,0 +1,46 @@
+"""The public entry point of the photovoltaic drawings (OPT-02, ADR-0040): `draw_pv(entrada, out_dir, name)`.
+
+One call for the three writers the stage used one by one (`pv_diagrams.write_all` for the ground layout, `pv_roof.write_all` for the roof planes and `pv_details.write` for the equipment detail).
+`PvDrawInput` holds the data; nothing is read from the process environment. The writers stay as the lower-level calls, so the drafts are the same bytes."""
+import copy
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Any, Dict, List, Mapping, Optional, Tuple
+
+
+@dataclass(frozen=True)
+class PvDrawInput:
+    """What the photovoltaic drawings need: any of the layout (ground), the roof placement and the equipment records, plus the yield result they annotate."""
+    result: Mapping[str, Any]                       # the yield result of `epc_pv` (stage 3 `outputs["pv"]`)
+    layout: Optional[Mapping[str, Any]] = None      # ground layout (`epc_pv.plan_layout`)
+    roof: Optional[Mapping[str, Any]] = None        # roof placement
+    parts: Optional[Mapping[str, Any]] = None       # equipment records for the detail sheet (None: no detail sheet)
+    language: str = "en"
+    stamp_date: Optional[str] = None
+
+
+def draw_pv(entrada: PvDrawInput, out_dir: Any, name: str) -> Tuple[Dict[str, Path], List[str]]:
+    """Writes the drafts the input asks for into `<out_dir>/pv_drafts` as `<name>_pv_*` and returns ({draft name: path}, the writers that ran, in order)."""
+    if not isinstance(entrada, PvDrawInput):
+        raise TypeError("draw_pv() takes a PvDrawInput")
+    from epc_drawing import pv_details, pv_diagrams, pv_roof
+    target = Path(out_dir) / "pv_drafts"
+    stem, drafts, ran = f"{name}_pv", {}, []
+    def detail() -> None:
+        if entrada.parts is None:
+            return
+        path = pv_details.write(dict(entrada.parts), target, stem, entrada.language, entrada.stamp_date)
+        if path is not None:
+            drafts[f"{stem}_equipment_detail"] = path
+            ran.append("pv_details.write")
+
+    if entrada.layout is not None:                  # ground layout, then its equipment detail
+        drafts.update(pv_diagrams.write_all(copy.deepcopy(dict(entrada.layout)), entrada.result, target, stem, entrada.language, entrada.stamp_date))
+        ran.append("pv_diagrams.write_all")
+        detail()
+    if entrada.roof is not None:                    # roof planes; the detail goes here only when there is no ground layout
+        drafts.update(pv_roof.write_all(copy.deepcopy(dict(entrada.roof)), entrada.result, target, stem, entrada.language, entrada.stamp_date))
+        ran.append("pv_roof.write_all")
+        if entrada.layout is None:
+            detail()
+    return drafts, ran

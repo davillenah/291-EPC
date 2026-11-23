@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 import ezdxf
+from epc_dxf import new_document
 from epc_dxf import deliverable, textstyle
 
 from epc_plan import core
@@ -244,7 +245,7 @@ def write_dxf(result: Dict[str, Any], path: Path, version: str = "", params: Dic
     profile = core.load_profile(result["discipline"])
     line_kinds, node_kinds = core._kinds(profile)
     code, scale = _UNITS[profile.get("unidades_salida", cfg["default_units"])]
-    doc = ezdxf.new(dxfversion=version, setup=True)
+    doc = new_document(version, setup=True)
     doc.units = code
     doc.styles.get("Standard").dxf.font = "arial.ttf"                    # one typeface for every text of the drawing
     msp = doc.modelspace()

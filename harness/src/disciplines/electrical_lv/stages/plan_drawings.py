@@ -1,6 +1,6 @@
 """The floor plans of stage 10: for each routed floor, the plan with everything (luminaires, outlets, trays, conduits, circuits) and the lighting plan (luminaires and the runs of the lighting circuits) and, when the engine gave the lux of the cells, the lux map (`luxmap`: the lighting plan over the coloured cells and lines of equal level of `lux_map.py`).
 
-The discipline draws nothing: it hands each floor document to `epc_plan.core.process` and the result to `epc_plan.dxfout.write_dxf` (with the walls and room names of the architecture under it).
+The discipline draws nothing: it hands each floor document to `epc_plan.draw_plan` (`core.process` then `dxfout.write_dxf`) (with the walls and room names of the architecture under it).
 The lighting plan is the same floor with the outlets and the circuits of the receptacles taken out, and only the lines that the engine says carry a lighting circuit.
 """
 import copy
@@ -37,7 +37,7 @@ def lighting_document(design):
 def write_floor_plans(routing, out_dir, board, scales=None):
     """Writes `<board>_plan_<floor>.dxf` and `<board>_lighting_<floor>.dxf` for every floor of the routing section; returns the warnings of the engine.
     `scales` ({plan name: N of 1:N}): the scale each plan will be printed at, so its text and symbols are sized for it (see `epc_plan.dxfout.write_dxf`)."""
-    import epc_plan.dxfout as dxfout
+    from epc_plan import PlanInput, draw_plan
     warnings, written = [], {}
     for floor, design in sorted(routing.items()):
         backdrop = copy.deepcopy(design.get("backdrop"))
@@ -46,7 +46,8 @@ def write_floor_plans(routing, out_dir, board, scales=None):
         for stem, doc, lux in drawn:
             path = out_dir / f"{board}_{stem}_{floor}.dxf"
             name = f"{board}_{stem}_{floor}"
-            warnings += [f"{floor}: {w}" for w in dxfout.write_dxf(_process(doc), path, backdrop=backdrop, paper_scale=(scales or {}).get(name), luxmap=lux)]
+            _, drawn_warnings = draw_plan(PlanInput(document=doc, backdrop=backdrop, paper_scale=(scales or {}).get(name), luxmap=lux), path)
+            warnings += [f"{floor}: {w}" for w in drawn_warnings]
             written[name] = path
     return warnings, written
 

@@ -10,16 +10,16 @@ _CENT = Decimal("0.01")
 _NOISE = Decimal("0.000000001")
 
 
-def _round_2(x, mode):
+def _round_2(x: float, mode: str) -> float:
     exact = Decimal(repr(float(x))).quantize(_NOISE)
     return float(exact.quantize(_CENT, rounding=mode))
 
 
-def round_down_2(x):
+def round_down_2(x: float) -> float:
     """Floor to two decimals: for a maximum allowed Ra [Ω]."""
     return _round_2(x, ROUND_FLOOR)
 
 
-def round_up_2(x):
+def round_up_2(x: float) -> float:
     """Ceiling to two decimals: for a measured or computed Ra [Ω] compared with the limit."""
     return _round_2(x, ROUND_CEILING)

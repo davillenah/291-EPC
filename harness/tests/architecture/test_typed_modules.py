@@ -12,6 +12,18 @@ TYPED_MODULES = (
     "harness/src/engines/calculation/transformer_sizing/src/epc_transformer_sizing/sizing.py",
     "harness/src/engines/calculation/voltage_drop/src/epc_voltage_drop/voltage_drop.py",
     "harness/src/engines/calculation/load_balance/src/epc_load_balance/current_and_loads.py",
+    "harness/src/engines/calculation/calc_common/src/epc_calc_common/fmt.py",
+    "harness/src/engines/calculation/calc_common/src/epc_calc_common/aea_rounding.py",
+    "harness/src/engines/calculation/calc_common/src/epc_calc_common/_validate.py",
+    "harness/src/engines/calculation/calc_common/src/epc_calc_common/norm_data.py",
+    "harness/src/engines/calculation/calc_common/src/epc_calc_common/policy.py",
+    "harness/src/engines/calculation/calc_common/src/epc_calc_common/api.py",
+    "harness/src/engines/calculation/grounding/src/epc_grounding/errors.py",
+    "harness/src/engines/calculation/short_circuit/src/epc_short_circuit/errors.py",
+    "harness/src/engines/calculation/grounding/src/epc_grounding/api.py",
+    "harness/src/engines/calculation/short_circuit/src/epc_short_circuit/api.py",
+    "harness/src/engines/calculation/selectivity/src/epc_selectivity/api.py",
+    "harness/src/engines/calculation/feeder_sizing/src/epc_feeder_sizing/api.py",
 )
 FLAGS = ("--disallow-untyped-defs", "--disallow-incomplete-defs", "--ignore-missing-imports", "--follow-imports=silent", "--no-error-summary", "--cache-dir=" + str(REPO / "tmp" / ".mypy_cache"))
 

@@ -133,9 +133,10 @@ def build(geometry: Dict[str, Any], result: Dict[str, Any], parts: Optional[Dict
     `parts` are the equipment records, `{"module": record, "inverters": {id: record}}`; without them the plain boxes are drawn. `level` is `low` (no detail), `standard` or `full` (one face per cell)."""
     parts = parts or {}
     import ezdxf
+    from epc_dxf import new_document
     if not geometry.get("tables"):
         raise DrawingError("err_layout_no_tables")
-    doc = ezdxf.new("R2018", setup=True)
+    doc = new_document("R2018", setup=True)
     doc.units = 6
     for name, colour in LAYERS.items():
         doc.layers.add(name, color=colour)
@@ -210,7 +211,8 @@ def _table_block(doc, geometry: Dict[str, Any], parts: Dict[str, Any], level: st
 
 def _new_document():
     import ezdxf
-    doc = ezdxf.new("R2018", setup=True)
+    from epc_dxf import new_document
+    doc = new_document("R2018", setup=True)
     doc.units = 6
     for name, colour in LAYERS.items():
         doc.layers.add(name, color=colour)

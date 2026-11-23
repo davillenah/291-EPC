@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "epc_design_basis input",
+  "description": "The arguments of build_design_basis_document(profile, *, criteria, assumptions, requirements, norm_status, insulation_rules). The profile must carry the critical supply data (earthing system and short-circuit level).",
+  "type": "object",
+  "required": ["profile"],
+  "additionalProperties": false,
+  "properties": {
+    "profile": {
+      "type": "object",
+      "required": ["supply"],
+      "description": "The project profile (D24).",
+      "properties": {
+        "project_code": {"type": "string"},
+        "language": {"type": "string"},
+        "client": {"type": "object", "properties": {"name": {"type": "string"}}},
+        "site": {"type": "object", "properties": {"address": {"type": "string"}, "country": {"type": "string"}, "installation_type": {"type": "string"}}},
+        "supply": {
+          "type": "object",
+          "required": ["earthing_system", "short_circuit_level"],
+          "properties": {
+            "source": {"type": "string"},
+            "voltage": {"type": "object", "properties": {"value": {"type": "number"}, "unit": {"type": "string"}}},
+            "earthing_system": {"type": "string", "minLength": 1, "description": "TT, TN or IT."},
+            "short_circuit_level": {"type": "object", "minProperties": 1, "properties": {"value": {"type": "number"}, "unit": {"type": "string"}, "origin": {"type": "string", "description": "Where the level comes from; missing, the document carries an issue."}}}
+          }
+        },
+        "normative_profile": {"type": "object", "properties": {"jurisdiction": {"type": "string"}, "revisions": {"type": "object", "additionalProperties": {"type": "string"}}}},
+        "criteria": {"type": "object", "properties": {"set": {"type": "string"}, "exceptions": {"type": "array"}}}
+      }
+    },
+    "criteria": {"type": ["object", "null"], "properties": {"set": {"type": "string"}, "exceptions": {"type": "array"}}},
+    "assumptions": {"type": ["array", "null"], "items": {"type": "object", "required": ["text", "reason"], "properties": {"text": {"type": "string", "pattern": "\\S"}, "reason": {"type": "string", "pattern": "\\S"}}}},
+    "requirements": {"type": ["object", "null"], "properties": {"items": {"type": "array", "items": {"type": "object", "properties": {"id": {"type": "string"}, "text": {"type": "string"}, "source": {"type": "string"}, "status": {"type": "string"}}}}}},
+    "norm_status": {"type": ["object", "null"], "additionalProperties": {"enum": ["verified", "pending review", "rejected"]}},
+    "insulation_rules": {"type": ["object", "null"], "additionalProperties": {"type": "string"}}
+  }
+}
