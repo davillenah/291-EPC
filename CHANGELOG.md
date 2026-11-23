@@ -5,6 +5,7 @@ All notable changes. Format: Keep a Changelog; versions follow `harness/docs/BRA
 ## [Unreleased]
 
 ### Changed
+- OPT-06: the documents stage draws the report PDFs in up to four processes (`epc_drawing.export.report_pdf.render_many`): documents 6.1 s to 3.0 s on a house run, same files.
 - COD-07 (third part): `epc_dxf.convert` and `finish_draft` count entities per layer on the document in memory, not by reading the written file again. Same bytes.
 - COD-05: `epc_drawing.export.pdf` (DXF to PDF, called from its command line only) skips matplotlib's per-patch limit computation: 13.1 s to 5.1 s for four example PDFs, same bytes. The report and transmittal PDFs, where the profile's text cost is, are unchanged.
 - COD-07 (second part): `epc_dxf.deliverable` reads the converted drawing once and writes it once while it assigns layers, colours and symbol blocks. Same bytes, about 5% faster on the example board.
