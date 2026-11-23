@@ -5,6 +5,7 @@ All notable changes. Format: Keep a Changelog; versions follow `harness/docs/BRA
 ## [Unreleased]
 
 ### Changed
+- No error is swallowed in silence (COD-11): an architecture test forbids a silent catch-all unless its line says why, and six of them now catch only the error they expect. `ci.yml` step names are quoted (the workflow had stopped parsing).
 - `python harness/tools/ci/reference_run.py` runs the fictional reference project in a temporary root, prints the seconds per stage and the difference with the previous run (OPT-14, first part of GEN-02); a weekly GitHub workflow runs it (GEN-10).
 - Fast and slow tests (COD-14): the modules that run whole pipelines carry the `slow` marker; `python -m pytest harness/tests -m "not slow"` takes about 50 s instead of 200 s. The gate and the CI still run everything.
 - Faster CI on pull requests into `dev` (OPT-07): only the engine suites the change can affect run (`run_gate.py --changed origin/dev`; every other check always runs). Pushes and pull requests into `main` run the full battery.

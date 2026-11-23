@@ -60,7 +60,7 @@ Cheap, change no drawing, and make every later change measurable and safe. Do fi
 The patterns the conversions of phase 3 follow; do before converting more engines. Errors and results first because the contracts use them.
 
 - [ ] **COD-21 · Explicit result type** (success, warnings, bilingual errors) instead of exceptions or silences.
-- [ ] **COD-11 · No generic `except` and no silent fallback** (for example the box fallback of `pv_diagrams`): every failure with a message in English and Spanish.
+- [~] **COD-11 · No generic `except` and no silent fallback** (for example the box fallback of `pv_diagrams`): every failure with a message in English and Spanish. Done 2026-11-23: the architecture test `test_no_silent_catch_all` forbids a silent `except:` / `except Exception:` unless its line states why (`# noqa: BLE001 - <reason>`); six silent catch-alls in `epc_dxf`, `epc_documents` and `epc_drawing.export.logo` now catch only the expected error. Left: the documented fallbacks (`epc_arch` backdrop and PDF readers, logo drawing, hidden folder on Windows) still answer None without a bilingual message, and the `pv_diagrams` box fallback is SYM-03.
 - [ ] **GEN-08 · Error catalogue (was I).** Stable error codes with messages in English and Spanish saying what happened and what to do.
 - [ ] **COD-22 · Immutable value objects between stages,** which makes the input-hash cache and parallel runs safe.
 - [ ] **COD-12 · Frozen dataclasses or schemas** for what travels between stages, instead of dicts with loose keys.
