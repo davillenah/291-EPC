@@ -35,7 +35,7 @@ from pathlib import Path
 
 from disciplines.electrical_lv.stages import engine_calls as EC
 from disciplines.electrical_lv.stages import pv_feeders as PF
-from disciplines.electrical_lv.stages.base import Stage, StageInputError
+from disciplines.electrical_lv.stages.base import Stage, StageInputError, reason
 
 ENGINE = "calculation/pv"
 FUNCTION = "epc_pv.run"
@@ -387,7 +387,7 @@ def _run(section):
     except epc_pv.PvError as exc:
         raise StageInputError([f"{exc} / {exc.es}"]) from exc
     except TypeError as exc:                      # an option the engine does not have
-        raise StageInputError([str(exc)]) from exc
+        raise StageInputError([reason(exc)]) from exc
 
 
 def _trim_to_site(section, result, proposal):

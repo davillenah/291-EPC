@@ -23,7 +23,7 @@ import copy
 import importlib
 
 from disciplines.electrical_lv.stages import pv_feeders as PF
-from disciplines.electrical_lv.stages.base import StageInputError
+from disciplines.electrical_lv.stages.base import StageInputError, reason
 from disciplines.electrical_lv.stages.mappings import (
     KIND_TAG_PREFIX, KIND_TOPOLOGY, OVERRIDE_KEYS, PHASE_CODE, POWER_UNITS_WITH_FP)
 
@@ -154,7 +154,7 @@ def _run(form, criteria):
         memo = board_memo.build(data["board"], data["circuits"], res["datos"], res["detalle"], res["limites"], res["conductor"], res["rcd_ma"],
                                 upstream=data.get("upstream"), validated=bool(data.get("validated", True)), feeders=res["acometidas"])
     except ValueError as exc:  # the engine refuses the inputs (unit, duplicate tag, parent that does not exist, ...)
-        raise StageInputError([str(exc)]) from exc
+        raise StageInputError([reason(exc)]) from exc
     return data, res, memo
 
 

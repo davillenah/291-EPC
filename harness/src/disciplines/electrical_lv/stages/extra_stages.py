@@ -29,7 +29,7 @@ The values the engines use from their norm records are pending review (D21): eve
 import copy
 
 from disciplines.electrical_lv.stages import engine_calls as EC
-from disciplines.electrical_lv.stages.base import Stage, StageInputError, engine_finding
+from disciplines.electrical_lv.stages.base import Stage, StageInputError, engine_finding, reason
 
 NOTE = "typical values of the engine, pending review by the owner (D21)"
 STUDIES = "studies"
@@ -234,7 +234,7 @@ class HvacStage(ExtraStage):
         try:
             result = epc_hvac.run(copy.deepcopy(given)).as_dict()
         except epc_hvac.HvacError as exc:
-            raise StageInputError([str(exc)]) from exc
+            raise StageInputError([reason(exc)]) from exc
         return {"hvac": result}, []
 
 
@@ -256,7 +256,7 @@ class ReceptaclesStage(ExtraStage):
         try:
             result = epc_receptacles.run(copy.deepcopy(self.section(context))).as_dict()
         except epc_receptacles.ReceptaclesError as exc:
-            raise StageInputError([str(exc)]) from exc
+            raise StageInputError([reason(exc)]) from exc
         findings = []
         for room in result["rooms"]:
             for check in (c for c in room["checks"] if not c["ok"]):
@@ -332,7 +332,7 @@ class CoordinationStage(ExtraStage):
         try:
             found = clash.detect(items, given.get("rules"))
         except core.PlanError as exc:
-            raise StageInputError([str(exc)]) from exc
+            raise StageInputError([reason(exc)]) from exc
         findings = [engine_finding(n, context.pipeline_run_id, self.spec.slug, c["id"], f"clash_{c['type']}", c["gap_m"], c["clearance_m"]) for n, c in enumerate(found, start=1) if c["severity"] == "error"]
         return {"elements": len(items), "clashes": found}, findings
 

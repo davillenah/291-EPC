@@ -16,7 +16,7 @@ the load (units W or kW only) and `outputs["load_check"]` lists each pair; a pai
 """
 from disciplines.electrical_lv import lux_map
 from disciplines.electrical_lv.stages import engine_calls as EC
-from disciplines.electrical_lv.stages.base import Stage, StageInputError, engine_finding
+from disciplines.electrical_lv.stages.base import Stage, StageInputError, engine_finding, reason
 
 ENGINE = "calculation/lighting"
 FUNCTION = "epc_lighting.run"
@@ -100,7 +100,7 @@ def _run(section):
         options = epc_lighting.Options(**{**lux_map.RETURN_GRID, **(section.get("options") or {})})
         return epc_lighting.run(section["document"], options).as_dict()
     except (epc_lighting.LightingError, TypeError) as exc:  # TypeError: an option the engine does not have
-        raise StageInputError([str(exc)]) from exc
+        raise StageInputError([reason(exc)]) from exc
 
 
 def _findings(result, checks, section, run_id, slug):
