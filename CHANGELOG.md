@@ -8,6 +8,9 @@ All notable changes. Format: Keep a Changelog; versions follow `harness/docs/BRA
 - PRO-13: `harness/tools/ci/harness_metrics.py` shows projects, runs, failures per stage and time per stage from the projects on disk.
 
 ### Changed
+- OPT-02 (ADR-0040 complete): `epc_plan.draw_model3d`, `epc_arch.building_solids` and `epc_arch.draw_elevation` are the 3D entry points; the `model3d` stage calls them. Same files.
+- OPT-09: input schema for `epc_descriptive_report`. COD-10: `selectivity.aea_protection` typed.
+- `docs/OWNER_DECISIONS.md`: the decisions that wait for the owner (golden SYM-00, `epc_documents` errors, ADRs, drawing base stages 1 and 3, IEC 60617 geometry) with the expected diff of each.
 - OPT-13: property tests over generated documents for `lighting`, `receptacles`, `hvac` and `pv` (monotonicity, totals, determinism); no norm value used.
 - COD-10 (second part): 14 more modules annotated and checked by mypy (`calc_common`, the `errors` of grounding and short circuit, the `api` doors of four calculation engines).
 - OPT-02 (ADR-0040, accepted): `epc_mld.draw(MldInput)`, `epc_plan.draw_plan(PlanInput)` and `epc_drawing.draw_pv(PvDrawInput)` are the single entry points of the MLD, the plan and the PV drawings; the stages call them. Same bytes.

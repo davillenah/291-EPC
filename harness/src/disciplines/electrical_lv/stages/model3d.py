@@ -73,11 +73,11 @@ def errors_of(given, routing):
 
 def _building(design, floor, heights):
     """The solids of the building of one floor, from the walls and openings of its architecture."""
-    from epc_arch import model3d
+    from epc_arch import FloorInput, building_solids
     backdrop = design.get("backdrop")
     if not backdrop or not backdrop.get("walls"):
         raise StageInputError([f"model3d: floor {floor} has no architecture in metres to build from"])
-    return model3d.building_solids(model3d.from_backdrop(backdrop, floor), heights)
+    return building_solids(FloorInput(backdrop=backdrop, floor=floor, heights=heights))
 
 
 def _raised(item, dz, floor):
@@ -119,16 +119,14 @@ def build(given, routing):
 
 def _elevations(given, routing, out_dir, board):
     """Writes the elevations asked for: `{"<floor>_<side>": path}` of the files, each on its IRAM sheet at the scale that fits."""
-    from epc_arch import model3d, sections
-    from epc_arch import template_from_svg
+    from epc_arch import ElevationInput, FloorInput, draw_elevation, template_from_svg
     from epc_titleblock import build as iram_sheet
     template = template_from_svg(iram_sheet("A1", False, None, False, None)["svg"]) if given.get("elevations") else None      # the IRAM sheet goes to the engine as data
     done = {}
     for e in given.get("elevations", []):
         floor = e["floor"]
-        arch = model3d.from_backdrop(routing[floor]["backdrop"], floor)
         path = out_dir / f"{board}_elevation_{floor}_{e['side']}.dxf"
-        done[f"{floor}_{e['side']}"] = sections.write_view_dxf(sections.elevation(arch, e["side"], given["floors"][floor]), arch, path, template=template)
+        done[f"{floor}_{e['side']}"] = draw_elevation(ElevationInput(floor=FloorInput(backdrop=routing[floor]["backdrop"], floor=floor, heights=given["floors"][floor]), side=e["side"], template=template), path)
     return done
 
 
@@ -142,14 +140,10 @@ def write(context_inputs, out_dir, board, stamp_date=None):
     bad = errors_of(given, routing)
     if bad:
         raise StageInputError(bad)
-    from epc_plan import core, detail, scene3d
+    from epc_plan import Model3dInput, core, detail, draw_model3d
     try:
         scene, parts = build(given, routing)
-        faces = scene3d.write_dxf(scene, out_dir / f"{board}_model_3d.dxf", stamp_date=stamp_date)
-        cuts = {}
-        for s in given.get("sections", []):
-            section = scene3d.cut(scene, s["axis"], s["at_m"], s["look"], s.get("depth_m"))
-            cuts[s["name"]] = scene3d.write_section_dxf(section, out_dir / f"{board}_section_{s['name']}.dxf", stamp_date=stamp_date)
+        faces, cuts = draw_model3d(Model3dInput(scene=scene, sections=tuple(given.get("sections", [])), stamp_date=stamp_date), out_dir, board)
     except (core.PlanError, ValueError) as exc:
         raise StageInputError([f"model3d: {exc}"]) from exc
     try:
