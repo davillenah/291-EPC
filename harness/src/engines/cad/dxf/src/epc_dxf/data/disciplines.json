@@ -5,6 +5,7 @@
     {
       "id": "arquitectura",
       "prefix": "ARQ-",
+      "also_prefixes": ["A-"],
       "profile": "arquitectura",
       "name": {
         "es": "Arquitectura",

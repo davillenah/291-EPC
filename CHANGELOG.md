@@ -8,6 +8,7 @@ All notable changes. Format: Keep a Changelog; versions follow `harness/docs/BRA
 - PRO-13: `harness/tools/ci/harness_metrics.py` shows projects, runs, failures per stage and time per stage from the projects on disk.
 
 ### Changed
+- DRW-01 stage 1 (option A): the 17 `A-*` layers and the five pens of `epc_arch` now live in `harness/config/dxf/layers.json` as `arch.*` roles (`lineweight` is the pen); `epc_style.json` keeps the sizes, text styles, font and sheet. `epc_arch` reads the catalog as data and imports no other engine, so it does not call `epc_dxf.new_document` (a dependency for three lines). Same drawings (checked entity by entity). Discipline grouping accepts `also_prefixes` (`A-`).
 - OPT-02 (ADR-0040 complete): `epc_plan.draw_model3d`, `epc_arch.building_solids` and `epc_arch.draw_elevation` are the 3D entry points; the `model3d` stage calls them. Same files.
 - OPT-09: input schema for `epc_descriptive_report`. COD-10: `selectivity.aea_protection` typed.
 - `docs/OWNER_DECISIONS.md`: the decisions that wait for the owner (golden SYM-00, `epc_documents` errors, ADRs, drawing base stages 1 and 3, IEC 60617 geometry) with the expected diff of each.
