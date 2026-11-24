@@ -31,6 +31,8 @@
  "engine-cutlist": 100.0,
  "engine-walls": 100.0,
  "engine-dims": 100.0,
+ "engine-expr": 100.0,
+ "engine-arrays": 100.0,
  "engine-datasheets": 100.0,
  "engine-rfq": 100.0
 }

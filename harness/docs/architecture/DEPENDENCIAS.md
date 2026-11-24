@@ -10,6 +10,7 @@ Cómo leerlo: **Usa** = de qué depende la unidad; **Lo usan** = quién se rompe
 |---|---|---|---|
 | `aea90364` | `calc_common`, `feeder_sizing`, `grounding`, `load_balance`, `selectivity`, `short_circuit`, `voltage_drop` | `calc_check`, `calc_common`, `drawing`, `feeder_sizing`, `grounding`, `lighting`, `load_balance`, `mld`, `selectivity`, `short_circuit`, `sld`, `voltage_drop` | `calc_check`, `calc_common`, `design_basis`, `drawing`, `feeder_sizing`, `grounding`, `lighting`, `load_balance`, `mld`, `selectivity`, `short_circuit`, `sld`, `transformer_sizing`, `voltage_drop` |
 | `arch` | `plan`, `titleblock` | `plan` | `plan` |
+| `arrays` | — | — | — |
 | `boq` | `pv` | `rfq` | `rfq` |
 | `calc_check` | `aea90364` | — | — |
 | `calc_common` | `aea90364` | `aea90364`, `feeder_sizing`, `grounding`, `load_balance`, `selectivity`, `short_circuit`, `voltage_drop` | `aea90364`, `calc_check`, `design_basis`, `drawing`, `feeder_sizing`, `grounding`, `lighting`, `load_balance`, `mld`, `selectivity`, `short_circuit`, `sld`, `transformer_sizing`, `voltage_drop` |
@@ -21,6 +22,7 @@ Cómo leerlo: **Usa** = de qué depende la unidad; **Lo usan** = quién se rompe
 | `documents` | — | — | — |
 | `drawing` | `aea90364`, `dxf`, `mld`, `pv`, `sld`, `symbols`, `titleblock` | — | — |
 | `dxf` | `symbols` | `drawing`, `mld`, `plan`, `sld`, `titleblock` | `arch`, `drawing`, `mld`, `plan`, `sld`, `titleblock` |
+| `expr` | — | — | — |
 | `feeder_sizing` | `aea90364`, `calc_common`, `voltage_drop` | `aea90364`, `grounding`, `short_circuit` | `aea90364`, `calc_check`, `calc_common`, `design_basis`, `drawing`, `grounding`, `lighting`, `load_balance`, `mld`, `selectivity`, `short_circuit`, `sld`, `transformer_sizing`, `voltage_drop` |
 | `grounding` | `aea90364`, `calc_common`, `feeder_sizing` | `aea90364`, `design_basis`, `selectivity` | `aea90364`, `calc_check`, `calc_common`, `design_basis`, `drawing`, `feeder_sizing`, `lighting`, `load_balance`, `mld`, `selectivity`, `short_circuit`, `sld`, `transformer_sizing`, `voltage_drop` |
 | `hvac` | — | — | — |
@@ -56,6 +58,7 @@ Lo declarado en `pyproject.toml` frente a lo que el código importa de verdad.
 |---|---|---|---|
 | `aea90364` | `openpyxl` | `openpyxl` | — |
 | `arch` | `ezdxf`, `numpy`, `pillow`, `pypdfium2` | `ezdxf`, `numpy`, `pillow`, `pypdfium2` | — |
+| `arrays` | — | — | — |
 | `boq` | — | — | — |
 | `calc_check` | — | `epc-aea90364` | — |
 | `calc_common` | — | — | — |
@@ -67,6 +70,7 @@ Lo declarado en `pyproject.toml` frente a lo que el código importa de verdad.
 | `documents` | `playwright`, `pypdf`, `python-docx` | `playwright`, `pypdf`, `python-docx` | — |
 | `drawing` | `ezdxf`, `matplotlib`, `numpy`, `openpyxl`, `pillow`, `svgelements` | `epc-aea90364`, `epc-mld`, `epc-sld`, `epc-titleblock`, `ezdxf`, `matplotlib`, `numpy`, `openpyxl`, `pillow`, `svgelements` | — |
 | `dxf` | `ezdxf`, `lxml`, `shapely`, `svgelements`, `vtracer` | `ezdxf`, `lxml`, `shapely`, `svgelements`, `vtracer` | — |
+| `expr` | — | — | — |
 | `feeder_sizing` | — | `epc-calc-common`, `epc-voltage-drop` | — |
 | `grounding` | — | `epc-calc-common`, `epc-feeder-sizing` | — |
 | `hvac` | — | — | — |

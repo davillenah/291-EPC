@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "expr (input)",
+  "description": "The arguments of evaluate() as one object.",
+  "type": "object",
+  "required": ["expression"],
+  "additionalProperties": false,
+  "properties": {
+    "expression": {"type": "string", "minLength": 1, "maxLength": 1000, "pattern": "\\S"},
+    "variables": {"type": ["object", "null"], "propertyNames": {"pattern": "^[A-Za-z_][A-Za-z0-9_]*$"}, "additionalProperties": {"type": "number"}}
+  }
+}

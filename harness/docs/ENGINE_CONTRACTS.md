@@ -338,6 +338,38 @@ Schema: `harness/src/engines/fabrication/cutlist/src/epc_cutlist/schema/input.sc
 | `parts[].angle_2_deg` | number or null |  | minimum -90, maximum 90 |  |
 | `parts[].angle_source` | one of `given`, `derived`, `unknown` |  |  |  |
 
+## epc_arrays
+
+### Input
+
+Schema: `harness/src/engines/geometry/arrays/src/epc_arrays/schema/input.schema.json` (arrays (input))
+
+| Field | Type | Required | Limits | Notes |
+|---|---|---|---|---|
+| `kind` | one of `rectangular`, `polar` | yes |  |  |
+| `base` | see point | yes |  |  |
+| `max_items` | integer | yes | minimum 1 |  |
+| `rows` | integer |  | minimum 1 |  |
+| `cols` | integer |  | minimum 1 |  |
+| `row_spacing` | number |  |  |  |
+| `col_spacing` | number |  |  |  |
+| `angle_deg` | number |  |  |  |
+| `center` | see point |  |  |  |
+| `count` | integer |  | minimum 1 |  |
+| `fill_deg` | number |  | minimum -360, maximum 360 |  |
+| `rotate_items` | boolean |  |  |  |
+
+## epc_expr
+
+### Input
+
+Schema: `harness/src/engines/geometry/expr/src/epc_expr/schema/input.schema.json` (expr (input))
+
+| Field | Type | Required | Limits | Notes |
+|---|---|---|---|---|
+| `expression` | string | yes | minLength 1, pattern \S |  |
+| `variables` | object or null |  |  |  |
+
 ## epc_boq
 
 ### Input
