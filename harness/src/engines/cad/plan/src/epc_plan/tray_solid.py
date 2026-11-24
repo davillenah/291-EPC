@@ -23,49 +23,37 @@ def _z_at(profile: Sequence[Tuple[float, float]], s: float) -> float:
     return profile[-1][1]
 
 
-def path3d(run: Sequence[P3], radius: float, vertical_radius: float) -> List[P3]:
-    """The axis of a run as 3D points: plan corners rounded by `radius`, height changes rounded by `vertical_radius`."""
-    plan = tray_draw.fillet_path([p[:2] for p in run], radius)
+def _profile(run: Sequence[P3], vertical_radius: float) -> List[Tuple[float, float]]:
+    """(distance walked in plan, height) of the run, with the changes of height rounded by `vertical_radius`."""
     walked, profile = 0.0, []
     for i, p in enumerate(run):
         if i:
             walked += math.dist(run[i - 1][:2], p[:2])
         profile.append((walked, p[2]))
-    profile = tray_draw.fillet_path(profile, vertical_radius) if vertical_radius > 0 else profile
-    total_plan = sum(math.dist(a, b) for a, b in zip(plan, plan[1:])) or 1.0
-    scale = walked / total_plan
-    out: List[P3] = []
-    along = 0.0
-    for i, p in enumerate(plan):
-        if i:
-            along += math.dist(plan[i - 1], p)
-        out.append((p[0], p[1], _z_at(profile, along * scale)))
-    cuts = [s for s, _ in profile]                                   # make sure every bend of the profile is a vertex of the path
-    s_plan = [0.0]
-    for a, b in zip(plan, plan[1:]):
-        s_plan.append(s_plan[-1] + math.dist(a, b) * scale)
-    for s in cuts:
-        for i in range(len(plan) - 1):
-            if s_plan[i] + 1e-6 < s < s_plan[i + 1] - 1e-6:
-                t = (s - s_plan[i]) / (s_plan[i + 1] - s_plan[i])
-                at = (plan[i][0] + (plan[i + 1][0] - plan[i][0]) * t, plan[i][1] + (plan[i + 1][1] - plan[i][1]) * t, _z_at(profile, s))
-                out.append(at)
-    out.sort(key=lambda q: _s_of(q, plan, s_plan))
-    return _dedupe3(out)
+    return tray_draw.fillet_path(profile, vertical_radius) if vertical_radius > 0 else profile
 
 
-def _s_of(q: P3, plan: Sequence[Tuple[float, float]], s_plan: Sequence[float]) -> float:
-    best, at = 1e18, 0.0
+def _point_at(plan: Sequence[Tuple[float, float]], marks: Sequence[float], s: float) -> Tuple[float, float]:
+    """The point of the plan path at distance `s` (`marks` holds the distance of every vertex)."""
     for i in range(len(plan) - 1):
-        a, b = plan[i], plan[i + 1]
-        length = math.dist(a, b)
-        if length < 1e-12:
-            continue
-        t = max(0.0, min(1.0, ((q[0] - a[0]) * (b[0] - a[0]) + (q[1] - a[1]) * (b[1] - a[1])) / length ** 2))
-        d = math.hypot(q[0] - (a[0] + (b[0] - a[0]) * t), q[1] - (a[1] + (b[1] - a[1]) * t))
-        if d < best - 1e-9:
-            best, at = d, s_plan[i] + (s_plan[i + 1] - s_plan[i]) * t
-    return at
+        if s <= marks[i + 1] + 1e-9:
+            t = 0.0 if marks[i + 1] - marks[i] < 1e-12 else (s - marks[i]) / (marks[i + 1] - marks[i])
+            return (plan[i][0] + (plan[i + 1][0] - plan[i][0]) * t, plan[i][1] + (plan[i + 1][1] - plan[i][1]) * t)
+    return plan[-1]
+
+
+def path3d(run: Sequence[P3], radius: float, vertical_radius: float) -> List[P3]:
+    """The axis of a run as 3D points: plan corners rounded by `radius`, height changes rounded by `vertical_radius`."""
+    plan = tray_draw.fillet_path([p[:2] for p in run], radius)
+    profile = _profile(run, vertical_radius)
+    walked = profile[-1][0]
+    marks = [0.0]
+    for a, b in zip(plan, plan[1:]):
+        marks.append(marks[-1] + math.dist(a, b))
+    scale = walked / (marks[-1] or 1.0)
+    marks = [m * scale for m in marks]
+    stops = sorted(set(marks) | {s for s, _ in profile})              # every vertex of the plan and every bend of the profile
+    return _dedupe3([(*_point_at(plan, marks, s), _z_at(profile, s)) for s in stops])
 
 
 def _frame(a: P3, b: P3) -> Tuple[P3, P3, P3]:
@@ -74,7 +62,6 @@ def _frame(a: P3, b: P3) -> Tuple[P3, P3, P3]:
     u = ((b[0] - a[0]) / d, (b[1] - a[1]) / d, (b[2] - a[2]) / d)
     h = math.hypot(u[0], u[1])
     n = (-u[1] / h, u[0] / h, 0.0) if h > 1e-9 else (0.0, 1.0, 0.0)
-    v = (u[1] * n[2] - u[2] * n[1], u[2] * n[0] - u[0] * n[2], u[0] * n[1] - u[1] * n[0])
     v = (n[1] * u[2] - n[2] * u[1], n[2] * u[0] - n[0] * u[2], n[0] * u[1] - n[1] * u[0])
     return u, n, v
 
