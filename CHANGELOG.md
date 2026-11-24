@@ -5,6 +5,7 @@ All notable changes. Format: Keep a Changelog; versions follow `harness/docs/BRA
 ## [Unreleased]
 
 ### Added
+- Reproducible run times: `SOURCE_DATE_EPOCH` fixes the time in the `epc_documents` seals and the `epc_arch` manifest when none is handed in.
 - File-name convention (`harness/docs/NAMING.md`) and gate check `file-names`: code and data files are lower snake_case and a folder never mixes `-` and `_`; existing offenders sit in a list that can only shrink. Renamed `deliverable_policy.json`, `document_catalog.json`, `manufacturer_catalog.schema.json`, `norm_register.schema.json`, `epc_progress.txt` (project `.epc/`) and `review_log.jsonl`.
 - `epc_dxf.verify`: read-only verification of a DXF (zero-length and tiny lines, duplicated lines, undefined layers and blocks, empty texts) with switchable rule ids and English and Spanish texts. No drawing changes, no golden bytes touched.
 - `epc_cutlist` (fabrication engine, generic): one-dimensional cutting plan with saw kerf, limited or unlimited stock lengths (bars, trays, conduits, profiles, cable drums), grouped parts and confidence marks on cut angles; input schema, bilingual errors (ADR-0039). Pure, no norm value.
@@ -18,6 +19,7 @@ All notable changes. Format: Keep a Changelog; versions follow `harness/docs/BRA
 - PRO-13: `harness/tools/ci/harness_metrics.py` shows projects, runs, failures per stage and time per stage from the projects on disk.
 
 ### Changed
+- `device_symbol_map.json` no longer repeats ports and MLD variants; `epc_drawing.symbol_for` reads them from the symbol catalogue (same answer).
 - COD-03 / DGM-13a: the legend texts of the SLD symbols live in the symbol catalog (`legend` field), not in `sld_generator.py`. Same drawings.
 - SYM-00: the SLD and MLD DXF files carry their symbols as `INSERT` blocks (library file found through the library catalog; the MLD passes its symbol library). Golden DXF files re-recorded once, owner approved.
 - DRW-01 option B (ARQ-37): every layer of every DXF follows NCS / AIA `291-<discipline>-<major>-<minor>-<status>` in English (photovoltaic uses discipline `W`); outside the standard: `0-Titleblock` (frame, title block and its text), `0-Viewport`. Names come from `harness/config/dxf/layers.json` only; `style_unify` no longer renames layers. Every layer carries an English description in the LAYER table (`epc_dxf.describe_layers`, run by `finish_draft`). Two roles may share a layer name only with the same look. The plan engine reads round or rect sections from profile data (`seccion`), not from layer-name patterns. Golden DXF files re-recorded with the official tools for this change only.

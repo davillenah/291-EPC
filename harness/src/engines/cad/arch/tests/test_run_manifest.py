@@ -46,6 +46,13 @@ class TestRunManifest(unittest.TestCase):
         self.assertEqual(first, second)
         self.assertEqual(first["run_at"], "2026-01-02T03:04:05+00:00")
 
+    def test_source_date_epoch_fixes_the_run_time(self):
+        import os
+        from unittest import mock
+        from epc_arch.cli_v2 import _run_time
+        with mock.patch.dict(os.environ, {"SOURCE_DATE_EPOCH": "1767323045"}):
+            self.assertEqual(_run_time(), "2026-01-02T03:04:05+00:00")
+
     def test_an_unknown_format_is_refused(self):
         self.assertEqual(main(["x.dxf", "--formats", "gif"]), 1)
 

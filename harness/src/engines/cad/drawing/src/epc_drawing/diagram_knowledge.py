@@ -43,11 +43,23 @@ def matching(variables: dict, domain: str = None) -> list:
 
 
 def symbol_for(device_id: str) -> dict:
-    """{'sld_symbol', 'mld_symbols', 'ports', 'match', 'status'} of a researched device; sld_symbol None when the library has no symbol."""
+    """{'sld_symbol', 'mld_symbols', 'ports', 'match', 'status'} of a researched device; sld_symbol None when the library has no symbol.
+
+    The map holds only the device to symbol link; the ports and the MLD variants (`<symbol>_<n>p_mld`) come from the symbol catalogue (one source, COD-03)."""
     for m in _json("puente_motor_dibujo/device_symbol_map.json")["mappings"]:
         if m["device_id"] == device_id:
-            return m
+            return {**m, **_from_catalogue(m["sld_symbol"])}
     raise KeyError(f"no device '{device_id}' in the diagram knowledge")
+
+
+def _from_catalogue(symbol):
+    """Ports and MLD variants of a library symbol id (empty when the device has no symbol)."""
+    if symbol is None:
+        return {"ports": [], "mld_symbols": []}
+    from epc_symbols import registry
+    mld = (i.split(".", 1)[1] for i in registry.list_ids(view="mld"))
+    variants = sorted(i for i in mld if i.startswith(symbol + "_") and i.endswith("p_mld") and i[len(symbol) + 1:-5].isdigit())
+    return {"ports": [t["id"] for t in registry.terminals(symbol)], "mld_symbols": variants}
 
 
 def _device_class(disp: str):
