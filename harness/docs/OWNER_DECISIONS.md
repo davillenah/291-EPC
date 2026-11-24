@@ -5,7 +5,7 @@ Written 2026-11-23. Each item says what it is, what the agents did not do and wh
 ## 1. Drawing base (DRW-01)
 
 ### Stage 3, one IRAM title block: already one geometry (correction of an earlier note)
-`epc_arch.export.sheet_iram` does **not** draw a second title block. It reads the SVG that `epc_titleblock` makes (`template_from_svg`) and turns its marks into items of the common drawing. The geometry has one source. What differs is only the **layer name** of the marks: `0-Titleblock` in the architecture drawings, `0-Titleblock` (role `sld.titleblock` of `config/dxf/layers.json`) in the diagrams and sheets; at the transmittal `config/dxf/unify.json` renames layers to the `<discipline>-<element>` convention.
+`epc_arch.export.sheet_iram` does **not** draw a second title block. It reads the SVG that `epc_titleblock` makes (`template_from_svg`) and turns its marks into items of the common drawing. The geometry has one source. What differs is only the **layer name** of the marks: `0-Titleblock` in the architecture drawings, `0-Titleblock` (role `sld.titleblock` of `config/dxf/layers.json`) in the diagrams and sheets; layers are not renamed at the transmittal any more (DRW-01 stage 3).
 - Expected diff if you accept "stage 3 is closed as done": none (only the BACKLOG line changes).
 - Expected diff if you want one layer name for the title block everywhere: the layer name inside every architecture DXF/SVG/PNG/PDF sheet (`0-Titleblock` to the chosen name); the file bytes of every architecture sheet change, so their golden files must be recorded again.
 - To decide: "close stage 3" or "rename the layer to X".

@@ -88,12 +88,33 @@ def apply(doc, role: str, catalog: Optional[Dict[str, dict]] = None) -> str:
     lay = doc.layers.get(a["name"]) if a["name"] in doc.layers else doc.layers.add(a["name"])
     lay.color = int(a["color"])
     lay.dxf.linetype = doc.linetypes.get(a["linetype"]).dxf.name if a["linetype"] in doc.linetypes else "Continuous"       # the name as the document writes it
+    _set_flags(lay, a)
+    return a["name"]
+
+
+def _set_flags(lay, a: dict) -> None:
     if a["lineweight"] is not None:                 # empty: the layer keeps the standard weight (what drawings had before the catalog)
         lay.dxf.lineweight = int(round(float(a["lineweight"]) * 100))
     lay.on, lay.is_frozen, lay.is_locked = bool(a["on"]), bool(a["frozen"]), bool(a["locked"])
+    lay.description = (a.get("description") or {}).get("en") or lay.description      # in the LAYER table: every layer of a deliverable has one
     if not a["plot"]:
         lay.dxf.plot = 0
-    return a["name"]
+
+
+def describe_layers(doc, catalog: Optional[Dict[str, dict]] = None) -> List[str]:
+    """Gives every layer of the document that has no description the English description of the catalog role of the same name; returns the layers still without one
+    (the layers `0` and `Defpoints` that every DXF carries are not counted)."""
+    by_name = {a["name"]: (a.get("description") or {}).get("en") for a in resolve(catalog).values() if a.get("name")}
+    missing = []
+    for lay in doc.layers:
+        name = lay.dxf.name
+        if name in ("0", "Defpoints") or lay.description:
+            continue
+        if by_name.get(name):
+            lay.description = by_name[name]
+        else:
+            missing.append(name)
+    return sorted(missing)
 
 
 def _name_problems(role: str, a: dict) -> Iterable[str]:
@@ -124,11 +145,14 @@ def validate(catalog: Dict[str, dict]) -> Dict[str, str]:
     for role, a in catalog.items():
         for msg in _problems(role, a):
             errors[msg.split(":")[0]] = msg.split(": ", 1)[1]
-        key = str(a.get("name", "")).strip().lower()
-        if key in seen and any(a.get(k) != catalog[seen[key]].get(k) for k in LOOK_FIELDS):
-            errors[f"{role}.name"] = f"already used by {seen[key]} with another look (colour, line type or weight)"
-        seen.setdefault(key, role)
+        other = seen.setdefault(str(a.get("name", "")).strip().lower(), role)
+        if _looks_differ(a, catalog[other]):
+            errors[f"{role}.name"] = f"already used by {other} with another look (colour, line type or weight)"
     return errors
+
+
+def _looks_differ(a: dict, b: dict) -> bool:
+    return any(a.get(k) != b.get(k) for k in LOOK_FIELDS)
 
 
 def dump(catalog: Dict[str, dict], path: os.PathLike) -> None:

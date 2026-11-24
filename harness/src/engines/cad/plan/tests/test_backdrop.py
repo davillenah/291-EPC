@@ -31,12 +31,12 @@ class TestBackdrop(unittest.TestCase):
         self.assertEqual((xs, ys), ([0.0, 10.0], [-0.1, 0.1]))
         second = sorted({round(p[1], 3) for p in walls[1].get_points()})
         self.assertEqual([float(v) + 0.0 for v in second], [-5.0, 0.0])                   # the screen's y down becomes the DXF's y up, as for the nodes
-        self.assertEqual([t.dxf.text for t in msp.query("TEXT") if t.dxf.layer.endswith("ARQ-LOCALES")], ["OFFICE"])
-        self.assertEqual([round(t.dxf.insert[1], 3) for t in msp.query("TEXT") if t.dxf.layer.endswith("ARQ-LOCALES")], [-2.5])
+        self.assertEqual([t.dxf.text for t in msp.query("TEXT") if t.dxf.layer.endswith("A-AREA")], ["OFFICE"])
+        self.assertEqual([round(t.dxf.insert[1], 3) for t in msp.query("TEXT") if t.dxf.layer.endswith("A-AREA")], [-2.5])
 
     def test_without_a_backdrop_nothing_is_added(self):
         _, msp = self.write(None)
-        self.assertFalse([e for e in msp if e.dxf.layer.endswith(("291-A-WALL-FULL-N", "ARQ-LOCALES"))])
+        self.assertFalse([e for e in msp if e.dxf.layer.endswith(("ARQ-MUROS", "A-AREA"))])
 
 
 if __name__ == "__main__":

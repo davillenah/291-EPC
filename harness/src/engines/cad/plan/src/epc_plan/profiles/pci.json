@@ -72,12 +72,13 @@
         "material"
       ],
       "simbolo_2d": "linea_simple",
-      "capa_dxf": "291-F-SPKL-PIPE-N",
+      "capa_dxf": "PCI-TUBERIA",
       "geom": {
         "z_m": 2.8,
         "ancho_m": 0.06,
         "alto_m": 0.06
-      }
+      },
+      "seccion": "round"
     },
     {
       "id": "CF",
@@ -90,12 +91,13 @@
         "tipo"
       ],
       "simbolo_2d": "linea_simple",
-      "capa_dxf": "291-F-PROT-SMOK-N",
+      "capa_dxf": "PCI-DETECTOR",
       "geom": {
         "z_m": 2.8,
         "ancho_m": 0.02,
         "alto_m": 0.02
-      }
+      },
+      "seccion": "round"
     }
   ],
   "nodos": [
@@ -110,7 +112,7 @@
         "tipo"
       ],
       "simbolo_2d": "rociador",
-      "capa_dxf": "291-F-SPKL-N",
+      "capa_dxf": "PCI-ROCIADOR",
       "geom": {
         "z_m": 2.8,
         "ancho_m": 0.15,
@@ -128,12 +130,13 @@
         "tipo"
       ],
       "simbolo_2d": "detector",
-      "capa_dxf": "291-F-PROT-SMOK-N",
+      "capa_dxf": "PCI-DETECTOR",
       "geom": {
         "z_m": 2.8,
         "ancho_m": 0.15,
         "alto_m": 0.15
-      }
+      },
+      "seccion": "round"
     },
     {
       "id": "HI",
@@ -146,7 +149,7 @@
         "dimensiones"
       ],
       "simbolo_2d": "caja_pase",
-      "capa_dxf": "291-F-PROT-HYDT-N",
+      "capa_dxf": "PCI-HIDRANTE",
       "geom": {
         "z_m": 0.0,
         "ancho_m": 0.6,
@@ -164,7 +167,7 @@
         "tipo"
       ],
       "simbolo_2d": "extintor",
-      "capa_dxf": "291-F-PROT-EXTI-N",
+      "capa_dxf": "PCI-EXTINTOR",
       "geom": {
         "z_m": 0.0,
         "ancho_m": 0.25,
@@ -182,7 +185,7 @@
         "tipo"
       ],
       "simbolo_2d": "pulsador",
-      "capa_dxf": "291-F-PROT-ALRM-N",
+      "capa_dxf": "PCI-PULSADOR",
       "geom": {
         "z_m": 1.4,
         "ancho_m": 0.12,
@@ -200,7 +203,7 @@
         "tipo"
       ],
       "simbolo_2d": "sirena",
-      "capa_dxf": "291-F-PROT-ALRM-N",
+      "capa_dxf": "PCI-PULSADOR",
       "geom": {
         "z_m": 2.4,
         "ancho_m": 0.2,
@@ -219,7 +222,7 @@
         "material"
       ],
       "simbolo_2d": "caja_pase",
-      "capa_dxf": "291-F-SPKL-PIPE-N",
+      "capa_dxf": "PCI-TUBERIA",
       "geom": {
         "z_m": 0.0,
         "ancho_m": 0.1,
@@ -242,7 +245,7 @@
         "tipo"
       ],
       "simbolo_2d": "motor",
-      "capa_dxf": "291-F-PROT-EQPM-N",
+      "capa_dxf": "PCI-EQUIPO",
       "geom": {
         "z_m": 0.5,
         "ancho_m": 1.0,
@@ -260,7 +263,7 @@
         "capacidad_l"
       ],
       "simbolo_2d": "equipo_mec",
-      "capa_dxf": "291-F-PROT-EQPM-N",
+      "capa_dxf": "PCI-EQUIPO",
       "geom": {
         "z_m": 1.5,
         "ancho_m": 3.0,
@@ -279,7 +282,7 @@
         "tipo"
       ],
       "simbolo_2d": "instrumento",
-      "capa_dxf": "291-F-PROT-VALV-N",
+      "capa_dxf": "PCI-VALVULA",
       "geom": {
         "z_m": 1.2,
         "ancho_m": 0.4,
@@ -298,7 +301,7 @@
         "tipo"
       ],
       "simbolo_2d": "instrumento",
-      "capa_dxf": "291-F-PROT-VALV-N",
+      "capa_dxf": "PCI-VALVULA",
       "geom": {
         "z_m": 1.2,
         "ancho_m": 0.15,
@@ -316,7 +319,7 @@
         "tipo"
       ],
       "simbolo_2d": "tablero",
-      "capa_dxf": "291-F-PROT-ALRM-PANL-N",
+      "capa_dxf": "PCI-CENTRAL",
       "geom": {
         "z_m": 1.5,
         "ancho_m": 0.5,
@@ -334,7 +337,7 @@
         "diametro_mm"
       ],
       "simbolo_2d": "caja_pase",
-      "capa_dxf": "291-F-PROT-HYDT-N",
+      "capa_dxf": "PCI-HIDRANTE",
       "geom": {
         "z_m": 0.6,
         "ancho_m": 0.4,

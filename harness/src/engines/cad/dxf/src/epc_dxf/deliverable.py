@@ -64,6 +64,7 @@ def finish_draft(doc, dxf_path, layers_file=None, stamp_date=None, seed=None) ->
     for role in drafts:
         if final[role] != role:
             doc.layers.remove(role)
+    _L.describe_layers(doc, catalog)                                                 # every layer of the file carries its description
     Path(dxf_path).parent.mkdir(parents=True, exist_ok=True)
     _stamp.save(doc, str(dxf_path), _stamp.parse(stamp_date, seed if seed is not None else Path(dxf_path).stem))
     layers, blocks = count_entities(doc)                       # the document that was just written: no need to read the file again

@@ -50,6 +50,7 @@ class Profiles(unittest.TestCase):
 class TwoDimensions(unittest.TestCase):
     def test_every_discipline_is_processed_and_written_as_a_plan_dxf(self):
         import ezdxf
+        import epc_dxf
         for pid in BUILDING_SERVICES:
             doc = drawing(pid)
             result = core.process(doc)
@@ -58,7 +59,7 @@ class TwoDimensions(unittest.TestCase):
                 path = Path(tmp) / f"{pid}.dxf"
                 self.assertEqual(dxfout.write_dxf(result, path), [], pid)
                 layers = {e.dxf.layer for e in ezdxf.readfile(str(path)).modelspace()}
-                wanted = {k["capa_dxf"] for k in core.load_profile(pid)["tramos"] + core.load_profile(pid)["nodos"]}
+                wanted = {epc_dxf.name("plan." + k["capa_dxf"]) for k in core.load_profile(pid)["tramos"] + core.load_profile(pid)["nodos"]}
                 self.assertTrue(wanted <= layers, f"{pid}: {sorted(wanted - layers)}")
 
 
@@ -98,7 +99,7 @@ class ThreeDimensions(unittest.TestCase):
         self.assertTrue(all(g["color"] != core.PARAMS["scene"]["default_color"] for g in scene3d.groups(whole)))
         sec = scene3d.cut(whole, "x", 5.0, "+")                                 # across every horizontal run of both floors
         self.assertEqual({c["discipline"] for c in sec["cut"]}, set(BUILDING_SERVICES))
-        water = sorted(c["level_m"] for c in sec["cut"] if c["layer"] == "291-P-DOMW-CPIP-N")
+        water = sorted(c["level_m"] for c in sec["cut"] if c["layer"] == "AGU-TUBERIA")
         self.assertEqual(water, [2.6, 5.6])                                     # the cold water pipe of each storey, a storey (3 m) apart
         with tempfile.TemporaryDirectory() as tmp:
             n = scene3d.write_section_dxf(sec, Path(tmp) / "s.dxf")

@@ -18,7 +18,7 @@ BOX = {"vertices": [[0, 0, 0], [1, 0, 0], [1, 1, 0], [0, 1, 0], [0, 0, 1], [1, 0
 
 def building():
     """A scene as `epc_arch.model3d.building_scene` gives it (the data only: this engine imports no other)."""
-    wall = {"id": "PB:w1:1", "tag": "w1", "kind": "wall", "discipline": "arquitectura", "level": "PB", "layer": "291-A-WALL-FULL-N", "mesh": json.loads(json.dumps(BOX))}
+    wall = {"id": "PB:w1:1", "tag": "w1", "kind": "wall", "discipline": "arquitectura", "level": "PB", "layer": "A-WALL-CUT", "mesh": json.loads(json.dumps(BOX))}
     return {"schema_version": "1.0", "units": "m", "solids": [wall], "box": [[0, 0, 0], [1, 1, 1]]}
 
 
@@ -35,7 +35,7 @@ class Scenes(unittest.TestCase):
     def test_the_groups_are_the_disciplines_and_their_layers(self):
         g = scene3d.groups(scene3d.merge([building(), services()]))
         self.assertEqual([(x["group"], x["solids"]) for x in g],
-                         [("arquitectura / 291-A-WALL-FULL-N", 1), ("electrica_BT / 291-E-POWR-PANL-N", 1), ("electrica_BT / 291-E-CABL-TRAY-N", 1), ("electrica_BT / 291-E-POWR-CNDT-N", 1)])
+                         [("arquitectura / A-WALL-CUT", 1), ("electrica_BT / ELEC-TABLERO", 1), ("electrica_BT / ELEC-BANDEJA", 1), ("electrica_BT / ELEC-CANAL", 1)])
         self.assertTrue(all(re.fullmatch(r"#[0-9A-Fa-f]{6}", x["color"]) and 0 < x["opacity"] <= 1 for x in g))
 
     def test_what_is_not_a_scene_is_refused(self):
@@ -54,27 +54,27 @@ class Sections(unittest.TestCase):
     def test_a_plane_across_the_runs_cuts_the_tray_as_its_rectangle_and_the_conduit_as_its_circle(self):
         sec = scene3d.cut(self.both(), "x", 5.0, "+")
         by_layer = {c["layer"]: c for c in sec["cut"]}
-        self.assertEqual(sorted(by_layer), ["291-E-CABL-TRAY-N", "291-E-POWR-CNDT-N"])
-        tray = by_layer["291-E-CABL-TRAY-N"]["loops"][0]
+        self.assertEqual(sorted(by_layer), ["ELEC-BANDEJA", "ELEC-CANAL"])
+        tray = by_layer["ELEC-BANDEJA"]["loops"][0]
         self.assertEqual((min(p[0] for p in tray), max(p[0] for p in tray), min(p[1] for p in tray), max(p[1] for p in tray)), (-0.15, 0.15, 2.55, 2.65))
-        self.assertEqual(by_layer["291-E-CABL-TRAY-N"]["level_m"], 2.6)
-        pipe = by_layer["291-E-POWR-CNDT-N"]["loops"][0]
+        self.assertEqual(by_layer["ELEC-BANDEJA"]["level_m"], 2.6)
+        pipe = by_layer["ELEC-CANAL"]["loops"][0]
         self.assertEqual(len(pipe), solid.core.PARAMS["solid"]["sides"])
         for u, z in pipe:
             self.assertAlmostEqual(((u - 2.0) ** 2 + (z - 2.6) ** 2) ** 0.5, 0.025, places=3)       # looking towards +x the right hand is -y: y = -2 is u = 2
 
     def test_the_building_is_cut_too(self):
         sec = scene3d.cut(self.both(), "x", 0.5, "+")
-        wall = next(c for c in sec["cut"] if c["layer"] == "291-A-WALL-FULL-N")
+        wall = next(c for c in sec["cut"] if c["layer"] == "A-WALL-CUT")
         self.assertEqual(sorted(wall["loops"][0]), [[-1.0, 0.0], [-1.0, 1.0], [0.0, 0.0], [0.0, 1.0]])
 
     def test_what_is_beyond_is_seen_up_to_the_depth(self):
         near = scene3d.cut(self.both(), "x", 5.0, "+", depth_m=1.0)
         self.assertEqual(near["seen"], [])
         far = scene3d.cut(self.both(), "x", 5.0, "+")
-        self.assertEqual(sorted(e["layer"] for e in far["seen"]), ["291-E-CABL-TRAY-N", "291-E-POWR-CNDT-N"])    # the stretch of tray that turns north at x = 10 and the far end of the conduit
+        self.assertEqual(sorted(e["layer"] for e in far["seen"]), ["ELEC-BANDEJA", "ELEC-CANAL"])    # the stretch of tray that turns north at x = 10 and the far end of the conduit
         back = scene3d.cut(self.both(), "x", 5.0, "-")
-        self.assertIn("291-A-WALL-FULL-N", [e["layer"] for e in back["seen"]])                                # looking back: the wall and the board
+        self.assertIn("A-WALL-CUT", [e["layer"] for e in back["seen"]])                                # looking back: the wall and the board
 
     def test_looking_the_other_way_mirrors_the_section(self):
         a, b = scene3d.cut(self.both(), "x", 5.0, "+"), scene3d.cut(self.both(), "x", 5.0, "-")
@@ -95,7 +95,7 @@ class Sections(unittest.TestCase):
             texts = sorted(e.dxf.text for e in msp if e.dxftype() == "TEXT")
             self.assertEqual(texts, ["BN-001 300x100 +2.60 (BOT +2.55)", "CN-001 D50 +2.60 (BOT +2.58)"])
             self.assertEqual(sum(1 for e in msp if e.dxftype() == "HATCH"), 2)
-            tray = next(e for e in msp if e.dxftype() == "LWPOLYLINE" and e.dxf.layer == "291-E-CABL-TRAY-N")
+            tray = next(e for e in msp if e.dxftype() == "LWPOLYLINE" and e.dxf.layer == "ELEC-BANDEJA")
             xs = [p[0] for p in tray.get_points("xy")]
             self.assertAlmostEqual(max(xs) - min(xs), 0.3, places=4)                               # real metres: the tray is 0.3 m wide
 
@@ -120,7 +120,7 @@ class Files(unittest.TestCase):
             n = scene3d.write_dxf(scene3d.merge([building(), services()]), path)
             msp = list(ezdxf.readfile(str(path)).modelspace())
             self.assertEqual((len(msp), {e.dxftype() for e in msp}), (n, {"3DFACE"}))
-            self.assertEqual(sum(1 for e in msp if e.dxf.layer == "291-A-WALL-FULL-N"), 6)
+            self.assertEqual(sum(1 for e in msp if e.dxf.layer == "A-WALL-CUT"), 6)
 
 
 if __name__ == "__main__":

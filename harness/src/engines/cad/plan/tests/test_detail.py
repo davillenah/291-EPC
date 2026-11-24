@@ -31,7 +31,7 @@ class Parts(unittest.TestCase):
         self.assertEqual([p["part"] for p in items], ["straight", "straight", "elbow"])
         self.assertEqual([p["length_m"] for p in of(items, "straight")], [9.7, 4.7])                # each cut by the leg of the elbow: one width (0.3 m)
         elbow = of(items, "elbow")[0]
-        self.assertEqual((elbow["angle_deg"], elbow["size"], elbow["layer"]), (90.0, "300x100", "291-E-CABL-TRAY-N"))
+        self.assertEqual((elbow["angle_deg"], elbow["size"], elbow["layer"]), (90.0, "300x100", "ELEC-BANDEJA"))
         self.assertEqual(elbow["path"], [[9.7, 0.0, 2.6], [10.0, 0.0, 2.6], [10.0, 0.3, 2.6]])
 
     def test_the_elbow_closes_the_corner_the_two_stretches_left_open(self):
@@ -125,9 +125,9 @@ class Scene(unittest.TestCase):
         import ezdxf
         items = solids(S.TRAY, S.CONDUIT)
         sec = scene3d.cut(detail.scene(items, hangers=SPEC), "x", 1.0, "+")              # through the first trapeze of the tray and the first rod of the conduit
-        tray_cut = next(c for c in sec["cut"] if c["layer"] == "291-E-CABL-TRAY-N")
+        tray_cut = next(c for c in sec["cut"] if c["layer"] == "ELEC-BANDEJA")
         self.assertEqual((tray_cut["size"], tray_cut["bottom_m"], tray_cut["top_m"]), ("300x100", 2.55, 2.65))
-        self.assertEqual(next(c for c in sec["cut"] if c["layer"] == "291-E-POWR-CNDT-N")["size"], "D50")
+        self.assertEqual(next(c for c in sec["cut"] if c["layer"] == "ELEC-CANAL")["size"], "D50")
         self.assertTrue([c for c in sec["cut"] if c["layer"] == detail.SUPPORT_LAYER])
         self.assertEqual(scene3d.dimension_points({"cut": [c for c in sec["cut"] if c["layer"] != detail.SUPPORT_LAYER]}), [0.0, 2.0])
         with tempfile.TemporaryDirectory() as tmp:

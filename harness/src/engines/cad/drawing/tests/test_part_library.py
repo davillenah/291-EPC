@@ -24,7 +24,7 @@ BOX = {"id": "t", "geometry": {"elements": [{"id": "body", "kind": "enclosure", 
 class TestPartLibrary(unittest.TestCase):
     def test_a_box_a_feature_and_what_gives_too_little(self):
         made = part_library.faces(BOX)
-        self.assertEqual(len(made["faces"]["PV-3D-REF-UNVERIFIED"]), 6)
+        self.assertEqual(len(made["faces"]["291-WS-ANNO-NOTE"]), 6)
         self.assertEqual(len(made["faces"][part_library.LAYER_FEATURE]), 6)
         self.assertEqual(sorted(made["skipped"]), ["no_size", "nowhere"])
         top = max(p[2] for f in made["faces"][part_library.LAYER_FEATURE] for p in f)
@@ -32,7 +32,7 @@ class TestPartLibrary(unittest.TestCase):
 
     def test_the_rotation_turns_the_element_about_its_position(self):
         rec = {"id": "r", "geometry": {"elements": [{"id": "b", "kind": "x", "position_mm": [0, 0, 0], "rotation_deg": [0, 0, 90], "size_mm": [1000, 100, 10], "status": "typical"}]}}
-        pts = [p for f in part_library.faces(rec)["faces"]["PV-3D-REF-TYPICAL"] for p in f]
+        pts = [p for f in part_library.faces(rec)["faces"]["291-WS-ANNO-SYMB"] for p in f]
         self.assertAlmostEqual(max(p[1] for p in pts), 1.0)
         self.assertAlmostEqual(min(p[0] for p in pts), -0.1)
 

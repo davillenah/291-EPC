@@ -84,16 +84,14 @@ class TestDxfConfig(unittest.TestCase):
         self.assertEqual(look["font"]["regular"], "arial.ttf")
         self.assertEqual((look["heights"]["titleblock_mm"], look["heights"]["legal_notice_mm"], look["heights"]["plan_text_m"]), (1.7, 1.0, 0.15))
 
-    def test_the_final_unification_follows_the_folder(self):
+    def test_the_final_step_keeps_the_layers_and_follows_the_typeface_of_the_folder(self):
         from epc_dxf import style_unify
         with tempfile.TemporaryDirectory() as t, Env(t):
             (Path(t) / "text.json").write_text(json.dumps({"font": {"regular": "calibri.ttf"}}))
-            (Path(t) / "unify.json").write_text(json.dumps({"elec_elements": {"BANDEJA": "BANDEJA-FINAL"}}))
-            self.assertEqual(style_unify.new_layer_name("291-E-CABL-TRAY-N"), "E-BANDEJA-FINAL")
-            self.assertEqual(style_unify.new_layer_name("291-E-LITE-EQPM-N"), "E-LIGHT")
+            self.assertEqual(style_unify.new_layer_name("291-E-CABL-TRAY-N"), "291-E-CABL-TRAY-N")          # the layers already carry their final names
             path = Path(t) / "t.dxf"
             dxfout.write_dxf(core.process(TRAYS), path)
-            style_unify.unify(path)
+            self.assertEqual(style_unify.unify(path), {})
             self.assertEqual(ezdxf.readfile(path).styles.get("ARIAL").dxf.font, "calibri.ttf")
 
     def test_a_bad_value_is_reported(self):

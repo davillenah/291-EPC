@@ -49,12 +49,13 @@
         "material"
       ],
       "simbolo_2d": "linea_simple",
-      "capa_dxf": "291-P-DOMW-CPIP-N",
+      "capa_dxf": "AGU-TUBERIA",
       "geom": {
         "z_m": 2.6,
         "ancho_m": 0.025,
         "alto_m": 0.025
-      }
+      },
+      "seccion": "round"
     },
     {
       "id": "AC",
@@ -68,12 +69,13 @@
         "material"
       ],
       "simbolo_2d": "linea_simple",
-      "capa_dxf": "291-P-DOMW-HPIP-N",
+      "capa_dxf": "AGU-TUBERIA-AC",
       "geom": {
         "z_m": 2.6,
         "ancho_m": 0.025,
         "alto_m": 0.025
-      }
+      },
+      "seccion": "round"
     }
   ],
   "nodos": [
@@ -89,7 +91,7 @@
         "tipo"
       ],
       "simbolo_2d": "equipo_mec",
-      "capa_dxf": "291-P-DOMW-EQPM-N",
+      "capa_dxf": "AGU-EQUIPO",
       "geom": {
         "z_m": 0.75,
         "ancho_m": 1.5,
@@ -108,7 +110,7 @@
         "tipo"
       ],
       "simbolo_2d": "motor",
-      "capa_dxf": "291-P-DOMW-EQPM-N",
+      "capa_dxf": "AGU-EQUIPO",
       "geom": {
         "z_m": 0.3,
         "ancho_m": 0.5,
@@ -128,7 +130,7 @@
         "tipo"
       ],
       "simbolo_2d": "equipo_mec",
-      "capa_dxf": "291-P-DOMW-EQPM-N",
+      "capa_dxf": "AGU-EQUIPO",
       "geom": {
         "z_m": 0.8,
         "ancho_m": 0.6,
@@ -147,7 +149,7 @@
         "tipo"
       ],
       "simbolo_2d": "instrumento",
-      "capa_dxf": "291-P-DOMW-VALV-N",
+      "capa_dxf": "AGU-VALVULA",
       "geom": {
         "z_m": 1.2,
         "ancho_m": 0.1,
@@ -165,7 +167,7 @@
         "tipo"
       ],
       "simbolo_2d": "caja_pase",
-      "capa_dxf": "291-P-DOMW-FIXT-N",
+      "capa_dxf": "AGU-ARTEFACTO",
       "geom": {
         "z_m": 0.4,
         "ancho_m": 0.5,
@@ -184,7 +186,7 @@
         "material"
       ],
       "simbolo_2d": "caja_pase",
-      "capa_dxf": "291-P-DOMW-CPIP-N",
+      "capa_dxf": "AGU-TUBERIA",
       "geom": {
         "z_m": 0.0,
         "ancho_m": 0.05,

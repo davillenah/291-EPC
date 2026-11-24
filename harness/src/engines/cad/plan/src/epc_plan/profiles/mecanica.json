@@ -18,12 +18,13 @@
         "material"
       ],
       "simbolo_2d": "linea_simple",
-      "capa_dxf": "291-M-MPIP-PIPE-N",
+      "capa_dxf": "MEC-TUBERIA",
       "geom": {
         "z_m": 2.5,
         "ancho_m": 0.1,
         "alto_m": 0.1
-      }
+      },
+      "seccion": "round"
     },
     {
       "id": "PR",
@@ -37,7 +38,7 @@
         "niveles"
       ],
       "simbolo_2d": "linea_simple",
-      "capa_dxf": "291-S-FRAM-N",
+      "capa_dxf": "MEC-PARRAL",
       "geom": {
         "z_m": 4.5,
         "ancho_m": 2.0,
@@ -56,12 +57,13 @@
         "material"
       ],
       "simbolo_2d": "linea_simple",
-      "capa_dxf": "291-M-MPIP-PIPE-N",
+      "capa_dxf": "MEC-TUBERIA",
       "geom": {
         "z_m": 3.0,
         "ancho_m": 0.05,
         "alto_m": 0.05
-      }
+      },
+      "seccion": "round"
     },
     {
       "id": "VP",
@@ -75,12 +77,13 @@
         "material"
       ],
       "simbolo_2d": "linea_simple",
-      "capa_dxf": "291-M-MPIP-PIPE-N",
+      "capa_dxf": "MEC-TUBERIA",
       "geom": {
         "z_m": 3.0,
         "ancho_m": 0.1,
         "alto_m": 0.1
-      }
+      },
+      "seccion": "round"
     },
     {
       "id": "CT",
@@ -94,7 +97,7 @@
         "potencia_w"
       ],
       "simbolo_2d": "linea_simple",
-      "capa_dxf": "291-A-CONV-N",
+      "capa_dxf": "MEC-TRANSPORTE",
       "geom": {
         "z_m": 1.0,
         "ancho_m": 0.8,
@@ -115,7 +118,7 @@
         "tipo"
       ],
       "simbolo_2d": "equipo_mec",
-      "capa_dxf": "291-Q-MAJQ-N",
+      "capa_dxf": "MEC-EQUIPO",
       "geom": {
         "z_m": 0.0,
         "ancho_m": 1.0,
@@ -133,7 +136,7 @@
         "dimensiones"
       ],
       "simbolo_2d": "caja_pase",
-      "capa_dxf": "291-S-FSTN-N",
+      "capa_dxf": "MEC-SOPORTE",
       "geom": {
         "z_m": 0.0,
         "ancho_m": 0.3,
@@ -152,7 +155,7 @@
         "tipo"
       ],
       "simbolo_2d": "equipo_mec",
-      "capa_dxf": "291-Q-MAJQ-N",
+      "capa_dxf": "MEC-EQUIPO",
       "geom": {
         "z_m": 1.5,
         "ancho_m": 2.0,
@@ -171,7 +174,7 @@
         "caudal"
       ],
       "simbolo_2d": "motor",
-      "capa_dxf": "291-Q-MAJQ-N",
+      "capa_dxf": "MEC-EQUIPO",
       "geom": {
         "z_m": 0.4,
         "ancho_m": 0.6,
@@ -189,7 +192,7 @@
         "potencia_w"
       ],
       "simbolo_2d": "motor",
-      "capa_dxf": "291-Q-MAJQ-N",
+      "capa_dxf": "MEC-EQUIPO",
       "geom": {
         "z_m": 0.75,
         "ancho_m": 1.2,
@@ -208,7 +211,7 @@
         "tipo"
       ],
       "simbolo_2d": "equipo_mec",
-      "capa_dxf": "291-Q-MAJQ-N",
+      "capa_dxf": "MEC-EQUIPO",
       "geom": {
         "z_m": 1.0,
         "ancho_m": 0.8,
@@ -227,7 +230,7 @@
         "tipo"
       ],
       "simbolo_2d": "instrumento",
-      "capa_dxf": "291-M-MPIP-VALV-N",
+      "capa_dxf": "MEC-VALVULA",
       "geom": {
         "z_m": 1.2,
         "ancho_m": 0.2,
@@ -246,7 +249,7 @@
         "luz_m"
       ],
       "simbolo_2d": "equipo_mec",
-      "capa_dxf": "291-A-CONV-N",
+      "capa_dxf": "MEC-TRANSPORTE",
       "geom": {
         "z_m": 7.0,
         "ancho_m": 1.5,
@@ -265,7 +268,7 @@
         "material"
       ],
       "simbolo_2d": "caja_pase",
-      "capa_dxf": "291-A-FLOR-EVTR-N",
+      "capa_dxf": "MEC-ASCENSOR",
       "geom": {
         "z_m": 0.0,
         "ancho_m": 2.0,
@@ -287,7 +290,7 @@
         "material"
       ],
       "simbolo_2d": "caja_pase",
-      "capa_dxf": "291-A-FLOR-EVTR-N",
+      "capa_dxf": "MEC-ASCENSOR",
       "geom": {
         "z_m": 0.0,
         "ancho_m": 2.5,
@@ -308,7 +311,7 @@
         "potencia_w"
       ],
       "simbolo_2d": "equipo_mec",
-      "capa_dxf": "291-A-FLOR-EVTR-N",
+      "capa_dxf": "MEC-ASCENSOR",
       "geom": {
         "z_m": 1.5,
         "ancho_m": 1.6,

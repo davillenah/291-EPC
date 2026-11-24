@@ -62,9 +62,9 @@ class TestRoofDxf(unittest.TestCase):
             self.assertNotEqual(caught.exception.en, caught.exception.es)
 
     def test_an_old_style_polyline_mtext_a_centred_text_and_a_closing_vertex(self):
-        poly = "0\nPOLYLINE\n8\nPV-CUBIERTA\n70\n1\n" + "".join(f"0\nVERTEX\n8\nPV-CUBIERTA\n10\n{x}\n20\n{y}\n" for x, y in ((0, 0), (6, 0), (6, 4), (0, 4), (0, 0))) + "0\nSEQEND\n"
-        mtext = "0\nMTEXT\n8\nPV-CUBIERTA-DATOS\n10\n1\n20\n1\n1\ntilt: 15,5\n"
-        centred = "0\nTEXT\n8\nPV-CUBIERTA-DATOS\n10\n99\n20\n99\n11\n3\n21\n2\n1\naz=270\n"
+        poly = "0\nPOLYLINE\n8\n291-W-ROOF-N\n70\n1\n" + "".join(f"0\nVERTEX\n8\n291-W-ROOF-N\n10\n{x}\n20\n{y}\n" for x, y in ((0, 0), (6, 0), (6, 4), (0, 4), (0, 0))) + "0\nSEQEND\n"
+        mtext = "0\nMTEXT\n8\n291-W-ROOF-NOTE\n10\n1\n20\n1\n1\ntilt: 15,5\n"
+        centred = "0\nTEXT\n8\n291-W-ROOF-NOTE\n10\n99\n20\n99\n11\n3\n21\n2\n1\naz=270\n"
         got = roofdxf.read(dxf([poly, mtext, centred]).encode("utf-8"), 0.5)["planes"][0]
         self.assertEqual((got["tilt_deg"], got["azimuth_deg"], got["width_m"]), (15.5, 270.0, 4.0))      # azimuth 270: the eave is the west edge, so the width is the north-south extent
 
@@ -78,7 +78,7 @@ class TestRoofDxf(unittest.TestCase):
                 roofdxf.read(case, 0.5)
 
     def test_a_polygon_that_is_not_a_rectangle_is_refused(self):
-        tri = "0\nLWPOLYLINE\n8\nPV-CUBIERTA\n90\n3\n70\n1\n10\n0\n20\n0\n10\n5\n20\n0\n10\n0\n20\n5\n"
+        tri = "0\nLWPOLYLINE\n8\n291-W-ROOF-N\n90\n3\n70\n1\n10\n0\n20\n0\n10\n5\n20\n0\n10\n0\n20\n5\n"
         with self.assertRaises(PvError):
             roofdxf.read(dxf([tri]), 0.5)
 

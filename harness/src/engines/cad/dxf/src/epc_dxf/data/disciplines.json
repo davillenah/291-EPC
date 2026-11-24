@@ -131,7 +131,8 @@
         "en": "Photovoltaic"
       },
       "role_prefixes": [
-        "pv."
+        "pv.",
+        "pv3d."
       ]
     },
     {

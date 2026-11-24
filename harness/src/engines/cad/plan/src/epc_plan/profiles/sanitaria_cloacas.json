@@ -18,12 +18,13 @@
         "material"
       ],
       "simbolo_2d": "linea_simple",
-      "capa_dxf": "291-P-SSWR-PIPE-N",
+      "capa_dxf": "SAN-CLOACA",
       "geom": {
         "z_m": -0.6,
         "ancho_m": 0.11,
         "alto_m": 0.11
-      }
+      },
+      "seccion": "round"
     },
     {
       "id": "CV",
@@ -37,12 +38,13 @@
         "material"
       ],
       "simbolo_2d": "linea_simple",
-      "capa_dxf": "291-P-SSWR-VENT-N",
+      "capa_dxf": "SAN-VENTILACION",
       "geom": {
         "z_m": 2.6,
         "ancho_m": 0.06,
         "alto_m": 0.06
-      }
+      },
+      "seccion": "round"
     }
   ],
   "nodos": [
@@ -57,7 +59,7 @@
         "dimensiones"
       ],
       "simbolo_2d": "camara",
-      "capa_dxf": "291-P-SSWR-MHOL-N",
+      "capa_dxf": "SAN-CAMARA",
       "geom": {
         "z_m": -0.5,
         "ancho_m": 0.6,
@@ -75,7 +77,7 @@
         "dimensiones"
       ],
       "simbolo_2d": "boca_registro",
-      "capa_dxf": "291-P-SSWR-FLDR-N",
+      "capa_dxf": "SAN-BOCA",
       "geom": {
         "z_m": -0.75,
         "ancho_m": 1.0,
@@ -94,7 +96,7 @@
         "material"
       ],
       "simbolo_2d": "caja_pase",
-      "capa_dxf": "291-P-SSWR-PIPE-N",
+      "capa_dxf": "SAN-CLOACA",
       "geom": {
         "z_m": 0.0,
         "ancho_m": 0.11,
@@ -115,7 +117,7 @@
         "tipo"
       ],
       "simbolo_2d": "boca_registro",
-      "capa_dxf": "291-P-SSWR-FLDR-N",
+      "capa_dxf": "SAN-BOCA",
       "geom": {
         "z_m": -0.2,
         "ancho_m": 0.2,
@@ -134,7 +136,7 @@
         "potencia_w"
       ],
       "simbolo_2d": "camara",
-      "capa_dxf": "291-P-SSWR-MHOL-N",
+      "capa_dxf": "SAN-CAMARA",
       "geom": {
         "z_m": -1.0,
         "ancho_m": 1.2,

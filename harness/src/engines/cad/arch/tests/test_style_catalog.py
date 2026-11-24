@@ -6,6 +6,7 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parent / "src"))
+sys.path.insert(0, str(HERE))
 
 from epc_arch.api import LAYERS_PATH, load_style, style_with   # noqa: E402
 
@@ -31,6 +32,17 @@ class TestStyleCatalog(unittest.TestCase):
         st = style_with({"pens": {"pen_050": 0.6}, "layer_pens": {"291-A-DOOR-N": "pen_050"}})
         self.assertEqual(st.layers["291-A-WALL-FULL-N"].width, 0.6)
         self.assertEqual(st.layers["291-A-DOOR-N"].width, 0.6)
+
+    def test_every_layer_of_the_dxf_has_a_description(self):
+        import io
+        import ezdxf
+        import helpers
+        from epc_arch import Options, recognize
+        from epc_arch.api import plan_dxf
+        doc = ezdxf.read(io.StringIO(plan_dxf(recognize(helpers.room_dxf(), "flat.dxf", Options()).architecture)))
+        layers = [lay for lay in doc.layers if lay.dxf.name not in ("0", "Defpoints")]
+        self.assertTrue(layers)
+        self.assertEqual([lay.dxf.name for lay in layers if not lay.description], [])
 
 
 if __name__ == "__main__":

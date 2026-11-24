@@ -80,7 +80,7 @@
         "material"
       ],
       "simbolo_2d": "linea_simple",
-      "capa_dxf": "291-M-HVAC-DUCT-N",
+      "capa_dxf": "HVAC-DUCTO",
       "geom": {
         "z_m": 2.7,
         "ancho_m": 0.4,
@@ -99,12 +99,13 @@
         "material"
       ],
       "simbolo_2d": "linea_simple",
-      "capa_dxf": "291-M-HVAC-PIPE-N",
+      "capa_dxf": "HVAC-TUBERIA",
       "geom": {
         "z_m": 2.7,
         "ancho_m": 0.05,
         "alto_m": 0.05
-      }
+      },
+      "seccion": "round"
     },
     {
       "id": "DR",
@@ -118,7 +119,7 @@
         "material"
       ],
       "simbolo_2d": "linea_simple",
-      "capa_dxf": "291-M-HVAC-RETN-DUCT-N",
+      "capa_dxf": "HVAC-DUCTO-RETORNO",
       "geom": {
         "z_m": 2.7,
         "ancho_m": 0.4,
@@ -137,7 +138,7 @@
         "material"
       ],
       "simbolo_2d": "linea_simple",
-      "capa_dxf": "291-M-EXHS-DUCT-N",
+      "capa_dxf": "HVAC-DUCTO-EXTRACCION",
       "geom": {
         "z_m": 2.7,
         "ancho_m": 0.3,
@@ -156,12 +157,13 @@
         "material"
       ],
       "simbolo_2d": "linea_simple",
-      "capa_dxf": "291-M-CWTR-PIPE-N",
+      "capa_dxf": "HVAC-TUBERIA-AGUA",
       "geom": {
         "z_m": 2.7,
         "ancho_m": 0.08,
         "alto_m": 0.08
-      }
+      },
+      "seccion": "round"
     },
     {
       "id": "AQ",
@@ -175,12 +177,13 @@
         "material"
       ],
       "simbolo_2d": "linea_simple",
-      "capa_dxf": "291-M-CWTR-PIPE-N",
+      "capa_dxf": "HVAC-TUBERIA-AGUA",
       "geom": {
         "z_m": 2.7,
         "ancho_m": 0.08,
         "alto_m": 0.08
-      }
+      },
+      "seccion": "round"
     },
     {
       "id": "CD",
@@ -194,12 +197,13 @@
         "material"
       ],
       "simbolo_2d": "linea_simple",
-      "capa_dxf": "291-M-HVAC-PIPE-N",
+      "capa_dxf": "HVAC-TUBERIA",
       "geom": {
         "z_m": 2.5,
         "ancho_m": 0.032,
         "alto_m": 0.032
-      }
+      },
+      "seccion": "round"
     }
   ],
   "nodos": [
@@ -215,7 +219,7 @@
         "tipo"
       ],
       "simbolo_2d": "hvac",
-      "capa_dxf": "291-M-HVAC-EQPM-N",
+      "capa_dxf": "HVAC-EQUIPO",
       "geom": {
         "z_m": 2.2,
         "ancho_m": 0.9,
@@ -234,7 +238,7 @@
         "tipo"
       ],
       "simbolo_2d": "hvac",
-      "capa_dxf": "291-M-HVAC-EQPM-N",
+      "capa_dxf": "HVAC-EQUIPO",
       "geom": {
         "z_m": 0.0,
         "ancho_m": 0.9,
@@ -252,7 +256,7 @@
         "dimensiones"
       ],
       "simbolo_2d": "caja_pase",
-      "capa_dxf": "291-M-HVAC-GRIL-N",
+      "capa_dxf": "HVAC-REJILLA",
       "geom": {
         "z_m": 2.7,
         "ancho_m": 0.6,
@@ -272,7 +276,7 @@
         "tipo"
       ],
       "simbolo_2d": "hvac",
-      "capa_dxf": "291-M-HVAC-EQPM-N",
+      "capa_dxf": "HVAC-EQUIPO",
       "geom": {
         "z_m": 1.0,
         "ancho_m": 2.0,
@@ -291,7 +295,7 @@
         "tipo"
       ],
       "simbolo_2d": "hvac",
-      "capa_dxf": "291-M-HVAC-EQPM-N",
+      "capa_dxf": "HVAC-EQUIPO",
       "geom": {
         "z_m": 1.0,
         "ancho_m": 2.5,
@@ -310,7 +314,7 @@
         "tipo"
       ],
       "simbolo_2d": "hvac",
-      "capa_dxf": "291-M-HVAC-EQPM-N",
+      "capa_dxf": "HVAC-EQUIPO",
       "geom": {
         "z_m": 1.5,
         "ancho_m": 2.5,
@@ -329,7 +333,7 @@
         "tipo"
       ],
       "simbolo_2d": "equipo_mec",
-      "capa_dxf": "291-M-HVAC-EQPM-N",
+      "capa_dxf": "HVAC-EQUIPO",
       "geom": {
         "z_m": 0.9,
         "ancho_m": 1.2,
@@ -348,7 +352,7 @@
         "caudal"
       ],
       "simbolo_2d": "motor",
-      "capa_dxf": "291-M-HVAC-EQPM-N",
+      "capa_dxf": "HVAC-EQUIPO",
       "geom": {
         "z_m": 0.4,
         "ancho_m": 0.5,
@@ -367,7 +371,7 @@
         "tipo"
       ],
       "simbolo_2d": "hvac",
-      "capa_dxf": "291-M-HVAC-EQPM-N",
+      "capa_dxf": "HVAC-EQUIPO",
       "geom": {
         "z_m": 2.6,
         "ancho_m": 0.8,
@@ -385,7 +389,7 @@
         "caudal"
       ],
       "simbolo_2d": "pleno",
-      "capa_dxf": "291-M-HVAC-EQPM-N",
+      "capa_dxf": "HVAC-EQUIPO",
       "geom": {
         "z_m": 2.7,
         "ancho_m": 0.6,
@@ -404,7 +408,7 @@
         "potencia_w"
       ],
       "simbolo_2d": "motor",
-      "capa_dxf": "291-M-HVAC-EQPM-N",
+      "capa_dxf": "HVAC-EQUIPO",
       "geom": {
         "z_m": 2.7,
         "ancho_m": 0.6,
@@ -422,7 +426,7 @@
         "dimensiones"
       ],
       "simbolo_2d": "caja_pase",
-      "capa_dxf": "291-M-HVAC-DUCT-EQPM-N",
+      "capa_dxf": "HVAC-COMPUERTA",
       "geom": {
         "z_m": 2.7,
         "ancho_m": 0.4,
@@ -441,7 +445,7 @@
         "material"
       ],
       "simbolo_2d": "caja_pase",
-      "capa_dxf": "291-M-HVAC-DUCT-N",
+      "capa_dxf": "HVAC-DUCTO",
       "geom": {
         "z_m": 0.0,
         "ancho_m": 0.6,
@@ -463,7 +467,7 @@
         "material"
       ],
       "simbolo_2d": "caja_pase",
-      "capa_dxf": "291-M-CWTR-PIPE-N",
+      "capa_dxf": "HVAC-TUBERIA-AGUA",
       "geom": {
         "z_m": 0.0,
         "ancho_m": 0.1,

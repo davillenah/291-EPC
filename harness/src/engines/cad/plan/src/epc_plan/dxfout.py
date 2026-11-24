@@ -199,7 +199,7 @@ def _add_luxmap(doc, msp, luxmap: Dict[str, Any], scale: float, height: float, l
     """The lux map under the luminaires, from the map the discipline gives in metres (y down, like the nodes): `rooms` with `cells` ({rect, color}) as a smooth colour field, `curves` (lines of equal level,
     {points, level_lux, color, weight}) with their value in lux, a reading of each room and a colour bar (`bar`: cells, ticks, caption, at). Returns how many entities were added."""
     count = 0
-    cells_layer, curves_layer, text_layer = layer("291-E-LITE-PATT-N"), layer("291-E-LITE-MARK-N"), layer("291-E-LITE-TEXT")
+    cells_layer, curves_layer, text_layer = layer("ELEC-LUX-MAPA"), layer("ELEC-LUX-CURVAS"), layer("ELEC-LUX-TEXTO")
     for name in (cells_layer, curves_layer, text_layer):
         if name not in doc.layers:
             doc.layers.add(name)

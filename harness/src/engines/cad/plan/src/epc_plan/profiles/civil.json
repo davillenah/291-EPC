@@ -41,7 +41,7 @@
         "dimensiones"
       ],
       "simbolo_2d": "linea_simple",
-      "capa_dxf": "291-C-DTCH-N",
+      "capa_dxf": "CIV-ZANJA",
       "geom": {
         "z_m": -0.6,
         "ancho_m": 0.4,
@@ -60,7 +60,7 @@
         "material"
       ],
       "simbolo_2d": "linea_simple",
-      "capa_dxf": "291-S-STRC-N",
+      "capa_dxf": "CIV-ESTRUCTURA",
       "geom": {
         "z_m": 3.0,
         "ancho_m": 0.25,
@@ -81,7 +81,7 @@
         "material"
       ],
       "simbolo_2d": "columna",
-      "capa_dxf": "291-S-STRC-N",
+      "capa_dxf": "CIV-ESTRUCTURA",
       "geom": {
         "z_m": 0.0,
         "ancho_m": 0.3,
@@ -99,7 +99,7 @@
         "dimensiones"
       ],
       "simbolo_2d": "zapata",
-      "capa_dxf": "291-S-FNDN-N",
+      "capa_dxf": "CIV-FUNDACION",
       "geom": {
         "z_m": -1.0,
         "ancho_m": 1.2,

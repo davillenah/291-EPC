@@ -43,6 +43,7 @@ def _setup(doc, d: Drawing, style: Style) -> None:
         lay = doc.layers.add(spec.name, color=spec.aci, linetype=spec.linetype if spec.linetype != "CONTINUOUS" else "Continuous")
         lay.dxf.lineweight = _lineweight(spec.width)
         lay.dxf.true_color = rgb2int(_rgb(spec.hex))
+        lay.description = spec.description
 
 
 class _Writer:

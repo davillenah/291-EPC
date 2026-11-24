@@ -135,12 +135,13 @@
         "tension_v"
       ],
       "simbolo_2d": "linea_simple",
-      "capa_dxf": "291-E-POWR-CABL-N",
+      "capa_dxf": "ELEC-CABLE",
       "geom": {
         "z_m": 2.6,
         "ancho_m": 0.02,
         "alto_m": 0.02
-      }
+      },
+      "seccion": "round"
     },
     {
       "id": "CN",
@@ -156,12 +157,13 @@
         "instalacion"
       ],
       "simbolo_2d": "linea_simple",
-      "capa_dxf": "291-E-POWR-CNDT-N",
+      "capa_dxf": "ELEC-CANAL",
       "geom": {
         "z_m": 2.6,
         "ancho_m": 0.05,
         "alto_m": 0.05
-      }
+      },
+      "seccion": "round"
     },
     {
       "id": "BN",
@@ -176,7 +178,7 @@
         "material"
       ],
       "simbolo_2d": "linea_simple",
-      "capa_dxf": "291-E-CABL-TRAY-N",
+      "capa_dxf": "ELEC-BANDEJA",
       "geom": {
         "z_m": 2.6,
         "ancho_m": 0.3,
@@ -196,12 +198,13 @@
         "profundidad_m"
       ],
       "simbolo_2d": "linea_simple",
-      "capa_dxf": "291-E-ANNO-MARK",
+      "capa_dxf": "ELEC-CRUCE",
       "geom": {
         "z_m": -0.6,
         "ancho_m": 0.1,
         "alto_m": 0.1
-      }
+      },
+      "seccion": "round"
     },
     {
       "id": "MT",
@@ -215,12 +218,13 @@
         "tension_v"
       ],
       "simbolo_2d": "linea_simple",
-      "capa_dxf": "291-E-POWR-SWBD-N",
+      "capa_dxf": "ELEC-MT",
       "geom": {
         "z_m": -0.8,
         "ancho_m": 0.1,
         "alto_m": 0.1
-      }
+      },
+      "seccion": "round"
     },
     {
       "id": "CD",
@@ -234,12 +238,13 @@
         "material"
       ],
       "simbolo_2d": "linea_simple",
-      "capa_dxf": "291-E-LTNG-N",
+      "capa_dxf": "ELEC-PARARRAYOS",
       "geom": {
         "z_m": 0.0,
         "ancho_m": 0.02,
         "alto_m": 0.02
-      }
+      },
+      "seccion": "round"
     }
   ],
   "nodos": [
@@ -255,7 +260,7 @@
         "profundidad_m"
       ],
       "simbolo_2d": "camara",
-      "capa_dxf": "291-E-POWR-MHOL-N",
+      "capa_dxf": "ELEC-CAMARA",
       "geom": {
         "z_m": -0.5,
         "ancho_m": 0.8,
@@ -273,7 +278,7 @@
         "dimensiones"
       ],
       "simbolo_2d": "caja_pase",
-      "capa_dxf": "291-E-POWR-JBOX-N",
+      "capa_dxf": "ELEC-CAJA",
       "geom": {
         "z_m": 2.6,
         "ancho_m": 0.2,
@@ -291,7 +296,7 @@
         "tablero"
       ],
       "simbolo_2d": "tablero",
-      "capa_dxf": "291-E-POWR-PANL-N",
+      "capa_dxf": "ELEC-TABLERO",
       "geom": {
         "z_m": 1.5,
         "ancho_m": 0.6,
@@ -312,7 +317,7 @@
         "tipo"
       ],
       "simbolo_2d": "luminaria",
-      "capa_dxf": "291-E-LITE-EQPM-N",
+      "capa_dxf": "ELEC-LUM",
       "geom": {
         "z_m": 2.8,
         "ancho_m": 0.6,
@@ -333,7 +338,7 @@
         "tipo"
       ],
       "simbolo_2d": "luminaria",
-      "capa_dxf": "291-E-LITE-EQPM-N",
+      "capa_dxf": "ELEC-LUM",
       "geom": {
         "z_m": 2.8,
         "ancho_m": 0.4,
@@ -353,7 +358,7 @@
         "potencia_va"
       ],
       "simbolo_2d": "tomacorriente",
-      "capa_dxf": "291-E-POWR-WALL-N",
+      "capa_dxf": "ELEC-TUG",
       "geom": {
         "z_m": 0.4,
         "ancho_m": 0.1,
@@ -374,7 +379,7 @@
         "destino"
       ],
       "simbolo_2d": "tomacorriente_especial",
-      "capa_dxf": "291-E-POWR-DEVC-N",
+      "capa_dxf": "ELEC-TUE",
       "geom": {
         "z_m": 1.2,
         "ancho_m": 0.1,
@@ -395,7 +400,7 @@
         "equipo"
       ],
       "simbolo_2d": "hvac",
-      "capa_dxf": "291-E-POWR-EQPM-N",
+      "capa_dxf": "ELEC-HVAC",
       "geom": {
         "z_m": 2.6,
         "ancho_m": 0.6,
@@ -416,7 +421,7 @@
         "equipo"
       ],
       "simbolo_2d": "motor",
-      "capa_dxf": "291-Q-POWR-N",
+      "capa_dxf": "ELEC-MOTOR",
       "geom": {
         "z_m": 0.0,
         "ancho_m": 0.5,
@@ -437,7 +442,7 @@
         "altura_m"
       ],
       "simbolo_2d": "pleno",
-      "capa_dxf": "291-E-POWR-FEED-N",
+      "capa_dxf": "ELEC-PLENO",
       "geom": {
         "z_m": 0.0,
         "ancho_m": 0.4,
@@ -455,7 +460,7 @@
         "tipo"
       ],
       "simbolo_2d": "interruptor",
-      "capa_dxf": "291-E-LITE-SWCH-N",
+      "capa_dxf": "ELEC-INT",
       "geom": {
         "z_m": 1.2,
         "ancho_m": 0.12,
@@ -474,7 +479,7 @@
         "tension_v"
       ],
       "simbolo_2d": "transformador",
-      "capa_dxf": "291-E-POWR-XFMR-N",
+      "capa_dxf": "ELEC-TRAFO",
       "geom": {
         "z_m": 0.0,
         "ancho_m": 1.5,
@@ -492,7 +497,7 @@
         "dimensiones"
       ],
       "simbolo_2d": "celda",
-      "capa_dxf": "291-E-POWR-XFMR-N",
+      "capa_dxf": "ELEC-TRAFO",
       "geom": {
         "z_m": 0.0,
         "ancho_m": 0.8,
@@ -511,7 +516,7 @@
         "altura_m"
       ],
       "simbolo_2d": "captor",
-      "capa_dxf": "291-E-LTNG-EQPM-N",
+      "capa_dxf": "ELEC-CAPTOR",
       "geom": {
         "z_m": 0.0,
         "ancho_m": 0.3,
@@ -531,7 +536,7 @@
         "largo_m"
       ],
       "simbolo_2d": "puesta_tierra",
-      "capa_dxf": "291-E-GRND-N",
+      "capa_dxf": "ELEC-TIERRA",
       "geom": {
         "z_m": -0.6,
         "ancho_m": 0.3,

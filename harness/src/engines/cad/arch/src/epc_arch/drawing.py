@@ -29,6 +29,7 @@ class LayerSpec:
     linetype: str
     aci: int
     hex: str
+    description: str = ""               # English text of the layer in the catalog: written in the LAYER table of every DXF
 
 
 @dataclass(frozen=True)
@@ -46,7 +47,7 @@ TEXT_RANGE = (0.8, 10.0)                 # mm: capital height of a text style
 
 
 def _style_of(raw: dict) -> Style:
-    layers = {d["name"]: LayerSpec(d["name"], d["pen"], raw["pens"].get(d["pen"], 0.0), d["linetype"], d["aci"], d["hex"]) for d in raw["layers"]}
+    layers = {d["name"]: LayerSpec(d["name"], d["pen"], raw["pens"].get(d["pen"], 0.0), d["linetype"], d["aci"], d["hex"], d.get("description", "")) for d in raw["layers"]}
     return Style(layers, raw["pens"], raw["linetypes"], raw["text_styles"], raw["font"], raw["sheet"])
 
 
@@ -62,7 +63,7 @@ def _raw_style(layers_file: Optional[Path] = None) -> dict:
     roles = json.loads((layers_file or LAYERS_PATH).read_text(encoding="utf-8-sig")).get("layers", {})
     arch = [a for role, a in roles.items() if role.startswith(ROLE_PREFIX)]
     raw["pens"] = {_pen_name(a["lineweight"]): a["lineweight"] for a in sorted(arch, key=lambda a: -(a["lineweight"] or 0)) if a["lineweight"]}
-    raw["layers"] = [{"name": a["name"], "pen": _pen_name(a["lineweight"]) if a["lineweight"] else None, "linetype": a["linetype"], "aci": a["color"], "hex": a["hex"]} for a in arch]
+    raw["layers"] = [{"name": a["name"], "pen": _pen_name(a["lineweight"]) if a["lineweight"] else None, "linetype": a["linetype"], "aci": a["color"], "hex": a["hex"], "description": (a.get("description") or {}).get("en", "")} for a in arch]
     return raw
 
 

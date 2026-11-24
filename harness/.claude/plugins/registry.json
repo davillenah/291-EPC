@@ -38,7 +38,6 @@
       ],
       "engine": [
         "aea90364",
-        "arch",
         "calc_common",
         "drawing",
         "dxf",
@@ -46,7 +45,6 @@
         "grounding",
         "load_balance",
         "mld",
-        "plan",
         "pv",
         "selectivity",
         "short_circuit",
@@ -55,7 +53,7 @@
         "titleblock",
         "voltage_drop"
       ],
-      "hash": "281b9077fd36c41c"
+      "hash": "307da2d08cf90993"
     },
     "doc-quality": {
       "version": "0.1.0",
@@ -77,13 +75,10 @@
       },
       "skills": [],
       "engine": [
-        "arch",
         "dxf",
-        "plan",
-        "symbols",
-        "titleblock"
+        "symbols"
       ],
-      "hash": "14e9f9ca1399cc8e"
+      "hash": "495d89100f7736d0"
     },
     "equipment-catalog": {
       "version": "0.1.0",
@@ -125,13 +120,11 @@
       },
       "skills": [],
       "engine": [
-        "arch",
         "dxf",
-        "plan",
         "symbols",
         "titleblock"
       ],
-      "hash": "45458cd35ed1a009"
+      "hash": "c95431297367daae"
     },
     "mld": {
       "version": "0.2.2",
@@ -147,14 +140,12 @@
       "skills": [],
       "engine": [
         "aea90364",
-        "arch",
         "calc_common",
         "dxf",
         "feeder_sizing",
         "grounding",
         "load_balance",
         "mld",
-        "plan",
         "selectivity",
         "short_circuit",
         "sld",
@@ -162,7 +153,7 @@
         "titleblock",
         "voltage_drop"
       ],
-      "hash": "3bf338e45e9a19cb"
+      "hash": "d52ccea80fc7a8c1"
     },
     "plan-drawing": {
       "version": "0.1.0",
@@ -180,7 +171,7 @@
         "symbols",
         "titleblock"
       ],
-      "hash": "ecb500f0eb173514"
+      "hash": "c85e543089cabe3c"
     },
     "pm2-docs": {
       "version": "0.1.0",
@@ -223,13 +214,11 @@
       "skills": [],
       "engine": [
         "aea90364",
-        "arch",
         "calc_common",
         "dxf",
         "feeder_sizing",
         "grounding",
         "load_balance",
-        "plan",
         "selectivity",
         "short_circuit",
         "sld",
@@ -237,7 +226,7 @@
         "titleblock",
         "voltage_drop"
       ],
-      "hash": "072c83f701f72dbe"
+      "hash": "09ba1395d991de68"
     },
     "spec-writer": {
       "version": "0.1.0",

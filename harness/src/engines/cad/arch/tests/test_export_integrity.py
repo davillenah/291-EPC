@@ -34,7 +34,7 @@ class TestExportIntegrity(unittest.TestCase):
         self.assertAlmostEqual(doc.header["$LTSCALE"], self.drawing.scale / 1000.0)
 
     def test_svg_and_dxf_have_the_same_layers(self):
-        in_svg = set(re.findall(r'<g id="(A-[A-Z-]+)"', self.svg))
+        in_svg = set(re.findall(r'<g id="(291-[A-Z0-9-]+|0-[A-Za-z]+)"', self.svg))
         doc = ezdxf.read(io.StringIO(self.dxf))
         used = {e.dxf.layer for e in doc.modelspace()}
         used |= {e.dxf.layer for ins in doc.modelspace().query("INSERT") for e in doc.blocks.get(ins.dxf.name)}        # doors and windows are blocks: their lines are in the block

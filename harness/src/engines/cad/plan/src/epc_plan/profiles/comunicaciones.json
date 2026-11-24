@@ -58,7 +58,7 @@
         "dimensiones"
       ],
       "simbolo_2d": "linea_simple",
-      "capa_dxf": "291-T-CABL-TRAY-N",
+      "capa_dxf": "COM-BANDEJA",
       "geom": {
         "z_m": 2.5,
         "ancho_m": 0.2,
@@ -76,12 +76,13 @@
         "tipo"
       ],
       "simbolo_2d": "linea_simple",
-      "capa_dxf": "291-T-COMM-CABL-N",
+      "capa_dxf": "COM-CABLE",
       "geom": {
         "z_m": 2.5,
         "ancho_m": 0.02,
         "alto_m": 0.02
-      }
+      },
+      "seccion": "round"
     }
   ],
   "nodos": [
@@ -96,7 +97,7 @@
         "dimensiones"
       ],
       "simbolo_2d": "rack",
-      "capa_dxf": "291-T-COMM-EQPM-N",
+      "capa_dxf": "COM-RACK",
       "geom": {
         "z_m": 0.0,
         "ancho_m": 0.6,
@@ -114,7 +115,7 @@
         "tipo"
       ],
       "simbolo_2d": "boca_datos",
-      "capa_dxf": "291-T-COMM-WALL-N",
+      "capa_dxf": "COM-BOCA",
       "geom": {
         "z_m": 0.3,
         "ancho_m": 0.1,
@@ -132,7 +133,7 @@
         "tipo"
       ],
       "simbolo_2d": "cctv",
-      "capa_dxf": "291-T-CCTV-N",
+      "capa_dxf": "COM-CCTV",
       "geom": {
         "z_m": 2.5,
         "ancho_m": 0.15,
@@ -150,7 +151,7 @@
         "tipo"
       ],
       "simbolo_2d": "antena",
-      "capa_dxf": "291-T-CCTV-N",
+      "capa_dxf": "COM-CCTV",
       "geom": {
         "z_m": 2.6,
         "ancho_m": 0.15,
