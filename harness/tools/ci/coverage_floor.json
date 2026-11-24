@@ -30,6 +30,7 @@
  "engine-boq": 100.0,
  "engine-cutlist": 100.0,
  "engine-walls": 100.0,
+ "engine-dims": 100.0,
  "engine-datasheets": 100.0,
  "engine-rfq": 100.0
 }

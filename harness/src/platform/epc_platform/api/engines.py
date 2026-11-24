@@ -3,6 +3,7 @@
 The engine packages are found by scanning `harness/src/engines/<group>/<area>/src/epc_*` (nothing is imported: versions are read from the
 package text), because the platform may not import the repository tools. Numbers are never computed here.
 """
+import json
 import re
 from pathlib import Path
 
@@ -96,6 +97,21 @@ def engine_info(name, *, actor=None, project_dir=None, clock=None):
     info = dict(engine, public_modules=_public_modules(folder), has_norm_register=(folder / "norm_register").is_dir(),
                 path=folder.relative_to(REPO).as_posix())
     return ok(info)
+
+
+@api_call
+def engine_schema(name, *, actor=None, project_dir=None, clock=None):
+    """The JSON schemas an engine publishes (`<package>/schema/*.json`: its input, and its output when it has one), read as they are. Read only.
+
+    `name` is the package or the area. The schemas are the engine's own contract (what an agent must send, with types, required keys and limits); an engine
+    with no schema gives an empty list, and says so in a note."""
+    _read_gate(actor, project_dir, clock, "harness_code", f"engine_schema:{name}")
+    engine = _find(name)
+    folder = _folder(engine) / "schema"
+    files = sorted(folder.glob("*.json")) if folder.is_dir() else []
+    schemas = {f.name: json.loads(f.read_text(encoding="utf-8")) for f in files}
+    warnings = [] if schemas else [f"{engine['package']} publishes no schema yet"]
+    return ok({"package": engine["package"], "count": len(schemas), "schemas": schemas}, warnings)
 
 
 @api_call

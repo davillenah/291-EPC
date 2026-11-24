@@ -27,7 +27,7 @@ from epc_platform.permissions import check
 
 CLOCK = lambda: "2026-01-01T00:00:00Z"  # noqa: E731
 ORC = {"role": "orchestrator", "id": "o1"}
-NEW_TOOLS = ["epc_engine_info", "epc_engine_list", "epc_norm_records", "epc_norms_pending", "epc_pipeline_run", "epc_project_approve", "epc_project_init", "epc_project_issue",
+NEW_TOOLS = ["epc_engine_info", "epc_engine_list", "epc_engine_schema", "epc_norm_records", "epc_norms_pending", "epc_pipeline_run", "epc_project_approve", "epc_project_init", "epc_project_issue",
              "epc_project_review", "epc_project_status", "epc_project_submit", "epc_stage_table"]
 WRITE_TOOLS = ["epc_pipeline_run", "epc_project_approve", "epc_project_init", "epc_project_issue", "epc_project_review", "epc_project_submit"]
 ANSWERS = dict(S.ANSWERS, project_code="PARITY-1")
@@ -110,13 +110,24 @@ class EngineQueryTests(Base):
     def test_the_engine_list_has_the_24_engines(self):
         answer = self.call("epc_engine_list")
         engines = answer["data"]["engines"]
-        self.assertEqual((answer["ok"], answer["data"]["count"], len(engines)), (True, 33, 33))
+        self.assertEqual((answer["ok"], answer["data"]["count"], len(engines)), (True, 34, 34))
         self.assertEqual({e["package"] for e in engines}, {f"epc_{a}" for a in (
             "aea90364", "calc_common", "load_balance", "voltage_drop", "feeder_sizing", "short_circuit", "grounding", "selectivity", "transformer_sizing", "hvac", "pv", "lighting", "receptacles", "arch", "drawing", "dxf", "mld", "plan", "sld", "symbols", "titleblock",
-            "documents", "terminal_blocks", "design_basis", "descriptive_report", "boq", "datasheets", "rfq", "cutlist", "walls", "rules", "standards", "calc_check")})
+            "documents", "terminal_blocks", "design_basis", "descriptive_report", "boq", "datasheets", "rfq", "cutlist", "walls", "dims", "rules", "standards", "calc_check")})
         versions = {e["package"]: e["version"] for e in engines}
         self.assertEqual((versions["epc_aea90364"], versions["epc_hvac"], versions["epc_rules"]), ("1.6.0", "0.1.0", "0.1.0"))
         self.assertEqual(answer, json.loads(json.dumps(api.list_engines())))
+
+    def test_engine_schema_gives_the_published_contract(self):
+        data = self.call("epc_engine_schema", name="cutlist")["data"]
+        self.assertEqual((data["package"], data["count"], sorted(data["schemas"])), ("epc_cutlist", 1, ["input.schema.json"]))
+        self.assertEqual(self.call("epc_engine_schema", name="epc_cutlist")["data"], data)
+        self.assertEqual(self.call("epc_engine_schema", name="nope")["error"]["code"], "unknown_engine")
+
+    def test_an_engine_without_schema_says_so(self):
+        answer = self.call("epc_engine_schema", name="rules")
+        self.assertEqual((answer["ok"], answer["data"]["count"]), (True, 0))
+        self.assertTrue(answer["warnings"])
 
     def test_engine_info_names_the_version_and_the_public_modules(self):
         info = self.call("epc_engine_info", name="aea90364")["data"]

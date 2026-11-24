@@ -478,6 +478,7 @@ Schema: `harness/src/engines/quality/terminal_blocks/src/epc_terminal_blocks/sch
 
 These engines do not yet validate their input against a schema at the entry point (OPT-09):
 
+- `epc_dims`
 - `epc_walls`
 - `epc_arch`
 - `epc_drawing`
