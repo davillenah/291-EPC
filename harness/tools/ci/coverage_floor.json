@@ -28,6 +28,7 @@
  "engine-design_basis": 100.0,
  "engine-descriptive_report": 100.0,
  "engine-boq": 100.0,
+ "engine-cutlist": 100.0,
  "engine-datasheets": 100.0,
  "engine-rfq": 100.0
 }
