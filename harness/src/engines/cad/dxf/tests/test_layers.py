@@ -48,7 +48,7 @@ class TestCatalog(unittest.TestCase):
             f = Path(t) / "layers.json"
             f.write_text(json.dumps({"layers": {"sld.diagram": {"name": "DIAGRAMA", "color": 3}, "custom.x": {**L.BLANK, "name": "X"}}}), encoding="utf-8")
             cat = L.load(f)
-            self.assertEqual((cat["sld.diagram"]["name"], cat["sld.diagram"]["color"], cat["sld.diagram"]["lineweight"]), ("DIAGRAMA", 3, None))
+            self.assertEqual((cat["sld.diagram"]["name"], cat["sld.diagram"]["color"], cat["sld.diagram"]["lineweight"]), ("DIAGRAMA", 3, L.defaults()["sld.diagram"]["lineweight"]))
             self.assertEqual(cat["sld.text"]["name"], "291-E-DIAG-TEXT")
             self.assertIn("custom.x", cat)
             with settings.use(settings.DxfSettings(layer_files=(str(f),))):          # the global file the MASTER edits, handed in as data

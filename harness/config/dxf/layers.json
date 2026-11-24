@@ -4,7 +4,7 @@
   "sld.diagram": {
    "name": "291-E-DIAG",
    "color": 5,
-   "lineweight": null,
+   "lineweight": 0.35,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -19,7 +19,7 @@
   "sld.text": {
    "name": "291-E-DIAG-TEXT",
    "color": 7,
-   "lineweight": null,
+   "lineweight": 0.18,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -64,7 +64,7 @@
   "plan.ELEC-CABLE": {
    "name": "291-E-POWR-CABL-N",
    "color": 1,
-   "lineweight": null,
+   "lineweight": 0.35,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -79,7 +79,7 @@
   "plan.ELEC-CANAL": {
    "name": "291-E-POWR-CNDT-N",
    "color": 2,
-   "lineweight": null,
+   "lineweight": 0.25,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -94,7 +94,7 @@
   "plan.ELEC-BANDEJA": {
    "name": "291-E-CABL-TRAY-N",
    "color": 3,
-   "lineweight": null,
+   "lineweight": 0.35,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -109,7 +109,7 @@
   "plan.ELEC-CRUCE": {
    "name": "291-E-ANNO-MARK",
    "color": 4,
-   "lineweight": null,
+   "lineweight": 0.18,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -124,7 +124,7 @@
   "plan.ELEC-CAMARA": {
    "name": "291-E-POWR-MHOL-N",
    "color": 5,
-   "lineweight": null,
+   "lineweight": 0.25,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -139,7 +139,7 @@
   "plan.ELEC-CAJA": {
    "name": "291-E-POWR-JBOX-N",
    "color": 6,
-   "lineweight": null,
+   "lineweight": 0.25,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -154,7 +154,7 @@
   "plan.ELEC-TABLERO": {
    "name": "291-E-POWR-PANL-N",
    "color": 7,
-   "lineweight": null,
+   "lineweight": 0.35,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -169,7 +169,7 @@
   "plan.ELEC-LUM": {
    "name": "291-E-LITE-EQPM-N",
    "color": 40,
-   "lineweight": null,
+   "lineweight": 0.35,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -184,7 +184,7 @@
   "plan.ELEC-TUG": {
    "name": "291-E-POWR-WALL-N",
    "color": 30,
-   "lineweight": null,
+   "lineweight": 0.25,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -199,7 +199,7 @@
   "plan.ELEC-TUE": {
    "name": "291-E-POWR-DEVC-N",
    "color": 50,
-   "lineweight": null,
+   "lineweight": 0.25,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -214,7 +214,7 @@
   "plan.ELEC-HVAC": {
    "name": "291-E-POWR-EQPM-N",
    "color": 150,
-   "lineweight": null,
+   "lineweight": 0.35,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -229,7 +229,7 @@
   "plan.SAN-CLOACA": {
    "name": "291-P-SSWR-PIPE-N",
    "color": 3,
-   "lineweight": null,
+   "lineweight": 0.25,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -244,7 +244,7 @@
   "plan.SAN-CAMARA": {
    "name": "291-P-SSWR-MHOL-N",
    "color": 5,
-   "lineweight": null,
+   "lineweight": 0.25,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -259,7 +259,7 @@
   "plan.SAN-BOCA": {
    "name": "291-P-SSWR-FLDR-N",
    "color": 4,
-   "lineweight": null,
+   "lineweight": 0.25,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -274,7 +274,7 @@
   "plan.PLAN-TAG": {
    "name": "291-E-ANNO-IDEN",
    "color": 7,
-   "lineweight": null,
+   "lineweight": 0.18,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -289,7 +289,7 @@
   "plan.PLAN-NODO": {
    "name": "291-E-ANNO-NPLT",
    "color": 8,
-   "lineweight": null,
+   "lineweight": 0.18,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -304,7 +304,7 @@
   "plan.ELEC-PLENO": {
    "name": "291-E-POWR-FEED-N",
    "color": 6,
-   "lineweight": null,
+   "lineweight": 0.35,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -439,7 +439,7 @@
   "plan.HVAC-DUCTO": {
    "name": "291-M-HVAC-DUCT-N",
    "color": 140,
-   "lineweight": null,
+   "lineweight": 0.25,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -454,7 +454,7 @@
   "plan.HVAC-REJILLA": {
    "name": "291-M-HVAC-GRIL-N",
    "color": 130,
-   "lineweight": null,
+   "lineweight": 0.25,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -469,7 +469,7 @@
   "plan.HVAC-EQUIPO": {
    "name": "291-M-HVAC-EQPM-N",
    "color": 160,
-   "lineweight": null,
+   "lineweight": 0.35,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -484,7 +484,7 @@
   "plan.HVAC-TUBERIA": {
    "name": "291-M-HVAC-PIPE-N",
    "color": 120,
-   "lineweight": null,
+   "lineweight": 0.25,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -499,7 +499,7 @@
   "plan.PCI-ROCIADOR": {
    "name": "291-F-SPKL-N",
    "color": 1,
-   "lineweight": null,
+   "lineweight": 0.25,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -514,7 +514,7 @@
   "plan.PCI-TUBERIA": {
    "name": "291-F-SPKL-PIPE-N",
    "color": 10,
-   "lineweight": null,
+   "lineweight": 0.25,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -529,7 +529,7 @@
   "plan.PCI-DETECTOR": {
    "name": "291-F-PROT-SMOK-N",
    "color": 6,
-   "lineweight": null,
+   "lineweight": 0.25,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -544,7 +544,7 @@
   "plan.PCI-HIDRANTE": {
    "name": "291-F-PROT-HYDT-N",
    "color": 12,
-   "lineweight": null,
+   "lineweight": 0.25,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -559,7 +559,7 @@
   "plan.PCI-EXTINTOR": {
    "name": "291-F-PROT-EXTI-N",
    "color": 14,
-   "lineweight": null,
+   "lineweight": 0.25,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -574,7 +574,7 @@
   "plan.COM-CABLE": {
    "name": "291-T-COMM-CABL-N",
    "color": 4,
-   "lineweight": null,
+   "lineweight": 0.35,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -589,7 +589,7 @@
   "plan.COM-BANDEJA": {
    "name": "291-T-CABL-TRAY-N",
    "color": 3,
-   "lineweight": null,
+   "lineweight": 0.35,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -604,7 +604,7 @@
   "plan.COM-RACK": {
    "name": "291-T-COMM-EQPM-N",
    "color": 5,
-   "lineweight": null,
+   "lineweight": 0.35,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -619,7 +619,7 @@
   "plan.COM-BOCA": {
    "name": "291-T-COMM-WALL-N",
    "color": 6,
-   "lineweight": null,
+   "lineweight": 0.25,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -634,7 +634,7 @@
   "plan.CIV-ESTRUCTURA": {
    "name": "291-S-STRC-N",
    "color": 30,
-   "lineweight": null,
+   "lineweight": 0.35,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -649,7 +649,7 @@
   "plan.CIV-FUNDACION": {
    "name": "291-S-FNDN-N",
    "color": 34,
-   "lineweight": null,
+   "lineweight": 0.25,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -664,7 +664,7 @@
   "plan.CIV-ZANJA": {
    "name": "291-C-DTCH-N",
    "color": 52,
-   "lineweight": null,
+   "lineweight": 0.25,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -679,7 +679,7 @@
   "plan.MEC-EQUIPO": {
    "name": "291-Q-MAJQ-N",
    "color": 150,
-   "lineweight": null,
+   "lineweight": 0.25,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -694,7 +694,7 @@
   "plan.MEC-TUBERIA": {
    "name": "291-M-MPIP-PIPE-N",
    "color": 170,
-   "lineweight": null,
+   "lineweight": 0.25,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -709,7 +709,7 @@
   "plan.MEC-SOPORTE": {
    "name": "291-S-FSTN-N",
    "color": 190,
-   "lineweight": null,
+   "lineweight": 0.25,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -724,7 +724,7 @@
   "plan.INS-INSTRUMENTO": {
    "name": "291-E-INST-N",
    "color": 200,
-   "lineweight": null,
+   "lineweight": 0.25,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -739,7 +739,7 @@
   "plan.INS-CABLE": {
    "name": "291-E-INST-CABL-N",
    "color": 210,
-   "lineweight": null,
+   "lineweight": 0.35,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -754,7 +754,7 @@
   "plan.INS-BANDEJA": {
    "name": "291-E-INST-CABL-TRAY-N",
    "color": 220,
-   "lineweight": null,
+   "lineweight": 0.35,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -769,7 +769,7 @@
   "plan.ELEC-INT": {
    "name": "291-E-LITE-SWCH-N",
    "color": 40,
-   "lineweight": null,
+   "lineweight": 0.25,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -784,7 +784,7 @@
   "plan.ELEC-TRAFO": {
    "name": "291-E-POWR-XFMR-N",
    "color": 6,
-   "lineweight": null,
+   "lineweight": 0.35,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -799,7 +799,7 @@
   "plan.ELEC-MT": {
    "name": "291-E-POWR-SWBD-N",
    "color": 1,
-   "lineweight": null,
+   "lineweight": 0.35,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -814,7 +814,7 @@
   "plan.PCI-PULSADOR": {
    "name": "291-F-PROT-ALRM-N",
    "color": 10,
-   "lineweight": null,
+   "lineweight": 0.25,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -829,7 +829,7 @@
   "plan.COM-CCTV": {
    "name": "291-T-CCTV-N",
    "color": 30,
-   "lineweight": null,
+   "lineweight": 0.25,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -844,7 +844,7 @@
   "plan.ELEC-MOTOR": {
    "name": "291-Q-POWR-N",
    "color": 30,
-   "lineweight": null,
+   "lineweight": 0.25,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -859,7 +859,7 @@
   "plan.ELEC-CAPTOR": {
    "name": "291-E-LTNG-EQPM-N",
    "color": 10,
-   "lineweight": null,
+   "lineweight": 0.35,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -874,7 +874,7 @@
   "plan.ELEC-TIERRA": {
    "name": "291-E-GRND-N",
    "color": 94,
-   "lineweight": null,
+   "lineweight": 0.25,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -889,7 +889,7 @@
   "plan.ELEC-PARARRAYOS": {
    "name": "291-E-LTNG-N",
    "color": 12,
-   "lineweight": null,
+   "lineweight": 0.25,
    "linetype": "DASHED",
    "on": true,
    "frozen": false,
@@ -904,7 +904,7 @@
   "plan.PLU-TUBERIA": {
    "name": "291-P-STRM-PIPE-N",
    "color": 4,
-   "lineweight": null,
+   "lineweight": 0.25,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -919,7 +919,7 @@
   "plan.PLU-CANALETA": {
    "name": "291-P-ROOF-N",
    "color": 4,
-   "lineweight": null,
+   "lineweight": 0.25,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -934,7 +934,7 @@
   "plan.PLU-BOCA": {
    "name": "291-P-STRM-RFDR-N",
    "color": 5,
-   "lineweight": null,
+   "lineweight": 0.25,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -949,7 +949,7 @@
   "plan.PLU-CAMARA": {
    "name": "291-P-STRM-MHOL-N",
    "color": 5,
-   "lineweight": null,
+   "lineweight": 0.25,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -964,7 +964,7 @@
   "plan.AGU-TUBERIA": {
    "name": "291-P-DOMW-CPIP-N",
    "color": 5,
-   "lineweight": null,
+   "lineweight": 0.25,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -979,7 +979,7 @@
   "plan.AGU-TUBERIA-AC": {
    "name": "291-P-DOMW-HPIP-N",
    "color": 1,
-   "lineweight": null,
+   "lineweight": 0.25,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -994,7 +994,7 @@
   "plan.AGU-EQUIPO": {
    "name": "291-P-DOMW-EQPM-N",
    "color": 5,
-   "lineweight": null,
+   "lineweight": 0.35,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -1009,7 +1009,7 @@
   "plan.AGU-VALVULA": {
    "name": "291-P-DOMW-VALV-N",
    "color": 5,
-   "lineweight": null,
+   "lineweight": 0.25,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -1024,7 +1024,7 @@
   "plan.AGU-ARTEFACTO": {
    "name": "291-P-DOMW-FIXT-N",
    "color": 8,
-   "lineweight": null,
+   "lineweight": 0.25,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -1039,7 +1039,7 @@
   "plan.GAS-TUBERIA": {
    "name": "291-M-NGAS-PIPE-N",
    "color": 2,
-   "lineweight": null,
+   "lineweight": 0.25,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -1054,7 +1054,7 @@
   "plan.GAS-EQUIPO": {
    "name": "291-M-NGAS-EQPM-N",
    "color": 2,
-   "lineweight": null,
+   "lineweight": 0.35,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -1069,7 +1069,7 @@
   "plan.GAS-VALVULA": {
    "name": "291-M-NGAS-VALV-N",
    "color": 2,
-   "lineweight": null,
+   "lineweight": 0.25,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -1084,7 +1084,7 @@
   "plan.GAS-ARTEFACTO": {
    "name": "291-M-NGAS-FIXT-N",
    "color": 30,
-   "lineweight": null,
+   "lineweight": 0.25,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -1099,7 +1099,7 @@
   "plan.SAN-VENTILACION": {
    "name": "291-P-SSWR-VENT-N",
    "color": 3,
-   "lineweight": null,
+   "lineweight": 0.25,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -1114,7 +1114,7 @@
   "plan.PCI-EQUIPO": {
    "name": "291-F-PROT-EQPM-N",
    "color": 1,
-   "lineweight": null,
+   "lineweight": 0.35,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -1129,7 +1129,7 @@
   "plan.PCI-VALVULA": {
    "name": "291-F-PROT-VALV-N",
    "color": 1,
-   "lineweight": null,
+   "lineweight": 0.25,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -1144,7 +1144,7 @@
   "plan.PCI-CENTRAL": {
    "name": "291-F-PROT-ALRM-PANL-N",
    "color": 6,
-   "lineweight": null,
+   "lineweight": 0.35,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -1159,7 +1159,7 @@
   "plan.HVAC-DUCTO-RETORNO": {
    "name": "291-M-HVAC-RETN-DUCT-N",
    "color": 4,
-   "lineweight": null,
+   "lineweight": 0.25,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -1174,7 +1174,7 @@
   "plan.HVAC-DUCTO-EXTRACCION": {
    "name": "291-M-EXHS-DUCT-N",
    "color": 30,
-   "lineweight": null,
+   "lineweight": 0.25,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -1189,7 +1189,7 @@
   "plan.HVAC-TUBERIA-AGUA": {
    "name": "291-M-CWTR-PIPE-N",
    "color": 5,
-   "lineweight": null,
+   "lineweight": 0.25,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -1204,7 +1204,7 @@
   "plan.HVAC-COMPUERTA": {
    "name": "291-M-HVAC-DUCT-EQPM-N",
    "color": 1,
-   "lineweight": null,
+   "lineweight": 0.35,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -1219,7 +1219,7 @@
   "plan.MEC-PARRAL": {
    "name": "291-S-FRAM-N",
    "color": 8,
-   "lineweight": null,
+   "lineweight": 0.25,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -1234,7 +1234,7 @@
   "plan.MEC-VALVULA": {
    "name": "291-M-MPIP-VALV-N",
    "color": 6,
-   "lineweight": null,
+   "lineweight": 0.25,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -1249,7 +1249,7 @@
   "plan.MEC-TRANSPORTE": {
    "name": "291-A-CONV-N",
    "color": 30,
-   "lineweight": null,
+   "lineweight": 0.25,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -1264,7 +1264,7 @@
   "plan.MEC-ASCENSOR": {
    "name": "291-A-FLOR-EVTR-N",
    "color": 6,
-   "lineweight": null,
+   "lineweight": 0.25,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -1279,7 +1279,7 @@
   "pv.SITE": {
    "name": "291-WC-PROP-N",
    "color": 8,
-   "lineweight": null,
+   "lineweight": 0.35,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -1294,7 +1294,7 @@
   "pv.ROAD": {
    "name": "291-WC-ROAD-N",
    "color": 9,
-   "lineweight": null,
+   "lineweight": 0.25,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -1309,7 +1309,7 @@
   "pv.TABLE": {
    "name": "291-WS-MNTG-N",
    "color": 5,
-   "lineweight": null,
+   "lineweight": 0.25,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -1324,7 +1324,7 @@
   "pv.ROOF": {
    "name": "291-W-ROOF-N",
    "color": 8,
-   "lineweight": null,
+   "lineweight": 0.25,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -1339,7 +1339,7 @@
   "pv.ROOF_OBSTACLE": {
    "name": "291-W-OBST-ROOF-N",
    "color": 8,
-   "lineweight": null,
+   "lineweight": 0.25,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -1354,7 +1354,7 @@
   "pv.ROOF_DATA": {
    "name": "291-W-ROOF-NOTE",
    "color": 7,
-   "lineweight": null,
+   "lineweight": 0.18,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -1369,7 +1369,7 @@
   "pv.MODULE": {
    "name": "291-WP-PVMD-N",
    "color": 5,
-   "lineweight": null,
+   "lineweight": 0.35,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -1384,7 +1384,7 @@
   "pv.CONDUIT": {
    "name": "291-WP-POWR-CNDT-N",
    "color": 4,
-   "lineweight": null,
+   "lineweight": 0.25,
    "linetype": "DASHED",
    "on": true,
    "frozen": false,
@@ -1399,7 +1399,7 @@
   "pv.INVERTER": {
    "name": "291-WP-POWR-EQPM-N",
    "color": 30,
-   "lineweight": null,
+   "lineweight": 0.35,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -1414,7 +1414,7 @@
   "pv.STATION": {
    "name": "291-WP-POWR-XFMR-PADM-N",
    "color": 6,
-   "lineweight": null,
+   "lineweight": 0.35,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -1429,7 +1429,7 @@
   "pv.DC": {
    "name": "291-WP-POWR-CABL-DCCB-N",
    "color": 1,
-   "lineweight": null,
+   "lineweight": 0.35,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -1444,7 +1444,7 @@
   "pv.AC": {
    "name": "291-WP-POWR-CABL-ACCB-N",
    "color": 3,
-   "lineweight": null,
+   "lineweight": 0.35,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -1459,7 +1459,7 @@
   "pv.TEXT": {
    "name": "291-WP-ANNO-TEXT",
    "color": 7,
-   "lineweight": null,
+   "lineweight": 0.18,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -1474,7 +1474,7 @@
   "pv.DIAGRAM": {
    "name": "291-WP-DIAG",
    "color": 5,
-   "lineweight": null,
+   "lineweight": 0.35,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -1489,7 +1489,7 @@
   "pv.DETAIL": {
    "name": "291-WP-DETL",
    "color": 5,
-   "lineweight": null,
+   "lineweight": 0.25,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -1504,7 +1504,7 @@
   "pv.DETAIL_REF": {
    "name": "291-WP-DETL-MARK",
    "color": 6,
-   "lineweight": null,
+   "lineweight": 0.18,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -1519,7 +1519,7 @@
   "pv.DETAIL_DIM": {
    "name": "291-WP-DETL-DIMS",
    "color": 3,
-   "lineweight": null,
+   "lineweight": 0.18,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -1534,7 +1534,7 @@
   "plan.ELEC-LUX-MAPA": {
    "name": "291-E-LITE-PATT-N",
    "color": 3,
-   "lineweight": null,
+   "lineweight": 0.25,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -1549,7 +1549,7 @@
   "plan.ELEC-LUX-CURVAS": {
    "name": "291-E-LITE-MARK-N",
    "color": 7,
-   "lineweight": null,
+   "lineweight": 0.18,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -1564,7 +1564,7 @@
   "plan.ELEC-LUX-TEXTO": {
    "name": "291-E-LITE-TEXT",
    "color": 7,
-   "lineweight": null,
+   "lineweight": 0.18,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -1866,7 +1866,7 @@
   "plan.PLAN-COTA": {
    "name": "291-E-ANNO-DIMS",
    "color": 7,
-   "lineweight": null,
+   "lineweight": 0.18,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -1881,7 +1881,7 @@
   "pv3d.CIMENTACION": {
    "name": "291-WS-FNDN-N",
    "color": 30,
-   "lineweight": null,
+   "lineweight": 0.25,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -1896,7 +1896,7 @@
   "pv3d.CUBIERTA": {
    "name": "291-WS-ROOF-N",
    "color": 8,
-   "lineweight": null,
+   "lineweight": 0.25,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -1911,7 +1911,7 @@
   "pv3d.ESTACION": {
    "name": "291-WS-POWR-XFMR-PADM-N",
    "color": 4,
-   "lineweight": null,
+   "lineweight": 0.35,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -1926,7 +1926,7 @@
   "pv3d.ESTRUCTURA": {
    "name": "291-WS-STRC-N",
    "color": 9,
-   "lineweight": null,
+   "lineweight": 0.35,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -1941,7 +1941,7 @@
   "pv3d.INVERSORES": {
    "name": "291-WS-POWR-EQPM-N",
    "color": 7,
-   "lineweight": null,
+   "lineweight": 0.35,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -1956,7 +1956,7 @@
   "pv3d.MODULOS": {
    "name": "291-WS-PVMD-N",
    "color": 5,
-   "lineweight": null,
+   "lineweight": 0.35,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -1971,7 +1971,7 @@
   "pv3d.OBSTACULOS": {
    "name": "291-WS-OBST-N",
    "color": 1,
-   "lineweight": null,
+   "lineweight": 0.25,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -1986,7 +1986,7 @@
   "pv3d.SUELO": {
    "name": "291-WS-TOPO-N",
    "color": 8,
-   "lineweight": null,
+   "lineweight": 0.25,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -2001,7 +2001,7 @@
   "pv3d.VALLADO": {
    "name": "291-WS-FENC-N",
    "color": 1,
-   "lineweight": null,
+   "lineweight": 0.25,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -2016,7 +2016,7 @@
   "pv3d.LIB-CUT": {
    "name": "291-WS-DETL-MCUT-N",
    "color": 1,
-   "lineweight": null,
+   "lineweight": 0.25,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -2031,7 +2031,7 @@
   "pv3d.LIB-FEATURE": {
    "name": "291-WS-DETL-OTLN-N",
    "color": 2,
-   "lineweight": null,
+   "lineweight": 0.25,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -2046,7 +2046,7 @@
   "pv3d.REF-FALLBACK": {
    "name": "291-WS-ANNO-REFR",
    "color": 6,
-   "lineweight": null,
+   "lineweight": 0.18,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -2061,7 +2061,7 @@
   "pv3d.REF-TYPICAL": {
    "name": "291-WS-ANNO-SYMB",
    "color": 30,
-   "lineweight": null,
+   "lineweight": 0.18,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
@@ -2076,7 +2076,7 @@
   "pv3d.REF-UNVERIFIED": {
    "name": "291-WS-ANNO-NOTE",
    "color": 40,
-   "lineweight": null,
+   "lineweight": 0.18,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,
