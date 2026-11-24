@@ -129,3 +129,19 @@ def tray_lines(pts: Sequence[Point], kind: str, width: float, p: Dict[str, float
     half = width / 2
     body = {"escalera": lambda: _ladder(path, half, p), "perforada": lambda: _floor(path, half, p, True), "ciega": lambda: _floor(path, half, p, False), "alambre": lambda: _mesh(path, half, p)}[kind]()
     return body + [_across(point, u, -half, half) for point, u in stations(path, p["joint_pitch"])]
+
+
+def support_shapes(pts: Sequence[Point], width: float, p: Dict[str, float]) -> Dict[str, list]:
+    """The trapeze hangers of a tray seen from above, one every `support_spacing` along its axis: a bar (`support_channel` deep, the tray width plus `support_overhang` on each
+    side) with a threaded rod of diameter `support_rod` at each end. Returns {"lines": [(a, b)], "circles": [(centre, radius)]}; `radius` and the sizes are drawing units."""
+    path = fillet_path(pts, p["radius"] + width / 2)
+    half = width / 2 + p["support_overhang"]
+    lines: List[Line] = []
+    circles = []
+    for point, u in stations(path, p["support_spacing"]):
+        a, b = _across(point, u, -half, half)
+        d = p["support_channel"] / 2
+        corners = [(a[0] - u[0] * d, a[1] - u[1] * d), (b[0] - u[0] * d, b[1] - u[1] * d), (b[0] + u[0] * d, b[1] + u[1] * d), (a[0] + u[0] * d, a[1] + u[1] * d)]
+        lines += [(corners[i], corners[(i + 1) % 4]) for i in range(4)]
+        circles += [(a, p["support_rod"] / 2), (b, p["support_rod"] / 2)]
+    return {"lines": lines, "circles": circles}

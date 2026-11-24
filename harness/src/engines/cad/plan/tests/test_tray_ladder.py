@@ -6,9 +6,9 @@ import ezdxf
 
 from epc_plan import core, dxfout as D, tray_draw as T
 
-SIZES = {"lip": 15.0, "rung_pitch": 300.0, "rung_width": 30.0, "slot_pitch": 100.0, "slot_length": 60.0, "wire_pitch": 100.0, "radius": 300.0, "joint_pitch": 3000.0}
+SIZES = {"lip": 15.0, "rung_pitch": 300.0, "rung_width": 30.0, "slot_pitch": 100.0, "slot_length": 60.0, "wire_pitch": 100.0, "radius": 300.0, "joint_pitch": 3000.0, "support_spacing": 1500.0, "support_channel": 41.0, "support_overhang": 25.0, "support_rod": 10.0}
 TRAYS = {"default_kind": "escalera", "lip_mm": 15.0, "rung_pitch_mm": 300.0, "rung_width_mm": 30.0, "slot_pitch_mm": 100.0, "slot_length_mm": 60.0, "wire_pitch_mm": 100.0,
-         "radius_mm": 300.0, "joint_length_mm": 3000.0}
+         "radius_mm": 300.0, "joint_length_mm": 3000.0, "support_spacing_mm": 1500.0, "support_channel_mm": 41.0, "support_overhang_mm": 25.0, "support_rod_mm": 10.0}
 STRAIGHT = [(0.0, 0.0), (6500.0, 0.0)]
 
 
@@ -81,11 +81,25 @@ class TestKinds(unittest.TestCase):
             self.assertTrue(all(math.isfinite(c) for ln in lines for p in ln for c in p), kind)
 
 
+class TestSupports(unittest.TestCase):
+    def test_a_hanger_every_spacing_with_a_bar_and_two_rods(self):
+        shapes = T.support_shapes(STRAIGHT, 300.0, SIZES)
+        self.assertEqual(len(shapes["circles"]), 2 * 4)                                           # 1500, 3000, 4500, 6000 on a 6500 mm run
+        self.assertEqual(len(shapes["lines"]), 4 * 4)
+        xs = sorted({c[0][0] for c in shapes["circles"]})
+        self.assertEqual(xs, [1500.0, 3000.0, 4500.0, 6000.0])
+        self.assertEqual(sorted({round(c[0][1], 6) for c in shapes["circles"]}), [-175.0, 175.0])   # the tray width plus 25 mm on each side
+        self.assertTrue(all(r == 5.0 for _, r in shapes["circles"]))
+
+    def test_a_run_shorter_than_the_spacing_has_none(self):
+        self.assertEqual(T.support_shapes([(0.0, 0.0), (1000.0, 0.0)], 300.0, SIZES), {"lines": [], "circles": []})
+
+
 class TestInTheDrawing(unittest.TestCase):
-    def lines(self, attrs, trays=TRAYS):
+    def lines(self, attrs, trays=TRAYS, support_layer=None):
         doc = ezdxf.new("R2018")
         blk = doc.blocks.new("T")
-        D._add_tray_detail(blk, {"attrs": attrs}, [(0.0, 0.0), (3.0, 0.0)], (0.0, 0.0), 1.0, trays, "L")      # scale 1: drawing unit = metre
+        D._add_tray_detail(blk, {"attrs": attrs}, [(0.0, 0.0), (3.0, 0.0)], (0.0, 0.0), 1.0, trays, "L", support_layer)      # scale 1: drawing unit = metre
         return [e for e in blk if e.dxftype() == "LINE"]
 
     def test_only_a_tray_with_a_width_is_drawn_with_detail(self):
@@ -96,6 +110,16 @@ class TestInTheDrawing(unittest.TestCase):
     def test_the_kind_comes_from_the_stretch_or_the_default(self):
         self.assertGreater(len(self.lines({"ancho_mm": 300, "tipo_bandeja": "perforada"})), len(self.lines({"ancho_mm": 300, "tipo_bandeja": "ciega"})))
         self.assertEqual(len(self.lines({"ancho_mm": 300})), len(self.lines({"ancho_mm": 300, "tipo_bandeja": "escalera"})))
+
+    def test_the_hangers_go_on_their_own_layer_and_can_be_switched_off(self):
+        doc = ezdxf.new("R2018")
+        blk = doc.blocks.new("T")
+        D._add_tray_detail(blk, {"attrs": {"ancho_mm": 300}}, [(0.0, 0.0), (4.0, 0.0)], (0.0, 0.0), 1.0, TRAYS, "L", "SUP")
+        self.assertEqual({e.dxf.layer for e in blk if e.dxftype() == "CIRCLE"}, {"SUP"})
+        self.assertEqual(len([e for e in blk if e.dxftype() == "CIRCLE"]), 4)                     # hangers at 1.5 and 3 m
+        off = ezdxf.new("R2018").blocks.new("U")
+        D._add_tray_detail(off, {"attrs": {"ancho_mm": 300}}, [(0.0, 0.0), (4.0, 0.0)], (0.0, 0.0), 1.0, dict(TRAYS, supports=False), "L", "SUP")
+        self.assertEqual([e for e in off if e.dxftype() == "CIRCLE"], [])
 
     def test_an_unknown_kind_is_an_error_in_two_languages(self):
         with self.assertRaises(core.PlanError) as c:

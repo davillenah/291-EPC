@@ -17,7 +17,7 @@ FILE_NAME = "text.json"
 SECTIONS = {
     "font": {"regular": str, "bold": str, "style": str, "style_bold": str},
     "heights": {"plan_text_m": float, "plan_symbol_mm": float, "plan_text_mm": float, "titleblock_mm": float, "legal_notice_mm": float, "diagram_text_mm": float, "frame_text_mm": float},
-    "trays": {"as_block": bool, "kinds": list, "block_prefix": str, "default_kind": str, "rung_pitch_mm": float, "rung_width_mm": float, "lip_mm": float, "slot_pitch_mm": float, "slot_length_mm": float, "wire_pitch_mm": float, "radius_mm": float, "joint_length_mm": float},
+    "trays": {"as_block": bool, "kinds": list, "block_prefix": str, "default_kind": str, "rung_pitch_mm": float, "rung_width_mm": float, "lip_mm": float, "slot_pitch_mm": float, "slot_length_mm": float, "wire_pitch_mm": float, "radius_mm": float, "joint_length_mm": float, "support_spacing_mm": float, "support_channel_mm": float, "support_overhang_mm": float, "support_rod_mm": float},
 }
 
 

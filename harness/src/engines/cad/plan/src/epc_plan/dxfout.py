@@ -131,7 +131,8 @@ def _tray_width_mm(s) -> float:
 
 
 TRAY_SIZES = {"lip": "lip_mm", "rung_pitch": "rung_pitch_mm", "rung_width": "rung_width_mm", "slot_pitch": "slot_pitch_mm", "slot_length": "slot_length_mm",
-              "wire_pitch": "wire_pitch_mm", "radius": "radius_mm", "joint_pitch": "joint_length_mm"}
+              "wire_pitch": "wire_pitch_mm", "radius": "radius_mm", "joint_pitch": "joint_length_mm", "support_spacing": "support_spacing_mm", "support_channel": "support_channel_mm",
+              "support_overhang": "support_overhang_mm", "support_rod": "support_rod_mm"}
 
 
 def _tray_kind(s, trays: Dict[str, Any]) -> str:
@@ -142,7 +143,7 @@ def _tray_kind(s, trays: Dict[str, Any]) -> str:
     return kind
 
 
-def _add_tray_detail(blk, s, pts, origin, scale: float, trays: Dict[str, Any], line_layer: str) -> None:
+def _add_tray_detail(blk, s, pts, origin, scale: float, trays: Dict[str, Any], line_layer: str, support_layer: Optional[str] = None) -> None:
     """A tray that has a width (`ancho_mm` in its attributes) is drawn as what it is (ladder, perforated, solid or wire mesh) with its rails, joints and bends;
     without a width it stays a line."""
     width_mm = _tray_width_mm(s)
@@ -152,6 +153,12 @@ def _add_tray_detail(blk, s, pts, origin, scale: float, trays: Dict[str, Any], l
     sizes = {key: float(trays[name]) * unit for key, name in TRAY_SIZES.items()}
     for a, b in tray_draw.tray_lines(pts, _tray_kind(s, trays), width_mm * unit, sizes):
         blk.add_line((a[0] - origin[0], a[1] - origin[1]), (b[0] - origin[0], b[1] - origin[1]), dxfattribs={"layer": line_layer})
+    if support_layer and trays.get("supports", True):
+        shapes = tray_draw.support_shapes(pts, width_mm * unit, sizes)
+        for a, b in shapes["lines"]:
+            blk.add_line((a[0] - origin[0], a[1] - origin[1]), (b[0] - origin[0], b[1] - origin[1]), dxfattribs={"layer": support_layer})
+        for c, r in shapes["circles"]:
+            blk.add_circle((c[0] - origin[0], c[1] - origin[1]), r, dxfattribs={"layer": support_layer})
 
 
 def _add_tray_block(doc, msp, s, pts, line_layer: str, cfg, height: float, layer, seen, style: str, trays: Dict[str, Any], scale: float = 1.0) -> None:
@@ -159,7 +166,7 @@ def _add_tray_block(doc, msp, s, pts, line_layer: str, cfg, height: float, layer
     ox, oy = pts[0]
     blk = doc.blocks.new(name=_block_name(doc, trays["block_prefix"], s["tag"]))
     blk.add_lwpolyline([(x - ox, y - oy) for x, y in pts], dxfattribs={"layer": line_layer})
-    _add_tray_detail(blk, s, pts, (ox, oy), scale, trays, line_layer)
+    _add_tray_detail(blk, s, pts, (ox, oy), scale, trays, line_layer, layer(cfg["support_layer"]))
     lift = _tray_width_mm(s) / 2000.0 * scale
     _add_label(blk, s, pts, height, cfg, layer, seen, style, (ox, oy), lift)
     msp.add_blockref(blk.name, (ox, oy), dxfattribs={"layer": line_layer})

@@ -2,5 +2,5 @@
   "schema_version": "1.0",
   "font": {"regular": "arial.ttf", "bold": "arialbd.ttf", "style": "ARIAL", "style_bold": "ARIAL_BOLD"},
   "heights": {"plan_text_m": 0.15, "plan_symbol_mm": 3.0, "plan_text_mm": 1.5, "titleblock_mm": 1.7, "legal_notice_mm": 1.0, "diagram_text_mm": 1.7, "frame_text_mm": 1.7},
-  "trays": {"as_block": true, "kinds": ["BN"], "block_prefix": "TRAY_", "default_kind": "escalera", "rung_pitch_mm": 300.0, "rung_width_mm": 30.0, "lip_mm": 15.0, "slot_pitch_mm": 100.0, "slot_length_mm": 60.0, "wire_pitch_mm": 100.0, "radius_mm": 300.0, "joint_length_mm": 3000.0}
+  "trays": {"as_block": true, "kinds": ["BN"], "block_prefix": "TRAY_", "default_kind": "escalera", "rung_pitch_mm": 300.0, "rung_width_mm": 30.0, "lip_mm": 15.0, "slot_pitch_mm": 100.0, "slot_length_mm": 60.0, "wire_pitch_mm": 100.0, "radius_mm": 300.0, "joint_length_mm": 3000.0, "support_spacing_mm": 1500.0, "support_channel_mm": 41.0, "support_overhang_mm": 25.0, "support_rod_mm": 10.0}
 }
