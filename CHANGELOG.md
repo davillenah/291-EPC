@@ -12,6 +12,7 @@ All notable changes. Format: Keep a Changelog; versions follow `harness/docs/BRA
 - M5 discovery: `engine_schema(name)` (api), `epc engines schema <name>` (CLI) and `epc_engine_schema` (MCP, read only) give the JSON schemas an engine publishes, so an agent can read an engine's input contract before calling it. An engine without a schema answers with a warning.
 - OPT-09 / M5: input schemas for `epc_walls` and `epc_dims` (published through `engine_schema`), with a test that the schema and the engine's own checks agree.
 - `epc_expr` (geometry engine, generic): safe arithmetic expression evaluator (`+ - * / ^ %`, `abs sin cos tan sqrt ceil floor round log exp PtDist PtAngle`, `pi`, named variables) for parametric values, fields and dimension formulas; nothing is run as code; every error has a code and English and Spanish text. `epc_arrays` (geometry engine, generic): rectangular and polar array positions (signed spacing, turned grids, full or partial fill, optional rotation of the copies); `max_items` is a required input.
+- `epc_dims.annotation_size` / `paper_size`: the size in drawing units of a text or arrow that measures a given length on the plotted sheet at the scale 1:N, for a drawing in any unit (no list of scales is held).
 - DRW-01: catalog role `sheet.viewport` (`0-Viewport`) and `epc_dxf.logo_layer_name` / `add_logo_layer` (`0-Logo-<Company>`, provider and client).
 - PRO-13: `harness/tools/ci/harness_metrics.py` shows projects, runs, failures per stage and time per stage from the projects on disk.
 
