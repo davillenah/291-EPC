@@ -5,6 +5,7 @@ All notable changes. Format: Keep a Changelog; versions follow `harness/docs/BRA
 ## [Unreleased]
 
 ### Added
+- `epc_select` (quality engine, generic): quick select of the records of a list that meet all or any of some conditions (`eq ne lt le gt ge in contains exists`); no default for `match` or the limit; English and Spanish errors, input schema, 100 % coverage. Idea taken from the quick-select filter of a CAD editor (behaviour only).
 - `epc_changes` (quality engine, generic): change control between revision A and B of a list of records (circuits, symbols, sheets): what was added, removed or changed field by field, with ignorable fields and a size limit; no default for the id field, the ignore list or the limit; English and Spanish errors, input schema, 100 % coverage.
 - Reproducible run times: `SOURCE_DATE_EPOCH` fixes the time in the `epc_documents` seals and the `epc_arch` manifest when none is handed in.
 - File-name convention (`harness/docs/NAMING.md`) and gate check `file-names`: code and data files are lower snake_case and a folder never mixes `-` and `_`; existing offenders sit in a list that can only shrink. Renamed `deliverable_policy.json`, `document_catalog.json`, `manufacturer_catalog.schema.json`, `norm_register.schema.json`, `epc_progress.txt` (project `.epc/`) and `review_log.jsonl`.
