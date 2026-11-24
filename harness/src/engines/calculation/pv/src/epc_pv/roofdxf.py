@@ -2,9 +2,9 @@
 
 The plan is drawn in plan view (seen from above, x east, y north) with these layers (names of the PV layer catalog, `config/dxf/layers.json`):
 
-  PV-CUBIERTA        one closed rectangle per roof plane (a horizontal projection; axis-aligned)
-  PV-CUBIERTA-OBST   one closed rectangle per obstacle (chimney, tank, skylight) inside a plane
-  PV-CUBIERTA-DATOS  an optional text inside a plane: `tilt=20 az=0` (degrees; azimuth from north, clockwise; a text may carry one or both)
+  291-W-ROOF-N        one closed rectangle per roof plane (a horizontal projection; axis-aligned)
+  291-W-OBST-ROOF-N   one closed rectangle per obstacle (chimney, tank, skylight) inside a plane
+  291-W-ROOF-NOTE  an optional text inside a plane: `tilt=20 az=0` (degrees; azimuth from north, clockwise; a text may carry one or both)
 
 What is read: the planes with their width along the eave and slope length, and the obstacles in the plane's own coordinates (`epc_pv.roof`). The tilt and the azimuth are read only when the drawing carries them;
 otherwise they are left out and the harness chooses them (stage 3). Units come from `$INSUNITS` of the file (metres, millimetres, centimetres, inches or feet); a file without units is refused (nothing is guessed).
@@ -19,7 +19,7 @@ from epc_pv.messages import bi, item
 from epc_pv.model import PvError
 
 SCHEMA_VERSION = "1.0"
-LAYER_PLANE, LAYER_OBSTACLE, LAYER_DATA = "PV-CUBIERTA", "PV-CUBIERTA-OBST", "PV-CUBIERTA-DATOS"
+LAYER_PLANE, LAYER_OBSTACLE, LAYER_DATA = "291-W-ROOF-N", "291-W-OBST-ROOF-N", "291-W-ROOF-NOTE"
 UNITS_M = {1: 0.0254, 2: 0.3048, 4: 0.001, 5: 0.01, 6: 1.0}
 MAIN_AZIMUTHS = (0, 90, 180, 270)
 TOL = 1e-6

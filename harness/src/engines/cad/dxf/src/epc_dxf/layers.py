@@ -18,6 +18,7 @@ DISCIPLINES_FILE = Path(__file__).resolve().parent / "data" / "disciplines.json"
 LINEWEIGHTS = (0.0, 0.05, 0.09, 0.13, 0.15, 0.18, 0.2, 0.25, 0.3, 0.35, 0.4, 0.5, 0.53, 0.6, 0.7, 0.8, 0.9, 1.0, 1.06, 1.2, 1.4, 1.58, 2.0, 2.11)      # mm: the ones DXF knows
 LINETYPES = ("CONTINUOUS", "DASHED", "DASHDOT", "CENTER", "HIDDEN", "PHANTOM", "DOT")
 FLAGS = ("on", "frozen", "locked", "plot")
+LOOK_FIELDS = ("color", "lineweight", "linetype")
 FORBIDDEN_IN_NAME = '<>/\\":;?*|=`'
 BLANK = {"name": "", "color": 7, "lineweight": None, "linetype": "CONTINUOUS", "on": True, "frozen": False, "locked": False, "plot": True}
 
@@ -87,12 +88,33 @@ def apply(doc, role: str, catalog: Optional[Dict[str, dict]] = None) -> str:
     lay = doc.layers.get(a["name"]) if a["name"] in doc.layers else doc.layers.add(a["name"])
     lay.color = int(a["color"])
     lay.dxf.linetype = doc.linetypes.get(a["linetype"]).dxf.name if a["linetype"] in doc.linetypes else "Continuous"       # the name as the document writes it
+    _set_flags(lay, a)
+    return a["name"]
+
+
+def _set_flags(lay, a: dict) -> None:
     if a["lineweight"] is not None:                 # empty: the layer keeps the standard weight (what drawings had before the catalog)
         lay.dxf.lineweight = int(round(float(a["lineweight"]) * 100))
     lay.on, lay.is_frozen, lay.is_locked = bool(a["on"]), bool(a["frozen"]), bool(a["locked"])
+    lay.description = (a.get("description") or {}).get("en") or lay.description      # in the LAYER table: every layer of a deliverable has one
     if not a["plot"]:
         lay.dxf.plot = 0
-    return a["name"]
+
+
+def describe_layers(doc, catalog: Optional[Dict[str, dict]] = None) -> List[str]:
+    """Gives every layer of the document that has no description the English description of the catalog role of the same name; returns the layers still without one
+    (the layers `0` and `Defpoints` that every DXF carries are not counted)."""
+    by_name = {a["name"]: (a.get("description") or {}).get("en") for a in resolve(catalog).values() if a.get("name")}
+    missing = []
+    for lay in doc.layers:
+        name = lay.dxf.name
+        if name in ("0", "Defpoints") or lay.description:
+            continue
+        if by_name.get(name):
+            lay.description = by_name[name]
+        else:
+            missing.append(name)
+    return sorted(missing)
 
 
 def _name_problems(role: str, a: dict) -> Iterable[str]:
@@ -117,17 +139,20 @@ def _problems(role: str, a: dict) -> Iterable[str]:
 
 
 def validate(catalog: Dict[str, dict]) -> Dict[str, str]:
-    """{field: message} for what a catalog may not contain; empty when it is valid. Two roles may not share a layer name."""
+    """{field: message} for what a catalog may not contain; empty when it is valid. Two roles may share a layer name (one layer for one element that two engines draw) only if they look the same."""
     errors: Dict[str, str] = {}
     seen: Dict[str, str] = {}
     for role, a in catalog.items():
         for msg in _problems(role, a):
             errors[msg.split(":")[0]] = msg.split(": ", 1)[1]
-        key = str(a.get("name", "")).strip().lower()
-        if key in seen:
-            errors[f"{role}.name"] = f"already used by {seen[key]}"
-        seen.setdefault(key, role)
+        other = seen.setdefault(str(a.get("name", "")).strip().lower(), role)
+        if _looks_differ(a, catalog[other]):
+            errors[f"{role}.name"] = f"already used by {other} with another look (colour, line type or weight)"
     return errors
+
+
+def _looks_differ(a: dict, b: dict) -> bool:
+    return any(a.get(k) != b.get(k) for k in LOOK_FIELDS)
 
 
 def dump(catalog: Dict[str, dict], path: os.PathLike) -> None:
@@ -147,13 +172,19 @@ def aci_hex(aci: int) -> str:
     return "#000000" if aci == 7 else colors.aci2rgb(aci).to_hex()[:7]
 
 
+def _in_discipline(role: str, d: dict) -> bool:
+    """A role belongs to a discipline by the element name in its key (`plan.ELEC-CABLE` starts with `ELEC-`) or by the prefix of the role (`arch.`, `pv.`, `sld.`): the layer name follows the NCS convention and carries no such group."""
+    element = role.split(".", 1)[-1]
+    return element.startswith(d["prefix"]) or role.startswith(tuple(d.get("role_prefixes", [])))
+
+
 def by_discipline(catalog: Optional[Dict[str, dict]] = None) -> List[dict]:
     """The catalog grouped by discipline, in the order of `disciplines()`: each with its layers (role, name, colour as the index and as hex, line type and weight, state, description).
-    A layer goes to the discipline whose prefix (or one of its `also_prefixes`) its name starts with; one that matches none is left out."""
+    A role goes to the discipline whose prefix its element name starts with, or whose role prefix it has; one that matches none is left out."""
     cat = resolve(catalog)
     out = []
     for d in disciplines():
         mine = [{"role": role, "name": a["name"], "color": a["color"], "hex": aci_hex(a["color"]), "linetype": a.get("linetype", "CONTINUOUS"), "lineweight": a.get("lineweight"),
-                 "on": a.get("on", True), "description": a.get("description", {})} for role, a in cat.items() if str(a.get("name", "")).startswith((d["prefix"], *d.get("also_prefixes", [])))]
+                 "on": a.get("on", True), "description": a.get("description", {})} for role, a in cat.items() if _in_discipline(role, d)]
         out.append({**d, "layers": sorted(mine, key=lambda x: x["name"])})
     return out

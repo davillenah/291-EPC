@@ -472,7 +472,7 @@ class FloorPlanTests(unittest.TestCase):
         self.assertIn("SYM_TOMACORRIENTE", blocks(plan))
         self.assertNotIn("SYM_TOMACORRIENTE", blocks(light))
         self.assertIn("SYM_LUMINARIA", blocks(light))
-        self.assertTrue([e for e in plan.modelspace().query("LWPOLYLINE") if e.dxf.layer == "A-WALL-CUT"])
+        self.assertTrue([e for e in plan.modelspace().query("LWPOLYLINE") if e.dxf.layer == "291-A-WALL-FULL-N"])
 
     def test_without_routing_no_floor_plan_is_written(self):
         import tempfile

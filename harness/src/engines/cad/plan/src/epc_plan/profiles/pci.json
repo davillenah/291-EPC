@@ -77,7 +77,8 @@
         "z_m": 2.8,
         "ancho_m": 0.06,
         "alto_m": 0.06
-      }
+      },
+      "seccion": "round"
     },
     {
       "id": "CF",
@@ -95,7 +96,8 @@
         "z_m": 2.8,
         "ancho_m": 0.02,
         "alto_m": 0.02
-      }
+      },
+      "seccion": "round"
     }
   ],
   "nodos": [
@@ -133,7 +135,8 @@
         "z_m": 2.8,
         "ancho_m": 0.15,
         "alto_m": 0.15
-      }
+      },
+      "seccion": "round"
     },
     {
       "id": "HI",

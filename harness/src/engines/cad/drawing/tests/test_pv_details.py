@@ -29,8 +29,8 @@ class TestPvDetails(unittest.TestCase):
             self.assertTrue(path.name.endswith("_equipment_detail.dxf"))
             doc = ezdxf.readfile(str(path))
             used = Counter(e.dxf.layer for e in doc.modelspace())
-        self.assertGreaterEqual(used["PV-DETALLE"], 108 + 3)               # the 108 cells, the three polygons of the H post, outlines
-        self.assertGreater(used["PV-DETALLE-REF"], 0)                       # frame and junction box are not in the module record
+        self.assertGreaterEqual(used["291-WP-DETL"], 108 + 3)               # the 108 cells, the three polygons of the H post, outlines
+        self.assertGreater(used["291-WP-DETL-MARK"], 0)                       # frame and junction box are not in the module record
         texts = " ".join(e.dxf.text for e in doc.modelspace() if e.dxftype() == "TEXT")
         self.assertIn("MÓDULO", texts)
         self.assertIn("REFERENCIA", texts)

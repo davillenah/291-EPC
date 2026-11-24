@@ -50,6 +50,7 @@ class Profiles(unittest.TestCase):
 class TwoDimensions(unittest.TestCase):
     def test_every_discipline_is_processed_and_written_as_a_plan_dxf(self):
         import ezdxf
+        import epc_dxf
         for pid in BUILDING_SERVICES:
             doc = drawing(pid)
             result = core.process(doc)
@@ -58,7 +59,7 @@ class TwoDimensions(unittest.TestCase):
                 path = Path(tmp) / f"{pid}.dxf"
                 self.assertEqual(dxfout.write_dxf(result, path), [], pid)
                 layers = {e.dxf.layer for e in ezdxf.readfile(str(path)).modelspace()}
-                wanted = {k["capa_dxf"] for k in core.load_profile(pid)["tramos"] + core.load_profile(pid)["nodos"]}
+                wanted = {epc_dxf.name("plan." + k["capa_dxf"]) for k in core.load_profile(pid)["tramos"] + core.load_profile(pid)["nodos"]}
                 self.assertTrue(wanted <= layers, f"{pid}: {sorted(wanted - layers)}")
 
 

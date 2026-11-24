@@ -40,20 +40,20 @@ class TestPvRoof(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             used = layers_of(self.write(tmp)["PVR_roof_layout"])
         placed = sum(p["modules"] for p in ROOF["roof"]["planes"])
-        self.assertEqual(used.count("PV-MODULOS"), placed)
-        self.assertEqual(used.count("PV-CUBIERTA-OBST"), sum(len(p["obstacles"]) for p in ROOF["roof"]["planes"]))
-        self.assertGreaterEqual(used.count("PV-CUBIERTA"), 2 * len(ROOF["roof"]["planes"]))      # outline and setback line of each plane
+        self.assertEqual(used.count("291-WP-PVMD-N"), placed)
+        self.assertEqual(used.count("291-W-OBST-ROOF-N"), sum(len(p["obstacles"]) for p in ROOF["roof"]["planes"]))
+        self.assertGreaterEqual(used.count("291-W-ROOF-N"), 2 * len(ROOF["roof"]["planes"]))      # outline and setback line of each plane
 
     def test_the_cabling_plan_has_a_raceway_and_a_drop_per_string(self):
         with tempfile.TemporaryDirectory() as tmp:
             used = layers_of(self.write(tmp)["PVR_roof_cabling"])
-        self.assertEqual(used.count("PV-CANALIZACION"), len(ROOF["roof"]["planes"]))
-        self.assertEqual(used.count("PV-CABLE-CC"), sum(a["strings"]["strings"] for a in ROOF["result"]["arrays"]))
+        self.assertEqual(used.count("291-WP-POWR-CNDT-N"), len(ROOF["roof"]["planes"]))
+        self.assertEqual(used.count("291-WP-POWR-CABL-DCCB-N"), sum(a["strings"]["strings"] for a in ROOF["result"]["arrays"]))
 
     def test_the_stringing_plan_colours_modules_by_string(self):
         with tempfile.TemporaryDirectory() as tmp:
             doc = ezdxf.readfile(str(self.write(tmp)["PVR_roof_stringing"]))
-        colours = {e.dxf.color for e in doc.modelspace() if e.dxf.layer == "PV-MODULOS"}
+        colours = {e.dxf.color for e in doc.modelspace() if e.dxf.layer == "291-WP-PVMD-N"}
         self.assertTrue(colours and 256 not in colours)
 
 

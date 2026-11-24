@@ -15,7 +15,7 @@ from epc_arch.drawing import Poly, _solid_pieces, build_drawing                #
 from epc_arch.export.export_dxf import to_dxf                    # noqa: E402
 import helpers                                                    # noqa: E402
 
-FILLED = {"A-WALL-FILL", "A-ROOM"}
+FILLED = {"291-A-WALL-PATT-N", "291-A-AREA"}
 
 
 class TestHatchOnlyWallsAndFloors(unittest.TestCase):
@@ -42,7 +42,7 @@ class TestHatchOnlyWallsAndFloors(unittest.TestCase):
         self.assertEqual(_solid_pieces(0.0, 10.0, [(2.0, 5.0), (4.0, 6.0)]), [(0.0, 2.0), (6.0, 10.0)])
 
     def test_the_wall_pieces_of_the_room_leave_its_door_free(self):
-        pieces = [it for it in self.drawing.items if isinstance(it, Poly) and it.layer == "A-WALL-FILL"]
+        pieces = [it for it in self.drawing.items if isinstance(it, Poly) and it.layer == "291-A-WALL-PATT-N"]
         self.assertGreater(len(pieces), 4)                                       # four walls, and more where the door and the window cut one
 
 

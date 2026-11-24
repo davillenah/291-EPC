@@ -140,7 +140,8 @@
         "z_m": 2.6,
         "ancho_m": 0.02,
         "alto_m": 0.02
-      }
+      },
+      "seccion": "round"
     },
     {
       "id": "CN",
@@ -161,7 +162,8 @@
         "z_m": 2.6,
         "ancho_m": 0.05,
         "alto_m": 0.05
-      }
+      },
+      "seccion": "round"
     },
     {
       "id": "BN",
@@ -201,7 +203,8 @@
         "z_m": -0.6,
         "ancho_m": 0.1,
         "alto_m": 0.1
-      }
+      },
+      "seccion": "round"
     },
     {
       "id": "MT",
@@ -220,7 +223,8 @@
         "z_m": -0.8,
         "ancho_m": 0.1,
         "alto_m": 0.1
-      }
+      },
+      "seccion": "round"
     },
     {
       "id": "CD",
@@ -239,7 +243,8 @@
         "z_m": 0.0,
         "ancho_m": 0.02,
         "alto_m": 0.02
-      }
+      },
+      "seccion": "round"
     }
   ],
   "nodos": [

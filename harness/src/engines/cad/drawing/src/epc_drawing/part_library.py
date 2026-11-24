@@ -15,8 +15,8 @@ from typing import Any, Dict, List, Optional, Tuple
 from epc_drawing import pv_parts
 
 Quad = Tuple[Tuple[float, float, float], ...]
-LAYER_FEATURE = "PV-3D-LIB-FEATURE"
-LAYER_CUT = "PV-3D-LIB-CUT"
+LAYER_FEATURE = "291-WS-DETL-OTLN-N"
+LAYER_CUT = "291-WS-DETL-MCUT-N"
 LAYERS = {**pv_parts.REF_LAYERS, LAYER_FEATURE: 2, LAYER_CUT: 1}
 FACES = ("front", "back", "left", "right", "top", "bottom")
 BLOCK_GAP_M = 0.5

@@ -104,7 +104,8 @@
         "z_m": 2.7,
         "ancho_m": 0.05,
         "alto_m": 0.05
-      }
+      },
+      "seccion": "round"
     },
     {
       "id": "DR",
@@ -161,7 +162,8 @@
         "z_m": 2.7,
         "ancho_m": 0.08,
         "alto_m": 0.08
-      }
+      },
+      "seccion": "round"
     },
     {
       "id": "AQ",
@@ -180,7 +182,8 @@
         "z_m": 2.7,
         "ancho_m": 0.08,
         "alto_m": 0.08
-      }
+      },
+      "seccion": "round"
     },
     {
       "id": "CD",
@@ -199,7 +202,8 @@
         "z_m": 2.5,
         "ancho_m": 0.032,
         "alto_m": 0.032
-      }
+      },
+      "seccion": "round"
     }
   ],
   "nodos": [

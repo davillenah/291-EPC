@@ -414,7 +414,7 @@ def stack(views: List[Tuple[View, float]]) -> View:
 
 
 # ---------------------------------------------------------------- the sheet
-LAYERS = {"cut": "A-WALL-CUT", "seen": "A-ELEV", "door": "A-DOOR", "window": "A-WINDOW", "glass": "A-WINDOW-GLASS", "ground": "A-WALL-CUT", "level": "A-ANNO", "room": "A-ROOM-TAG"}
+LAYERS = {"cut": "291-A-WALL-FULL-N", "seen": "291-A-ELEV-N", "door": "291-A-DOOR-N", "window": "291-A-GLAZ-N", "glass": "291-A-GLAZ-FULL-N", "ground": "291-A-WALL-FULL-N", "level": "291-A-ANNO", "room": "291-A-AREA-IDEN"}
 
 
 FILLS = {"cut": "#8C8C8C", "seen": "#FFFFFF", "door": "#FFFFFF", "window": "#FFFFFF"}

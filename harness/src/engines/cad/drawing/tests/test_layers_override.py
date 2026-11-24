@@ -28,7 +28,7 @@ class TestLayerOverride(unittest.TestCase):
                 doc = ezdxf.readfile(str(Path(t) / "work" / "out" / name))
                 names = {layer.dxf.name for layer in doc.layers}
                 self.assertTrue({"DIAGRAMA-X", "TEXTOS-X"} <= names, (name, sorted(names)))
-                self.assertNotIn("291-E-DIAGRAMA", names)
+                self.assertNotIn("291-E-DIAG", names)
                 self.assertEqual(doc.layers.get("DIAGRAMA-X").color, 3)
                 used = {e.dxf.layer for e in doc.modelspace()}
                 self.assertIn("DIAGRAMA-X", used)

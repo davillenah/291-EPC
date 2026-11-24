@@ -24,19 +24,19 @@ class TestBackdrop(unittest.TestCase):
     def test_the_walls_are_closed_outlines_of_their_thickness_and_the_names_text(self):
         warnings, msp = self.write(BACKDROP)
         self.assertEqual(warnings, [])
-        walls = [e for e in msp.query("LWPOLYLINE") if e.dxf.layer.endswith("ARQ-MUROS")]
+        walls = [e for e in msp.query("LWPOLYLINE") if e.dxf.layer.endswith("291-A-WALL-FULL-N")]
         self.assertEqual(len(walls), 2)                        # the wall of length zero is left out
         xs = sorted({round(p[0], 3) for p in walls[0].get_points()})
         ys = sorted({round(p[1], 3) for p in walls[0].get_points()})
         self.assertEqual((xs, ys), ([0.0, 10.0], [-0.1, 0.1]))
         second = sorted({round(p[1], 3) for p in walls[1].get_points()})
         self.assertEqual([float(v) + 0.0 for v in second], [-5.0, 0.0])                   # the screen's y down becomes the DXF's y up, as for the nodes
-        self.assertEqual([t.dxf.text for t in msp.query("TEXT") if t.dxf.layer.endswith("ARQ-LOCALES")], ["OFFICE"])
-        self.assertEqual([round(t.dxf.insert[1], 3) for t in msp.query("TEXT") if t.dxf.layer.endswith("ARQ-LOCALES")], [-2.5])
+        self.assertEqual([t.dxf.text for t in msp.query("TEXT") if t.dxf.layer.endswith("A-AREA")], ["OFFICE"])
+        self.assertEqual([round(t.dxf.insert[1], 3) for t in msp.query("TEXT") if t.dxf.layer.endswith("A-AREA")], [-2.5])
 
     def test_without_a_backdrop_nothing_is_added(self):
         _, msp = self.write(None)
-        self.assertFalse([e for e in msp if e.dxf.layer.endswith(("ARQ-MUROS", "ARQ-LOCALES"))])
+        self.assertFalse([e for e in msp if e.dxf.layer.endswith(("ARQ-MUROS", "A-AREA"))])
 
 
 if __name__ == "__main__":

@@ -23,7 +23,8 @@
         "z_m": -0.6,
         "ancho_m": 0.11,
         "alto_m": 0.11
-      }
+      },
+      "seccion": "round"
     },
     {
       "id": "CV",
@@ -42,7 +43,8 @@
         "z_m": 2.6,
         "ancho_m": 0.06,
         "alto_m": 0.06
-      }
+      },
+      "seccion": "round"
     }
   ],
   "nodos": [

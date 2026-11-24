@@ -74,16 +74,16 @@ class TestDxf(unittest.TestCase):
         root = ET.fromstring(r.svg)
         ns = "{http://www.w3.org/2000/svg}"
         groups = {g.get("id"): g for g in root.iter(f"{ns}g")}
-        self.assertEqual(set(groups) & {"ARQ-FONDO", "ARQ-MUROS", "ARQ-PUERTAS", "ARQ-VENTANAS", "ARQ-HUECOS"}, {"ARQ-FONDO", "ARQ-MUROS", "ARQ-PUERTAS", "ARQ-VENTANAS", "ARQ-HUECOS"})
-        self.assertEqual(len(list(groups["ARQ-MUROS"])), 6)
-        self.assertEqual(len(list(groups["ARQ-PUERTAS"])), 1)
+        self.assertEqual(set(groups) & {"291-A-ANNO-REFR", "291-A-WALL-FULL-N", "291-A-DOOR-N", "291-A-GLAZ-N", "291-A-WALL-JAMB-N"}, {"291-A-ANNO-REFR", "291-A-WALL-FULL-N", "291-A-DOOR-N", "291-A-GLAZ-N", "291-A-WALL-JAMB-N"})
+        self.assertEqual(len(list(groups["291-A-WALL-FULL-N"])), 6)
+        self.assertEqual(len(list(groups["291-A-DOOR-N"])), 1)
         vx, vy, vw, vh = (float(v) for v in root.get("viewBox").split())
         self.assertEqual((vw, vh), (float(root.get("width")), float(root.get("height"))))     # one unit of the SVG is one unit of the plan space
         for w in r.architecture.walls:                                                        # framed on the building: every wall is inside
             for x, y in (w.a, w.b):
                 self.assertTrue(vx <= x <= vx + vw and vy <= y <= vy + vh)
         no_bg = ET.fromstring(recognize(helpers.room_dxf(), "flat.dxf", Options(background=False)).svg)
-        self.assertNotIn("ARQ-FONDO", {g.get("id") for g in no_bg.iter(f"{ns}g")})
+        self.assertNotIn("291-A-ANNO-REFR", {g.get("id") for g in no_bg.iter(f"{ns}g")})
 
     def test_the_walls_with_their_door_and_window_shut_close_one_room_with_its_area(self):
         a = recognize(helpers.room_dxf(), "flat.dxf").architecture

@@ -18,7 +18,7 @@ PAPER = "#FFFFFF"
 STYLE_PATH = Path(__file__).with_name("epc_style.json")
 LAYERS_PATH = Path(__file__).resolve().parents[6] / "config" / "dxf" / "layers.json"      # harness/config/dxf: the one catalog of layers; epc_arch reads its `arch.*` roles as data, it imports no other engine
 ROLE_PREFIX = "arch."
-NOTE_KINDS = (("axes", "A-GRID"), ("dimensions", "A-DIM"), ("labels", "A-ANNO"))
+NOTE_KINDS = (("axes", "291-A-GRID"), ("dimensions", "291-A-ANNO-DIMS"), ("labels", "291-A-ANNO"))
 
 
 @dataclass(frozen=True)
@@ -29,6 +29,7 @@ class LayerSpec:
     linetype: str
     aci: int
     hex: str
+    description: str = ""               # English text of the layer in the catalog: written in the LAYER table of every DXF
 
 
 @dataclass(frozen=True)
@@ -46,7 +47,7 @@ TEXT_RANGE = (0.8, 10.0)                 # mm: capital height of a text style
 
 
 def _style_of(raw: dict) -> Style:
-    layers = {d["name"]: LayerSpec(d["name"], d["pen"], raw["pens"].get(d["pen"], 0.0), d["linetype"], d["aci"], d["hex"]) for d in raw["layers"]}
+    layers = {d["name"]: LayerSpec(d["name"], d["pen"], raw["pens"].get(d["pen"], 0.0), d["linetype"], d["aci"], d["hex"], d.get("description", "")) for d in raw["layers"]}
     return Style(layers, raw["pens"], raw["linetypes"], raw["text_styles"], raw["font"], raw["sheet"])
 
 
@@ -62,7 +63,7 @@ def _raw_style(layers_file: Optional[Path] = None) -> dict:
     roles = json.loads((layers_file or LAYERS_PATH).read_text(encoding="utf-8-sig")).get("layers", {})
     arch = [a for role, a in roles.items() if role.startswith(ROLE_PREFIX)]
     raw["pens"] = {_pen_name(a["lineweight"]): a["lineweight"] for a in sorted(arch, key=lambda a: -(a["lineweight"] or 0)) if a["lineweight"]}
-    raw["layers"] = [{"name": a["name"], "pen": _pen_name(a["lineweight"]) if a["lineweight"] else None, "linetype": a["linetype"], "aci": a["color"], "hex": a["hex"]} for a in arch]
+    raw["layers"] = [{"name": a["name"], "pen": _pen_name(a["lineweight"]) if a["lineweight"] else None, "linetype": a["linetype"], "aci": a["color"], "hex": a["hex"], "description": (a.get("description") or {}).get("en", "")} for a in arch]
     return raw
 
 
@@ -171,7 +172,7 @@ class ImageItem:
     y: float
     w: float
     h: float
-    layer: str = "A-TITLE"
+    layer: str = "0-Titleblock"
 
 
 @dataclass
@@ -308,7 +309,7 @@ def _wall_items(w: Wall, others: List[Wall], m: _Map, gaps: Optional[List[Tuple[
         a = (w.a[0] + ux * s0, w.a[1] + uy * s0)
         b = (w.a[0] + ux * s1, w.a[1] + uy * s1)
         quad = [(a[0] + ox, a[1] + oy), (b[0] + ox, b[1] + oy), (b[0] - ox, b[1] - oy), (a[0] - ox, a[1] - oy)]
-        out += [_poly(m, quad, "A-WALL-FILL", closed=True, fill="layer", stroke=False), _poly(m, quad, "A-WALL-CUT", closed=True)]
+        out += [_poly(m, quad, "291-A-WALL-PATT-N", closed=True, fill="layer", stroke=False), _poly(m, quad, "291-A-WALL-FULL-N", closed=True)]
     return out
 
 
@@ -324,13 +325,13 @@ def _door_items(o: Opening, T: float, m: _Map) -> List[object]:
         a1 = math.degrees(math.atan2(o.swing[1] - hy, o.swing[0] - hx))
         cross = (closed[0] - hx) * (o.swing[1] - hy) - (closed[1] - hy) * (o.swing[0] - hx)
         start, end = (a0, a1) if cross > 0 else (a1, a0)
-        out.append(ArcItem(m((hx, hy)), r * m.k, start, end, "A-DOOR-SWING"))
+        out.append(ArcItem(m((hx, hy)), r * m.k, start, end, "291-A-DOOR-FULL-N"))
         tk = min(T * 0.35, r * 0.05)
         sx, sy = ax.ux * sign * tk, ax.uy * sign * tk
-        out.append(_poly(m, [(hx, hy), o.swing, (o.swing[0] + sx, o.swing[1] + sy), (hx + sx, hy + sy)], "A-DOOR", closed=True))
+        out.append(_poly(m, [(hx, hy), o.swing, (o.swing[0] + sx, o.swing[1] + sy), (hx + sx, hy + sy)], "291-A-DOOR-N", closed=True))
     for s_ in (-1, 1):
         c = (o.at[0] + ax.ux * s_ * o.width / 2, o.at[1] + ax.uy * s_ * o.width / 2)
-        out.append(_poly(m, [(c[0] + ax.nx * T / 2, c[1] + ax.ny * T / 2), (c[0] - ax.nx * T / 2, c[1] - ax.ny * T / 2)], "A-DOOR"))
+        out.append(_poly(m, [(c[0] + ax.nx * T / 2, c[1] + ax.ny * T / 2), (c[0] - ax.nx * T / 2, c[1] - ax.ny * T / 2)], "291-A-DOOR-N"))
     return out
 
 
@@ -339,9 +340,9 @@ def _window_items(o: Opening, T: float, m: _Map) -> List[object]:
     hw = o.width / 2
     at = lambda t, n: (o.at[0] + ax.ux * t + ax.nx * n, o.at[1] + ax.uy * t + ax.ny * n)          # noqa: E731
     frame = [at(-hw, T / 2), at(hw, T / 2), at(hw, -T / 2), at(-hw, -T / 2)]
-    out: List[object] = [_poly(m, frame, "A-WINDOW", closed=True)]
+    out: List[object] = [_poly(m, frame, "291-A-GLAZ-N", closed=True)]
     for n in (T * 0.12, -T * 0.12):
-        out.append(_poly(m, [at(-hw, n), at(hw, n)], "A-WINDOW-GLASS"))
+        out.append(_poly(m, [at(-hw, n), at(hw, n)], "291-A-GLAZ-FULL-N"))
     return out
 
 
@@ -349,8 +350,8 @@ def _hole_items(o: Opening, T: float, m: _Map) -> List[Poly]:
     ax = axis_of(o.angle)
     hw = o.width / 2
     a, b = (o.at[0] - ax.ux * hw, o.at[1] - ax.uy * hw), (o.at[0] + ax.ux * hw, o.at[1] + ax.uy * hw)
-    out = [_poly(m, [(a[0] + ax.nx * n, a[1] + ax.ny * n), (b[0] + ax.nx * n, b[1] + ax.ny * n)], "A-OPENING") for n in (T / 2, -T / 2)]
-    out += [_poly(m, [(p[0] + ax.nx * T / 2, p[1] + ax.ny * T / 2), (p[0] - ax.nx * T / 2, p[1] - ax.ny * T / 2)], "A-OPENING", linetype="CONTINUOUS") for p in (a, b)]
+    out = [_poly(m, [(a[0] + ax.nx * n, a[1] + ax.ny * n), (b[0] + ax.nx * n, b[1] + ax.ny * n)], "291-A-WALL-JAMB-N") for n in (T / 2, -T / 2)]
+    out += [_poly(m, [(p[0] + ax.nx * T / 2, p[1] + ax.ny * T / 2), (p[0] - ax.nx * T / 2, p[1] - ax.ny * T / 2)], "291-A-WALL-JAMB-N", linetype="CONTINUOUS") for p in (a, b)]
     return out
 
 
@@ -359,7 +360,7 @@ def _wipeout(o: Opening, T: float, m: _Map) -> Poly:
     ax = axis_of(o.angle)
     hw = o.width / 2
     at = lambda t, n: (o.at[0] + ax.ux * t + ax.nx * n, o.at[1] + ax.uy * t + ax.ny * n)          # noqa: E731
-    return _poly(m, [at(-hw, T / 2), at(hw, T / 2), at(hw, -T / 2), at(-hw, -T / 2)], "A-WIPEOUT", closed=True, stroke=False)
+    return _poly(m, [at(-hw, T / 2), at(hw, T / 2), at(hw, -T / 2), at(-hw, -T / 2)], "291-A-ANNO-NPLT", closed=True, stroke=False)
 
 
 def _blocked(o: Opening, items: List[object], T: float, m: _Map) -> List[object]:
@@ -387,7 +388,7 @@ def _room_items(arch: Architecture, m: _Map) -> List[object]:
     out: List[object] = []
     for i, r in enumerate(arch.rooms):
         for x0, y0, x1, y1 in r.rects:
-            out.append(_poly(m, [(x0, y0), (x1, y0), (x1, y1), (x0, y1)], "A-ROOM", closed=True, fill="layer", stroke=False))
+            out.append(_poly(m, [(x0, y0), (x1, y0), (x1, y1), (x0, y1)], "291-A-AREA", closed=True, fill="layer", stroke=False))
     return out
 
 
@@ -399,7 +400,7 @@ def _note_items(arch: Architecture, m: _Map, drop: set) -> List[object]:
             continue
         out += [_poly(m, [l.a, l.b], layer) for l in marks.lines]
         out += [ArcItem(m(a.c), a.r * m.k, a.start, a.end, layer) for a in marks.arcs]
-        out += [TextItem(t.value, m(t.at), "TXT_18", "A-ANNO") for t in marks.texts if id(t) not in drop]
+        out += [TextItem(t.value, m(t.at), "TXT_18", "291-A-ANNO") for t in marks.texts if id(t) not in drop]
     return out
 
 

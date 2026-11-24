@@ -31,13 +31,13 @@ class TestPvModel3d(unittest.TestCase):
             self.assertTrue(path.name.endswith("_pv_model_3d.dxf"))
             doc = ezdxf.readfile(str(path))
             used = Counter(e.dxf.layer for e in doc.modelspace())
-        self.assertEqual(used["PV-3D-MODULOS"], 6 * sum(t["modules"] for t in g["tables"]))
-        self.assertTrue({"PV-3D-SUELO", "PV-3D-ESTRUCTURA", "PV-3D-ESTACION", "PV-3D-VALLADO"} <= set(used))
+        self.assertEqual(used["291-WS-PVMD-N"], 6 * sum(t["modules"] for t in g["tables"]))
+        self.assertTrue({"291-WS-TOPO-N", "291-WS-STRC-N", "291-WS-POWR-XFMR-PADM-N", "291-WS-FENC-N"} <= set(used))
 
     def test_the_modules_rise_with_the_tilt_and_stand_on_the_front_clearance(self):
         g = geometry()
         doc = pv_model3d.build(g, PLANT["result"])
-        zs = [v[2] for e in doc.modelspace() if e.dxf.layer == "PV-3D-MODULOS" for v in e.wcs_vertices()]
+        zs = [v[2] for e in doc.modelspace() if e.dxf.layer == "291-WS-PVMD-N" for v in e.wcs_vertices()]
         self.assertAlmostEqual(min(zs), 0.5 - 0.03 * 0.94, delta=0.05)      # lowest edge: the clearance (the module is 30 mm thick)
         self.assertGreater(max(zs), min(zs) + 1.0)
 
@@ -70,21 +70,21 @@ class TestPvModel3dDetail(unittest.TestCase):
         n = sum(t["modules"] for t in g["tables"])
         std = Counter(e.dxf.layer for e in pv_model3d.build(g, PLANT["result"], records()).modelspace())
         full = Counter(e.dxf.layer for e in pv_model3d.build(g, PLANT["result"], records(), "full").modelspace())
-        self.assertEqual(std["PV-3D-MODULOS"], 6 * n)
-        self.assertEqual(std["PV-3D-REF-FALLBACK"] >= 2 * 6 * n, True)       # the section and the box are not in the record: reference dimensions
-        self.assertEqual(full["PV-3D-REF-UNVERIFIED"], 108 * n)              # 2 x (9 x 6) cells as printed in the record
-        self.assertNotIn("PV-3D-REF-UNVERIFIED", std)
+        self.assertEqual(std["291-WS-PVMD-N"], 6 * n)
+        self.assertEqual(std["291-WS-ANNO-REFR"] >= 2 * 6 * n, True)       # the section and the box are not in the record: reference dimensions
+        self.assertEqual(full["291-WS-ANNO-NOTE"], 108 * n)              # 2 x (9 x 6) cells as printed in the record
+        self.assertNotIn("291-WS-ANNO-NOTE", std)
         low = Counter(e.dxf.layer for e in pv_model3d.build(g, PLANT["result"], records(), "low").modelspace())
-        self.assertFalse([k for k in low if k == "PV-3D-REF-FALLBACK" and low[k] > 6])
+        self.assertFalse([k for k in low if k == "291-WS-ANNO-REFR" and low[k] > 6])
 
     def test_the_inverter_record_sets_the_enclosure_size_and_hangs_the_terminals(self):
         g = geometry()
         doc = pv_model3d.build(g, PLANT["result"], records())
-        inv = [v for e in doc.modelspace() if e.dxf.layer == "PV-3D-INVERSORES" for v in e.wcs_vertices()]
+        inv = [v for e in doc.modelspace() if e.dxf.layer == "291-WS-POWR-EQPM-N" for v in e.wcs_vertices()]
         self.assertAlmostEqual(max(v[0] for v in inv) - min(v[0] for v in inv), 0.661, places=3)
         self.assertAlmostEqual(max(v[2] for v in inv) - min(v[2] for v in inv), 0.682, places=3)
         used = Counter(e.dxf.layer for e in doc.modelspace())
-        self.assertGreater(used["PV-3D-REF-TYPICAL"], 0)
+        self.assertGreater(used["291-WS-ANNO-SYMB"], 0)
 
 
 class TestFoundation(unittest.TestCase):
@@ -94,13 +94,13 @@ class TestFoundation(unittest.TestCase):
 
     def test_nothing_goes_below_the_surface_unless_the_structure_record_states_a_depth(self):
         g = geometry()
-        self.assertEqual(self.zs(g, "PV-3D-CIMENTACION"), [])
-        self.assertGreaterEqual(min(self.zs(g, "PV-3D-ESTRUCTURA")), 0.0)
+        self.assertEqual(self.zs(g, "291-WS-FNDN-N"), [])
+        self.assertGreaterEqual(min(self.zs(g, "291-WS-STRC-N")), 0.0)
         g["foundation"] = {"structure_id": "driven_pile_fixed_table", "embedment_m": 1.5}
-        self.assertAlmostEqual(min(self.zs(g, "PV-3D-CIMENTACION")), -1.5)
-        self.assertGreaterEqual(min(self.zs(g, "PV-3D-ESTRUCTURA")), 0.0)
+        self.assertAlmostEqual(min(self.zs(g, "291-WS-FNDN-N")), -1.5)
+        self.assertGreaterEqual(min(self.zs(g, "291-WS-STRC-N")), 0.0)
         g["foundation"] = {"structure_id": "roof_flat_slab_anchored", "embedment_m": None}
-        self.assertEqual(self.zs(g, "PV-3D-CIMENTACION"), [])
+        self.assertEqual(self.zs(g, "291-WS-FNDN-N"), [])
 
 
 class TestPvModel3dStructure(unittest.TestCase):
@@ -110,7 +110,7 @@ class TestPvModel3dStructure(unittest.TestCase):
             rec = pv_parts.find_record(DATA / "mounting_structures" / folder, ident)
             section = pv_parts.post_section(rec)
             self.assertEqual(len(section["polygons"]), sides, ident)
-            self.assertEqual(section["layer"], "PV-3D-REF-UNVERIFIED")
+            self.assertEqual(section["layer"], "291-WS-ANNO-NOTE")
         self.assertIsNone(pv_parts.post_section(pv_parts.find_record(DATA / "mounting_structures" / "ground", "driven_pile_fixed_table")))   # section not given: reference post
 
     def test_posts_take_the_profile_and_go_to_the_layer_of_its_status(self):
@@ -118,10 +118,10 @@ class TestPvModel3dStructure(unittest.TestCase):
         g = geometry()
         parts = {"structure": pv_parts.find_record(DATA / "mounting_structures" / "ground", "carport_steel_s355")}
         doc = pv_model3d.build(g, PLANT["result"], parts)
-        xs = sorted({round(v[0], 3) for e in doc.modelspace() if e.dxf.layer == "PV-3D-REF-UNVERIFIED" for v in e.wcs_vertices()})
+        xs = sorted({round(v[0], 3) for e in doc.modelspace() if e.dxf.layer == "291-WS-ANNO-NOTE" for v in e.wcs_vertices()})
         self.assertAlmostEqual(xs[1] - xs[0], 0.08, places=3)          # width of the 80 x 160 x 5 rectangular tube
         plain = Counter(e.dxf.layer for e in pv_model3d.build(g, PLANT["result"]).modelspace())
-        self.assertGreater(plain["PV-3D-ESTRUCTURA"], Counter(e.dxf.layer for e in doc.modelspace())["PV-3D-ESTRUCTURA"])
+        self.assertGreater(plain["291-WS-STRC-N"], Counter(e.dxf.layer for e in doc.modelspace())["291-WS-STRC-N"])
 
 
 class TestFreecadMacro(unittest.TestCase):
@@ -138,7 +138,7 @@ class TestFreecadMacro(unittest.TestCase):
         self.assertEqual(sum(1 for line in text.splitlines() if line.startswith("I(")), len(g["tables"]) + len(inverters))
         self.assertGreaterEqual(done["blocks"], len(kinds))
         self.assertLessEqual(done["blocks"], len(kinds) + len(inverters))
-        self.assertIn("PV-3D-SUELO", text)
+        self.assertIn("291-WS-TOPO-N", text)
 
     def test_a_layout_without_tables_is_refused(self):
         from epc_drawing import pv_freecad
@@ -157,9 +157,9 @@ class TestRoofModel(unittest.TestCase):
             doc = ezdxf.readfile(str(path))
             used = Counter(e.dxf.layer for e in doc.modelspace())
         self.assertTrue(path.name.endswith("_pv_roof_model_3d.dxf"))
-        self.assertEqual(used["PV-3D-MODULOS"], 6 * sum(len(p["cells"]) for p in data["roof"]["planes"]))
-        self.assertEqual(used["PV-3D-CUBIERTA"], 6 * len(data["roof"]["planes"]))
-        self.assertGreater(used["PV-3D-OBSTACULOS"], 0)
+        self.assertEqual(used["291-WS-PVMD-N"], 6 * sum(len(p["cells"]) for p in data["roof"]["planes"]))
+        self.assertEqual(used["291-WS-ROOF-N"], 6 * len(data["roof"]["planes"]))
+        self.assertGreater(used["291-WS-OBST-N"], 0)
 
     def test_a_roof_without_planes_is_refused(self):
         from epc_drawing import pv_roof_model3d
