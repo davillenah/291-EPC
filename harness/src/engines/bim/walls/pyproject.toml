@@ -13,4 +13,4 @@ dependencies = []
 where = ["src"]
 
 [tool.setuptools.package-data]
-epc_walls = ["params.json"]
+epc_walls = ["params.json", "schema/*.json"]

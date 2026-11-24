@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "arrays (input)",
+  "description": "The arguments of rectangular() (kind 'rectangular') or polar() (kind 'polar') as one object. `max_items` has no default.",
+  "type": "object",
+  "required": ["kind", "base", "max_items"],
+  "$defs": {"point": {"type": "array", "items": {"type": "number"}, "minItems": 2, "maxItems": 2}},
+  "oneOf": [
+    {"properties": {"kind": {"const": "rectangular"}}, "required": ["rows", "cols", "row_spacing", "col_spacing", "angle_deg"], "not": {"anyOf": [{"required": ["center"]}, {"required": ["count"]}]}},
+    {"properties": {"kind": {"const": "polar"}}, "required": ["center", "count", "fill_deg", "rotate_items"], "not": {"anyOf": [{"required": ["rows"]}, {"required": ["cols"]}]}}
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "kind": {"enum": ["rectangular", "polar"]},
+    "base": {"$ref": "#/$defs/point"},
+    "max_items": {"type": "integer", "minimum": 1},
+    "rows": {"type": "integer", "minimum": 1},
+    "cols": {"type": "integer", "minimum": 1},
+    "row_spacing": {"type": "number"},
+    "col_spacing": {"type": "number"},
+    "angle_deg": {"type": "number"},
+    "center": {"$ref": "#/$defs/point"},
+    "count": {"type": "integer", "minimum": 1},
+    "fill_deg": {"type": "number", "minimum": -360, "maximum": 360},
+    "rotate_items": {"type": "boolean"}
+  }
+}

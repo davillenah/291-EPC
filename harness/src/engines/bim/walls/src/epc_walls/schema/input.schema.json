@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "walls (input)",
+  "description": "The arguments of outlines() as one object. A wall has either a thickness `t` or a list of `layers` (from the exterior inward), never both.",
+  "type": "object",
+  "required": ["walls", "tol"],
+  "additionalProperties": false,
+  "$defs": {
+    "point": {"type": "array", "items": {"type": "number"}, "minItems": 2, "maxItems": 2},
+    "layer": {
+      "type": "object",
+      "required": ["mat", "t", "function"],
+      "additionalProperties": false,
+      "properties": {
+        "mat": {"type": "string", "minLength": 1, "pattern": "\\S"},
+        "t": {"type": "number", "minimum": 0, "maximum": 2000},
+        "function": {"enum": ["finish", "substrate", "structure", "insulation", "membrane"]},
+        "kind": {"enum": ["material", "cavity"]},
+        "priority": {"type": ["integer", "null"], "minimum": 0, "maximum": 999},
+        "core": {"type": "boolean"}
+      }
+    }
+  },
+  "properties": {
+    "tol": {"type": "number", "exclusiveMinimum": 0},
+    "max_mitre_ratio": {"type": ["number", "null"], "exclusiveMinimum": 0},
+    "styles": {
+      "type": ["object", "null"],
+      "additionalProperties": {
+        "oneOf": [
+          {"enum": ["mitre", "butt", "square"]},
+          {"type": "object", "required": ["style"], "additionalProperties": false,
+           "properties": {"style": {"enum": ["mitre", "butt", "square"]}, "through": {"type": ["string", "null"]}}}
+        ]
+      }
+    },
+    "walls": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "a", "b"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {"type": "string", "minLength": 1, "pattern": "\\S"},
+          "a": {"$ref": "#/$defs/point"},
+          "b": {"$ref": "#/$defs/point"},
+          "t": {"type": "number", "exclusiveMinimum": 0},
+          "layers": {"type": "array", "minItems": 1, "maxItems": 32, "items": {"$ref": "#/$defs/layer"}},
+          "ext_side": {"enum": ["left", "right"]},
+          "join_off": {"type": ["object", "null"], "additionalProperties": false, "properties": {"a": {"type": "boolean"}, "b": {"type": "boolean"}}}
+        }
+      }
+    }
+  }
+}
