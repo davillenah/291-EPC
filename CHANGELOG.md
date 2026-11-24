@@ -10,6 +10,7 @@ All notable changes. Format: Keep a Changelog; versions follow `harness/docs/BRA
 - `epc_walls` (building engine, generic): straight walls from an axis and a thickness or a layer assembly, join records (L, T, X with a canonical key), corner geometry (mitre, butt, square) with a square fallback and bilingual notes, and layer bands with priority. No norm value, no catalog.
 - `epc_dims` (building engine, generic): automatic exterior dimensions from straight walls and openings (total on the south and west edges, one chain per edge with wall ends, opening edges and arriving walls; no repeat of dimensions already drawn). `gap`, `step`, `tol` and `min_wall` are required inputs; what it does not do is said in a note.
 - M5 discovery: `engine_schema(name)` (api), `epc engines schema <name>` (CLI) and `epc_engine_schema` (MCP, read only) give the JSON schemas an engine publishes, so an agent can read an engine's input contract before calling it. An engine without a schema answers with a warning.
+- OPT-09 / M5: input schemas for `epc_walls` and `epc_dims` (published through `engine_schema`), with a test that the schema and the engine's own checks agree.
 - DRW-01: catalog role `sheet.viewport` (`0-Viewport`) and `epc_dxf.logo_layer_name` / `add_logo_layer` (`0-Logo-<Company>`, provider and client).
 - PRO-13: `harness/tools/ci/harness_metrics.py` shows projects, runs, failures per stage and time per stage from the projects on disk.
 
