@@ -14,6 +14,7 @@ Cómo leerlo: **Usa** = de qué depende la unidad; **Lo usan** = quién se rompe
 | `boq` | `pv` | `rfq` | `rfq` |
 | `calc_check` | `aea90364` | — | — |
 | `calc_common` | `aea90364` | `aea90364`, `feeder_sizing`, `grounding`, `load_balance`, `selectivity`, `short_circuit`, `voltage_drop` | `aea90364`, `calc_check`, `design_basis`, `drawing`, `feeder_sizing`, `grounding`, `lighting`, `load_balance`, `mld`, `selectivity`, `short_circuit`, `sld`, `transformer_sizing`, `voltage_drop` |
+| `changes` | — | — | — |
 | `cutlist` | — | — | — |
 | `datasheets` | — | `rfq` | `rfq` |
 | `descriptive_report` | — | — | — |
@@ -62,6 +63,7 @@ Lo declarado en `pyproject.toml` frente a lo que el código importa de verdad.
 | `boq` | — | — | — |
 | `calc_check` | — | `epc-aea90364` | — |
 | `calc_common` | — | — | — |
+| `changes` | — | — | — |
 | `cutlist` | — | — | — |
 | `datasheets` | — | — | — |
 | `descriptive_report` | — | — | — |

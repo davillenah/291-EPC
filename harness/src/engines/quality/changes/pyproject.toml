@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "epc-changes"
+version = "0.1.0"
+description = "EPC-291 quality engine: change control between two revisions of a list of records (what was added, removed or changed, field by field); generic, no norm value"
+requires-python = ">=3.10"
+dependencies = []
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+epc_changes = ["schema/*.json"]

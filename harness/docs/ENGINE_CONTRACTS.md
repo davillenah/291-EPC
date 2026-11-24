@@ -455,6 +455,20 @@ Schema: `harness/src/engines/procurement/rfq/src/epc_rfq/schema/input.schema.jso
 | `datasheets` | object or null |  |  | The structure of epc_datasheets.build_datasheets as a plain dict. |
 | `requestable_categories` | array or null |  | minItems 1 |  |
 
+## epc_changes
+
+### Input
+
+Schema: `harness/src/engines/quality/changes/src/epc_changes/schema/input.schema.json` (changes (input))
+
+| Field | Type | Required | Limits | Notes |
+|---|---|---|---|---|
+| `previous` | array | yes |  |  |
+| `current` | array | yes |  |  |
+| `id_field` | string | yes | minLength 1 |  |
+| `ignore` | array | yes |  |  |
+| `max_changes` | integer | yes | minimum 1 |  |
+
 ## epc_descriptive_report
 
 ### Input

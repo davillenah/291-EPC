@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "changes (input)",
+  "description": "The arguments of compare() as one object. `id_field`, `ignore` and `max_changes` have no default.",
+  "type": "object",
+  "required": ["previous", "current", "id_field", "ignore", "max_changes"],
+  "additionalProperties": false,
+  "properties": {
+    "previous": {"type": "array", "items": {"type": "object"}},
+    "current": {"type": "array", "items": {"type": "object"}},
+    "id_field": {"type": "string", "minLength": 1},
+    "ignore": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "max_changes": {"type": "integer", "minimum": 1}
+  }
+}
