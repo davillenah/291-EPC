@@ -41,6 +41,15 @@ class Parts(unittest.TestCase):
         self.assertEqual((min(xs), max(xs), min(ys), max(ys)), (9.7, 10.15, -0.15, 0.3))             # out to the outer corner of the bend
         self.assertTrue(all(0 <= i < len(elbow["mesh"]["vertices"]) for f in elbow["mesh"]["faces"] for i in f))
 
+    def test_the_straights_of_a_tray_layer_are_ladders_when_asked_and_boxes_otherwise(self):
+        box = detail.parts(tray())
+        layer = of(box, "straight")[0]["layer"]
+        ladder = detail.parts(tray(), {"ladder_trays": {"layers": [layer]}})
+        self.assertGreater(len(of(ladder, "straight")[0]["mesh"]["faces"]), len(of(box, "straight")[0]["mesh"]["faces"]))
+        self.assertEqual(len(of(detail.parts(tray(), {"ladder_trays": {"layers": ["OTHER"]}}), "straight")[0]["mesh"]["faces"]), len(of(box, "straight")[0]["mesh"]["faces"]))
+        with self.assertRaises(core.PlanError):
+            detail.parts(tray(), {"ladder_trays": {"layers": []}})
+
     def test_a_straight_run_has_no_fitting(self):
         items = detail.parts(solids(S.CONDUIT))
         self.assertEqual([(p["part"], p["length_m"], p["size"]) for p in items], [("straight", 10.0, "D50")])

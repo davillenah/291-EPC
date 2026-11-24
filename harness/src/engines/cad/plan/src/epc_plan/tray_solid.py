@@ -99,3 +99,10 @@ def ladder_mesh(path: Sequence[P3], width: float, depth: float, p: Dict[str, flo
             due += p["rung_pitch"]
         walked += length
     return {"vertices": vertices, "faces": faces}
+
+
+def solid(ident: str, tag: str, run: Sequence[P3], layer: str, width: float, depth: float, p: Dict[str, float], radius: float, vertical_radius: float,
+          level: str = "") -> Dict[str, object]:
+    """One tray as a solid of the 3D scene (the same plain data `scene3d` shows and writes: id, tag, kind, discipline, level, layer and the mesh), in the units of its arguments."""
+    return {"id": ident, "tag": tag, "kind": "tray", "discipline": "electricidad", "level": level, "layer": layer,
+            "mesh": ladder_mesh(path3d(run, radius, vertical_radius), width, depth, p)}

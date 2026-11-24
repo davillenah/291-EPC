@@ -25,6 +25,12 @@ class TestSolid(unittest.TestCase):
         a = S.ladder_mesh(S.path3d(RUN, 300.0, 300.0), 300.0, 100.0, P)
         self.assertEqual(a, S.ladder_mesh(S.path3d(RUN, 300.0, 300.0), 300.0, 100.0, P))
 
+    def test_a_tray_is_a_solid_of_the_scene(self):
+        from epc_plan import scene3d
+        sol = S.solid("T1", "T1", [(0.0, 0.0, 2.4), (3.0, 0.0, 2.4)], "291-E-CABL-TRAY-N", 0.3, 0.1, {"rail": 0.002, "rung": 0.03, "rung_thick": 0.003, "rung_pitch": 0.3}, 0.3, 0.3, "PB")
+        self.assertEqual((sol["kind"], sol["layer"]), ("tray", "291-E-CABL-TRAY-N"))
+        scene3d.check({"schema_version": "1.0", "units": "m", "solids": [sol], "box": None})
+
 
 if __name__ == "__main__":
     unittest.main()

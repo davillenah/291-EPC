@@ -126,7 +126,15 @@ def _toward(a, b, d: float) -> V3:
     return _add(a, _unit(_sub(b, a)), d)
 
 
-def _run_parts(s: Dict[str, Any], ring: List[Tuple[float, float]], leg: float) -> List[Dict[str, Any]]:
+def _straight_mesh(piece: Dict[str, Any], ladder: Optional[Dict[str, Any]]) -> Dict[str, Any]:
+    """The mesh of a straight piece: the rails and rungs of a ladder tray when `ladder` says its layer is one, else the swept box."""
+    if ladder and piece.get("layer") in ladder["layers"] and piece["section"] == "rect":
+        from epc_plan import tray_solid
+        return tray_solid.ladder_mesh([tuple(p) for p in piece["path"]], piece["width_m"], piece["height_m"], ladder["sizes"])
+    return S.mesh(piece)
+
+
+def _run_parts(s: Dict[str, Any], ring: List[Tuple[float, float]], leg: float, ladder: Optional[Dict[str, Any]] = None) -> List[Dict[str, Any]]:
     """One run as its straight pieces (cut to the elbows) and the elbow at each bend."""
     path = [tuple(p) for p in s["path"]]
     legs = _legs(path, leg)
@@ -135,7 +143,7 @@ def _run_parts(s: Dict[str, Any], ring: List[Tuple[float, float]], leg: float) -
         a, b = _toward(path[i], path[i + 1], legs[i]), _toward(path[i + 1], path[i], legs[i + 1])
         if _len(a, b) > 1e-6:
             piece = dict(s, path=[_r(a), _r(b)])
-            out.append(_part(s, "straight", i + 1, S.mesh(piece), path=piece["path"], length_m=round(_len(a, b), 3)))
+            out.append(_part(s, "straight", i + 1, _straight_mesh(piece, ladder), path=piece["path"], length_m=round(_len(a, b), 3)))
     for i in range(1, len(path) - 1):
         if legs[i] > 0:
             a, b = _toward(path[i], path[i - 1], legs[i]), _toward(path[i], path[i + 1], legs[i])
@@ -205,15 +213,28 @@ def _setting(spec: Optional[Dict[str, Any]], key: str) -> float:
     return float(value)
 
 
+def _ladder(spec: Optional[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
+    """The ladder trays asked for in `spec["ladder_trays"]` ({"layers": [...]}): the layers and the sizes of rail and rungs (`params.json`, `detail.ladder`, in metres)."""
+    given = (spec or {}).get("ladder_trays")
+    if not given:
+        return None
+    layers = given.get("layers") if isinstance(given, dict) else None
+    if not isinstance(layers, list) or not layers or not all(isinstance(x, str) for x in layers):
+        raise core.PlanError("err_detail_number", key="ladder_trays")
+    q = core.PARAMS["detail"]["ladder"]
+    return {"layers": layers, "sizes": {"rail": q["rail_m"], "rung": q["rung_m"], "rung_thick": q["rung_thick_m"], "rung_pitch": q["rung_pitch_m"]}}
+
+
 def parts(solids: List[Dict[str, Any]], spec: Optional[Dict[str, Any]] = None) -> List[Dict[str, Any]]:
     """The runs of the solids as the parts they are built from: straights, elbows, tees and reducers, each with its mesh. Boxes (equipment, boards, chambers) are not parts: they stay as
-    they are in the scene. `spec` may give `elbow_leg_factor` (the leg of an elbow in widths of its run)."""
+    they are in the scene. `spec` may give `elbow_leg_factor` (the leg of an elbow in widths of its run) and `ladder_trays` ({"layers": [...]}: the straights on those layers are drawn as ladder trays, with rails and rungs)."""
     factor = _setting(spec, "elbow_leg_factor")
     sides = core.PARAMS["solid"]["sides"]
     runs = [s for s in solids if s.get("shape") == "run"]
     rings = {s["id"]: S._ring(s, sides) for s in runs}
     leg_of = lambda s: factor * s["width_m"]                                  # noqa: E731
-    out = [p for s in runs for p in _run_parts(s, rings[s["id"]], leg_of(s))]
+    ladder = _ladder(spec)
+    out = [p for s in runs for p in _run_parts(s, rings[s["id"]], leg_of(s), ladder)]
     return out + _tees(runs, rings, leg_of) + _reducers(runs, rings, leg_of)
 
 
