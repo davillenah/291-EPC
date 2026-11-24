@@ -102,6 +102,10 @@ MESSAGES: Dict[str, Dict[str, str]] = {
         "en": "the supports are not valid: {details}",
         "es": "los soportes no son válidos: {details}",
     },
+    "err_tray_kind": {
+        "en": "unknown tray kind {kind!r}: the kinds are {kinds}",
+        "es": "tipo de bandeja desconocido {kind!r}: los tipos son {kinds}",
+    },
 }
 
 

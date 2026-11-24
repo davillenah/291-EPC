@@ -10,7 +10,7 @@ import ezdxf
 from epc_dxf import new_document
 from epc_dxf import deliverable, textstyle
 
-from epc_plan import core
+from epc_plan import core, tray_draw
 from epc_plan.core import PlanError
 
 _UNITS = {"m": (6, 1.0), "mm": (4, 1000.0)}          # DXF $INSUNITS code and the factor from metres
@@ -122,42 +122,6 @@ def _block_name(doc, prefix: str, tag: str) -> str:
     return name
 
 
-def _offset_path(pts, d: float):
-    """The path `pts` moved sideways by `d` (left of the walking direction when positive); the corners are mitred, so the two rails of a bend meet."""
-    pts = [p for i, p in enumerate(pts) if i == 0 or math.dist(p, pts[i - 1]) > 1e-9]
-    if len(pts) < 2:
-        return list(pts)
-    normals = []
-    for a, b in zip(pts, pts[1:]):
-        length = math.dist(a, b)
-        normals.append((-(b[1] - a[1]) / length, (b[0] - a[0]) / length))
-    out = [(pts[0][0] + normals[0][0] * d, pts[0][1] + normals[0][1] * d)]
-    for i in range(1, len(pts) - 1):
-        (n1x, n1y), (n2x, n2y) = normals[i - 1], normals[i]
-        k = 1 + n1x * n2x + n1y * n2y                              # 1 + cos of the turn: the corner moves d / (that / 2) along the bisector
-        k = k if k > 1e-6 else 1e-6
-        out.append((pts[i][0] + (n1x + n2x) * d / k, pts[i][1] + (n1y + n2y) * d / k))
-    out.append((pts[-1][0] + normals[-1][0] * d, pts[-1][1] + normals[-1][1] * d))
-    return out
-
-
-def _ladder_lines(pts, width: float, pitch: float):
-    """The lines of a ladder tray seen from above: the two rails (the path moved half the width to each side) and a rung every `pitch` along the path, as a list of (start, end)."""
-    left, right = _offset_path(pts, width / 2), _offset_path(pts, -width / 2)
-    lines = [(a, b) for rail in (left, right) for a, b in zip(rail, rail[1:])]
-    half = width / 2
-    for a, b in zip(pts, pts[1:]):
-        length = math.dist(a, b)
-        if length <= 0:
-            continue
-        ux, uy = (b[0] - a[0]) / length, (b[1] - a[1]) / length
-        count = math.ceil(length / pitch - 1e-9) - 1                # the rungs strictly inside the stretch, square to it
-        for k in range(1, count + 1):
-            cx, cy = a[0] + ux * k * pitch, a[1] + uy * k * pitch
-            lines.append(((cx - uy * half, cy + ux * half), (cx + uy * half, cy - ux * half)))
-    return lines
-
-
 def _tray_width_mm(s) -> float:
     """The width written on a tray (`ancho_mm` in its attributes), 0 when it has none or it is not a number."""
     try:
@@ -166,23 +130,37 @@ def _tray_width_mm(s) -> float:
         return 0.0
 
 
-def _add_tray_detail(blk, s, pts, origin, scale: float, pitch_mm: float, line_layer: str) -> None:
-    """A tray that has a width (`ancho_mm` in its attributes) is drawn as a ladder: two rails and the rungs; without a width it stays a line."""
+TRAY_SIZES = {"lip": "lip_mm", "rung_pitch": "rung_pitch_mm", "rung_width": "rung_width_mm", "slot_pitch": "slot_pitch_mm", "slot_length": "slot_length_mm",
+              "wire_pitch": "wire_pitch_mm", "radius": "radius_mm", "joint_pitch": "joint_length_mm"}
+
+
+def _tray_kind(s, trays: Dict[str, Any]) -> str:
+    """The kind of tray written on a stretch (`tipo_bandeja`), the configured default when it has none; an unknown kind is an error."""
+    kind = str((s.get("attrs") or {}).get("tipo_bandeja") or trays["default_kind"])
+    if kind not in tray_draw.KINDS:
+        raise core.PlanError("err_tray_kind", kind=kind, kinds=", ".join(tray_draw.KINDS))
+    return kind
+
+
+def _add_tray_detail(blk, s, pts, origin, scale: float, trays: Dict[str, Any], line_layer: str) -> None:
+    """A tray that has a width (`ancho_mm` in its attributes) is drawn as what it is (ladder, perforated, solid or wire mesh) with its rails, joints and bends;
+    without a width it stays a line."""
     width_mm = _tray_width_mm(s)
-    if width_mm <= 0 or pitch_mm <= 0 or len(pts) < 2:
+    if width_mm <= 0 or len(pts) < 2:
         return
     unit = scale / 1000.0                                          # drawing units per millimetre
-    for a, b in _ladder_lines(pts, width_mm * unit, pitch_mm * unit):
+    sizes = {key: float(trays[name]) * unit for key, name in TRAY_SIZES.items()}
+    for a, b in tray_draw.tray_lines(pts, _tray_kind(s, trays), width_mm * unit, sizes):
         blk.add_line((a[0] - origin[0], a[1] - origin[1]), (b[0] - origin[0], b[1] - origin[1]), dxfattribs={"layer": line_layer})
 
 
-def _add_tray_block(doc, msp, s, pts, line_layer: str, cfg, height: float, layer, seen, style: str, prefix: str, scale: float = 1.0, pitch_mm: float = 0.0) -> None:
+def _add_tray_block(doc, msp, s, pts, line_layer: str, cfg, height: float, layer, seen, style: str, trays: Dict[str, Any], scale: float = 1.0) -> None:
     """One block per tray: its outline (a ladder with its rails and rungs when it has a width) and its text inside, inserted at the first point so the CAD moves everything together."""
     ox, oy = pts[0]
-    blk = doc.blocks.new(name=_block_name(doc, prefix, s["tag"]))
+    blk = doc.blocks.new(name=_block_name(doc, trays["block_prefix"], s["tag"]))
     blk.add_lwpolyline([(x - ox, y - oy) for x, y in pts], dxfattribs={"layer": line_layer})
-    _add_tray_detail(blk, s, pts, (ox, oy), scale, pitch_mm, line_layer)
-    lift = _tray_width_mm(s) / 2000.0 * scale if pitch_mm > 0 else 0.0
+    _add_tray_detail(blk, s, pts, (ox, oy), scale, trays, line_layer)
+    lift = _tray_width_mm(s) / 2000.0 * scale
     _add_label(blk, s, pts, height, cfg, layer, seen, style, (ox, oy), lift)
     msp.add_blockref(blk.name, (ox, oy), dxfattribs={"layer": line_layer})
 
@@ -192,7 +170,7 @@ def _add_stretch(doc, msp, s, line_kinds, cfg, scale: float, height: float, laye
     pts = [(x * scale, y * scale) for x, y in s["points_m"]]
     line_layer = layer(line_kinds[s["kind"]]["capa_dxf"])
     if doc is not None and trays.get("as_block") and s["kind"] in trays.get("kinds", []):
-        _add_tray_block(doc, msp, s, pts, line_layer, cfg, height, layer, seen, style, trays["block_prefix"], scale, float(trays.get("rung_pitch_mm", 0.0)))
+        _add_tray_block(doc, msp, s, pts, line_layer, cfg, height, layer, seen, style, trays, scale)
         return 1
     msp.add_lwpolyline(pts, dxfattribs={"layer": line_layer})
     return 1 + _add_label(msp, s, pts, height, cfg, layer, seen, style)
