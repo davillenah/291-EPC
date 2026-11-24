@@ -27,6 +27,7 @@ ALREADY_PINNED = {
     "epc_cutlist": "harness/src/engines/fabrication/cutlist/tests",   # hand-checked numbers asserted in the engine's own tests
     "epc_walls": "harness/src/engines/bim/walls/tests",
     "epc_expr": "harness/src/engines/geometry/expr/tests",           # hand-checked values asserted in the engine's own tests
+    "epc_select": "harness/src/engines/quality/select/tests",           # hand-checked selections asserted in the engine's own tests
     "epc_changes": "harness/src/engines/quality/changes/tests",           # hand-checked change summaries asserted in the engine's own tests
     "epc_arrays": "harness/src/engines/geometry/arrays/tests",       # hand-checked positions asserted in the engine's own tests
     "epc_dims": "harness/src/engines/bim/dims/tests",           # hand-checked dimensions asserted in the engine's own tests               # hand-checked geometry asserted in the engine's own tests

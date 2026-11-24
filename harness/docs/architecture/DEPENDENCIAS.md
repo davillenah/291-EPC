@@ -35,6 +35,7 @@ Cómo leerlo: **Usa** = de qué depende la unidad; **Lo usan** = quién se rompe
 | `receptacles` | — | — | — |
 | `rfq` | `boq`, `datasheets` | — | — |
 | `rules` | — | — | — |
+| `select` | — | — | — |
 | `selectivity` | `aea90364`, `calc_common`, `grounding`, `load_balance` | `aea90364` | `aea90364`, `calc_check`, `calc_common`, `design_basis`, `drawing`, `feeder_sizing`, `grounding`, `lighting`, `load_balance`, `mld`, `short_circuit`, `sld`, `transformer_sizing`, `voltage_drop` |
 | `short_circuit` | `aea90364`, `calc_common`, `feeder_sizing` | `aea90364`, `design_basis`, `transformer_sizing` | `aea90364`, `calc_check`, `calc_common`, `design_basis`, `drawing`, `feeder_sizing`, `grounding`, `lighting`, `load_balance`, `mld`, `selectivity`, `sld`, `transformer_sizing`, `voltage_drop` |
 | `sld` | `aea90364`, `dxf`, `symbols`, `titleblock` | `drawing`, `mld` | `drawing`, `mld` |
@@ -84,6 +85,7 @@ Lo declarado en `pyproject.toml` frente a lo que el código importa de verdad.
 | `receptacles` | — | — | — |
 | `rfq` | — | — | — |
 | `rules` | `engines` | — | `engines` |
+| `select` | — | — | — |
 | `selectivity` | — | `epc-calc-common`, `epc-grounding`, `epc-load-balance` | — |
 | `short_circuit` | — | `epc-calc-common`, `epc-feeder-sizing` | — |
 | `sld` | `cairosvg`, `lxml`, `openpyxl` | `cairosvg`, `epc-aea90364`, `epc-dxf`, `epc-symbols`, `epc-titleblock`, `lxml`, `openpyxl` | — |
