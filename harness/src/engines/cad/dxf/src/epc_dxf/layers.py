@@ -101,6 +101,25 @@ def _set_flags(lay, a: dict) -> None:
         lay.dxf.plot = 0
 
 
+def logo_layer_name(company: str) -> str:
+    """The layer of a company logo, `0-Logo-<Company>`: the name of the provider or of the client without spaces or symbols (`Energy Sapiens` gives `0-Logo-EnergySapiens`); it comes from the project data."""
+    word = "".join(ch for ch in str(company) if ch.isalnum() and ch.isascii())
+    if not word:
+        from epc_dxf.errors import DxfError
+        raise DxfError("err_logo_layer_company")
+    return f"0-Logo-{word}"
+
+
+def add_logo_layer(doc, company: str, role: str = "provider") -> str:
+    """Adds the layer of the logo of `company` (`role`: `provider` or `client`) with its English description; returns its name."""
+    name = logo_layer_name(company)
+    lay = doc.layers.get(name) if name in doc.layers else doc.layers.add(name)
+    lay.color = 7
+    lay.dxf.lineweight = 25
+    lay.description = f"Logo of the {role} company {company}"
+    return name
+
+
 def describe_layers(doc, catalog: Optional[Dict[str, dict]] = None) -> List[str]:
     """Gives every layer of the document that has no description the English description of the catalog role of the same name; returns the layers still without one
     (the layers `0` and `Defpoints` that every DXF carries are not counted)."""

@@ -9,6 +9,7 @@ Flujo (sld_generator.py):
 Las capas de los bloques se reasignan a las capas 291-* del SLD.
 """
 import functools
+import json
 import os, re
 from lxml import etree
 import ezdxf
@@ -44,8 +45,29 @@ def _absoluta(el):
     return res
 
 
+@functools.lru_cache(maxsize=16)
+def _catalogo(lib):
+    """{symbol id: DXF file name} from the library's own `_catalog.json` (its `file` field names the SVG; the DXF has the same stem)."""
+    ruta = os.path.join(lib, '_catalog.json')
+    if not os.path.isfile(ruta):
+        return {}
+    with open(ruta, encoding='utf-8-sig') as f:
+        return {i['id']: os.path.splitext(i['file'])[0] + '.dxf' for i in json.load(f).get('symbols', []) if i.get('id') and i.get('file')}
+
+
+def _archivo(lib, sid):
+    """The library file of a symbol id (SYM-00): the file the library's catalog names for it, or `<id>.dxf`; None when the library has none."""
+    if not sid:
+        return None
+    for nombre in (_catalogo(lib).get(sid), sid + '.dxf'):
+        ruta = os.path.join(lib, nombre) if nombre else None
+        if ruta and os.path.isfile(ruta):
+            return ruta
+    return None
+
+
 def _bloque_disponible(lib, sid):
-    return bool(sid) and os.path.isfile(os.path.join(lib, sid + '.dxf'))
+    return _archivo(lib, sid) is not None
 
 
 def separar(svg_texto, lib):
@@ -73,20 +95,26 @@ def _library_block(path: str, mtime_ns: int):
     return ezdxf.readfile(path)
 
 
+def _importar(doc, lib, sid):
+    """Imports the library block of a symbol id into the document (once) and returns the block name, the one the library file gives it."""
+    block_file = _archivo(lib, sid)
+    src = _library_block(block_file, os.stat(block_file).st_mtime_ns)
+    propios = [b.name for b in src.blocks if not b.name.startswith('*')]
+    nombre = sid.upper() if sid.upper() in propios else (propios[0] if propios else sid.upper())
+    imp = importer.Importer(src, doc)
+    if nombre not in doc.blocks:
+        imp.import_block(nombre)
+    imp.finalize()
+    return nombre
+
+
 def insertar(dxf_path, lib, instancias, alto_mm, catalog=None, stamp=None, doc=None, write=True):
     cat = _L.resolve(catalog)
     doc = _stamp.document(dxf_path, doc)
     msp = doc.modelspace()
     sids = sorted({i['sid'] for i in instancias})
-    nombres = []
-    for sid in sids:
-        block_file = os.path.join(lib, sid + '.dxf')
-        src = _library_block(block_file, os.stat(block_file).st_mtime_ns)
-        imp = importer.Importer(src, doc)
-        nombres.append(sid.upper())
-        if sid.upper() not in doc.blocks:
-            imp.import_block(sid.upper())
-        imp.finalize()
+    bloque_de = {sid: _importar(doc, lib, sid) for sid in sids}
+    nombres = list(bloque_de.values())
     # capas de los bloques -> capas del SLD (colores, alturas y estilos de texto: los del plugin, sin cambios)
     for nombre in nombres:
         for e in doc.blocks.get(nombre):
@@ -99,9 +127,9 @@ def insertar(dxf_path, lib, instancias, alto_mm, catalog=None, stamp=None, doc=N
                 pass
     for i in instancias:
         k = i['k']
-        ref = msp.add_blockref(i['sid'].upper(), (i['X'], alto_mm - i['Y']),
+        ref = msp.add_blockref(bloque_de[i['sid']], (i['X'], alto_mm - i['Y']),
                                dxfattribs={'layer': _L.name('sld.diagram', cat), 'xscale': k, 'yscale': k, 'zscale': k})
-        tags = [a.dxf.tag for a in doc.blocks.get(i['sid'].upper()).query('ATTDEF')]
+        tags = [a.dxf.tag for a in doc.blocks.get(bloque_de[i['sid']]).query('ATTDEF')]
         ref.add_auto_attribs({t: i['valores'].get(t, '') for t in tags})
         for a in ref.attribs:
             a.dxf.layer = _L.name('sld.text', cat)

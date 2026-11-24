@@ -35,7 +35,7 @@ class TestStyleCompliance(unittest.TestCase):
 
     def test_names_follow_the_convention(self):
         for name in self.style.layers:
-            self.assertRegex(name, r"^(291-[A-Z]{1,2}(-[A-Z]{4}){1,3}(-[A-Z0-9])?|0-[A-Za-z]+)$")        # NCS / AIA: 291-<discipline>-<major>-<minor>-<status>, or a 0- layer outside the standard
+            self.assertRegex(name, r"^(291-[A-Z]{1,2}(-[A-Z]{4}){1,3}(-[A-Z0-9])?|0-[A-Za-z]+(-[A-Za-z0-9]+)?)$")        # NCS / AIA: 291-<discipline>-<major>-<minor>-<status>, or a 0- layer outside the standard
         for name in self.style.pens:
             self.assertRegex(name, r"^pen_\d{3}$")
         for name in self.style.text_styles:

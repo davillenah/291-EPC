@@ -45,24 +45,6 @@ MOD_LISTA = False   # lista de modificaciones (fig. 3): activar sólo cuando la 
 TABLE_COLS = [('TAG', 16), ('DESCRIPCIÓN', 120), ('P [kW]', 18), ('FASE', 14), ('Ib [A]', 18), ('In [A]', 18), ('Icu [kA]', 18),
               ('DISPOSITIVO', 150), ('CABLE F/N [mm²]', 30), ('PE [mm²]', 18), ('L [m]', 16), ('ΔU [%]', 20)]
 TW, TX, HH, RH = 610.0, 30.0, 8.0, 6.0
-SIG = {
- 'lv_mccb_basic': ('MCCB', 'Interruptor automatico en caja moldeada'),
- 'lv_mccb_motorized': ('MCCB M', 'Interruptor en caja moldeada motorizado'),
- 'lv_mcb': ('MCB', 'Interruptor termomagnetico / guardamotor (MPCB)'),
- 'lv_rcbo': ('RCBO', 'Interruptor termomagnetico diferencial'),
- 'lv_rccb': ('RCCB', 'Interruptor diferencial'),
- 'lv_contactor': ('KM', 'Contactor'),
- 'lv_thermal_overload': ('OL', 'Rele termico de sobrecarga'),
- 'lv_soft_starter': ('SS', 'Arrancador suave'),
- 'lv_vfd': ('VFD', 'Variador de frecuencia'),
- 'lv_motor_3ph': ('M 3~', 'Motor trifasico'),
- 'lv_load_box_kw': ('LOAD', 'Carga generica (kW)'),
- 'lv_ups': ('UPS', 'Sistema de alimentacion ininterrumpida'),
- 'lv_cable_arrow_in': ('ACOM.', 'Cable de acometida'),
- 'lv_cable_arrow_out': ('SAL.', 'Cable de salida hacia la carga'),
- 'lv_busbar_node': ('BUS', 'Derivacion desde barra'),
- 'lv_earth_pe': ('PE', 'Puesta a tierra / PE'),
-}
 BOARD_KEYS = ('NOMBRE', 'TENSION_V', 'SISTEMA', 'ICC_KA', 'FP_DEFAULT', 'FRECUENCIA_HZ', 'PROYECTO', 'LONG_ACOMETIDA_m')
 
 
@@ -616,8 +598,9 @@ class _Sheet:
         T, line, y = self.T, self.line, g['Y0']
         T(g['RX'], y, 'REFERENCIAS', size=g['TIT'], bold=True); y += 6
         for sid in sorted(self.used):
-            if sid not in SIG: continue
-            sg, ds = SIG[sid]
+            legend = self.cat.get(sid, {}).get('legend')           # the legend text of a symbol lives in the symbol catalog (DGM-13a)
+            if not legend: continue
+            sg, ds = legend['abbr'], legend['es']
             T(g['RX'], y, sg, bold=True); T(g['RX'] + 18, y, ds); y += g['LSR']
         line(g['RX'], y, g['RX'] + 14, y, BLACK, 0.7); T(g['RX'] + 18, y + 1, 'Barra de potencia BDP (trazo 0,7)'); y += g['LSR']
         line(g['RX'], y, g['RX'] + 14, y, GREEN, 0.25, '10 1 2 1'); T(g['RX'] + 18, y + 1, 'Barra PE / proteccion (verde)')

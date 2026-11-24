@@ -144,7 +144,8 @@
         "en": "Single-line and multi-line diagrams"
       },
       "role_prefixes": [
-        "sld."
+        "sld.",
+        "sheet."
       ]
     }
   ]

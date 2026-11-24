@@ -9,7 +9,7 @@ import ezdxf
 from epc_plan import core, dxfout
 from test_draw_plan import _document
 
-NAME = re.compile(r"^(291-[A-Z]{1,2}(-[A-Z]{4}){1,3}(-[A-Z0-9])?|0-[A-Za-z]+)$")
+NAME = re.compile(r"^(291-[A-Z]{1,2}(-[A-Z]{4}){1,3}(-[A-Z0-9])?|0-[A-Za-z]+(-[A-Za-z0-9]+)?)$")
 
 
 class TestLayerNames(unittest.TestCase):

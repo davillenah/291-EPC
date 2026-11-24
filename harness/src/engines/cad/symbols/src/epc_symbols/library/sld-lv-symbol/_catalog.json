@@ -1317,7 +1317,12 @@
           "size": 3.47
         }
       ],
-      "diagram_type": "SLD"
+      "diagram_type": "SLD",
+      "legend": {
+        "abbr": "BUS",
+        "es": "Derivacion desde barra",
+        "en": "Tap from the busbar"
+      }
     },
     {
       "id": "lv_bypass_ups",
@@ -1394,7 +1399,12 @@
           "size": 3.47
         }
       ],
-      "diagram_type": "SLD"
+      "diagram_type": "SLD",
+      "legend": {
+        "abbr": "ACOM.",
+        "es": "Cable de acometida",
+        "en": "Incoming feeder cable"
+      }
     },
     {
       "id": "lv_cable_arrow_out",
@@ -1431,7 +1441,12 @@
           "size": 3.47
         }
       ],
-      "diagram_type": "SLD"
+      "diagram_type": "SLD",
+      "legend": {
+        "abbr": "SAL.",
+        "es": "Cable de salida hacia la carga",
+        "en": "Outgoing cable to the load"
+      }
     },
     {
       "id": "lv_cable_run",
@@ -1828,7 +1843,12 @@
         "lv_contactor_2p_mld",
         "lv_contactor_3p_mld",
         "lv_contactor_4p_mld"
-      ]
+      ],
+      "legend": {
+        "abbr": "KM",
+        "es": "Contactor",
+        "en": "Contactor"
+      }
     },
     {
       "id": "lv_ct",
@@ -2161,7 +2181,12 @@
           "size": 3.47
         }
       ],
-      "diagram_type": "SLD"
+      "diagram_type": "SLD",
+      "legend": {
+        "abbr": "PE",
+        "es": "Puesta a tierra / PE",
+        "en": "Earthing / PE"
+      }
     },
     {
       "id": "lv_emergency_stop",
@@ -3197,7 +3222,12 @@
           "size": 3.47
         }
       ],
-      "diagram_type": "SLD"
+      "diagram_type": "SLD",
+      "legend": {
+        "abbr": "LOAD",
+        "es": "Carga generica (kW)",
+        "en": "Generic load (kW)"
+      }
     },
     {
       "id": "lv_manual_transfer_switch",
@@ -3362,7 +3392,12 @@
         "lv_mcb_2p_mld",
         "lv_mcb_3p_mld",
         "lv_mcb_4p_mld"
-      ]
+      ],
+      "legend": {
+        "abbr": "MCB",
+        "es": "Interruptor termomagnetico / guardamotor (MPCB)",
+        "en": "Miniature circuit breaker / motor protection breaker (MPCB)"
+      }
     },
     {
       "id": "lv_mccb_basic",
@@ -3425,7 +3460,12 @@
         "lv_mccb_basic_2p_mld",
         "lv_mccb_basic_3p_mld",
         "lv_mccb_basic_4p_mld"
-      ]
+      ],
+      "legend": {
+        "abbr": "MCCB",
+        "es": "Interruptor automatico en caja moldeada",
+        "en": "Moulded-case circuit breaker"
+      }
     },
     {
       "id": "lv_mccb_drawout",
@@ -3701,7 +3741,12 @@
         "lv_mccb_motorized_2p_mld",
         "lv_mccb_motorized_3p_mld",
         "lv_mccb_motorized_4p_mld"
-      ]
+      ],
+      "legend": {
+        "abbr": "MCCB M",
+        "es": "Interruptor en caja moldeada motorizado",
+        "en": "Motorized moulded-case circuit breaker"
+      }
     },
     {
       "id": "lv_mccb_motorized_drawout",
@@ -3941,7 +3986,12 @@
           "size": 3.47
         }
       ],
-      "diagram_type": "SLD"
+      "diagram_type": "SLD",
+      "legend": {
+        "abbr": "M 3~",
+        "es": "Motor trifasico",
+        "en": "Three-phase motor"
+      }
     },
     {
       "id": "lv_motor_starter_dol",
@@ -4669,7 +4719,12 @@
           "anchor": "end",
           "size": 3.47
         }
-      ]
+      ],
+      "legend": {
+        "abbr": "RCBO",
+        "es": "Interruptor termomagnetico diferencial",
+        "en": "Residual-current circuit breaker with overcurrent protection"
+      }
     },
     {
       "id": "lv_rccb",
@@ -4747,7 +4802,12 @@
         "lv_rccb_1p_mld",
         "lv_rccb_2p_mld",
         "lv_rccb_4p_mld"
-      ]
+      ],
+      "legend": {
+        "abbr": "RCCB",
+        "es": "Interruptor diferencial",
+        "en": "Residual-current circuit breaker"
+      }
     },
     {
       "id": "lv_rcd_relay_toroid",
@@ -5207,7 +5267,12 @@
           "size": 3.47
         }
       ],
-      "diagram_type": "SLD"
+      "diagram_type": "SLD",
+      "legend": {
+        "abbr": "SS",
+        "es": "Arrancador suave",
+        "en": "Soft starter"
+      }
     },
     {
       "id": "lv_spd_varistor",
@@ -5444,7 +5509,12 @@
         "lv_thermal_overload_2p_mld",
         "lv_thermal_overload_3p_mld",
         "lv_thermal_overload_4p_mld"
-      ]
+      ],
+      "legend": {
+        "abbr": "OL",
+        "es": "Rele termico de sobrecarga",
+        "en": "Thermal overload relay"
+      }
     },
     {
       "id": "lv_three_phase_marker",
@@ -5612,7 +5682,12 @@
           "size": 3.47
         }
       ],
-      "diagram_type": "SLD"
+      "diagram_type": "SLD",
+      "legend": {
+        "abbr": "UPS",
+        "es": "Sistema de alimentacion ininterrumpida",
+        "en": "Uninterruptible power supply"
+      }
     },
     {
       "id": "lv_varimeter",
@@ -5746,7 +5821,12 @@
           "size": 3.47
         }
       ],
-      "diagram_type": "SLD"
+      "diagram_type": "SLD",
+      "legend": {
+        "abbr": "VFD",
+        "es": "Variador de frecuencia",
+        "en": "Variable frequency drive"
+      }
     },
     {
       "id": "lv_voltmeter",

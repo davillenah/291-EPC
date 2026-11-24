@@ -2087,6 +2087,21 @@
     "es": "Geometría de referencia de un registro que ninguna persona verificó",
     "en": "Reference geometry from a record that no person verified"
    }
+  },
+  "sheet.viewport": {
+   "name": "0-Viewport",
+   "color": 7,
+   "lineweight": 0.25,
+   "linetype": "CONTINUOUS",
+   "on": true,
+   "frozen": false,
+   "locked": false,
+   "plot": false,
+   "description": {
+    "en": "Viewport frames of the sheet (not plotted)",
+    "es": "Marcos de ventanas gráficas de la lámina (no se imprimen)"
+   },
+   "ncs_match": "outside_standard"
   }
  }
 }
