@@ -387,14 +387,14 @@ class Generator:
         etree.fromstring(final.encode("utf-8"))
         svg_path = out_dir / f"{name}.svg"
         svg_path.write_text(final, encoding="utf-8", newline="\n")
-        dxf_path = self.to_dxf(svg_path, final, out_dir, name, self.stamp_date, self.say)
+        dxf_path = self.to_dxf(svg_path, final, out_dir, name, self.stamp_date, self.say, self.lib)
         return str(svg_path), str(dxf_path) if dxf_path else None
 
     @staticmethod
-    def to_dxf(svg_path: Path, final: str, out_dir: Path, name: str, stamp_date=None, say=_notice):
+    def to_dxf(svg_path: Path, final: str, out_dir: Path, name: str, stamp_date=None, say=_notice, lib: Optional[str] = None):
         """DXF por el mismo convertidor del paquete (trazos) y las capas 291-* del unifilar."""
         from epc_dxf import deliverable
-        done = deliverable.convert(svg_path, stamp_date=stamp_date, seed=name)
+        done = deliverable.convert(svg_path, symbol_library=lib, stamp_date=stamp_date, seed=name)
         for line in done["messages"]:
             say(line)
         return done["dxf"]
