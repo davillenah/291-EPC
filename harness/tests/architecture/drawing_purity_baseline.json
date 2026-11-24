@@ -20,12 +20,6 @@
  "harness/src/engines/cad/drawing/src/epc_drawing/export/plan_sheet.py": {
   "tempfile": 1
  },
- "harness/src/engines/cad/dxf/src/epc_dxf/layers.py": {
-  "environment": 1
- },
- "harness/src/engines/cad/dxf/src/epc_dxf/textstyle.py": {
-  "environment": 2
- },
  "harness/src/engines/cad/mld/src/epc_mld/mld_generator.py": {
   "clock": 1,
   "environment": 2

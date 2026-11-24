@@ -2,17 +2,15 @@
 
 Like the layer catalog, three sources, the later winning field by field (a file may carry only what it changes):
   1. `harness/config/dxf/text.json`: the file the values live in, edit it (one source, no copy in the code);
-  2. the same file name in another folder named in EPC_DXF_CONFIG_DIR (empty: none), when it is not that one;
-  3. the files named in EPC_DXF_TEXT_JSON (several are separated as paths are).
+  2. the same file name in another folder named by the settings in force (`epc_dxf.settings`, `config_dir`; empty: none), when it is not that one;
+  3. the files the settings name (`text_files`).
+The settings are handed in by the caller (`settings.use`); the process environment is never read here (ADR-0042).
 Nothing is cached: edit the file and the next DXF is written with the change. Old DXFs are not touched: write them again.
 """
 import json
-import os
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-ENV_DIR = "EPC_DXF_CONFIG_DIR"
-ENV_FILES = "EPC_DXF_TEXT_JSON"
 REPO_CONFIG = Path(__file__).resolve().parents[6] / "config" / "dxf"          # harness/config/dxf: the files that hold the values in force (one source)
 DEFAULT_FILE = REPO_CONFIG / "text.json"
 FILE_NAME = "text.json"
@@ -24,8 +22,9 @@ SECTIONS = {
 
 
 def config_dir() -> Optional[Path]:
-    """The editable folder: the one EPC_DXF_CONFIG_DIR names (empty: none), else `harness/config/dxf` when it exists."""
-    named = os.environ.get(ENV_DIR)
+    """The editable folder: the one the settings name (empty: none), else `harness/config/dxf` when it exists."""
+    from epc_dxf import settings
+    named = settings.current().config_dir
     if named is not None:
         return Path(named) if named else None
     return REPO_CONFIG if REPO_CONFIG.is_dir() else None
@@ -38,7 +37,8 @@ def _read(path: Path) -> Dict[str, Any]:
 def _files() -> List[Path]:
     folder = config_dir()
     folder = folder if folder and folder.resolve() != REPO_CONFIG.resolve() else None
-    named = [Path(x) for x in (os.environ.get(ENV_FILES) or "").split(os.pathsep) if x]
+    from epc_dxf import settings
+    named = [Path(x) for x in settings.current().text_files]
     return ([folder / FILE_NAME] if folder else []) + named
 
 
@@ -82,7 +82,7 @@ def get_section(section: str) -> Dict[str, Any]:
 
 
 def load_file(name: str) -> Dict[str, Any]:
-    """A table of the editable folder (`unify.json`...): the packaged default with, key by key, what the file of the folder and those of EPC_DXF_TEXT_JSON (when they have this name) change."""
+    """A table of the editable folder (`unify.json`...): the packaged default with, key by key, what the file of the folder and those of the settings (when they have this name) change."""
     out = {k: dict(v) if isinstance(v, dict) else v for k, v in _read(REPO_CONFIG / name).items()}
     folder = config_dir()
     for p in ([folder / name] if folder and folder.resolve() != REPO_CONFIG.resolve() else []):

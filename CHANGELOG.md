@@ -5,6 +5,7 @@ All notable changes. Format: Keep a Changelog; versions follow `harness/docs/BRA
 ## [Unreleased]
 
 ### Added
+- `epc_dxf.settings` (DRW-02 step b): the DXF engine no longer reads `EPC_LAYERS_JSON`, `EPC_DXF_CONFIG_DIR` or `EPC_DXF_TEXT_JSON`; the layer and text settings arrive as data (`DxfSettings`, scoped per call so two calls in parallel never share state). Only an adapter calls `settings.from_environment`. Same bytes as before for the same settings.
 - Architecture test `test_drawing_purity`: the drawing engines may not use the environment, the current folder, the clock, subprocesses or temporary files more than they do today (24 uses in 14 files), and the baseline only shrinks (ADR-0042).
 - `epc_select` (quality engine, generic): quick select of the records of a list that meet all or any of some conditions (`eq ne lt le gt ge in contains exists`); no default for `match` or the limit; English and Spanish errors, input schema, 100 % coverage. Idea taken from the quick-select filter of a CAD editor (behaviour only).
 - `epc_changes` (quality engine, generic): change control between revision A and B of a list of records (circuits, symbols, sheets): what was added, removed or changed field by field, with ignorable fields and a size limit; no default for the id field, the ignore list or the limit; English and Spanish errors, input schema, 100 % coverage.
