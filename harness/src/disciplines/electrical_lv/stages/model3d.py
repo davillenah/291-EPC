@@ -20,7 +20,7 @@ from disciplines.electrical_lv.stages.routing_stage import routed_document
 ARCH_ENGINE, ARCH_FUNCTION = "cad/arch", "epc_arch.model3d.building_solids"
 PLAN_ENGINE, PLAN_FUNCTIONS = "cad/plan", ("epc_plan.solid.solids", "epc_plan.detail.parts", "epc_plan.scene3d.write_dxf")
 SECTION_KEYS = {"name", "axis", "at_m", "look", "depth_m"}
-KEYS = {"floors", "supports", "sections", "elevations"}
+KEYS = {"floors", "supports", "sections", "elevations", "ladder_trays"}
 SIDES = ("N", "S", "E", "W")
 
 
@@ -46,6 +46,11 @@ def _is_supports(given):
     return isinstance(given, dict) and set(given) <= {"spacing_m", "rod_m", "channel_m", "overhang_m"} and "spacing_m" in given
 
 
+def _is_ladder(given):
+    layers = given.get("layers") if isinstance(given, dict) else None
+    return isinstance(layers, list) and bool(layers) and all(isinstance(x, str) for x in layers) and set(given) == {"layers"}
+
+
 def _floor_errors(floors, routing):
     from epc_arch.sections import heights_errors
     out = [f"model3d/floors: floor {f} is not a routed floor" for f in sorted(set(floors) - set(routing))]
@@ -68,6 +73,8 @@ def errors_of(given, routing):
     out = _floor_errors(given["floors"], routing)
     if "supports" in given and not _is_supports(given["supports"]):
         out.append("model3d/supports: {spacing_m, rod_m?, channel_m?, overhang_m?}")
+    if "ladder_trays" in given and not _is_ladder(given["ladder_trays"]):
+        out.append("model3d/ladder_trays: {layers: [layer names of the trays]}")
     return out + _section_errors(given.get("sections", [])) + _elevation_errors(given.get("elevations", []), routing)
 
 
@@ -102,6 +109,11 @@ def _hangers(given):
     return dict(copy.deepcopy(given["supports"]), slab_underside_m=under)
 
 
+def _parts_spec(given):
+    """The spec of the parts: the ladder trays when the engineer asked for them (`ladder_trays: {layers}`), else none (the runs stay swept boxes)."""
+    return {"ladder_trays": given["ladder_trays"]} if "ladder_trays" in given else None
+
+
 def build(given, routing):
     """(scene, parts) of the whole building: the building and the equipment as they are, the runs as their parts and, when asked, their supports."""
     from epc_plan import detail, scene3d, solid
@@ -111,7 +123,7 @@ def build(given, routing):
         building += _building(routing[floor], floor, heights)
         services += _services(routing[floor], floor, heights)
     hangers = _hangers(given)
-    parts = detail.parts(services) + (detail.supports(services, hangers) if hangers else [])
+    parts = detail.parts(services, _parts_spec(given)) + (detail.supports(services, hangers) if hangers else [])
     boxes = [s for s in services if s["shape"] != "run"]
     whole = scene3d.merge([{"schema_version": "1.0", "units": "m", "solids": building, "box": None}, solid.scene(boxes + parts)])
     return whole, parts
