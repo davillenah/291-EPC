@@ -274,6 +274,27 @@ Schema: `harness/src/engines/calculation/receptacles/src/epc_receptacles/schema/
 | `rooms[].estimate.confidence` | number | yes |  |  |
 | `rooms[].estimate.source` | string | yes |  |  |
 
+## epc_cutlist
+
+### Input
+
+Schema: `harness/src/engines/fabrication/cutlist/src/epc_cutlist/schema/input.schema.json` (cut list (input))
+
+| Field | Type | Required | Limits | Notes |
+|---|---|---|---|---|
+| `kerf_mm` | number | yes | minimum 0 |  |
+| `stock` | object | yes |  |  |
+| `parts` | array | yes | minItems 1 |  |
+| `parts[].id` | string | yes | minLength 1, pattern \S |  |
+| `parts[].material` | string | yes | minLength 1, pattern \S |  |
+| `parts[].length_mm` | number | yes | exclusiveMinimum 0 |  |
+| `parts[].quantity` | integer |  | minimum 1 |  |
+| `parts[].size` | string or null |  | minLength 1 |  |
+| `parts[].label` | string or null |  |  |  |
+| `parts[].angle_1_deg` | number or null |  | minimum -90, maximum 90 |  |
+| `parts[].angle_2_deg` | number or null |  | minimum -90, maximum 90 |  |
+| `parts[].angle_source` | one of `given`, `derived`, `unknown` |  |  |  |
+
 ## epc_boq
 
 ### Input
@@ -457,6 +478,7 @@ Schema: `harness/src/engines/quality/terminal_blocks/src/epc_terminal_blocks/sch
 
 These engines do not yet validate their input against a schema at the entry point (OPT-09):
 
+- `epc_walls`
 - `epc_arch`
 - `epc_drawing`
 - `epc_dxf`

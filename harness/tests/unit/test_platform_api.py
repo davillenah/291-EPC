@@ -114,7 +114,7 @@ class QueryTests(Base):
     def test_unknown_engine_and_norm_records_of_every_engine(self):
         self.assertEqual(api.engine_info("zzz")["error"]["code"], "unknown_engine")
         everything = api.norm_records()["data"]
-        self.assertEqual(len(everything["packages"]), 31)
+        self.assertEqual(len(everything["packages"]), 33)
         self.assertTrue(all(r["review_status"] in ("verified", "pending review", "rejected") for r in everything["records"]))
 
 

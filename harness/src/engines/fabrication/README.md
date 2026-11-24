@@ -1,5 +1,7 @@
 # `fabrication`
 
-Status: **planned**
+Status: **in development**
 
-Part of the PRD structure; filled by the relocation and migration tasks.
+Fabrication engines (what is cut, bent or assembled before installation). One engine so far:
+
+- `cutlist` (`epc_cutlist`): the one-dimensional cutting plan of bars, trays, conduits, profiles and cables. See `cutlist/README.md`.

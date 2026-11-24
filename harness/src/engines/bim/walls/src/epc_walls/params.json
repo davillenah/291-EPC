@@ -1,0 +1,13 @@
+{
+  "_note": "Design parameters of the algorithm, not norm values: nothing here comes from a standard. They are data so a project can review them (pending review).",
+  "review": "pending review",
+  "max_mitre_ratio": 3.86,
+  "max_mitre_ratio_meaning": "a mitre or butt end point farther than this multiple of the larger half thickness from the corner is refused and the corner keeps square ends (about 30 degrees between the walls: 1 / sin(15 degrees))",
+  "parallel_sine": 0.02,
+  "parallel_sine_meaning": "walls whose directions have a sine of the angle between them below this are treated as one line (no corner)",
+  "layer_functions": ["finish", "substrate", "structure", "insulation", "membrane"],
+  "layer_priority_default": {"structure": 800, "substrate": 600, "insulation": 400, "membrane": 300, "finish": 200, "cavity": 100},
+  "layer_priority_range": [0, 999],
+  "layer_thickness_max_mm": 2000,
+  "layers_max": 32
+}
