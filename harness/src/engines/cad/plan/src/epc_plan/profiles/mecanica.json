@@ -23,7 +23,8 @@
         "z_m": 2.5,
         "ancho_m": 0.1,
         "alto_m": 0.1
-      }
+      },
+      "seccion": "round"
     },
     {
       "id": "PR",
@@ -61,7 +62,8 @@
         "z_m": 3.0,
         "ancho_m": 0.05,
         "alto_m": 0.05
-      }
+      },
+      "seccion": "round"
     },
     {
       "id": "VP",
@@ -80,7 +82,8 @@
         "z_m": 3.0,
         "ancho_m": 0.1,
         "alto_m": 0.1
-      }
+      },
+      "seccion": "round"
     },
     {
       "id": "CT",

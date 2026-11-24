@@ -360,7 +360,7 @@ class TestDxf(unittest.TestCase):
         self.assertEqual(warnings, [])
         dxf = ezdxf.readfile(str(path))
         layers = {l.dxf.name for l in dxf.layers}
-        self.assertTrue({"ELEC-BANDEJA", "ELEC-CANAL", "ELEC-CAMARA", "ELEC-CAJA", "ELEC-TABLERO", "PLAN-TAG", "PLAN-NODO"} <= layers)
+        self.assertTrue({"291-E-CABL-TRAY-N", "291-E-POWR-CNDT-N", "291-E-POWR-MHOL-N", "291-E-POWR-JBOX-N", "291-E-POWR-PANL-N", "291-E-ANNO-IDEN", "291-E-ANNO-NPLT"} <= layers)
         kinds = [e.dxftype() for e in dxf.modelspace()]
         trays = [s for s in result["stretches"] if s["kind"] == "BN"]
         others = len(result["stretches"]) - len(trays)                      # a tray is one block (outline and text inside); the rest stay loose
@@ -470,8 +470,8 @@ class TestPlenum(unittest.TestCase):
             path = Path(t) / "plan.dxf"
             dxfout.write_dxf(out, path)
             doc = ezdxf.readfile(str(path))
-            self.assertIn("ELEC-PLENO", {lay.dxf.name for lay in doc.layers})
-            self.assertTrue(any(e.dxftype() == "INSERT" and e.dxf.layer == "ELEC-PLENO" for e in doc.modelspace()))
+            self.assertIn("291-E-POWR-FEED-N", {lay.dxf.name for lay in doc.layers})
+            self.assertTrue(any(e.dxftype() == "INSERT" and e.dxf.layer == "291-E-POWR-FEED-N" for e in doc.modelspace()))
 
 
 class TestRouteThroughPlenums(unittest.TestCase):

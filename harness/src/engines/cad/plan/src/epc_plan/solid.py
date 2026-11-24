@@ -12,7 +12,7 @@ too, straight up from its bottom to its top (`altura_m`), round or rectangular l
     write_dxf_3d(solids, path)   -> a 3D DXF: each path as a 3D polyline and each solid as a mesh of faces, on the layer of its kind
 
 Sizes are those of the kind in the profile of the discipline unless the person wrote others on the element (`ancho_m`, `alto_m`, `z_m`): nothing is calculated here.
-Whether a kind is round or rectangular is data: `seccion` of the kind in its profile ("round" or "rect"), else the pattern `solid.round_layers` of `params.json` on its layer.
+Whether a kind is round or rectangular is data: `seccion` of the kind in its profile ("round" or "rect"), else rectangular. The layer name says nothing about it (it follows the NCS / AIA convention).
 Fittings (elbows, tees, reducers) are not generated: at a bend the two stretches simply meet.
 """
 import math
@@ -27,10 +27,7 @@ SECTIONS = ("round", "rect")
 
 
 def _section(kind: Dict[str, Any], params: Dict[str, Any]) -> str:
-    given = kind.get("seccion")
-    if given in SECTIONS:
-        return given
-    return "round" if re.search(params["solid"]["round_layers"], kind.get("capa_dxf", ""), re.I) else "rect"
+    return "round" if kind.get("seccion") == "round" else "rect"
 
 
 def _path(item: Dict[str, Any], vertical: bool) -> List[List[float]]:

@@ -16,7 +16,7 @@ from epc_drawing import pv_parts
 from epc_drawing.errors import DrawingError
 
 Point = Tuple[float, float, float]
-LAYERS = {"PV-3D-SUELO": 8, "PV-3D-MODULOS": 5, "PV-3D-ESTRUCTURA": 9, "PV-3D-CIMENTACION": 30, "PV-3D-INVERSORES": 7, "PV-3D-ESTACION": 4, "PV-3D-VALLADO": 1, **pv_parts.REF_LAYERS}
+LAYERS = {"291-WS-TOPO-N": 8, "291-WS-PVMD-N": 5, "291-WS-STRC-N": 9, "291-WS-FNDN-N": 30, "291-WS-POWR-EQPM-N": 7, "291-WS-POWR-XFMR-PADM-N": 4, "291-WS-FENC-N": 1, **pv_parts.REF_LAYERS}
 POST_M, RAIL_M, RAIL_DEPTH_M, SPACING_M = 0.1, 0.08, 0.06, 4.0
 STATION_HEIGHT_M, PAD_HEIGHT_M, SOIL_M, MODULE_M = 2.6, 0.9, 0.15, 0.03
 PLINTH_M = 0.3
@@ -58,7 +58,7 @@ def _modules(geometry: Dict[str, Any], table: Dict[str, Any], tilt: float, rear_
 
 def embedment_m(geometry: Dict[str, Any]) -> float:
     """The depth of the posts below the surface: the embedment the structure record states (`geometry["foundation"]["embedment_m"]`), else 0. Nothing is assumed: a roof or a structure without
-    a stated depth has no part below the surface, and a ground plant with embedded piles draws them on their own layer (`PV-3D-CIMENTACION`) so they are never mistaken for posts under the floor by error."""
+    a stated depth has no part below the surface, and a ground plant with embedded piles draws them on their own layer (`291-WS-FNDN-N`) so they are never mistaken for posts under the floor by error."""
     return float((geometry.get("foundation") or {}).get("embedment_m") or 0.0)
 
 
@@ -118,12 +118,12 @@ def _inverters(msp, geometry: Dict[str, Any], records: Dict[str, Any], level: st
             continue
         det = pv_parts.inverter_detail(records.get(inv.get("catalog_id") or inv.get("id")), level)
         if det is None:
-            _add(msp, "PV-3D-INVERSORES", box(inv["x"] - inv["width_m"] / 2, inv["y"] - inv["depth_m"] / 2, 0, inv["width_m"], inv["depth_m"], PAD_HEIGHT_M))
+            _add(msp, "291-WS-POWR-EQPM-N", box(inv["x"] - inv["width_m"] / 2, inv["y"] - inv["depth_m"] / 2, 0, inv["width_m"], inv["depth_m"], PAD_HEIGHT_M))
             continue
         w, h, d = det["size"]
         x0, y0 = inv["x"] - w / 2, inv["y"] - d / 2
-        _add(msp, "PV-3D-REF-FALLBACK", box(x0, y0, 0, w, d, PLINTH_M))
-        _add(msp, "PV-3D-INVERSORES", box(x0, y0, PLINTH_M, w, d, h))
+        _add(msp, "291-WS-ANNO-REFR", box(x0, y0, 0, w, d, PLINTH_M))
+        _add(msp, "291-WS-POWR-EQPM-N", box(x0, y0, PLINTH_M, w, d, h))
         for layer, faces in det["parts"]:       # record frame: x width, y height, z depth (wall at 0); the front looks south
             _add(msp, layer, [tuple((x0 + p[0], y0 + d - p[2], PLINTH_M + p[1]) for p in f) for f in faces])
 
@@ -144,25 +144,25 @@ def build(geometry: Dict[str, Any], result: Dict[str, Any], parts: Optional[Dict
     slope = float(geometry["table"]["slope_m"])
     front = float(geometry["module"]["front_clearance_m"] or 0.0)
     site = geometry["site"]
-    _add(msp, "PV-3D-SUELO", box(0, 0, -SOIL_M, site["width_m"], site["length_m"], SOIL_M))
+    _add(msp, "291-WS-TOPO-N", box(0, 0, -SOIL_M, site["width_m"], site["length_m"], SOIL_M))
     s = site["setback_m"]
-    msp.add_polyline3d([(s, s, 0), (site["width_m"] - s, s, 0), (site["width_m"] - s, site["length_m"] - s, 0), (s, site["length_m"] - s, 0)], close=True, dxfattribs={"layer": "PV-3D-VALLADO"})
+    msp.add_polyline3d([(s, s, 0), (site["width_m"] - s, s, 0), (site["width_m"] - s, site["length_m"] - s, 0), (s, site["length_m"] - s, 0)], close=True, dxfattribs={"layer": "291-WS-FENC-N"})
     for table in geometry["tables"]:
         tilt = math.radians(float(geometry["tilts_deg"][table["array"]]))
         rear_h = front + slope * math.sin(tilt)
-        _add(msp, "PV-3D-MODULOS", _modules(geometry, table, tilt, rear_h))
+        _add(msp, "291-WS-PVMD-N", _modules(geometry, table, tilt, rear_h))
         if parts.get("module") is not None:
             for layer, faces in _module_details(geometry, table, tilt, rear_h, parts["module"], level).items():
                 _add(msp, layer, faces)
         section = pv_parts.post_section(parts.get("structure"))
         rails, posts, buried = _supports(table, slope, tilt, rear_h, embedment_m(geometry), section)
-        _add(msp, "PV-3D-ESTRUCTURA", rails + ([] if section else posts))
+        _add(msp, "291-WS-STRC-N", rails + ([] if section else posts))
         if section:
             _add(msp, section["layer"], posts)
-        _add(msp, "PV-3D-CIMENTACION", buried)
+        _add(msp, "291-WS-FNDN-N", buried)
     _inverters(msp, geometry, parts.get("inverters") or {}, level)
     st = geometry["station"]
-    _add(msp, "PV-3D-ESTACION", box(st["x"], st["y"], 0, st["width_m"], st["depth_m"], STATION_HEIGHT_M))
+    _add(msp, "291-WS-POWR-XFMR-PADM-N", box(st["x"], st["y"], 0, st["width_m"], st["depth_m"], STATION_HEIGHT_M))
     return doc
 
 
@@ -196,16 +196,16 @@ def _table_block(doc, geometry: Dict[str, Any], parts: Dict[str, Any], level: st
     slope = float(geometry["table"]["slope_m"])
     rear_h = float(geometry["module"]["front_clearance_m"] or 0.0) + slope * math.sin(tilt)
     local = {"x": 0.0, "y": 0.0, "width_m": width, "modules": modules}
-    _add(block, "PV-3D-MODULOS", _modules(geometry, local, tilt, rear_h))
+    _add(block, "291-WS-PVMD-N", _modules(geometry, local, tilt, rear_h))
     if parts.get("module") is not None:
         for layer, faces in _module_details(geometry, local, tilt, rear_h, parts["module"], level).items():
             _add(block, layer, faces)
     section = pv_parts.post_section(parts.get("structure"))
     rails, posts, buried = _supports(local, slope, tilt, rear_h, embedment_m(geometry), section)
-    _add(block, "PV-3D-ESTRUCTURA", rails + ([] if section else posts))
+    _add(block, "291-WS-STRC-N", rails + ([] if section else posts))
     if section:
         _add(block, section["layer"], posts)
-    _add(block, "PV-3D-CIMENTACION", buried)
+    _add(block, "291-WS-FNDN-N", buried)
     return name
 
 
@@ -239,15 +239,15 @@ def build_sector(geometry: Dict[str, Any], tables: List[Dict[str, Any]], parts: 
     for table in tables:
         tilt_deg = float(geometry["tilts_deg"][table["array"]])
         name = _table_block(doc, geometry, parts, level, str(table["array"]), int(table["modules"]), float(table["width_m"]), tilt_deg)
-        msp.add_blockref(name, (table["x"], table["y"], 0.0), dxfattribs={"layer": "PV-3D-MODULOS"})
+        msp.add_blockref(name, (table["x"], table["y"], 0.0), dxfattribs={"layer": "291-WS-PVMD-N"})
     return doc
 
 
 def _inverter_block(doc, det, name: str) -> None:
     w, h, d = det["size"]
     block = doc.blocks.new(name)
-    _add(block, "PV-3D-REF-FALLBACK", box(0, 0, 0, w, d, PLINTH_M))
-    _add(block, "PV-3D-INVERSORES", box(0, 0, PLINTH_M, w, d, h))
+    _add(block, "291-WS-ANNO-REFR", box(0, 0, 0, w, d, PLINTH_M))
+    _add(block, "291-WS-POWR-EQPM-N", box(0, 0, PLINTH_M, w, d, h))
     for layer, faces in det["parts"]:
         _add(block, layer, [tuple((p[0], d - p[2], PLINTH_M + p[1]) for p in f) for f in faces])
 
@@ -258,8 +258,8 @@ def build_common(geometry: Dict[str, Any], parts: Optional[Dict[str, Any]] = Non
     doc = _new_document()
     msp = doc.modelspace()
     site, s = geometry["site"], geometry["site"]["setback_m"]
-    _add(msp, "PV-3D-SUELO", box(0, 0, -SOIL_M, site["width_m"], site["length_m"], SOIL_M))
-    msp.add_polyline3d([(s, s, 0), (site["width_m"] - s, s, 0), (site["width_m"] - s, site["length_m"] - s, 0), (s, site["length_m"] - s, 0)], close=True, dxfattribs={"layer": "PV-3D-VALLADO"})
+    _add(msp, "291-WS-TOPO-N", box(0, 0, -SOIL_M, site["width_m"], site["length_m"], SOIL_M))
+    msp.add_polyline3d([(s, s, 0), (site["width_m"] - s, s, 0), (site["width_m"] - s, site["length_m"] - s, 0), (s, site["length_m"] - s, 0)], close=True, dxfattribs={"layer": "291-WS-FENC-N"})
     records = parts.get("inverters") or {}
     for inv in geometry["inverters"]:
         if inv.get("x") is None:
@@ -268,7 +268,7 @@ def build_common(geometry: Dict[str, Any], parts: Optional[Dict[str, Any]] = Non
         if det is None:
             name = f"{INVERTER_BLOCK}-PAD-{inv['width_m']:g}x{inv['depth_m']:g}"
             if name not in doc.blocks:
-                _add(doc.blocks.new(name), "PV-3D-INVERSORES", box(0, 0, 0, inv["width_m"], inv["depth_m"], PAD_HEIGHT_M))
+                _add(doc.blocks.new(name), "291-WS-POWR-EQPM-N", box(0, 0, 0, inv["width_m"], inv["depth_m"], PAD_HEIGHT_M))
             at = (inv["x"] - inv["width_m"] / 2, inv["y"] - inv["depth_m"] / 2, 0.0)
         else:
             w, _, d = det["size"]
@@ -276,9 +276,9 @@ def build_common(geometry: Dict[str, Any], parts: Optional[Dict[str, Any]] = Non
             if name not in doc.blocks:
                 _inverter_block(doc, det, name)
             at = (inv["x"] - w / 2, inv["y"] - d / 2, 0.0)
-        msp.add_blockref(name, at, dxfattribs={"layer": "PV-3D-INVERSORES"})
+        msp.add_blockref(name, at, dxfattribs={"layer": "291-WS-POWR-EQPM-N"})
     st = geometry["station"]
-    _add(msp, "PV-3D-ESTACION", box(st["x"], st["y"], 0, st["width_m"], st["depth_m"], STATION_HEIGHT_M))
+    _add(msp, "291-WS-POWR-XFMR-PADM-N", box(st["x"], st["y"], 0, st["width_m"], st["depth_m"], STATION_HEIGHT_M))
     return doc
 
 
@@ -306,7 +306,7 @@ def write_assembly(geometry: Dict[str, Any], result: Dict[str, Any], out_dir, na
     for path in written:
         ref = path.stem.replace(stem + "_", "PV-PART-")
         master.add_xref_def(path.name, ref)
-        master.modelspace().add_blockref(ref, (0.0, 0.0, 0.0), dxfattribs={"layer": "PV-3D-ESTRUCTURA"})
+        master.modelspace().add_blockref(ref, (0.0, 0.0, 0.0), dxfattribs={"layer": "291-WS-STRC-N"})
     master_path = out / f"{stem}.dxf"
     deliverable.finish_draft(master, master_path, None, stamp_date, stem)
     return {"master": master_path, "parts": written, "sectors": len(groups)}

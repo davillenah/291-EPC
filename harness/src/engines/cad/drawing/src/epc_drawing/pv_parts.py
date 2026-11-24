@@ -4,7 +4,7 @@ Nothing here invents a value. A dimension comes from the record, with the status
 dimension is used and the part goes to the fallback layer, so the person can tell sourced geometry from a drawing convention. The records are handed in by the caller (this engine does not import `epc_pv`):
 
   find_record(data_dir, record_id) -> dict | None     the JSON record whose `id` is `record_id`, searched under `data_dir`
-  layer_for(status) -> str                            `PV-3D-REF-UNVERIFIED`, `PV-3D-REF-TYPICAL` or `PV-3D-REF-FALLBACK`
+  layer_for(status) -> str                            `291-WS-ANNO-NOTE`, `291-WS-ANNO-SYMB` or `291-WS-ANNO-REFR`
   module_detail(record, length_m, width_m, thick_m, level) -> dict      parts of one module in its own frame (u along the short side, s along the long, w normal)
   post_section(record) -> dict | None                                   the section of the post of a mounting structure record, as polygons in metres, with its layer
   inverter_detail(record, level) -> dict                                parts of one inverter in metres (x width, y height, z depth; wall at z=0)
@@ -20,9 +20,9 @@ LEVELS = ("low", "standard", "full")
 FRAME_WIDTH_M = 0.035          # reference frame face width when the record gives no section
 JBOX_M = (0.12, 0.07, 0.02)    # reference junction box (along, across, depth) when the record gives none
 CONNECTOR_M = 0.05             # reference length of a terminal hanging under an inverter
-STATUS_LAYER = {"unverified": "PV-3D-REF-UNVERIFIED", "typical": "PV-3D-REF-TYPICAL"}
-FALLBACK_LAYER = "PV-3D-REF-FALLBACK"
-REF_LAYERS = {"PV-3D-REF-UNVERIFIED": 40, "PV-3D-REF-TYPICAL": 30, "PV-3D-REF-FALLBACK": 6}
+STATUS_LAYER = {"unverified": "291-WS-ANNO-NOTE", "typical": "291-WS-ANNO-SYMB"}
+FALLBACK_LAYER = "291-WS-ANNO-REFR"
+REF_LAYERS = {"291-WS-ANNO-NOTE": 40, "291-WS-ANNO-SYMB": 30, "291-WS-ANNO-REFR": 6}
 _cache: Dict[Tuple[str, str], Optional[Dict[str, Any]]] = {}
 
 

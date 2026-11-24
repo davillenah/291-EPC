@@ -1,5 +1,5 @@
 """The plan as the person drew it, for a vector PDF: the pictures of its page, cut to the frame of the recognized plan and put in an SVG of that frame, so that what is shown is the sheet itself (its fills, its colours, its tags)
-and the walls, doors and windows found lie over it exactly. The page is drawn once for each layer (the walls, the doors, the windows, the axes, the dimensions, the labels and, in `ARQ-FONDO`, all the rest), each from the
+and the walls, doors and windows found lie over it exactly. The page is drawn once for each layer (the walls, the doors, the windows, the axes, the dimensions, the labels and, in `291-A-ANNO-REFR`, all the rest), each from the
 objects of the page that belong to it, so that a layer can be hidden by taking its group out. The page and the plan space are tied by the texts both have (a text that is once in the page and once in the plan says where a point
 of the page went); when they cannot be tied well enough the plan is shown as the engine draws it."""
 import base64
@@ -50,9 +50,9 @@ def fit(page: List[Text], plan: List[Text], side: float) -> Optional[Tuple[float
 
 
 Tie = Tuple[float, float, float]
-LAYERS = (("ARQ-FONDO", "arq.background"), ("ARQ-MUROS", "arq.wall"), ("ARQ-PUERTAS", "arq.door"), ("ARQ-VENTANAS", "arq.window"), ("ARQ-HUECOS", "arq.opening"),
-          ("ARQ-EJES", "arq.axes"), ("ARQ-COTAS", "arq.dimension"), ("ARQ-ETIQUETAS", "arq.label"))
-NOTE_OF = (("axes", "ARQ-EJES"), ("dimensions", "ARQ-COTAS"), ("labels", "ARQ-ETIQUETAS"))        # in the order a stroke is given to one of them
+LAYERS = (("291-A-ANNO-REFR", "arq.background"), ("291-A-WALL-FULL-N", "arq.wall"), ("291-A-DOOR-N", "arq.door"), ("291-A-GLAZ-N", "arq.window"), ("291-A-WALL-JAMB-N", "arq.opening"),
+          ("291-A-GRID", "arq.axes"), ("291-A-ANNO-DIMS", "arq.dimension"), ("291-A-ANNO-IDEN", "arq.label"))
+NOTE_OF = (("axes", "291-A-GRID"), ("dimensions", "291-A-ANNO-DIMS"), ("labels", "291-A-ANNO-IDEN"))        # in the order a stroke is given to one of them
 GRID = 0.5                                                  # points: how near the ends of a stroke of the page must be to those of a mark
 MATCHED = 0.5                                               # of the elements of an object that have to be those of a mark
 
@@ -109,10 +109,10 @@ def _text_kind(bounds: Tuple[float, float, float, float], marks) -> Optional[str
 
 def _opening_layer(arch: Architecture, c: Tuple[float, float], size: float) -> Optional[str]:
     """A small object near a door, a window or an opening is that one's (the swing, the leaf, the frame, the glass)."""
-    layer_of = {"door": "ARQ-PUERTAS", "window": "ARQ-VENTANAS"}
+    layer_of = {"door": "291-A-DOOR-N", "window": "291-A-GLAZ-N"}
     for o in arch.openings:
         if size <= 1.4 * o.width and math.hypot(c[0] - o.at[0], c[1] - o.at[1]) <= 0.85 * o.width:
-            return layer_of.get(o.kind, "ARQ-HUECOS")
+            return layer_of.get(o.kind, "291-A-WALL-JAMB-N")
     return None
 
 
@@ -145,7 +145,7 @@ def _solid_wall(arch: Architecture, bounds, tie: Tie) -> bool:
 
 def _building_layer(arch: Architecture, bounds, tie: Tie) -> str:
     c, size, _ = _centre_and_sizes(bounds, tie)
-    return _opening_layer(arch, c, size) or ("ARQ-MUROS" if _in_wall(arch, c) else "ARQ-FONDO")
+    return _opening_layer(arch, c, size) or ("291-A-WALL-FULL-N" if _in_wall(arch, c) else "291-A-ANNO-REFR")
 
 
 def classify(page, arch: Architecture, tie: Tie) -> Dict[int, str]:
@@ -155,13 +155,13 @@ def classify(page, arch: Architecture, tie: Tie) -> Dict[int, str]:
     for i, obj in enumerate(page.get_objects()):
         bounds = obj.get_bounds()
         if obj.type == raw.FPDF_PAGEOBJ_TEXT:
-            out[i] = _text_kind(bounds, marks) or "ARQ-FONDO"
+            out[i] = _text_kind(bounds, marks) or "291-A-ANNO-REFR"
         elif obj.type == raw.FPDF_PAGEOBJ_PATH:
             part = Primitives(source="pdf")
             _path_geometry(obj.raw, part, [])
-            out[i] = "ARQ-MUROS" if _solid_wall(arch, bounds, tie) else _stroke_kind(part, marks) or _building_layer(arch, bounds, tie)
+            out[i] = "291-A-WALL-FULL-N" if _solid_wall(arch, bounds, tie) else _stroke_kind(part, marks) or _building_layer(arch, bounds, tie)
         else:
-            out[i] = "ARQ-FONDO"
+            out[i] = "291-A-ANNO-REFR"
     return out
 
 

@@ -54,14 +54,14 @@ class TestBackdrop(unittest.TestCase):
         axis.lines = [Line((100.0, 550.0), (100.0, 50.0))]
         other = Primitives(source="pdf")
         other.lines = [Line((300.0, 300.0), (400.0, 300.0))]
-        self.assertEqual(_stroke_kind(axis, marks), "ARQ-EJES")
+        self.assertEqual(_stroke_kind(axis, marks), "291-A-GRID")
         self.assertIsNone(_stroke_kind(other, marks))
-        self.assertEqual(_text_kind((299.0, 395.0, 330.0, 405.0), marks), "ARQ-ETIQUETAS")        # a text object that holds the start of a label
+        self.assertEqual(_text_kind((299.0, 395.0, 330.0, 405.0), marks), "291-A-ANNO-IDEN")        # a text object that holds the start of a label
         self.assertIsNone(_text_kind((10.0, 10.0, 20.0, 20.0), marks))
 
     def test_what_is_small_and_near_a_door_is_the_door_and_a_thick_piece_on_a_wall_is_the_wall(self):
         arch = self._arch()
-        self.assertEqual(_opening_layer(arch, (510.0, 320.0), 30.0), "ARQ-PUERTAS")
+        self.assertEqual(_opening_layer(arch, (510.0, 320.0), 30.0), "291-A-DOOR-N")
         self.assertIsNone(_opening_layer(arch, (510.0, 320.0), 300.0))             # too big to be a part of the door
         tie = (1.0, 0.0, 600.0)
         self.assertTrue(_solid_wall(arch, (200.0, 295.0, 260.0, 305.0), tie))        # as thick as the wall (10) and on it

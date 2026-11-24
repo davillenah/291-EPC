@@ -14,7 +14,7 @@ from typing import Any, Dict, List, Optional, Tuple
 from epc_arch.model import Architecture, Level, Opening, Wall
 from epc_arch.sections import _W, _checked, _cut_pieces, _minus, _plan_in_metres
 
-LAYERS = {"wall": "A-WALL-CUT", "slab": "A-WALL-FILL", "glass": "A-WINDOW-GLASS", "room": "A-ROOM"}
+LAYERS = {"wall": "291-A-WALL-FULL-N", "slab": "291-A-WALL-PATT-N", "glass": "291-A-GLAZ-FULL-N", "room": "291-A-AREA"}
 ROOM_PLATE = 0.01                          # metres: the thickness of the plate that marks a room on the floor
 Box = Tuple[float, float, float, float, float, float]      # x0, y0, z0, x1, y1, z1 in the plan frame (y down)
 

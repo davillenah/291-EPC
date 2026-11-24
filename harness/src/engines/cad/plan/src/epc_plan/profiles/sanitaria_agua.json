@@ -54,7 +54,8 @@
         "z_m": 2.6,
         "ancho_m": 0.025,
         "alto_m": 0.025
-      }
+      },
+      "seccion": "round"
     },
     {
       "id": "AC",
@@ -73,7 +74,8 @@
         "z_m": 2.6,
         "ancho_m": 0.025,
         "alto_m": 0.025
-      }
+      },
+      "seccion": "round"
     }
   ],
   "nodos": [

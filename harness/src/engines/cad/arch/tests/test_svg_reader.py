@@ -86,7 +86,7 @@ class TestTitleLayers(unittest.TestCase):
     def test_the_layers_named_for_the_title_block_are_not_part_of_the_plan(self):
         from epc_arch.model import Line, Primitives
         from epc_arch.pipeline import _without_title
-        prims = Primitives(source="svg", lines=[Line((0.0, 0.0), (1.0, 0.0), 0.0, "A-MUROS-30"), Line((0.0, 0.0), (9.0, 0.0), 0.0, "A-ROTULO"), Line((0.0, 1.0), (9.0, 1.0), 0.0, "A-TITLE"), Line((0.0, 2.0), (1.0, 2.0), 0.0, "A-VENTANAS")])
+        prims = Primitives(source="svg", lines=[Line((0.0, 0.0), (1.0, 0.0), 0.0, "A-MUROS-30"), Line((0.0, 0.0), (9.0, 0.0), 0.0, "A-ROTULO"), Line((0.0, 1.0), (9.0, 1.0), 0.0, "0-Titleblock"), Line((0.0, 2.0), (1.0, 2.0), 0.0, "A-VENTANAS")])
         self.assertEqual([l.layer for l in _without_title(prims).lines], ["A-MUROS-30", "A-VENTANAS"])
 
     def test_a_drawing_with_no_such_layer_is_left_as_it_is(self):

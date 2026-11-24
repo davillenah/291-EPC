@@ -1,10 +1,10 @@
-"""The sheet around the plan: frame, title block, graphic scale and north arrow, all in layer A-TITLE and in paper millimetres."""
+"""The sheet around the plan: frame, title block, graphic scale and north arrow, all in layer 0-Titleblock and in paper millimetres."""
 from typing import Tuple
 
 from epc_arch.drawing import Drawing, Poly, TextItem
 from epc_arch.model import Architecture
 
-LAYER = "A-TITLE"
+LAYER = "0-Titleblock"
 
 
 def _rect(x0: float, y0: float, x1: float, y1: float, fill=None) -> Poly:

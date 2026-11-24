@@ -18,7 +18,7 @@ def _room(x0=0.0, y0=0.0, x1=60.0, y1=40.0, name="DORMITORIO") -> Room:
 
 
 def _bar(x0, y0, x1, y1):
-    return Poly(((x0, y0), (x1, y0), (x1, y1), (x0, y1)), "A-WALL-CUT", closed=True, fill="layer")
+    return Poly(((x0, y0), (x1, y0), (x1, y1), (x0, y1)), "291-A-WALL-FULL-N", closed=True, fill="layer")
 
 
 def _box_of(t: TextItem):
@@ -55,14 +55,14 @@ class TestLabelPlacer(unittest.TestCase):
 
     def test_a_round_tag_on_a_wall_is_moved_onto_the_floor(self):
         wall = _bar(28.0, 0.0, 32.0, 40.0)
-        circle = ArcItem((30.0, 20.0), 3.0, 0.0, 359.9, "A-ANNO")
-        text = TextItem("P-01", (30.0, 20.5), "TXT_18", "A-ANNO", "middle")
+        circle = ArcItem((30.0, 20.0), 3.0, 0.0, 359.9, "291-A-ANNO")
+        text = TextItem("P-01", (30.0, 20.5), "TXT_18", "291-A-ANNO", "middle")
         moved = move_round_tags([wall, circle, text], [_room(x0=0.0, x1=28.0), _room(x0=32.0, x1=60.0)], M)
         c = [i for i in moved if isinstance(i, ArcItem)][0]
         self.assertTrue(c.c[0] + c.r <= 28.0 or c.c[0] - c.r >= 32.0)
 
     def test_a_round_tag_that_touches_nothing_stays(self):
-        circle = ArcItem((10.0, 10.0), 3.0, 0.0, 359.9, "A-ANNO")
+        circle = ArcItem((10.0, 10.0), 3.0, 0.0, 359.9, "291-A-ANNO")
         moved = move_round_tags([circle], [_room()], M)
         self.assertEqual([i.c for i in moved if isinstance(i, ArcItem)], [(10.0, 10.0)])
 

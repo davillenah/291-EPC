@@ -84,13 +84,13 @@ class TestDrawingOnAnIramSheet(unittest.TestCase):
     def test_the_sheet_is_the_iram_one_and_the_plan_is_in_its_free_area(self):
         d = self.drawing
         self.assertEqual((d.sheet, d.size, d.template), ("A3", (420.0, 297.0), "A3"))
-        walls = [i for i in d.of("A-WALL-CUT") if isinstance(i, Poly)]
+        walls = [i for i in d.of("291-A-WALL-FULL-N") if isinstance(i, Poly)]
         xs = [p[0] for w in walls for p in w.points]
         ys = [p[1] for w in walls for p in w.points]
         self.assertTrue(35.0 <= min(xs) and max(xs) <= 400.0 and 20.0 <= min(ys) and max(ys) <= 204.5)
 
     def test_the_title_block_has_the_scale_the_plan_is_drawn_at_and_the_given_fields(self):
-        texts = {i.value for i in self.drawing.of("A-TITLE") if isinstance(i, TextItem)}
+        texts = {i.value for i in self.drawing.of("0-Titleblock") if isinstance(i, TextItem)}
         self.assertTrue({f"1:{self.drawing.scale}", "Casa de prueba"} <= texts)
         self.assertIn(self.drawing.title, texts)                              # the sheet had only the `{denominacion}` sample: the plan's name goes there
 

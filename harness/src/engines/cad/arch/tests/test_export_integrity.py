@@ -34,7 +34,7 @@ class TestExportIntegrity(unittest.TestCase):
         self.assertAlmostEqual(doc.header["$LTSCALE"], self.drawing.scale / 1000.0)
 
     def test_svg_and_dxf_have_the_same_layers(self):
-        in_svg = set(re.findall(r'<g id="(A-[A-Z-]+)"', self.svg))
+        in_svg = set(re.findall(r'<g id="(291-[A-Z0-9-]+|0-[A-Za-z]+)"', self.svg))
         doc = ezdxf.read(io.StringIO(self.dxf))
         used = {e.dxf.layer for e in doc.modelspace()}
         used |= {e.dxf.layer for ins in doc.modelspace().query("INSERT") for e in doc.blocks.get(ins.dxf.name)}        # doors and windows are blocks: their lines are in the block
@@ -42,8 +42,8 @@ class TestExportIntegrity(unittest.TestCase):
 
     def test_layers_of_the_dxf_carry_the_style(self):
         doc = ezdxf.read(io.StringIO(self.dxf))
-        self.assertEqual(doc.layers.get("A-WALL-CUT").dxf.lineweight, 50)
-        self.assertEqual(doc.layers.get("A-DOOR-SWING").dxf.linetype, "DASHED")
+        self.assertEqual(doc.layers.get("291-A-WALL-FULL-N").dxf.lineweight, 50)
+        self.assertEqual(doc.layers.get("291-A-DOOR-FULL-N").dxf.linetype, "DASHED")
 
     def test_the_svg_is_in_paper_millimetres(self):
         self.assertIn('width="420mm" height="297mm"', self.svg)

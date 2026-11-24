@@ -14,8 +14,8 @@ from epc_drawing import pv_model3d as m3
 from epc_drawing.errors import DrawingError
 
 SLAB_M, STANDOFF_M, MODULE_M, OBSTACLE_M, SPACING_M = 0.2, 0.12, 0.035, 1.0, 3.0
-LAYER_ROOF = "PV-3D-CUBIERTA"
-LAYERS = {**m3.LAYERS, LAYER_ROOF: 8, "PV-3D-OBSTACULOS": 1}
+LAYER_ROOF = "291-WS-ROOF-N"
+LAYERS = {**m3.LAYERS, LAYER_ROOF: 8, "291-WS-OBST-N": 1}
 
 
 def build(roof: Dict[str, Any], result: Dict[str, Any]):
@@ -37,9 +37,9 @@ def build(roof: Dict[str, Any], result: Dict[str, Any]):
         m3._add(msp, LAYER_ROOF, m3.tilted_box(origin, t, 0.0, 0.0, -SLAB_M, width, slope, SLAB_M))
         md, mw = float(p["module"]["depth_m"]), float(p["module"]["width_m"])
         for c in p.get("cells", []):
-            m3._add(msp, "PV-3D-MODULOS", m3.tilted_box(origin, t, float(c["x"]), slope - float(c["y"]) - md, STANDOFF_M, mw, md, MODULE_M))
+            m3._add(msp, "291-WS-PVMD-N", m3.tilted_box(origin, t, float(c["x"]), slope - float(c["y"]) - md, STANDOFF_M, mw, md, MODULE_M))
         for o in p.get("obstacles", []):
-            m3._add(msp, "PV-3D-OBSTACULOS", m3.tilted_box(origin, t, float(o["x"]), slope - float(o["y"]) - float(o["depth_m"]), 0.0, float(o["width_m"]), float(o["depth_m"]), OBSTACLE_M))
+            m3._add(msp, "291-WS-OBST-N", m3.tilted_box(origin, t, float(o["x"]), slope - float(o["y"]) - float(o["depth_m"]), 0.0, float(o["width_m"]), float(o["depth_m"]), OBSTACLE_M))
         x += width + 2.0
     return doc
 

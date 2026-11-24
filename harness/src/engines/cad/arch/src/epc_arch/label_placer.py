@@ -13,7 +13,7 @@ RES = 2.0                   # grid cells per mm of paper
 MARGIN = 0.5                # mm of clear paper left around what is drawn
 STYLE = "TXT_18"
 LINE = 1.25                 # line spacing, in text heights
-ROOM_LAYER = "A-ROOM"
+ROOM_LAYER = "291-A-AREA"
 Pt = Tuple[float, float]
 
 
@@ -110,7 +110,7 @@ def _texts(lines: List[str], centre: Pt, height: float, layer: str) -> List[Text
     return [TextItem(t, (centre[0], centre[1] + (i - (n - 1) / 2) * LINE * height + 0.35 * height), STYLE, layer, "middle") for i, t in enumerate(lines)]
 
 
-def place_room_labels(rooms: List[Room], items: List[object], m, tagged: set = frozenset(), layer: str = "A-ROOM-TAG") -> List[TextItem]:
+def place_room_labels(rooms: List[Room], items: List[object], m, tagged: set = frozenset(), layer: str = "291-A-AREA-IDEN") -> List[TextItem]:
     style = load_style()
     if not rooms:
         return []
@@ -135,7 +135,7 @@ def _circle_groups(items: List[object]) -> dict:
     """The arcs of the annotations that make a circle, by centre and radius."""
     groups: dict = {}
     for it in items:
-        if isinstance(it, ArcItem) and it.layer == "A-ANNO":
+        if isinstance(it, ArcItem) and it.layer == "291-A-ANNO":
             groups.setdefault((round(it.c[0], 1), round(it.c[1], 1), round(it.r, 1)), []).append(it)
     return groups
 
@@ -153,8 +153,8 @@ def _notes_in(notes: List[TextItem], cx: float, cy: float, r: float) -> List[Tex
 
 def _circles(items: List[object]) -> List[Tuple[List[ArcItem], List[TextItem], Pt, float]]:
     """The round tags of the annotations (a circle drawn as arcs, with the text inside it) that no leader hangs from: (arcs, texts, centre, radius) each. Those with a leader stay where they are."""
-    leaders = [it for it in items if isinstance(it, Poly) and it.layer == "A-ANNO" and len(it.points) == 2]
-    notes = [t for t in items if isinstance(t, TextItem) and t.layer == "A-ANNO"]
+    leaders = [it for it in items if isinstance(it, Poly) and it.layer == "291-A-ANNO" and len(it.points) == 2]
+    notes = [t for t in items if isinstance(t, TextItem) and t.layer == "291-A-ANNO"]
     out = []
     for (cx, cy, r), arcs in _circle_groups(items).items():
         if _is_round_tag(arcs, cx, cy, r, leaders):

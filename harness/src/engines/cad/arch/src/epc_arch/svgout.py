@@ -1,4 +1,4 @@
-"""The recognized plan as an SVG with layers: the original linework faint underneath and, over it, one group per kind of element (`ARQ-MUROS`, `ARQ-PUERTAS`, `ARQ-VENTANAS`, `ARQ-HUECOS`),
+"""The recognized plan as an SVG with layers: the original linework faint underneath and, over it, one group per kind of element (`291-A-WALL-FULL-N`, `291-A-DOOR-N`, `291-A-GLAZ-N`, `291-A-WALL-JAMB-N`),
 each element with its id and confidence. The SVG is the frame of the plan space (see `model`): one unit of the SVG is one unit of the coordinates in the result.
 
 Drawn by the conventions of architectural drawing (Sierra Mejía, *Dibujo técnico arquitectónico: estándares básicos*): the weight of a line says what it is. Cut walls are the heaviest (solid
@@ -12,8 +12,8 @@ from epc_arch.config import PARAMS
 from epc_arch.geometry import arc_point, arc_span, axis_of, segment_distance
 from epc_arch.model import Architecture, Opening, Primitives, Wall
 
-LAYERS = (("ARQ-MUROS", "arq.wall"), ("ARQ-PUERTAS", "arq.door"), ("ARQ-VENTANAS", "arq.window"), ("ARQ-HUECOS", "arq.opening"))
-NOTE_LAYERS = (("axes", "ARQ-EJES", "arq.axes", "#8a94a6"), ("dimensions", "ARQ-COTAS", "arq.dimension", "#c0392b"), ("labels", "ARQ-ETIQUETAS", "arq.label", "#3b6ea5"))     # annotations: apart from the building, in layers that the disciplines other than architecture hide
+LAYERS = (("291-A-WALL-FULL-N", "arq.wall"), ("291-A-DOOR-N", "arq.door"), ("291-A-GLAZ-N", "arq.window"), ("291-A-WALL-JAMB-N", "arq.opening"))
+NOTE_LAYERS = (("axes", "291-A-GRID", "arq.axes", "#8a94a6"), ("dimensions", "291-A-ANNO-DIMS", "arq.dimension", "#c0392b"), ("labels", "291-A-ANNO-IDEN", "arq.label", "#3b6ea5"))     # annotations: apart from the building, in layers that the disciplines other than architecture hide
 INK, PAPER, GLASS, DOOR, HOLE, SWEEP = "#1f2933", "#ffffff", "#3b82c4", "#6b7280", "#9aa5b1", "#f1efe9"
 Pt = Tuple[float, float]
 FONT = "Arial, Helvetica, sans-serif"
@@ -245,10 +245,10 @@ def render(arch: Architecture, prims: Primitives, background: bool = True, limit
     out = [f'<svg xmlns="http://www.w3.org/2000/svg" width="{_f(vw)}" height="{_f(vh)}" viewBox="{_f(vx)} {_f(vy)} {_f(vw)} {_f(vh)}" data-source="{escape(arch.source)}">',
            f'<rect x="{_f(vx)}" y="{_f(vy)}" width="{_f(vw)}" height="{_f(vh)}" fill="{PAPER}"/>']
     if background:
-        out += ['<g id="ARQ-FONDO" data-layer="arq.background" fill="none" stroke="#2b3038" stroke-opacity="0.85">', *_background(prims, limit, hairline(arch)), "</g>"]
+        out += ['<g id="291-A-ANNO-REFR" data-layer="arq.background" fill="none" stroke="#2b3038" stroke-opacity="0.85">', *_background(prims, limit, hairline(arch)), "</g>"]
     walls_svg, doors, windows, holes = _layer_items(arch)
     out += [f'<g id="{LAYERS[0][0]}" data-layer="{LAYERS[0][1]}">', *walls_svg, "</g>"]
-    out += ['<g id="ARQ-CORTES" data-layer="arq.cut">', *[_cut(o, T) for o in arch.openings], "</g>"]
+    out += ['<g id="291-A-SECT" data-layer="arq.cut">', *[_cut(o, T) for o in arch.openings], "</g>"]
     for (gid, role), items in zip(LAYERS[1:], (doors, windows, holes)):
         out += [f'<g id="{gid}" data-layer="{role}">', *items, "</g>"]
     out += _notes(arch)
@@ -257,14 +257,14 @@ def render(arch: Architecture, prims: Primitives, background: bool = True, limit
     out.append(f'<line x1="{_f(x0)}" y1="{_f(y1 + margin * 0.6)}" x2="{_f(x1)}" y2="{_f(y1 + margin * 0.6)}" stroke="{HOLE}" stroke-width="{_f(hairline(arch))}"/>')
     title = escape(arch.level.name.upper()) if arch.level else "PLANTA ARQUITECTÓNICA"
     scale = f"Escala 1:{arch.drawing_scale}" if arch.drawing_scale else ("Escala gráfica" if arch.units_per_metre else "Sin escala")
-    out.append(f'<g id="ARQ-ROTULO" data-layer="arq.title"><text x="{_f(x0)}" y="{_f(ty)}" font-family="{FONT}" font-size="{_f(fs * 1.25)}" font-weight="700" letter-spacing="{_f(fs * 0.08)}" fill="{INK}">{title}</text>'
+    out.append(f'<g id="0-Titleblock" data-layer="arq.title"><text x="{_f(x0)}" y="{_f(ty)}" font-family="{FONT}" font-size="{_f(fs * 1.25)}" font-weight="700" letter-spacing="{_f(fs * 0.08)}" fill="{INK}">{title}</text>'
                f'<text x="{_f(x0)}" y="{_f(ty + fs * 1.3)}" font-family="{FONT}" font-size="{_f(fs * 0.8)}" fill="{HOLE}">{scale}</text></g>')
-    out.append(f'<text id="ARQ-LEYENDA" x="{_f(x1)}" y="{_f(ty + fs * 1.3)}" text-anchor="end" font-family="{FONT}" font-size="{_f(fs * 0.75)}" fill="{HOLE}">{escape(_caption(arch, walls))}</text>')
+    out.append(f'<text id="291-A-ANNO-LEGN" x="{_f(x1)}" y="{_f(ty + fs * 1.3)}" text-anchor="end" font-family="{FONT}" font-size="{_f(fs * 0.75)}" fill="{HOLE}">{escape(_caption(arch, walls))}</text>')
     if arch.units_per_metre:
         metres = min((1, 2, 5, 10, 20), key=lambda m: abs(m * arch.units_per_metre - side / 5))
         length = metres * arch.units_per_metre
         bx, by, bh = x1 - length, ty - fs * 0.9, fs * 0.3
-        out.append(f'<g id="ARQ-ESCALA" data-layer="arq.scale"><rect x="{_f(bx)}" y="{_f(by)}" width="{_f(length / 2)}" height="{_f(bh)}" fill="{INK}"/>'
+        out.append(f'<g id="291-A-ANNO-SYMB" data-layer="arq.scale"><rect x="{_f(bx)}" y="{_f(by)}" width="{_f(length / 2)}" height="{_f(bh)}" fill="{INK}"/>'
                    f'<rect x="{_f(bx + length / 2)}" y="{_f(by)}" width="{_f(length / 2)}" height="{_f(bh)}" fill="{PAPER}" stroke="{INK}" stroke-width="{_f(hairline(arch))}"/>'
                    f'<text x="{_f(bx)}" y="{_f(by - fs * 0.25)}" font-family="{FONT}" font-size="{_f(fs * 0.6)}" fill="{INK}">0</text>'
                    f'<text x="{_f(x1)}" y="{_f(by - fs * 0.25)}" text-anchor="end" font-family="{FONT}" font-size="{_f(fs * 0.6)}" fill="{INK}">{metres} m</text></g>')

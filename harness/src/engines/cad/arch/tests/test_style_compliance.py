@@ -1,4 +1,4 @@
-"""Every layer, pen, linetype and text style a drawing uses exists in `epc_style.json`; names follow the English convention."""
+"""Every layer, pen, linetype and text style a drawing uses exists in `epc_style.json`; names follow the NCS / AIA convention."""
 import re
 import sys
 import unittest
@@ -35,7 +35,7 @@ class TestStyleCompliance(unittest.TestCase):
 
     def test_names_follow_the_convention(self):
         for name in self.style.layers:
-            self.assertRegex(name, r"^A-[A-Z]+(-[A-Z]+)*$")
+            self.assertRegex(name, r"^(291-[A-Z]{1,2}(-[A-Z]{4}){1,3}(-[A-Z0-9])?|0-[A-Za-z]+)$")        # NCS / AIA: 291-<discipline>-<major>-<minor>-<status>, or a 0- layer outside the standard
         for name in self.style.pens:
             self.assertRegex(name, r"^pen_\d{3}$")
         for name in self.style.text_styles:

@@ -17,28 +17,28 @@ class TestCatalog(unittest.TestCase):
     def test_the_default_catalog_is_valid_and_has_the_diagram_and_plan_roles(self):
         cat = L.load()
         self.assertEqual(L.validate(cat), {})
-        self.assertEqual(L.name("sld.diagram", cat), "291-E-DIAGRAMA")
+        self.assertEqual(L.name("sld.diagram", cat), "291-E-DIAG")
         self.assertTrue({"sld.text", "sld.titleblock", "sld.sheet", "plan.ELEC-LUM", "plan.SAN-CLOACA", "plan.PLAN-TAG"} <= set(cat))
 
     def test_the_layers_are_grouped_by_discipline_by_the_prefix_of_their_names(self):
         groups = {g["id"]: g for g in L.by_discipline()}
         self.assertEqual(list(groups)[:3], ["arquitectura", "civil", "mecanica"])                # the order a project is worked
-        self.assertIn("ELEC-CABLE", [x["name"] for x in groups["electrica"]["layers"]])
-        self.assertTrue({"HVAC-DUCTO", "HVAC-EQUIPO"} <= {x["name"] for x in groups["hvac"]["layers"]})
-        self.assertTrue({"PCI-ROCIADOR", "PCI-DETECTOR"} <= {x["name"] for x in groups["pci"]["layers"]})
+        self.assertIn("291-E-POWR-CABL-N", [x["name"] for x in groups["electrica"]["layers"]])
+        self.assertTrue({"291-M-HVAC-DUCT-N", "291-M-HVAC-EQPM-N"} <= {x["name"] for x in groups["hvac"]["layers"]})
+        self.assertTrue({"291-F-SPKL-N", "291-F-PROT-SMOK-N"} <= {x["name"] for x in groups["pci"]["layers"]})
         self.assertEqual(groups["sanitaria"]["profile"], "sanitaria_cloacas")
         self.assertEqual([groups[k]["profile"] for k in ("hvac", "pci", "comunicaciones")], ["hvac", "pci", "comunicaciones"])
         self.assertEqual(groups["arquitectura"]["profile"], "arquitectura")
-        self.assertIn("291-E-DIAGRAMA", [x["name"] for x in groups["diagramas"]["layers"]])
+        self.assertIn("291-E-DIAG", [x["name"] for x in groups["diagramas"]["layers"]])
         grouped = {x["name"] for g in groups.values() for x in g["layers"]}
         self.assertEqual(grouped, {a["name"] for a in L.load().values()})                       # every layer of the catalog belongs to some discipline
 
-    def test_a_layer_renamed_in_a_file_moves_with_its_prefix_and_a_colour_has_a_hex(self):
+    def test_a_layer_renamed_in_a_file_stays_in_the_discipline_of_its_role_and_a_colour_has_a_hex(self):
         cat = L.load()
         cat["plan.ELEC-CABLE"] = {**cat["plan.ELEC-CABLE"], "name": "HVAC-X"}
         names = {g["id"]: [x["name"] for x in g["layers"]] for g in L.by_discipline(cat)}
-        self.assertIn("HVAC-X", names["hvac"])
-        self.assertNotIn("HVAC-X", names["electrica"])
+        self.assertIn("HVAC-X", names["electrica"])                 # the group follows the role, the name follows the NCS convention
+        self.assertNotIn("HVAC-X", names["hvac"])
         self.assertEqual(L.aci_hex(1), "#ff0000")
         self.assertEqual(L.aci_hex(7), "#000000")
 
@@ -48,7 +48,7 @@ class TestCatalog(unittest.TestCase):
             f.write_text(json.dumps({"layers": {"sld.diagram": {"name": "DIAGRAMA", "color": 3}, "custom.x": {**L.BLANK, "name": "X"}}}), encoding="utf-8")
             cat = L.load(f)
             self.assertEqual((cat["sld.diagram"]["name"], cat["sld.diagram"]["color"], cat["sld.diagram"]["lineweight"]), ("DIAGRAMA", 3, None))
-            self.assertEqual(cat["sld.text"]["name"], "291-E-TEXTOS")
+            self.assertEqual(cat["sld.text"]["name"], "291-E-DIAG-TEXT")
             self.assertIn("custom.x", cat)
             os.environ[L.ENV_VAR] = str(f)                                   # the global file the MASTER edits
             try:
@@ -58,7 +58,7 @@ class TestCatalog(unittest.TestCase):
 
     def test_validation_names_each_wrong_field(self):
         cat = L.load()
-        cat["sld.text"] = {**cat["sld.text"], "name": "291-E-DIAGRAMA", "color": 300, "lineweight": 0.27, "linetype": "WAVY", "on": "yes"}
+        cat["sld.text"] = {**cat["sld.text"], "name": "291-E-DIAG", "color": 300, "lineweight": 0.27, "linetype": "WAVY", "on": "yes"}
         cat["sld.sheet"] = {**cat["sld.sheet"], "name": "bad:name"}
         errors = L.validate(cat)
         self.assertEqual({"sld.text.name", "sld.text.color", "sld.text.lineweight", "sld.text.linetype", "sld.text.on", "sld.sheet.name"}, set(errors))
@@ -68,8 +68,8 @@ class TestCatalog(unittest.TestCase):
         doc = ezdxf.new("R2018")
         cat = L.load()
         cat["sld.diagram"] = {**cat["sld.diagram"], "color": 3, "lineweight": 0.5, "locked": True, "plot": False}
-        self.assertEqual(L.apply(doc, "sld.diagram", cat), "291-E-DIAGRAMA")
-        lay = doc.layers.get("291-E-DIAGRAMA")
+        self.assertEqual(L.apply(doc, "sld.diagram", cat), "291-E-DIAG")
+        lay = doc.layers.get("291-E-DIAG")
         self.assertEqual((lay.color, lay.dxf.lineweight, lay.is_locked, lay.dxf.plot), (3, 50, True, 0))
 
     def test_an_unknown_role_gets_plain_defaults(self):
