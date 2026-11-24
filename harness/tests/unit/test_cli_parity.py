@@ -22,11 +22,11 @@ ORC = M.ORC
 CODE = "PARITY-1"
 # CLI subcommand -> api function it calls
 CLI_TO_API = {"init": "init_project", "run": "run_pipeline", "status": "status", "review": "review", "submit": "submit", "approve": "approve", "issue": "issue",
-              "engines list": "list_engines", "engines info": "engine_info", "norms": "norm_records", "norms-pending": "norms_pending",
+              "engines list": "list_engines", "engines info": "engine_info", "engines schema": "engine_schema", "norms": "norm_records", "norms-pending": "norms_pending",
               "stages": "stage_table"}
 # MCP tool -> api function it calls (every tool of the server; the older tools that read the parked web backend were archived in MIG-38b)
 MCP_TO_API = {"epc_project_init": "init_project", "epc_pipeline_run": "run_pipeline", "epc_project_status": "status", "epc_project_review": "review", "epc_project_submit": "submit",
-              "epc_project_approve": "approve", "epc_project_issue": "issue", "epc_engine_list": "list_engines", "epc_engine_info": "engine_info",
+              "epc_project_approve": "approve", "epc_project_issue": "issue", "epc_engine_list": "list_engines", "epc_engine_info": "engine_info", "epc_engine_schema": "engine_schema",
               "epc_norm_records": "norm_records", "epc_norms_pending": "norms_pending", "epc_stage_table": "stage_table"}
 MCP_ONLY = set()          # every MCP tool calls an api function since MIG-38b (the older web-backend tools were archived)
 API_HELPERS = {"ApiError", "fail", "ok", "project_path"}

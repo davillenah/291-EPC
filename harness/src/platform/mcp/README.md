@@ -24,6 +24,7 @@ Pipeline tools (MIG-33b). They call `epc_platform.api` only, the same functions 
 | `epc_stage_table` | full, readonly | The 12 stages of the pipeline: title, engines, status, wired or not. |
 | `epc_engine_list` | full, readonly | The engine packages with group, area and version. |
 | `epc_engine_info` | full, readonly | Version and public modules of one engine. |
+| `epc_engine_schema` | full, readonly | The JSON schemas an engine publishes (its input contract). |
 | `epc_norm_records` | full, readonly | Norm records and review status of one engine (or all). Read only. |
 | `epc_norms_pending` | full, readonly | Norm points still to be reviewed: units, units with pending points, pending total (`detail: true` lists the units). Platform-wide, read only. |
 | `epc_project_status` | full, readonly | Workflow state, `master_project_state`, review files and last audit events. |

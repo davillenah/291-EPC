@@ -24,6 +24,7 @@ python -m epc_platform.cli <command> [options]
 | `epc issue <project>` | `issue` | `epc_project_issue` |
 | `epc engines list [--project CODE]` | `list_engines` | `epc_engine_list` |
 | `epc engines info <name> [--project CODE]` | `engine_info` | `epc_engine_info` |
+| `epc engines schema <name> [--project CODE]` | `engine_schema` | `epc_engine_schema` |
 | `epc norms [package] [--project CODE]` | `norm_records` | `epc_norm_records` |
 | `epc norms-pending [--detail] [--project CODE]` | `norms_pending` | `epc_norms_pending` |
 | `epc stages [--project CODE]` | `stage_table` | `epc_stage_table` |

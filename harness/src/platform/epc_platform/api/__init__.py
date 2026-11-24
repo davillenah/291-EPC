@@ -11,10 +11,10 @@ Conventions
   * The only writes go through `ProjectStore`: the `/init` flow, the pipeline run and the workflow. No function here writes `ssot/` itself.
 """
 from epc_platform.api.access import project_path
-from epc_platform.api.engines import engine_info, list_engines, norm_records, norms_pending, stage_table
+from epc_platform.api.engines import engine_info, engine_schema, list_engines, norm_records, norms_pending, stage_table
 from epc_platform.api.envelope import ApiError, fail, ok
 from epc_platform.api.project import approve, init_project, issue, review, status, submit
 from epc_platform.api.run import run_pipeline
 
-__all__ = ["ApiError", "approve", "engine_info", "fail", "init_project", "issue", "list_engines", "norm_records", "norms_pending", "ok", "project_path", "review", "submit",
+__all__ = ["ApiError", "approve", "engine_info", "engine_schema", "fail", "init_project", "issue", "list_engines", "norm_records", "norms_pending", "ok", "project_path", "review", "submit",
            "run_pipeline", "stage_table", "status"]
