@@ -14,6 +14,12 @@ def wall(i, a, b, t=0.2, **kw):
     return {"id": i, "a": a, "b": b, "t": t, **kw}
 
 
+class DoorTests(unittest.TestCase):
+    def test_the_public_door_names_the_functions(self):
+        from epc_walls import api
+        self.assertEqual(sorted(api.__all__), ["WallsError", "bands", "derive", "outlines"])
+
+
 class JoinTests(unittest.TestCase):
     def test_l_t_x_and_keys(self):
         ws = [wall("A", (0, 0), (4, 0)), wall("B", (4, 0), (4, 3)), wall("C", (2, 0), (2, -3)), wall("D", (6, -1), (6, 1)), wall("E", (5, 0), (7, 0))]

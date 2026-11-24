@@ -8,10 +8,6 @@ def sub(p, q):
     return (p[0] - q[0], p[1] - q[1])
 
 
-def add(p, q):
-    return (p[0] + q[0], p[1] + q[1])
-
-
 def mul(p, k):
     return (p[0] * k, p[1] * k)
 

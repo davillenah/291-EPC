@@ -109,6 +109,14 @@ def _collect(doc, min_length, off):
     return findings, checked
 
 
+def _tally(findings, off):
+    """`(counts per rule, findings kept (at most MAX_PER_RULE per rule), rules that were cut)`."""
+    by_rule = {rule: [f for f in findings if f["rule"] == rule] for rule in RULES if rule not in off}
+    counts = {rule: len(items) for rule, items in by_rule.items()}
+    kept = [f for items in by_rule.values() for f in items[:MAX_PER_RULE]]
+    return counts, kept, sorted(r for r, n in counts.items() if n > MAX_PER_RULE)
+
+
 def verify(source, *, min_length=None, off=()):
     """`{ok, rules, counts, findings, truncated, entities_checked, min_length}` for a DXF document or file.
 
@@ -117,7 +125,6 @@ def verify(source, *, min_length=None, off=()):
     """
     _check_arguments(min_length, off)
     findings, checked = _collect(_document(source), min_length, off)
-    counts = {rule: sum(1 for f in findings if f["rule"] == rule) for rule in RULES if rule not in off}
-    kept = [f for rule in counts for f in [x for x in findings if x["rule"] == rule][:MAX_PER_RULE]]
-    return {"ok": not any(f["severity"] == "error" for f in findings), "rules": sorted(counts), "counts": counts, "findings": kept,
-            "truncated": sorted(r for r, n in counts.items() if n > MAX_PER_RULE), "entities_checked": checked, "min_length": float(min_length)}
+    counts, kept, cut = _tally(findings, off)
+    return {"ok": not any(f["severity"] == "error" for f in findings), "rules": sorted(counts), "counts": counts, "findings": kept, "truncated": cut,
+            "entities_checked": checked, "min_length": float(min_length)}
