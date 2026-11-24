@@ -2,7 +2,7 @@
 import math
 import unittest
 
-from epc_walls import WallsError, bands, derive, inputs, outlines
+from epc_walls import WallsError, assembly, bands, derive, inputs, outlines
 
 
 def area(poly):
@@ -101,6 +101,17 @@ class CornerTests(unittest.TestCase):
         r = outlines(ws, tol=0.001)
         self.assertTrue(any(i["code"] == "note_node_complex" for i in r["issues"]))
 
+    def test_t_too_sharp_keeps_the_stem_as_drawn(self):
+        s = (3 + 3 * math.cos(math.radians(10)), 3 * math.sin(math.radians(10)))
+        r = outlines([wall("H", (0, 0), (6, 0)), wall("S", (3, 0), s)], tol=0.001)
+        self.assertEqual(r["joins"][0]["applied"], "square")
+        self.assertEqual(r["issues"][0]["code"], "note_t_not_through")
+
+    def test_collinear_butt_stays_square(self):
+        r = outlines([wall("A", (0, 0), (4, 0)), wall("B", (4, 0), (8, 0))], tol=0.001, styles={"A:end|B:start": "butt"})
+        self.assertEqual(r["joins"][0]["applied"], "square")
+        self.assertEqual(r["issues"][0]["code"], "note_corner_square")
+
     def test_x_records_only(self):
         r = outlines([wall("A", (0, 0), (4, 0)), wall("B", (2, -2), (2, 2))], tol=0.001)
         self.assertEqual(r["joins"][0]["applied"], "cross")
@@ -116,6 +127,10 @@ class LayerTests(unittest.TestCase):
         self.assertEqual(w["thickness"], 110)
         self.assertEqual([b["mat"] for b in w["bands"]], ["b", "a"])
         self.assertEqual(w["bands"][1]["hi"], 55)
+
+    def test_validate_gives_the_sum(self):
+        got = assembly.validate(self.LAYERS)
+        self.assertEqual((got["thickness"], len(got["layers"])), (110, 3))
 
     def test_exterior_on_the_right(self):
         b = bands(self.LAYERS, "right")

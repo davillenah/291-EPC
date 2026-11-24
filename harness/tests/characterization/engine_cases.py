@@ -24,6 +24,8 @@ ALREADY_PINNED = {
     "epc_drawing": "harness/src/engines/cad/drawing/tests/golden",
     "epc_documents": "harness/src/engines/quality/documents/tests/golden",
     "epc_aea90364": "harness/src/engines/calculation/aea90364/tests/golden",
+    "epc_cutlist": "harness/src/engines/fabrication/cutlist/tests",   # hand-checked numbers asserted in the engine's own tests
+    "epc_walls": "harness/src/engines/bim/walls/tests",               # hand-checked geometry asserted in the engine's own tests
 }
 
 # (engine, "module.function", args, kwargs). Only fictional numbers.

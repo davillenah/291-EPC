@@ -39,18 +39,32 @@ def _crossing(x, y, tol):
     return tol < s < vec.length(d) - tol and tol < t < vec.length(e) - tol
 
 
-def _pair(x, y, tol):
-    """The records between two walls: L for ends within `tol`, T for an end on the other's side, X for a crossing."""
+def _ends_meet(x, y, tol):
+    """The L records between two walls (ends within `tol`) and the ends they use: `(records, used)`."""
     found, used = [], set()
     for px, pa in _ends(x):
         for py, pb in _ends(y):
-            if not x["join_off"][px] and not y["join_off"][py] and vec.length(vec.sub(pa, pb)) <= tol:
+            free = not x["join_off"][px] and not y["join_off"][py]
+            if free and vec.length(vec.sub(pa, pb)) <= tol:
                 found.append(_record({"wall": x["id"], "pos": px}, {"wall": y["id"], "pos": py}))
                 used.update({("x", px), ("y", py)})
+    return found, used
+
+
+def _ends_on_side(x, y, used, tol):
+    """The T records where an end of one wall lies on the side of the other and is not used by an L record."""
+    found = []
     for mine, other, tag in ((x, y, "x"), (y, x, "y")):
         for pos, point in _ends(mine):
             if (tag, pos) not in used and not mine["join_off"][pos] and _on_side(point, other, tol):
                 found.append(_record({"wall": mine["id"], "pos": pos}, {"wall": other["id"], "pos": "mid"}))
+    return found
+
+
+def _pair(x, y, tol):
+    """The records between two walls: L for ends within `tol`, T for an end on the other's side, X for a crossing."""
+    found, used = _ends_meet(x, y, tol)
+    found += _ends_on_side(x, y, used, tol)
     if not found and _crossing(x, y, tol):
         found.append(_record({"wall": x["id"], "pos": "mid"}, {"wall": y["id"], "pos": "mid"}))
     return found

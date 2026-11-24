@@ -60,21 +60,26 @@ def _through(p, run, stop, style):
     return (end_l, end_r), (stop_l, stop_r)
 
 
+def _ends_for(p, a, b, style, through):
+    """`{a, b}` ends for the style, or None when the faces do not meet."""
+    if style == "mitre":
+        result = _mitre(p, a, b)
+        return None if result is None else {"a": result[0], "b": result[1]}
+    run, stop = (a, b) if through != "b" else (b, a)
+    made = _through(p, run, stop, style)
+    if made is None:
+        return None
+    return {"a": made[0], "b": made[1]} if through != "b" else {"a": made[1], "b": made[0]}
+
+
 def corner(p, a, b, *, style, through, ratio):
     """The two ends of an L corner at `p`: `a` and `b` are `(d, h)` of each wall. Returns `{style, a: (left, right), b: (left, right)}` or None.
 
     None means the corner cannot be made as asked (walls in one line, or an end point farther than `ratio` times the larger half thickness): the caller keeps square
     ends. `through` is `'a'` or `'b'`, the wall that runs through for `butt` and `square` (default `'a'`).
     """
-    h_max = max(a[1], b[1])
-    if style == "mitre":
-        result = _mitre(p, a, b)
-        ends = None if result is None else {"a": result[0], "b": result[1]}
-    else:
-        run, stop = (a, b) if through != "b" else (b, a)
-        made = _through(p, run, stop, style)
-        ends = None if made is None else ({"a": made[0], "b": made[1]} if through != "b" else {"a": made[1], "b": made[0]})
-    if ends is None or not _within([q for e in ends.values() for q in e], p, h_max, ratio):
+    ends = _ends_for(p, a, b, style, through)
+    if ends is None or not _within([q for e in ends.values() for q in e], p, max(a[1], b[1]), ratio):
         return None
     return {"style": style, "a": ends["a"], "b": ends["b"]}
 

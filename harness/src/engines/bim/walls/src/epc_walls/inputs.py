@@ -40,6 +40,15 @@ def _unknown(raw, allowed, where):
         raise WallsError("err_unknown_keys", where=where, keys=", ".join(unknown))
 
 
+def _function_and_kind(raw, where):
+    function, kind = raw.get("function"), raw.get("kind", "material")
+    if function not in PARAMS["layer_functions"]:
+        raise WallsError("err_layer_function", where=where, allowed=", ".join(PARAMS["layer_functions"]), value=function)
+    if kind not in ("material", "cavity"):
+        raise WallsError("err_layer_kind", where=where, value=kind)
+    return function, kind
+
+
 def layer(raw, where):
     """A validated layer: from the exterior inward, with material, thickness (mm), function, kind, optional priority and core flag."""
     if not isinstance(raw, dict):
@@ -49,11 +58,7 @@ def layer(raw, where):
     thickness = raw.get("t")
     if not _number(thickness) or thickness < 0 or thickness > high:
         raise WallsError("err_layer_thickness", where=where, high=high, value=thickness)
-    function, kind = raw.get("function"), raw.get("kind", "material")
-    if function not in PARAMS["layer_functions"]:
-        raise WallsError("err_layer_function", where=where, allowed=", ".join(PARAMS["layer_functions"]), value=function)
-    if kind not in ("material", "cavity"):
-        raise WallsError("err_layer_kind", where=where, value=kind)
+    function, kind = _function_and_kind(raw, where)
     if thickness == 0 and (kind != "material" or function != "membrane"):
         raise WallsError("err_layer_zero_not_membrane", where=where)
     return {"mat": text(raw.get("mat"), f"{where}: mat"), "t": float(thickness), "function": function, "kind": kind, "priority": _priority(raw.get("priority"), where),
