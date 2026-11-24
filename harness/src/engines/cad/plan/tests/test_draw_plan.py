@@ -24,8 +24,9 @@ def _document():
 
 
 def _stable(data):
-    """The DXF carries a new GUID and the writing time in every file; everything else must be identical."""
+    """The DXF carries a new GUID and the writing time (also as Julian dates) in every file; everything else must be identical."""
     data = re.sub(rb"\d{4}-\d\d-\d\dT[\d:.]+\+00:00", b"{TIME}", data)
+    data = re.sub(rb"(?m)^\d{7}\.\d+$", b"{JULIAN}", data)             # the Julian dates of the header move with the second the file is written
     return re.sub(rb"\{[0-9A-F-]{36}\}", b"{GUID}", data)
 
 
