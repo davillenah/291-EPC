@@ -20,6 +20,7 @@ All notable changes. Format: Keep a Changelog; versions follow `harness/docs/BRA
 - PRO-13: `harness/tools/ci/harness_metrics.py` shows projects, runs, failures per stage and time per stage from the projects on disk.
 
 ### Changed
+- `harness/docs/architecture/REPOSITORY_LAYOUT.md` replaces `target-structure.md` with the tree as it is today (the old target tree no longer existed).
 - `device_symbol_map.json` no longer repeats ports and MLD variants; `epc_drawing.symbol_for` reads them from the symbol catalogue (same answer).
 - COD-03 / DGM-13a: the legend texts of the SLD symbols live in the symbol catalog (`legend` field), not in `sld_generator.py`. Same drawings.
 - SYM-00: the SLD and MLD DXF files carry their symbols as `INSERT` blocks (library file found through the library catalog; the MLD passes its symbol library). Golden DXF files re-recorded once, owner approved.
