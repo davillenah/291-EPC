@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "epc-expr"
+version = "0.1.0"
+description = "EPC-291 geometry engine: a safe arithmetic expression evaluator (no eval) for parametric values, fields and dimension formulas"
+requires-python = ">=3.10"
+dependencies = []
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+epc_expr = ["schema/*.json"]

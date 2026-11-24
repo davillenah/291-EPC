@@ -107,6 +107,10 @@ def _engines_info(session, args):
     return api.engine_info(args.name, **_scope(session, args))
 
 
+def _engines_schema(session, args):
+    return api.engine_schema(args.name, **_scope(session, args))
+
+
 def _norms(session, args):
     return api.norm_records(args.package, **_scope(session, args))
 
@@ -144,6 +148,8 @@ COMMANDS = {c.key: c for c in (
     Command("engines list", "list the engine packages", "list_engines", _engines_list, (PROJECT_OPT,)),
     Command("engines info", "version and public modules of one engine", "engine_info", _engines_info,
             ((("name",), {"help": "engine package (epc_sld) or area (sld)"}), PROJECT_OPT)),
+    Command("engines schema", "the JSON schemas an engine publishes (its input contract)", "engine_schema", _engines_schema,
+            ((("name",), {"help": "engine package (epc_boq) or area (boq)"}), PROJECT_OPT)),
     Command("norms", "norm records and their review status", "norm_records", _norms,
             ((("package",), {"nargs": "?", "help": "engine package; all engines when omitted"}), PROJECT_OPT)),
     Command("norms-pending", "norm points still to be reviewed (units and totals)", "norms_pending", _norms_pending,

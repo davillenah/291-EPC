@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "dims (input)",
+  "description": "The arguments of dimensions() as one object. `gap`, `step`, `tol` and `min_wall` have no defaults.",
+  "type": "object",
+  "required": ["walls", "tol", "gap", "step", "min_wall"],
+  "additionalProperties": false,
+  "$defs": {"point": {"type": "array", "items": {"type": "number"}, "minItems": 2, "maxItems": 2}},
+  "properties": {
+    "tol": {"type": "number", "exclusiveMinimum": 0},
+    "gap": {"type": "number", "exclusiveMinimum": 0},
+    "step": {"type": "number", "exclusiveMinimum": 0},
+    "min_wall": {"type": "number", "exclusiveMinimum": 0},
+    "walls": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "a", "b", "t"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {"type": "string", "minLength": 1, "pattern": "\\S"},
+          "a": {"$ref": "#/$defs/point"},
+          "b": {"$ref": "#/$defs/point"},
+          "t": {"type": "number", "exclusiveMinimum": 0},
+          "ext_side": {"enum": ["left", "right"]}
+        }
+      }
+    },
+    "openings": {
+      "type": ["array", "null"],
+      "items": {
+        "type": "object",
+        "required": ["id", "wall", "from", "width"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {"type": "string", "minLength": 1, "pattern": "\\S"},
+          "wall": {"type": "string", "minLength": 1},
+          "from": {"type": "number", "minimum": 0},
+          "width": {"type": "number", "exclusiveMinimum": 0}
+        }
+      }
+    },
+    "existing": {
+      "type": ["array", "null"],
+      "items": {"type": "object", "required": ["p1", "p2"], "additionalProperties": false, "properties": {"p1": {"$ref": "#/$defs/point"}, "p2": {"$ref": "#/$defs/point"}}}
+    }
+  }
+}

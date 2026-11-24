@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "epc-cutlist"
+version = "0.1.0"
+description = "EPC-291 fabrication engine: one-dimensional cutting plan (cut list) of bars, trays, conduits, profiles or cables from stock lengths, with saw kerf, grouped parts and confidence marks on cut angles"
+requires-python = ">=3.10"
+dependencies = []
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+epc_cutlist = ["schema/*.json"]

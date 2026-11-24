@@ -48,6 +48,10 @@ def epc_engine_info(ctx: Context, args: dict):
     return _api().engine_info(args["name"], **_query_scope(ctx, args))
 
 
+def epc_engine_schema(ctx: Context, args: dict):
+    return _api().engine_schema(args["name"], **_query_scope(ctx, args))
+
+
 def epc_norm_records(ctx: Context, args: dict):
     return _api().norm_records(args.get("package"), **_query_scope(ctx, args))
 
@@ -93,6 +97,8 @@ def register(reg: Registry) -> None:
                       epc_stage_table, OPTIONAL_PROJECT, [], both))
     reg.register(Tool("epc_engine_list", "The engine packages (name, group, area, version).", epc_engine_list, OPTIONAL_PROJECT, [], both))
     reg.register(Tool("epc_engine_info", "Version and public modules of one engine (package name or area).", epc_engine_info,
+                      dict(OPTIONAL_PROJECT, name=TEXT), ["name"], both))
+    reg.register(Tool("epc_engine_schema", "The JSON schemas an engine publishes (its input contract: types, required keys, limits). Read only.", epc_engine_schema,
                       dict(OPTIONAL_PROJECT, name=TEXT), ["name"], both))
     reg.register(Tool("epc_norm_records", "Norm records and their review status for one engine package, or all of them. Read only.", epc_norm_records,
                       dict(OPTIONAL_PROJECT, package=TEXT), [], both))

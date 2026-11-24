@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "cut list (input)",
+  "description": "The arguments of build_cutlist as one object.",
+  "type": "object",
+  "required": ["stock", "parts", "kerf_mm"],
+  "additionalProperties": false,
+  "properties": {
+    "kerf_mm": {"type": "number", "minimum": 0},
+    "stock": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "array",
+        "minItems": 1,
+        "items": {
+          "oneOf": [
+            {"type": "number", "exclusiveMinimum": 0},
+            {"type": "object", "required": ["length_mm"], "additionalProperties": false,
+             "properties": {"length_mm": {"type": "number", "exclusiveMinimum": 0}, "count": {"type": ["integer", "null"], "minimum": 1}}}
+          ]
+        }
+      }
+    },
+    "parts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "material", "length_mm"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {"type": "string", "minLength": 1, "pattern": "\\S"},
+          "material": {"type": "string", "minLength": 1, "pattern": "\\S"},
+          "length_mm": {"type": "number", "exclusiveMinimum": 0},
+          "quantity": {"type": "integer", "minimum": 1},
+          "size": {"type": ["string", "null"], "minLength": 1},
+          "label": {"type": ["string", "null"]},
+          "angle_1_deg": {"type": ["number", "null"], "minimum": -90, "maximum": 90},
+          "angle_2_deg": {"type": ["number", "null"], "minimum": -90, "maximum": 90},
+          "angle_source": {"enum": ["given", "derived", "unknown"]}
+        }
+      }
+    }
+  }
+}

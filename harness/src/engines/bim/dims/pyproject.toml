@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "epc-dims"
+version = "0.1.0"
+description = "EPC-291 building engine: automatic exterior dimensions (total and chains by edge) from straight walls and openings; plan units, pure functions"
+requires-python = ">=3.10"
+dependencies = []
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+epc_dims = ["schema/*.json"]

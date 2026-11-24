@@ -5,6 +5,13 @@ All notable changes. Format: Keep a Changelog; versions follow `harness/docs/BRA
 ## [Unreleased]
 
 ### Added
+- `epc_dxf.verify`: read-only verification of a DXF (zero-length and tiny lines, duplicated lines, undefined layers and blocks, empty texts) with switchable rule ids and English and Spanish texts. No drawing changes, no golden bytes touched.
+- `epc_cutlist` (fabrication engine, generic): one-dimensional cutting plan with saw kerf, limited or unlimited stock lengths (bars, trays, conduits, profiles, cable drums), grouped parts and confidence marks on cut angles; input schema, bilingual errors (ADR-0039). Pure, no norm value.
+- `epc_walls` (building engine, generic): straight walls from an axis and a thickness or a layer assembly, join records (L, T, X with a canonical key), corner geometry (mitre, butt, square) with a square fallback and bilingual notes, and layer bands with priority. No norm value, no catalog.
+- `epc_dims` (building engine, generic): automatic exterior dimensions from straight walls and openings (total on the south and west edges, one chain per edge with wall ends, opening edges and arriving walls; no repeat of dimensions already drawn). `gap`, `step`, `tol` and `min_wall` are required inputs; what it does not do is said in a note.
+- M5 discovery: `engine_schema(name)` (api), `epc engines schema <name>` (CLI) and `epc_engine_schema` (MCP, read only) give the JSON schemas an engine publishes, so an agent can read an engine's input contract before calling it. An engine without a schema answers with a warning.
+- OPT-09 / M5: input schemas for `epc_walls` and `epc_dims` (published through `engine_schema`), with a test that the schema and the engine's own checks agree.
+- `epc_expr` (geometry engine, generic): safe arithmetic expression evaluator (`+ - * / ^ %`, `abs sin cos tan sqrt ceil floor round log exp PtDist PtAngle`, `pi`, named variables) for parametric values, fields and dimension formulas; nothing is run as code; every error has a code and English and Spanish text. `epc_arrays` (geometry engine, generic): rectangular and polar array positions (signed spacing, turned grids, full or partial fill, optional rotation of the copies); `max_items` is a required input.
 - DRW-01: catalog role `sheet.viewport` (`0-Viewport`) and `epc_dxf.logo_layer_name` / `add_logo_layer` (`0-Logo-<Company>`, provider and client).
 - PRO-13: `harness/tools/ci/harness_metrics.py` shows projects, runs, failures per stage and time per stage from the projects on disk.
 
