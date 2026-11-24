@@ -24,7 +24,7 @@ FLOOR = REPO / "harness" / "tools" / "ci" / "coverage_floor.json"
 TOLERANCE = 0.3                      # points: runs are not byte-identical (threads, timing)
 AREAS = {                            # area -> path fragment of its production code
     **{f"engine-{n}": f"/{P.engine_src_rel(n)}/" for n in (
-        "aea90364", "calc_common", "load_balance", "voltage_drop", "feeder_sizing", "short_circuit", "grounding", "selectivity", "transformer_sizing", "rules", "standards", "calc_check", "dxf", "symbols", "titleblock", "plan", "arch", "lighting", "receptacles", "hvac", "pv", "sld", "mld", "drawing", "documents", "terminal_blocks", "design_basis", "descriptive_report", "boq", "datasheets", "rfq", "cutlist")},
+        "aea90364", "calc_common", "load_balance", "voltage_drop", "feeder_sizing", "short_circuit", "grounding", "selectivity", "transformer_sizing", "rules", "standards", "calc_check", "dxf", "symbols", "titleblock", "plan", "arch", "lighting", "receptacles", "hvac", "pv", "sld", "mld", "drawing", "documents", "terminal_blocks", "design_basis", "descriptive_report", "boq", "datasheets", "rfq", "cutlist", "walls")},
 }
 
 

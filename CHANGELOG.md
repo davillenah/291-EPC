@@ -7,6 +7,7 @@ All notable changes. Format: Keep a Changelog; versions follow `harness/docs/BRA
 ### Added
 - `epc_dxf.verify`: read-only verification of a DXF (zero-length and tiny lines, duplicated lines, undefined layers and blocks, empty texts) with switchable rule ids and English and Spanish texts. No drawing changes, no golden bytes touched.
 - `epc_cutlist` (fabrication engine, generic): one-dimensional cutting plan with saw kerf, limited or unlimited stock lengths (bars, trays, conduits, profiles, cable drums), grouped parts and confidence marks on cut angles; input schema, bilingual errors (ADR-0039). Pure, no norm value.
+- `epc_walls` (building engine, generic): straight walls from an axis and a thickness or a layer assembly, join records (L, T, X with a canonical key), corner geometry (mitre, butt, square) with a square fallback and bilingual notes, and layer bands with priority. No norm value, no catalog.
 - DRW-01: catalog role `sheet.viewport` (`0-Viewport`) and `epc_dxf.logo_layer_name` / `add_logo_layer` (`0-Logo-<Company>`, provider and client).
 - PRO-13: `harness/tools/ci/harness_metrics.py` shows projects, runs, failures per stage and time per stage from the projects on disk.
 

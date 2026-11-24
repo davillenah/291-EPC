@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "epc-walls"
+version = "0.1.0"
+description = "EPC-291 building engine: straight walls from an axis, a thickness or a layer assembly, with join records (L, T, X) and corner geometry (mitre, butt, square); plan millimetres, pure functions"
+requires-python = ">=3.10"
+dependencies = []
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+epc_walls = ["params.json"]

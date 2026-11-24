@@ -40,6 +40,7 @@ Cómo leerlo: **Usa** = de qué depende la unidad; **Lo usan** = quién se rompe
 | `titleblock` | `dxf` | `arch`, `drawing`, `mld`, `sld` | `arch`, `drawing`, `mld`, `plan`, `sld` |
 | `transformer_sizing` | `short_circuit` | — | — |
 | `voltage_drop` | `aea90364`, `calc_common` | `aea90364`, `design_basis`, `feeder_sizing` | `aea90364`, `calc_check`, `calc_common`, `design_basis`, `drawing`, `feeder_sizing`, `grounding`, `lighting`, `load_balance`, `mld`, `selectivity`, `short_circuit`, `sld`, `transformer_sizing` |
+| `walls` | — | — | — |
 
 ## Módulos del backend
 
@@ -84,6 +85,7 @@ Lo declarado en `pyproject.toml` frente a lo que el código importa de verdad.
 | `titleblock` | — | `epc-dxf` | — |
 | `transformer_sizing` | — | `epc-short-circuit` | — |
 | `voltage_drop` | — | `epc-calc-common` | — |
+| `walls` | — | — | — |
 
 ## Plugins
 
