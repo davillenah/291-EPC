@@ -144,6 +144,16 @@ def _documents(folder, info):
     return docs
 
 
+def _folder_documents(folders):
+    """The documents of the makers whose categories are those the data sheets are built from; a maker of other categories (trays) is left out."""
+    catalog = []
+    for folder in folders:
+        info = _manufacturer(folder)
+        if set(info["categories"]) & set(CATEGORIES):
+            catalog += _documents(folder, info)
+    return catalog
+
+
 def load_catalog_dir(path):
     """Read a catalog folder (`<path>/<manufacturer>/{manufacturer,breakers,cables}.json`) into the `catalog` argument; ValueError when invalid.
 
@@ -155,10 +165,6 @@ def load_catalog_dir(path):
     folders = sorted(p for p in root.iterdir() if p.is_dir())
     if not folders:
         raise DatasheetsError("err_catalog_folder_empty", root=root)
-    catalog = []
-    for folder in folders:
-        info = _manufacturer(folder)
-        if set(info["categories"]) & set(CATEGORIES):
-            catalog += _documents(folder, info)
+    catalog = _folder_documents(folders)
     products(catalog)
     return catalog
