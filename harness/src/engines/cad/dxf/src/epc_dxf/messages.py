@@ -2,6 +2,10 @@
 from typing import Dict
 
 MESSAGES: Dict[str, Dict[str, str]] = {
+    "err_logo_layer_company": {
+        "en": "a logo layer needs the name of a company (letters or digits)",
+        "es": "una capa de logo necesita el nombre de una empresa (letras o dígitos)",
+    },
     "err_stamp_date_type": {
         "en": "stamp date must be an ISO date or datetime, not {type_name}",
         "es": "la fecha del sello debe ser una fecha o fecha y hora ISO, no {type_name}",

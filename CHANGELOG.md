@@ -5,6 +5,7 @@ All notable changes. Format: Keep a Changelog; versions follow `harness/docs/BRA
 ## [Unreleased]
 
 ### Added
+- DRW-01: catalog role `sheet.viewport` (`0-Viewport`) and `epc_dxf.logo_layer_name` / `add_logo_layer` (`0-Logo-<Company>`, provider and client).
 - PRO-13: `harness/tools/ci/harness_metrics.py` shows projects, runs, failures per stage and time per stage from the projects on disk.
 
 ### Changed

@@ -18,7 +18,9 @@ from epc_dxf.layers import (
     disciplines,
     aci_hex,
     by_discipline,
+    add_logo_layer,
     describe_layers,
+    logo_layer_name,
 )  # noqa: F401
 from epc_dxf.package import (
     describe,
@@ -51,4 +53,4 @@ from epc_dxf.textstyle import (
 )  # noqa: F401
 from epc_dxf.errors import DxfError  # noqa: F401
 
-__all__ = ["DxfError", "Stamp", "new_document", "aci_hex", "add_styles", "apply", "by_discipline", "config_dir", "convert", "defaults", "deliver", "describe", "describe_layers", "describe_dxf", "disciplines", "dump", "finish_draft", "get", "get_section", "inspect", "layers_used", "load", "load_file", "moment_of", "name", "new", "new_layer_name", "override_of", "parse", "pin", "resolve", "role_attribute", "save", "sort_classes", "tag_iram_sheet", "unify", "validate"]
+__all__ = ["DxfError", "Stamp", "new_document", "aci_hex", "add_logo_layer", "add_styles", "apply", "by_discipline", "config_dir", "convert", "defaults", "deliver", "describe", "describe_layers", "describe_dxf", "disciplines", "dump", "finish_draft", "get", "get_section", "inspect", "layers_used", "load", "load_file", "logo_layer_name", "moment_of", "name", "new", "new_layer_name", "override_of", "parse", "pin", "resolve", "role_attribute", "save", "sort_classes", "tag_iram_sheet", "unify", "validate"]
