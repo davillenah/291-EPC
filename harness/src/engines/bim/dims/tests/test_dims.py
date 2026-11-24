@@ -1,7 +1,7 @@
 """The exterior dimensions of a rectangular building (hand-checked numbers), the skipped walls and the errors."""
 import unittest
 
-from epc_dims import DimsError, api, dimensions
+from epc_dims import DimsError, annotation_size, api, dimensions, paper_size
 
 BOX = [{"id": "S", "a": (0, 0), "b": (8000, 0), "t": 200, "ext_side": "right"},
        {"id": "E", "a": (8000, 0), "b": (8000, 5000), "t": 200, "ext_side": "right"},
@@ -100,9 +100,28 @@ class ErrorTests(unittest.TestCase):
         self.check("err_not_point", existing=[{"p1": 1, "p2": (0, 0)}])
 
 
+class ScaleTests(unittest.TestCase):
+    def test_a_text_at_scale(self):
+        self.assertEqual(annotation_size(2.5, 50, 1), 125.0)
+        self.assertEqual(annotation_size(2.5, 50, 10), 12.5)
+        self.assertEqual(annotation_size(2.5, 50, 1000), 0.125)
+        self.assertEqual(annotation_size(0.2, 30, 0.1), 60.0)
+
+    def test_paper_size_is_the_inverse(self):
+        self.assertEqual(paper_size(125, 50, 1), 2.5)
+        self.assertEqual(paper_size(annotation_size(3.5, 100, 10), 100, 10), 3.5)
+
+    def test_bad_scale_values(self):
+        for call in (lambda: annotation_size(0, 50, 1), lambda: annotation_size(2.5, -1, 1), lambda: annotation_size(2.5, 50, float("nan")),
+                     lambda: annotation_size(True, 50, 1), lambda: paper_size("x", 50, 1)):
+            with self.assertRaises(DimsError) as c:
+                call()
+            self.assertEqual(c.exception.code, "err_not_positive_number")
+
+
 class DoorTests(unittest.TestCase):
     def test_the_public_door(self):
-        self.assertEqual(sorted(api.__all__), ["DimsError", "dimensions"])
+        self.assertEqual(sorted(api.__all__), ["DimsError", "annotation_size", "dimensions", "paper_size"])
 
 
 if __name__ == "__main__":

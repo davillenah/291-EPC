@@ -16,3 +16,7 @@ line, value}`; drawing it (native DIMENSION or exploded) is the job of the drawi
 
 What it does not do (and says so in a note): interior rooms, grid axes, installation heights, text collisions, curved or oblique walls. `gap`, `step`, `tol` and
 `min_wall` have no defaults: they are design choices of the project, not norm values.
+
+Annotation sizes: `annotation_size(paper_mm, scale_denominator, drawing_unit_mm)` gives the size in drawing units of something that measures `paper_mm` on the
+plotted sheet at the scale `1:N` (a 2.5 mm text at 1:50 is 125 in a drawing in millimetres, 12.5 in centimetres, 0.125 in metres); `paper_size` is the inverse.
+The engine holds no list of scales: the project chooses.
