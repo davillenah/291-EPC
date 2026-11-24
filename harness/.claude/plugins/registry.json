@@ -17,7 +17,7 @@
         "short_circuit",
         "voltage_drop"
       ],
-      "hash": "2f42bf90cbc3941f"
+      "hash": "13e2a53e8ce55e18"
     },
     "board-design": {
       "version": "0.2.1",
@@ -53,7 +53,7 @@
         "titleblock",
         "voltage_drop"
       ],
-      "hash": "32067c43857600df"
+      "hash": "737700673e5799c7"
     },
     "doc-quality": {
       "version": "0.1.0",
@@ -64,7 +64,7 @@
       "engine": [
         "documents"
       ],
-      "hash": "f86c7427b4a6214c"
+      "hash": "47fa6ff1c0072ae7"
     },
     "dxf-output": {
       "version": "0.1.0",
@@ -153,7 +153,7 @@
         "titleblock",
         "voltage_drop"
       ],
-      "hash": "8de4f0f413105fd2"
+      "hash": "4356865c29513a34"
     },
     "plan-drawing": {
       "version": "0.1.0",
@@ -171,7 +171,7 @@
         "symbols",
         "titleblock"
       ],
-      "hash": "feac9c8152b77862"
+      "hash": "271060f751eb5d3a"
     },
     "pm2-docs": {
       "version": "0.1.0",
@@ -186,7 +186,7 @@
       "engine": [
         "documents"
       ],
-      "hash": "0a04df802a54b227"
+      "hash": "e8e0880db88133b3"
     },
     "procurement": {
       "version": "0.1.0",
@@ -226,7 +226,7 @@
         "titleblock",
         "voltage_drop"
       ],
-      "hash": "175951bd29c43869"
+      "hash": "fa1928bcd41a5d92"
     },
     "spec-writer": {
       "version": "0.1.0",
@@ -241,7 +241,7 @@
       "engine": [
         "documents"
       ],
-      "hash": "2824f99d4d4ae148"
+      "hash": "3ef75578fee463fa"
     },
     "standard-ingest": {
       "version": "0.1.0",

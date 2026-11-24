@@ -1,10 +1,10 @@
 """What `pipeline.run()` records in the project folder while it runs, when the context has a `ProjectStore`.
 
-For every stage: one line in `epc-progress.txt`, one file `ssot/stage_<NN>_<slug>.json` (the full StageResult) and an update of
+For every stage: one line in `epc_progress.txt`, one file `ssot/stage_<NN>_<slug>.json` (the full StageResult) and an update of
 `master_project_state.json`. Stage 1 also writes `project_profile.json` and freezes `inputs/`; from stage 2 on, a changed,
 added or removed input blocks the stage with a finding (rule IM-01). Everything goes through the store with the run's token. After stage 12 its drawing files are copied to `deliverables/TR-NNN/` and the manifest it built is written under `.epc/manifests/`.
 
-Progress line format (`epc-progress.txt`, plain text, one line per stage, appended):
+Progress line format (`epc_progress.txt`, plain text, one line per stage, appended):
 
     <ISO timestamp> | run <pipeline_run_id> | stage <n> <slug> | <status> | <message>
 

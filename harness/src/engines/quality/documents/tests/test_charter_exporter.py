@@ -304,6 +304,16 @@ class TestSealTime(unittest.TestCase):
                 with open(seal, encoding="utf-8") as fh:
                     self.assertEqual(json.load(fh)["files"]["a.md"], {"sha256_16": "abc123", "updated": "2026-01-02T03:04:05Z"})
 
+    def test_source_date_epoch_fixes_the_seal_time(self):
+        from unittest import mock
+        from epc_documents import canvas_exporter as C
+        for module in (X, C):
+            with mock.patch.dict(os.environ, {"SOURCE_DATE_EPOCH": "1767323045"}):
+                self.assertEqual(module._seal_time(), "2026-01-02T03:04:05Z")
+            self.assertEqual(module._seal_time("2026-05-06T07:08:09Z"), "2026-05-06T07:08:09Z")
+            with mock.patch.dict(os.environ, {"SOURCE_DATE_EPOCH": ""}):
+                self.assertRegex(module._seal_time(), r"^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\dZ$")
+
 
 if __name__ == "__main__":
     unittest.main()

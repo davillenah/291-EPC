@@ -2,8 +2,8 @@
  "schema_version": "1.0",
  "id": "device_to_symbol_map",
  "description": {
-  "en": "Maps research device ids to symbols of the repo library (cad/symbols). Ports come from the library _catalog.json. Nothing verified.",
-  "es": "Mapea ids de dispositivos investigados a simbolos de la biblioteca del repo (cad/symbols). Los puertos vienen de _catalog.json. Nada verificado."
+  "en": "Maps research device ids to symbols of the repo library (cad/symbols). Ports and MLD variants are not repeated here: they come from the library _catalog.json (COD-03). Nothing verified.",
+  "es": "Mapea ids de dispositivos investigados a simbolos de la biblioteca del repo (cad/symbols). Los puertos y las variantes MLD no se repiten aqui: vienen de _catalog.json (COD-03). Nada verificado."
  },
  "library_snapshot": "harness/src/engines/cad/symbols (read-only, 2026-11-20, main)",
  "mappings": [
@@ -11,16 +11,6 @@
    "device_id": "acb",
    "sld_symbol": "lv_acb_basic",
    "match": "exact",
-   "mld_symbols": [
-    "lv_acb_basic_1p_mld",
-    "lv_acb_basic_2p_mld",
-    "lv_acb_basic_3p_mld",
-    "lv_acb_basic_4p_mld"
-   ],
-   "ports": [
-    "top",
-    "bottom"
-   ],
    "status": "unverified",
    "note": {
     "en": "Name match against the repo symbol catalog.",
@@ -31,15 +21,6 @@
    "device_id": "ats",
    "sld_symbol": "lv_ats",
    "match": "exact",
-   "mld_symbols": [
-    "lv_ats_3p_mld",
-    "lv_ats_4p_mld"
-   ],
-   "ports": [
-    "top_1",
-    "top_2",
-    "bottom"
-   ],
    "status": "unverified",
    "note": {
     "en": "Name match against the repo symbol catalog.",
@@ -50,10 +31,6 @@
    "device_id": "capacitor_bank",
    "sld_symbol": "lv_capacitor_bank",
    "match": "exact",
-   "mld_symbols": [],
-   "ports": [
-    "in"
-   ],
    "status": "unverified",
    "note": {
     "en": "Name match against the repo symbol catalog.",
@@ -64,16 +41,6 @@
    "device_id": "contactor",
    "sld_symbol": "lv_contactor",
    "match": "exact",
-   "mld_symbols": [
-    "lv_contactor_1p_mld",
-    "lv_contactor_2p_mld",
-    "lv_contactor_3p_mld",
-    "lv_contactor_4p_mld"
-   ],
-   "ports": [
-    "top",
-    "bottom"
-   ],
    "status": "unverified",
    "note": {
     "en": "Name match against the repo symbol catalog.",
@@ -84,12 +51,6 @@
    "device_id": "ct",
    "sld_symbol": "lv_ct",
    "match": "exact",
-   "mld_symbols": [],
-   "ports": [
-    "top",
-    "bottom",
-    "secondary"
-   ],
    "status": "unverified",
    "note": {
     "en": "Name match against the repo symbol catalog.",
@@ -100,16 +61,6 @@
    "device_id": "fuse_am",
    "sld_symbol": "lv_fuse",
    "match": "exact",
-   "mld_symbols": [
-    "lv_fuse_1p_mld",
-    "lv_fuse_2p_mld",
-    "lv_fuse_3p_mld",
-    "lv_fuse_4p_mld"
-   ],
-   "ports": [
-    "top",
-    "bottom"
-   ],
    "status": "unverified",
    "note": {
     "en": "Name match against the repo symbol catalog.",
@@ -120,16 +71,6 @@
    "device_id": "fuse_gg",
    "sld_symbol": "lv_fuse",
    "match": "exact",
-   "mld_symbols": [
-    "lv_fuse_1p_mld",
-    "lv_fuse_2p_mld",
-    "lv_fuse_3p_mld",
-    "lv_fuse_4p_mld"
-   ],
-   "ports": [
-    "top",
-    "bottom"
-   ],
    "status": "unverified",
    "note": {
     "en": "Name match against the repo symbol catalog.",
@@ -140,16 +81,6 @@
    "device_id": "fuse_gpv",
    "sld_symbol": "lv_fuse",
    "match": "exact",
-   "mld_symbols": [
-    "lv_fuse_1p_mld",
-    "lv_fuse_2p_mld",
-    "lv_fuse_3p_mld",
-    "lv_fuse_4p_mld"
-   ],
-   "ports": [
-    "top",
-    "bottom"
-   ],
    "status": "unverified",
    "note": {
     "en": "Name match against the repo symbol catalog.",
@@ -160,12 +91,6 @@
    "device_id": "generator_set",
    "sld_symbol": "lv_generator",
    "match": "exact",
-   "mld_symbols": [
-    "lv_generator_3p_mld"
-   ],
-   "ports": [
-    "top"
-   ],
    "status": "unverified",
    "note": {
     "en": "Name match against the repo symbol catalog.",
@@ -176,11 +101,6 @@
    "device_id": "imd_insulation_monitor",
    "sld_symbol": "lv_imd",
    "match": "placeholder",
-   "mld_symbols": [],
-   "ports": [
-    "top",
-    "bottom"
-   ],
    "status": "unverified",
    "note": {
     "en": "Block placeholder (a box with the device name) until the real IEC 60617 symbol exists (DGM-03). MLD variants not created yet.",
@@ -191,16 +111,6 @@
    "device_id": "mcb",
    "sld_symbol": "lv_mcb",
    "match": "exact",
-   "mld_symbols": [
-    "lv_mcb_1p_mld",
-    "lv_mcb_2p_mld",
-    "lv_mcb_3p_mld",
-    "lv_mcb_4p_mld"
-   ],
-   "ports": [
-    "top",
-    "bottom"
-   ],
    "status": "unverified",
    "note": {
     "en": "Name match against the repo symbol catalog.",
@@ -211,16 +121,6 @@
    "device_id": "mccb",
    "sld_symbol": "lv_mccb_basic",
    "match": "exact",
-   "mld_symbols": [
-    "lv_mccb_basic_1p_mld",
-    "lv_mccb_basic_2p_mld",
-    "lv_mccb_basic_3p_mld",
-    "lv_mccb_basic_4p_mld"
-   ],
-   "ports": [
-    "top",
-    "bottom"
-   ],
    "status": "unverified",
    "note": {
     "en": "Name match against the repo symbol catalog.",
@@ -231,11 +131,6 @@
    "device_id": "mpcb",
    "sld_symbol": "lv_motor_starter_dol",
    "match": "close",
-   "mld_symbols": [],
-   "ports": [
-    "top",
-    "bottom"
-   ],
    "status": "unverified",
    "note": {
     "en": "Chosen by name match against the repo symbol catalog; a person must confirm the symbol is the right one.",
@@ -246,11 +141,6 @@
    "device_id": "mv_circuit_breaker_relay_module",
    "sld_symbol": "mv_circuit_breaker",
    "match": "close",
-   "mld_symbols": [],
-   "ports": [
-    "top",
-    "bottom"
-   ],
    "status": "unverified",
    "note": {
     "en": "Chosen by name match against the repo symbol catalog; a person must confirm the symbol is the right one.",
@@ -261,10 +151,6 @@
    "device_id": "mv_earthing_switch",
    "sld_symbol": "mv_earthing_switch",
    "match": "exact",
-   "mld_symbols": [],
-   "ports": [
-    "top"
-   ],
    "status": "unverified",
    "note": {
     "en": "Name match against the repo symbol catalog.",
@@ -275,11 +161,6 @@
    "device_id": "mv_load_break_switch_c",
    "sld_symbol": "mv_load_break_switch",
    "match": "exact",
-   "mld_symbols": [],
-   "ports": [
-    "top",
-    "bottom"
-   ],
    "status": "unverified",
    "note": {
     "en": "Name match against the repo symbol catalog.",
@@ -290,11 +171,6 @@
    "device_id": "mv_switch_fuse_f",
    "sld_symbol": "mv_switch_fuse_combination",
    "match": "exact",
-   "mld_symbols": [],
-   "ports": [
-    "top",
-    "bottom"
-   ],
    "status": "unverified",
    "note": {
     "en": "Name match against the repo symbol catalog.",
@@ -305,11 +181,6 @@
    "device_id": "mv_vacuum_circuit_breaker",
    "sld_symbol": "mv_circuit_breaker",
    "match": "exact",
-   "mld_symbols": [],
-   "ports": [
-    "top",
-    "bottom"
-   ],
    "status": "unverified",
    "note": {
     "en": "Name match against the repo symbol catalog.",
@@ -320,10 +191,6 @@
    "device_id": "pv_bidirectional_meter_lv",
    "sld_symbol": "lv_energy_meter_kwh",
    "match": "close",
-   "mld_symbols": [],
-   "ports": [
-    "top"
-   ],
    "status": "unverified",
    "note": {
     "en": "Chosen by name match against the repo symbol catalog; a person must confirm the symbol is the right one.",
@@ -334,11 +201,6 @@
    "device_id": "pv_blocking_diode",
    "sld_symbol": "lv_pv_blocking_diode",
    "match": "placeholder",
-   "mld_symbols": [],
-   "ports": [
-    "top",
-    "bottom"
-   ],
    "status": "unverified",
    "note": {
     "en": "Block placeholder (a box with the device name) until the real IEC 60617 symbol exists (DGM-03). MLD variants not created yet.",
@@ -349,11 +211,6 @@
    "device_id": "pv_dc_breaker",
    "sld_symbol": "lv_dc_disconnect",
    "match": "close",
-   "mld_symbols": [],
-   "ports": [
-    "top",
-    "bottom"
-   ],
    "status": "unverified",
    "note": {
     "en": "Chosen by name match against the repo symbol catalog; a person must confirm the symbol is the right one.",
@@ -364,11 +221,6 @@
    "device_id": "pv_dc_switch_load_break",
    "sld_symbol": "lv_dc_disconnect",
    "match": "exact",
-   "mld_symbols": [],
-   "ports": [
-    "top",
-    "bottom"
-   ],
    "status": "unverified",
    "note": {
     "en": "Name match against the repo symbol catalog.",
@@ -379,11 +231,6 @@
    "device_id": "pv_hybrid_battery_inverter",
    "sld_symbol": "lv_inverter",
    "match": "close",
-   "mld_symbols": [],
-   "ports": [
-    "top",
-    "bottom"
-   ],
    "status": "unverified",
    "note": {
     "en": "Chosen by name match against the repo symbol catalog; a person must confirm the symbol is the right one.",
@@ -394,11 +241,6 @@
    "device_id": "pv_inverter_grid_tie",
    "sld_symbol": "lv_inverter",
    "match": "exact",
-   "mld_symbols": [],
-   "ports": [
-    "top",
-    "bottom"
-   ],
    "status": "unverified",
    "note": {
     "en": "Name match against the repo symbol catalog.",
@@ -409,11 +251,6 @@
    "device_id": "pv_microinverter",
    "sld_symbol": "lv_inverter",
    "match": "close",
-   "mld_symbols": [],
-   "ports": [
-    "top",
-    "bottom"
-   ],
    "status": "unverified",
    "note": {
     "en": "Chosen by name match against the repo symbol catalog; a person must confirm the symbol is the right one.",
@@ -424,12 +261,6 @@
    "device_id": "pv_mv_power_station",
    "sld_symbol": "mv_ring_main_unit",
    "match": "close",
-   "mld_symbols": [],
-   "ports": [
-    "ring_in",
-    "ring_out",
-    "feeder_out"
-   ],
    "status": "unverified",
    "note": {
     "en": "Chosen by name match against the repo symbol catalog; a person must confirm the symbol is the right one.",
@@ -440,11 +271,6 @@
    "device_id": "pv_power_optimizer",
    "sld_symbol": "lv_pv_power_optimizer",
    "match": "placeholder",
-   "mld_symbols": [],
-   "ports": [
-    "top",
-    "bottom"
-   ],
    "status": "unverified",
    "note": {
     "en": "Block placeholder (a box with the device name) until the real IEC 60617 symbol exists (DGM-03). MLD variants not created yet.",
@@ -455,11 +281,6 @@
    "device_id": "pv_rapid_shutdown_device",
    "sld_symbol": "lv_pv_rapid_shutdown",
    "match": "placeholder",
-   "mld_symbols": [],
-   "ports": [
-    "top",
-    "bottom"
-   ],
    "status": "unverified",
    "note": {
     "en": "Block placeholder (a box with the device name) until the real IEC 60617 symbol exists (DGM-03). MLD variants not created yet.",
@@ -470,11 +291,6 @@
    "device_id": "pv_rcmu",
    "sld_symbol": "lv_pv_rcmu",
    "match": "placeholder",
-   "mld_symbols": [],
-   "ports": [
-    "top",
-    "bottom"
-   ],
    "status": "unverified",
    "note": {
     "en": "Block placeholder (a box with the device name) until the real IEC 60617 symbol exists (DGM-03). MLD variants not created yet.",
@@ -485,11 +301,6 @@
    "device_id": "pv_string_combiner_box",
    "sld_symbol": "lv_pv_combiner_box",
    "match": "placeholder",
-   "mld_symbols": [],
-   "ports": [
-    "top",
-    "bottom"
-   ],
    "status": "unverified",
    "note": {
     "en": "Block placeholder (a box with the device name) until the real IEC 60617 symbol exists (DGM-03). MLD variants not created yet.",
@@ -500,15 +311,6 @@
    "device_id": "rcbo",
    "sld_symbol": "lv_rcbo",
    "match": "exact",
-   "mld_symbols": [
-    "lv_rcbo_1p_mld",
-    "lv_rcbo_2p_mld",
-    "lv_rcbo_4p_mld"
-   ],
-   "ports": [
-    "top",
-    "bottom"
-   ],
    "status": "unverified",
    "note": {
     "en": "Name match against the repo symbol catalog.",
@@ -519,15 +321,6 @@
    "device_id": "rccb",
    "sld_symbol": "lv_rccb",
    "match": "exact",
-   "mld_symbols": [
-    "lv_rccb_1p_mld",
-    "lv_rccb_2p_mld",
-    "lv_rccb_4p_mld"
-   ],
-   "ports": [
-    "top",
-    "bottom"
-   ],
    "status": "unverified",
    "note": {
     "en": "Name match against the repo symbol catalog.",
@@ -538,15 +331,6 @@
    "device_id": "rcd_type_a",
    "sld_symbol": "lv_rccb",
    "match": "close",
-   "mld_symbols": [
-    "lv_rccb_1p_mld",
-    "lv_rccb_2p_mld",
-    "lv_rccb_4p_mld"
-   ],
-   "ports": [
-    "top",
-    "bottom"
-   ],
    "status": "unverified",
    "note": {
     "en": "Chosen by name match against the repo symbol catalog; a person must confirm the symbol is the right one.",
@@ -557,15 +341,6 @@
    "device_id": "rcd_type_ac",
    "sld_symbol": "lv_rccb",
    "match": "close",
-   "mld_symbols": [
-    "lv_rccb_1p_mld",
-    "lv_rccb_2p_mld",
-    "lv_rccb_4p_mld"
-   ],
-   "ports": [
-    "top",
-    "bottom"
-   ],
    "status": "unverified",
    "note": {
     "en": "Chosen by name match against the repo symbol catalog; a person must confirm the symbol is the right one.",
@@ -576,15 +351,6 @@
    "device_id": "rcd_type_b",
    "sld_symbol": "lv_rccb",
    "match": "close",
-   "mld_symbols": [
-    "lv_rccb_1p_mld",
-    "lv_rccb_2p_mld",
-    "lv_rccb_4p_mld"
-   ],
-   "ports": [
-    "top",
-    "bottom"
-   ],
    "status": "unverified",
    "note": {
     "en": "Chosen by name match against the repo symbol catalog; a person must confirm the symbol is the right one.",
@@ -595,15 +361,6 @@
    "device_id": "rcd_type_f",
    "sld_symbol": "lv_rccb",
    "match": "close",
-   "mld_symbols": [
-    "lv_rccb_1p_mld",
-    "lv_rccb_2p_mld",
-    "lv_rccb_4p_mld"
-   ],
-   "ports": [
-    "top",
-    "bottom"
-   ],
    "status": "unverified",
    "note": {
     "en": "Chosen by name match against the repo symbol catalog; a person must confirm the symbol is the right one.",
@@ -614,11 +371,6 @@
    "device_id": "relay_ansi_27",
    "sld_symbol": "lv_protection_relay",
    "match": "close",
-   "mld_symbols": [],
-   "ports": [
-    "top",
-    "trip"
-   ],
    "status": "unverified",
    "note": {
     "en": "Chosen by name match against the repo symbol catalog; a person must confirm the symbol is the right one.",
@@ -629,11 +381,6 @@
    "device_id": "relay_ansi_32_reverse_power",
    "sld_symbol": "lv_protection_relay",
    "match": "close",
-   "mld_symbols": [],
-   "ports": [
-    "top",
-    "trip"
-   ],
    "status": "unverified",
    "note": {
     "en": "Chosen by name match against the repo symbol catalog; a person must confirm the symbol is the right one.",
@@ -644,11 +391,6 @@
    "device_id": "relay_ansi_49",
    "sld_symbol": "lv_protection_relay",
    "match": "close",
-   "mld_symbols": [],
-   "ports": [
-    "top",
-    "trip"
-   ],
    "status": "unverified",
    "note": {
     "en": "Chosen by name match against the repo symbol catalog; a person must confirm the symbol is the right one.",
@@ -659,11 +401,6 @@
    "device_id": "relay_ansi_50_51",
    "sld_symbol": "lv_protection_relay",
    "match": "close",
-   "mld_symbols": [],
-   "ports": [
-    "top",
-    "trip"
-   ],
    "status": "unverified",
    "note": {
     "en": "Chosen by name match against the repo symbol catalog; a person must confirm the symbol is the right one.",
@@ -674,11 +411,6 @@
    "device_id": "relay_ansi_50n_51n",
    "sld_symbol": "lv_protection_relay",
    "match": "close",
-   "mld_symbols": [],
-   "ports": [
-    "top",
-    "trip"
-   ],
    "status": "unverified",
    "note": {
     "en": "Chosen by name match against the repo symbol catalog; a person must confirm the symbol is the right one.",
@@ -689,11 +421,6 @@
    "device_id": "relay_ansi_59",
    "sld_symbol": "lv_protection_relay",
    "match": "close",
-   "mld_symbols": [],
-   "ports": [
-    "top",
-    "trip"
-   ],
    "status": "unverified",
    "note": {
     "en": "Chosen by name match against the repo symbol catalog; a person must confirm the symbol is the right one.",
@@ -704,11 +431,6 @@
    "device_id": "relay_ansi_63",
    "sld_symbol": "lv_protection_relay",
    "match": "close",
-   "mld_symbols": [],
-   "ports": [
-    "top",
-    "trip"
-   ],
    "status": "unverified",
    "note": {
     "en": "Chosen by name match against the repo symbol catalog; a person must confirm the symbol is the right one.",
@@ -719,11 +441,6 @@
    "device_id": "relay_ansi_67_directional_overcurrent",
    "sld_symbol": "lv_protection_relay",
    "match": "close",
-   "mld_symbols": [],
-   "ports": [
-    "top",
-    "trip"
-   ],
    "status": "unverified",
    "note": {
     "en": "Chosen by name match against the repo symbol catalog; a person must confirm the symbol is the right one.",
@@ -734,11 +451,6 @@
    "device_id": "relay_ansi_81",
    "sld_symbol": "lv_protection_relay",
    "match": "close",
-   "mld_symbols": [],
-   "ports": [
-    "top",
-    "trip"
-   ],
    "status": "unverified",
    "note": {
     "en": "Chosen by name match against the repo symbol catalog; a person must confirm the symbol is the right one.",
@@ -749,11 +461,6 @@
    "device_id": "relay_ansi_86",
    "sld_symbol": "lv_protection_relay",
    "match": "close",
-   "mld_symbols": [],
-   "ports": [
-    "top",
-    "trip"
-   ],
    "status": "unverified",
    "note": {
     "en": "Chosen by name match against the repo symbol catalog; a person must confirm the symbol is the right one.",
@@ -764,11 +471,6 @@
    "device_id": "relay_ansi_87",
    "sld_symbol": "mv_differential_relay",
    "match": "exact",
-   "mld_symbols": [],
-   "ports": [
-    "in",
-    "out"
-   ],
    "status": "unverified",
    "note": {
     "en": "Name match against the repo symbol catalog.",
@@ -779,16 +481,6 @@
    "device_id": "spd_type1",
    "sld_symbol": "lv_spd_varistor",
    "match": "close",
-   "mld_symbols": [
-    "lv_spd_varistor_1p_mld",
-    "lv_spd_varistor_2p_mld",
-    "lv_spd_varistor_3p_mld",
-    "lv_spd_varistor_4p_mld"
-   ],
-   "ports": [
-    "top",
-    "bottom"
-   ],
    "status": "unverified",
    "note": {
     "en": "Chosen by name match against the repo symbol catalog; a person must confirm the symbol is the right one.",
@@ -799,16 +491,6 @@
    "device_id": "spd_type2",
    "sld_symbol": "lv_spd_varistor",
    "match": "exact",
-   "mld_symbols": [
-    "lv_spd_varistor_1p_mld",
-    "lv_spd_varistor_2p_mld",
-    "lv_spd_varistor_3p_mld",
-    "lv_spd_varistor_4p_mld"
-   ],
-   "ports": [
-    "top",
-    "bottom"
-   ],
    "status": "unverified",
    "note": {
     "en": "Name match against the repo symbol catalog.",
@@ -819,16 +501,6 @@
    "device_id": "spd_type3",
    "sld_symbol": "lv_spd_varistor",
    "match": "close",
-   "mld_symbols": [
-    "lv_spd_varistor_1p_mld",
-    "lv_spd_varistor_2p_mld",
-    "lv_spd_varistor_3p_mld",
-    "lv_spd_varistor_4p_mld"
-   ],
-   "ports": [
-    "top",
-    "bottom"
-   ],
    "status": "unverified",
    "note": {
     "en": "Chosen by name match against the repo symbol catalog; a person must confirm the symbol is the right one.",
@@ -839,16 +511,6 @@
    "device_id": "switch_disconnector",
    "sld_symbol": "lv_switch_disconnector",
    "match": "exact",
-   "mld_symbols": [
-    "lv_switch_disconnector_1p_mld",
-    "lv_switch_disconnector_2p_mld",
-    "lv_switch_disconnector_3p_mld",
-    "lv_switch_disconnector_4p_mld"
-   ],
-   "ports": [
-    "top",
-    "bottom"
-   ],
    "status": "unverified",
    "note": {
     "en": "Name match against the repo symbol catalog.",
@@ -859,10 +521,6 @@
    "device_id": "switchboard_tgbt",
    "sld_symbol": "lv_busbar_node",
    "match": "close",
-   "mld_symbols": [],
-   "ports": [
-    "bottom"
-   ],
    "status": "unverified",
    "note": {
     "en": "Chosen by name match against the repo symbol catalog; a person must confirm the symbol is the right one.",
@@ -873,16 +531,6 @@
    "device_id": "thermal_overload_relay",
    "sld_symbol": "lv_thermal_overload",
    "match": "exact",
-   "mld_symbols": [
-    "lv_thermal_overload_1p_mld",
-    "lv_thermal_overload_2p_mld",
-    "lv_thermal_overload_3p_mld",
-    "lv_thermal_overload_4p_mld"
-   ],
-   "ports": [
-    "top",
-    "bottom"
-   ],
    "status": "unverified",
    "note": {
     "en": "Name match against the repo symbol catalog.",
@@ -893,11 +541,6 @@
    "device_id": "transformer_mv_lv",
    "sld_symbol": "mv_transformer_2w",
    "match": "exact",
-   "mld_symbols": [],
-   "ports": [
-    "top",
-    "bottom"
-   ],
    "status": "unverified",
    "note": {
     "en": "Name match against the repo symbol catalog.",
@@ -908,13 +551,6 @@
    "device_id": "ups",
    "sld_symbol": "lv_ups",
    "match": "exact",
-   "mld_symbols": [
-    "lv_ups_3p_mld"
-   ],
-   "ports": [
-    "top",
-    "bottom"
-   ],
    "status": "unverified",
    "note": {
     "en": "Name match against the repo symbol catalog.",
@@ -925,10 +561,6 @@
    "device_id": "utility_metering_mv",
    "sld_symbol": "mv_energy_meter",
    "match": "close",
-   "mld_symbols": [],
-   "ports": [
-    "top"
-   ],
    "status": "unverified",
    "note": {
     "en": "Chosen by name match against the repo symbol catalog; a person must confirm the symbol is the right one.",
@@ -939,11 +571,6 @@
    "device_id": "vt",
    "sld_symbol": "lv_vt",
    "match": "exact",
-   "mld_symbols": [],
-   "ports": [
-    "primary",
-    "secondary"
-   ],
    "status": "unverified",
    "note": {
     "en": "Name match against the repo symbol catalog.",

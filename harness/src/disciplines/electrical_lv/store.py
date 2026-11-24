@@ -1,7 +1,7 @@
 """The project folder and its single-source-of-truth (SSOT) files (PRD sections 10.3 and 14.4).
 
 Layout of a project folder: `inputs/` (immutable after intake, hashed) and `deliverables/<TR-NNN>/` (one folder per transmittal) are what a person sees; everything the harness keeps
-for itself lives in the hidden folder `.epc/`: `project_profile.json`, `master_project_state.json`, `epc-progress.txt`, `ssot/` (project data),
+for itself lives in the hidden folder `.epc/`: `project_profile.json`, `master_project_state.json`, `epc_progress.txt`, `ssot/` (project data),
 `runs/<pipeline_run_id>/`, `manifests/` (one manifest per transmittal), `reviews/` and `audit/`. `init_from_template` marks `.epc/` hidden on Windows (a leading dot already hides it on macOS and Linux).
 
 SSOT write rule. Every method that writes the profile, the state, the progress log, `ssot/` or a run folder takes a
@@ -37,7 +37,7 @@ INTERNAL = ".epc"            # everything the harness keeps for itself (the user
 SSOT_DIR, RUNS_DIR, REVIEWS_DIR, AUDIT_DIR, MANIFESTS_DIR = (f"{INTERNAL}/{n}" for n in ("ssot", "runs", "reviews", "audit", "manifests"))
 PROFILE = f"{INTERNAL}/project_profile.json"
 STATE = f"{INTERNAL}/master_project_state.json"
-PROGRESS = f"{INTERNAL}/epc-progress.txt"
+PROGRESS = f"{INTERNAL}/epc_progress.txt"
 MANIFEST_SCHEMA = "deliverable_manifest.schema.json"
 MANIFEST_SUFFIX = ".manifest.json"
 SUPERSEDE_FIELDS = ("superseded_by", "signed", "superseded_signature")
@@ -252,7 +252,7 @@ class ProjectStore:
         self._write_checked(token, STATE, state, "master_project_state.schema.json")
 
     def append_progress(self, token, line):
-        """Append one line (no line break inside) to `epc-progress.txt`."""
+        """Append one line (no line break inside) to `epc_progress.txt`."""
         self._require(token)
         if not isinstance(line, str) or "\n" in line or "\r" in line:
             raise StoreError("a progress entry is one line of text")

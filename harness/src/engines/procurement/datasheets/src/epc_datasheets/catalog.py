@@ -1,6 +1,6 @@
 """The manufacturer catalog: validation of the documents given as an argument, and the one explicit I/O function `load_catalog_dir`.
 
-Shapes understood (the same as `harness/schemas/manufacturer-catalog.schema.json`):
+Shapes understood (the same as `harness/schemas/manufacturer_catalog.schema.json`):
 - manufacturer file `manufacturer.json`: `{"id", "name", "categories": [...], "country"?, "web"?}`
 - product file `breakers.json` / `cables.json`: `{"manufacturer", "category", "products": [product, ...]}`; a product has `id, family, type, status, source`
   and optionally `rated_current_a` (`{"min"?, "max"?}`, or a list of numbers), `poles` (list of integers), `breaking_capacity`

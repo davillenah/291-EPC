@@ -11,7 +11,7 @@ REPO_CLASSES = (("harness/config/normative", R.CONFIG_NORMATIVE), ("harness/sche
                 ("harness/tools", R.HARNESS_CODE), ("harness/.claude", R.HARNESS_CODE), ("harness/tests", R.HARNESS_CODE))
 INTERNAL = ".epc"
 MANIFESTS = "manifests"
-ROOT_FILES = ("project_profile.json", "master_project_state.json", "epc-progress.txt")      # files directly inside `.epc/`
+ROOT_FILES = ("project_profile.json", "master_project_state.json", "epc_progress.txt")      # files directly inside `.epc/`
 INTERNAL_CLASSES = (R.SSOT, R.RUNS, R.REVIEWS, R.AUDIT)                                        # folders inside `.epc/`
 OPEN_CLASSES = (R.INPUTS, R.DELIVERABLES, R.TRANSMITTALS)                                      # folders directly in the project
 

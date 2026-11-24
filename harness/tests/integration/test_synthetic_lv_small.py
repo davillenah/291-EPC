@@ -85,7 +85,7 @@ class ProjectFilesAreRecorded(SyntheticRunCase):
         self.assertTrue((self.root / ".epc" / "ssot" / "inputs_manifest.json").is_file())
 
     def test_progress_log_has_one_line_per_stage(self):
-        lines = (self.root / ".epc" / "epc-progress.txt").read_text(encoding="utf-8").splitlines()
+        lines = (self.root / ".epc" / "epc_progress.txt").read_text(encoding="utf-8").splitlines()
         stage_lines = [line for line in lines if f"run {S.RUN_ID} | stage" in line]
         self.assertEqual(len(stage_lines), 12)
         self.assertTrue(all(" | ok | " in line for line in stage_lines))

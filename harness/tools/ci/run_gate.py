@@ -143,6 +143,7 @@ def main():
     run("registry", [py, str(BUILD), "registry", "--check"], REPO)
     run("skill-conflicts", [py, str(CONFLICTS), "--env", "production"], REPO)
     run("ignored-sources", [py, str(REPO / "harness" / "tools" / "ci" / "check_ignored_sources.py")], REPO)
+    run("file-names", [py, str(REPO / "harness" / "tools" / "ci" / "check_file_names.py")], REPO)
     run("single-source", [py, str(REPO / "harness" / "tools" / "ci" / "check_single_source.py")], REPO)
     run("dev-credentials", [py, str(REPO / "harness" / "tools" / "ci" / "check_dev_credentials.py")], REPO)
     run("complexity", [py, str(REPO / "harness" / "tools" / "ci" / "check_complexity.py")], REPO)

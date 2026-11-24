@@ -193,7 +193,7 @@ projects/<code>/
     ├── project_profile.json        # client, site, supply, normative profile, criteria, language
     ├── manifests/TR-NNN.manifest.json  # ONE manifest per transmittal, covering every file of it (§13)
     ├── master_project_state.json   # stage status, revisions, open findings (pipeline writes it)
-    ├── epc-progress.txt            # human-readable progress log
+    ├── epc_progress.txt            # human-readable progress log
     ├── ssot/                       # project data written only by the pipeline
     ├── runs/<pipeline_run_id>/     # intermediate results, logs (ignored)
     ├── reviews/                    # engineer corrections and findings

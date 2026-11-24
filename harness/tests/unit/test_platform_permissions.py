@@ -136,7 +136,7 @@ class ClassifyTests(unittest.TestCase):
             base = f".epc/{cls}" if cls in INTERNAL_CLASSES else cls
             self.assertEqual(classify_path(self.project, f"{base}/a/b.json"), cls)
             self.assertEqual(classify_path(self.project, self.project / base / "z"), cls)
-        for name in (".epc/project_profile.json", ".epc/master_project_state.json", ".epc/epc-progress.txt"):
+        for name in (".epc/project_profile.json", ".epc/master_project_state.json", ".epc/epc_progress.txt"):
             self.assertEqual(classify_path(self.project, name), R.SSOT)
 
     def test_repo_paths_need_a_repo_root(self):

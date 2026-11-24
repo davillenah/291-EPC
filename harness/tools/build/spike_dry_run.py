@@ -652,7 +652,7 @@ def stage_outputs(proj):
 
 
 def executed_stages(proj, run_id):
-    lines = (proj.project / ".epc" / "epc-progress.txt").read_text(encoding="utf-8").splitlines()
+    lines = (proj.project / ".epc" / "epc_progress.txt").read_text(encoding="utf-8").splitlines()
     return sorted(int(m.group(1)) for line in lines for m in [re.search(rf"run {run_id} \| stage (\d+) ", line)] if m)
 
 

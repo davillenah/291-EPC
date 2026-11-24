@@ -548,9 +548,13 @@ def _docx_con_python_docx(d, docx_ruta, sello, titulo):
 
 # --- SEAL.json -----------------------------------------------------------------------------------------
 def _seal_time(ahora=None):
-    """The time written in the seal: the one handed in (OPT-10), else the clock."""
+    """The time written in the seal: the one handed in (OPT-10), else `SOURCE_DATE_EPOCH` (reproducible builds), else the clock."""
     import datetime
-    return ahora or datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+    if ahora:
+        return ahora
+    epoch = os.environ.get("SOURCE_DATE_EPOCH", "")
+    moment = datetime.datetime.fromtimestamp(int(epoch), datetime.timezone.utc) if epoch.isdigit() else datetime.datetime.now(datetime.timezone.utc)
+    return moment.strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 def _actualizar_seal(raiz, nombre_archivo, sello, ahora=None):

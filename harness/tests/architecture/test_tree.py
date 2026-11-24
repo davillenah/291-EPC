@@ -43,7 +43,7 @@ class TreeMatchesPrd(unittest.TestCase):
         profile = json.loads((base / "project_profile.json").read_text(encoding="utf-8"))
         self.assertIsNone(profile["project_code"])
         self.assertIsNone(profile["client"]["name"])
-        self.assertTrue((base / "epc-progress.txt").is_file())
+        self.assertTrue((base / "epc_progress.txt").is_file())
 
     def test_the_tree_names_the_prd_section(self):
         self.assertIn("§10.2", EXPECTED["source"])
