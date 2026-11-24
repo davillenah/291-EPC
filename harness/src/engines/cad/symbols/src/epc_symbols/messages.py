@@ -6,6 +6,14 @@ MESSAGES: Dict[str, Dict[str, str]] = {
         "en": "unknown symbol library {kind!r}; expected one of {kinds}",
         "es": "biblioteca de símbolos desconocida {kind!r}; se esperaba una de {kinds}",
     },
+    "err_placeholder_name": {
+        "en": "a stand-in box needs the name of the symbol",
+        "es": "la caja provisoria necesita el nombre del símbolo",
+    },
+    "err_placeholder_size": {
+        "en": "{field} must be greater than zero, got {value}",
+        "es": "{field} debe ser mayor que cero, se recibió {value}",
+    },
 }
 
 
