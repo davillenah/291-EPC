@@ -54,7 +54,7 @@ harness/src/engines/calculation/aea90364/                              # el moto
     ├── data/
     │   ├── standard-solutions.json           # soluciones normalizadas (qué símbolos arman cada circuito)
     │   ├── design-criteria.json              # catálogo de criterios base (el revisor corrige aquí; el proyecto sobrescribe)
-    │   ├── review.json   review-log.jsonl    # quién aprobó qué punto, cuándo, y la huella del valor
+    │   ├── review.json   review_log.jsonl    # quién aprobó qué punto, cuándo, y la huella del valor
     ├── standards/<ID>/rules.json             # normas ingeridas y promovidas (esquema 1.1), una carpeta por parte de la norma
     └── norm_data.py                          # dónde está el dato (el backend y el motor de dibujo preguntan aquí)
 harness/config/normative/<CC>/jurisdiction.json   # solo país: nombre, idioma, tensiones y `packs` (qué motor de norma usa cada dominio)
@@ -234,7 +234,7 @@ Catálogo `engine/<norma>/src/epc_<norma>/data/design-criteria.json` (hoy `harne
 
 - Rol de plataforma `standards` (el **revisor de normas**): una cuenta sin organización que solo alcanza `/api/norms/*`. La crea un administrador (`python -m epc.modules.identity.cli create-admin --role standards`).
 - El módulo `norms` lista los **puntos** (una regla, una tabla o constante, un criterio) y permite **corregir** el valor (se reescribe en el archivo de datos con su propio formato, para que git muestre solo ese cambio) y **aprobar** o **marcar** con una nota.
-- Estados: **pendiente** hasta aprobar; la aprobación guarda quién, cuándo, nota y la **huella** del valor aprobado en `harness/src/engines/calculation/aea90364/src/epc_aea90364/data/review.json`, y cada acción se agrega a `data/review-log.jsonl` (el estado de revisión es dato de la norma y viaja con su motor). Un valor que cambia por otra vía después de aprobar (por ejemplo un merge) aparece como **desactualizado** y pide nueva aprobación.
+- Estados: **pendiente** hasta aprobar; la aprobación guarda quién, cuándo, nota y la **huella** del valor aprobado en `harness/src/engines/calculation/aea90364/src/epc_aea90364/data/review.json`, y cada acción se agrega a `data/review_log.jsonl` (el estado de revisión es dato de la norma y viaja con su motor). Un valor que cambia por otra vía después de aprobar (por ejemplo un merge) aparece como **desactualizado** y pide nueva aprobación.
 - El revisor corrige **valores, no estructura**: las reglas conservan sus campos y tipos; las tablas, sus claves y tamaños.
 
 ### Estado actual (honesto)

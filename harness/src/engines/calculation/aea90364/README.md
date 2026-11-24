@@ -7,7 +7,7 @@ src/epc_aea90364/
 ├── aea_*.py, board_*.py, ...     the calculation: demand, protection, ampacity, cable section, voltage drop, short circuit, earthing, route, special locations
 ├── data/
 │   ├── review.json               who approved which point of the norm data, when, and the fingerprint of the approved value (the owner's review state)
-│   ├── review-log.jsonl          every review action, appended
+│   ├── review_log.jsonl          every review action, appended
 │   ├── installation_types.json   vocabulary of installation types (D14: project logic, not a norm value)
 │   └── insulation_by_role.json   insulation by circuit role (D6: project rule, not a norm value)
 ├── standards/<STANDARD-ID>/rules.json   standards ingested with `epc_standards` and promoted (schema 1.1), one folder per part of the norm

@@ -137,7 +137,7 @@ class InitTests(TempCase):
         for name in S.SUBDIRS:
             self.assertTrue((store.root / name).is_dir(), name)
         files = sorted(tree_bytes(store.root))
-        self.assertEqual(files, [".epc/epc-progress.txt", ".epc/master_project_state.json", ".epc/project_profile.json"])
+        self.assertEqual(files, [".epc/epc_progress.txt", ".epc/master_project_state.json", ".epc/project_profile.json"])
         self.assertEqual(store.read_profile()["status"], "template")
         self.assertFalse(store.is_frozen())
 

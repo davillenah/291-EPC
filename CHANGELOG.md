@@ -5,6 +5,7 @@ All notable changes. Format: Keep a Changelog; versions follow `harness/docs/BRA
 ## [Unreleased]
 
 ### Added
+- File-name convention (`harness/docs/NAMING.md`) and gate check `file-names`: code and data files are lower snake_case and a folder never mixes `-` and `_`; existing offenders sit in a list that can only shrink. Renamed `deliverable_policy.json`, `document_catalog.json`, `manufacturer_catalog.schema.json`, `norm_register.schema.json`, `epc_progress.txt` (project `.epc/`) and `review_log.jsonl`.
 - `epc_dxf.verify`: read-only verification of a DXF (zero-length and tiny lines, duplicated lines, undefined layers and blocks, empty texts) with switchable rule ids and English and Spanish texts. No drawing changes, no golden bytes touched.
 - `epc_cutlist` (fabrication engine, generic): one-dimensional cutting plan with saw kerf, limited or unlimited stock lengths (bars, trays, conduits, profiles, cable drums), grouped parts and confidence marks on cut angles; input schema, bilingual errors (ADR-0039). Pure, no norm value.
 - `epc_walls` (building engine, generic): straight walls from an axis and a thickness or a layer assembly, join records (L, T, X with a canonical key), corner geometry (mitre, butt, square) with a square fallback and bilingual notes, and layer bands with priority. No norm value, no catalog.

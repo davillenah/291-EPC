@@ -58,7 +58,7 @@ class Reproducibility(unittest.TestCase):
                 self.assertEqual(self.fa[rel].read_bytes(), self.fb[rel].read_bytes())
 
     def test_the_named_artifacts_are_identical(self):
-        for rel in (".epc/project_profile.json", ".epc/master_project_state.json", ".epc/epc-progress.txt", ".epc/audit/events.jsonl", ".epc/reviews/workflow.json",
+        for rel in (".epc/project_profile.json", ".epc/master_project_state.json", ".epc/epc_progress.txt", ".epc/audit/events.jsonl", ".epc/reviews/workflow.json",
                     ".epc/ssot/inputs_manifest.json"):
             self.assertEqual(self.fa[rel].read_bytes(), self.fb[rel].read_bytes(), rel)
         stages = [rel for rel in self.fa if rel.startswith(".epc/ssot/stage_")]

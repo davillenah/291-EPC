@@ -2,7 +2,7 @@
 
 Code of a document: `<project_code>-<DISC>-<SUB>-<TYPE>-<NNN>[-<LEVEL>]`, for example `2026-ES-HNDA-3085-E-LV-SLD-001-L01`.
   DISC   `E` (electrical); SUB `LV` or `MV`; the system (lighting, receptacles...) goes into the description, not into the code.
-  TYPE   the three letters of `document-catalog.json` (plus SEC, ELV and DET for sections, elevations and details).
+  TYPE   the three letters of `document_catalog.json` (plus SEC, ELV and DET for sections, elevations and details).
   NNN    counts the documents of that type in the project (SLD-001 is the general single-line diagram, SLD-002 the lighting one...).
   LEVEL  only for a document that belongs to one level: `L00` ground floor, `L01`.. above, `LS01`.. below ground (two digits).
 File name: `<code>_<description>.<ext>`. The description is English, lower case, full words joined by `_`, at most 40 characters, specific to the content of
