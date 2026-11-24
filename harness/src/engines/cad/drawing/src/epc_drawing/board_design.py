@@ -18,6 +18,7 @@ Writes in DIR/out: <NAME>_sizing.json (contract of aea_export), SLD_<NAME>*/MLD_
 """
 import argparse
 import concurrent.futures
+import contextvars
 import copy
 import datetime as dt
 import json
@@ -367,7 +368,9 @@ def _run_sheet_generators(diagrams, env, board_table, out, name, maxl, out_dir, 
     if not jobs:
         return [], None
     with concurrent.futures.ThreadPoolExecutor(max_workers=len(jobs)) as pool:
-        runs = list(pool.map(lambda job: job(), jobs))
+        # each job runs in a copy of the caller's context, so the settings handed in reach the worker threads
+        futures = [pool.submit(contextvars.copy_context().run, job) for job in jobs]
+        runs = [f.result() for f in futures]
     log, error = [], None
     for lines, err in runs:
         log += lines

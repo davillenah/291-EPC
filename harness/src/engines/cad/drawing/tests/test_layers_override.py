@@ -10,6 +10,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import characterization as C   # noqa: E402
 
 import ezdxf   # noqa: E402
+from epc_dxf import settings   # noqa: E402
 
 
 class TestLayerOverride(unittest.TestCase):
@@ -17,12 +18,9 @@ class TestLayerOverride(unittest.TestCase):
         with tempfile.TemporaryDirectory() as t:
             f = Path(t) / "layers.json"
             f.write_text(json.dumps({"layers": {"sld.diagram": {"name": "DIAGRAMA-X", "color": 3}, "sld.text": {"name": "TEXTOS-X"}}}), encoding="utf-8")
-            os.environ["EPC_LAYERS_JSON"] = str(f)
-            try:
-                data, criteria, maxl, diagrams = C.CASES["small_sld_mld"]
+            data, criteria, maxl, diagrams = C.CASES["small_sld_mld"]
+            with settings.use(settings.DxfSettings(layer_files=(str(f),))):
                 summary = C.B.design(data, Path(t) / "work", "T1", criteria, None, maxl, diagrams)
-            finally:
-                del os.environ["EPC_LAYERS_JSON"]
             self.assertTrue(summary["ok"], summary.get("error"))
             for name in ("SLD_T1.dxf", "MLD_T1.dxf"):
                 doc = ezdxf.readfile(str(Path(t) / "work" / "out" / name))

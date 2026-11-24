@@ -9,7 +9,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
 import ezdxf   # noqa: E402
-from epc_dxf import textstyle   # noqa: E402
+from epc_dxf import settings, textstyle   # noqa: E402
 from epc_plan import core, dxfout   # noqa: E402
 
 TRAYS = {"schema_version": "1.0", "plan": {"id": "T", "level": "L0", "scale": {"p1": [0, 0], "p2": [100, 0], "distance_m": 10}, "origin": [0, 0]}, "discipline": "electrica_BT",
@@ -17,17 +17,15 @@ TRAYS = {"schema_version": "1.0", "plan": {"id": "T", "level": "L0", "scale": {"
 
 
 class Env:
+    """The DXF settings with `folder` as the editable folder, handed in as data (no process environment)."""
     def __init__(self, folder):
-        self.folder = folder
+        self.use = settings.use(settings.DxfSettings(config_dir=folder))
 
     def __enter__(self):
-        self.old = os.environ.get(textstyle.ENV_DIR)
-        os.environ[textstyle.ENV_DIR] = self.folder
+        self.use.__enter__()
 
     def __exit__(self, *a):
-        os.environ.pop(textstyle.ENV_DIR, None)
-        if self.old is not None:
-            os.environ[textstyle.ENV_DIR] = self.old
+        self.use.__exit__(*a)
 
 
 def write(folder):
