@@ -5,9 +5,12 @@ All notable changes. Format: Keep a Changelog; versions follow `harness/docs/BRA
 ## [Unreleased]
 
 ### Added
+- DRW-01: catalog role `sheet.viewport` (`0-Viewport`) and `epc_dxf.logo_layer_name` / `add_logo_layer` (`0-Logo-<Company>`, provider and client).
 - PRO-13: `harness/tools/ci/harness_metrics.py` shows projects, runs, failures per stage and time per stage from the projects on disk.
 
 ### Changed
+- COD-03 / DGM-13a: the legend texts of the SLD symbols live in the symbol catalog (`legend` field), not in `sld_generator.py`. Same drawings.
+- SYM-00: the SLD and MLD DXF files carry their symbols as `INSERT` blocks (library file found through the library catalog; the MLD passes its symbol library). Golden DXF files re-recorded once, owner approved.
 - DRW-01 option B (ARQ-37): every layer of every DXF follows NCS / AIA `291-<discipline>-<major>-<minor>-<status>` in English (photovoltaic uses discipline `W`); outside the standard: `0-Titleblock` (frame, title block and its text), `0-Viewport`. Names come from `harness/config/dxf/layers.json` only; `style_unify` no longer renames layers. Every layer carries an English description in the LAYER table (`epc_dxf.describe_layers`, run by `finish_draft`). Two roles may share a layer name only with the same look. The plan engine reads round or rect sections from profile data (`seccion`), not from layer-name patterns. Golden DXF files re-recorded with the official tools for this change only.
 - DRW-01 stage 1 (option A): the 17 `A-*` layers and the five pens of `epc_arch` now live in `harness/config/dxf/layers.json` as `arch.*` roles (`lineweight` is the pen); `epc_style.json` keeps the sizes, text styles, font and sheet. `epc_arch` reads the catalog as data and imports no other engine, so it does not call `epc_dxf.new_document` (a dependency for three lines). Same drawings (checked entity by entity). Discipline grouping accepts `also_prefixes` (`A-`).
 - OPT-02 (ADR-0040 complete): `epc_plan.draw_model3d`, `epc_arch.building_solids` and `epc_arch.draw_elevation` are the 3D entry points; the `model3d` stage calls them. Same files.
