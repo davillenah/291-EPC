@@ -4,6 +4,7 @@ Generic building engine: it holds no norm value. The distances that shape the re
 """
 from epc_dims.build import dimensions
 from epc_dims.errors import DimsError
+from epc_dims.scales import annotation_size, paper_size
 
-__all__ = ["dimensions", "DimsError"]
+__all__ = ["dimensions", "annotation_size", "paper_size", "DimsError"]
 __version__ = "0.1.0"

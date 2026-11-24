@@ -9,7 +9,7 @@ Norm data (tables, constants, rules, design criteria, standard solutions, system
   standard-solutions.json  which symbols build each circuit
   system_voltages.json     the system voltages (230/400 V, 220/380 V) and their U0
 
-The review state of the owner stays with the AEA 90364 engine package (`epc_aea90364/data/`) (`review.json`, `review-log.jsonl`).
+The review state of the owner stays with the AEA 90364 engine package (`epc_aea90364/data/`) (`review.json`, `review_log.jsonl`).
 
 The folder is found, in this order: (1) the environment variable `EPC_NORMATIVE_ROOT` (the `normative` folder that holds `AR/`), (2) the nearest parent of this
 file that has `harness/config/normative` (the repository, or a built plugin's `lib/`), (3) otherwise `FileNotFoundError` naming what was searched.
@@ -33,7 +33,7 @@ def _review_dir() -> Path:
 
 DATA = _review_dir()                                                  # review state of the owner (not norm data)
 REVIEW = DATA / "review.json"
-REVIEW_LOG = DATA / "review-log.jsonl"
+REVIEW_LOG = DATA / "review_log.jsonl"
 CRITERIA = {"electrical": "design-criteria.json"}                    # AEA 90364 is an electrical norm: one catalog
 _CACHE: Dict[str, Any] = {}
 

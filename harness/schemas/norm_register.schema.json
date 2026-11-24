@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://epc-291.local/schemas/norm-register.schema.json",
+  "$id": "https://epc-291.local/schemas/norm_register.schema.json",
   "title": "Norm register file",
   "description": "One topic file of the norm register of an engine: engine/<pkg>/src/epc_<pkg>/norm_register/<topic>.json. A record lists one norm-based value (or a set of values) with its clause, source and review state. Records of type json only POINT to the data (single source of truth); records of type code carry the literal in `value`.",
   "type": "object",

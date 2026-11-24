@@ -1,7 +1,7 @@
 """Runs the pipeline of a project in the background and reports it: progress by stage and the deliverables by numbered folder.
 
 `start(...)` launches `epc run` through the CLI (the designed interface) in a thread; `status(id)` reads what the pipeline itself records in the project folder
-(`.epc/epc-progress.txt`, one line per finished stage) and, when it ends, lists `deliverables/TR-NNN/<NN_FOLDER>/<file>`. The page never sees JSON or paths of the inputs.
+(`.epc/epc_progress.txt`, one line per finished stage) and, when it ends, lists `deliverables/TR-NNN/<NN_FOLDER>/<file>`. The page never sees JSON or paths of the inputs.
 """
 import json
 import os
@@ -56,7 +56,7 @@ def _why(res):
 
 def progress(folder, rid):
     """[{stage, status, message}] of the stages the run has finished, from the progress log of the project."""
-    log = Path(folder) / ".epc" / "epc-progress.txt"
+    log = Path(folder) / ".epc" / "epc_progress.txt"
     try:
         lines = log.read_text(encoding="utf-8").splitlines()
     except OSError:

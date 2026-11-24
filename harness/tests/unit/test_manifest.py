@@ -504,7 +504,7 @@ class NamingTests(unittest.TestCase):
         self.assertEqual(N.problems(self.entry(level="L00", page=2)), [])
 
     def test_every_document_type_of_the_catalog_is_known(self):
-        catalog = json.loads((REPO / "harness" / "schemas" / "document-catalog.json").read_text(encoding="utf-8"))
+        catalog = json.loads((REPO / "harness" / "schemas" / "document_catalog.json").read_text(encoding="utf-8"))
         types = {d["type"] for d in catalog["disciplines"]["electrical"]["documents"]}
         self.assertLessEqual(types, set(N.TYPES))
         self.assertLessEqual(set(N.PAGED_TYPES), set(N.TYPES))

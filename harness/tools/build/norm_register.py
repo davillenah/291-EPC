@@ -5,7 +5,7 @@
   python harness/tools/build/norm_register.py --report        # (re)write harness/docs/NORM_REGISTER.md
   python harness/tools/build/norm_register.py --report --check  # fail when harness/docs/NORM_REGISTER.md is out of date
 
-Hand records live in `engine/<pkg>/src/<module>/norm_register/<topic>.json` (schema: harness/schemas/norm-register.schema.json). A record of type `json` only
+Hand records live in `engine/<pkg>/src/<module>/norm_register/<topic>.json` (schema: harness/schemas/norm_register.schema.json). A record of type `json` only
 POINTS to the data (single source of truth, ADR-0012); a record of type `code` carries the literal in `value`. The rules of the AEA engine and of the lighting
 engine are indexed automatically from their own fields (no hand records). Review state is read from the AEA `review.json`; this tool never writes it."""
 import argparse
@@ -20,7 +20,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import epc_paths as P  # noqa: E402
 
 REPO = P.REPO
-SCHEMA = Path(P.SCHEMAS_REL) / "norm-register.schema.json"
+SCHEMA = Path(P.SCHEMAS_REL) / "norm_register.schema.json"
 TARGET = Path(P.DOCS_REL) / "NORM_REGISTER.md"
 REVIEW = Path(P.engine_src_rel("aea90364")) / "epc_aea90364" / "data" / "review.json"
 AEA_RULES = f"{P.NORM_DATA_REL['aea90364']}/rules/*.json"
@@ -378,7 +378,7 @@ def main(argv=None) -> int:
     ap.add_argument("--check", action="store_true", help="exit 1 on errors (with --report: also when the report is out of date)")
     ap.add_argument("--report", action="store_true", help="write harness/docs/NORM_REGISTER.md")
     ap.add_argument("--root", default=str(REPO), help="repository root (tests use a temp dir)")
-    ap.add_argument("--schema", default=None, help="schema file (default: <root>/harness/schemas/norm-register.schema.json)")
+    ap.add_argument("--schema", default=None, help="schema file (default: <root>/harness/schemas/norm_register.schema.json)")
     args = ap.parse_args(argv)
     root = Path(args.root)
     reg = Register(root, Path(args.schema) if args.schema else None)

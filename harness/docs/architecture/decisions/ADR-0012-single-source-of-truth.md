@@ -16,7 +16,7 @@ Copies drift. The norm review (ADR-0011) made it concrete: the drawing engine ke
 | Rules of the AEA engine | `engine/calc/src/epc_calc/rules/*.json` | calculation engine, norm review |
 | Calculation tables and constants | `engine/calc/src/epc_calc/aea_tables.json` | calculation engine, norm review |
 | Base design criteria | `engine/jurisdictions/AR/electrical/design-criteria.json` | design pipeline, project criteria screen, norm review, built plugin (generated copy) |
-| Review state of the norms | `engine/jurisdictions/AR/review.json` + `review-log.jsonl` | norm review |
+| Review state of the norms | `engine/jurisdictions/AR/review.json` + `review_log.jsonl` | norm review |
 | Project criteria overrides | `<project>/workspace/00-setup/design-criteria.json` | design pipeline |
 | Report types / register definitions | `management/methodologies/<id>/reports.json`, `registers.json` | reporting, registers |
 | Project registers and plan | `<project>/workspace/05-management/` | registers, reporting, management |

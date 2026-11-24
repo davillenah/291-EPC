@@ -84,4 +84,4 @@ Each module has the same internal shape: `api/` (routers), `application/` (use c
 | Developer (us) | Everything, plus `planning/`, `docs/`, `harness/.claude/`, `engine/` | Client data (never in git) |
 
 ## 6. Roadmap to get there
-See [target-structure.md](target-structure.md) for the full tree, the mapping from today's folders and the migration phases.
+See [REPOSITORY_LAYOUT.md](REPOSITORY_LAYOUT.md) for the tree as it is today.

@@ -84,7 +84,7 @@ engine/<norma>/
     ├── rules/*.json  (+ _indice.json)      # reglas de ingeniería derivadas de la norma (paráfrasis; solo la referencia)
     ├── data/
     │   ├── design-criteria.json            # catálogo de criterios base por disciplina; el proyecto los sobrescribe
-    │   ├── review.json  review-log.jsonl   # quién aprobó qué punto, cuándo, y la huella del valor
+    │   ├── review.json  review_log.jsonl   # quién aprobó qué punto, cuándo, y la huella del valor
     │   └── standard-solutions.json         # soluciones normalizadas (si aplica)
     ├── standards/<ID>/rules.json           # partes de la norma ingeridas y promovidas (esquema 1.1)
     ├── norm_data.py                        # dónde está cada dato: criteria_file(), REVIEW, REVIEW_LOG…

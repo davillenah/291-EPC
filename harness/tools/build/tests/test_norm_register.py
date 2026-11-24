@@ -13,7 +13,7 @@ REPO = Path(__file__).resolve().parents[4]
 sys.path.insert(0, str(REPO / "harness" / "tools" / "build"))
 import norm_register as nr  # noqa: E402
 
-SCHEMA = REPO / "harness" / "schemas" / "norm-register.schema.json"
+SCHEMA = REPO / "harness" / "schemas" / "norm_register.schema.json"
 DATA = {"tabla": {"a": 1, "b/c": [10, 20]}}
 CODE = '﻿"""x"""\nLIMIT = 3.5\nNAMES = ("a", "b")\nVAL: int = 7\nDYN = len("abc")\n'
 

@@ -18,7 +18,7 @@ import epc_aea90364   # noqa: E402
 PKG = Path(epc_aea90364.__file__).resolve().parent                   # norm_data itself is in epc_calc_common since MIG-37b; the rest of the package data stays here
 MOVED_FILES = ("aea_tables.json", "design-criteria.json", "standard-solutions.json", "system_voltages.json")
 STAYING = ("formulas_aea.json", "example_calculo.json", "example_conductor_table.json", "data/installation_types.json", "data/insulation_by_role.json",
-           "data/review.json", "data/review-log.jsonl")
+           "data/review.json", "data/review_log.jsonl")
 
 
 def _root_with_copy(tmp):

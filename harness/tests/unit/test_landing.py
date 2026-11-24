@@ -362,7 +362,7 @@ class RunnerTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             folder = Path(tmp) / "P"
             (folder / ".epc").mkdir(parents=True)
-            (folder / ".epc" / "epc-progress.txt").write_text(
+            (folder / ".epc" / "epc_progress.txt").write_text(
                 "header\n2026-11-19T00:00:00Z | run run-A | stage 1 intake | ok | -\n2026-11-19T00:00:01Z | run run-B | stage 1 intake | ok | -\n"
                 "2026-11-19T00:00:02Z | run run-A | stage 2 requirements_inputs | blocked | a | b\n", encoding="utf-8")
             self.assertEqual([(x["stage"], x["status"]) for x in runner.progress(folder, "run-A")], [(1, "ok"), (2, "blocked")])

@@ -42,12 +42,17 @@ class DiagramKnowledge(unittest.TestCase):
         devs = {Path(f).stem for d in ("sld_mld/devices", "pv_sld_mld/devices") for f in glob.glob(str(K / d / "*.json"))}
         m = json.loads((K / "puente_motor_dibujo/device_symbol_map.json").read_text(encoding="utf-8"))["mappings"]
         self.assertEqual(devs, {x["device_id"] for x in m})
+        from epc_drawing import diagram_knowledge as DK
         for x in m:
+            self.assertNotIn("ports", x)          # one source (COD-03): ports and MLD variants come from the symbol catalogue
+            self.assertNotIn("mld_symbols", x)
             if x["sld_symbol"] is None:
                 self.assertEqual("not_found", x["status"])
+                self.assertEqual({"ports": [], "mld_symbols": []}, {k: DK.symbol_for(x["device_id"])[k] for k in ("ports", "mld_symbols")})
                 continue
-            self.assertEqual(cat[x["sld_symbol"]], x["ports"], x["device_id"])
-            for mld in x["mld_symbols"]:
+            got = DK.symbol_for(x["device_id"])
+            self.assertEqual(cat[x["sld_symbol"]], got["ports"], x["device_id"])
+            for mld in got["mld_symbols"]:
                 self.assertIn(mld, cat)
 
     def test_netlists_use_existing_symbols_ports_and_devices(self):

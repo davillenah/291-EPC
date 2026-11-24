@@ -4,6 +4,7 @@ Reads the plan with the current engine and writes it with the v2 exporters, one 
 import argparse
 import hashlib
 import json
+import os
 import subprocess
 import sys
 import tempfile
@@ -80,7 +81,9 @@ def fields_of(a) -> dict:
 
 
 def _run_time(now=None) -> str:
-    """The run time written in the manifest: the one handed in (OPT-10), else the clock."""
+    """The run time written in the manifest: the one handed in (OPT-10), else `SOURCE_DATE_EPOCH` (reproducible builds), else the clock."""
+    if now is None and os.environ.get("SOURCE_DATE_EPOCH", "").isdigit():
+        now = datetime.fromtimestamp(int(os.environ["SOURCE_DATE_EPOCH"]), timezone.utc)
     return (now or datetime.now(timezone.utc)).isoformat(timespec="seconds")
 
 

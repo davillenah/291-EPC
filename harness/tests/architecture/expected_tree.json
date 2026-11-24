@@ -356,7 +356,7 @@
   "harness/.claude/settings.json",
   "harness/CLAUDE.md",
   "harness/src/disciplines/electrical_lv/pipeline.py",
-  "projects/_template/.epc/epc-progress.txt",
+  "projects/_template/.epc/epc_progress.txt",
   "projects/_template/.epc/master_project_state.json",
   "projects/_template/.epc/project_profile.json"
  ]

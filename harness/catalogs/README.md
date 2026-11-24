@@ -13,4 +13,4 @@ Rules:
 - Every product has a `source` (page it came from) and a `status`: `unverified` until someone checks it against the maker's current catalog, then `verified`.
 - A value that is not known is left out; never guessed.
 - The owner's PDF catalogs update these files later (see `E4-05` in `harness/docs/BACKLOG.md`).
-- Shape: `harness/schemas/manufacturer-catalog.schema.json`.
+- Shape: `harness/schemas/manufacturer_catalog.schema.json`.

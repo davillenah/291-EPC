@@ -5,6 +5,9 @@ All notable changes. Format: Keep a Changelog; versions follow `harness/docs/BRA
 ## [Unreleased]
 
 ### Added
+- `epc_changes` (quality engine, generic): change control between revision A and B of a list of records (circuits, symbols, sheets): what was added, removed or changed field by field, with ignorable fields and a size limit; no default for the id field, the ignore list or the limit; English and Spanish errors, input schema, 100 % coverage.
+- Reproducible run times: `SOURCE_DATE_EPOCH` fixes the time in the `epc_documents` seals and the `epc_arch` manifest when none is handed in.
+- File-name convention (`harness/docs/NAMING.md`) and gate check `file-names`: code and data files are lower snake_case and a folder never mixes `-` and `_`; existing offenders sit in a list that can only shrink. Renamed `deliverable_policy.json`, `document_catalog.json`, `manufacturer_catalog.schema.json`, `norm_register.schema.json`, `epc_progress.txt` (project `.epc/`) and `review_log.jsonl`.
 - `epc_dxf.verify`: read-only verification of a DXF (zero-length and tiny lines, duplicated lines, undefined layers and blocks, empty texts) with switchable rule ids and English and Spanish texts. No drawing changes, no golden bytes touched.
 - `epc_cutlist` (fabrication engine, generic): one-dimensional cutting plan with saw kerf, limited or unlimited stock lengths (bars, trays, conduits, profiles, cable drums), grouped parts and confidence marks on cut angles; input schema, bilingual errors (ADR-0039). Pure, no norm value.
 - `epc_walls` (building engine, generic): straight walls from an axis and a thickness or a layer assembly, join records (L, T, X with a canonical key), corner geometry (mitre, butt, square) with a square fallback and bilingual notes, and layer bands with priority. No norm value, no catalog.
@@ -12,10 +15,13 @@ All notable changes. Format: Keep a Changelog; versions follow `harness/docs/BRA
 - M5 discovery: `engine_schema(name)` (api), `epc engines schema <name>` (CLI) and `epc_engine_schema` (MCP, read only) give the JSON schemas an engine publishes, so an agent can read an engine's input contract before calling it. An engine without a schema answers with a warning.
 - OPT-09 / M5: input schemas for `epc_walls` and `epc_dims` (published through `engine_schema`), with a test that the schema and the engine's own checks agree.
 - `epc_expr` (geometry engine, generic): safe arithmetic expression evaluator (`+ - * / ^ %`, `abs sin cos tan sqrt ceil floor round log exp PtDist PtAngle`, `pi`, named variables) for parametric values, fields and dimension formulas; nothing is run as code; every error has a code and English and Spanish text. `epc_arrays` (geometry engine, generic): rectangular and polar array positions (signed spacing, turned grids, full or partial fill, optional rotation of the copies); `max_items` is a required input.
+- `epc_dims.annotation_size` / `paper_size`: the size in drawing units of a text or arrow that measures a given length on the plotted sheet at the scale 1:N, for a drawing in any unit (no list of scales is held).
 - DRW-01: catalog role `sheet.viewport` (`0-Viewport`) and `epc_dxf.logo_layer_name` / `add_logo_layer` (`0-Logo-<Company>`, provider and client).
 - PRO-13: `harness/tools/ci/harness_metrics.py` shows projects, runs, failures per stage and time per stage from the projects on disk.
 
 ### Changed
+- `harness/docs/architecture/REPOSITORY_LAYOUT.md` replaces `target-structure.md` with the tree as it is today (the old target tree no longer existed).
+- `device_symbol_map.json` no longer repeats ports and MLD variants; `epc_drawing.symbol_for` reads them from the symbol catalogue (same answer).
 - COD-03 / DGM-13a: the legend texts of the SLD symbols live in the symbol catalog (`legend` field), not in `sld_generator.py`. Same drawings.
 - SYM-00: the SLD and MLD DXF files carry their symbols as `INSERT` blocks (library file found through the library catalog; the MLD passes its symbol library). Golden DXF files re-recorded once, owner approved.
 - DRW-01 option B (ARQ-37): every layer of every DXF follows NCS / AIA `291-<discipline>-<major>-<minor>-<status>` in English (photovoltaic uses discipline `W`); outside the standard: `0-Titleblock` (frame, title block and its text), `0-Viewport`. Names come from `harness/config/dxf/layers.json` only; `style_unify` no longer renames layers. Every layer carries an English description in the LAYER table (`epc_dxf.describe_layers`, run by `finish_draft`). Two roles may share a layer name only with the same look. The plan engine reads round or rect sections from profile data (`seccion`), not from layer-name patterns. Golden DXF files re-recorded with the official tools for this change only.
