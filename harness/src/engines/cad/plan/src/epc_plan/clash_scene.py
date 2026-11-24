@@ -41,21 +41,21 @@ def _distance(a: Box, b: Box) -> float:
     return sum(x * x for x in d) ** 0.5
 
 
+def _relation(x: Box, y: Box, clearance_m: float, trays: bool):
+    """How two boxes relate: ("hard", depth, point, boxes), ("clearance", distance, point, boxes) or None."""
+    gap, point = _gap(x, y)
+    if gap < -EPS:
+        return ("hard", gap, point, (x, y))
+    if clearance_m > 0 and trays and _distance(x, y) < clearance_m - EPS:
+        return ("clearance", _distance(x, y), point, (x, y))
+    return None
+
+
 def _pair(a: Dict[str, Any], b: Dict[str, Any], clearance_m: float):
     """The worst relation found between the boxes of two solids: (type, gap, point, the two boxes) or None."""
-    worst = None
-    for x in boxes(a):
-        for y in boxes(b):
-            gap, point = _gap(x, y)
-            if gap < -EPS:
-                cand = ("hard", gap, point, (x, y))
-            elif clearance_m > 0 and a["kind"] == b["kind"] == "tray" and _distance(x, y) < clearance_m - EPS:
-                cand = ("clearance", _distance(x, y), point, (x, y))
-            else:
-                continue
-            if worst is None or (cand[0] == "hard" and (worst[0] != "hard" or cand[1] < worst[1])) or (cand[0] == worst[0] == "clearance" and cand[1] < worst[1]):
-                worst = cand
-    return worst
+    trays = a["kind"] == b["kind"] == "tray"
+    found = [r for x in boxes(a) for y in boxes(b) for r in [_relation(x, y, clearance_m, trays)] if r]
+    return min(found, key=lambda r: (r[0] != "hard", r[1])) if found else None
 
 
 def _overlap(a: Box, b: Box) -> List[float]:
@@ -70,21 +70,20 @@ def _relevant(a: Dict[str, Any], b: Dict[str, Any]) -> bool:
     return True
 
 
+def _entry(a: Dict[str, Any], b: Dict[str, Any], hit) -> Dict[str, Any]:
+    kind, gap, point, pair = hit
+    ref = lambda s: {k: s.get(k) for k in ("id", "tag", "kind", "layer")}
+    what = {"en": "clash" if kind == "hard" else "clearance too small", "es": "choque" if kind == "hard" else "separación insuficiente"}
+    return {"id": hashlib.sha1("|".join(sorted([str(a["id"]), str(b["id"])])).encode()).hexdigest()[:10], "type": kind, "severity": "error" if kind == "hard" else "warning",
+            "gap_m": round(gap, 3), "overlap_m": _overlap(*pair) if kind == "hard" else None, "point_m": [round(c, 3) for c in point], "level": a.get("level") or b.get("level") or "",
+            "a": ref(a), "b": ref(b),
+            "text": {lang: f"{a['tag']} ({a['kind']}) / {b['tag']} ({b['kind']}): {what[lang]}, {abs(round(gap, 3))} m" for lang in ("en", "es")}}
+
+
 def detect(scene: Dict[str, Any], clearance_m: float = 0.0) -> List[Dict[str, Any]]:
     """Every clash between the solids of the scene (see the module text), worst first."""
     solids = [s for s in scene["solids"] if s["kind"] != "room"]
-    found = []
-    for i, a in enumerate(solids):
-        for b in solids[i + 1:]:
-            if not _relevant(a, b):
-                continue
-            hit = _pair(a, b, clearance_m)
-            if hit is None:
-                continue
-            kind, gap, point, hit_boxes = hit
-            found.append({"id": hashlib.sha1("|".join(sorted([str(a["id"]), str(b["id"])])).encode()).hexdigest()[:10], "type": kind, "severity": "error" if kind == "hard" else "warning",
-                          "gap_m": round(gap, 3), "overlap_m": _overlap(hit_boxes[0], hit_boxes[1]) if kind == "hard" else None, "point_m": [round(c, 3) for c in point], "level": a.get("level") or b.get("level") or "",
-                          "a": {k: a.get(k) for k in ("id", "tag", "kind", "layer")}, "b": {k: b.get(k) for k in ("id", "tag", "kind", "layer")},
-                          "text": {"en": f"{a['tag']} ({a['kind']}) and {b['tag']} ({b['kind']}): {kind}, {abs(round(gap, 3))} m", "es": f"{a['tag']} ({a['kind']}) y {b['tag']} ({b['kind']}): {'choque' if kind == 'hard' else 'separación insuficiente'}, {abs(round(gap, 3))} m"}})
-    found.sort(key=lambda c: (c["type"] != "hard", c["gap_m"], c["id"]))
-    return found
+    pairs = [(a, b) for i, a in enumerate(solids) for b in solids[i + 1:] if _relevant(a, b)]
+    hits = [(a, b, _pair(a, b, clearance_m)) for a, b in pairs]
+    found = [_entry(a, b, hit) for a, b, hit in hits if hit is not None]
+    return sorted(found, key=lambda c: (c["type"] != "hard", c["gap_m"], c["id"]))
