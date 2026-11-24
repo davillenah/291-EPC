@@ -333,6 +333,13 @@ class LoadCatalogDirTests(unittest.TestCase):
             self.assertEqual(len(build_datasheets("TG-1", [device_req()], catalog)["datasheets"][0]["candidates"]), 2)
             self.assertEqual(len(load_catalog_dir(str(root))), 4)
 
+    def test_a_maker_of_other_categories_is_not_a_source_of_data_sheets(self):
+        with tempfile.TemporaryDirectory() as root:
+            self.good(root, "m1")
+            self.write(root, "trays", {"manufacturer.json": {"id": "trays", "name": "TRAYS", "categories": ["cable_trays"]},
+                                       "cable_trays.json": document("trays", "cable_trays", [product("t1")])})
+            self.assertEqual({d["manufacturer"] for d in load_catalog_dir(root)}, {"m1"})
+
     def test_folder_errors(self):
         self.fails("no-such-folder-xyz", "catalog folder not found")
         with tempfile.TemporaryDirectory() as root:
