@@ -95,25 +95,39 @@ def _save(doc, path: Path, stamp_date: Optional[str]) -> None:
     deliverable.finish_draft(doc, path, None, stamp_date)
 
 
+def _role_of(layer: str, catalog: Dict[str, Any]) -> str:
+    """The role of the layer catalogue a solid's layer stands for: the role itself, a role of the plan (`plan.ELEC-BANDEJA`), or the role that already carries that final name (`291-A-WALL-FULL-N`)."""
+    if layer in catalog:
+        return layer
+    if "plan." + layer in catalog:
+        return "plan." + layer
+    return next((role for role, look in catalog.items() if look.get("name") == layer), layer)
+
+
 def write_dxf(scene: Dict[str, Any], path: Path, version: str = "", params: Dict[str, Any] = core.PARAMS, stamp_date: Optional[str] = None) -> int:
-    """A 3D DXF of the scene in metres: every face as a 3DFACE on the layer of its solid. Returns how many faces were written."""
+    """A 3D DXF of the scene in metres, made of blocks: each shape (a support, a section of tray, a wall piece, a luminaire) is one block of 3DFACEs and every solid that has that shape is an
+    insertion of it on the layer of its kind (`scene_blocks`). Returns how many faces the scene has."""
     import ezdxf
-    from epc_dxf import new_document
+    from epc_dxf import layers as layer_catalog, new_document
+    from epc_plan import scene_blocks
     from epc_plan.dxfout import _dxf_version
     check(scene)
     doc = new_document(_dxf_version(params["dxf"], version), setup=True)
     doc.units = 6
     msp = doc.modelspace()
-    faces = 0
-    for s in scene["solids"]:
-        layer = s.get("layer") or "0"
+    catalog = layer_catalog.load()
+    grouped = scene_blocks.group(scene["solids"])
+    for b in grouped["blocks"]:
+        blk = doc.blocks.new(name=b["name"])
+        for f in b["faces"]:
+            blk.add_3dface([tuple(b["vertices"][i]) for i in f], dxfattribs={"layer": "0"})        # layer 0: the insertion gives them its layer, colour and weight
+    for ins in grouped["inserts"]:
+        layer = _role_of(ins["layer"], catalog)             # the layers of the catalogue: their name, colour and line weight, as in every other deliverable
         if layer not in doc.layers:
             doc.layers.add(layer)
-        for f in s["mesh"]["faces"]:
-            msp.add_3dface([tuple(s["mesh"]["vertices"][i]) for i in f], dxfattribs={"layer": layer})
-            faces += 1
+        msp.add_blockref(ins["block"], tuple(ins["at"]), dxfattribs={"layer": layer, "rotation": ins["rotation"]})
     _save(doc, path, stamp_date)
-    return faces
+    return sum(len(s["mesh"]["faces"]) for s in scene["solids"])
 
 
 # ---------------------------------------------------------------- sections through everything
