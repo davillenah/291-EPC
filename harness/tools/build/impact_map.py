@@ -22,12 +22,12 @@ import epc_paths as P  # noqa: E402
 
 REPO = P.REPO
 TARGET = P.DOCS / "architecture" / "DEPENDENCIAS.md"
-ENGINE_PKGS = {"epc_aea90364": "aea90364", "epc_calc_common": "calc_common", "epc_load_balance": "load_balance", "epc_voltage_drop": "voltage_drop", "epc_feeder_sizing": "feeder_sizing", "epc_short_circuit": "short_circuit", "epc_grounding": "grounding", "epc_selectivity": "selectivity", "epc_transformer_sizing": "transformer_sizing", "epc_terminal_blocks": "terminal_blocks", "epc_design_basis": "design_basis", "epc_descriptive_report": "descriptive_report", "epc_boq": "boq", "epc_datasheets": "datasheets", "epc_rfq": "rfq", "epc_cutlist": "cutlist", "epc_walls": "walls", "epc_dims": "dims", "epc_expr": "expr", "epc_arrays": "arrays",
+ENGINE_PKGS = {"epc_aea90364": "aea90364", "epc_calc_common": "calc_common", "epc_load_balance": "load_balance", "epc_voltage_drop": "voltage_drop", "epc_feeder_sizing": "feeder_sizing", "epc_short_circuit": "short_circuit", "epc_grounding": "grounding", "epc_selectivity": "selectivity", "epc_transformer_sizing": "transformer_sizing", "epc_terminal_blocks": "terminal_blocks", "epc_design_basis": "design_basis", "epc_descriptive_report": "descriptive_report", "epc_boq": "boq", "epc_datasheets": "datasheets", "epc_rfq": "rfq", "epc_cutlist": "cutlist", "epc_walls": "walls", "epc_dims": "dims", "epc_expr": "expr", "epc_arrays": "arrays", "epc_changes": "changes",
                "epc_documents": "documents", "epc_standards": "standards", "epc_rules": "rules", "epc_calc_check": "calc_check", "epc_plan": "plan", "epc_symbols": "symbols", "epc_dxf": "dxf",
                "epc_titleblock": "titleblock", "epc_sld": "sld", "epc_mld": "mld", "epc_drawing": "drawing", "epc_arch": "arch", "epc_lighting": "lighting", "epc_receptacles": "receptacles", "epc_hvac": "hvac", "epc_pv": "pv"}
 ENGINE_ROOTS = {a: f"{P.engine_src_rel(a)}/epc_{a}" for a in ENGINE_PKGS.values()}
 PYPROJECT = {a: P.ENGINE_FOLDERS_REL[a] for a in ENGINE_PKGS.values()}
-NAME_REF = re.compile(r"\bepc_(?:aea90364|calc_common|load_balance|voltage_drop|feeder_sizing|short_circuit|grounding|selectivity|transformer_sizing|terminal_blocks|design_basis|descriptive_report|boq|datasheets|rfq|cutlist|walls|dims|expr|arrays|documents|standards|rules|calc_check|plan|symbols|dxf|titleblock|sld|mld|drawing|arch|lighting|receptacles|hvac|pv)(?:\.[a-z_]+)*")
+NAME_REF = re.compile(r"\bepc_(?:aea90364|calc_common|load_balance|voltage_drop|feeder_sizing|short_circuit|grounding|selectivity|transformer_sizing|terminal_blocks|design_basis|descriptive_report|boq|datasheets|rfq|cutlist|walls|dims|expr|arrays|changes|documents|standards|rules|calc_check|plan|symbols|dxf|titleblock|sld|mld|drawing|arch|lighting|receptacles|hvac|pv)(?:\.[a-z_]+)*")
 STD = set(sys.stdlib_module_names)
 IGNORED_THIRD_PARTY = {"epc", "tests", "conftest", "pytest"}
 

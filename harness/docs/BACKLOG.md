@@ -143,7 +143,7 @@ After the flow is stable. Related items adjacent: delivery and revisions, then s
 - [ ] **PRO-07 · Project status panel:** stages run, pending reviews, what blocks the issue.
 - [ ] **PRO-10 · Issue checklist** generated from the real project state.
 - [ ] **GEN-06 · One-click delivery package (was G).** Drawings, memo, lists, transmittal and manifest in one numbered folder, with the edit or production mark visible.
-- [ ] **GEN-07 · Change control between revisions (was H).** A readable summary of what changed between revision A and B (circuits, sections, symbols).
+- [~] **GEN-07 · Change control between revisions (was H).** A readable summary of what changed between revision A and B (circuits, sections, symbols). Done 2026-11-24: engine `epc_changes.compare` (added, removed, changed by field). Pending: feed it from the manifests of two issues and write the readable summary into the transmittal.
 - [ ] **GEN-05 · Shorter guided form (was E).** `/init` asks only what cannot be deduced and proposes defaults with their basis.
 - [ ] **PRO-09 · "What if" mode:** change a load or a cable and see the effect without redoing the project.
 - [ ] **PRO-06 · More studies:** short circuit and protection selectivity on the relational model.
