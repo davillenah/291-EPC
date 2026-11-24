@@ -60,35 +60,39 @@ def _footprint(pts: Sequence[Point], width: float, clearance: float) -> List[Lis
     return rects
 
 
-def _outside(line: Line, rect: Sequence[Point]) -> List[Line]:
-    """The parts of a segment that lie outside a convex rectangle (Cyrus-Beck): none, one or two pieces."""
+def _inside(line: Line, rect: Sequence[Point]) -> Optional[Tuple[float, float]]:
+    """The part of a segment (as a range of t from 0 to 1) that lies inside a convex rectangle (Cyrus-Beck), or None when none of it does."""
     (x0, y0), (x1, y1) = line
+    centre = (sum(c[0] for c in rect) / 4, sum(c[1] for c in rect) / 4)
     t0, t1 = 0.0, 1.0
     for i in range(4):
         p, q = rect[i], rect[(i + 1) % 4]
-        nx, ny = q[1] - p[1], -(q[0] - p[0])                       # outward normal of a rectangle walked in order
-        centre = (sum(c[0] for c in rect) / 4, sum(c[1] for c in rect) / 4)
-        if nx * (centre[0] - p[0]) + ny * (centre[1] - p[1]) > 0:
+        nx, ny = q[1] - p[1], -(q[0] - p[0])
+        if nx * (centre[0] - p[0]) + ny * (centre[1] - p[1]) > 0:   # the normal points outward
             nx, ny = -nx, -ny
         num = nx * (p[0] - x0) + ny * (p[1] - y0)
         den = nx * (x1 - x0) + ny * (y1 - y0)
         if abs(den) < 1e-12:
             if num < 0:
-                return [line]                                       # parallel and outside this side: wholly outside
+                return None                                         # parallel and outside this side
             continue
         t = num / den
-        if den > 0:
-            t1 = min(t1, t)
-        else:
-            t0 = max(t0, t)
-        if t0 >= t1:
-            return [line]
+        t0, t1 = (t0, min(t1, t)) if den > 0 else (max(t0, t), t1)
+    return (t0, t1) if t0 < t1 else None
+
+
+def _outside(line: Line, rect: Sequence[Point]) -> List[Line]:
+    """The parts of a segment that lie outside a convex rectangle: the whole line, or up to two pieces."""
+    span = _inside(line, rect)
+    if span is None:
+        return [line]
+    (x0, y0), (x1, y1) = line
     at = lambda k: (x0 + (x1 - x0) * k, y0 + (y1 - y0) * k)
     pieces = []
-    if t0 > 1e-9:
-        pieces.append((at(0.0), at(t0)))
-    if t1 < 1 - 1e-9:
-        pieces.append((at(t1), at(1.0)))
+    if span[0] > 1e-9:
+        pieces.append((at(0.0), at(span[0])))
+    if span[1] < 1 - 1e-9:
+        pieces.append((at(span[1]), at(1.0)))
     return pieces
 
 

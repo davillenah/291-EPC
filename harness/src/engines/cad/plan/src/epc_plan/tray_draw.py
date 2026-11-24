@@ -7,6 +7,8 @@ radius. All sizes arrive as arguments in drawing units; nothing is read from fil
 import math
 from typing import Dict, List, Sequence, Tuple
 
+from epc_plan.core import PlanError
+
 Point = Tuple[float, float]
 Line = Tuple[Point, Point]
 KINDS = ("escalera", "perforada", "ciega", "alambre")
@@ -124,7 +126,7 @@ def tray_lines(pts: Sequence[Point], kind: str, width: float, p: Dict[str, float
     """The lines of one tray: `pts` is its axis, `width` its clear width and `p` the drawing sizes (`lip`, `rung_pitch`, `rung_width`, `slot_pitch`, `slot_length`,
     `wire_pitch`, `radius`, `joint_pitch`), all in drawing units. The joints of the sections are drawn as a line across every `joint_pitch`."""
     if kind not in KINDS:
-        raise ValueError(kind)
+        raise PlanError("err_tray_kind", kind=kind, kinds=", ".join(KINDS))
     path = fillet_path(pts, p["radius"] + width / 2)               # the radius of the catalogue is the inside one
     half = width / 2
     body = {"escalera": lambda: _ladder(path, half, p), "perforada": lambda: _floor(path, half, p, True), "ciega": lambda: _floor(path, half, p, False), "alambre": lambda: _mesh(path, half, p)}[kind]()

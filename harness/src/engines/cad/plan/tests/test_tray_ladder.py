@@ -72,7 +72,7 @@ class TestKinds(unittest.TestCase):
         self.assertGreater(len(across(lines)), 60)
 
     def test_an_unknown_kind_is_refused(self):
-        with self.assertRaises(ValueError):
+        with self.assertRaises(core.PlanError):
             T.tray_lines(STRAIGHT, "x", 300.0, SIZES)
 
     def test_every_kind_draws_a_bend(self):
