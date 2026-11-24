@@ -100,13 +100,14 @@ def _stacked(mid, angle, height, seen):
     return (mid[0] + math.cos(rad) * n * 1.4 * height, mid[1] + math.sin(rad) * n * 1.4 * height)
 
 
-def _add_label(target, s, pts, height, cfg, layer, seen, style: str = "Standard", origin=(0.0, 0.0)) -> int:
+def _add_label(target, s, pts, height, cfg, layer, seen, style: str = "Standard", origin=(0.0, 0.0), lift: float = 0.0) -> int:
     """Write the label of a stretch when it fits, into the model space or into a block (`origin`: where the block is inserted); returns the entities added (0 or 1)."""
     text = _label(s, sum(math.dist(p, q) for p, q in zip(pts, pts[1:])), height)
     if not text:
         return 0
     mid, angle = _label_position(pts)
     x, y = _stacked(mid, angle, height, seen)
+    x, y = x + math.cos(math.radians(angle + 90)) * lift, y + math.sin(math.radians(angle + 90)) * lift       # clear of a ladder drawn with its width
     target.add_text(text, height=height, rotation=angle, dxfattribs={"layer": layer(cfg["tag_layer"]), "style": style}).set_placement((x - origin[0], y - origin[1]), align=ezdxf.enums.TextEntityAlignment.BOTTOM_CENTER)
     return 1
 
@@ -121,12 +122,68 @@ def _block_name(doc, prefix: str, tag: str) -> str:
     return name
 
 
-def _add_tray_block(doc, msp, s, pts, line_layer: str, cfg, height: float, layer, seen, style: str, prefix: str) -> None:
-    """One block per tray: its outline and its text inside, inserted at the first point so the CAD moves everything together."""
+def _offset_path(pts, d: float):
+    """The path `pts` moved sideways by `d` (left of the walking direction when positive); the corners are mitred, so the two rails of a bend meet."""
+    pts = [p for i, p in enumerate(pts) if i == 0 or math.dist(p, pts[i - 1]) > 1e-9]
+    if len(pts) < 2:
+        return list(pts)
+    normals = []
+    for a, b in zip(pts, pts[1:]):
+        length = math.dist(a, b)
+        normals.append((-(b[1] - a[1]) / length, (b[0] - a[0]) / length))
+    out = [(pts[0][0] + normals[0][0] * d, pts[0][1] + normals[0][1] * d)]
+    for i in range(1, len(pts) - 1):
+        (n1x, n1y), (n2x, n2y) = normals[i - 1], normals[i]
+        k = 1 + n1x * n2x + n1y * n2y                              # 1 + cos of the turn: the corner moves d / (that / 2) along the bisector
+        k = k if k > 1e-6 else 1e-6
+        out.append((pts[i][0] + (n1x + n2x) * d / k, pts[i][1] + (n1y + n2y) * d / k))
+    out.append((pts[-1][0] + normals[-1][0] * d, pts[-1][1] + normals[-1][1] * d))
+    return out
+
+
+def _ladder_lines(pts, width: float, pitch: float):
+    """The lines of a ladder tray seen from above: the two rails (the path moved half the width to each side) and a rung every `pitch` along the path, as a list of (start, end)."""
+    left, right = _offset_path(pts, width / 2), _offset_path(pts, -width / 2)
+    lines = [(a, b) for rail in (left, right) for a, b in zip(rail, rail[1:])]
+    half = width / 2
+    for a, b in zip(pts, pts[1:]):
+        length = math.dist(a, b)
+        if length <= 0:
+            continue
+        ux, uy = (b[0] - a[0]) / length, (b[1] - a[1]) / length
+        count = math.ceil(length / pitch - 1e-9) - 1                # the rungs strictly inside the stretch, square to it
+        for k in range(1, count + 1):
+            cx, cy = a[0] + ux * k * pitch, a[1] + uy * k * pitch
+            lines.append(((cx - uy * half, cy + ux * half), (cx + uy * half, cy - ux * half)))
+    return lines
+
+
+def _tray_width_mm(s) -> float:
+    """The width written on a tray (`ancho_mm` in its attributes), 0 when it has none or it is not a number."""
+    try:
+        return float((s.get("attrs") or {}).get("ancho_mm") or 0)
+    except (TypeError, ValueError):
+        return 0.0
+
+
+def _add_tray_detail(blk, s, pts, origin, scale: float, pitch_mm: float, line_layer: str) -> None:
+    """A tray that has a width (`ancho_mm` in its attributes) is drawn as a ladder: two rails and the rungs; without a width it stays a line."""
+    width_mm = _tray_width_mm(s)
+    if width_mm <= 0 or pitch_mm <= 0 or len(pts) < 2:
+        return
+    unit = scale / 1000.0                                          # drawing units per millimetre
+    for a, b in _ladder_lines(pts, width_mm * unit, pitch_mm * unit):
+        blk.add_line((a[0] - origin[0], a[1] - origin[1]), (b[0] - origin[0], b[1] - origin[1]), dxfattribs={"layer": line_layer})
+
+
+def _add_tray_block(doc, msp, s, pts, line_layer: str, cfg, height: float, layer, seen, style: str, prefix: str, scale: float = 1.0, pitch_mm: float = 0.0) -> None:
+    """One block per tray: its outline (a ladder with its rails and rungs when it has a width) and its text inside, inserted at the first point so the CAD moves everything together."""
     ox, oy = pts[0]
     blk = doc.blocks.new(name=_block_name(doc, prefix, s["tag"]))
     blk.add_lwpolyline([(x - ox, y - oy) for x, y in pts], dxfattribs={"layer": line_layer})
-    _add_label(blk, s, pts, height, cfg, layer, seen, style, (ox, oy))
+    _add_tray_detail(blk, s, pts, (ox, oy), scale, pitch_mm, line_layer)
+    lift = _tray_width_mm(s) / 2000.0 * scale if pitch_mm > 0 else 0.0
+    _add_label(blk, s, pts, height, cfg, layer, seen, style, (ox, oy), lift)
     msp.add_blockref(blk.name, (ox, oy), dxfattribs={"layer": line_layer})
 
 
@@ -135,7 +192,7 @@ def _add_stretch(doc, msp, s, line_kinds, cfg, scale: float, height: float, laye
     pts = [(x * scale, y * scale) for x, y in s["points_m"]]
     line_layer = layer(line_kinds[s["kind"]]["capa_dxf"])
     if doc is not None and trays.get("as_block") and s["kind"] in trays.get("kinds", []):
-        _add_tray_block(doc, msp, s, pts, line_layer, cfg, height, layer, seen, style, trays["block_prefix"])
+        _add_tray_block(doc, msp, s, pts, line_layer, cfg, height, layer, seen, style, trays["block_prefix"], scale, float(trays.get("rung_pitch_mm", 0.0)))
         return 1
     msp.add_lwpolyline(pts, dxfattribs={"layer": line_layer})
     return 1 + _add_label(msp, s, pts, height, cfg, layer, seen, style)

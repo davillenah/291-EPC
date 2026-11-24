@@ -17,7 +17,7 @@ FILE_NAME = "text.json"
 SECTIONS = {
     "font": {"regular": str, "bold": str, "style": str, "style_bold": str},
     "heights": {"plan_text_m": float, "plan_symbol_mm": float, "plan_text_mm": float, "titleblock_mm": float, "legal_notice_mm": float, "diagram_text_mm": float, "frame_text_mm": float},
-    "trays": {"as_block": bool, "kinds": list, "block_prefix": str},
+    "trays": {"as_block": bool, "kinds": list, "block_prefix": str, "rung_pitch_mm": float},
 }
 
 

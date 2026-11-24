@@ -13,6 +13,7 @@ from pathlib import Path
 from epc_datasheets.errors import DatasheetsError
 
 PRODUCT_FILES = ("breakers.json", "cables.json")
+CATEGORIES = ("breakers", "cables")                      # the categories the data sheets are built from; a maker with none of them (a tray maker) is not a source here
 REQUIRED_PRODUCT = ("id", "family", "type", "status", "source")
 STATUSES = ("unverified", "verified")
 COPIED = ("family", "type", "status", "source", "rated_current_a", "poles", "breaking_capacity", "voltage", "standards", "construction", "temperature_c", "notes")
@@ -143,6 +144,16 @@ def _documents(folder, info):
     return docs
 
 
+def _folder_documents(folders):
+    """The documents of the makers whose categories are those the data sheets are built from; a maker of other categories (trays) is left out."""
+    catalog = []
+    for folder in folders:
+        info = _manufacturer(folder)
+        if set(info["categories"]) & set(CATEGORIES):
+            catalog += _documents(folder, info)
+    return catalog
+
+
 def load_catalog_dir(path):
     """Read a catalog folder (`<path>/<manufacturer>/{manufacturer,breakers,cables}.json`) into the `catalog` argument; ValueError when invalid.
 
@@ -154,8 +165,6 @@ def load_catalog_dir(path):
     folders = sorted(p for p in root.iterdir() if p.is_dir())
     if not folders:
         raise DatasheetsError("err_catalog_folder_empty", root=root)
-    catalog = []
-    for folder in folders:
-        catalog += _documents(folder, _manufacturer(folder))
+    catalog = _folder_documents(folders)
     products(catalog)
     return catalog
