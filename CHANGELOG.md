@@ -5,6 +5,7 @@ All notable changes. Format: Keep a Changelog; versions follow `harness/docs/BRA
 ## [Unreleased]
 
 ### Changed
+- Single-line diagram: the three header lines of each feeder (name, section and protection, bar data) are spaced at 1.5 times the text height instead of 1.07, so they no longer touch. Goldens re-recorded for this change only.
 - Line weights in the DXF layer catalog (owner request 2026-11-24, finish of drawings): the 110 layers that had no weight now have one by kind (0.35 mm main conductors, equipment and structure; 0.25 mm the rest; 0.18 mm text, marks and dimensions). Title block and sheet frame layers, architecture layers and every IEC 60617 symbol are untouched. The DXF goldens of the drawing and characterization suites were re-recorded for this change only.
 
 ### Added

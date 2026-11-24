@@ -447,9 +447,9 @@ class _Sheet:
             self.place('lv_mccb_basic', {'tag': f"Q-{f['name']}"[:14]}, x, 40)
             self.feeder_to_bus(x, k)
             self.T(tx, 31.5, f"{f['name']} / {f['length_m']:g} m", size=FS_DES, bold=True)
-            self.T(tx, 31.5 + 3.0*sp, 'Seccion y proteccion: Pendiente' if f['pending'] else f"{f['S_mm2']} mm² · XLPE/Cu IRAM 2178")
+            self.T(tx, 31.5 + 4.2*sp, 'Seccion y proteccion: Pendiente' if f['pending'] else f"{f['S_mm2']} mm² · XLPE/Cu IRAM 2178")
             self.draw_transfer(x, f, tx)
-            self.T(tx, 31.5 + 6.0*sp, ((f['source'] + ' · ') if f.get('source') else '') + ('' if f['pending'] or f['In'] is None else f"In {f['In']:g} A") + ('' if f['pending'] or f['du_pct'] is None else f" · ΔU {f['du_pct']:.2f} %")
+            self.T(tx, 31.5 + 8.4*sp, ((f['source'] + ' · ') if f.get('source') else '') + ('' if f['pending'] or f['In'] is None else f"In {f['In']:g} A") + ('' if f['pending'] or f['du_pct'] is None else f" · ΔU {f['du_pct']:.2f} %")
                    + (' · en paralelo' if f.get('together') else ''))
 
     def draw_feeder_head(self, x, f):
@@ -493,8 +493,8 @@ class _Sheet:
         """El texto de la acometida, junto al cable de entrada (horizontal, sobre el Q-GRAL): el cable y su protección vienen del tablero superior."""
         ac, xa, sp, v = self.fig['feeder'], self.xa, self.sp, self.v
         self.T(xa + 6, 31.5, f"{self.first_feeder_name()} / {ac['length_m']:g} m", size=FS_DES, bold=True)
-        self.T(xa + 6, 31.5 + 3.0*sp, 'Seccion y proteccion: Pendiente (tablero superior)' if ac['pending'] else f"{ac['S_mm2']} mm² · XLPE/Cu IRAM 2178")
-        self.T(xa + 6, 31.5 + 6.0*sp, f"Barra {v:.0f} V · In {self.bdp} A · Icc {self.icc:g} kA" + ('' if ac['pending'] or ac['du_pct'] is None else f" · ΔU {ac['du_pct']:.2f} %"))
+        self.T(xa + 6, 31.5 + 4.2*sp, 'Seccion y proteccion: Pendiente (tablero superior)' if ac['pending'] else f"{ac['S_mm2']} mm² · XLPE/Cu IRAM 2178")
+        self.T(xa + 6, 31.5 + 8.4*sp, f"Barra {v:.0f} V · In {self.bdp} A · Icc {self.icc:g} kA" + ('' if ac['pending'] or ac['du_pct'] is None else f" · ΔU {ac['du_pct']:.2f} %"))
 
     def draw_boards(self):
         x = X0
