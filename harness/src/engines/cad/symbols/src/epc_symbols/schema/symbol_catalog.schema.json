@@ -14,6 +14,7 @@
           "file": {"type": "string", "pattern": "\\.svg$"},
           "name_en": {"type": "string"},
           "name_es": {"type": "string"},
+          "legend": {"type": "object", "required": ["abbr", "es", "en"], "properties": {"abbr": {"type": "string"}, "es": {"type": "string"}, "en": {"type": "string"}}},
           "size": {"type": "object", "required": ["w", "h"], "properties": {"w": {"type": "number"}, "h": {"type": "number"}}},
           "ports": {
             "type": "array",
