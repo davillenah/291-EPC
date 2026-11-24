@@ -1,0 +1,49 @@
+{
+ "harness/src/engines/cad/arch/src/epc_arch/cli_v2.py": {
+  "clock": 1,
+  "environment": 2,
+  "process": 2,
+  "tempfile": 1
+ },
+ "harness/src/engines/cad/arch/src/epc_arch/export/export_raster.py": {
+  "environment": 1
+ },
+ "harness/src/engines/cad/arch/src/epc_arch/sources/dxf.py": {
+  "tempfile": 1
+ },
+ "harness/src/engines/cad/drawing/src/epc_drawing/board_design.py": {
+  "environment": 1
+ },
+ "harness/src/engines/cad/drawing/src/epc_drawing/diagram_knowledge.py": {
+  "environment": 1
+ },
+ "harness/src/engines/cad/drawing/src/epc_drawing/export/plan_sheet.py": {
+  "tempfile": 1
+ },
+ "harness/src/engines/cad/dxf/src/epc_dxf/layers.py": {
+  "environment": 1
+ },
+ "harness/src/engines/cad/dxf/src/epc_dxf/textstyle.py": {
+  "environment": 2
+ },
+ "harness/src/engines/cad/mld/src/epc_mld/mld_generator.py": {
+  "clock": 1,
+  "environment": 2
+ },
+ "harness/src/engines/cad/plan/src/epc_plan/jobs.py": {
+  "clock": 2
+ },
+ "harness/src/engines/cad/plan/src/epc_plan/underlay.py": {
+  "tempfile": 1
+ },
+ "harness/src/engines/cad/sld/src/epc_sld/sld_generator.py": {
+  "clock": 1,
+  "environment": 1
+ },
+ "harness/src/engines/cad/sld/src/epc_sld/sld_paginate.py": {
+  "environment": 1
+ },
+ "harness/src/engines/cad/titleblock/src/epc_titleblock/service.py": {
+  "clock": 1
+ }
+}
