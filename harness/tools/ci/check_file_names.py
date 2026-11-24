@@ -34,37 +34,56 @@ def stem_of(name):
     return name[: name.rfind(".")] if "." in name else name
 
 
-def offenders(files):
-    bad = set()
-    seen = defaultdict(lambda: [set(), set()])
+def _fixed(name):
+    return name.startswith(".") or name in EXEMPT_NAMES or name.startswith("ADR-")
+
+
+def _breaks_case(name):
+    """Rule 1: a code or data file that is not lower snake_case."""
+    suffix = Path(name).suffix
+    if suffix not in CODE_DATA:
+        return False
+    if name.endswith(".schema.json"):
+        return not SNAKE.fullmatch(name[: -len(".schema.json")])
+    return not SNAKE.fullmatch(name.removesuffix(suffix))
+
+
+def _mixed_folders(files):
+    """Rule 2: files of the folders that use both `-` and `_` in their names."""
+    seen = defaultdict(lambda: ([], []))
     for p in files:
         folder, _, name = p.rpartition("/")
-        suffix = Path(name).suffix
-        if name.startswith(".") or name in EXEMPT_NAMES or name.startswith("ADR-"):
+        if Path(name).suffix not in CODE_DATA | {".md"}:
             continue
-        if suffix in CODE_DATA and not SNAKE.fullmatch(name.removesuffix(suffix)) and not name.endswith(".schema.json"):
-            bad.add(p)
-        if suffix in CODE_DATA or suffix == ".md":
-            s = stem_of(name)
-            seen[folder][0].add(p) if "-" in s else None
-            seen[folder][1].add(p) if "_" in s else None
-    for dashed, under in seen.values():
-        if dashed and under:
-            bad |= dashed | under
-    return bad
+        stem = stem_of(name)
+        for mark, group in zip("-_", seen[folder]):
+            if mark in stem:
+                group.append(p)
+    return {p for dashed, under in seen.values() if dashed and under for p in dashed + under}
+
+
+def offenders(files):
+    kept = [p for p in files if not _fixed(p.rpartition("/")[2])]
+    return {p for p in kept if _breaks_case(p.rpartition("/")[2])} | _mixed_folders(kept)
+
+
+def _legacy():
+    return set(json.loads(LEGACY.read_text())) if LEGACY.exists() else set()
+
+
+def _update(bad):
+    keep = bad & (_legacy() or bad)
+    LEGACY.write_text(json.dumps(sorted(keep), indent=1) + "\n")
+    print(f"file-names: legacy list holds {len(keep)} file(s)")
+    return 0
 
 
 def main():
-    update = "--update" in sys.argv
-    files = tracked()
-    bad = offenders(files) | {p for p in files if p.endswith(".schema.json") and not SNAKE.fullmatch(p.rpartition("/")[2][: -len(".schema.json")])}
-    legacy = set(json.loads(LEGACY.read_text())) if LEGACY.exists() else set()
-    if update:
-        LEGACY.write_text(json.dumps(sorted(bad & (legacy or bad)), indent=1) + "\n")
-        print(f"file-names: legacy list holds {len(bad & (legacy or bad))} file(s)")
-        return 0
-    new = sorted(bad - legacy)
-    gone = sorted(legacy - bad)
+    bad = offenders(tracked())
+    if "--update" in sys.argv:
+        return _update(bad)
+    legacy = _legacy()
+    new, gone = sorted(bad - legacy), sorted(legacy - bad)
     for p in new:
         print("FAIL name breaks the convention (lower snake_case, one separator per folder):", p)
     for p in gone:
