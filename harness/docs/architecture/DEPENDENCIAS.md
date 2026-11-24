@@ -80,7 +80,7 @@ Lo declarado en `pyproject.toml` frente a lo que el código importa de verdad.
 | `lighting` | `engines` | — | `engines` |
 | `load_balance` | — | `epc-calc-common` | — |
 | `mld` | `lxml` | `epc-aea90364`, `epc-dxf`, `epc-symbols`, `epc-titleblock`, `lxml` | — |
-| `plan` | `ezdxf` | `epc-dxf`, `epc-symbols`, `ezdxf` | — |
+| `plan` | `engines`, `ezdxf` | `epc-dxf`, `epc-symbols`, `ezdxf` | `engines` |
 | `pv` | `timezonefinder` | `timezonefinder` | — |
 | `receptacles` | — | — | — |
 | `rfq` | — | — | — |

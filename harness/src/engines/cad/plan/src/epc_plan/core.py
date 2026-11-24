@@ -16,7 +16,7 @@ from epc_symbols import plan_symbols
 from epc_plan.messages import text
 
 HERE = Path(__file__).resolve().parent
-TYPICAL = HERE / "typical-values.json"         # the values the engineer confirms (cable diameters, commercial sizes, fill limits, limits per circuit): reviewed once, in the norms review
+TYPICAL = HERE / "typical_values.json"         # the values the engineer confirms (cable diameters, commercial sizes, fill limits, limits per circuit): reviewed once, in the norms review
 
 
 def load_params() -> Dict[str, Any]:

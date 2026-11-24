@@ -636,7 +636,7 @@
    "verified_at": null,
    "issues": [
     "no clause: 'typical value, to verify'",
-    "plan typical-values design.families repeats max_outlets (TUG 15, TUE 1): two copies"
+    "plan typical_values design.families repeats max_outlets (TUG 15, TUE 1): two copies"
    ],
    "note": "Max 15 outlets per circuit; typical value. Check AEA 771 limits."
   },
@@ -670,7 +670,7 @@
    "verified_at": null,
    "issues": [
     "no clause: 'typical value, to verify'",
-    "plan typical-values design.families repeats max_outlets (TUG 15, TUE 1): two copies"
+    "plan typical_values design.families repeats max_outlets (TUG 15, TUE 1): two copies"
    ],
    "note": "Max 1 outlet per circuit; typical value. Check AEA 771 limits."
   },
