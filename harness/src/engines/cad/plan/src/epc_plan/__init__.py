@@ -1,12 +1,33 @@
-"""plan: see MODULE.md and SPEC.md."""
-__version__ = "0.1.0"
+"""The electrical plan engine (plans, trays and 3D model) moved into `epc_draw.plan` (ADR-0042). This package is a door: `epc_plan` and every `epc_plan.<module>` are the same objects as `epc_draw.plan` and `epc_draw.plan.<module>`."""
+import importlib
+import importlib.abc
+import importlib.util
+import sys
 
-__all__ = ["Model3dInput", "PlanError", "PlanInput", "area", "best_layout", "build_graph", "cable_mm", "chain", "check", "cut", "default_rules", "derive_inverts", "detect", "dimension_points", "draw_model3d", "draw_plan", "footprints", "gap_3d", "geometry_of", "group_of", "groups", "height_gap", "inside", "isometric", "load_params", "load_profile", "load_rules", "merge", "merge_rules", "mesh", "metres_per_unit", "orient_from_outlet", "parse_level", "partitions", "parts", "plan_gap", "process", "profiles", "propose_runs", "propose_wiring", "reload_params", "room_of", "rule_for", "rule_key", "scene", "size_container", "size_containers", "solids", "split_evenly", "supports", "takeoff", "to_world", "tray_pieces", "versions", "wall_brackets", "write_dxf", "write_dxf_3d", "write_obj", "write_section_dxf"]
+from epc_draw import plan as _symbols
+
+__version__ = "0.1.0"
+__all__ = list(_symbols.__all__)
+
+
+class _Door(importlib.abc.MetaPathFinder, importlib.abc.Loader):
+    """`import epc_plan.<name>` gives the module `epc_draw.plan.<name>` itself (one copy, so classes and settings are shared)."""
+
+    def find_spec(self, name, path=None, target=None):
+        if name.startswith("epc_plan.") and name != "epc_plan.__main__":   # `python -m epc_plan` runs the file next to this one
+            return importlib.util.spec_from_loader(name, self)
+        return None
+
+    def create_module(self, spec):
+        return importlib.import_module("epc_draw.plan." + spec.name.split(".", 1)[1])
+
+    def exec_module(self, module):
+        return None
+
+
+if not any(isinstance(f, _Door) and f.__class__.__module__ == __name__ for f in sys.meta_path):
+    sys.meta_path.insert(0, _Door())
 
 
 def __getattr__(name):
-    """The public names load on first use (PEP 562), so importing the package stays as cheap as it was."""
-    if name in __all__:
-        from epc_plan import api
-        return getattr(api, name)
-    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+    return getattr(_symbols, name)

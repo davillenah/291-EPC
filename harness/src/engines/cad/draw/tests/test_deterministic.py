@@ -13,7 +13,7 @@ sys.path.insert(0, str(SRC))
 import ezdxf  # noqa: E402
 from ezdxf.tools import juliandate  # noqa: E402
 
-from epc_dxf import deliverable, roles, stamp  # noqa: E402
+from epc_draw.core import deliverable, roles, stamp  # noqa: E402
 
 SVG = """<svg xmlns="http://www.w3.org/2000/svg" width="200mm" height="100mm" viewBox="0 0 200 100">
 <rect id="papel" x="0" y="0" width="200" height="100" fill="#fff"/>
@@ -26,7 +26,7 @@ SVG = """<svg xmlns="http://www.w3.org/2000/svg" width="200mm" height="100mm" vi
 MIXED_ENTITIES = """
 import sys
 sys.path.insert(0, sys.argv[2])
-from epc_dxf import stamp
+from epc_draw.core import stamp
 s = stamp.parse("2026-03-04", "MIXED")
 doc = stamp.new("R2010", s)
 msp = doc.modelspace()

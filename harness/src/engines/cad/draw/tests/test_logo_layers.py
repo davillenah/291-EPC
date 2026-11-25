@@ -4,7 +4,7 @@ import unittest
 
 import ezdxf
 
-from epc_dxf import add_logo_layer, layers as L, logo_layer_name
+from epc_draw.core import add_logo_layer, layers as L, logo_layer_name
 
 
 class TestLogoLayers(unittest.TestCase):

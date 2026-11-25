@@ -5,7 +5,7 @@ import threading
 import unittest
 from pathlib import Path
 
-from epc_dxf import layers, settings, textstyle
+from epc_draw.core import layers, settings, textstyle
 
 
 def write(folder, name, data):

@@ -45,68 +45,6 @@ Schema: `harness/src/engines/bim/walls/src/epc_walls/schema/input.schema.json` (
 | `walls[].join_off.a` | boolean |  |  |  |
 | `walls[].join_off.b` | boolean |  |  |  |
 
-## epc_plan
-
-### Input
-
-Schema: `harness/src/engines/cad/plan/src/epc_plan/schema/input.schema.json` (plan drawing (input))
-
-| Field | Type | Required | Limits | Notes |
-|---|---|---|---|---|
-| `schema_version` | `1.0` | yes |  |  |
-| `plan` | object | yes |  |  |
-| `plan.id` | string |  |  |  |
-| `plan.level` | string |  | pattern ^L(0\|[1-9][0-9]*\|-[1-9][0-9]*)$ | L0 ground, L1.. up, L-1.. down |
-| `plan.scale` | object | yes |  |  |
-| `plan.scale.p1` | array | yes | minItems 2, maxItems 2 |  |
-| `plan.scale.p2` | array | yes | minItems 2, maxItems 2 |  |
-| `plan.scale.distance_m` | number | yes | exclusiveMinimum 0 |  |
-| `plan.origin` | array |  | minItems 2, maxItems 2 | the point 0,0 the person set, in view units |
-| `discipline` | string | yes |  |  |
-| `dxf_version` | string |  |  |  |
-| `outlet` | string |  |  | id of the node where a network drains to |
-| `outlet_invert_m` | number |  |  |  |
-| `circuits` | array |  |  | circuits to route from an origin node to a destination node over the drawn stretches |
-| `circuits[].tag` | string | yes |  |  |
-| `circuits[].from` | string | yes |  |  |
-| `circuits[].to` | string | yes |  |  |
-| `circuits[].via` | array |  |  |  |
-| `circuits[].ternas` | integer |  | minimum 1 |  |
-| `nodes` | array |  |  |  |
-| `nodes[].id` | string | yes |  |  |
-| `nodes[].kind` | string | yes |  |  |
-| `nodes[].x` | number | yes |  |  |
-| `nodes[].y` | number | yes |  |  |
-| `nodes[].tag` | string |  |  |  |
-| `nodes[].circuit` | string |  |  | circuit of the board a load belongs to |
-| `nodes[].board` | string |  |  | id of the board (made in Engineering) a board symbol stands for, or a load is fed from |
-| `nodes[].attrs` | object |  |  |  |
-| `lines` | array |  |  |  |
-| `lines[].id` | string | yes |  |  |
-| `lines[].kind` | string | yes |  |  |
-| `lines[].points` | array | yes | minItems 2 |  |
-| `lines[].tag` | string |  |  |  |
-| `lines[].circuit` | string |  |  | tag of the circuit in the board: the line references it, it never creates it |
-| `lines[].attrs` | object |  |  |  |
-
-### Output
-
-Schema: `harness/src/engines/cad/plan/src/epc_plan/schema/output.schema.json` (plan result (output))
-
-| Field | Type | Required | Limits | Notes |
-|---|---|---|---|---|
-| `schema_version` | `1.0` | yes |  |  |
-| `plan` | object | yes |  |  |
-| `discipline` | string | yes |  |  |
-| `nodes` | array | yes |  |  |
-| `stretches` | array | yes |  |  |
-| `schedule` | object | yes |  |  |
-| `circuits` | object | yes |  | route of each circuit: found, stretches, length_m (with the height of the plenums it goes through), plenums, rise_m, ternas, cable_length_m |
-| `network` | object or null | yes |  |  |
-| `rules_used` | array | yes |  |  |
-| `warnings` | array | yes |  |  |
-| `files` | object |  |  |  |
-
 ## epc_hvac
 
 ### Input
@@ -588,6 +526,7 @@ These engines do not yet validate their input against a schema at the entry poin
 - `epc_drawing`
 - `epc_dxf`
 - `epc_mld`
+- `epc_plan`
 - `epc_sld`
 - `epc_symbols`
 - `epc_titleblock`

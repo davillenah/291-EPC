@@ -1,5 +1,5 @@
 import sys
 
-from epc_plan.cli import main
+from epc_draw.plan.cli import main
 
 sys.exit(main())

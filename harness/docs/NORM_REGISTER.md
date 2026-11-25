@@ -344,6 +344,41 @@ Archivo: `harness/src/engines/cad/draw/src/epc_draw/norm_register/iram_sheet.jso
 | `titleblock.layout.default_text` | - | - | - | `{"coordinates": 3.5, "block": 2.0}` | mm | design-default | low | pending | block text 2.0 vs 2.5/1.8 in lamina_iram and 1.7 in dxf; no clause |
 | `titleblock.layout.default_block` | IRAM 4508 | - | - | `{"width": 175, "height": 51, "modifications_height": 21.5}` | mm | norm | medium | pending | repeats RW/RH/MH of lamina_iram: duplicates a value defined elsewhere (ADR-0012 single source); no clause in layout.py |
 
+## draw / plan_params
+
+Archivo: `harness/src/engines/cad/draw/src/epc_draw/norm_register/plan_params.json` (4 registros)
+
+| id | norma | cláusula | página | valor / ubicación | unidad | procedencia | confianza | estado | problemas |
+|---|---|---|---|---|---|---|---|---|---|
+| `plan.params.geometry.snap_tolerance_m` | - | - | - | `params.json#/geometry/snap_tolerance_m` | m | design-default | low | pending | algorithm setting, not a norm |
+| `plan.params.coordination.story_height_m` | - | - | - | `params.json#/coordination/story_height_m` | m | design-default | low | pending | no source; project dependent |
+| `plan.params.dxf.text_height_m` | - | - | - | `params.json#/dxf/text_height_m` | m (plan units) | design-default | low | pending | 0.15 m in plan units (was 0.25 m: labels ran into each other); no scale link, no IRAM 4503 text height cited |
+| `plan.params.style` | - | - | - | `params.json#/style` | mm | design-default | low | pending | 0.25 mm line and 2.0 mm font; no IRAM 4502/4503 reference; sheet pens are in titleblock |
+
+## draw / plan_rules
+
+Archivo: `harness/src/engines/cad/draw/src/epc_draw/norm_register/plan_rules.json` (2 registros)
+
+| id | norma | cláusula | página | valor / ubicación | unidad | procedencia | confianza | estado | problemas |
+|---|---|---|---|---|---|---|---|---|---|
+| `plan.clash.rules` | - | - | - | `clash_rules.json#/rules` | m | typical | low | pending | file says typical values, not a standard; 0.30 m electrical-to-sewer has no clause |
+| `plan.knowledge.sanitaria_cloacas.pendiente_minima` | - | - | - | `rules.json#/rules/0/table` | % (diameter mm) | norm | low | pending | slope_pct values are all null: waiting for the sewer standard the owner provides; source norma/edicion/clausula empty: no clause |
+
+## draw / plan_typical_values
+
+Archivo: `harness/src/engines/cad/draw/src/epc_draw/norm_register/plan_typical_values.json` (8 registros)
+
+| id | norma | cláusula | página | valor / ubicación | unidad | procedencia | confianza | estado | problemas |
+|---|---|---|---|---|---|---|---|---|---|
+| `plan.typical.sizing.cable_mm_by_section` | - | - | - | `typical_values.json#/sizing/cable_mm_by_section` | mm (section in mm2) | typical | low | pending | no clause: file says confirm against the standard and the catalogue; catalogue dependent; not a norm value |
+| `plan.typical.sizing.conduit_mm` | - | - | - | `typical_values.json#/sizing/conduit_mm` | mm | typical | low | pending | no clause: file says confirm against the standard and the catalogue; list 16-110 mm; is it internal or nominal diameter? |
+| `plan.typical.tray_catalogue` | - | - | - | `typical_values.json#/tray_catalogue` | mm | typical | low | pending | no clause: file says confirm against the standard and the catalogue |
+| `plan.typical.sizing.tray_fill_max_pct` | - | - | - | `typical_values.json#/sizing/tray_fill_max_pct` | % | typical | low | pending | given by the owner (40 %, 'as the standard says'); no clause recorded: a person must confirm it against the standard |
+| `plan.typical.occupancy.default_cable_mm` | - | - | - | `typical_values.json#/occupancy/default_cable_mm` | mm | typical | low | pending | no clause: file says confirm against the standard and the catalogue |
+| `plan.typical.occupancy.tray_pct` | - | - | - | `typical_values.json#/occupancy/tray_pct` | % | typical | low | pending | no clause: file says confirm against the standard and the catalogue; 50 % here vs 40 % ocupacion_max_pct in aea90364 rules/bandejas.json (line 59); criterion raceway_fill_max_pct (default 40, range 40-60) is a separate value: three copies |
+| `plan.typical.occupancy.conduit_pct` | - | - | - | `typical_values.json#/occupancy/conduit_pct` | % | typical | low | pending | no clause: file says confirm against the standard and the catalogue; 53/31/40 % (1 / 2 / many cables) vs 35 % in AEA rules canalizaciones (non-tabulated cases) and criterion raceway_fill_max_pct (default 40, range 40-60); the AEA rules refer to Tabla 771.12.IX for tabulated cases; compare these values with it |
+| `plan.typical.design.families` | - | - | - | `typical_values.json#/design/families` | outlets; VA | typical | low | pending | no clause: file says confirm against the standard and the catalogue; TUG 15 outlets and TUE 1 outlet repeat receptacles circuits values (two copies); IUG 100 VA, IUE 10 VA, ACU 1500 VA, FMO 7500 VA per outlet are design assumptions |
+
 ## draw / svg_to_dxf
 
 Archivo: `harness/src/engines/cad/draw/src/epc_draw/norm_register/svg_to_dxf.json` (5 registros)
@@ -447,41 +482,6 @@ Archivo: `harness/src/engines/calculation/lighting/src/epc_lighting/norm_registe
 | `lighting.params.emergency` | EN 1838 (as recalled in code) | - | - | `params.json#/emergency` | lx, ratio, m | typical | low | pending | no clause: code says 'as recalled, EN 1838'; Argentine requirements not referenced |
 | `lighting.params.point_grid` | - | - | - | `params.json#/point_grid` | m | design-default | low | pending | numerical setting; not a norm value |
 | `lighting.params.photometry_max_output_ratio` | - | - | - | `params.json#/photometry_max_output_ratio` | ratio | design-default | low | pending | tolerance setting, no source |
-
-## plan / params
-
-Archivo: `harness/src/engines/cad/plan/src/epc_plan/norm_register/params.json` (4 registros)
-
-| id | norma | cláusula | página | valor / ubicación | unidad | procedencia | confianza | estado | problemas |
-|---|---|---|---|---|---|---|---|---|---|
-| `plan.params.geometry.snap_tolerance_m` | - | - | - | `params.json#/geometry/snap_tolerance_m` | m | design-default | low | pending | algorithm setting, not a norm |
-| `plan.params.coordination.story_height_m` | - | - | - | `params.json#/coordination/story_height_m` | m | design-default | low | pending | no source; project dependent |
-| `plan.params.dxf.text_height_m` | - | - | - | `params.json#/dxf/text_height_m` | m (plan units) | design-default | low | pending | 0.15 m in plan units (was 0.25 m: labels ran into each other); no scale link, no IRAM 4503 text height cited |
-| `plan.params.style` | - | - | - | `params.json#/style` | mm | design-default | low | pending | 0.25 mm line and 2.0 mm font; no IRAM 4502/4503 reference; sheet pens are in titleblock |
-
-## plan / rules
-
-Archivo: `harness/src/engines/cad/plan/src/epc_plan/norm_register/rules.json` (2 registros)
-
-| id | norma | cláusula | página | valor / ubicación | unidad | procedencia | confianza | estado | problemas |
-|---|---|---|---|---|---|---|---|---|---|
-| `plan.clash.rules` | - | - | - | `clash_rules.json#/rules` | m | typical | low | pending | file says typical values, not a standard; 0.30 m electrical-to-sewer has no clause |
-| `plan.knowledge.sanitaria_cloacas.pendiente_minima` | - | - | - | `rules.json#/rules/0/table` | % (diameter mm) | norm | low | pending | slope_pct values are all null: waiting for the sewer standard the owner provides; source norma/edicion/clausula empty: no clause |
-
-## plan / typical_values
-
-Archivo: `harness/src/engines/cad/plan/src/epc_plan/norm_register/typical_values.json` (8 registros)
-
-| id | norma | cláusula | página | valor / ubicación | unidad | procedencia | confianza | estado | problemas |
-|---|---|---|---|---|---|---|---|---|---|
-| `plan.typical.sizing.cable_mm_by_section` | - | - | - | `typical_values.json#/sizing/cable_mm_by_section` | mm (section in mm2) | typical | low | pending | no clause: file says confirm against the standard and the catalogue; catalogue dependent; not a norm value |
-| `plan.typical.sizing.conduit_mm` | - | - | - | `typical_values.json#/sizing/conduit_mm` | mm | typical | low | pending | no clause: file says confirm against the standard and the catalogue; list 16-110 mm; is it internal or nominal diameter? |
-| `plan.typical.tray_catalogue` | - | - | - | `typical_values.json#/tray_catalogue` | mm | typical | low | pending | no clause: file says confirm against the standard and the catalogue |
-| `plan.typical.sizing.tray_fill_max_pct` | - | - | - | `typical_values.json#/sizing/tray_fill_max_pct` | % | typical | low | pending | given by the owner (40 %, 'as the standard says'); no clause recorded: a person must confirm it against the standard |
-| `plan.typical.occupancy.default_cable_mm` | - | - | - | `typical_values.json#/occupancy/default_cable_mm` | mm | typical | low | pending | no clause: file says confirm against the standard and the catalogue |
-| `plan.typical.occupancy.tray_pct` | - | - | - | `typical_values.json#/occupancy/tray_pct` | % | typical | low | pending | no clause: file says confirm against the standard and the catalogue; 50 % here vs 40 % ocupacion_max_pct in aea90364 rules/bandejas.json (line 59); criterion raceway_fill_max_pct (default 40, range 40-60) is a separate value: three copies |
-| `plan.typical.occupancy.conduit_pct` | - | - | - | `typical_values.json#/occupancy/conduit_pct` | % | typical | low | pending | no clause: file says confirm against the standard and the catalogue; 53/31/40 % (1 / 2 / many cables) vs 35 % in AEA rules canalizaciones (non-tabulated cases) and criterion raceway_fill_max_pct (default 40, range 40-60); the AEA rules refer to Tabla 771.12.IX for tabulated cases; compare these values with it |
-| `plan.typical.design.families` | - | - | - | `typical_values.json#/design/families` | outlets; VA | typical | low | pending | no clause: file says confirm against the standard and the catalogue; TUG 15 outlets and TUE 1 outlet repeat receptacles circuits values (two copies); IUG 100 VA, IUE 10 VA, ACU 1500 VA, FMO 7500 VA per outlet are design assumptions |
 
 ## pv / typical
 

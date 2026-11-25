@@ -7,7 +7,7 @@ from pathlib import Path
 SRC = Path(__file__).resolve().parents[1] / "src"
 sys.path.insert(0, str(SRC))
 
-from epc_dxf import deliverable  # noqa: E402
+from epc_draw.core import deliverable  # noqa: E402
 from test_deterministic import SVG  # noqa: E402
 
 
@@ -39,7 +39,7 @@ class DeliverableBytes(unittest.TestCase):
             self.assertEqual((data["layers"], data["blocks"]), (made["layers"], made["blocks"]))
 
     def test_the_symbol_library_comes_in_as_data(self):
-        from epc_dxf import bloques_dxf
+        from epc_draw.core import bloques_dxf
         from epc_draw.symbols import library_dir
         folder = library_dir("sld-lv-symbol")
         sid = sorted(bloques_dxf.load_library(folder).catalog)[0]

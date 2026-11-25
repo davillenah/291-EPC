@@ -18,10 +18,10 @@
   "clock": 1,
   "environment": 2
  },
- "harness/src/engines/cad/plan/src/epc_plan/jobs.py": {
+ "harness/src/engines/cad/draw/src/epc_draw/plan/jobs.py": {
   "clock": 2
  },
- "harness/src/engines/cad/plan/src/epc_plan/underlay.py": {
+ "harness/src/engines/cad/draw/src/epc_draw/plan/underlay.py": {
   "tempfile": 1
  },
  "harness/src/engines/cad/draw/src/epc_draw/sld/sld_generator.py": {

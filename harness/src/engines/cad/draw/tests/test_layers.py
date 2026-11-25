@@ -10,8 +10,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 import ezdxf  # noqa: E402
 
-from epc_dxf import layers as L  # noqa: E402
-from epc_dxf import settings  # noqa: E402
+from epc_draw.core import layers as L  # noqa: E402
+from epc_draw.core import settings  # noqa: E402
 
 
 class TestCatalog(unittest.TestCase):

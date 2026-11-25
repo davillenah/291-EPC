@@ -8,12 +8,12 @@ The default catalog travels with the package; the global file the MASTER edits (
 
 | | |
 |---|---|
-| Incluye (motor) | `aea90364`, `calc_common`, `draw`, `dxf`, `feeder_sizing`, `grounding`, `load_balance`, `selectivity`, `short_circuit`, `symbols`, `titleblock`, `voltage_drop` |
+| Incluye (motor) | `aea90364`, `arch`, `calc_common`, `draw`, `dxf`, `feeder_sizing`, `grounding`, `load_balance`, `plan`, `selectivity`, `short_circuit`, `symbols`, `titleblock`, `voltage_drop` |
 | Es dueño de | `dxf` |
 | Necesita (plugins) | — |
-| Lo necesitan | `board-design`, `plan-drawing` |
-| Paquetes de Python | `ezdxf`, `lxml`, `openpyxl`, `shapely`, `svgelements`, `vtracer` |
-| Si lo modificas, revisa | plugins `board-design`, `plan-drawing`; módulos del backend — |
+| Lo necesitan | `board-design` |
+| Paquetes de Python | `ezdxf`, `lxml`, `numpy`, `openpyxl`, `pillow`, `pypdfium2`, `shapely`, `svgelements`, `vtracer` |
+| Si lo modificas, revisa | plugins `board-design`; módulos del backend — |
 
 Generado por `python harness/tools/build/regen_plugins.py`; el mapa completo está en `harness/docs/architecture/DEPENDENCIAS.md`.
 <!-- deps:end -->
