@@ -75,8 +75,8 @@
    "id": "plan.typical.sizing.tray_mm",
    "kind": "typical",
    "title": {
-    "es": "Bandejas: medidas comerciales ancho x alto",
-    "en": "Trays: commercial width x height"
+    "es": "Bandejas: medidas comerciales ancho, altura de ala y altura útil",
+    "en": "Trays: commercial width, rail height and useful height"
    },
    "norm": null,
    "edition": null,

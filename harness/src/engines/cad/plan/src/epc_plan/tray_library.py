@@ -76,7 +76,7 @@ def _accessory(kind: str, width: float, depth: float, p: Dict[str, float], q: Di
     if fitting == "splice":
         n = q["splice_len_m"]
         return H.join(*[_plate((n, q["splice_thick_m"], depth * 0.7), (0.0, s * (width / 2 + q["splice_thick_m"] / 2), 0)) for s in (-1, 1)])
-    return _plate((q["straight_m"], width + 2 * q["lid_flange_m"], p["cover"] if "cover" in p else 0.004), (q["straight_m"] / 2, 0, 0))     # cover
+    return _plate((q["straight_m"], width + 2 * q["lid_flange_m"], T.cover_thickness(p, width) if "cover" in p else 0.004), (q["straight_m"] / 2, 0, 0))     # cover
 
 
 COVERS = {"straight": "cover", "elbow90": "cover_elbow90", "elbow45": "cover_elbow45", "elbow_adjustable": "cover_adjustable", "tee": "cover_tee", "cross": "cover_cross", "vertical_bend": "cover_link"}
@@ -98,7 +98,8 @@ def _runs(fitting: str, q: Dict[str, float], radius: float) -> List[List[Tuple[f
 def _covers(width: float, depth: float) -> List[Dict[str, Any]]:
     """The cover of the straight and of each fitting, for every kind that takes one (a wire-mesh tray has none)."""
     p, q, radius = _sizes()
-    p = dict(p, cover=core.PARAMS["detail"]["ladder"]["cover_m"])
+    ladder = core.PARAMS["detail"]["ladder"]
+    p = dict(p, cover=ladder["cover_m"], cover_wide=ladder["cover_wide_m"], cover_wide_from=ladder["cover_wide_from_m"])
     return [_piece(_tray_code(kind, width, depth, COVERS[fitting]), "tray", TRAY_LAYER, H.join(*[T.cover_mesh(path, width, depth, p) for path in _runs(fitting, q, radius)]))
             for kind in ("escalera", "perforada", "ciega", "canal") for fitting in COVERS]
 
@@ -117,8 +118,8 @@ def _trays(width: float, depth: float) -> List[Dict[str, Any]]:
 def _supports(width: float, depth: float) -> List[Dict[str, Any]]:
     q = _sizes()[1]
     size = f"{round(width * 1000)}x{round(depth * 1000)}"
-    wall = H.wall_bracket(q, width, 0.1, 0.04, q["plate_m"], 0.15)
-    named = [(_tray_code("escalera", width, depth, "bracket_wall"), wall), (_tray_code("escalera", width, depth, "bracket_heavy"), H.heavy_bracket(q, width)),
+    wall = H.wall_bracket(q, width, width / 2 + q["wall_gap_m"], 0.04, 0.1, 0.15)
+    named = [(_tray_code("escalera", width, depth, "bracket_wall"), wall), (_tray_code("escalera", width, depth, "bracket_heavy"), H.heavy_bracket(q, width, width / 2 + q["wall_gap_m"])),
              (tray_code.part("trapeze", size), H.trapeze(q, width, 0.5)), (tray_code.part("rod", f"M{round(q['rod_m'] * 1000)}x{round(q['rod_len_m'] * 1000)}"), H.rod(q)),
              (tray_code.part("strut", f"{round(q['strut_m'] * 1000)}x{round(q['strut_m'] * 1000)}x{round(q['strut_len_m'] * 1000)}"), H.strut(q)),
              (tray_code.part("clamp", f"M{round(q['rod_m'] * 1000)}"), H.clamp(q)), (tray_code.part("ceiling_plate", f"M{round(q['rod_m'] * 1000)}"), H.ceiling_plate(q))]

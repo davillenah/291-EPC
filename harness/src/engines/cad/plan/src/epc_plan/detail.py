@@ -291,6 +291,7 @@ def _ladder_sizes(cover: bool) -> Dict[str, float]:
     sizes = {k: q[k + "_m"] for k in keys}
     if cover:
         sizes["cover"] = q["cover_m"]                                    # the lid, a flat sheet over the rails
+        sizes["cover_wide"], sizes["cover_wide_from"] = q["cover_wide_m"], q["cover_wide_from_m"]    # thicker from this width
     return sizes
 
 

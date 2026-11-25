@@ -12,7 +12,7 @@
     "note": "Typical fill limits and cable diameter; confirm against the standard of the project."
   },
   "sizing": {
-    "note": "Typical outside diameters of a multi-core cable by conductor section, and the commercial sizes of conduits (internal diameter) and trays (width x height); confirm them against the catalogue of the project.",
+    "note": "Typical outside diameters of a multi-core cable by conductor section, and the commercial sizes of conduits (internal diameter) and trays (width, rail height, useful height above the rungs: the fill is taken over the width times the useful height); confirm them against the catalogue of the project.",
     "tray_fill_max_pct": 40,
     "cable_mm_by_section": {
       "1.5": 9.0,
@@ -45,28 +45,84 @@
     ],
     "tray_mm": [
       [
-        100,
-        50
+        150,
+        65,
+        44
       ],
       [
         150,
-        50
-      ],
-      [
-        200,
-        50
+        90,
+        70
       ],
       [
         300,
-        50
+        65,
+        44
       ],
       [
-        400,
-        50
+        150,
+        115,
+        95
+      ],
+      [
+        150,
+        150,
+        130
+      ],
+      [
+        450,
+        65,
+        44
+      ],
+      [
+        300,
+        90,
+        70
       ],
       [
         600,
-        50
+        65,
+        44
+      ],
+      [
+        300,
+        115,
+        95
+      ],
+      [
+        450,
+        90,
+        70
+      ],
+      [
+        300,
+        150,
+        130
+      ],
+      [
+        600,
+        90,
+        70
+      ],
+      [
+        450,
+        115,
+        95
+      ],
+      [
+        600,
+        115,
+        95
+      ],
+      [
+        450,
+        150,
+        130
+      ],
+      [
+        600,
+        150,
+        130
       ]
     ]
   },
