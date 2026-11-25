@@ -69,9 +69,26 @@ def test_every_tray_kind_has_a_mesh():
     p = {"rail": 0.002, "rung": 0.03, "rung_thick": 0.015, "rung_pitch": 0.3, "foot": 0.015, "curl": 0.012, "slot_pitch": 0.1, "slot": 0.05, "slot_height": 0.012,
          "floor_margin": 0.02, "wire": 0.004, "wire_pitch": 0.05}
     path = [(0, 0, 0), (1, 0, 0), (1, 1, 0)]
-    counts = {k: len(tray_solid.tray_mesh(path, 0.3, 0.09, p, k)["faces"]) for k in ("escalera", "perforada", "ciega", "alambre")}
+    counts = {k: len(tray_solid.tray_mesh(path, 0.3, 0.09, p, k)["faces"]) for k in ("escalera", "perforada", "ciega", "alambre", "canal")}
     assert all(c > 0 for c in counts.values())
     assert counts["perforada"] > counts["ciega"]                     # the slots split the floor
+    assert counts["canal"] == 3 * 2                                  # a U channel is floor and two walls on each of the two stretches
     assert counts["alambre"] > counts["escalera"]                    # a mesh is many wires
     with pytest.raises(core.PlanError):
         tray_solid.tray_mesh(path, 0.3, 0.09, p, "nope")
+
+
+def test_joints_carry_four_bolts_every_section_length():
+    from epc_plan import tray_solid
+    p = {"rail": 0.002, "rung": 0.03, "rung_thick": 0.015, "rung_pitch": 0.3, "joint": 3.0, "bolt": 0.016}
+    plain = tray_solid.ladder_mesh([(0, 0, 0), (7, 0, 0)], 0.3, 0.09, {k: v for k, v in p.items() if k not in ("joint", "bolt")})
+    bolted = tray_solid.ladder_mesh([(0, 0, 0), (7, 0, 0)], 0.3, 0.09, p)
+    assert len(bolted["faces"]) - len(plain["faces"]) == 2 * 4 * 6          # joints at 3 m and 6 m, four boxes of six faces each
+
+
+def test_a_vertical_bend_can_be_a_few_straight_links():
+    from epc_plan import tray_solid
+    run = [(0, 0, 0), (2, 0, 0), (2, 0, 1)]
+    smooth = tray_solid.path3d(run, 0.0, 0.5, 8)
+    linked = tray_solid.path3d(run, 0.0, 0.5, 5)
+    assert len(linked) < len(smooth)

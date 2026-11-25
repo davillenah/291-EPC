@@ -92,6 +92,26 @@ class Parts(unittest.TestCase):
         ys = sorted({abs(v[1]) for v in red[0]["mesh"]["vertices"]})
         self.assertEqual(ys, [0.0, 0.075, 0.15])                                      # from 300 to 150 mm wide
 
+    def test_the_reducer_of_a_tray_layer_tapers_as_a_tray_of_its_kind(self):
+        wide = S.line("w", "BN", [0, 0], [50, 0])
+        narrow = S.line("n", "BN", [50, 0], [100, 0], ancho_m=0.15)
+        layer = of(detail.parts(solids(wide, narrow)), "reducer")[0]["layer"]
+        for kind in ("escalera", "perforada", "ciega", "alambre"):
+            red = of(detail.parts(solids(wide, narrow), {"ladder_trays": {"layers": [layer], "kinds": {layer: kind}}}), "reducer")
+            self.assertGreater(len(red[0]["mesh"]["faces"]), 0, kind)
+            ys = {round(abs(v[1]), 3) for v in red[0]["mesh"]["vertices"]}
+            self.assertTrue({0.15, 0.075} <= ys or kind == "alambre", kind)           # the rails reach both widths
+
+    def test_two_tray_runs_crossing_in_the_middle_at_one_height_make_a_cross(self):
+        main = S.line("m", "BN", [0, 0], [100, 0])
+        other = S.line("o", "BN", [50, -30], [50, 30])
+        items = detail.parts(solids(main, other))
+        cross = of(items, "cross")
+        self.assertEqual([(c["run"], c["branch"], c["at"]) for c in cross], [("m", "o", [5.0, 0.0, 2.6])])
+        self.assertEqual(cross[0]["path"], [[4.55, 0.0, 2.6], [5.45, 0.0, 2.6]])
+        self.assertIn("cross", [r["type"] for r in detail.takeoff(items)["fittings"]])                  # and it is in the bill
+        self.assertFalse(of(detail.parts(solids(main, S.line("o", "BN", [50, 0], [50, 30]))), "cross"))   # ending on the main run is a tee, not a cross
+
     def test_runs_of_another_discipline_do_not_join(self):
         pipe = solid.solids(S.sheet(discipline="sanitaria_cloacas", lines=[S.line("p", "CC", [50, 0], [50, -30], z_m=2.6)]), "S1")
         self.assertEqual(of(detail.parts(tray() + pipe), "tee"), [])
