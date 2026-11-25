@@ -53,7 +53,7 @@
         "titleblock",
         "voltage_drop"
       ],
-      "hash": "5ee9a3f4e5c41739"
+      "hash": "19514522465b5de8"
     },
     "doc-quality": {
       "version": "0.1.0",
@@ -171,7 +171,7 @@
         "symbols",
         "titleblock"
       ],
-      "hash": "44748ed44593ae08"
+      "hash": "cae1992f4d9f7ed6"
     },
     "pm2-docs": {
       "version": "0.1.0",

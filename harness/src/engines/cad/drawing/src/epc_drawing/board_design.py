@@ -316,7 +316,7 @@ def design(data: dict, out_dir: Path, name: str, criteria: Optional[dict] = None
     figures["note"] += " " + calc_note(res)
     figures_json = out / f"{name}_figures.json"
     figures_json.write_text(json.dumps(figures, ensure_ascii=False, indent=1) + "\n", encoding="utf-8", newline="\n")
-    env = dict(os.environ, EPC_TITLEBLOCK_JSON=str(request_json), SLD_CALC_JSON=str(calc_json), SLD_CALC_DETAIL=str(detail_json), SLD_FIGURES_JSON=str(figures_json))
+    env = dict(EPC_TITLEBLOCK_JSON=str(request_json), SLD_CALC_JSON=str(calc_json), SLD_CALC_DETAIL=str(detail_json), SLD_FIGURES_JSON=str(figures_json))
     _layout_env(data, out_dir, env)
     if day is not None:
         env["EPC_STAMP_DATE"] = day.isoformat()      # the sheet generators (separate processes) read it
