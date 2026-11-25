@@ -5,7 +5,7 @@ plan to `epc_plan.solid`; `epc_plan.detail` turns the runs into the parts they a
 `epc_plan.scene3d` writes the model and cuts the sections.
 
     "model3d": {"floors": {"PB": {"wall_height_m": 2.8, "door_head_m": 2.05, "window_sill_m": 0.9, "window_head_m": 2.1, "slab_m": 0.2, "elevation_m": 0.0}},     # every routed floor, all heights: none is assumed
-                "supports": {"spacing_m": 1.5},                               # optional: without it no support is drawn (the spacing comes from the standard and the manufacturer)
+                "supports": {"spacing_m": 1.5},                               # optional: without it no support is drawn (the spacing comes from the standard and the manufacturer); with "mount": "wall" and "reach_m" they are brackets on the walls
                 "ladder_trays": {"layers": ["ELEC-BANDEJA"], "kinds": {"ELEC-BANDEJA": "perforada"}, "cover": False},    # optional: the trays are ladder trays by default; false = swept boxes
                 "sections": [{"name": "A", "axis": "x", "at_m": 12.0, "look": "+", "depth_m": 3.0}],     # optional: the detail sections to cut (depth_m optional)
                 "elevations": [{"floor": "PB", "side": "S"}]}                  # optional: the elevations of the building of a floor (N, S, E or W), on the IRAM sheet
@@ -45,7 +45,10 @@ def _elevation_errors(elevations, routing):
 
 
 def _is_supports(given):
-    return isinstance(given, dict) and set(given) <= {"spacing_m", "rod_m", "channel_m", "overhang_m"} and "spacing_m" in given
+    """Supports: hangers under the slab (the default) or, with `mount: "wall"`, brackets on the wall beside the tray, which need `reach_m` (the engineer's value, none assumed)."""
+    if not isinstance(given, dict) or not set(given) <= {"spacing_m", "rod_m", "channel_m", "overhang_m", "mount", "reach_m"} or "spacing_m" not in given:
+        return False
+    return given.get("mount", "slab") == "slab" and "reach_m" not in given or given.get("mount") == "wall" and "reach_m" in given
 
 
 def _is_ladder(given):
@@ -85,7 +88,7 @@ def errors_of(given, routing):
         return ["model3d: {floors: {floor id: heights}, supports?: {spacing_m}, sections?: [...]}"]
     out = _floor_errors(given["floors"], routing)
     if "supports" in given and not _is_supports(given["supports"]):
-        out.append("model3d/supports: {spacing_m, rod_m?, channel_m?, overhang_m?}")
+        out.append("model3d/supports: {spacing_m, rod_m?, channel_m?, overhang_m?} or {spacing_m, mount: 'wall', reach_m}")
     return out + _tray_errors(given) + _section_errors(given.get("sections", [])) + _elevation_errors(given.get("elevations", []), routing)
 
 
@@ -120,6 +123,16 @@ def _hangers(given):
     return dict(copy.deepcopy(given["supports"]), slab_underside_m=under)
 
 
+def _supports(given, services, building):
+    """The supports of the runs: hangers from the slab, or wall brackets on the walls of the building (`supports.mount`); none when no spacing was given."""
+    from epc_plan import detail, wall_brackets
+    if "supports" not in given:
+        return []
+    if given["supports"].get("mount") == "wall":
+        return wall_brackets(services, [s for s in building if s["kind"] == "wall"], {k: given["supports"][k] for k in ("spacing_m", "reach_m")})
+    return detail.supports(services, _hangers(given))
+
+
 def _parts_spec(given):
     """The spec of the parts: the trays as the engineer asked (`ladder_trays: {layers, kinds?, cover?}`); when he does not say, the runs of the tray layer are drawn as ladder trays, the
     default kind; `ladder_trays: false` keeps every run a swept box."""
@@ -135,8 +148,7 @@ def build(given, routing):
         heights = given["floors"][floor]
         building += _building(routing[floor], floor, heights)
         services += _services(routing[floor], floor, heights)
-    hangers = _hangers(given)
-    parts = detail.parts(services, _parts_spec(given)) + (detail.supports(services, hangers) if hangers else [])
+    parts = detail.parts(services, _parts_spec(given)) + _supports(given, services, building)
     boxes = [s for s in services if s["shape"] != "run"]
     whole = scene3d.merge([{"schema_version": "1.0", "units": "m", "solids": building, "box": None}, solid.scene(boxes + parts)])
     return whole, parts

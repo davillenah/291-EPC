@@ -5,6 +5,7 @@
   "coordination": {"story_height_m": 3.0, "max_items": 4000},
   "solid": {"sides": 12},
   "detail": {"note": "Sizes the parts are drawn with when nobody says them: drawing data, not design values.", "elbow_leg_factor": 1.0, "rod_m": 0.01, "channel_m": 0.041, "overhang_m": 0.05,
+             "bracket": {"arm_m": 0.04, "plate_m": 0.1, "plate_height_m": 0.15, "plate_thick_m": 0.008},
              "ladder": {"rail_m": 0.002, "rung_m": 0.03, "rung_thick_m": 0.015, "rung_pitch_m": 0.3, "foot_m": 0.015, "curl_m": 0.012, "slot_pitch_m": 0.1, "slot_m": 0.05, "slot_height_m": 0.012, "cover_m": 0.004, "elbow_radius_m": 0.3, "vertical_links": 5, "joint_m": 3.0, "bolt_m": 0.016, "floor_margin_m": 0.02, "wire_m": 0.004, "wire_pitch_m": 0.05}},
   "scene": {"detail_text_m": 0.06, "default_color": "#8A93A0",
             "discipline_colors": {"arquitectura": "#C9CDD3", "civil": "#9C8F7A", "electrica_BT": "#E0A100", "comunicaciones": "#2E9E6B", "instrumentacion": "#7A5CC2", "hvac": "#3B8FD1", "mecanica": "#5E6B7A", "pci": "#D64541", "sanitaria_cloacas": "#8B5A2B", "sanitaria_pluvial": "#2BA6B8", "sanitaria_agua": "#2F6FDE", "gas": "#E3C800"},

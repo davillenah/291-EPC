@@ -1,0 +1,26 @@
+{
+ "note": "Own names of the tray models of the project, free of any maker: BN-<kind>-<width>x<rail height> for a straight, BN-<kind>-<fitting>-<width>x<rail height> for a fitting. Widths and heights in millimetres.",
+ "prefix": "BN",
+ "kinds": {
+  "escalera": {"code": "ESC", "name": {"en": "Ladder tray", "es": "Bandeja escalera"}},
+  "perforada": {"code": "PER", "name": {"en": "Perforated tray", "es": "Bandeja perforada"}},
+  "ciega": {"code": "CIE", "name": {"en": "Solid-bottom tray", "es": "Bandeja ciega"}},
+  "alambre": {"code": "ALA", "name": {"en": "Wire-mesh tray", "es": "Bandeja de alambre"}},
+  "canal": {"code": "CAN", "name": {"en": "U channel", "es": "Canal U"}}
+ },
+ "fittings": {
+  "straight": {"code": "", "name": {"en": "Straight section", "es": "Tramo recto"}},
+  "elbow90": {"code": "C90", "name": {"en": "Horizontal elbow 90°", "es": "Curva plana 90°"}},
+  "elbow45": {"code": "C45", "name": {"en": "Horizontal elbow 45°", "es": "Curva plana 45°"}},
+  "elbow_adjustable": {"code": "CAJ", "name": {"en": "Adjustable elbow", "es": "Curva ajustable"}},
+  "vertical_bend": {"code": "CV", "name": {"en": "Vertical bend", "es": "Curva vertical"}},
+  "tee": {"code": "T", "name": {"en": "Tee", "es": "Unión T"}},
+  "cross": {"code": "X", "name": {"en": "Cross", "es": "Unión cruz"}},
+  "reduction_central": {"code": "RC", "name": {"en": "Central reducer", "es": "Reducción central"}},
+  "reduction_side": {"code": "RL", "name": {"en": "Side reducer", "es": "Reducción lateral"}},
+  "end": {"code": "FIN", "name": {"en": "End cap", "es": "Tapa de fin"}},
+  "cover": {"code": "TP", "name": {"en": "Cover", "es": "Tapa"}},
+  "bracket_wall": {"code": "MP", "name": {"en": "Wall bracket", "es": "Ménsula de pared"}},
+  "bracket_heavy": {"code": "MR", "name": {"en": "Heavy bracket", "es": "Ménsula reforzada"}}
+ }
+}

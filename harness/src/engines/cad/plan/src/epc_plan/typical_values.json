@@ -13,6 +13,7 @@
   },
   "sizing": {
     "note": "Typical outside diameters of a multi-core cable by conductor section, and the commercial sizes of conduits (internal diameter) and trays (width x height); confirm them against the catalogue of the project.",
+    "tray_fill_max_pct": 40,
     "cable_mm_by_section": {
       "1.5": 9.0,
       "2.5": 10.5,

@@ -40,6 +40,15 @@ class TestSizing(unittest.TestCase):
         self.assertEqual(len(out["cable_mm"]), 2)
         self.assertEqual(out["size"], {"ancho_mm": 100.0, "alto_mm": 50.0})
 
+    def test_a_tray_never_goes_over_forty_percent_and_gets_our_own_model_code(self):
+        cables = [f"C{i}" for i in range(8)]
+        out = sizing.size_containers([box("BN", cables, 8)], {c: 25 for c in cables}, {}, KINDS, P)[0]    # 8 cables of 23 mm
+        self.assertLessEqual(out["used_pct"], 40.0)
+        self.assertEqual(out["limit_pct"], 40.0)
+        self.assertTrue(out["fits"])
+        self.assertEqual(out["model"], f"BN-ESC-{int(out['size']['ancho_mm'])}x{int(out['size']['alto_mm'])}")
+        self.assertIsNone(sizing.size_containers([box("CN", ["A"], 1)], {"A": 2.5}, {}, KINDS, P)[0]["model"])
+
     def test_when_nothing_holds_them_the_largest_is_returned_and_it_is_said(self):
         out = sizing.size_containers([box("CN", ["X"] * 1, 1)], {"X": 240}, {"X": 40}, KINDS, P)[0]
         self.assertFalse(out["fits"])

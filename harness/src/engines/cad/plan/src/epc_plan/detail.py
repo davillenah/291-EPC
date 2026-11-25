@@ -319,7 +319,21 @@ def parts(solids: List[Dict[str, Any]], spec: Optional[Dict[str, Any]] = None) -
     leg_of = lambda s: factor * s["width_m"]                                  # noqa: E731
     ladder = _ladder(spec)
     out = [p for s in runs for p in _run_parts(s, rings[s["id"]], leg_of(s), ladder)]
-    return out + _tees(runs, rings, leg_of, ladder) + _reducers(runs, rings, leg_of, ladder) + _crosses(runs, leg_of, ladder)
+    return _named(out + _tees(runs, rings, leg_of, ladder) + _reducers(runs, rings, leg_of, ladder) + _crosses(runs, leg_of, ladder), ladder)
+
+
+def _named(items: List[Dict[str, Any]], ladder: Optional[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    """The parts of the tray layers with their kind of tray and the own name of their model (`tray_code`): BN-ESC-C90-300x90."""
+    if not ladder:
+        return items
+    from epc_plan import tray_code
+    for p in items:
+        fitting = tray_code.fitting_of(p["part"], p.get("angle_deg"))
+        if p.get("layer") in ladder["layers"] and p["section"] == "rect" and fitting:
+            kind = ladder.get("kinds", {}).get(p["layer"], "escalera")
+            p["tray_kind"] = kind
+            p["model"] = tray_code.code(kind, p["width_m"] * 1000, p["height_m"] * 1000, fitting)
+    return items
 
 
 # ---------------------------------------------------------------- supports
@@ -416,7 +430,7 @@ def takeoff(items: List[Dict[str, Any]]) -> Dict[str, List[Dict[str, Any]]]:
     fittings: Dict[tuple, Dict[str, Any]] = {}
     hangers: Dict[tuple, Dict[str, Any]] = {}
     for p in items:
-        base = {"discipline": p.get("discipline", ""), "layer": p.get("layer", ""), "size": p.get("size", "")}
+        base = {"discipline": p.get("discipline", ""), "layer": p.get("layer", ""), "size": p.get("size", ""), "model": p.get("model", "")}
         if p.get("part") == "straight":
             _count(straights, tuple(base.values()), base, length_m=p["length_m"])
         elif p.get("part") in ("elbow", "tee", "cross", "reducer"):
