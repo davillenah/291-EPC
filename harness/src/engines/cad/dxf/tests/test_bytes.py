@@ -26,6 +26,18 @@ class DeliverableBytes(unittest.TestCase):
         a = deliverable.convert_bytes(SVG, stamp_date="2026-03-04", seed="S")["dxf"]
         self.assertEqual(a, deliverable.convert_bytes(SVG, stamp_date="2026-03-04", seed="S")["dxf"])
 
+    def test_a_draft_comes_back_as_the_bytes_the_path_call_writes(self):
+        import ezdxf
+        def draft():
+            doc = ezdxf.new("R2018", setup=False)
+            doc.modelspace().add_line((0, 0), (5, 5))
+            return doc
+        with tempfile.TemporaryDirectory() as t:
+            made = deliverable.finish_draft(draft(), Path(t) / "D.dxf", None, "2026-03-04", "D")
+            data = deliverable.finish_draft_bytes(draft(), None, "2026-03-04", "D")
+            self.assertEqual(data["dxf"], Path(made["dxf"]).read_bytes())
+            self.assertEqual((data["layers"], data["blocks"]), (made["layers"], made["blocks"]))
+
 
 if __name__ == "__main__":
     unittest.main()
