@@ -85,7 +85,7 @@ def colorear(svg_path, dxf_path, catalog=None, a3=None, stamp=None, doc=None, wr
     from ezdxf.colors import rgb2int
     from svgelements import SVG, Circle, Ellipse, Path, Polygon, Rect, Shape, SimpleLine, Text
     from epc_dxf import svg_to_dxf as S
-    svg = SVG.parse(svg_path, reify=True)
+    svg = SVG.parse(S.stream(svg_path), reify=True)
     elementos = list(svg.elements())
     formas = [e for e in elementos if isinstance(e, Shape) and not isinstance(e, Text)]
     _, omitir = S._logos(svg_path, formas)
@@ -105,7 +105,7 @@ def colorear(svg_path, dxf_path, catalog=None, a3=None, stamp=None, doc=None, wr
                 if cadena: lista.append((cadena, not d))
             for hijo in el:
                 _recorrer(hijo, d)
-        _recorrer(ET.parse(svg_path).getroot(), False)
+        _recorrer(ET.parse(S.stream(svg_path)).getroot(), False)
         p_xml = 0
         for idx, e in enumerate(elementos):
             if isinstance(e, Text) and e.text and e.text.strip():

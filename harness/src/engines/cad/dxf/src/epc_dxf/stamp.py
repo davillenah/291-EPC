@@ -96,8 +96,27 @@ def new_document(version: str = "R2018", *, setup: bool = False, stamp: Optional
 
 def save(doc, path, stamp: Optional[Stamp] = None) -> None:
     """`doc.saveas(path)`; with a stamp the pinned values are written (ezdxf renews them inside the write, so they are put back right after it does)."""
+    _write(doc, path, stamp, lambda target: doc.saveas(target))
+
+
+def to_text(doc, stamp: Optional[Stamp] = None) -> str:
+    """The DXF text of a document, as `save` would write it, held in memory."""
+    import io
+    buf = io.StringIO()
+    _write(doc, buf, stamp, doc.write)
+    return buf.getvalue()
+
+
+def reload(doc, stamp: Optional[Stamp] = None):
+    """The document written and read again, in memory: the same renumbering of handles a saved and re-read file goes through."""
+    import io
+    import ezdxf
+    return ezdxf.read(io.StringIO(to_text(doc, stamp)))
+
+
+def _write(doc, target, stamp, write) -> None:
     if stamp is None:
-        doc.saveas(path)
+        write(target)
         return
     pin(doc, stamp)
     renew = doc._update_metadata
@@ -109,7 +128,7 @@ def save(doc, path, stamp: Optional[Stamp] = None) -> None:
 
     doc._update_metadata = pinned
     try:
-        doc.saveas(path)
+        write(target)
     finally:
         del doc._update_metadata
 

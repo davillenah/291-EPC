@@ -104,6 +104,15 @@ def _polilineas(elemento, segmentos=SEGMENTOS_CURVA):
     return salida
 
 
+class SvgText(str):
+    """An SVG held in memory: the converter reads it like a file, with no file on disk (ADR-0042)."""
+
+
+def stream(source):
+    """What the XML readers take: a fresh text stream over an in-memory SVG, or the path itself."""
+    return io.StringIO(str(source)) if isinstance(source, SvgText) else source
+
+
 def _nombres_logos(svg_path):
     """Nombre del logo (o None) de cada forma, en el mismo orden que el SVG parseado."""
     nombres = []
@@ -118,7 +127,7 @@ def _nombres_logos(svg_path):
         for hijo in el:
             recorrer(hijo, nombre)
 
-    recorrer(ET.parse(svg_path).getroot(), None)
+    recorrer(ET.parse(stream(svg_path)).getroot(), None)
     return nombres
 
 
@@ -294,9 +303,16 @@ def _formas_imagen(imagen):
     return salida
 
 
-def convertir(svg_path, dxf_path=None, stamp=None):
+def convertir_a_archivo(svg_path, dxf_path=None, stamp=None):
+    """The DXF file of an SVG file, next to it unless a path is given; returns the path."""
     dxf_path = dxf_path or os.path.splitext(svg_path)[0] + ".dxf"
-    svg = SVG.parse(svg_path, reify=True)
+    _stamp.save(convertir(svg_path, stamp), dxf_path, stamp)
+    return dxf_path
+
+
+def convertir(svg_path, stamp=None):
+    """The ezdxf document of an SVG (a path, or `SvgText` held in memory); nothing is written."""
+    svg = SVG.parse(stream(svg_path), reify=True)
     alto_mm = 0.0
     if svg.height is not None:
         alto_mm = float(svg.height.in_px() if hasattr(svg.height, "in_px") else svg.height) / PX_POR_MM
@@ -387,11 +403,10 @@ def convertir(svg_path, dxf_path=None, stamp=None):
                     msp.add_lwpolyline([(x, y_dxf(y)) for x, y in puntos],
                                        close=cerrada, dxfattribs={"layer": "0"})
 
-    _stamp.save(doc, dxf_path, stamp)
-    return dxf_path
+    return doc
 
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         sys.exit("uso: python svg_to_dxf.py lamina.svg")
-    print(convertir(sys.argv[1]))
+    print(convertir_a_archivo(sys.argv[1]))
