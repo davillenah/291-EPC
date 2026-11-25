@@ -11,10 +11,12 @@ def gauge_mm(cat: Dict[str, Any], gauge: str) -> float:
 
 
 def rail_gauge(cat: Dict[str, Any], ala_mm: float, finish: str = "", gauge: str = "") -> str:
-    """The gauge of the rail: the asked one when the height has it, else the default; the 150 rail exists only in the heavy gauge."""
-    allowed = cat["rail_heights_mm"][str(int(ala_mm))]["gauges"]
+    """The gauge of the rail: the asked one when the rail height has it, else the first one the height has (the 150 rail exists only in the heavy gauge). A height that is not commercial takes
+    the next one up."""
+    heights = sorted(int(h) for h in cat["rail_heights_mm"])
+    allowed = cat["rail_heights_mm"][str(next((h for h in heights if h >= ala_mm - 1e-9), heights[-1]))]["gauges"]
     want = gauge or cat["default"]["gauge"]
-    return want if want in allowed else allowed[-1] if want > allowed[-1] else allowed[0]
+    return want if want in allowed else allowed[0]
 
 
 def rail_thickness_mm(cat: Dict[str, Any], ala_mm: float, finish: str = "", gauge: str = "") -> float:
@@ -40,12 +42,15 @@ def fill_candidates(cat: Dict[str, Any]) -> List[Dict[str, float]]:
     return [{"ancho_mm": w, "alto_mm": u, "ala_mm": a} for w, a, u in sizes(cat)]
 
 
-def ladder(q: Dict[str, Any], cat: Dict[str, Any]) -> Dict[str, Any]:
-    """The ladder sizes of the drawing (`detail.ladder`, metres) with the ones the catalogue fixes filled in: the sheet of the rail and of the covers, the length of a section and the bends."""
-    finish, widest = cat["default"]["finish"], max(cat["widths_mm"])
-    wide = [int(w) for w, g in cat["cover_gauge"][finish].items() if g != cat["cover_gauge"][finish][str(min(cat["widths_mm"]))]]
-    return {**q, "rail_m": rail_thickness_mm(cat, 90, finish) / 1000, "cover_m": cover_thickness_mm(cat, min(cat["widths_mm"]), finish) / 1000,
-            "cover_wide_m": cover_thickness_mm(cat, widest, finish) / 1000, "cover_wide_from_m": (min(wide) if wide else widest) / 1000,
+def ladder(q: Dict[str, Any], cat: Dict[str, Any], ala_mm: float = 90, width_mm: float = 0, finish: str = "", gauge: str = "") -> Dict[str, Any]:
+    """The ladder sizes of the drawing (`detail.ladder`, metres) with the ones the catalogue fixes filled in: the sheet of the rail (by rail height, finish and gauge) and of the covers (by finish
+    and width), the length of a section and the bends."""
+    finish = finish or cat["default"]["finish"]
+    table, widths = cat["cover_gauge"][finish], sorted(int(w) for w in cat["cover_gauge"][finish])
+    thin = cover_thickness_mm(cat, widths[0], finish)
+    wide = [w for w in widths if cover_thickness_mm(cat, w, finish) != thin]
+    return {**q, "rail_m": rail_thickness_mm(cat, ala_mm, finish, gauge) / 1000, "cover_m": cover_thickness_mm(cat, width_mm or widths[0], finish) / 1000,
+            "cover_wide_m": cover_thickness_mm(cat, widths[-1], finish) / 1000, "cover_wide_from_m": (min(wide) if wide else widths[-1]) / 1000,
             "elbow_radius_m": cat["inner_bend_radius_mm"] / 1000, "vertical_links": cat["articulated_bend"]["links"], "joint_m": cat["length_mm"] / 1000}
 
 

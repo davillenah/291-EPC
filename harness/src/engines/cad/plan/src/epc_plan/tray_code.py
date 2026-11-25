@@ -1,6 +1,6 @@
 """The names of the tray models of the project (`tray_names.json`): our own, free of any maker. A pure function of its arguments.
 
-    code(kind, width_mm, height_mm, fitting="straight")   -> "BN-ESC-300x90", "BN-ESC-C90-300x90"
+    code(kind, width_mm, height_mm, fitting="straight")   -> "BN-ESC-300x90", "BN-ESC-C90-300x90", "BN-ESC-300x90-18Z"
     fitting_of(part, angle_deg)                           -> the fitting name of a part of a run ("elbow" at 90 degrees is "elbow90")
     name(kind, fitting="straight")                        -> {"en": ..., "es": ...}
 """
@@ -26,12 +26,12 @@ def fitting_of(part: str, angle_deg: Optional[float] = None) -> Optional[str]:
     return PART_FITTINGS.get(part)
 
 
-def code(kind: str, width_mm: float, height_mm: float, fitting: str = "straight") -> str:
+def code(kind: str, width_mm: float, height_mm: float, fitting: str = "straight", gauge: str = "", finish: str = "") -> str:
     names = _names()
     if kind not in names["kinds"] or fitting not in names["fittings"]:
         raise PlanError("err_tray_kind", kind=kind, kinds=", ".join(names["kinds"]))
     parts = [names["prefix"], names["kinds"][kind]["code"], names["fittings"][fitting]["code"], f"{round(width_mm)}x{round(height_mm)}"]
-    return "-".join(p for p in parts if p)
+    return "-".join(p for p in parts if p) + (f"-{gauge}{finish}" if gauge or finish else "")      # BN-ESC-300x90-18Z when the sheet is given
 
 
 def name(kind: str, fitting: str = "straight") -> Dict[str, str]:

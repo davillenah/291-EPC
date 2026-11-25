@@ -32,6 +32,15 @@ class TrayCatalogueTests(unittest.TestCase):
         faces = {p["code"]["code"] if isinstance(p["code"], dict) else p["code"]: len(p["mesh"]["faces"]) for p in tray_library._accessories(0.3, 0.09)}
         self.assertGreater(faces["SB-BUC-M6x25"], faces["SB-BUC-3-8x25"])
 
+    def test_the_library_names_the_sheet_only_when_asked(self):
+        from epc_plan import tray_library
+        self.assertEqual(tray_library.pieces(0.3, 0.09)[0]["code"], "BN-ESC-300x90")
+        self.assertEqual(tray_library.pieces(0.3, 0.15, "14", "G")[0]["code"], "BN-ESC-300x150-14G")
+
+    def test_the_heavy_rail_is_the_only_one_of_the_150_height(self):
+        self.assertEqual(C.rail_thickness_mm(self.cat, 150, "G", "18"), 2.10)
+        self.assertEqual(C.rail_thickness_mm(self.cat, 90, "G", "14"), 2.10)
+
 
 if __name__ == "__main__":
     unittest.main()
