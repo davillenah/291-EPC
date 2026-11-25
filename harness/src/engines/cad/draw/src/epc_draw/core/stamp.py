@@ -143,3 +143,11 @@ def save_if(doc, path, stamp: Optional[Stamp] = None, write: bool = True) -> Non
     """`save`, unless the caller keeps working on the same document and writes it at the end."""
     if write:
         save(doc, path, stamp)
+
+
+def issue_day(stamp_date: DateLike, today: Optional[datetime.date] = None) -> str:
+    """The issue date of a drawing as dd/mm/yyyy: the stamp date if one is given, else `today`, else the clock. The one place the drawing engine reads the clock for a date;
+    a caller that wants the same bytes every time passes `stamp_date` or `today`."""
+    moment = moment_of(stamp_date)
+    day = moment.date() if moment else (today or datetime.date.today())
+    return day.strftime("%d/%m/%Y")

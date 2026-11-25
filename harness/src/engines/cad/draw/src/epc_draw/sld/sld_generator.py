@@ -4,7 +4,7 @@
 Una hoja (`_Sheet`) se arma por etapas, cada una una función corta: leer la entrada y el cálculo, dibujar acometida, barra, circuitos, cables y cargas,
 la tabla, las referencias, el rótulo, y entregar (SVG y DXF). El dibujo no calcula: todo número sale del cálculo de epc_aea90364.
 """
-import sys, os, math, json, textwrap, datetime, re
+import sys, os, math, json, textwrap, re
 from xml.sax.saxutils import escape as xesc
 from epc_draw.sld import board_table
 from lxml import etree
@@ -667,8 +667,7 @@ class _Sheet:
     def issue_date(self):
         """La fecha de emisión del rótulo (dd/mm/aaaa): la fecha del plano si se dio (`EPC_STAMP_DATE`), la de hoy si no."""
         from epc_draw.core import stamp
-        moment = stamp.moment_of(self.stamp_date)
-        return (moment.date() if moment else datetime.date.today()).strftime('%d/%m/%Y')
+        return stamp.issue_day(self.stamp_date)
 
     def fill_title(self, lam, mod):
         """Rellena los campos del rótulo; lo que el SLD no calcula (empresa, cliente, códigos...) queda en blanco, no quedan {clave} visibles."""

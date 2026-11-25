@@ -27,6 +27,13 @@ class TestToday(unittest.TestCase):
         self.assertEqual(common["proy_fecha"], datetime.date.today().strftime("%d/%m/%Y"))
 
 
+class TestIssueDay(unittest.TestCase):
+    def test_the_stamp_date_wins_then_the_given_day(self):
+        from epc_draw.core import stamp
+        self.assertEqual(stamp.issue_day("2026-03-04", datetime.date(2020, 1, 1)), "04/03/2026")
+        self.assertEqual(stamp.issue_day(None, datetime.date(2020, 1, 2)), "02/01/2020")
+
+
 class TestWriteWithStamp(unittest.TestCase):
     def test_the_dxf_is_reproducible_with_a_stamp_date(self):
         with tempfile.TemporaryDirectory() as t:
