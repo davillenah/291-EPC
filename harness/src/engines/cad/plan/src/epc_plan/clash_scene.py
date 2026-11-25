@@ -51,10 +51,10 @@ def _relation(x: Box, y: Box, clearance_m: float, trays: bool):
     return None
 
 
-def _pair(a: Dict[str, Any], b: Dict[str, Any], clearance_m: float):
-    """The worst relation found between the boxes of two solids: (type, gap, point, the two boxes) or None."""
+def _pair(a: Dict[str, Any], b: Dict[str, Any], clearance_m: float, boxes_a: Sequence[Box] = (), boxes_b: Sequence[Box] = ()):
+    """The worst relation found between the boxes of two solids: (type, gap, point, the two boxes) or None. The boxes of each solid may be given when they are already known."""
     trays = a["kind"] == b["kind"] == "tray"
-    found = [r for x in boxes(a) for y in boxes(b) for r in [_relation(x, y, clearance_m, trays)] if r]
+    found = [r for x in (boxes_a or boxes(a)) for y in (boxes_b or boxes(b)) for r in [_relation(x, y, clearance_m, trays)] if r]
     return min(found, key=lambda r: (r[0] != "hard", r[1])) if found else None
 
 
@@ -80,10 +80,34 @@ def _entry(a: Dict[str, Any], b: Dict[str, Any], hit) -> Dict[str, Any]:
             "text": {lang: f"{a['tag']} ({a['kind']}) / {b['tag']} ({b['kind']}): {what[lang]}, {abs(round(gap, 3))} m" for lang in ("en", "es")}}
 
 
+def _extent(parts: Sequence[Box]) -> Box:
+    return (tuple(min(b[0][k] for b in parts) for k in range(3)), tuple(max(b[1][k] for b in parts) for k in range(3)))  # type: ignore[return-value]
+
+
+def _near(a: Box, b: Box, margin: float) -> bool:
+    """Whether two extents are no further apart than `margin` along any axis (a pair that is not cannot clash and is not looked at)."""
+    return all(a[0][k] - margin <= b[1][k] and b[0][k] - margin <= a[1][k] for k in (1, 2))
+
+
+def _candidates(solids: List[Dict[str, Any]], parts: List[Sequence[Box]], clearance_m: float) -> List[Tuple[int, int]]:
+    """The pairs of solids whose extents come near enough to clash, found by sweeping along x (sorted by their lowest x) instead of comparing every pair."""
+    margin = max(clearance_m, 0.0) + 2 * EPS
+    order = sorted((i for i in range(len(solids)) if parts[i]), key=lambda i: _extent(parts[i])[0][0])
+    extents = {i: _extent(parts[i]) for i in order}
+    pairs = []
+    for n, i in enumerate(order):
+        for j in order[n + 1:]:
+            if extents[j][0][0] > extents[i][1][0] + margin:
+                break                                                  # every later solid starts further along x than this one reaches
+            if _near(extents[i], extents[j], margin) and _relevant(solids[i], solids[j]):
+                pairs.append((min(i, j), max(i, j)))                  # the order of the scene, as when every pair was compared
+    return pairs
+
+
 def detect(scene: Dict[str, Any], clearance_m: float = 0.0) -> List[Dict[str, Any]]:
     """Every clash between the solids of the scene (see the module text), worst first."""
     solids = [s for s in scene["solids"] if s["kind"] != "room"]
-    pairs = [(a, b) for i, a in enumerate(solids) for b in solids[i + 1:] if _relevant(a, b)]
-    hits = [(a, b, _pair(a, b, clearance_m)) for a, b in pairs]
+    parts = [boxes(s) for s in solids]
+    hits = [(solids[i], solids[j], _pair(solids[i], solids[j], clearance_m, parts[i], parts[j])) for i, j in _candidates(solids, parts, clearance_m)]
     found = [_entry(a, b, hit) for a, b, hit in hits if hit is not None]
     return sorted(found, key=lambda c: (c["type"] != "hard", c["gap_m"], c["id"]))

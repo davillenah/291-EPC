@@ -161,7 +161,6 @@ def _add_solid(msp, s: Dict[str, Any], layer, params) -> int:
 def write_dxf_3d(items: List[Dict[str, Any]], path: Path, version: str = "", params: Dict[str, Any] = core.PARAMS, layers_file=None) -> List[str]:
     """Write the solids as a 3D DXF in metres: the axis of each as a 3D polyline and its body as a mesh of faces, on the layer of its kind (named by its role, as the 2D deliverable does).
     Returns the warnings (audit findings, read-back differences)."""
-    import ezdxf
     from epc_dxf import new_document
     from epc_dxf import deliverable
     from epc_plan.dxfout import _dxf_version
@@ -176,7 +175,15 @@ def write_dxf_3d(items: List[Dict[str, Any]], path: Path, version: str = "", par
     path.parent.mkdir(parents=True, exist_ok=True)
     warnings = [f"DXF audit: {e.message}" for e in doc.audit().errors]
     deliverable.finish_draft(doc, path, layers_file)
-    back = len(ezdxf.readfile(str(path)).modelspace())
+    back = _entities_written(path)
     if back != expected:
-        warnings.append(f"DXF read back has {back} entities, expected {expected}")
+        warnings.append(f"DXF file holds {back} entities, expected {expected}")
     return warnings
+
+
+_ENTITY = re.compile(rb"^(3DFACE|POLYLINE)\r?$", re.MULTILINE)
+
+
+def _entities_written(path: Path) -> int:
+    """How many faces and polylines the DXF file on disk holds, counted in its text (a check of the file itself that is much cheaper than parsing it back)."""
+    return len(_ENTITY.findall(Path(path).read_bytes()))
