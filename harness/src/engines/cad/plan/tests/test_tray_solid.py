@@ -100,3 +100,15 @@ def test_a_vertical_bend_can_be_a_few_straight_links():
     linked = tray_solid.path3d(run, 0.0, 0.5, 5)
     assert len(linked) < len(smooth)
 
+
+
+class TestPerforatedFloor(unittest.TestCase):
+    def test_the_floor_is_a_solid_sheet_with_small_round_holes(self):
+        from epc_plan import core, tray_solid as T
+        p = dict(core.PARAMS["detail"]["ladder"])
+        p = {k[:-2]: v for k, v in p.items() if k.endswith("_m")}
+        perforated = T.tray_mesh([(0, 0, 0), (1, 0, 0)], 0.3, 0.09, p, "perforada")
+        solid = T.tray_mesh([(0, 0, 0), (1, 0, 0)], 0.3, 0.09, p, "ciega")
+        self.assertGreater(len(perforated["faces"]), len(solid["faces"]) + 6 * 25 * 6 - 10)          # 6 columns x 25 rows of holes, six faces around each
+        floor = [f for f in perforated["faces"] if all(abs(perforated["vertices"][i][2] + 0.045) < 1e-9 for i in f)]
+        self.assertGreater(len(floor), 900)
