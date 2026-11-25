@@ -62,6 +62,21 @@ class TheTraysOfTheModel(unittest.TestCase):
         self.assertTrue([e for e in model3d.errors_of(dict(base, ladder_trays={"layers": []}), routing) if "ladder_trays" in e])
 
 
+class TheClashListOfTheModel(unittest.TestCase):
+    def test_a_bad_clearance_is_an_error(self):
+        base = {"floors": {"PB": HEIGHTS}}
+        routing = {"PB": {}}
+        self.assertFalse([e for e in model3d.errors_of(dict(base, clearance_m=0.05), routing) if "clearance" in e])
+        for bad in (-1, "a", True):
+            self.assertTrue([e for e in model3d.errors_of(dict(base, clearance_m=bad), routing) if "clearance" in e], bad)
+
+    def test_the_rows_of_the_list_say_both_languages(self):
+        clash = {"id": "x", "type": "hard", "severity": "error", "level": "L0", "a": {"tag": "BN1", "kind": "BN", "layer": "L"}, "b": {"tag": "CN1", "kind": "CN", "layer": "M"},
+                 "gap_m": -0.1, "overlap_m": [0.1, 0.1, 0.1], "point_m": [1, 2, 3], "text": {"en": "clash", "es": "choque"}}
+        row = model3d._clash_rows([clash])[0]
+        self.assertEqual((row[0], row[4], row[9], row[10]), ("x", "BN1 (BN, L)", "clash", "choque"))
+
+
 class Model3dInTheRun(unittest.TestCase):
     def test_without_the_section_nothing_is_written(self):
         res, files, _, _ = stage10()
@@ -79,8 +94,10 @@ class Model3dInTheRun(unittest.TestCase):
         self.assertTrue(out["takeoff"]["straights"] and out["takeoff"]["supports"])
         self.assertEqual(sorted(out["sections"]), ["A"])
         self.assertGreater(out["sections"]["A"]["outlines"], 0)
+        self.assertEqual(len([f for f in files if f.endswith("_clashes.xlsx")]), 1, files)                  # the list of clashes is a file of the run
+        self.assertEqual(out["clashes"]["file"].rsplit("_", 1)[-1], "clashes.xlsx")
         calls = [c["function"] for c in res.engine_calls]
-        self.assertTrue({"epc_arch.model3d.building_solids", "epc_plan.detail.parts", "epc_plan.scene3d.write_dxf"} <= set(calls))
+        self.assertTrue({"epc_arch.model3d.building_solids", "epc_plan.detail.parts", "epc_plan.clash_scene.detect", "epc_plan.scene3d.write_dxf"} <= set(calls))
 
     def test_the_section_names_what_it_cuts_with_its_level(self):
         res, _, texts, _ = stage10(model3d=MODEL)
