@@ -143,6 +143,69 @@
     "en": "Divider",
     "es": "Separador longitudinal"
    }
+  },
+  "cover_elbow90": {
+   "code": "TC90",
+   "name": {
+    "en": "Cover for the 90° elbow",
+    "es": "Tapa de curva 90°"
+   }
+  },
+  "cover_elbow45": {
+   "code": "TC45",
+   "name": {
+    "en": "Cover for the 45° elbow",
+    "es": "Tapa de curva 45°"
+   }
+  },
+  "cover_adjustable": {
+   "code": "TCA",
+   "name": {
+    "en": "Cover for the adjustable elbow",
+    "es": "Tapa de curva ajustable"
+   }
+  },
+  "cover_tee": {
+   "code": "TT",
+   "name": {
+    "en": "Cover for the tee",
+    "es": "Tapa de unión T"
+   }
+  },
+  "cover_cross": {
+   "code": "TX",
+   "name": {
+    "en": "Cover for the cross",
+    "es": "Tapa de unión cruz"
+   }
+  },
+  "cover_link": {
+   "code": "TV",
+   "name": {
+    "en": "Cover for the vertical bend",
+    "es": "Tapa de curva vertical"
+   }
+  },
+  "bracket_adjustable": {
+   "code": "MG",
+   "name": {
+    "en": "Adjustable wall bracket",
+    "es": "Ménsula graduable de pared"
+   }
+  },
+  "splice_lateral": {
+   "code": "UNL",
+   "name": {
+    "en": "Lateral splice plate",
+    "es": "Placa de unión lateral"
+   }
+  },
+  "union_articulated": {
+   "code": "UA",
+   "name": {
+    "en": "Articulated union",
+    "es": "Unión articulada"
+   }
   }
  },
  "hardware": {
@@ -210,6 +273,48 @@
     "name": {
      "en": "Ceiling plate",
      "es": "Placa de techo"
+    }
+   },
+   "carriage_bolt": {
+    "code": "BUC",
+    "name": {
+     "en": "Carriage bolt",
+     "es": "Bulón de cabeza redonda y cuello cuadrado"
+    }
+   },
+   "retainer_bolt": {
+    "code": "RET",
+    "name": {
+     "en": "Cover retainer bolt",
+     "es": "Bulón de retén de tapa"
+    }
+   },
+   "suspension_clamp": {
+    "code": "GSU",
+    "name": {
+     "en": "Suspension clamp",
+     "es": "Grapa de suspensión"
+    }
+   },
+   "fixing_clamp": {
+    "code": "GFI",
+    "name": {
+     "en": "Fixing clamp",
+     "es": "Grapa de fijación"
+    }
+   },
+   "ground_clamp": {
+    "code": "GPT",
+    "name": {
+     "en": "Grounding clamp",
+     "es": "Grapa de puesta a tierra"
+    }
+   },
+   "mounting_plate": {
+    "code": "PUM",
+    "name": {
+     "en": "Universal mounting plate",
+     "es": "Placa universal de montaje"
     }
    }
   }

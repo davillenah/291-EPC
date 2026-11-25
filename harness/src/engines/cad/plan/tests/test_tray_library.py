@@ -17,6 +17,8 @@ class TestTrayLibrary(unittest.TestCase):
         for kind in ("ESC", "PER", "CIE", "ALA", "CAN"):
             for fitting in ("", "C90", "C45", "CV", "T", "X", "RC", "RL", "CAJ", "FIN", "UN", "TP"):
                 code = "-".join(x for x in ("BN", kind, fitting, "300x90") if x)
+                if kind == "ALA" and fitting == "TP":
+                    continue                                                   # a wire-mesh tray takes no cover
                 self.assertIn(code, self.by_code)
 
     def test_supports_and_fasteners_are_there(self):
@@ -30,6 +32,13 @@ class TestTrayLibrary(unittest.TestCase):
             self.assertTrue(p["mesh"]["faces"])
             self.assertTrue(all(3 <= len(f) <= 4 for f in p["mesh"]["faces"]))
             self.assertTrue(all(0 <= i < len(p["mesh"]["vertices"]) for f in p["mesh"]["faces"] for i in f))
+
+    def test_everything_of_the_maker_catalogue_has_a_part_of_ours(self):
+        wanted = ["BN-ESC-TC90-300x90", "BN-ESC-TC45-300x90", "BN-ESC-TCA-300x90", "BN-ESC-TT-300x90", "BN-ESC-TX-300x90", "BN-ESC-TV-300x90", "BN-ESC-MG-300x90", "BN-ESC-UNL-300x90",
+                  "BN-ESC-UA-300x90", "SB-PUM-100x100", "SB-BUC-M8x25", "SB-BUC-3-8x25", "SB-RET-M8", "SB-GSU-M10", "SB-GFI-M8", "SB-GPT-M8"]
+        for code in wanted:
+            self.assertIn(code, self.by_code)
+        self.assertNotIn("BN-ALA-TP-300x90", self.by_code)                      # a wire-mesh tray takes no cover
 
     def test_a_piece_is_written_to_dxf_with_its_own_mesh(self):
         import tempfile

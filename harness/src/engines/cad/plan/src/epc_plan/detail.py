@@ -287,7 +287,7 @@ def tray_kinds() -> tuple:
 def _ladder_sizes(cover: bool) -> Dict[str, float]:
     """The sizes of rail, rungs, floor and wires (`params.json`, `detail.ladder`, in metres), and the lid when there is one."""
     q = core.PARAMS["detail"]["ladder"]
-    keys = ("rail", "rung", "rung_thick", "rung_pitch", "foot", "curl", "slot_pitch", "slot", "slot_height", "floor_margin", "wire", "wire_pitch", "joint", "bolt")
+    keys = ("rail", "rung", "rung_thick", "rung_pitch", "foot", "curl", "slot_pitch", "slot", "slot_height", "floor_margin", "hole_pitch", "hole", "wire", "wire_pitch", "joint", "bolt")
     sizes = {k: q[k + "_m"] for k in keys}
     if cover:
         sizes["cover"] = q["cover_m"]                                    # the lid, a flat sheet over the rails

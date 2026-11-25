@@ -155,11 +155,24 @@ def _side_rails(vertices: List[List[float]], faces: List[List[int]], a: P3, b: P
         _box(vertices, faces, tuple(mid[k] + n[k] * off for k in range(3)), axes, (math.dist(a, b), p["rail"], depth))
 
 
-def _lid(vertices: List[List[float]], faces: List[List[int]], a: P3, b: P3, axes: Tuple[P3, P3, P3], width: float, depth: float, p: Dict[str, float]) -> None:
-    """The cover of a stretch: a flat sheet `p["cover"]` over the top of the rails."""
+def _lid(vertices: List[List[float]], faces: List[List[int]], a: P3, b: P3, axes: Tuple[P3, P3, P3], width: float, depth: float, p: Dict[str, float],
+         ns: Optional[Tuple[P3, P3]] = None) -> None:
+    """The cover of a stretch: a flat sheet `p["cover"]` over the top of the rails (with `ns`, the mitred lateral vectors at its two ends)."""
     n, v = axes[1], axes[2]
-    corners = [tuple(e[k] + n[k] * sy * (width / 2 + p["rail"]) + v[k] * (depth / 2 + p["cover"]) for k in range(3)) for e, sy in ((a, -1), (b, -1), (b, 1), (a, 1))]
+    leans = ns or (n, n)
+    corners = [tuple(e[k] + lean[k] * sy * (width / 2 + p["rail"]) + v[k] * (depth / 2 + p["cover"]) for k in range(3)) for e, sy, lean in ((a, -1, leans[0]), (b, -1, leans[1]), (b, 1, leans[1]), (a, 1, leans[0]))]
     _quad(vertices, faces, corners)
+
+
+def cover_mesh(path: Sequence[P3], width: float, depth: float, p: Dict[str, float]) -> Dict[str, list]:
+    """The cover alone (a flat sheet over the rails, as `_lid` draws it) along `path`: for the covers of straights and fittings; `p` needs `rail` and `cover`."""
+    vertices: List[List[float]] = []
+    faces: List[List[int]] = []
+    turns = _miters(path)
+    for i, (a, b) in enumerate(zip(path, path[1:])):
+        if math.dist(a, b) > 1e-9:
+            _lid(vertices, faces, a, b, _frame(a, b), width, depth, p, (turns[i], turns[i + 1]))
+    return {"vertices": vertices, "faces": faces}
 
 
 def _joints(vertices: List[List[float]], faces: List[List[int]], path: Sequence[P3], width: float, depth: float, p: Dict[str, float]) -> None:
@@ -229,6 +242,44 @@ def _floor(vertices: List[List[float]], faces: List[List[int]], a: P3, b: P3, ax
         _quad(vertices, faces, [tuple(a[k] + u[k] * x + n[k] * y - v[k] * depth / 2 for k in range(3)) for x, y in ((s0, y0), (s1, y0), (s1, y1), (s0, y1))])
 
 
+def _tray_floor(vertices: List[List[float]], faces: List[List[int]], a: P3, b: P3, axes: Tuple[P3, P3, P3], width: float, depth: float, p: Dict[str, float], kind: str) -> None:
+    """The floor of a perforated or solid-bottom tray: sheet with round holes when the sizes of the holes are given, bands of slots otherwise."""
+    if kind == "perforada" and "hole" in p:
+        _perforated(vertices, faces, a, b, axes, width, depth, p)
+    else:
+        _floor(vertices, faces, a, b, axes, width, depth, p, kind == "perforada")
+
+
+def _hole_cell(vertices: List[List[float]], faces: List[List[int]], at: P3, axes: Tuple[P3, P3, P3], size: Tuple[float, float], diameter: float) -> None:
+    """One square cell of the perforated floor: the sheet around a round hole (a hexagon of the given diameter). `at` is the centre of the cell, `size` its length and width."""
+    u, n = axes[0], axes[1]
+    half_u, half_n, r = size[0] / 2, size[1] / 2, diameter / 2
+    outer = [(-half_u, -half_n), (0.0, -half_n), (half_u, -half_n), (half_u, half_n), (0.0, half_n), (-half_u, half_n)]
+    inner = [(r * math.cos(math.pi / 3 * k + math.pi / 6), r * math.sin(math.pi / 3 * k + math.pi / 6)) for k in range(6)]
+    inner = [min(inner, key=lambda q, o=o: (q[0] - o[0] / 2) ** 2 + (q[1] - o[1] / 2) ** 2) for o in outer]
+    for k in range(6):
+        k2 = (k + 1) % 6
+        _quad(vertices, faces, [tuple(at[j] + u[j] * x + n[j] * y for j in range(3)) for x, y in (outer[k], outer[k2], inner[k2], inner[k])])
+
+
+def _perforated(vertices: List[List[float]], faces: List[List[int]], a: P3, b: P3, axes: Tuple[P3, P3, P3], width: float, depth: float, p: Dict[str, float]) -> None:
+    """The floor of a perforated tray: a solid sheet with small round holes in a grid (`hole_pitch` apart, `hole` across), a solid margin along each rail and a solid strip at the end."""
+    u, n, v = axes
+    length, pitch = math.dist(a, b), p["hole_pitch"]
+    cols, rows = int((width - 2 * p["floor_margin"]) / pitch + 1e-9), int(length / pitch + 1e-9)
+    side = (width - cols * pitch) / 2                                    # the margin and what is left of the width after the columns
+    floor = tuple(a[k] - v[k] * depth / 2 for k in range(3))
+    sheet = lambda x0, x1, y0, y1: _quad(vertices, faces, [tuple(floor[k] + u[k] * x + n[k] * y for k in range(3)) for x, y in ((x0, y0), (x1, y0), (x1, y1), (x0, y1))])    # noqa: E731
+    sheet(0, length, -width / 2, -width / 2 + side)
+    sheet(0, length, width / 2 - side, width / 2)
+    if rows * pitch < length - 1e-9:
+        sheet(rows * pitch, length, -width / 2 + side, width / 2 - side)
+    for i in range(rows):
+        for j in range(cols):
+            centre = tuple(floor[k] + u[k] * (i + 0.5) * pitch + n[k] * (-width / 2 + side + (j + 0.5) * pitch) for k in range(3))
+            _hole_cell(vertices, faces, centre, axes, (pitch, pitch), p["hole"])
+
+
 def _wire(vertices: List[List[float]], faces: List[List[int]], a: P3, b: P3, axes: Tuple[P3, P3, P3], width: float, depth: float, p: Dict[str, float]) -> None:
     """A wire-mesh tray: a longitudinal wire along each top edge and every `wire_pitch` across the floor, and a transverse wire every `wire_pitch`."""
     u, n, v = axes
@@ -273,7 +324,7 @@ def tray_mesh(path: Sequence[P3], width: float, depth: float, p: Dict[str, float
             _channel(vertices, faces, a, b, axes, width, depth)
             continue
         _side_rails(vertices, faces, a, b, axes, width, depth, p, (turns[i], turns[i + 1]))
-        _floor(vertices, faces, a, b, axes, width, depth, p, kind == "perforada")
+        _tray_floor(vertices, faces, a, b, axes, width, depth, p, kind)
         if p.get("cover"):
             _lid(vertices, faces, a, b, axes, width, depth, p)
     if kind != "alambre":
