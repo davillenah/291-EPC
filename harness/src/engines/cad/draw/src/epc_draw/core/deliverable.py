@@ -32,6 +32,7 @@ def _finish(doc, svg, instances: list, symbol_library, height_mm: float, catalog
     from epc_draw.core import bloques_dxf, capas_dxf
     capas_dxf.aplicar(None, catalog, stamp, doc=doc, write=False)
     capas_dxf.colorear(svg, None, catalog, a3, stamp, doc=doc, write=False)       # colour, line weight and the layer of each entity by its role
+    _L.apply_viewport(doc, catalog)                                                # the viewport of the sheet: `0-Viewport`
     blocks = bloques_dxf.insertar(None, symbol_library, instances, height_mm, catalog, stamp, doc=doc, write=False)[0] if instances else 0
     return blocks, count_entities(doc)[0]
 
@@ -49,6 +50,13 @@ def _retarget_blocks(doc, final: Dict[str, str]) -> None:
             entity.dxf.layer = final.get(entity.dxf.layer, entity.dxf.layer)
 
 
+def _retarget_layouts(doc, final: Dict[str, str]) -> None:
+    """The viewports of the paper space follow their role too."""
+    for layout in doc.layouts:
+        for entity in ([] if layout.name == "Model" else layout):
+            entity.dxf.layer = final.get(entity.dxf.layer, entity.dxf.layer)
+
+
 def _role_layers_to_catalog(doc, layers_file) -> None:
     """Every role layer of the draft is renamed and given the look the catalog says, the entities follow."""
     catalog = _L.load(layers_file)                                                   # a path or a list of paths: global, company, project
@@ -58,6 +66,7 @@ def _role_layers_to_catalog(doc, layers_file) -> None:
         if entity.dxf.layer in final:
             _retarget(entity, final[entity.dxf.layer])
     _retarget_blocks(doc, final)
+    _retarget_layouts(doc, final)
     for role in drafts:
         if final[role] != role:
             doc.layers.remove(role)

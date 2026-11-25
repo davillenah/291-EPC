@@ -48,7 +48,7 @@ class TestSheetLayers(unittest.TestCase):
         self.assertGreater(out["layers"]["0-Logo-ClienteUnoSA"], 0)
 
     def test_the_viewport_helper_puts_the_viewport_of_the_sheet_on_its_layer(self):
-        """The helper exists and is tested; it is not wired into the converted sheets yet: that changes the bytes of every sheet, so it waits for the owner (goldens)."""
+        """The helper on a hand-made document."""
         doc = ezdxf.new("R2018")
         L.add_sheet_viewport(doc, 420.0, 297.0)
         self.assertEqual(L.apply_viewport(doc, L.load()), "0-Viewport")
@@ -56,6 +56,12 @@ class TestSheetLayers(unittest.TestCase):
         self.assertIn("0-Viewport", found)
         self.assertNotIn("sheet.viewport", [lay.dxf.name for lay in doc.layers])
         self.assertIsNone(L.apply_viewport(ezdxf.new("R2018"), L.load()))
+
+    def test_every_converted_sheet_has_its_viewport_on_the_viewport_layer(self):
+        _, doc = self.sheet()
+        found = [e.dxf.layer for layout in doc.layouts if layout.name != "Model" for e in layout if e.dxftype() == "VIEWPORT"]
+        self.assertIn("0-Viewport", found)
+        self.assertNotIn("sheet.viewport", [lay.dxf.name for lay in doc.layers])
 
     def test_a_sheet_without_company_names_keeps_its_logos_on_layer_0(self):
         from epc_draw.core import deliverable

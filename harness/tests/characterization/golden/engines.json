@@ -4262,8 +4262,8 @@
  },
  "pipeline": {
   "delivered": {
-   "deliverables/TR-001/01_SLD/SLD_TS-SYNTH.dxf": "58ba5623871e94320c8d208fce918076394dd90b5fc6cc77a3f6878270dc7ddd",
-   "deliverables/TR-001/01_SLD/SLD_TS-SYNTH_TABLA.dxf": "730d3716c0db4d751a4bbecb678fd89271a9e9882e9638b051a949dc43a631b6"
+   "deliverables/TR-001/01_SLD/SLD_TS-SYNTH.dxf": "b68cb190d952e599bc449a8466dc8cfdb5f1c34fffbf9a316c629dfac5dc982f",
+   "deliverables/TR-001/01_SLD/SLD_TS-SYNTH_TABLA.dxf": "bbdf0e33a05076965b7ff429114f47013ee96b398a2b66f640cbec50b3fdde50"
   },
   "engines_by_stage": {
    "board_structure": [
@@ -4291,6 +4291,7 @@
     "epc_sld",
     "epc_mld",
     "epc_dxf",
+    "epc_draw",
     "epc_symbols",
     "epc_titleblock",
     "epc_drawing"
@@ -4330,9 +4331,9 @@
    "stage_07_selectivity.json": "f351598444dcd01293482324dc14507886c0699c363a051555254430cb54ab74",
    "stage_08_earthing.json": "1b041b0f2856a2296fa565c3ac35e25deb01323d357cda53cabb011a0e919a7e",
    "stage_09_calc_check.json": "55630b4fdeebff968621225f56c4149be0a4807823da9f3b1cdf816de2e8fd6b",
-   "stage_10_drawings.json": "01de7612a4238161525e47a22adec9987d83d8302aa01390797c47f19fafa793",
+   "stage_10_drawings.json": "bd33ab307587b45cbcda42580720dd019630986c1aaf23b6f0f3b57fac2f4fcc",
    "stage_11_documents.json": "c6a3539b2dbf8fbd32c4e947460293e48e8fd094b70ce41d3862958e966ea692",
-   "stage_12_package_issue.json": "8d7a74a10af5e475a889a3123e8c7db1a06988c8f41589d1e5fee422d2d79084"
+   "stage_12_package_issue.json": "2efc01570a736a4d13dfcb23401d0ef05c080918f708f6751b70741eb480efb0"
   }
  }
 }
