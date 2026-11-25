@@ -5,11 +5,11 @@ import sys
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "src"))
 
-from epc_plan import core, tray_junction, tray_library   # noqa: E402
+from epc_plan import core, tray_catalogue, tray_junction, tray_library   # noqa: E402
 
 
 def _sizes():
-    ladder = core.PARAMS["detail"]["ladder"]
+    ladder = tray_catalogue.ladder(core.PARAMS["detail"]["ladder"], core.PARAMS["tray_catalogue"])
     keys = ("rail", "rung", "rung_thick", "rung_pitch", "foot", "curl", "lip", "jog", "slot_pitch", "slot", "slot_height", "floor_margin", "hole_pitch", "hole", "wire", "wire_pitch", "joint", "bolt")
     return {k: ladder[k + "_m"] for k in keys}
 

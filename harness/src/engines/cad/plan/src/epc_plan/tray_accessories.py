@@ -19,17 +19,19 @@ def _across(mesh: Mesh) -> Mesh:
     return {"vertices": [[v[2], v[1], v[0]] for v in mesh["vertices"]], "faces": mesh["faces"]}
 
 
-def carriage_bolt(q: Dict[str, float], diameter: float) -> Mesh:
+def carriage_bolt(q: Dict[str, float], diameter: float, pitch: float = 0.0) -> Mesh:
     """A carriage bolt: a low round head, a square neck under it and the threaded shank."""
     head = H.prism(q["carriage_head_m"] / 2, q["carriage_head_h_m"], int(q["sides"]))
     neck = _box((q["carriage_head_h_m"] + diameter / 4, 0.0, 0.0), (diameter / 2, diameter, diameter))
-    shank = H.prism(diameter / 2, q["bolt_len_m"], int(q["sides"]), x0=q["carriage_head_h_m"] + diameter / 2)
+    start = q["carriage_head_h_m"] + diameter / 2
+    shank = H.threaded(diameter / 2, q["bolt_len_m"], pitch, int(q["sides"]), start) if pitch else H.prism(diameter / 2, q["bolt_len_m"], int(q["sides"]), x0=start)
     return H.join(head, neck, shank)
 
 
-def retainer_bolt(q: Dict[str, float]) -> Mesh:
+def retainer_bolt(q: Dict[str, float], pitch: float = 0.0) -> Mesh:
     """The bolt that holds a cover: a wide flat head and the shank."""
-    return H.join(H.prism(q["retainer_head_m"] / 2, q["washer_t_m"] * 2, int(q["sides"])), H.prism(q["bolt_m"] / 2, q["bolt_len_m"], int(q["sides"]), x0=q["washer_t_m"] * 2))
+    head, x0 = H.prism(q["retainer_head_m"] / 2, q["washer_t_m"] * 2, int(q["sides"])), q["washer_t_m"] * 2
+    return H.join(head, H.threaded(q["bolt_m"] / 2, q["bolt_len_m"], pitch, int(q["sides"]), x0) if pitch else H.prism(q["bolt_m"] / 2, q["bolt_len_m"], int(q["sides"]), x0=x0))
 
 
 def _plate(q: Dict[str, float], width: float, height: float, holes: int) -> Mesh:

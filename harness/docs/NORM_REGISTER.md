@@ -457,7 +457,7 @@ Archivo: `harness/src/engines/cad/plan/src/epc_plan/norm_register/typical_values
 |---|---|---|---|---|---|---|---|---|---|
 | `plan.typical.sizing.cable_mm_by_section` | - | - | - | `typical_values.json#/sizing/cable_mm_by_section` | mm (section in mm2) | typical | low | pending | no clause: file says confirm against the standard and the catalogue; catalogue dependent; not a norm value |
 | `plan.typical.sizing.conduit_mm` | - | - | - | `typical_values.json#/sizing/conduit_mm` | mm | typical | low | pending | no clause: file says confirm against the standard and the catalogue; list 16-110 mm; is it internal or nominal diameter? |
-| `plan.typical.sizing.tray_mm` | - | - | - | `typical_values.json#/sizing/tray_mm` | mm | typical | low | pending | no clause: file says confirm against the standard and the catalogue |
+| `plan.typical.tray_catalogue` | - | - | - | `typical_values.json#/tray_catalogue` | mm | typical | low | pending | no clause: file says confirm against the standard and the catalogue |
 | `plan.typical.sizing.tray_fill_max_pct` | - | - | - | `typical_values.json#/sizing/tray_fill_max_pct` | % | typical | low | pending | given by the owner (40 %, 'as the standard says'); no clause recorded: a person must confirm it against the standard |
 | `plan.typical.occupancy.default_cable_mm` | - | - | - | `typical_values.json#/occupancy/default_cable_mm` | mm | typical | low | pending | no clause: file says confirm against the standard and the catalogue |
 | `plan.typical.occupancy.tray_pct` | - | - | - | `typical_values.json#/occupancy/tray_pct` | % | typical | low | pending | no clause: file says confirm against the standard and the catalogue; 50 % here vs 40 % ocupacion_max_pct in aea90364 rules/bandejas.json (line 59); criterion raceway_fill_max_pct (default 40, range 40-60) is a separate value: three copies |
@@ -731,7 +731,7 @@ Archivo: `harness/src/engines/calculation/transformer_sizing/src/epc_transformer
 - `plan.typical.sizing.cable_mm_by_section` (-; hand)
 - `plan.typical.sizing.conduit_mm` (-; hand)
 - `plan.typical.sizing.tray_fill_max_pct` (-; hand)
-- `plan.typical.sizing.tray_mm` (-; hand)
+- `plan.typical.tray_catalogue` (-; hand)
 - `pv.typical.faiman.u0` (-; hand)
 - `pv.typical.faiman.u1` (-; hand)
 - `pv.typical.iam_ashrae_b0` (-; hand)

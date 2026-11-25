@@ -52,11 +52,19 @@ def _across_corners(flats: float) -> float:
     return flats / math.sqrt(3)
 
 
-def bolt(q: Dict[str, float]) -> Mesh:
-    """A hex-head bolt: the head at x = 0 and the shank of `bolt_len_m` after it."""
+def bolt(q: Dict[str, float], pitch: float = 0.0) -> Mesh:
+    """A hex-head bolt: the head at x = 0 and the shank of `bolt_len_m` after it, with its thread turns when the `pitch` is given."""
     head = prism(_across_corners(q["head_flats_m"]), q["head_h_m"], 6)
-    shank = prism(q["bolt_m"] / 2, q["bolt_len_m"], int(q["sides"]), x0=q["head_h_m"])
+    shank = threaded(q["bolt_m"] / 2, q["bolt_len_m"], pitch, int(q["sides"]), q["head_h_m"]) if pitch else prism(q["bolt_m"] / 2, q["bolt_len_m"], int(q["sides"]), x0=q["head_h_m"])
     return join(head, shank)
+
+
+def threaded(radius: float, length: float, pitch: float, sides: int, x0: float = 0.0) -> Mesh:
+    """A threaded shank along +x: the core and one ridge per turn of `pitch` (the ridge is half a pitch thick), `int(length / pitch)` turns."""
+    turns = int(length / pitch + 1e-9)
+    root = radius - 0.6 * pitch * 0.5
+    ridges = [prism(radius, pitch / 2, sides, x0=x0 + k * pitch + pitch / 4) for k in range(turns)]
+    return join(prism(root, length, sides, x0=x0), *ridges)
 
 
 def nut(q: Dict[str, float]) -> Mesh:

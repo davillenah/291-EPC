@@ -12,7 +12,7 @@
     "note": "Typical fill limits and cable diameter; confirm against the standard of the project."
   },
   "sizing": {
-    "note": "Typical outside diameters of a multi-core cable by conductor section, and the commercial sizes of conduits (internal diameter) and trays (width, rail height, useful height above the rungs: the fill is taken over the width times the useful height); confirm them against the catalogue of the project.",
+    "note": "Typical outside diameters of a multi-core cable by conductor section, and the commercial sizes of conduits (internal diameter); the trays come from `tray_catalogue`; confirm them against the catalogue of the project.",
     "tray_fill_max_pct": 40,
     "cable_mm_by_section": {
       "1.5": 9.0,
@@ -42,88 +42,6 @@
       75,
       90,
       110
-    ],
-    "tray_mm": [
-      [
-        150,
-        65,
-        44
-      ],
-      [
-        150,
-        90,
-        70
-      ],
-      [
-        300,
-        65,
-        44
-      ],
-      [
-        150,
-        115,
-        95
-      ],
-      [
-        150,
-        150,
-        130
-      ],
-      [
-        450,
-        65,
-        44
-      ],
-      [
-        300,
-        90,
-        70
-      ],
-      [
-        600,
-        65,
-        44
-      ],
-      [
-        300,
-        115,
-        95
-      ],
-      [
-        450,
-        90,
-        70
-      ],
-      [
-        300,
-        150,
-        130
-      ],
-      [
-        600,
-        90,
-        70
-      ],
-      [
-        450,
-        115,
-        95
-      ],
-      [
-        600,
-        115,
-        95
-      ],
-      [
-        450,
-        150,
-        130
-      ],
-      [
-        600,
-        150,
-        130
-      ]
     ]
   },
   "design": {
@@ -181,6 +99,240 @@
         "label": {
           "es": "Fuerza motriz",
           "en": "Motor power"
+        }
+      }
+    }
+  },
+  "tray_catalogue": {
+    "note": "The ladder tray line of a maker catalogue, as data (sizes in mm, the weights and loads as printed): gauges, finishes, widths, rail heights, the sheet of every part, the supports and fasteners, the articulated bend and the load test. Own extract for modelling and sizing; confirm against the catalogue of the project.",
+    "source": "ladder tray maker catalogue, ladder line, pages 2 to 27",
+    "standards": {
+      "load_test": "IEC 61537:2006 clause 10.3",
+      "hot_dip_galvanizing": "ASTM A123",
+      "installation": "AEA 90364"
+    },
+    "length_mm": 3000,
+    "inner_bend_radius_mm": 300,
+    "gauge_mm": {
+      "22": 0.71,
+      "20": 0.89,
+      "18": 1.24,
+      "14": 2.1
+    },
+    "finishes": {
+      "Z": "sheet galvanized at the mill, cold assembly of rails and rungs, gauge 18 only",
+      "G": "welded, then hot-dip galvanized (ASTM A123), gauges 18 and 14"
+    },
+    "default": {
+      "finish": "Z",
+      "gauge": "18"
+    },
+    "widths_mm": [
+      150,
+      300,
+      450,
+      600
+    ],
+    "widths_available_mm": [
+      150,
+      300,
+      450,
+      600,
+      750,
+      900
+    ],
+    "rail_heights_mm": {
+      "65": {
+        "useful_mm": 44,
+        "gauges": [
+          "18",
+          "14"
+        ]
+      },
+      "90": {
+        "useful_mm": 70,
+        "gauges": [
+          "18",
+          "14"
+        ]
+      },
+      "115": {
+        "useful_mm": 95,
+        "gauges": [
+          "18",
+          "14"
+        ]
+      },
+      "150": {
+        "useful_mm": 130,
+        "gauges": [
+          "14"
+        ]
+      }
+    },
+    "rung_seat_mm": 15,
+    "cover_gauge": {
+      "Z": {
+        "150": "22",
+        "300": "22",
+        "450": "20",
+        "600": "20"
+      },
+      "G": {
+        "150": "18",
+        "300": "18",
+        "450": "18",
+        "600": "18",
+        "750": "18",
+        "900": "18"
+      }
+    },
+    "end_plate_widths_mm": [
+      75,
+      150,
+      225,
+      300,
+      450,
+      600
+    ],
+    "reductions_mm": [
+      [
+        300,
+        150
+      ],
+      [
+        450,
+        150
+      ],
+      [
+        450,
+        300
+      ],
+      [
+        600,
+        150
+      ],
+      [
+        600,
+        300
+      ],
+      [
+        600,
+        450
+      ]
+    ],
+    "articulated_bend": {
+      "links": 5,
+      "radius_mm_by_links": {
+        "3": 125,
+        "4": 210,
+        "5": 294,
+        "6": 376,
+        "7": 460,
+        "8": 540,
+        "9": 625,
+        "10": 705
+      }
+    },
+    "supports_mm": {
+      "wall_bracket": [
+        130,
+        180,
+        230,
+        330
+      ],
+      "heavy_bracket": [
+        130,
+        180,
+        230,
+        330,
+        480,
+        630
+      ],
+      "trapeze_by_tray_width": {
+        "150": 200,
+        "200": 250,
+        "300": 350,
+        "450": 500,
+        "600": 650
+      },
+      "adjustable_bracket_by_tray_width": {
+        "150": 200,
+        "200": 250,
+        "300": 370
+      },
+      "mounting_plate": [
+        [
+          190,
+          190
+        ],
+        [
+          130,
+          125
+        ]
+      ],
+      "mounting_plate_with_gland": [
+        130,
+        125
+      ]
+    },
+    "fasteners": {
+      "union": "3/8 inch Whitworth carriage bolt with nut, 4 sets per union and no splice plates",
+      "accessory": "M6 carriage bolt with nut, only to fix accessories on the rails of straights",
+      "cover": "M6 bolt with retainer nut"
+    },
+    "union_bolt_sets": 4,
+    "weights": {
+      "tray_300x90_3m_kg": 8,
+      "union_materials_g": 90
+    },
+    "threads": {
+      "note": "Not printed in the catalogue: the standard pitch of the thread each bolt set names (BSW for 3/8 inch Whitworth, ISO coarse for M6); the pack of 100 units is printed.",
+      "3/8": {"standard": "BSW", "threads_per_inch": 16, "pitch_mm": 1.5875, "major_mm": 9.525},
+      "M6": {"standard": "ISO coarse", "pitch_mm": 1.0, "major_mm": 6.0},
+      "pack_units": 100
+    },
+    "load_test": {
+      "span_m": 1.5,
+      "tray_length_m": 6,
+      "Z": {
+        "65": {
+          "load_kg_m": 300,
+          "deflection_mm": {
+            "150": 6.5,
+            "300": 7.3,
+            "450": 8.1,
+            "600": 9.8
+          }
+        },
+        "90": {
+          "load_kg_m": 400,
+          "deflection_mm": {
+            "150": 7.6,
+            "300": 8.5,
+            "450": 8.8,
+            "600": 11.5
+          }
+        }
+      },
+      "G": {
+        "65": {
+          "load_kg_m": 310,
+          "deflection_mm": {
+            "150": 6.2,
+            "300": 7.1,
+            "450": 8.6,
+            "600": 9.7
+          }
+        },
+        "90": {
+          "load_kg_m": 440,
+          "deflection_mm": {
+            "150": 6.5,
+            "300": 8.3,
+            "450": 9.5,
+            "600": 11.0
+          }
         }
       }
     }

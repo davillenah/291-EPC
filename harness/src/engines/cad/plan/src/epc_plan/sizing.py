@@ -6,7 +6,7 @@ commercial size whose free section holds them within the fill limit is the one t
 import math
 from typing import Any, Dict, List, Optional
 
-from epc_plan import occupancy, tray_code
+from epc_plan import occupancy, tray_catalogue, tray_code
 
 
 def cable_mm(section_mm2: Optional[float], cfg: Dict[str, Any], default: float) -> float:
@@ -30,7 +30,7 @@ def _is_tray(kind: str, kinds: Dict[str, Dict[str, Any]]) -> bool:
 
 def _candidates(tray: bool, cfg: Dict[str, Any]) -> List[Dict[str, float]]:
     if tray:
-        return [{"ancho_mm": float(w), "alto_mm": float(useful), "ala_mm": float(ala)} for w, ala, useful in cfg["tray_mm"]]      # the fill is over the useful height above the rungs
+        return tray_catalogue.fill_candidates(cfg["tray_catalogue"])      # the fill is over the useful height above the rungs
     return [{"diametro_mm": float(d)} for d in cfg["conduit_mm"]]
 
 
@@ -65,7 +65,7 @@ def size_container(container: Dict[str, Any], sections: Dict[str, Optional[float
 
 def size_containers(containers: List[Dict[str, Any]], sections: Dict[str, Optional[float]], ternas: Dict[str, int], line_kinds: Dict[str, Dict[str, Any]], params: Dict[str, Any]) -> List[Dict[str, Any]]:
     """One entry per container: its line, kind, circuits, cables, the size it has now (the fill reported by the plan, if it had a size) and the size that fits."""
-    cfg, occ = params["sizing"], params["occupancy"]
+    cfg, occ = {**params["sizing"], "tray_catalogue": params["tray_catalogue"]}, params["occupancy"]
     out = []
     for c in containers:
         tray = _is_tray(c["kind"], line_kinds)
