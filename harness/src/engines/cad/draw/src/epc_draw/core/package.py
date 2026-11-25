@@ -9,8 +9,8 @@ import json
 from pathlib import Path
 from typing import Dict, Iterable, List, Optional
 
-from epc_dxf import deliverable
-from epc_dxf import layers as _L
+from epc_draw.core import deliverable
+from epc_draw.core import layers as _L
 
 
 def _entry(svg: Path, layers: Dict[str, int], blocks: int, role_of: Dict[str, str], messages: Iterable[str]) -> dict:

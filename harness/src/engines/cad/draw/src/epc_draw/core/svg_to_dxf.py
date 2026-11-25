@@ -21,8 +21,8 @@ from ezdxf.colors import rgb2int
 from ezdxf.enums import TextEntityAlignment
 from svgelements import SVG, Circle, Ellipse, Image, Path, Polygon, Rect, Shape, SimpleLine, Text
 
-from epc_dxf import stamp as _stamp
-from epc_dxf import textstyle as _T
+from epc_draw.core import stamp as _stamp
+from epc_draw.core import textstyle as _T
 
 try:
     import vtracer

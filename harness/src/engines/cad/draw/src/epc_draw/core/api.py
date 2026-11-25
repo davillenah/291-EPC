@@ -1,11 +1,11 @@
 """The public door of the engine (COD-02): the names other packages may import. Everything else in the package is internal."""
-from epc_dxf.deliverable import (
+from epc_draw.core.deliverable import (
     finish_draft,
     inspect,
     layers_used,
     convert,
 )  # noqa: F401
-from epc_dxf.layers import (
+from epc_draw.core.layers import (
     load,
     defaults,
     override_of,
@@ -22,17 +22,17 @@ from epc_dxf.layers import (
     describe_layers,
     logo_layer_name,
 )  # noqa: F401
-from epc_dxf.package import (
+from epc_draw.core.package import (
     describe,
     describe_dxf,
     deliver,
 )  # noqa: F401
-from epc_dxf.stamp import new_document  # noqa: F401
-from epc_dxf.roles import (
+from epc_draw.core.stamp import new_document  # noqa: F401
+from epc_draw.core.roles import (
     tag_iram_sheet,
     role_attribute,
 )  # noqa: F401
-from epc_dxf.stamp import (
+from epc_draw.core.stamp import (
     Stamp,
     moment_of,
     parse,
@@ -41,17 +41,17 @@ from epc_dxf.stamp import (
     new,
     save,
 )  # noqa: F401
-from epc_dxf.style_unify import (
+from epc_draw.core.style_unify import (
     new_layer_name,
     unify,
 )  # noqa: F401
-from epc_dxf.textstyle import (
+from epc_draw.core.textstyle import (
     config_dir,
     add_styles,
     get_section,
     load_file,
 )  # noqa: F401
-from epc_dxf.verification import verify  # noqa: F401
-from epc_dxf.errors import DxfError  # noqa: F401
+from epc_draw.core.verification import verify  # noqa: F401
+from epc_draw.core.errors import DxfError  # noqa: F401
 
 __all__ = ["DxfError", "verify", "Stamp", "new_document", "aci_hex", "add_logo_layer", "add_styles", "apply", "by_discipline", "config_dir", "convert", "defaults", "deliver", "describe", "describe_layers", "describe_dxf", "disciplines", "dump", "finish_draft", "get", "get_section", "inspect", "layers_used", "load", "load_file", "logo_layer_name", "moment_of", "name", "new", "new_layer_name", "override_of", "parse", "pin", "resolve", "role_attribute", "save", "sort_classes", "tag_iram_sheet", "unify", "validate"]

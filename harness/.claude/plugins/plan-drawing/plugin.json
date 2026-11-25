@@ -50,6 +50,7 @@
   ],
   "engine": [
     "arch",
+    "draw",
     "dxf",
     "plan",
     "symbols",

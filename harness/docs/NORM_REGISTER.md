@@ -325,6 +325,18 @@ Archivo: `harness/src/engines/procurement/datasheets/src/epc_datasheets/norm_reg
 | `datasheets.params.catalog_siemens_breakers` | - | - | - | `breakers.json#/products` | A, kA, V | convention | low | pending | no clause: manufacturer catalog (unverified); every product has status unverified and a source URL to check |
 | `datasheets.params.catalog_prysmian_cables` | - | - | - | `cables.json#/products` | - | convention | low | pending | no clause: manufacturer catalog (unverified); every product has status unverified and a source URL to check |
 
+## draw / svg_to_dxf
+
+Archivo: `harness/src/engines/cad/draw/src/epc_draw/norm_register/svg_to_dxf.json` (5 registros)
+
+| id | norma | cláusula | página | valor / ubicación | unidad | procedencia | confianza | estado | problemas |
+|---|---|---|---|---|---|---|---|---|---|
+| `dxf.code.altura_texto_mm` | - | - | - | `1.7` | mm | design-default | low | pending | 1.7 mm vs 2.0 (layout.DEFAULT_TEXT block, FS_ROTULO comment says 2 mm) and 2.5/1.8 in lamina_iram; no clause |
+| `dxf.code.fs_rotulo` | - | - | - | `2.778` | svg units | convention | low | pending | comment says it is the font-size generated for 2 mm; ratio 2.778/2 differs from FS_LEGAL/ALTURA_LEGAL 1.528/1.0 |
+| `dxf.code.altura_legal_mm` | - | - | - | `1.0` | mm | design-default | low | pending | no clause |
+| `dxf.code.px_por_mm` | - | - | - | `3.77953` | px/mm | physics | medium | pending | exact 96/25.4 = 3.7795276; code uses 3.779530 |
+| `dxf.layers.lineweights` | - | - | - | `[0.0, 0.05, 0.09, 0.13, 0.15, 0.18, 0.2, 0.25, 0.3, 0.35,...` | mm | convention | medium | pending | layer names (e.g. '0' used for all converted entities) are not registered |
+
 ## drawing / plan_sheet
 
 Archivo: `harness/src/engines/cad/drawing/src/epc_drawing/norm_register/plan_sheet.json` (4 registros)
@@ -335,18 +347,6 @@ Archivo: `harness/src/engines/cad/drawing/src/epc_drawing/norm_register/plan_she
 | `drawing.code.formats` | - | - | - | `["A0", "A1", "A2", "A3", "A4"]` | - | convention | medium | pending | duplicates titleblock FORMATOS keys (names only): duplicates a value defined elsewhere (ADR-0012 single source) |
 | `drawing.code.gap` | - | - | - | `5.0` | mm | design-default | low | pending | duplicates arch sheet_iram.GAP (5.0): duplicates a value defined elsewhere (ADR-0012 single source); no clause |
 | `drawing.code.unit_mm` | - | - | - | `{"4": 1.0, "5": 10.0, "6": 1000.0}` | mm per unit | physics | medium | pending | codes 4/5/6 = mm/cm/m of DXF $INSUNITS |
-
-## dxf / svg_to_dxf
-
-Archivo: `harness/src/engines/cad/dxf/src/epc_dxf/norm_register/svg_to_dxf.json` (5 registros)
-
-| id | norma | cláusula | página | valor / ubicación | unidad | procedencia | confianza | estado | problemas |
-|---|---|---|---|---|---|---|---|---|---|
-| `dxf.code.altura_texto_mm` | - | - | - | `1.7` | mm | design-default | low | pending | 1.7 mm vs 2.0 (layout.DEFAULT_TEXT block, FS_ROTULO comment says 2 mm) and 2.5/1.8 in lamina_iram; no clause |
-| `dxf.code.fs_rotulo` | - | - | - | `2.778` | svg units | convention | low | pending | comment says it is the font-size generated for 2 mm; ratio 2.778/2 differs from FS_LEGAL/ALTURA_LEGAL 1.528/1.0 |
-| `dxf.code.altura_legal_mm` | - | - | - | `1.0` | mm | design-default | low | pending | no clause |
-| `dxf.code.px_por_mm` | - | - | - | `3.77953` | px/mm | physics | medium | pending | exact 96/25.4 = 3.7795276; code uses 3.779530 |
-| `dxf.layers.lineweights` | - | - | - | `[0.0, 0.05, 0.09, 0.13, 0.15, 0.18, 0.2, 0.25, 0.3, 0.35,...` | mm | convention | medium | pending | layer names (e.g. '0' used for all converted entities) are not registered |
 
 ## hvac / constants
 

@@ -7,7 +7,7 @@ smallest acceptable line length is an input in drawing units (EPC sheets are in 
 import math
 from pathlib import Path
 
-from epc_dxf.errors import DxfError
+from epc_draw.core.errors import DxfError
 
 TOLERANCE = 1e-9
 MAX_PER_RULE = 200

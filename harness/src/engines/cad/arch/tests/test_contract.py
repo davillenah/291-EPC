@@ -14,6 +14,7 @@ HEIGHTS = {"elevation_m": 0.0, "wall_height_m": 2.8, "door_head_m": 2.1, "window
 
 def _stable(data):
     data = re.sub(rb"\d{4}-\d\d-\d\dT[\d:.]+\+00:00", b"{TIME}", data)
+    data = re.sub(rb"(\$TD\w+\r?\n\s*40\r?\n)[\d.]+", rb"\1{JULIAN}", data)
     return re.sub(rb"\{[0-9A-F-]{36}\}", b"{GUID}", data)
 
 

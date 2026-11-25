@@ -118,7 +118,7 @@
   },
   {
    "path": "harness/src/engines/cad",
-   "purpose": "sld, mld, plan, drawing, dxf, symbols, titleblock, arch",
+   "purpose": "sld, mld, plan, drawing, dxf, draw, symbols, titleblock, arch",
    "status": "planned"
   },
   {

@@ -9,9 +9,7 @@
   "jurisdiction": [
     "AR"
   ],
-  "requires": {
-    "iec-symbols": "^0.4.19"
-  },
+  "requires": {},
   "consumes": [
     "Drawing"
   ],
@@ -39,6 +37,7 @@
     "dxf"
   ],
   "engine": [
+    "draw",
     "dxf",
     "symbols"
   ]

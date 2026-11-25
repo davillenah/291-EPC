@@ -11,9 +11,9 @@ from typing import Dict, List, Optional
 
 import ezdxf
 
-from epc_dxf import layers as _L
-from epc_dxf import svg_to_dxf
-from epc_dxf import stamp as _stamp
+from epc_draw.core import layers as _L
+from epc_draw.core import svg_to_dxf
+from epc_draw.core import stamp as _stamp
 
 
 def _sha256(path: Path) -> str:
@@ -22,14 +22,14 @@ def _sha256(path: Path) -> str:
 
 def _prepare(text: str, symbol_library) -> tuple:
     """The SVG the converter reads (without the symbols that go as blocks), kept in memory, and those symbols."""
-    from epc_dxf import bloques_dxf
+    from epc_draw.core import bloques_dxf
     stripped, instances = bloques_dxf.separar(text, symbol_library) if symbol_library is not None else (text, [])
     return svg_to_dxf.SvgText(stripped), instances
 
 
 def _finish(doc, svg, instances: list, symbol_library, height_mm: float, catalog: Dict[str, dict], a3: Optional[bool], stamp=None) -> tuple:
     """(symbols inserted as blocks, entities per layer). Layers, colours and symbol blocks on the converted drawing: the three steps work on that one document, in memory (COD-07)."""
-    from epc_dxf import bloques_dxf, capas_dxf
+    from epc_draw.core import bloques_dxf, capas_dxf
     capas_dxf.aplicar(None, catalog, stamp, doc=doc, write=False)
     capas_dxf.colorear(svg, None, catalog, a3, stamp, doc=doc, write=False)       # colour, line weight and the layer of each entity by its role
     blocks = bloques_dxf.insertar(None, symbol_library, instances, height_mm, catalog, stamp, doc=doc, write=False)[0] if instances else 0
@@ -106,7 +106,7 @@ def layers_used(dxf: Path) -> Dict[str, int]:
 def convert_document(svg_text: str, *, symbol_library=None, layers_file=None, a3: Optional[bool] = None, stamp_date=None, seed: str = "drawing") -> dict:
     """SVG in development -> DXF deliverable, all in memory: nothing is read from or written to a folder except the symbol library the caller names.
     Returns {"doc": the ezdxf document, "stamp": the stamp to save it with, "blocks": ..., "layers": ..., "messages": [...]}."""
-    from epc_dxf import bloques_dxf
+    from epc_draw.core import bloques_dxf
     catalog = _L.load(layers_file)
     stamp = _stamp.parse(stamp_date, seed)
     symbol_library = bloques_dxf.as_library(symbol_library) if symbol_library else None       # a folder is read once here; a `SymbolLibrary` comes in as data

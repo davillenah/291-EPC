@@ -27,7 +27,7 @@ This plugin is packaging only. The code lives in `harness/src/engines/cad/drawin
 
 | | |
 |---|---|
-| Incluye (motor) | `dxf`, `symbols`, `titleblock` |
+| Incluye (motor) | `draw`, `dxf`, `symbols`, `titleblock` |
 | Es dueño de | `titleblock` |
 | Necesita (plugins) | `dxf-output` |
 | Lo necesitan | `board-design`, `mld`, `sld` |

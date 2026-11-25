@@ -8,9 +8,9 @@ The default catalog travels with the package; the global file the MASTER edits (
 
 | | |
 |---|---|
-| Incluye (motor) | `dxf`, `symbols` |
+| Incluye (motor) | `draw`, `dxf`, `symbols` |
 | Es dueño de | `dxf` |
-| Necesita (plugins) | `iec-symbols` |
+| Necesita (plugins) | — |
 | Lo necesitan | `board-design`, `iram-titleblock`, `mld`, `plan-drawing`, `sld` |
 | Paquetes de Python | `ezdxf`, `lxml`, `shapely`, `svgelements`, `vtracer` |
 | Si lo modificas, revisa | plugins `board-design`, `iram-titleblock`, `mld`, `plan-drawing`, `sld`; módulos del backend — |

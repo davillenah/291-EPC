@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "epc-draw"
+version = "0.1.0"
+description = "EPC-291 one drawing engine: the DXF core (layers, stamp, deliverable in bytes) and one function per kind of drawing"
+requires-python = ">=3.10"
+dependencies = ["ezdxf", "lxml", "shapely", "svgelements", "vtracer"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"epc_draw" = ["norm_register/*.json"]
+"epc_draw.core" = ["data/*.json"]
