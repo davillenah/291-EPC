@@ -28,17 +28,20 @@ def moved(mesh: Mesh, dx: float = 0.0, dy: float = 0.0, dz: float = 0.0) -> Mesh
     return {"vertices": [[v[0] + dx, v[1] + dy, v[2] + dz] for v in mesh["vertices"]], "faces": mesh["faces"]}
 
 
+def _rings(radius: float, length: float, sides: int, x0: float, inner: float, turn: float) -> List[List[List[float]]]:
+    """The rings of a prism along x: outer start, outer end and, for a tube, inner end and inner start."""
+    spec = [(radius, x0), (radius, x0 + length)] + ([(inner, x0 + length), (inner, x0)] if inner else [])
+    return [[[x, r * math.cos(turn + 2 * math.pi * k / sides), r * math.sin(turn + 2 * math.pi * k / sides)] for k in range(sides)] for r, x in spec]
+
+
 def prism(radius: float, length: float, sides: int, x0: float = 0.0, inner: float = 0.0, turn: float = 0.0) -> Mesh:
     """A round or hexagonal prism along x (`sides` 6 is a hex nut, 16 a cylinder); with `inner` > 0 it is a tube (washer, coupler)."""
-    vertices, faces = _new()
-    rings = [(radius, x0), (radius, x0 + length)] + ([(inner, x0 + length), (inner, x0)] if inner else [])
-    for r, x in rings:
-        vertices.extend([[x, r * math.cos(turn + 2 * math.pi * k / sides), r * math.sin(turn + 2 * math.pi * k / sides)] for k in range(sides)])
+    rings = _rings(radius, length, sides, x0, inner, turn)
+    vertices = [v for ring in rings for v in ring]
+    faces: List[List[int]] = []
     for ring in range(len(rings) if inner else 1):
         nxt = (ring + 1) % len(rings) if inner else 1
-        for k in range(sides):
-            a, b = ring * sides + k, ring * sides + (k + 1) % sides
-            faces.append([a, b, nxt * sides + (k + 1) % sides, nxt * sides + k])
+        faces.extend([[ring * sides + k, ring * sides + (k + 1) % sides, nxt * sides + (k + 1) % sides, nxt * sides + k] for k in range(sides)])
     if not inner:
         faces.extend([[0, k, k + 1] for k in range(1, sides - 1)])                       # the two ends as fans of triangles
         faces.extend([[sides, sides + k + 1, sides + k] for k in range(1, sides - 1)])
@@ -57,7 +60,13 @@ def bolt(q: Dict[str, float]) -> Mesh:
 
 
 def nut(q: Dict[str, float]) -> Mesh:
-    return prism(_across_corners(q["head_flats_m"]), q["nut_h_m"], 6)
+    return prism(_across_corners(q["head_flats_m"]), q["nut_h_m"], 6, inner=q["bolt_m"] / 2)
+
+
+def side_reducer(mesh: Mesh, length: float, widths: Tuple[float, float]) -> Mesh:
+    """A central reducer turned into a side one: one rail stays straight, the other leans in (the mesh sheared by half the difference of widths along its length)."""
+    shift = (widths[0] - widths[1]) / 2
+    return {"vertices": [[v[0], v[1] + shift * v[0] / length, v[2]] for v in mesh["vertices"]], "faces": mesh["faces"]}
 
 
 def washer(q: Dict[str, float]) -> Mesh:
@@ -114,14 +123,16 @@ def wall_bracket(q: Dict[str, float], width: float, reach: float, arm: float, pl
     return {"vertices": vertices, "faces": faces}
 
 
-def heavy_bracket(q: Dict[str, float], width: float) -> Mesh:
+def heavy_bracket(q: Dict[str, float], width: float, reach: float = 0.0) -> Mesh:
     """A heavy bracket: a long arm, a taller backplate and a diagonal brace from the plate up to the arm, for a wide tray with a heavy load."""
-    reach = q["heavy_reach_m"]
+    reach = reach or q["heavy_reach_m"]
     arm = q["heavy_arm_m"] / 2
     base = wall_bracket(q, width, reach, arm, q["plate_m"], q["heavy_plate_height_m"])
     angle = math.radians(q["heavy_brace_deg"])
-    brace_len = (reach / 2) / math.cos(angle)
+    run = reach / 2
+    x_end = reach - arm                                                   # the brace meets the plate a little in from the wall face
+    mid_x, mid_z = x_end - run / 2, -arm - run * math.tan(angle) / 2
     u = (math.cos(angle), 0.0, -math.sin(angle))
     vertices, faces = _new()
-    T._box(vertices, faces, (reach - reach / 4, 0.0, -arm - reach / 4 * math.tan(angle)), (u, (0.0, 1.0, 0.0), (math.sin(angle), 0.0, math.cos(angle))), (brace_len, arm / 2, arm / 2))
+    T._box(vertices, faces, (mid_x, 0.0, mid_z), (u, (0.0, 1.0, 0.0), (math.sin(angle), 0.0, math.cos(angle))), (run / math.cos(angle), arm / 2, arm / 2))
     return join(base, {"vertices": vertices, "faces": faces})

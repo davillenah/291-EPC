@@ -4,12 +4,13 @@ A bracket is a backplate against the face of the wall and an arm that runs from 
 stretch (`spacing_m`, as for the hangers) the nearest wall on either side that is at the height of the tray and no further than `reach_m` from its edge. The reach is a design value of the engineer
 (no default). The walls come from the caller (the engine reads nothing); a place with no wall within reach gets no bracket, and it is the caller who reports it.
 
-    brackets(runs, walls, spec) -> [support solid]      runs: the solids of the runs; walls: the solids of the walls (with their mesh, the frame of the runs); spec: {spacing_m, reach_m}
+    brackets(runs, walls, spec) -> [support solid]      runs: the solids of the runs; walls: the solids of the walls (with their mesh, the frame of the runs); spec: {spacing_m, reach_m, heavy_over_m?}: trays wider than `heavy_over_m` (the engineer's value, none assumed) get the heavy bracket
 """
 import math
 from typing import Any, Dict, List, Optional, Sequence, Tuple
 
 from epc_plan import clash_scene, core, detail
+from epc_plan import tray_hardware as hardware
 from epc_plan import tray_solid as T
 
 Box = Tuple[Tuple[float, float, float], Tuple[float, float, float]]
@@ -61,18 +62,30 @@ def _sides(a: Sequence[float], b: Sequence[float]) -> List[Tuple[float, float]]:
 def _wanted(spec: Any) -> List[str]:
     if not isinstance(spec, dict):
         return ["supports: an object with spacing_m and reach_m"]
-    return [f"supports/{k}: required, a positive number of metres (no default: it comes from the standard and the manufacturer)" for k in ("spacing_m", "reach_m")
-            if not isinstance(spec.get(k), (int, float)) or isinstance(spec.get(k), bool) or spec[k] <= 0]
+    bad = [f"supports/{k}: required, a positive number of metres (no default: it comes from the standard and the manufacturer)" for k in ("spacing_m", "reach_m")
+           if not isinstance(spec.get(k), (int, float)) or isinstance(spec.get(k), bool) or spec[k] <= 0]
+    if "heavy_over_m" in spec and (not isinstance(spec["heavy_over_m"], (int, float)) or isinstance(spec["heavy_over_m"], bool) or spec["heavy_over_m"] <= 0):
+        bad.append("supports/heavy_over_m: a positive width in metres above which the heavy bracket is used (optional, no default)")
+    return bad
 
 
-def _on_wall(s: Dict[str, Any], at, sides, walls: Sequence[Box], reach: float, sizes: Dict[str, float], n: int) -> Optional[Dict[str, Any]]:
+def _heavy_mesh(at: Sequence[float], d: Tuple[float, float], reach: float, tray: Dict[str, Any]) -> Dict[str, list]:
+    """The heavy bracket of the library placed at `at`, pointing along `d` to a wall `reach` away (z = 0 of the part is the underside of the tray)."""
+    local = hardware.heavy_bracket(core.PARAMS["detail"]["library"], tray["width_m"], reach)
+    dx, dy = d
+    z0 = at[2] - tray["height_m"] / 2
+    return {"vertices": [[round(at[0] + dx * x - dy * y, 4), round(at[1] + dy * x + dx * y, 4), round(z0 + z, 4)] for x, y, z in local["vertices"]], "faces": local["faces"]}
+
+
+def _on_wall(s: Dict[str, Any], at, sides, walls: Sequence[Box], reach: float, sizes: Dict[str, float], n: int, heavy: bool = False) -> Optional[Dict[str, Any]]:
     """The bracket of the tray `s` at `at`, on the nearer of the two sides that has a wall within reach of the edge of the tray."""
     seen = [(t, d) for d in sides for t in [_nearest(at, d, walls)] if t is not None and t - s["width_m"] / 2 <= reach]
     if not seen:
         return None
     t, d = min(seen)
     return {"id": f"{s['id']}:support{n}", "tag": f"SP-{n:03d}", "kind": "support", "discipline": s["discipline"], "level": s["level"], "sheet": s.get("sheet", ""), "layer": detail.SUPPORT_LAYER,
-            "shape": "box", "part": "support", "support": "wall_bracket", "run": s["id"], "size": detail._size(s), "at": detail._r(at), "rod_m": 0.0, "mesh": _mesh(at, d, t, s, sizes)}
+            "shape": "box", "part": "support", "support": "wall_bracket_heavy" if heavy else "wall_bracket", "run": s["id"], "size": detail._size(s), "at": detail._r(at), "rod_m": 0.0,
+            "mesh": _heavy_mesh(at, d, t, s) if heavy else _mesh(at, d, t, s, sizes)}
 
 
 def _level_stretches(s: Dict[str, Any]) -> List[Any]:
@@ -93,7 +106,7 @@ def brackets(runs: List[Dict[str, Any]], walls: Sequence[Dict[str, Any]], spec: 
     for s in runs:
         for a, b in _level_stretches(s):
             for at in detail._places(a, b, spec["spacing_m"]):
-                made = _on_wall(s, at, _sides(a, b), boxes, spec["reach_m"], sizes, len(out) + 1)
+                made = _on_wall(s, at, _sides(a, b), boxes, spec["reach_m"], sizes, len(out) + 1, s["width_m"] > spec.get("heavy_over_m", math.inf))
                 if made:
                     out.append(made)
     return out

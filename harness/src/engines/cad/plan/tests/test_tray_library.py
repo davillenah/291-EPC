@@ -15,7 +15,7 @@ class TestTrayLibrary(unittest.TestCase):
 
     def test_every_kind_has_its_straight_and_fittings(self):
         for kind in ("ESC", "PER", "CIE", "ALA", "CAN"):
-            for fitting in ("", "C90", "C45", "CV", "T", "X", "RC", "FIN", "UN", "TP"):
+            for fitting in ("", "C90", "C45", "CV", "T", "X", "RC", "RL", "CAJ", "FIN", "UN", "TP"):
                 code = "-".join(x for x in ("BN", kind, fitting, "300x90") if x)
                 self.assertIn(code, self.by_code)
 

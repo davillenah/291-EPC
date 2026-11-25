@@ -41,6 +41,8 @@ def _fitting(kind: str, width: float, depth: float, p: Dict[str, float], q: Dict
         return T.tray_mesh(_path([(0, 0, 0), (leg, 0, 0), (leg, leg, 0)], radius), width, depth, p, kind)
     if fitting == "elbow45":
         return T.tray_mesh(_path([(0, 0, 0), (leg, 0, 0), (leg + side * math.cos(math.pi / 4), side * math.sin(math.pi / 4), 0)], radius), width, depth, p, kind)
+    if fitting == "elbow_adjustable":
+        return T.tray_mesh(_path([(0, 0, 0), (leg, 0, 0), (leg + side * math.cos(math.pi / 3), side * math.sin(math.pi / 3), 0)], radius), width, depth, p, kind)
     if fitting == "vertical_bend":
         return T.tray_mesh(_path([(0, 0, 0), (leg, 0, 0), (leg + side, 0, side)], radius), width, depth, p, kind)
     return _junction(kind, width, depth, p, q, fitting)
@@ -53,8 +55,9 @@ def _junction(kind: str, width: float, depth: float, p: Dict[str, float], q: Dic
         if fitting == "cross":
             parts.append(T.tray_mesh([(0, -leg, 0), (0, 0, 0)], width, depth, p, kind))
         return H.join(*parts)
-    if fitting == "reduction_central":
-        return T.reducer_mesh((0, 0, 0), (leg, 0, 0), (width, width / 2), depth, p, kind)
+    if fitting in ("reduction_central", "reduction_side"):
+        reduced = T.reducer_mesh((0, 0, 0), (leg, 0, 0), (width, width / 2), depth, p, kind)
+        return reduced if fitting == "reduction_central" else H.side_reducer(reduced, leg, (width, width / 2))
     return _accessory(kind, width, depth, p, q, fitting)
 
 
@@ -80,7 +83,7 @@ def _trays(width: float, depth: float) -> List[Dict[str, Any]]:
     p, q, radius = _sizes()
     out = []
     for kind in ("escalera", "perforada", "ciega", "alambre", "canal"):
-        for fitting in ("straight", "elbow90", "elbow45", "vertical_bend", "tee", "cross", "reduction_central", "end", "splice", "divider", "cover"):
+        for fitting in ("straight", "elbow90", "elbow45", "elbow_adjustable", "vertical_bend", "tee", "cross", "reduction_central", "reduction_side", "end", "splice", "divider", "cover"):
             if fitting == "divider" and kind in ("escalera", "alambre"):
                 continue
             out.append(_piece(_tray_code(kind, width, depth, fitting), "tray", TRAY_LAYER, _fitting(kind, width, depth, p, q, radius, fitting)))

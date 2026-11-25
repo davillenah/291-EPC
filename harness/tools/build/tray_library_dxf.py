@@ -16,22 +16,29 @@ def file_name(code: str) -> str:
     return code.lower().replace("-", "_") + ".dxf"
 
 
+def _width(it: Dict[str, Any]) -> float:
+    xs = [v[0] for v in it["mesh"]["vertices"]]
+    return max(xs) - min(xs) if xs else 0.0
+
+
+def _moved(it: Dict[str, Any], dx: float, dy: float) -> Dict[str, Any]:
+    xs = [v[0] for v in it["mesh"]["vertices"]]
+    shift = dx - (min(xs) if xs else 0.0)
+    mesh = {"vertices": [[v[0] + shift, v[1] + dy, v[2]] for v in it["mesh"]["vertices"]], "faces": it["mesh"]["faces"]}
+    return dict(it, mesh=mesh, path=[[p[0] + shift, p[1] + dy, p[2]] for p in it["path"]])
+
+
 def _grid(items: List[Dict[str, Any]], gap: float = 1.0) -> List[Dict[str, Any]]:
-    """The pieces laid out in rows by group, so one sheet shows all of them."""
-    placed, rows = [], {}
+    """The pieces laid out in rows by group and kind, so one sheet shows all of them."""
+    rows: Dict[str, List[Dict[str, Any]]] = {}
     for it in items:
-        row = rows.setdefault(it["group"] + it["code"].split("-")[1], [])
-        row.append(it)
-    y = 0.0
-    for row in rows.values():
+        rows.setdefault(it["group"] + it["code"].split("-")[1], []).append(it)
+    placed = []
+    for n, row in enumerate(rows.values()):
         x = 0.0
         for it in row:
-            vs = it["mesh"]["vertices"]
-            w = max(v[0] for v in vs) - min(v[0] for v in vs) if vs else 0.0
-            shift = x - (min(v[0] for v in vs) if vs else 0.0)
-            placed.append(dict(it, mesh={"vertices": [[v[0] + shift, v[1] + y, v[2]] for v in vs], "faces": it["mesh"]["faces"]}, path=[[p[0] + shift, p[1] + y, p[2]] for p in it["path"]]))
-            x += w + gap
-        y += 1.5
+            placed.append(_moved(it, x, n * 1.5))
+            x += _width(it) + gap
     return placed
 
 
