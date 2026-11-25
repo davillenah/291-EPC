@@ -10,7 +10,6 @@ sus conductores (L1 L2 L3 N) a paso uniforme de 10 mm, con los símbolos MLD_LV 
 "detalle": {...}} (resultado de epc_aea90364.aea_pipeline). Devuelve la lista de hojas generadas (SVG y DXF).
 Rótulo y láminas: se piden al servicio de epc_titleblock (los datos del proyecto: EPC_TITLEBLOCK_JSON, o el rótulo del propio dato de entrada).
 """
-import datetime
 import json
 import os
 import re
@@ -367,8 +366,7 @@ class Generator:
     def write_sheet(self, sh: Sheet, index: int, name: str, out_dir: Path) -> tuple:
         lam = tag_iram_sheet(self.title_block_sheet(index, name))
         from epc_draw.core import stamp
-        moment = stamp.moment_of(self.stamp_date)
-        today = (moment.date() if moment else datetime.date.today()).strftime("%d/%m/%Y")
+        today = stamp.issue_day(self.stamp_date)
         vals = {"cliente": "No indicado", "denominacion": self.board.get("name", ""), "denominacion_2": "DIAGRAMA MULTIFILAR BT", "empresa": "—",
                 "plano_n": str(self.board.get("project") or ""), "plano_propio": name, "escala": "S/E", "emision": today, "reemplaza": "—",
                 "notas": "Referencial: ver cálculo"}

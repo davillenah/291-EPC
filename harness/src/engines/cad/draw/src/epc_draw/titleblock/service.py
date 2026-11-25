@@ -45,7 +45,8 @@ def _logo_source(value):
 def project_request(titleblock: dict, logos: dict = None, today: datetime.date = None) -> dict:
     """The common part of a request from the title block data of a project (company, client, who drew, checked and approved, description...):
     the three dates are the day the drawing is made. `sheets` are added by whoever draws."""
-    day = (today or datetime.date.today()).strftime("%d/%m/%Y")
+    from epc_draw.core import stamp
+    day = stamp.issue_day(None, today)
     common = {field: titleblock.get(key) or "" for key, field in PROJECT_FIELDS.items()}
     common.update(proy_fecha=day, ver_fecha=day, val_fecha=day)
     return {"schema_version": SCHEMA_VERSION, "logos": {k: _logo_source(v) for k, v in (logos or {}).items()}, "common": common, **_own_sheets(titleblock)}
