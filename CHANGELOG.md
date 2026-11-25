@@ -4,6 +4,7 @@ All notable changes. Format: Keep a Changelog; versions follow `harness/docs/BRA
 
 
 ### Unreleased (tray catalogue)
+- Catalogue block `parts`: finish, gauge and rail heights each part comes in (fittings in G only, barrier strip 0.71 mm in Z and 1.24 mm in G, articulated union in Z for rails 90 and 115, finish of every support); the library takes the barrier strip sheet from it. The load test is printed for a 1.5 m span only.
 - The library names the sheet when asked (`pieces(width, height, gauge, finish)`, code suffix like `-18Z`) and takes the rail and cover thickness from the catalogue by rail height, finish and width.
 - `tray_catalogue` block in the typical values (gauges, finishes, widths, rail heights, supports, fasteners, load test) as the single source; `tray_catalogue.py` reads it for sizing, drawing and the library. Rules in CLAUDE.md: PDFs never stored, read to the end, own nomenclature.
 - Bolts of the library carry their thread: one ridge per turn of the standard pitch (3/8 inch Whitworth 1.5875 mm, M6 1.0 mm; pitch not printed in the catalogue, pending review).

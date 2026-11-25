@@ -41,6 +41,10 @@ class TrayCatalogueTests(unittest.TestCase):
         self.assertEqual(C.rail_thickness_mm(self.cat, 150, "G", "18"), 2.10)
         self.assertEqual(C.rail_thickness_mm(self.cat, 90, "G", "14"), 2.10)
 
+    def test_the_barrier_strip_sheet_follows_the_finish(self):
+        self.assertEqual(C.divider_thickness_mm(self.cat, "Z"), 0.71)
+        self.assertEqual(C.divider_thickness_mm(self.cat, "G"), 1.24)
+
 
 if __name__ == "__main__":
     unittest.main()

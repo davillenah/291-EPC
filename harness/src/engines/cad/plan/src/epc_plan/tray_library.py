@@ -16,7 +16,9 @@ TRAY_LAYER, SUPPORT_LAYER, FASTENER_LAYER = "ELEC-BANDEJA", "MEC-SOPORTE", "MEC-
 def _sizes(ala_mm: float = 90, width_mm: float = 0, finish: str = "", gauge: str = "") -> Tuple[Dict[str, float], Dict[str, float], float]:
     ladder = tray_catalogue.ladder(core.PARAMS["detail"]["ladder"], core.PARAMS["tray_catalogue"], ala_mm, width_mm, finish, gauge)
     keys = ("rail", "rung", "rung_thick", "rung_pitch", "foot", "curl", "lip", "jog", "slot_pitch", "slot", "slot_height", "floor_margin", "hole_pitch", "hole", "wire", "wire_pitch", "joint", "bolt")
-    return {k: ladder[k + "_m"] for k in keys}, core.PARAMS["detail"]["library"], ladder["elbow_radius_m"]
+    cat = core.PARAMS["tray_catalogue"]
+    library = dict(core.PARAMS["detail"]["library"], divider_thick_m=tray_catalogue.divider_thickness_mm(cat, finish) / 1000)      # the barrier strip sheet follows the finish
+    return {k: ladder[k + "_m"] for k in keys}, library, ladder["elbow_radius_m"]
 
 
 def _pitch(size: str) -> float:
