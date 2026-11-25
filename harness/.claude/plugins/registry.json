@@ -53,7 +53,7 @@
         "titleblock",
         "voltage_drop"
       ],
-      "hash": "4b563d8b45683798"
+      "hash": "d28626672911363c"
     },
     "doc-quality": {
       "version": "0.1.0",
@@ -78,7 +78,7 @@
         "dxf",
         "symbols"
       ],
-      "hash": "1896ff6b1783c1b3"
+      "hash": "3eafd4d4fc72c043"
     },
     "equipment-catalog": {
       "version": "0.1.0",
@@ -124,7 +124,7 @@
         "symbols",
         "titleblock"
       ],
-      "hash": "05f0fcf056b0a89f"
+      "hash": "6e8b6d18e395eff4"
     },
     "mld": {
       "version": "0.2.2",
@@ -153,7 +153,7 @@
         "titleblock",
         "voltage_drop"
       ],
-      "hash": "718c5fa0a0eeac3b"
+      "hash": "2c84dbfaec86e49c"
     },
     "plan-drawing": {
       "version": "0.1.0",
@@ -171,7 +171,7 @@
         "symbols",
         "titleblock"
       ],
-      "hash": "6e5a10a7d63cc6a6"
+      "hash": "797cdcf57ecb693b"
     },
     "pm2-docs": {
       "version": "0.1.0",
@@ -226,7 +226,7 @@
         "titleblock",
         "voltage_drop"
       ],
-      "hash": "236bc9a9be03482e"
+      "hash": "eebd4f2210454597"
     },
     "spec-writer": {
       "version": "0.1.0",

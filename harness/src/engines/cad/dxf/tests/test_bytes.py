@@ -26,6 +26,30 @@ class DeliverableBytes(unittest.TestCase):
         a = deliverable.convert_bytes(SVG, stamp_date="2026-03-04", seed="S")["dxf"]
         self.assertEqual(a, deliverable.convert_bytes(SVG, stamp_date="2026-03-04", seed="S")["dxf"])
 
+    def test_a_draft_comes_back_as_the_bytes_the_path_call_writes(self):
+        import ezdxf
+        def draft():
+            doc = ezdxf.new("R2018", setup=False)
+            doc.modelspace().add_line((0, 0), (5, 5))
+            return doc
+        with tempfile.TemporaryDirectory() as t:
+            made = deliverable.finish_draft(draft(), Path(t) / "D.dxf", None, "2026-03-04", "D")
+            data = deliverable.finish_draft_bytes(draft(), None, "2026-03-04", "D")
+            self.assertEqual(data["dxf"], Path(made["dxf"]).read_bytes())
+            self.assertEqual((data["layers"], data["blocks"]), (made["layers"], made["blocks"]))
+
+    def test_the_symbol_library_comes_in_as_data(self):
+        from epc_dxf import bloques_dxf
+        from epc_symbols import library_dir
+        folder = library_dir("sld-lv-symbol")
+        sid = sorted(bloques_dxf.load_library(folder).catalog)[0]
+        svg = ('<svg xmlns="http://www.w3.org/2000/svg" width="100mm" height="50mm"><g class="sym" data-sid="%s" transform="translate(10,10)">'
+               '<rect x="0" y="0" width="4" height="4" fill="none" stroke="#000"/></g></svg>' % sid)
+        lib = bloques_dxf.load_library(folder)
+        data = deliverable.convert_bytes(svg, symbol_library=lib, stamp_date="2026-03-04", seed="L")
+        self.assertEqual(data["blocks"], 1)
+        self.assertEqual(data["dxf"], deliverable.convert_bytes(svg, symbol_library=folder, stamp_date="2026-03-04", seed="L")["dxf"])
+
 
 if __name__ == "__main__":
     unittest.main()
