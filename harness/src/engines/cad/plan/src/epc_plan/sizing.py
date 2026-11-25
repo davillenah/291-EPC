@@ -30,7 +30,7 @@ def _is_tray(kind: str, kinds: Dict[str, Dict[str, Any]]) -> bool:
 
 def _candidates(tray: bool, cfg: Dict[str, Any]) -> List[Dict[str, float]]:
     if tray:
-        return [{"ancho_mm": float(w), "alto_mm": float(h)} for w, h in cfg["tray_mm"]]
+        return [{"ancho_mm": float(w), "alto_mm": float(useful), "ala_mm": float(ala)} for w, ala, useful in cfg["tray_mm"]]      # the fill is over the useful height above the rungs
     return [{"diametro_mm": float(d)} for d in cfg["conduit_mm"]]
 
 
@@ -47,7 +47,7 @@ def _limit(first: Dict[str, float], cables: int, tray: bool, cfg: Dict[str, Any]
 def _model(container: Dict[str, Any], found: Dict[str, Any], tray: bool) -> Optional[str]:
     """Our own model code of the tray that fits (None for a conduit)."""
     size = found["size"]
-    return tray_code.code(container.get("tray_kind", "escalera"), size["ancho_mm"], size["alto_mm"]) if tray else None
+    return tray_code.code(container.get("tray_kind", "escalera"), size["ancho_mm"], size.get("ala_mm", size["alto_mm"])) if tray else None
 
 
 def size_container(container: Dict[str, Any], sections: Dict[str, Optional[float]], terna_cables: Dict[str, int], tray: bool, cfg: Dict[str, Any], occ: Dict[str, Any]) -> Dict[str, Any]:
