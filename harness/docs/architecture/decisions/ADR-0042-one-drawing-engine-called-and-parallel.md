@@ -1,6 +1,6 @@
 # ADR-0042: One drawing engine, called as a function and safe to run in parallel
 
-Status: proposed (owner request, 2026-11-24). Builds on ADR-0038 (engines are called, not watching), ADR-0040 (single entry points) and BACKLOG DRW-01 / OPT-05.
+Status: accepted (owner, 2026-11-25). Proposed on owner request, 2026-11-24. Builds on ADR-0038 (engines are called, not watching), ADR-0040 (single entry points) and BACKLOG DRW-01 / OPT-05.
 
 ## Context
 Drawing is split in eight engines (`dxf`, `symbols`, `titleblock`, `plan`, `arch`, `sld`, `mld`, `drawing`). Audit of 2026-11-24 over their `src/`:
