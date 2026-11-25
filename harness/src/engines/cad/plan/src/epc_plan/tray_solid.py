@@ -230,11 +230,18 @@ def _wire(vertices: List[List[float]], faces: List[List[int]], a: P3, b: P3, axe
         x += p["wire_pitch"]
 
 
+def _channel(vertices: List[List[float]], faces: List[List[int]], a: P3, b: P3, axes: Tuple[P3, P3, P3], width: float, depth: float) -> None:
+    """A U channel: the floor and the two walls, as sheets, with no return lip."""
+    n, v = axes[1], axes[2]
+    for (y0, z0), (y1, z1) in (((-width / 2, depth / 2), (-width / 2, -depth / 2)), ((-width / 2, -depth / 2), (width / 2, -depth / 2)), ((width / 2, -depth / 2), (width / 2, depth / 2))):
+        _quad(vertices, faces, [tuple(e[k] + n[k] * y + v[k] * z for k in range(3)) for e, y, z in ((a, y0, z0), (b, y0, z0), (b, y1, z1), (a, y1, z1))])
+
+
 def tray_mesh(path: Sequence[P3], width: float, depth: float, p: Dict[str, float], kind: str = "escalera") -> Dict[str, list]:
-    """The mesh of a tray of the given kind (`escalera`, `perforada`, `ciega`, `alambre`) along `path`: the ladder, or the same rails with a floor (slotted for `perforada`), or a wire mesh."""
+    """The mesh of a tray of the given kind (`escalera`, `perforada`, `ciega`, `alambre`, `canal`) along `path`: the ladder, or the same rails with a floor (slotted for `perforada`), or a wire mesh."""
     if kind == "escalera":
         return ladder_mesh(path, width, depth, p)
-    if kind not in ("perforada", "ciega", "alambre"):
+    if kind not in ("perforada", "ciega", "alambre", "canal"):
         raise PlanError("err_tray_kind", kind=kind, kinds=", ".join(tray_draw.KINDS))
     vertices: List[List[float]] = []
     faces: List[List[int]] = []
@@ -244,6 +251,9 @@ def tray_mesh(path: Sequence[P3], width: float, depth: float, p: Dict[str, float
         axes = _frame(a, b)
         if kind == "alambre":
             _wire(vertices, faces, a, b, axes, width, depth, p)
+            continue
+        if kind == "canal":
+            _channel(vertices, faces, a, b, axes, width, depth)
             continue
         _side_rails(vertices, faces, a, b, axes, width, depth, p)
         _floor(vertices, faces, a, b, axes, width, depth, p, kind == "perforada")

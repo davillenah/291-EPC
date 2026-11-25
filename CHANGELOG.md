@@ -5,6 +5,7 @@ All notable changes. Format: Keep a Changelog; versions follow `harness/docs/BRA
 ## [Unreleased]
 
 ### Changed
+- New tray kind `canal` (U channel: floor and two walls, no return lip) in the plan drawing (`tray_draw`) and in 3D (`tray_solid`).
 - 3D trays: bolts at the joints (four bolt heads every 3 m of tray, `joint_m` and `bolt_m`) and the vertical bend of an elbow as 5 straight links, like the articulated bend of the catalogue (`vertical_links`). Own values, unverified.
 - 3D reducers and crosses of trays: a reducer tapers from one width to the other as a tray of its kind (rails lean in, rungs or floor as wide as the taper; a wire tray steps down), and two tray runs of one layer that cross in the middle at the same height now make a `cross` part (two arms, in the take-off as a fitting).
 - Stage 10 now draws the runs of the tray layer (`ELEC-BANDEJA`) as ladder trays by default (rails with section and slots, rungs, elbows and tees of the same kind); `model3d.ladder_trays` chooses another kind per layer (`kinds`), adds the lid (`cover`) or, as `false`, keeps the old swept boxes.

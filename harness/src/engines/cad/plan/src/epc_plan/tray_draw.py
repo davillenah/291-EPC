@@ -1,7 +1,7 @@
 """How a cable tray looks from above (plan view), as lines: pure geometry, the caller draws them.
 
-A tray is a path (its axis) with a width. Four kinds: `escalera` (ladder: two side rails with their return lip and rungs), `perforada` (perforated floor
-between the rails, with its slots), `ciega` (solid floor) and `alambre` (wire mesh). Every kind shows a joint every nominal length of a section and bends with a
+A tray is a path (its axis) with a width. Five kinds: `escalera` (ladder: two side rails with their return lip and rungs), `perforada` (perforated floor
+between the rails, with its slots), `ciega` (solid floor), `alambre` (wire mesh) and `canal` (a U channel: floor and two walls, no return lip). Every kind shows a joint every nominal length of a section and bends with a
 radius. All sizes arrive as arguments in drawing units; nothing is read from files or the environment.
 """
 import math
@@ -11,7 +11,7 @@ from epc_plan.core import PlanError
 
 Point = Tuple[float, float]
 Line = Tuple[Point, Point]
-KINDS = ("escalera", "perforada", "ciega", "alambre")
+KINDS = ("escalera", "perforada", "ciega", "alambre", "canal")
 
 
 def _dedupe(pts: Sequence[Point]) -> List[Point]:
@@ -129,7 +129,7 @@ def tray_lines(pts: Sequence[Point], kind: str, width: float, p: Dict[str, float
         raise PlanError("err_tray_kind", kind=kind, kinds=", ".join(KINDS))
     path = fillet_path(pts, p["radius"] + width / 2)               # the radius of the catalogue is the inside one
     half = width / 2
-    body = {"escalera": lambda: _ladder(path, half, p), "perforada": lambda: _floor(path, half, p, True), "ciega": lambda: _floor(path, half, p, False), "alambre": lambda: _mesh(path, half, p)}[kind]()
+    body = {"escalera": lambda: _ladder(path, half, p), "perforada": lambda: _floor(path, half, p, True), "ciega": lambda: _floor(path, half, p, False), "alambre": lambda: _mesh(path, half, p), "canal": lambda: _floor(path, half, p, False)}[kind]()
     return body + [_across(point, u, -half, half) for point, u in stations(path, p["joint_pitch"])]
 
 
