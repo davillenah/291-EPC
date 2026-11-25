@@ -1,7 +1,7 @@
 """IRAM A0-A4 sheets and custom title blocks (SVG, DXF)."""
 __version__ = "0.1.0"
 
-__all__ = ["Pluma", "RequestError", "TitleblockError", "build", "main", "project_request", "render", "standard_config", "text_of", "validate", "write"]
+__all__ = ["Logo", "Pluma", "RequestError", "TitleblockError", "build", "main", "project_request", "render", "standard_config", "text_of", "validate", "write"]
 
 
 def __getattr__(name):

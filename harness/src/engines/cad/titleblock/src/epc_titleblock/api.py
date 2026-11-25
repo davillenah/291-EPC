@@ -14,5 +14,6 @@ from epc_titleblock.sheet_generator import (
     standard_config,
 )  # noqa: F401
 from epc_titleblock.errors import TitleblockError  # noqa: F401
+from epc_titleblock.logo import Logo  # noqa: F401
 
-__all__ = ["Pluma", "RequestError", "TitleblockError", "build", "main", "project_request", "render", "standard_config", "text_of", "validate", "write"]
+__all__ = ["Logo", "Pluma", "RequestError", "TitleblockError", "build", "main", "project_request", "render", "standard_config", "text_of", "validate", "write"]
