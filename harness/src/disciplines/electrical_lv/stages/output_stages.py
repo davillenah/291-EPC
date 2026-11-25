@@ -196,6 +196,23 @@ def pv_equipment(context):
     return out
 
 
+def tray_equipment(context):
+    """The tray-system lines of the BOQ (trays by model, fittings, supports and the rod they need) from the take-off of the 3D model of stage 10, as it counted them; None without a model."""
+    res = context.results.get(10)
+    take = res.outputs.get("takeoff") if res is not None and res.status == "ok" else None
+    if not take:
+        return None
+    out = [{"description": f"Tray {r['model'] or r['layer']} {r['size']}", "unit": "m", "quantity": r["length_m"], "source": [r["layer"]], "category": "tray_system"} for r in take.get("straights", [])]
+    out += [{"description": f"Tray fitting {r['model'] or r['type']} {r['size']}", "unit": "un", "quantity": r["count"], "source": [r["layer"]], "category": "tray_system"} for r in take.get("fittings", [])]
+    out += [{"description": f"Tray support {r['type']} {r['size']}", "unit": "un", "quantity": r["count"], "source": [r["layer"]], "category": "tray_system"} for r in take.get("supports", [])]
+    return out or None
+
+
+def boq_equipment(context):
+    """All the equipment lines of the BOQ: the plant's and the tray system's; None when there are none."""
+    return (pv_equipment(context) or []) + (tray_equipment(context) or []) or None
+
+
 def boq_allowance(context):
     """The wastage percentage the engineer gave, or None: it is never defaulted."""
     given = EC.inputs_of(context).get("boq")
@@ -324,7 +341,7 @@ class DocumentsStage(Stage):
         if allowance is None:
             pending = [dict(p, reason=NO_ALLOWANCE) if p["name"] == BOQ_PENDING_NAME else p for p in pending]
         else:
-            docs["boq"] = self.boq(ch, allowance, terminals["totals"], pv_equipment(context))
+            docs["boq"] = self.boq(ch, allowance, terminals["totals"], boq_equipment(context))
             pending = [p for p in pending if p["name"] != BOQ_PENDING_NAME]
             calls.append(EC.record_for(BOQ_ENGINE, BOQ_BUILD))
         given = datasheets_inputs(context)

@@ -141,6 +141,22 @@ class Model3dInTheRun(unittest.TestCase):
         self.assertEqual(res.status, "blocked")
 
 
+class TheTrayLinesOfTheBoq(unittest.TestCase):
+    def test_the_boq_gets_the_tray_lines_from_the_takeoff_of_the_model(self):
+        from types import SimpleNamespace as NS
+        from disciplines.electrical_lv.stages import output_stages
+        take = {"straights": [{"layer": "ELEC-BANDEJA", "size": "300x90", "model": "BN-ESC-300x90", "length_m": 12.0}],
+                "fittings": [{"layer": "ELEC-BANDEJA", "size": "300x90", "model": "BN-ESC-C90-300x90", "type": "elbow", "count": 2}],
+                "supports": [{"layer": "MEC-SOPORTE", "size": "300x90", "model": "", "type": "wall_bracket", "count": 4}]}
+        ctx = NS(results={10: NS(status="ok", outputs={"takeoff": take})})
+        lines = output_stages.tray_equipment(ctx)
+        self.assertEqual([(l["unit"], l["quantity"]) for l in lines], [("m", 12.0), ("un", 2), ("un", 4)])
+        self.assertTrue(all(l["category"] == "tray_system" for l in lines))
+        self.assertIn("BN-ESC-C90-300x90", lines[1]["description"])
+        self.assertIsNone(output_stages.tray_equipment(NS(results={})))
+        self.assertEqual(len(output_stages.boq_equipment(ctx)), 3)
+
+
 class Errors(unittest.TestCase):
     def test_the_section_is_checked_against_the_routed_floors(self):
         self.assertEqual(model3d.errors_of(MODEL, {"PB": {}}), [])
