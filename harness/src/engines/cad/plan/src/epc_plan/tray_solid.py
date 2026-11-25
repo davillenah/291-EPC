@@ -82,8 +82,33 @@ def rail_section(depth: float, foot: float, curl: float) -> List[Tuple[float, fl
     return [(foot, 0.0), (0.0, 0.0), (0.0, depth - curl), (curl / 3, depth - curl / 3), (curl, depth), (curl * 1.4, depth - curl / 3)]
 
 
+def _quad(vertices: List[List[float]], faces: List[List[int]], corners: Sequence[P3]) -> None:
+    base = len(vertices)
+    vertices.extend([list(c) for c in corners])
+    faces.append([base, base + 1, base + 2, base + 3])
+
+
+def _web(vertices: List[List[float]], faces: List[List[int]], a: P3, length: float, axes: Tuple[P3, P3, P3], lateral: float, depth: float, p: Dict[str, float]) -> None:
+    """The web of a rail from `a` along its length, with the side slots left open: the slot pitch, length and height come from `p` (`slot_pitch`, `slot`, `slot_height`)."""
+    u, n, v = axes
+    top = depth - p["curl"]
+    mid = (top - p["slot_height"]) / 2
+    pieces = []
+    at = 0.0
+    while at < length - 1e-9:
+        end = min(at + p["slot_pitch"] - p["slot"], length)
+        pieces.append((at, end, 0.0, top))
+        if end < length - 1e-9:
+            stop = min(end + p["slot"], length)
+            pieces.append((end, stop, 0.0, mid))
+            pieces.append((end, stop, mid + p["slot_height"], top))
+        at = end + p["slot"]
+    for s0, s1, h0, h1 in pieces:
+        _quad(vertices, faces, [tuple(a[k] + u[k] * x + n[k] * lateral + v[k] * (h - depth / 2) for k in range(3)) for x, h in ((s0, h0), (s1, h0), (s1, h1), (s0, h1))])
+
+
 def _rail(vertices: List[List[float]], faces: List[List[int]], a: P3, b: P3, axes: Tuple[P3, P3, P3], side: int, width: float, depth: float, p: Dict[str, float]) -> None:
-    """A rail as a sheet swept along a..b: one quad per segment of its section."""
+    """A rail as a sheet swept along a..b: one quad per segment of its section, the web with its side slots."""
     u, n, v = axes
     section = rail_section(depth, p["foot"], p["curl"])
     base = len(vertices)
@@ -93,7 +118,11 @@ def _rail(vertices: List[List[float]], faces: List[List[int]], a: P3, b: P3, axe
             vertices.append([end[k] + n[k] * lateral + v[k] * (height - depth / 2) for k in range(3)])
     count = len(section)
     for i in range(count - 1):
+        if i == 1 and "slot" in p:
+            continue
         faces.append([base + i, base + i + 1, base + count + i + 1, base + count + i])
+    if "slot" in p:
+        _web(vertices, faces, a, math.dist(a, b), axes, side * width / 2, depth, p)
 
 
 def ladder_mesh(path: Sequence[P3], width: float, depth: float, p: Dict[str, float]) -> Dict[str, list]:
