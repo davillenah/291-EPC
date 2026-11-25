@@ -2,6 +2,9 @@
 
 All notable changes. Format: Keep a Changelog; versions follow `harness/docs/BRANCHING.md` (releases are tagged on `main`).
 
+
+### Unreleased (tray catalogue)
+- `tray_catalogue` block in the typical values (gauges, finishes, widths, rail heights, supports, fasteners, load test) as the single source; `tray_catalogue.py` reads it for sizing, drawing and the library. Rules in CLAUDE.md: PDFs never stored, read to the end, own nomenclature.
 ## [Unreleased]
 
 ### Changed

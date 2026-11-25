@@ -15,7 +15,7 @@ couplings, covers or fixings to the structure, and supports only for horizontal 
 import math
 from typing import Any, Dict, List, Optional, Tuple
 
-from epc_plan import core
+from epc_plan import core, tray_catalogue
 from epc_plan import solid as S
 from epc_plan.core import PlanError
 
@@ -284,9 +284,14 @@ def tray_kinds() -> tuple:
     return tray_draw.KINDS
 
 
+def _ladder_params() -> Dict[str, Any]:
+    """`detail.ladder` with the sheet, section length and bends of the catalogue."""
+    return tray_catalogue.ladder(core.PARAMS["detail"]["ladder"], core.PARAMS["tray_catalogue"])
+
+
 def _ladder_sizes(cover: bool) -> Dict[str, float]:
     """The sizes of rail, rungs, floor and wires (`params.json`, `detail.ladder`, in metres), and the lid when there is one."""
-    q = core.PARAMS["detail"]["ladder"]
+    q = _ladder_params()
     keys = ("rail", "rung", "rung_thick", "rung_pitch", "foot", "curl", "lip", "jog", "slot_pitch", "slot", "slot_height", "floor_margin", "hole_pitch", "hole", "wire", "wire_pitch", "joint", "bolt")
     sizes = {k: q[k + "_m"] for k in keys}
     if cover:
@@ -307,7 +312,7 @@ def _ladder(spec: Optional[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
     layers = given.get("layers") if isinstance(given, dict) else None
     if not isinstance(layers, list) or not layers or not all(isinstance(x, str) for x in layers) or not _kinds_ok(given.get("kinds", {}), layers):
         raise core.PlanError("err_detail_number", key="ladder_trays")
-    return {"layers": layers, "sizes": _ladder_sizes(bool(given.get("cover"))), "kinds": given.get("kinds", {}), "elbow_radius": core.PARAMS["detail"]["ladder"]["elbow_radius_m"], "links": core.PARAMS["detail"]["ladder"]["vertical_links"]}
+    return {"layers": layers, "sizes": _ladder_sizes(bool(given.get("cover"))), "kinds": given.get("kinds", {}), "elbow_radius": _ladder_params()["elbow_radius_m"], "links": _ladder_params()["vertical_links"]}
 
 
 def parts(solids: List[Dict[str, Any]], spec: Optional[Dict[str, Any]] = None) -> List[Dict[str, Any]]:
