@@ -52,3 +52,12 @@ def test_rail_web_has_side_slots():
     plain = tray_solid.ladder_mesh([(0, 0, 0), (1, 0, 0)], 0.3, 0.09, {k: v for k, v in p.items() if not k.startswith("slot")})
     assert len(slotted["faces"]) > len(plain["faces"])
     assert all(len(f) == 4 for f in slotted["faces"])
+
+
+def test_cover_adds_a_lid_over_the_rails():
+    from epc_plan import tray_solid
+    p = {"rail": 0.002, "rung": 0.03, "rung_thick": 0.015, "rung_pitch": 0.3}
+    open_tray = tray_solid.ladder_mesh([(0, 0, 0), (1, 0, 0)], 0.3, 0.09, p)
+    closed = tray_solid.ladder_mesh([(0, 0, 0), (1, 0, 0)], 0.3, 0.09, dict(p, cover=0.004))
+    assert len(closed["faces"]) == len(open_tray["faces"]) + 1
+    assert max(v[2] for v in closed["vertices"]) > max(v[2] for v in open_tray["vertices"])

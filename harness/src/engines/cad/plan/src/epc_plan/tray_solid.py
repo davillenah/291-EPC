@@ -62,7 +62,7 @@ def _frame(a: P3, b: P3) -> Tuple[P3, P3, P3]:
     u = ((b[0] - a[0]) / d, (b[1] - a[1]) / d, (b[2] - a[2]) / d)
     h = math.hypot(u[0], u[1])
     n = (-u[1] / h, u[0] / h, 0.0) if h > 1e-9 else (0.0, 1.0, 0.0)
-    v = (n[1] * u[2] - n[2] * u[1], n[2] * u[0] - n[0] * u[2], n[0] * u[1] - n[1] * u[0])
+    v = (u[1] * n[2] - u[2] * n[1], u[2] * n[0] - u[0] * n[2], u[0] * n[1] - u[1] * n[0])
     return u, n, v
 
 
@@ -125,8 +125,28 @@ def _rail(vertices: List[List[float]], faces: List[List[int]], a: P3, b: P3, axe
         _web(vertices, faces, a, math.dist(a, b), axes, side * width / 2, depth, p)
 
 
+def _side_rails(vertices: List[List[float]], faces: List[List[int]], a: P3, b: P3, axes: Tuple[P3, P3, P3], width: float, depth: float, p: Dict[str, float]) -> None:
+    """Both rails of a stretch: the cold-formed C when `p` has its sizes, a plain strip otherwise."""
+    u, n, v = axes
+    mid = tuple((a[k] + b[k]) / 2 for k in range(3))
+    for side in (-1, 1):
+        if "foot" in p:
+            _rail(vertices, faces, a, b, axes, side, width, depth, p)
+            continue
+        off = side * (width / 2 + p["rail"] / 2)
+        _box(vertices, faces, tuple(mid[k] + n[k] * off for k in range(3)), axes, (math.dist(a, b), p["rail"], depth))
+
+
+def _lid(vertices: List[List[float]], faces: List[List[int]], a: P3, b: P3, axes: Tuple[P3, P3, P3], width: float, depth: float, p: Dict[str, float]) -> None:
+    """The cover of a stretch: a flat sheet `p["cover"]` over the top of the rails."""
+    n, v = axes[1], axes[2]
+    corners = [tuple(e[k] + n[k] * sy * (width / 2 + p["rail"]) + v[k] * (depth / 2 + p["cover"]) for k in range(3)) for e, sy in ((a, -1), (b, -1), (b, 1), (a, 1))]
+    _quad(vertices, faces, corners)
+
+
 def ladder_mesh(path: Sequence[P3], width: float, depth: float, p: Dict[str, float]) -> Dict[str, list]:
-    """The mesh of a ladder tray along `path`: `width` clear width, `depth` rail height; `p` has `rail` (thickness of the rail), `rung` (width of a rung), `rung_thick` and `rung_pitch`."""
+    """The mesh of a ladder tray along `path`: `width` clear width, `depth` rail height; `p` has `rail` (thickness of the rail), `rung` (width of a rung), `rung_thick` and `rung_pitch`;
+    `foot`, `curl`, `slot_pitch`, `slot` and `slot_height` give the rails their section and side slots; `cover` adds a lid."""
     vertices: List[List[float]] = []
     faces: List[List[int]] = []
     due = p["rung_pitch"] / 2
@@ -135,18 +155,14 @@ def ladder_mesh(path: Sequence[P3], width: float, depth: float, p: Dict[str, flo
         length = math.dist(a, b)
         if length < 1e-9:
             continue
-        u, n, v = _frame(a, b)
-        mid = tuple((a[k] + b[k]) / 2 for k in range(3))
-        for side in (-1, 1):
-            off = side * (width / 2 + p["rail"] / 2)
-            if "foot" in p:
-                _rail(vertices, faces, a, b, (u, n, v), side, width, depth, p)
-                continue
-            _box(vertices, faces, tuple(mid[k] + n[k] * off for k in range(3)), (u, n, v), (length, p["rail"], depth))
+        axes = _frame(a, b)
+        u, n, v = axes
+        _side_rails(vertices, faces, a, b, axes, width, depth, p)
+        if p.get("cover"):
+            _lid(vertices, faces, a, b, axes, width, depth, p)
         while due < walked + length - 1e-9:
-            t = due - walked
-            at = tuple(a[k] + u[k] * t for k in range(3))
-            _box(vertices, faces, tuple(at[k] - v[k] * (depth / 2 - p["rung_thick"] / 2) for k in range(3)), (u, n, v), (p["rung"], width, p["rung_thick"]))
+            at = tuple(a[k] + u[k] * (due - walked) for k in range(3))
+            _box(vertices, faces, tuple(at[k] - v[k] * (depth / 2 - p["rung_thick"] / 2) for k in range(3)), axes, (p["rung"], width, p["rung_thick"]))
             due += p["rung_pitch"]
         walked += length
     return {"vertices": vertices, "faces": faces}
