@@ -7,7 +7,10 @@ name = "epc-draw"
 version = "0.1.0"
 description = "EPC-291 one drawing engine: the DXF core (layers, stamp, deliverable in bytes) and one function per kind of drawing"
 requires-python = ">=3.10"
-dependencies = ["ezdxf", "lxml", "shapely", "svgelements", "vtracer"]
+dependencies = ["epc-aea90364", "ezdxf", "lxml", "openpyxl>=3.1", "shapely", "svgelements", "vtracer"]
+
+[project.optional-dependencies]
+previews = ["cairosvg"]
 
 [tool.setuptools.packages.find]
 where = ["src"]

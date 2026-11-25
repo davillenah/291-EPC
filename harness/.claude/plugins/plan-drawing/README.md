@@ -8,11 +8,11 @@ The platform uses it through the layout module; it installs and updates on its o
 
 | | |
 |---|---|
-| Incluye (motor) | `arch`, `draw`, `dxf`, `plan`, `symbols`, `titleblock` |
+| Incluye (motor) | `aea90364`, `arch`, `calc_common`, `draw`, `dxf`, `feeder_sizing`, `grounding`, `load_balance`, `plan`, `selectivity`, `short_circuit`, `symbols`, `titleblock`, `voltage_drop` |
 | Es dueño de | `plan` |
 | Necesita (plugins) | `dxf-output`, `iec-symbols` |
 | Lo necesitan | — |
-| Paquetes de Python | `ezdxf`, `lxml`, `numpy`, `pillow`, `pypdfium2`, `shapely`, `svgelements`, `vtracer` |
+| Paquetes de Python | `ezdxf`, `lxml`, `numpy`, `openpyxl`, `pillow`, `pypdfium2`, `shapely`, `svgelements`, `vtracer` |
 | Si lo modificas, revisa | plugins —; módulos del backend — |
 
 Generado por `python harness/tools/build/regen_plugins.py`; el mapa completo está en `harness/docs/architecture/DEPENDENCIAS.md`.

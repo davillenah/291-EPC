@@ -12,7 +12,7 @@ import unittest
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[3]
-EXAMPLE = REPO / "harness" / "src" / "engines" / "cad" / "sld" / "examples" / "sld" / "input_for_sld_V1.xlsx"
+EXAMPLE = REPO / "harness" / "src" / "engines" / "cad" / "draw" / "examples" / "sld" / "input_for_sld_V1.xlsx"
 STAMP = "2026-01-01"
 _STATE = {}
 
@@ -29,7 +29,7 @@ def _prepare(root: Path) -> dict:
 
 def draw_hashes(files: dict) -> dict:
     """Draws the diagram into a folder of its own and returns {file name: sha256}."""
-    from epc_sld import SldInput, draw
+    from epc_draw.sld import SldInput, draw
     with tempfile.TemporaryDirectory() as d, contextlib.redirect_stdout(io.StringIO()):
         draw(SldInput(**files), d, "SLD_V1", stamp_date=STAMP)
         return {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(Path(d).iterdir())}
@@ -37,7 +37,7 @@ def draw_hashes(files: dict) -> dict:
 
 def files_hashes(files: dict) -> dict:
     """The same drawing through the function that returns bytes and writes no folder: {file name: sha256}."""
-    from epc_sld import SldInput, draw_files
+    from epc_draw.sld import SldInput, draw_files
     with contextlib.redirect_stdout(io.StringIO()):
         made = draw_files(SldInput(**files), "SLD_V1", stamp_date=STAMP)
     return {name: hashlib.sha256(data).hexdigest() for name, data in sorted(made.items())}

@@ -35,6 +35,7 @@
     "requires": [
       "ezdxf",
       "lxml",
+      "openpyxl",
       "shapely",
       "svgelements",
       "vtracer"
@@ -46,9 +47,18 @@
     "source": "291_G_IRAM_Custom_TitleBlocks_Generator"
   },
   "engine": [
+    "aea90364",
+    "calc_common",
     "draw",
     "dxf",
-    "titleblock"
+    "feeder_sizing",
+    "grounding",
+    "load_balance",
+    "selectivity",
+    "short_circuit",
+    "symbols",
+    "titleblock",
+    "voltage_drop"
   ],
   "owns": [
     "titleblock"

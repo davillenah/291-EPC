@@ -14,7 +14,7 @@ PATTERN = re.compile(r"291_E_LV_SLD_IEC60617_|\blibrary_dir\(")
 # the generators keep the library folder for the catalogue rows and for a library given by path (SYM-02 pending: the rest of the SLD and MLD symbol handling)
 ALLOWED = {
     "harness/src/engines/cad/mld/src/epc_mld/mld_generator.py",
-    "harness/src/engines/cad/sld/src/epc_sld/sld_generator.py",
+    "harness/src/engines/cad/draw/src/epc_draw/sld/sld_generator.py",
 }
 
 
