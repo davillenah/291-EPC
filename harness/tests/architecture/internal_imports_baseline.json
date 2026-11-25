@@ -113,7 +113,6 @@
  "harness/src/engines/cad/drawing/tests/test_stamp.py::epc_drawing.export.stamp",
  "harness/src/engines/cad/drawing/tests/test_tables_xlsx.py::epc_drawing.export",
  "harness/src/engines/cad/drawing/tests/test_transmittal_pdf.py::epc_drawing.export.transmittal_pdf",
- "harness/src/engines/cad/mld/src/epc_mld/mld_generator.py::epc_dxf.roles",
  "harness/src/engines/cad/sld/src/epc_sld/sld_generator.py::epc_aea90364.aea_pipeline",
  "harness/src/engines/cad/sld/tests/test_sld_package.py::epc_sld.sld_generator",
  "harness/src/engines/calculation/feeder_sizing/src/epc_feeder_sizing/aea_conductors.py::epc_calc_common._validate",

@@ -76,6 +76,7 @@
   "engine": [
     "aea90364",
     "calc_common",
+    "draw",
     "drawing",
     "dxf",
     "feeder_sizing",

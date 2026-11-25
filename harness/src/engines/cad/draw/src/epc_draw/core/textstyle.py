@@ -11,7 +11,7 @@ import json
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-REPO_CONFIG = Path(__file__).resolve().parents[6] / "config" / "dxf"          # harness/config/dxf: the files that hold the values in force (one source)
+REPO_CONFIG = Path(__file__).resolve().parents[7] / "config" / "dxf"          # harness/config/dxf: the files that hold the values in force (one source)
 DEFAULT_FILE = REPO_CONFIG / "text.json"
 FILE_NAME = "text.json"
 SECTIONS = {
@@ -23,7 +23,7 @@ SECTIONS = {
 
 def config_dir() -> Optional[Path]:
     """The editable folder: the one the settings name (empty: none), else `harness/config/dxf` when it exists."""
-    from epc_dxf import settings
+    from epc_draw.core import settings
     named = settings.current().config_dir
     if named is not None:
         return Path(named) if named else None
@@ -37,7 +37,7 @@ def _read(path: Path) -> Dict[str, Any]:
 def _files() -> List[Path]:
     folder = config_dir()
     folder = folder if folder and folder.resolve() != REPO_CONFIG.resolve() else None
-    from epc_dxf import settings
+    from epc_draw.core import settings
     named = [Path(x) for x in settings.current().text_files]
     return ([folder / FILE_NAME] if folder else []) + named
 

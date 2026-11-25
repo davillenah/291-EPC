@@ -5,7 +5,7 @@ The layers of every drawing already carry their final names: the catalog `harnes
 """
 from pathlib import Path
 
-from epc_dxf import textstyle
+from epc_draw.core import textstyle
 
 
 
@@ -24,7 +24,7 @@ def _fix_fonts(doc):
 def unify(path, stamp_date=None):
     """Rewrites the DXF `path` in place; returns {} (no layer is renamed: the catalog holds the final names). With `stamp_date` the file is written with the pinned times and GUIDs of `epc_dxf.stamp` (the same input gives the same bytes)."""
     import ezdxf
-    from epc_dxf import stamp
+    from epc_draw.core import stamp
     path = Path(path)
     doc = ezdxf.readfile(str(path))
     _fix_fonts(doc)

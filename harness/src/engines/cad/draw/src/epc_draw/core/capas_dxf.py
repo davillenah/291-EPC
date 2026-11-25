@@ -13,9 +13,9 @@ import math
 import ezdxf
 import xml.etree.ElementTree as ET
 
-from epc_dxf import layers as _L
-from epc_dxf import stamp as _stamp
-from epc_dxf import textstyle as _T
+from epc_draw.core import layers as _L
+from epc_draw.core import stamp as _stamp
+from epc_draw.core import textstyle as _T
 
 # Las capas no se escriben aquí: el catálogo (epc_dxf.layers) dice cómo se llama y cómo se ve cada rol.
 ROLES = ('sld.diagram', 'sld.text', 'sld.titleblock', 'sld.sheet')
@@ -84,7 +84,7 @@ def colorear(svg_path, dxf_path, catalog=None, a3=None, stamp=None, doc=None, wr
     cat = _catalogo(catalog)
     from ezdxf.colors import rgb2int
     from svgelements import SVG, Circle, Ellipse, Path, Polygon, Rect, Shape, SimpleLine, Text
-    from epc_dxf import svg_to_dxf as S
+    from epc_draw.core import svg_to_dxf as S
     svg = SVG.parse(S.stream(svg_path), reify=True)
     elementos = list(svg.elements())
     formas = [e for e in elementos if isinstance(e, Shape) and not isinstance(e, Text)]

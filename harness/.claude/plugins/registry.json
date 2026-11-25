@@ -39,6 +39,7 @@
       "engine": [
         "aea90364",
         "calc_common",
+        "draw",
         "drawing",
         "dxf",
         "feeder_sizing",
@@ -53,7 +54,7 @@
         "titleblock",
         "voltage_drop"
       ],
-      "hash": "d28626672911363c"
+      "hash": "222294d62a4d55cb"
     },
     "doc-quality": {
       "version": "0.1.0",
@@ -70,15 +71,14 @@
       "version": "0.1.0",
       "kind": "generator",
       "status": "active",
-      "requires": {
-        "iec-symbols": "^0.4.19"
-      },
+      "requires": {},
       "skills": [],
       "engine": [
+        "draw",
         "dxf",
         "symbols"
       ],
-      "hash": "3eafd4d4fc72c043"
+      "hash": "cc661941a2f9c804"
     },
     "equipment-catalog": {
       "version": "0.1.0",
@@ -98,7 +98,7 @@
       "engine": [
         "symbols"
       ],
-      "hash": "b3fee5552b636412"
+      "hash": "1b99a2f358cbfea7"
     },
     "intake-analysis": {
       "version": "0.1.0",
@@ -120,11 +120,12 @@
       },
       "skills": [],
       "engine": [
+        "draw",
         "dxf",
         "symbols",
         "titleblock"
       ],
-      "hash": "6e8b6d18e395eff4"
+      "hash": "e30dcd0aa5534137"
     },
     "mld": {
       "version": "0.2.2",
@@ -141,6 +142,7 @@
       "engine": [
         "aea90364",
         "calc_common",
+        "draw",
         "dxf",
         "feeder_sizing",
         "grounding",
@@ -153,7 +155,7 @@
         "titleblock",
         "voltage_drop"
       ],
-      "hash": "2c84dbfaec86e49c"
+      "hash": "38758802a2996513"
     },
     "plan-drawing": {
       "version": "0.1.0",
@@ -166,12 +168,13 @@
       "skills": [],
       "engine": [
         "arch",
+        "draw",
         "dxf",
         "plan",
         "symbols",
         "titleblock"
       ],
-      "hash": "8436b1a66c1c42d7"
+      "hash": "121c21558cce1235"
     },
     "pm2-docs": {
       "version": "0.1.0",
@@ -215,6 +218,7 @@
       "engine": [
         "aea90364",
         "calc_common",
+        "draw",
         "dxf",
         "feeder_sizing",
         "grounding",
@@ -226,7 +230,7 @@
         "titleblock",
         "voltage_drop"
       ],
-      "hash": "eebd4f2210454597"
+      "hash": "d735c7e7bb755a9d"
     },
     "spec-writer": {
       "version": "0.1.0",

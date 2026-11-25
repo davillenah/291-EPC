@@ -17,8 +17,8 @@ from typing import Mapping
 from lxml import etree
 import ezdxf
 from ezdxf.addons import importer
-from epc_dxf import layers as _L
-from epc_dxf import stamp as _stamp
+from epc_draw.core import layers as _L
+from epc_draw.core import stamp as _stamp
 
 
 

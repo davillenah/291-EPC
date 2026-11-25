@@ -14,7 +14,7 @@ from typing import Optional, Union
 import ezdxf
 from ezdxf.document import CREATED_BY_EZDXF, WRITTEN_BY_EZDXF
 from ezdxf.tools import juliandate
-from epc_dxf.errors import DxfError
+from epc_draw.core.errors import DxfError
 
 NAMESPACE = uuid.UUID("5d0d1c6e-0291-4e6b-9a47-8c1f5f3a1b10")  # fixed: the GUIDs are uuid5 of (kind, moment, seed) under it
 DateLike = Union[str, datetime.date, datetime.datetime, None]

@@ -1,6 +1,6 @@
 {
  "schema_version": "1.0",
- "engine": "dxf",
+ "engine": "draw",
  "topic": "svg_to_dxf",
  "records": [
   {
@@ -24,7 +24,7 @@
    "confidence": "low",
    "location": {
     "type": "code",
-    "file": "harness/src/engines/cad/dxf/src/epc_dxf/svg_to_dxf.py",
+    "file": "harness/src/engines/cad/draw/src/epc_draw/core/svg_to_dxf.py",
     "symbol": "ALTURA_TEXTO_MM",
     "line": 38
    },
@@ -60,7 +60,7 @@
    "confidence": "low",
    "location": {
     "type": "code",
-    "file": "harness/src/engines/cad/dxf/src/epc_dxf/svg_to_dxf.py",
+    "file": "harness/src/engines/cad/draw/src/epc_draw/core/svg_to_dxf.py",
     "symbol": "FS_ROTULO",
     "line": 39
    },
@@ -95,7 +95,7 @@
    "confidence": "low",
    "location": {
     "type": "code",
-    "file": "harness/src/engines/cad/dxf/src/epc_dxf/svg_to_dxf.py",
+    "file": "harness/src/engines/cad/draw/src/epc_draw/core/svg_to_dxf.py",
     "symbol": "ALTURA_LEGAL_MM",
     "line": 40
    },
@@ -130,7 +130,7 @@
    "confidence": "medium",
    "location": {
     "type": "code",
-    "file": "harness/src/engines/cad/dxf/src/epc_dxf/svg_to_dxf.py",
+    "file": "harness/src/engines/cad/draw/src/epc_draw/core/svg_to_dxf.py",
     "symbol": "PX_POR_MM",
     "line": 30
    },
@@ -165,7 +165,7 @@
    "confidence": "medium",
    "location": {
     "type": "code",
-    "file": "harness/src/engines/cad/dxf/src/epc_dxf/layers.py",
+    "file": "harness/src/engines/cad/draw/src/epc_draw/core/layers.py",
     "symbol": "LINEWEIGHTS",
     "line": 17
    },

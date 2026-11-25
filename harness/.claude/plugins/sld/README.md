@@ -29,7 +29,7 @@ This plugin is packaging only. The code lives in `harness/src/engines/calculatio
 
 | | |
 |---|---|
-| Incluye (motor) | `aea90364`, `calc_common`, `dxf`, `feeder_sizing`, `grounding`, `load_balance`, `selectivity`, `short_circuit`, `sld`, `symbols`, `titleblock`, `voltage_drop` |
+| Incluye (motor) | `aea90364`, `calc_common`, `draw`, `dxf`, `feeder_sizing`, `grounding`, `load_balance`, `selectivity`, `short_circuit`, `sld`, `symbols`, `titleblock`, `voltage_drop` |
 | Es dueño de | `sld` |
 | Necesita (plugins) | `aea-calc`, `dxf-output`, `iec-symbols`, `iram-titleblock` |
 | Lo necesitan | `board-design`, `mld` |

@@ -50,6 +50,7 @@
   "engine": [
     "aea90364",
     "calc_common",
+    "draw",
     "dxf",
     "feeder_sizing",
     "grounding",

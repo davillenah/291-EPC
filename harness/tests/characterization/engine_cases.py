@@ -278,7 +278,7 @@ def more_engines():
 STAGES = {"intake": ["epc_calc_common"], "requirements_inputs": ["epc_design_basis"], "loads_demand": ["epc_load_balance", "epc_calc_common"],
           "supply_transformer": ["epc_transformer_sizing", "epc_short_circuit"], "board_structure": ["epc_load_balance"],
           "cable_sizing": ["epc_feeder_sizing", "epc_voltage_drop", "epc_aea90364"], "selectivity": ["epc_selectivity"], "earthing": ["epc_grounding"],
-          "calc_check": ["epc_calc_check", "epc_rules"], "drawings": ["epc_sld", "epc_mld", "epc_dxf", "epc_symbols", "epc_titleblock", "epc_drawing"],
+          "calc_check": ["epc_calc_check", "epc_rules"], "drawings": ["epc_sld", "epc_mld", "epc_dxf", "epc_draw", "epc_symbols", "epc_titleblock", "epc_drawing"],
           "documents": ["epc_documents", "epc_boq", "epc_datasheets", "epc_rfq", "epc_terminal_blocks", "epc_descriptive_report", "epc_design_basis"],
           "package_issue": ["epc_documents"]}
 

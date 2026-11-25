@@ -12,7 +12,7 @@ import json
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional
 
-DEFAULT_FILE = Path(__file__).resolve().parents[6] / "config" / "dxf" / "layers.json"      # harness/config/dxf: the file the values live in (one source)
+DEFAULT_FILE = Path(__file__).resolve().parents[7] / "config" / "dxf" / "layers.json"      # harness/config/dxf: the file the values live in (one source)
 DISCIPLINES_FILE = Path(__file__).resolve().parent / "data" / "disciplines.json"
 LINEWEIGHTS = (0.0, 0.05, 0.09, 0.13, 0.15, 0.18, 0.2, 0.25, 0.3, 0.35, 0.4, 0.5, 0.53, 0.6, 0.7, 0.8, 0.9, 1.0, 1.06, 1.2, 1.4, 1.58, 2.0, 2.11)      # mm: the ones DXF knows
 LINETYPES = ("CONTINUOUS", "DASHED", "DASHDOT", "CENTER", "HIDDEN", "PHANTOM", "DOT")
@@ -28,14 +28,14 @@ def _read(path: Path) -> Dict[str, dict]:
 
 def _editable_file() -> List[str]:
     """The layer file of the editable folder (`harness/config/dxf`), when there is one."""
-    from epc_dxf import textstyle
+    from epc_draw.core import textstyle
     folder = textstyle.config_dir()
     return [str(folder / "layers.json")] if folder and folder.resolve() != DEFAULT_FILE.parent.resolve() else []
 
 
 def _files(*extra: Any) -> List[Path]:
     """The override files in order of authority: those the settings in force name, then `extra` (each a path or a list of paths)."""
-    from epc_dxf import settings
+    from epc_draw.core import settings
     named = _editable_file() + list(settings.current().layer_files)
     flat = [y for x in extra for y in (x if isinstance(x, (list, tuple)) else [x]) if y]
     return [Path(x) for x in [*named, *flat]]
@@ -105,7 +105,7 @@ def logo_layer_name(company: str) -> str:
     """The layer of a company logo, `0-Logo-<Company>`: the name of the provider or of the client without spaces or symbols (`Energy Sapiens` gives `0-Logo-EnergySapiens`); it comes from the project data."""
     word = "".join(ch for ch in str(company) if ch.isalnum() and ch.isascii())
     if not word:
-        from epc_dxf.errors import DxfError
+        from epc_draw.core.errors import DxfError
         raise DxfError("err_logo_layer_company")
     return f"0-Logo-{word}"
 
