@@ -23,7 +23,7 @@ def _sha256(path: Path) -> str:
 def _prepare(text: str, symbol_library) -> tuple:
     """The SVG the converter reads (without the symbols that go as blocks), kept in memory, and those symbols."""
     from epc_dxf import bloques_dxf
-    stripped, instances = bloques_dxf.separar(text, symbol_library) if symbol_library else (text, [])
+    stripped, instances = bloques_dxf.separar(text, symbol_library) if symbol_library is not None else (text, [])
     return svg_to_dxf.SvgText(stripped), instances
 
 
@@ -106,8 +106,10 @@ def layers_used(dxf: Path) -> Dict[str, int]:
 def convert_document(svg_text: str, *, symbol_library=None, layers_file=None, a3: Optional[bool] = None, stamp_date=None, seed: str = "drawing") -> dict:
     """SVG in development -> DXF deliverable, all in memory: nothing is read from or written to a folder except the symbol library the caller names.
     Returns {"doc": the ezdxf document, "stamp": the stamp to save it with, "blocks": ..., "layers": ..., "messages": [...]}."""
+    from epc_dxf import bloques_dxf
     catalog = _L.load(layers_file)
     stamp = _stamp.parse(stamp_date, seed)
+    symbol_library = bloques_dxf.as_library(symbol_library) if symbol_library else None       # a folder is read once here; a `SymbolLibrary` comes in as data
     svg, instances = _prepare(svg_text, symbol_library)
     doc = _stamp.reload(svg_to_dxf.convertir(svg, stamp), stamp)      # as the file that was saved and read again
     height = float(re.search(r'height="([\d.]+)mm"', svg_text).group(1)) if instances else 0.0
