@@ -43,3 +43,12 @@ def test_rail_section_is_a_c_with_foot_and_rolled_edge():
     assert max(h for _, h in section) == 0.09                                # up to the rail height
     mesh = tray_solid.ladder_mesh([(0, 0, 0), (1, 0, 0)], 0.3, 0.09, {"rail": 0.002, "rung": 0.03, "rung_thick": 0.015, "rung_pitch": 0.3, "foot": 0.015, "curl": 0.012})
     assert len(mesh["faces"]) >= 2 * (len(section) - 1)
+
+
+def test_rail_web_has_side_slots():
+    from epc_plan import tray_solid
+    p = {"rail": 0.002, "rung": 0.03, "rung_thick": 0.015, "rung_pitch": 0.3, "foot": 0.015, "curl": 0.012, "slot_pitch": 0.1, "slot": 0.05, "slot_height": 0.012}
+    slotted = tray_solid.ladder_mesh([(0, 0, 0), (1, 0, 0)], 0.3, 0.09, p)
+    plain = tray_solid.ladder_mesh([(0, 0, 0), (1, 0, 0)], 0.3, 0.09, {k: v for k, v in p.items() if not k.startswith("slot")})
+    assert len(slotted["faces"]) > len(plain["faces"])
+    assert all(len(f) == 4 for f in slotted["faces"])
