@@ -13,8 +13,8 @@ from epc_plan import tray_accessories as A, tray_hardware as H, tray_junction, t
 TRAY_LAYER, SUPPORT_LAYER, FASTENER_LAYER = "ELEC-BANDEJA", "MEC-SOPORTE", "MEC-FIJACION"
 
 
-def _sizes() -> Tuple[Dict[str, float], Dict[str, float], float]:
-    ladder = tray_catalogue.ladder(core.PARAMS["detail"]["ladder"], core.PARAMS["tray_catalogue"])
+def _sizes(ala_mm: float = 90, width_mm: float = 0, finish: str = "", gauge: str = "") -> Tuple[Dict[str, float], Dict[str, float], float]:
+    ladder = tray_catalogue.ladder(core.PARAMS["detail"]["ladder"], core.PARAMS["tray_catalogue"], ala_mm, width_mm, finish, gauge)
     keys = ("rail", "rung", "rung_thick", "rung_pitch", "foot", "curl", "lip", "jog", "slot_pitch", "slot", "slot_height", "floor_margin", "hole_pitch", "hole", "wire", "wire_pitch", "joint", "bolt")
     return {k: ladder[k + "_m"] for k in keys}, core.PARAMS["detail"]["library"], ladder["elbow_radius_m"]
 
@@ -30,8 +30,8 @@ def _piece(code: Dict[str, Any], group: str, layer: str, mesh: Dict[str, list], 
             "level": "", "shape": "box", "path": [[round(min(xs), 4), 0.0, 0.0], [round(max(xs) + 1e-3, 4), 0.0, 0.0]], "mesh": mesh}
 
 
-def _tray_code(kind: str, width: float, height: float, fitting: str) -> Dict[str, Any]:
-    return {"code": tray_code.code(kind, width * 1000, height * 1000, fitting), "name": tray_code.name(kind, fitting)}
+def _tray_code(kind: str, width: float, height: float, fitting: str, sheet: Tuple[str, str] = ("", "")) -> Dict[str, Any]:
+    return {"code": tray_code.code(kind, width * 1000, height * 1000, fitting, *sheet), "name": tray_code.name(kind, fitting)}
 
 
 def _path(run: List[Tuple[float, float, float]], radius: float, links: int = 5) -> List[Tuple[float, float, float]]:
@@ -112,23 +112,23 @@ def _runs(fitting: str, q: Dict[str, float], radius: float, width: float = 0.0) 
     return arms[fitting]
 
 
-def _covers(width: float, depth: float) -> List[Dict[str, Any]]:
+def _covers(width: float, depth: float, gauge: str = "", finish: str = "") -> List[Dict[str, Any]]:
     """The cover of the straight and of each fitting, for every kind that takes one (a wire-mesh tray has none)."""
-    p, q, radius = _sizes()
-    ladder = tray_catalogue.ladder(core.PARAMS["detail"]["ladder"], core.PARAMS["tray_catalogue"])
+    p, q, radius = _sizes(depth * 1000, width * 1000, finish, gauge)
+    ladder = tray_catalogue.ladder(core.PARAMS["detail"]["ladder"], core.PARAMS["tray_catalogue"], depth * 1000, width * 1000, finish, gauge)
     p = dict(p, cover=ladder["cover_m"], cover_wide=ladder["cover_wide_m"], cover_wide_from=ladder["cover_wide_from_m"])
-    return [_piece(_tray_code(kind, width, depth, COVERS[fitting]), "tray", TRAY_LAYER, H.join(*[T.cover_mesh(path, width, depth, p) for path in _runs(fitting, q, radius, width)]))
+    return [_piece(_tray_code(kind, width, depth, COVERS[fitting], (gauge, finish)), "tray", TRAY_LAYER, H.join(*[T.cover_mesh(path, width, depth, p) for path in _runs(fitting, q, radius, width)]))
             for kind in ("escalera", "perforada", "ciega", "canal") for fitting in COVERS]
 
 
-def _trays(width: float, depth: float) -> List[Dict[str, Any]]:
-    p, q, radius = _sizes()
+def _trays(width: float, depth: float, gauge: str = "", finish: str = "") -> List[Dict[str, Any]]:
+    p, q, radius = _sizes(depth * 1000, width * 1000, finish, gauge)
     out = []
     for kind in ("escalera", "perforada", "ciega", "alambre", "canal"):
         for fitting in ("straight", "elbow90", "elbow45", "elbow_adjustable", "vertical_bend", "tee", "cross", "reduction_central", "reduction_side", "end", "splice", "divider", "cover"):
             if fitting == "divider" and kind in ("escalera", "alambre") or fitting == "cover":
                 continue                                                  # the covers come from `_covers`, one for each fitting
-            out.append(_piece(_tray_code(kind, width, depth, fitting), "tray", TRAY_LAYER, _fitting(kind, width, depth, p, q, radius, fitting)))
+            out.append(_piece(_tray_code(kind, width, depth, fitting, (gauge, finish)), "tray", TRAY_LAYER, _fitting(kind, width, depth, p, q, radius, fitting)))
     return out
 
 
@@ -163,8 +163,8 @@ def _accessories(width: float, depth: float) -> List[Dict[str, Any]]:
     return [_piece(c, "support" if "BN" in c["code"] or "PUM" in c["code"] else "fastener", SUPPORT_LAYER if "BN" in c["code"] or "PUM" in c["code"] else FASTENER_LAYER, m) for c, m in named]
 
 
-def pieces(width_m: float = 0.3, height_m: float = 0.09) -> List[Dict[str, Any]]:
+def pieces(width_m: float = 0.3, height_m: float = 0.09, gauge: str = "", finish: str = "") -> List[Dict[str, Any]]:
     """Every part of the system for a tray `width_m` wide and `height_m` high, one solid each (id, code, bilingual name, group, layer, path, mesh)."""
     if width_m <= 0 or height_m <= 0:
         raise core.PlanError("err_detail_number", key="tray size")
-    return _trays(width_m, height_m) + _covers(width_m, height_m) + _supports(width_m, height_m) + _fasteners() + _accessories(width_m, height_m)
+    return _trays(width_m, height_m, gauge, finish) + _covers(width_m, height_m, gauge, finish) + _supports(width_m, height_m) + _fasteners() + _accessories(width_m, height_m)
