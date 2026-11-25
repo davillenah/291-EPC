@@ -19,7 +19,7 @@ import math
 import re
 import xml.etree.ElementTree as ET
 from typing import Any, Dict, List, Optional
-from epc_titleblock.errors import TitleblockError
+from epc_draw.titleblock.errors import TitleblockError
 
 SCHEMA_VERSION = "1.0"
 PEN_ROLES = ("cut", "frame", "zone", "outline", "cell", "fine")

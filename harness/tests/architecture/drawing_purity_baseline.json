@@ -31,7 +31,7 @@
  "harness/src/engines/cad/sld/src/epc_sld/sld_paginate.py": {
   "environment": 1
  },
- "harness/src/engines/cad/titleblock/src/epc_titleblock/service.py": {
+ "harness/src/engines/cad/draw/src/epc_draw/titleblock/service.py": {
   "clock": 1
  }
 }

@@ -325,6 +325,25 @@ Archivo: `harness/src/engines/procurement/datasheets/src/epc_datasheets/norm_reg
 | `datasheets.params.catalog_siemens_breakers` | - | - | - | `breakers.json#/products` | A, kA, V | convention | low | pending | no clause: manufacturer catalog (unverified); every product has status unverified and a source URL to check |
 | `datasheets.params.catalog_prysmian_cables` | - | - | - | `cables.json#/products` | - | convention | low | pending | no clause: manufacturer catalog (unverified); every product has status unverified and a source URL to check |
 
+## draw / iram_sheet
+
+Archivo: `harness/src/engines/cad/draw/src/epc_draw/norm_register/iram_sheet.json` (12 registros)
+
+| id | norma | cláusula | página | valor / ubicación | unidad | procedencia | confianza | estado | problemas |
+|---|---|---|---|---|---|---|---|---|---|
+| `titleblock.code.formatos` | IRAM 4504 (Manual IRAM Ed. XXVII (as cited in code docstring)) | 2.3.1, 2.3.2, 2.3.3, fig. 5, fig. 6 | - | `{"A0": [1189, 841, 20, 20, 12, 6], "A1": [841, 594, 25, 1...` | mm; columns x rows | norm | medium | pending | A0 12x6 and A2 6x3 coordinate grids are derived by the code authors (module ~99 x 140), only A1 8x4 and A3 4x2 are as in fig. 6; A0 margin 20 on four sides (fig. 16), A1-A4 left 25 and 10 elsewhere; A4 has no coordinates; entry is portrait (210x297) while others are landscape; engine/drawing plan_sheet.FORMATS repeats the format names |
+| `titleblock.code.w_rec_w_util_w_cent` | IRAM 4502 / IRAM 4504 (Manual IRAM Ed. XXVII (as cited in code docstring)) | 4502 line A group d (recuadro); 4504 2.4.1 (centring) | - | `{"W_REC": 1.0, "W_UTIL": 0.5, "W_CENT": 0.5}` | mm | norm | medium | pending | W_UTIL has no clause in the code comment; layout.DEFAULT_PENS repeats 1.0/0.5 (frame/zone): duplicates a value defined elsewhere (ADR-0012 single source) |
+| `titleblock.code.w_rotulo` | IRAM 4508 (Manual IRAM Ed. XXVII (as cited in code docstring)) | fig. 2 | - | `{"W_08": 0.8, "W_04": 0.4, "W_02": 0.2}` | mm | norm | medium | pending | layout.DEFAULT_PENS repeats outline 0.8 / cell 0.4 / fine 0.2: duplicates a value defined elsewhere (ADR-0012 single source) |
+| `titleblock.code.bloque_rotulo_dim` | IRAM 4508 (Manual IRAM Ed. XXVII (as cited in code docstring)) | fig. 2 (175 x 51), fig. 3 (175 x 21.5) | - | `{"RW": 175, "RH": 51, "MH": 21.5}` | mm | norm | medium | pending | layout.DEFAULT_BLOCK repeats 175/51/21.5: duplicates a value defined elsewhere (ADR-0012 single source) |
+| `titleblock.code.cx_columnas` | IRAM 4508 (Manual IRAM Ed. XXVII (as cited in code docstring)) | fig. 2 (columns 26/20/10/19/45/55) | - | `[0, 26, 46, 56, 75, 120, 175]` | mm | norm | medium | pending | cell geometry inside the block (rows, cell positions) is hard-coded in dibujar_rotulo and not registered individually |
+| `titleblock.code.xv` | IRAM 4508 (Manual IRAM Ed. XXVII (as cited in code docstring)) | fig. 2 | - | `64` | mm | norm | medium | pending | - |
+| `titleblock.code.t25` | IRAM 4503 (Manual IRAM Ed. XXVII (as cited in code docstring)) | - | - | `2.5` | mm | norm | low | pending | no clause in code beyond 'IRAM 4503' for capital height; text heights 2.5 / 1.8 here, 2.0 in layout.DEFAULT_TEXT block, 1.7 in dxf ALTURA_TEXTO_MM: inconsistent |
+| `titleblock.code.lab` | IRAM 4508 (Manual IRAM Ed. XXVII (as cited in code docstring)) | fig. 2 | - | `1.8` | mm | norm | low | pending | see t25 text-height inconsistency |
+| `titleblock.code.fr` | IRAM 4504 (Manual IRAM Ed. XXVII (as cited in code docstring)) | fig. 6 (not cited at the line) | - | `{"with_coordinates": 5, "without": 0}` | mm | norm | low | pending | value is conditional in code: 5 if the format has coordinates else 0; no clause cited at the definition |
+| `titleblock.layout.default_pens` | IRAM 4502 / 4508 | - | - | `{"cut": 0.1, "frame": 1.0, "zone": 0.5, "outline": 0.8, "...` | mm | norm | medium | pending | no clause in layout.py; values repeat lamina_iram W_* constants: duplicates a value defined elsewhere (ADR-0012 single source) |
+| `titleblock.layout.default_text` | - | - | - | `{"coordinates": 3.5, "block": 2.0}` | mm | design-default | low | pending | block text 2.0 vs 2.5/1.8 in lamina_iram and 1.7 in dxf; no clause |
+| `titleblock.layout.default_block` | IRAM 4508 | - | - | `{"width": 175, "height": 51, "modifications_height": 21.5}` | mm | norm | medium | pending | repeats RW/RH/MH of lamina_iram: duplicates a value defined elsewhere (ADR-0012 single source); no clause in layout.py |
+
 ## draw / svg_to_dxf
 
 Archivo: `harness/src/engines/cad/draw/src/epc_draw/norm_register/svg_to_dxf.json` (5 registros)
@@ -533,25 +552,6 @@ Archivo: `harness/src/engines/quality/terminal_blocks/src/epc_terminal_blocks/no
 | id | norma | cláusula | página | valor / ubicación | unidad | procedencia | confianza | estado | problemas |
 |---|---|---|---|---|---|---|---|---|---|
 | `terminal_blocks.params.terminal_sizes` | - | - | - | `terminal_sizes.json#/terminal_sizes` | mm2, A | convention | low | pending | no clause: catalog/convention; values to verify against the chosen manufacturer catalog |
-
-## titleblock / iram_sheet
-
-Archivo: `harness/src/engines/cad/titleblock/src/epc_titleblock/norm_register/iram_sheet.json` (12 registros)
-
-| id | norma | cláusula | página | valor / ubicación | unidad | procedencia | confianza | estado | problemas |
-|---|---|---|---|---|---|---|---|---|---|
-| `titleblock.code.formatos` | IRAM 4504 (Manual IRAM Ed. XXVII (as cited in code docstring)) | 2.3.1, 2.3.2, 2.3.3, fig. 5, fig. 6 | - | `{"A0": [1189, 841, 20, 20, 12, 6], "A1": [841, 594, 25, 1...` | mm; columns x rows | norm | medium | pending | A0 12x6 and A2 6x3 coordinate grids are derived by the code authors (module ~99 x 140), only A1 8x4 and A3 4x2 are as in fig. 6; A0 margin 20 on four sides (fig. 16), A1-A4 left 25 and 10 elsewhere; A4 has no coordinates; entry is portrait (210x297) while others are landscape; engine/drawing plan_sheet.FORMATS repeats the format names |
-| `titleblock.code.w_rec_w_util_w_cent` | IRAM 4502 / IRAM 4504 (Manual IRAM Ed. XXVII (as cited in code docstring)) | 4502 line A group d (recuadro); 4504 2.4.1 (centring) | - | `{"W_REC": 1.0, "W_UTIL": 0.5, "W_CENT": 0.5}` | mm | norm | medium | pending | W_UTIL has no clause in the code comment; layout.DEFAULT_PENS repeats 1.0/0.5 (frame/zone): duplicates a value defined elsewhere (ADR-0012 single source) |
-| `titleblock.code.w_rotulo` | IRAM 4508 (Manual IRAM Ed. XXVII (as cited in code docstring)) | fig. 2 | - | `{"W_08": 0.8, "W_04": 0.4, "W_02": 0.2}` | mm | norm | medium | pending | layout.DEFAULT_PENS repeats outline 0.8 / cell 0.4 / fine 0.2: duplicates a value defined elsewhere (ADR-0012 single source) |
-| `titleblock.code.bloque_rotulo_dim` | IRAM 4508 (Manual IRAM Ed. XXVII (as cited in code docstring)) | fig. 2 (175 x 51), fig. 3 (175 x 21.5) | - | `{"RW": 175, "RH": 51, "MH": 21.5}` | mm | norm | medium | pending | layout.DEFAULT_BLOCK repeats 175/51/21.5: duplicates a value defined elsewhere (ADR-0012 single source) |
-| `titleblock.code.cx_columnas` | IRAM 4508 (Manual IRAM Ed. XXVII (as cited in code docstring)) | fig. 2 (columns 26/20/10/19/45/55) | - | `[0, 26, 46, 56, 75, 120, 175]` | mm | norm | medium | pending | cell geometry inside the block (rows, cell positions) is hard-coded in dibujar_rotulo and not registered individually |
-| `titleblock.code.xv` | IRAM 4508 (Manual IRAM Ed. XXVII (as cited in code docstring)) | fig. 2 | - | `64` | mm | norm | medium | pending | - |
-| `titleblock.code.t25` | IRAM 4503 (Manual IRAM Ed. XXVII (as cited in code docstring)) | - | - | `2.5` | mm | norm | low | pending | no clause in code beyond 'IRAM 4503' for capital height; text heights 2.5 / 1.8 here, 2.0 in layout.DEFAULT_TEXT block, 1.7 in dxf ALTURA_TEXTO_MM: inconsistent |
-| `titleblock.code.lab` | IRAM 4508 (Manual IRAM Ed. XXVII (as cited in code docstring)) | fig. 2 | - | `1.8` | mm | norm | low | pending | see t25 text-height inconsistency |
-| `titleblock.code.fr` | IRAM 4504 (Manual IRAM Ed. XXVII (as cited in code docstring)) | fig. 6 (not cited at the line) | - | `{"with_coordinates": 5, "without": 0}` | mm | norm | low | pending | value is conditional in code: 5 if the format has coordinates else 0; no clause cited at the definition |
-| `titleblock.layout.default_pens` | IRAM 4502 / 4508 | - | - | `{"cut": 0.1, "frame": 1.0, "zone": 0.5, "outline": 0.8, "...` | mm | norm | medium | pending | no clause in layout.py; values repeat lamina_iram W_* constants: duplicates a value defined elsewhere (ADR-0012 single source) |
-| `titleblock.layout.default_text` | - | - | - | `{"coordinates": 3.5, "block": 2.0}` | mm | design-default | low | pending | block text 2.0 vs 2.5/1.8 in lamina_iram and 1.7 in dxf; no clause |
-| `titleblock.layout.default_block` | IRAM 4508 | - | - | `{"width": 175, "height": 51, "modifications_height": 21.5}` | mm | norm | medium | pending | repeats RW/RH/MH of lamina_iram: duplicates a value defined elsewhere (ADR-0012 single source); no clause in layout.py |
 
 ## transformer_sizing / params
 

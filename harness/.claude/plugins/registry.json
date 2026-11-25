@@ -54,7 +54,7 @@
         "titleblock",
         "voltage_drop"
       ],
-      "hash": "4faecbed29dc0622"
+      "hash": "107de9a07f14c3af"
     },
     "doc-quality": {
       "version": "0.1.0",
@@ -77,7 +77,7 @@
         "draw",
         "dxf"
       ],
-      "hash": "a532bcf98083840d"
+      "hash": "9ab4f33dbd40b638"
     },
     "equipment-catalog": {
       "version": "0.1.0",
@@ -99,7 +99,7 @@
         "dxf",
         "symbols"
       ],
-      "hash": "7822c0d54956dac0"
+      "hash": "d61256eead56c0a1"
     },
     "intake-analysis": {
       "version": "0.1.0",
@@ -116,16 +116,14 @@
       "version": "0.5.4",
       "kind": "generator",
       "status": "active",
-      "requires": {
-        "dxf-output": "^0.1.0"
-      },
+      "requires": {},
       "skills": [],
       "engine": [
         "draw",
         "dxf",
         "titleblock"
       ],
-      "hash": "faad376ecccf3ccd"
+      "hash": "9acfa3224d684d00"
     },
     "mld": {
       "version": "0.2.2",
@@ -155,7 +153,7 @@
         "titleblock",
         "voltage_drop"
       ],
-      "hash": "abb6505319d5da00"
+      "hash": "ee504eff57dd1ad6"
     },
     "plan-drawing": {
       "version": "0.1.0",
@@ -174,7 +172,7 @@
         "symbols",
         "titleblock"
       ],
-      "hash": "7f5bece9f0b4c7b9"
+      "hash": "df095d66df51c6df"
     },
     "pm2-docs": {
       "version": "0.1.0",
@@ -230,7 +228,7 @@
         "titleblock",
         "voltage_drop"
       ],
-      "hash": "d7144f756a4cbde8"
+      "hash": "7b172ce4aee9b393"
     },
     "spec-writer": {
       "version": "0.1.0",

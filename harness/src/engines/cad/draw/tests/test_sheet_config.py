@@ -8,7 +8,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
-from epc_titleblock import layout, service, sheet_generator          # noqa: E402
+from epc_draw.titleblock import layout, service, sheet_generator          # noqa: E402
 
 
 def block_of(svg: str) -> str:

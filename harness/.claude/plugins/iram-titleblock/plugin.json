@@ -13,9 +13,7 @@
     "IRAM 4504",
     "IRAM 4508"
   ],
-  "requires": {
-    "dxf-output": "^0.1.0"
-  },
+  "requires": {},
   "consumes": [
     "TitleBlock"
   ],

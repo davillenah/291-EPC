@@ -16,7 +16,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import epc_paths as P  # noqa: E402
 
 REPO = P.REPO
-LOGOS = f"{P.engine_src_rel('titleblock')}/epc_titleblock/assets"
+LOGOS = f"{P.engine_src_rel('draw')}/epc_draw/titleblock/assets"
 EXEMPT_PARTS = ("/tests/fixtures/", "/node_modules/", "/dist/", "/incoming/")      # incoming/: modules that stand alone carry a copy of the contract and the prompt by design
 MIN_BYTES = 200
 ALLOWED = [

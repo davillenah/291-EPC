@@ -13,7 +13,7 @@ import ezdxf
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parent / "src"))
-sys.path.insert(0, str(HERE.parent.parent / "titleblock" / "src"))
+sys.path.insert(0, str(HERE.parent.parent / "draw" / "src"))
 sys.path.insert(0, str(HERE))
 
 from epc_arch import Options, recognize                          # noqa: E402
@@ -71,7 +71,7 @@ class TestOrgStyle(unittest.TestCase):
             (t / "plan.dxf").write_bytes(helpers.room_dxf())
             (t / "style.json").write_text(json.dumps({"pens": {"pen_050": 0.9}}), encoding="utf-8")
             (t / "sheet.json").write_text(json.dumps({"pens": {"frame": 1.5}}), encoding="utf-8")
-            env = {**os.environ, "PYTHONPATH": os.pathsep.join([str(HERE.parent / "src"), str(HERE.parent.parent / "titleblock" / "src")])}
+            env = {**os.environ, "PYTHONPATH": os.pathsep.join([str(HERE.parent / "src"), str(HERE.parent.parent / "draw" / "src")])}
             res = subprocess.run([sys.executable, "-m", "epc_arch.cli_v2", str(t / "plan.dxf"), "--out", str(t / "o"), "--formats", "svg", "--style", str(t / "style.json"),
                                   "--sheet-config", str(t / "sheet.json")], capture_output=True, text=True, env=env)
             self.assertEqual(res.returncode, 0, res.stderr[-400:])

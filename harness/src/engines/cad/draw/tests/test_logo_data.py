@@ -8,7 +8,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-from epc_titleblock import Logo, render  # noqa: E402
+from epc_draw.titleblock import Logo, render  # noqa: E402
 
 
 def png(w=4, h=2):

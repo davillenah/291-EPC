@@ -1,5 +1,5 @@
 """The error of the engine: a code with an English and a Spanish text (ADR-0039)."""
-from epc_titleblock.messages import text
+from epc_draw.titleblock.messages import text
 
 
 class TitleblockError(ValueError):

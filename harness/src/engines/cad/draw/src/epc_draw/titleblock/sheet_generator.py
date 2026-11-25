@@ -35,9 +35,9 @@ import sys
 import types
 import xml.etree.ElementTree as ET
 
-from epc_titleblock import layout
-from epc_titleblock.errors import TitleblockError
-from epc_titleblock.logo import as_logo
+from epc_draw.titleblock import layout
+from epc_draw.titleblock.errors import TitleblockError
+from epc_draw.titleblock.logo import as_logo
 
 # formato: (ancho, alto, margen izq., margen sup./der./inf., columnas, filas)
 # A0: margen 20 en los 4 lados (archivado con banda adhesiva, fig. 16).
@@ -136,7 +136,7 @@ def build(fmt: str = "A0", modifications: bool = False, logos=None, iram: bool =
     `block_elements` are the elements of the title block as drawn, to be edited and given back in `config["block"]["elements"]`.
 
     `logos` = {"provider": file, "client": file} (svg or png) that go in the boxes of the title block; none by default.
-    The sheet keeps its fields as {placeholders}; `epc_titleblock.service` fills them."""
+    The sheet keeps its fields as {placeholders}; `epc_draw.titleblock.service` fills them."""
     MOD = modifications          # agrega la lista de modificaciones (fig. 3) sobre el rótulo
     FMT = fmt.upper()
     logos = logos or {}
@@ -577,7 +577,7 @@ def _take_config(argv: list):
 
 
 def main(argv=None) -> int:
-    """python -m epc_titleblock.sheet_generator A0|A1|A2|A3|A4 [out.svg] [--mod] [--config sheet.json]: the sheet and its two blocks next to it."""
+    """python -m epc_draw.titleblock.sheet_generator A0|A1|A2|A3|A4 [out.svg] [--mod] [--config sheet.json]: the sheet and its two blocks next to it."""
     argv = list(sys.argv[1:] if argv is None else argv)
     config = _take_config(argv)
     args = [a for a in argv if not a.startswith("--")]
