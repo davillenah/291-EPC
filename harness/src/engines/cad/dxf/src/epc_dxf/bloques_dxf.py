@@ -8,9 +8,12 @@ Flujo (sld_generator.py):
      y coloca un INSERT por aparición con su escala (A3 = escala del grupo) y sus atributos.
 Las capas de los bloques se reasignan a las capas 291-* del SLD.
 """
-import functools
+import io
 import json
 import os, re
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Mapping
 from lxml import etree
 import ezdxf
 from ezdxf.addons import importer
@@ -45,33 +48,50 @@ def _absoluta(el):
     return res
 
 
-@functools.lru_cache(maxsize=16)
-def _catalogo(lib):
-    """{symbol id: DXF file name} from the library's own `_catalog.json` (its `file` field names the SVG; the DXF has the same stem)."""
-    ruta = os.path.join(lib, '_catalog.json')
-    if not os.path.isfile(ruta):
-        return {}
-    with open(ruta, encoding='utf-8-sig') as f:
-        return {i['id']: os.path.splitext(i['file'])[0] + '.dxf' for i in json.load(f).get('symbols', []) if i.get('id') and i.get('file')}
+@dataclass(frozen=True)
+class SymbolLibrary:
+    """The DXF blocks of a symbol library as data (ADR-0042): the engine reads no folder, the caller hands this in.
+    `catalog` is {symbol id: DXF file name}; `files` is {file name: DXF text}, decoded as ezdxf does when it reads a file."""
+    catalog: Mapping[str, str]
+    files: Mapping[str, str]
+
+    def file_of(self, sid):
+        """The file of a symbol id (SYM-00): the file the library's catalog names for it, or `<id>.dxf`; None when the library has none."""
+        if not sid:
+            return None
+        return next((n for n in (self.catalog.get(sid), sid + '.dxf') if n and n in self.files), None)
 
 
-def _archivo(lib, sid):
-    """The library file of a symbol id (SYM-00): the file the library's catalog names for it, or `<id>.dxf`; None when the library has none."""
-    if not sid:
-        return None
-    for nombre in (_catalogo(lib).get(sid), sid + '.dxf'):
-        ruta = os.path.join(lib, nombre) if nombre else None
-        if ruta and os.path.isfile(ruta):
-            return ruta
-    return None
+def _dxf_text(path: Path) -> str:
+    """The text of an ASCII DXF file, read with the encoding its header names and the error handling `ezdxf.readfile` uses."""
+    from ezdxf.filemanagement import dxf_file_info
+    with open(path, 'rt', encoding=dxf_file_info(str(path)).encoding, errors='surrogateescape') as f:
+        return f.read()
+
+
+def load_library(folder) -> SymbolLibrary:
+    """Reads a symbol folder once into data: its `_catalog.json` (id -> DXF name; its `file` field names the SVG, the DXF has the same stem) and every `.dxf` in it. This is the caller's side of the door."""
+    folder = Path(folder)
+    ruta = folder / '_catalog.json'
+    catalog = {}
+    if ruta.is_file():
+        with open(ruta, encoding='utf-8-sig') as f:
+            catalog = {i['id']: os.path.splitext(i['file'])[0] + '.dxf' for i in json.load(f).get('symbols', []) if i.get('id') and i.get('file')}
+    return SymbolLibrary(catalog, {p.name: _dxf_text(p) for p in sorted(folder.glob('*.dxf'))})
+
+
+def as_library(lib) -> SymbolLibrary:
+    """A `SymbolLibrary`, or the folder that holds one (read once)."""
+    return lib if isinstance(lib, SymbolLibrary) else load_library(lib)
 
 
 def _bloque_disponible(lib, sid):
-    return _archivo(lib, sid) is not None
+    return lib.file_of(sid) is not None
 
 
 def separar(svg_texto, lib):
     """Devuelve (svg_sin_simbolos, instancias). Instancia: sid, X, Y (mm SVG), k, valores."""
+    lib = as_library(lib)
     raiz = etree.fromstring(svg_texto.encode('utf-8'))
     instancias = []
     for g in raiz.xpath("//*[@class='sym' and @data-sid]"):
@@ -89,16 +109,9 @@ def separar(svg_texto, lib):
     return etree.tostring(raiz, encoding='unicode'), instancias
 
 
-@functools.lru_cache(maxsize=256)
-def _library_block(path: str, mtime_ns: int):
-    """The DXF file of one library symbol, read once per run and file version (COD-07): the importer only reads from it, so one parsed copy serves every drawing."""
-    return ezdxf.readfile(path)
-
-
 def _importar(doc, lib, sid):
     """Imports the library block of a symbol id into the document (once) and returns the block name, the one the library file gives it."""
-    block_file = _archivo(lib, sid)
-    src = _library_block(block_file, os.stat(block_file).st_mtime_ns)
+    src = ezdxf.read(io.StringIO(lib.files[lib.file_of(sid)]))
     propios = [b.name for b in src.blocks if not b.name.startswith('*')]
     nombre = sid.upper() if sid.upper() in propios else (propios[0] if propios else sid.upper())
     imp = importer.Importer(src, doc)
@@ -110,6 +123,7 @@ def _importar(doc, lib, sid):
 
 def insertar(dxf_path, lib, instancias, alto_mm, catalog=None, stamp=None, doc=None, write=True):
     cat = _L.resolve(catalog)
+    lib = as_library(lib)
     doc = _stamp.document(dxf_path, doc)
     msp = doc.modelspace()
     sids = sorted({i['sid'] for i in instancias})

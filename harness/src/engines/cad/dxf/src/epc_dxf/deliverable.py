@@ -23,7 +23,7 @@ def _sha256(path: Path) -> str:
 def _prepare(text: str, symbol_library) -> tuple:
     """The SVG the converter reads (without the symbols that go as blocks), kept in memory, and those symbols."""
     from epc_dxf import bloques_dxf
-    stripped, instances = bloques_dxf.separar(text, symbol_library) if symbol_library else (text, [])
+    stripped, instances = bloques_dxf.separar(text, symbol_library) if symbol_library is not None else (text, [])
     return svg_to_dxf.SvgText(stripped), instances
 
 
@@ -49,9 +49,8 @@ def _retarget_blocks(doc, final: Dict[str, str]) -> None:
             entity.dxf.layer = final.get(entity.dxf.layer, entity.dxf.layer)
 
 
-def finish_draft(doc, dxf_path, layers_file=None, stamp_date=None, seed=None) -> dict:
-    """A DXF in development (an ezdxf document) whose entities sit on layers named by their ROLE (`plan.ELEC-LUM`) becomes the deliverable: every role layer is renamed
-    and given the look the catalog says, the entities follow and the file is saved (with `stamp_date`, an ISO date or datetime, the file carries that date and GUIDs derived from it and `seed`, so the same drawing gives the same bytes). Returns {"dxf": path, "layers": {name: entities}, "blocks": inserts}."""
+def _role_layers_to_catalog(doc, layers_file) -> None:
+    """Every role layer of the draft is renamed and given the look the catalog says, the entities follow."""
     catalog = _L.load(layers_file)                                                   # a path or a list of paths: global, company, project
     drafts = [lay.dxf.name for lay in doc.layers if lay.dxf.name in catalog]
     final = {role: _L.apply(doc, role, catalog) for role in drafts}
@@ -63,6 +62,21 @@ def finish_draft(doc, dxf_path, layers_file=None, stamp_date=None, seed=None) ->
         if final[role] != role:
             doc.layers.remove(role)
     _L.describe_layers(doc, catalog)                                                 # every layer of the file carries its description
+
+
+def finish_draft_bytes(doc, layers_file=None, stamp_date=None, seed: str = "drawing") -> dict:
+    """`finish_draft` with the file as data: {"dxf": bytes, "layers": {name: entities}, "blocks": inserts}. The caller writes the bytes where it wants (ADR-0042)."""
+    _role_layers_to_catalog(doc, layers_file)
+    stamp = _stamp.parse(stamp_date, seed)
+    data = _stamp.to_text(doc, stamp).encode(doc.output_encoding or "utf-8")
+    layers, blocks = count_entities(doc)
+    return {"dxf": data, "layers": layers, "blocks": blocks}
+
+
+def finish_draft(doc, dxf_path, layers_file=None, stamp_date=None, seed=None) -> dict:
+    """A DXF in development (an ezdxf document) whose entities sit on layers named by their ROLE (`plan.ELEC-LUM`) becomes the deliverable: every role layer is renamed
+    and given the look the catalog says, the entities follow and the file is saved (with `stamp_date`, an ISO date or datetime, the file carries that date and GUIDs derived from it and `seed`, so the same drawing gives the same bytes). Returns {"dxf": path, "layers": {name: entities}, "blocks": inserts}."""
+    _role_layers_to_catalog(doc, layers_file)
     Path(dxf_path).parent.mkdir(parents=True, exist_ok=True)
     _stamp.save(doc, str(dxf_path), _stamp.parse(stamp_date, seed if seed is not None else Path(dxf_path).stem))
     layers, blocks = count_entities(doc)                       # the document that was just written: no need to read the file again
@@ -92,8 +106,10 @@ def layers_used(dxf: Path) -> Dict[str, int]:
 def convert_document(svg_text: str, *, symbol_library=None, layers_file=None, a3: Optional[bool] = None, stamp_date=None, seed: str = "drawing") -> dict:
     """SVG in development -> DXF deliverable, all in memory: nothing is read from or written to a folder except the symbol library the caller names.
     Returns {"doc": the ezdxf document, "stamp": the stamp to save it with, "blocks": ..., "layers": ..., "messages": [...]}."""
+    from epc_dxf import bloques_dxf
     catalog = _L.load(layers_file)
     stamp = _stamp.parse(stamp_date, seed)
+    symbol_library = bloques_dxf.as_library(symbol_library) if symbol_library else None       # a folder is read once here; a `SymbolLibrary` comes in as data
     svg, instances = _prepare(svg_text, symbol_library)
     doc = _stamp.reload(svg_to_dxf.convertir(svg, stamp), stamp)      # as the file that was saved and read again
     height = float(re.search(r'height="([\d.]+)mm"', svg_text).group(1)) if instances else 0.0
