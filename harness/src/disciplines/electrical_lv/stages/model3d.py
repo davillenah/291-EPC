@@ -5,7 +5,7 @@ plan to `epc_plan.solid`; `epc_plan.detail` turns the runs into the parts they a
 `epc_plan.scene3d` writes the model and cuts the sections.
 
     "model3d": {"floors": {"PB": {"wall_height_m": 2.8, "door_head_m": 2.05, "window_sill_m": 0.9, "window_head_m": 2.1, "slab_m": 0.2, "elevation_m": 0.0}},     # every routed floor, all heights: none is assumed
-                "supports": {"spacing_m": 1.5},                               # optional: without it no support is drawn (the spacing comes from the standard and the manufacturer); with "mount": "wall" and "reach_m" they are brackets on the walls
+                "supports": {"spacing_m": 1.5},                               # optional: without it no support is drawn (the spacing comes from the standard and the manufacturer); with "mount": "wall" and "reach_m" they are brackets on the walls (and "heavy_over_m": the heavy bracket for trays wider than that)
                 "ladder_trays": {"layers": ["ELEC-BANDEJA"], "kinds": {"ELEC-BANDEJA": "perforada"}, "cover": False},    # optional: the trays are ladder trays by default; false = swept boxes
                 "sections": [{"name": "A", "axis": "x", "at_m": 12.0, "look": "+", "depth_m": 3.0}],     # optional: the detail sections to cut (depth_m optional)
                 "elevations": [{"floor": "PB", "side": "S"}]}                  # optional: the elevations of the building of a floor (N, S, E or W), on the IRAM sheet
@@ -46,9 +46,9 @@ def _elevation_errors(elevations, routing):
 
 def _is_supports(given):
     """Supports: hangers under the slab (the default) or, with `mount: "wall"`, brackets on the wall beside the tray, which need `reach_m` (the engineer's value, none assumed)."""
-    if not isinstance(given, dict) or not set(given) <= {"spacing_m", "rod_m", "channel_m", "overhang_m", "mount", "reach_m"} or "spacing_m" not in given:
+    if not isinstance(given, dict) or not set(given) <= {"spacing_m", "rod_m", "channel_m", "overhang_m", "mount", "reach_m", "heavy_over_m"} or "spacing_m" not in given:
         return False
-    return given.get("mount", "slab") == "slab" and "reach_m" not in given or given.get("mount") == "wall" and "reach_m" in given
+    return given.get("mount", "slab") == "slab" and not {"reach_m", "heavy_over_m"} & set(given) or given.get("mount") == "wall" and "reach_m" in given
 
 
 def _is_ladder(given):
@@ -88,7 +88,7 @@ def errors_of(given, routing):
         return ["model3d: {floors: {floor id: heights}, supports?: {spacing_m}, sections?: [...]}"]
     out = _floor_errors(given["floors"], routing)
     if "supports" in given and not _is_supports(given["supports"]):
-        out.append("model3d/supports: {spacing_m, rod_m?, channel_m?, overhang_m?} or {spacing_m, mount: 'wall', reach_m}")
+        out.append("model3d/supports: {spacing_m, rod_m?, channel_m?, overhang_m?} or {spacing_m, mount: 'wall', reach_m, heavy_over_m?}")
     return out + _tray_errors(given) + _section_errors(given.get("sections", [])) + _elevation_errors(given.get("elevations", []), routing)
 
 
@@ -129,7 +129,7 @@ def _supports(given, services, building):
     if "supports" not in given:
         return []
     if given["supports"].get("mount") == "wall":
-        return wall_brackets(services, [s for s in building if s["kind"] == "wall"], {k: given["supports"][k] for k in ("spacing_m", "reach_m")})
+        return wall_brackets(services, [s for s in building if s["kind"] == "wall"], {k: given["supports"][k] for k in ("spacing_m", "reach_m", "heavy_over_m") if k in given["supports"]})
     return detail.supports(services, _hangers(given))
 
 

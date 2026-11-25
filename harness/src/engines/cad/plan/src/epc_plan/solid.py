@@ -152,7 +152,7 @@ def _add_solid(msp, s: Dict[str, Any], layer, params) -> int:
     """The axis of a solid as a 3D polyline and its body as faces. Returns how many entities were added."""
     attribs = {"layer": layer(s["layer"])} if s["layer"] else {}
     msp.add_polyline3d([tuple(p) for p in s["path"]], dxfattribs=attribs)
-    m = mesh(s, params)
+    m = s.get("mesh") or mesh(s, params)                       # a part that brings its own mesh keeps it
     for f in m["faces"]:
         msp.add_3dface([tuple(m["vertices"][i]) for i in f], dxfattribs=attribs)
     return 1 + len(m["faces"])

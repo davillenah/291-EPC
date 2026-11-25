@@ -34,3 +34,13 @@ def test_the_nearer_wall_of_the_two_sides_wins_and_a_far_wall_gets_nothing():
 def test_the_spec_needs_both_values():
     with pytest.raises(core.PlanError):
         wall_bracket.brackets([TRAY], [], {"spacing_m": 2.0})
+
+
+def test_a_tray_wider_than_the_given_width_gets_the_heavy_bracket_on_the_wall():
+    made = wall_bracket.brackets([TRAY], [wall(0.4, 0.6)], dict(SPEC, heavy_over_m=0.25))
+    assert [m["support"] for m in made] == ["wall_bracket_heavy"] * 2
+    ys = [v[1] for v in made[0]["mesh"]["vertices"]]
+    assert max(ys) == pytest.approx(0.4)                                        # the plate is still against the wall
+    assert wall_bracket.brackets([TRAY], [wall(0.4, 0.6)], dict(SPEC, heavy_over_m=0.5))[0]["support"] == "wall_bracket"
+    with pytest.raises(core.PlanError):
+        wall_bracket.brackets([TRAY], [wall(0.4, 0.6)], dict(SPEC, heavy_over_m=-1))
