@@ -66,7 +66,7 @@ def test_cover_adds_a_lid_over_the_rails():
     p = {"rail": 0.002, "rung": 0.03, "rung_thick": 0.015, "rung_pitch": 0.3}
     open_tray = tray_solid.ladder_mesh([(0, 0, 0), (1, 0, 0)], 0.3, 0.09, p)
     closed = tray_solid.ladder_mesh([(0, 0, 0), (1, 0, 0)], 0.3, 0.09, dict(p, cover=0.004))
-    assert len(closed["faces"]) == len(open_tray["faces"]) + 1
+    assert len(closed["faces"]) == len(open_tray["faces"]) + 6          # the lid is a closed plate
     assert max(v[2] for v in closed["vertices"]) > max(v[2] for v in open_tray["vertices"])
 
 
@@ -79,8 +79,8 @@ def test_every_tray_kind_has_a_mesh():
     counts = {k: len(tray_solid.tray_mesh(path, 0.3, 0.09, p, k)["faces"]) for k in ("escalera", "perforada", "ciega", "alambre", "canal")}
     assert all(c > 0 for c in counts.values())
     assert counts["perforada"] > counts["ciega"]                     # the slots split the floor
-    assert counts["canal"] == 3 * 2                                  # a U channel is floor and two walls on each of the two stretches
-    assert counts["alambre"] > counts["escalera"]                    # a mesh is many wires
+    assert counts["canal"] == 3 * 6 * 2                              # a U channel is floor and two walls, each a closed plate, on each of the two stretches
+    assert counts["alambre"] > 100 and counts["alambre"] > 10 * counts["canal"]     # a mesh is many wires
     with pytest.raises(core.PlanError):
         tray_solid.tray_mesh(path, 0.3, 0.09, p, "nope")
 
@@ -112,3 +112,15 @@ class TestPerforatedFloor(unittest.TestCase):
         self.assertGreater(len(perforated["faces"]), len(solid["faces"]) + 6 * 25 * 6 - 10)          # 6 columns x 25 rows of holes, six faces around each
         floor = [f for f in perforated["faces"] if all(abs(perforated["vertices"][i][2] + 0.045) < 1e-9 for i in f)]
         self.assertGreater(len(floor), 900)
+
+
+def test_catalogue_rail_has_the_fold_hook_and_return_lip_and_a_real_thickness():
+    from epc_plan import tray_solid
+    section = tray_solid.rail_section(0.065, 0.015, 0.026, 0.007, 0.004)
+    assert section[0] == (0.015, 0.007) and section[1] == (0.015, 0.0) and section[2] == (0.0, 0.0)     # the foot turned in with its return lip
+    assert max(h for _, h in section) == 0.065                                                        # the hook ends at the rail height
+    assert max(x for x, _ in section) > 0.004                                                         # the S fold and the hook go inward
+    outline = tray_solid.rail_outline(section, 0.002)
+    assert len(outline) == 2 * len(section)
+    xs = [x for x, _ in outline]
+    assert min(xs) < -0.0009 and min(xs) > -0.0011                                                    # the web is 2 mm thick: 1 mm outside its centre line

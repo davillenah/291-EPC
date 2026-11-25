@@ -15,7 +15,7 @@ TRAY_LAYER, SUPPORT_LAYER, FASTENER_LAYER = "ELEC-BANDEJA", "MEC-SOPORTE", "MEC-
 
 def _sizes() -> Tuple[Dict[str, float], Dict[str, float], float]:
     ladder = core.PARAMS["detail"]["ladder"]
-    keys = ("rail", "rung", "rung_thick", "rung_pitch", "foot", "curl", "slot_pitch", "slot", "slot_height", "floor_margin", "hole_pitch", "hole", "wire", "wire_pitch", "joint", "bolt")
+    keys = ("rail", "rung", "rung_thick", "rung_pitch", "foot", "curl", "lip", "jog", "slot_pitch", "slot", "slot_height", "floor_margin", "hole_pitch", "hole", "wire", "wire_pitch", "joint", "bolt")
     return {k: ladder[k + "_m"] for k in keys}, core.PARAMS["detail"]["library"], ladder["elbow_radius_m"]
 
 
