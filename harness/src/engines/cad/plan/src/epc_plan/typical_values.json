@@ -286,6 +286,12 @@
       "tray_300x90_3m_kg": 8,
       "union_materials_g": 90
     },
+    "threads": {
+      "note": "Not printed in the catalogue: the standard pitch of the thread each bolt set names (BSW for 3/8 inch Whitworth, ISO coarse for M6); the pack of 100 units is printed.",
+      "3/8": {"standard": "BSW", "threads_per_inch": 16, "pitch_mm": 1.5875, "major_mm": 9.525},
+      "M6": {"standard": "ISO coarse", "pitch_mm": 1.0, "major_mm": 6.0},
+      "pack_units": 100
+    },
     "load_test": {
       "span_m": 1.5,
       "tray_length_m": 6,

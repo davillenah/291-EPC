@@ -47,3 +47,8 @@ def ladder(q: Dict[str, Any], cat: Dict[str, Any]) -> Dict[str, Any]:
     return {**q, "rail_m": rail_thickness_mm(cat, 90, finish) / 1000, "cover_m": cover_thickness_mm(cat, min(cat["widths_mm"]), finish) / 1000,
             "cover_wide_m": cover_thickness_mm(cat, widest, finish) / 1000, "cover_wide_from_m": (min(wide) if wide else widest) / 1000,
             "elbow_radius_m": cat["inner_bend_radius_mm"] / 1000, "vertical_links": cat["articulated_bend"]["links"], "joint_m": cat["length_mm"] / 1000}
+
+
+def thread_turns(cat: Dict[str, Any], size: str, length_mm: float) -> int:
+    """The turns of the thread over a threaded length: the length over the pitch of the named bolt (`3/8` or `M6`), rounded down."""
+    return int(length_mm / cat["threads"][size]["pitch_mm"] + 1e-9)

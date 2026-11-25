@@ -19,6 +19,11 @@ def _sizes() -> Tuple[Dict[str, float], Dict[str, float], float]:
     return {k: ladder[k + "_m"] for k in keys}, core.PARAMS["detail"]["library"], ladder["elbow_radius_m"]
 
 
+def _pitch(size: str) -> float:
+    """The pitch of the thread of a bolt set, in metres (the catalogue block `threads`)."""
+    return core.PARAMS["tray_catalogue"]["threads"][size]["pitch_mm"] / 1000
+
+
 def _piece(code: Dict[str, Any], group: str, layer: str, mesh: Dict[str, list], tag_of: str = "") -> Dict[str, Any]:
     xs = [v[0] for v in mesh["vertices"]] or [0.0, 0.0]
     return {"id": code["code"], "tag": code["code"], "code": code["code"], "name": code["name"], "group": group, "layer": layer, "kind": "tray_part", "discipline": "electricidad",
@@ -141,7 +146,7 @@ def _supports(width: float, depth: float) -> List[Dict[str, Any]]:
 def _fasteners() -> List[Dict[str, Any]]:
     q = _sizes()[1]
     m = f"M{round(q['bolt_m'] * 1000)}"
-    named = [(tray_code.part("bolt", f"{m}x{round(q['bolt_len_m'] * 1000)}"), H.bolt(q)), (tray_code.part("nut", m), H.nut(q)), (tray_code.part("washer", m), H.washer(q)),
+    named = [(tray_code.part("bolt", f"{m}x{round(q['bolt_len_m'] * 1000)}"), H.bolt(q, _pitch("M6"))), (tray_code.part("nut", m), H.nut(q)), (tray_code.part("washer", m), H.washer(q)),
              (tray_code.part("coupler", f"M{round(q['rod_m'] * 1000)}"), H.coupler(q))]
     return [_piece(c, "fastener", FASTENER_LAYER, mesh) for c, mesh in named]
 
@@ -151,9 +156,9 @@ def _accessories(width: float, depth: float) -> List[Dict[str, Any]]:
     mm = lambda x: round(x * 1000)                                          # noqa: E731
     named = [(_tray_code("escalera", width, depth, "bracket_adjustable"), A.adjustable_bracket(q, width, 0.15)), (_tray_code("escalera", width, depth, "splice_lateral"), A.lateral_splice(q, depth)),
              (_tray_code("escalera", width, depth, "union_articulated"), A.articulated_union(q, depth)), (tray_code.part("mounting_plate", f"{mm(q['plate_m'])}x{mm(q['plate_m'])}"), A.mounting_plate(q)),
-             (tray_code.part("carriage_bolt", f"M{mm(q['bolt_m'])}x{mm(q['bolt_len_m'])}"), A.carriage_bolt(q, q["bolt_m"])),
-             (tray_code.part("carriage_bolt", f"3-8x{mm(q['bolt_len_m'])}"), A.carriage_bolt(q, q["bolt38_m"])),
-             (tray_code.part("retainer_bolt", f"M{mm(q['bolt_m'])}"), A.retainer_bolt(q)), (tray_code.part("suspension_clamp", f"M{mm(q['rod_m'])}"), A.suspension_clamp(q)),
+             (tray_code.part("carriage_bolt", f"M{mm(q['bolt_m'])}x{mm(q['bolt_len_m'])}"), A.carriage_bolt(q, q["bolt_m"], _pitch("M6"))),
+             (tray_code.part("carriage_bolt", f"3-8x{mm(q['bolt_len_m'])}"), A.carriage_bolt(q, q["bolt38_m"], _pitch("3/8"))),
+             (tray_code.part("retainer_bolt", f"M{mm(q['bolt_m'])}"), A.retainer_bolt(q, _pitch("M6"))), (tray_code.part("suspension_clamp", f"M{mm(q['rod_m'])}"), A.suspension_clamp(q)),
              (tray_code.part("fixing_clamp", f"M{mm(q['bolt_m'])}"), A.fixing_clamp(q)), (tray_code.part("ground_clamp", f"M{mm(q['bolt_m'])}"), A.grounding_clamp(q))]
     return [_piece(c, "support" if "BN" in c["code"] or "PUM" in c["code"] else "fastener", SUPPORT_LAYER if "BN" in c["code"] or "PUM" in c["code"] else FASTENER_LAYER, m) for c, m in named]
 
