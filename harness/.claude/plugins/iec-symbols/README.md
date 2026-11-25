@@ -26,11 +26,11 @@ This plugin is packaging only. The code lives in `harness/src/engines/cad/drawin
 
 | | |
 |---|---|
-| Incluye (motor) | `symbols` |
+| Incluye (motor) | `draw`, `dxf`, `symbols` |
 | Es dueño de | `symbols` |
 | Necesita (plugins) | — |
 | Lo necesitan | `board-design`, `mld`, `plan-drawing`, `sld` |
-| Paquetes de Python | — |
+| Paquetes de Python | `ezdxf`, `lxml`, `shapely`, `svgelements`, `vtracer` |
 | Si lo modificas, revisa | plugins `board-design`, `mld`, `plan-drawing`, `sld`; módulos del backend — |
 
 Generado por `python harness/tools/build/regen_plugins.py`; el mapa completo está en `harness/docs/architecture/DEPENDENCIAS.md`.

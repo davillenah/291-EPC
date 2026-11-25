@@ -9,7 +9,7 @@ import pathlib
 
 import ezdxf
 
-LIB = pathlib.Path(__file__).resolve().parents[2] / "src" / "epc_symbols" / "library" / "sld-lv-symbol"
+LIB = pathlib.Path(__file__).resolve().parents[2] / "src" / "epc_draw" / "symbols" / "library" / "sld-lv-symbol"
 PREFIX = "291_E_LV_SLD_IEC60617_"
 W, H, STUB = 24.0, 20.0, 2.5      # box width, port to port height, stub length (mm; ports on the 2.5 mm grid)
 BLUE = "#0000ff"

@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "epc_symbols catalogue (_catalog.json of one library)",
+  "title": "epc_draw.symbols catalogue (_catalog.json of one library)",
   "type": "object",
   "required": ["symbols"],
   "properties": {

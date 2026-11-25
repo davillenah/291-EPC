@@ -1,6 +1,6 @@
 """Places a library symbol in a DXF document as a block reference (INSERT), the way every drawing engine must (PRD-symbols, SYM-01).
 
-The symbol library (`epc_symbols`) depends on nothing, so it only says where a block is: `epc_symbols.registry.dxf_block(id, view)` gives (file, block name) and this module does the DXF part.
+The symbol library (`epc_draw.symbols`) depends on nothing, so it only says where a block is: `epc_draw.symbols.registry.dxf_block(id, view)` gives (file, block name) and this module does the DXF part.
 """
 from pathlib import Path
 from typing import Optional, Tuple

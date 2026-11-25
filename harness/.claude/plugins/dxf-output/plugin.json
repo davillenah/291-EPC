@@ -38,7 +38,6 @@
   ],
   "engine": [
     "draw",
-    "dxf",
-    "symbols"
+    "dxf"
   ]
 }

@@ -12,7 +12,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
-from epc_symbols import KINDS, library_dir
+from epc_draw.symbols import KINDS, library_dir
 
 # library -> (domain, view)
 DOMAINS: Dict[str, Tuple[str, str]] = {

@@ -40,7 +40,7 @@ class DeliverableBytes(unittest.TestCase):
 
     def test_the_symbol_library_comes_in_as_data(self):
         from epc_dxf import bloques_dxf
-        from epc_symbols import library_dir
+        from epc_draw.symbols import library_dir
         folder = library_dir("sld-lv-symbol")
         sid = sorted(bloques_dxf.load_library(folder).catalog)[0]
         svg = ('<svg xmlns="http://www.w3.org/2000/svg" width="100mm" height="50mm"><g class="sym" data-sid="%s" transform="translate(10,10)">'

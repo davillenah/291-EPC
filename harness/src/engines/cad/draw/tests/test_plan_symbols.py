@@ -1,7 +1,7 @@
 """SYM-04: the unit symbols of the electrical plan live in the symbol engine, not in `epc_plan`."""
 import unittest
 
-from epc_symbols import plan_symbols
+from epc_draw.symbols import plan_symbols
 
 
 class PlanSymbols(unittest.TestCase):

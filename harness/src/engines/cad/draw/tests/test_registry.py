@@ -5,7 +5,7 @@ import unittest
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
-from epc_symbols import KINDS, library_dir, registry as R  # noqa: E402
+from epc_draw.symbols import KINDS, library_dir, registry as R  # noqa: E402
 
 
 class TestResolve(unittest.TestCase):

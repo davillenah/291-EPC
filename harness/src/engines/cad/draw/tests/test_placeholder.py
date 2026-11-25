@@ -1,8 +1,8 @@
 """A symbol the library does not have is drawn as a box with its name inside (owner rule, 2026-11-24)."""
 import unittest
 
-import epc_symbols
-from epc_symbols import SymbolsError, UnknownSymbol, placeholder, resolve
+from epc_draw import symbols as epc_symbols
+from epc_draw.symbols import SymbolsError, UnknownSymbol, placeholder, resolve
 
 
 class TestPlaceholder(unittest.TestCase):

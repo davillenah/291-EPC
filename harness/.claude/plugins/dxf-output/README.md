@@ -8,7 +8,7 @@ The default catalog travels with the package; the global file the MASTER edits (
 
 | | |
 |---|---|
-| Incluye (motor) | `draw`, `dxf`, `symbols` |
+| Incluye (motor) | `draw`, `dxf` |
 | Es dueño de | `dxf` |
 | Necesita (plugins) | — |
 | Lo necesitan | `board-design`, `iram-titleblock`, `mld`, `plan-drawing`, `sld` |
