@@ -29,3 +29,11 @@ The fields are those of the title block (`service.FIELDS`); `service.project_req
 of a request. A field nobody gives stays blank. Command line: `python -m epc_draw.titleblock.service request.json out_dir [--dxf]`; one sheet by hand: `python -m epc_draw.titleblock.sheet_generator A4 out.svg`.
 
 The old name `epc_titleblock` is a door to this package.
+
+## Single-line diagram (`epc_draw.sld`)
+
+
+Single-line diagram of a board on IRAM sheets (SVG and DXF per sheet, plus the circuit table). It only draws: the calculation (`SLD_CALC_JSON`, `SLD_CALC_DETAIL`) and the board figures (`SLD_FIGURES_JSON`) come from `epc_aea90364`. Use it through `epc_drawing.board_design`.
+Needs `epc_aea90364`; the symbols, the title block (it asks for its sheets) and the deliverable are in `epc_draw`. Example workbook: `examples/sld/`.
+
+The old name `epc_sld` is a door to this package.

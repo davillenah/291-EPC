@@ -1,9 +1,9 @@
 """Draws an SLD in one or several sheets from ONE workbook, as a function (ADR-0038).
 `paginate(lib, xlsx, out, name, lamina, modblock, maxl=18, environ=None, stamp_date=None)` splits the roots (and their descendants) into sheets of up to `maxl` leaf circuits and
 draws each one in process with `sld_generator.generate`; if all fit in one sheet only <NAME> is drawn. The calculation and the sheet options come in `environ`, never from the process.
-Command line (thin adapter): python -m epc_sld.sld_paginate <lib> <input.xlsx> <out_dir> <NAME> <lamina.svg> <mod_block.svg> [max_salidas=18]"""
+Command line (thin adapter): python -m epc_draw.sld.sld_paginate <lib> <input.xlsx> <out_dir> <NAME> <lamina.svg> <mod_block.svg> [max_salidas=18]"""
 import sys, os
-from epc_sld import board_table, sld_generator
+from epc_draw.sld import board_table, sld_generator
 
 
 def _circuits(xlsx):

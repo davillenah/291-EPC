@@ -29,6 +29,7 @@
     "requires": [
       "ezdxf",
       "lxml",
+      "openpyxl",
       "shapely",
       "svgelements",
       "vtracer"
@@ -42,9 +43,18 @@
     "source": "291_E_IEC60617_Symbols_Generator"
   },
   "engine": [
+    "aea90364",
+    "calc_common",
     "draw",
     "dxf",
-    "symbols"
+    "feeder_sizing",
+    "grounding",
+    "load_balance",
+    "selectivity",
+    "short_circuit",
+    "symbols",
+    "titleblock",
+    "voltage_drop"
   ],
   "owns": [
     "symbols"

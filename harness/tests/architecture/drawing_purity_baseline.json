@@ -24,11 +24,11 @@
  "harness/src/engines/cad/plan/src/epc_plan/underlay.py": {
   "tempfile": 1
  },
- "harness/src/engines/cad/sld/src/epc_sld/sld_generator.py": {
+ "harness/src/engines/cad/draw/src/epc_draw/sld/sld_generator.py": {
   "clock": 1,
   "environment": 1
  },
- "harness/src/engines/cad/sld/src/epc_sld/sld_paginate.py": {
+ "harness/src/engines/cad/draw/src/epc_draw/sld/sld_paginate.py": {
   "environment": 1
  },
  "harness/src/engines/cad/draw/src/epc_draw/titleblock/service.py": {

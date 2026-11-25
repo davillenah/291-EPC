@@ -37,6 +37,7 @@
       "ezdxf",
       "lxml",
       "numpy",
+      "openpyxl",
       "pillow",
       "pypdfium2",
       "shapely",
@@ -49,11 +50,19 @@
     "plan"
   ],
   "engine": [
+    "aea90364",
     "arch",
+    "calc_common",
     "draw",
     "dxf",
+    "feeder_sizing",
+    "grounding",
+    "load_balance",
     "plan",
+    "selectivity",
+    "short_circuit",
     "symbols",
-    "titleblock"
+    "titleblock",
+    "voltage_drop"
   ]
 }

@@ -6,9 +6,9 @@ from pathlib import Path
 from unittest import mock
 
 ENGINES = Path(__file__).resolve().parents[3]                # harness/src/engines: one folder per group (cad, calculation, ...)
-sys.path[:0] = [str(ENGINES / g / a / "src") for g, a in (("cad", "sld"), ("calculation", "aea90364"), ("cad", "symbols"), ("cad", "titleblock"), ("cad", "dxf"))]
+sys.path[:0] = [str(ENGINES / g / a / "src") for g, a in (("cad", "draw"), ("calculation", "aea90364"))]
 
-from epc_sld import sld_generator as G   # noqa: E402
+from epc_draw.sld import sld_generator as G   # noqa: E402
 
 
 def bare_sheet(stamp_date):

@@ -6,14 +6,14 @@ la tabla, las referencias, el rótulo, y entregar (SVG y DXF). El dibujo no calc
 """
 import sys, os, math, json, textwrap, datetime, re
 from xml.sax.saxutils import escape as xesc
-from epc_sld import board_table
+from epc_draw.sld import board_table
 from lxml import etree
 try:
     import cairosvg  # optional: only needed for PNG previews; requires the Cairo DLL on Windows
 except (ImportError, OSError):
     cairosvg = None
-from epc_dxf import roles as ROLES
-from epc_symbols import library_dir, resolve, UnknownSymbol
+from epc_draw.core import roles as ROLES
+from epc_draw.symbols import library_dir, resolve, UnknownSymbol
 
 from epc_aea90364.aea_pipeline import TOPOLOGIAS_MOTOR         # which topologies are motors (the choice of symbols); the numbers come from the calculation
 
@@ -654,7 +654,7 @@ class _Sheet:
         """El rótulo de la hoja y su bloque de modificaciones: se piden al servicio de epc_titleblock, o se leen de las láminas dadas."""
         if self.lamina != 'default':
             return open(self.lamina, encoding='utf-8').read(), open(self.modblock, encoding='utf-8').read()
-        from epc_titleblock import service as TBS     # los datos del proyecto vienen en EPC_TITLEBLOCK_JSON; sin Excel ni subprocesos
+        from epc_draw.titleblock import service as TBS     # los datos del proyecto vienen en EPC_TITLEBLOCK_JSON; sin Excel ni subprocesos
         env, name = self.env, self.name
         pedido = json.load(open(env['EPC_TITLEBLOCK_JSON'], encoding='utf-8')) if env.get('EPC_TITLEBLOCK_JSON') else {}
         nombres = env.get('SLD_NAMES', name).split(',')
@@ -666,7 +666,7 @@ class _Sheet:
 
     def issue_date(self):
         """La fecha de emisión del rótulo (dd/mm/aaaa): la fecha del plano si se dio (`EPC_STAMP_DATE`), la de hoy si no."""
-        from epc_dxf import stamp
+        from epc_draw.core import stamp
         moment = stamp.moment_of(self.stamp_date)
         return (moment.date() if moment else datetime.date.today()).strftime('%d/%m/%Y')
 
@@ -732,7 +732,7 @@ class _Sheet:
 
     def files(self, final):
         """The sheet as data: ({file name: bytes}, notes). The SVG, its DXF through epc_dxf (layers of the catalog, symbols as blocks, colour and stroke weight) and the calculation summary; nothing is written."""
-        from epc_dxf import deliverable as DL
+        from epc_draw.core import deliverable as DL
         made = DL.convert_bytes(final, symbol_library=self.lib, a3=self.a3, stamp_date=self.stamp_date, seed=self.name)
         summ = {t: dict(In=self.r[t]['In'], Ib=round(self.r[t]['Ib'], 1), icu=self.r[t]['icu'], S=self.r[t]['S'], dU=round(self.r[t]['dv'], 2), disp=self.r[t]['disp']) for t in self.tree}
         files = {self.name + '.svg': final.encode('utf-8'), self.name + '.dxf': made['dxf'],
@@ -801,7 +801,7 @@ def generate(lib, xlsx, out, name, lamina='default', modblock='default', environ
 
 
 def main(argv=None, environ=None) -> int:
-    """python -m epc_sld.sld_generator LIB XLSX OUT NAME LAMINA MODBLOCK (what sld_paginate runs for each sheet)."""
+    """python -m epc_draw.sld.sld_generator LIB XLSX OUT NAME LAMINA MODBLOCK (what sld_paginate runs for each sheet)."""
     args = sys.argv[1:] if argv is None else argv
     generate(*args[:6], environ=environ)
     return 0

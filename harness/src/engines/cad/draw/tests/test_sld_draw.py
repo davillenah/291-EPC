@@ -1,4 +1,4 @@
-"""The public function `epc_sld.draw` (DGM-16): it checks its input with bilingual coded errors and builds the generator environment from the contract, never from the process."""
+"""The public function `epc_draw.sld.draw` (DGM-16): it checks its input with bilingual coded errors and builds the generator environment from the contract, never from the process."""
 import os
 import sys
 import tempfile
@@ -10,8 +10,8 @@ HERE = Path(__file__).resolve().parent
 ENGINES = HERE.parents[2]
 sys.path[:0] = [str(d) for d in sorted(ENGINES.glob("*/*/src"))]
 
-from epc_sld import SldError, SldInput, draw  # noqa: E402
-from epc_sld import sld_paginate  # noqa: E402
+from epc_draw.sld import SldError, SldInput, draw  # noqa: E402
+from epc_draw.sld import sld_paginate  # noqa: E402
 from unittest import mock  # noqa: E402
 
 
@@ -73,7 +73,7 @@ class TestBoardTable(unittest.TestCase):
 
     def test_data_and_workbook_give_the_same_rows(self):
         import openpyxl
-        from epc_sld import board_table
+        from epc_draw.sld import board_table
         with tempfile.TemporaryDirectory() as t:
             wb = openpyxl.Workbook()
             ws = wb.active
@@ -95,7 +95,7 @@ class TestBoardTable(unittest.TestCase):
             self.assertEqual(trimmed(board_table.load(self.BOARD)[1][1:]), trimmed(board_table.load(str(path))[1][1:]))
 
     def test_an_empty_board_keeps_its_header(self):
-        from epc_sld import board_table
+        from epc_draw.sld import board_table
         rows = board_table.load({"tablero": {}, "circuitos": [], "columnas": ["TAG"]})[1]
         self.assertEqual(rows[1], ("TAG",))
 

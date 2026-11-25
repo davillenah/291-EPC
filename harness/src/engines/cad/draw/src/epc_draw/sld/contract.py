@@ -7,7 +7,7 @@ import sys
 from dataclasses import dataclass
 from typing import List, Optional
 
-from epc_sld.errors import SldError
+from epc_draw.sld.errors import SldError
 
 FORMATS = ("A1", "A3")
 
@@ -61,7 +61,7 @@ def environ_of(entrada: SldInput) -> dict:
 def draw_files(entrada: SldInput, name: str, maxl: int = 18, stamp_date: Optional[str] = None) -> dict:
     """`draw` with the sheets as data: {file name: bytes}. The engine writes nothing; the caller puts the bytes where it wants (ADR-0042). Same bytes as the files `draw` writes."""
     _check(entrada, maxl)
-    from epc_sld import sld_paginate
+    from epc_draw.sld import sld_paginate
     files, notes = sld_paginate.paginate_files(entrada.lib, entrada.board if entrada.board is not None else entrada.xlsx, name, entrada.lamina, entrada.modblock, maxl=maxl, environ=environ_of(entrada), stamp_date=stamp_date)
     for line in notes:
         print(line, file=sys.stderr)
@@ -72,5 +72,5 @@ def draw(entrada: SldInput, out_dir, name: str, maxl: int = 18, stamp_date: Opti
     """Draws the single-line diagram of one board into `out_dir` (SVG and DXF per sheet) and returns the names of the sheets, diagram sheets first, then the calculation table.
     `stamp_date` (an ISO date) fixes every date in the files, so the same input gives the same bytes. Raises `SldError` when the input is not valid."""
     _check(entrada, maxl)
-    from epc_sld import sld_paginate
+    from epc_draw.sld import sld_paginate
     return sld_paginate.paginate(entrada.lib, entrada.board if entrada.board is not None else entrada.xlsx, str(out_dir), name, entrada.lamina, entrada.modblock, maxl=maxl, environ=environ_of(entrada), stamp_date=stamp_date)
