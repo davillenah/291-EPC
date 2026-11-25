@@ -90,9 +90,53 @@ def _box(vertices: List[List[float]], faces: List[List[int]], centre: P3, axes: 
         faces.append([base + i for i in quad])
 
 
-def rail_section(depth: float, foot: float, curl: float) -> List[Tuple[float, float]]:
-    """The centre line of a cold-formed rail (a C with the bottom foot turned in and the top edge rolled), as (inward, height above the bottom) pairs."""
-    return [(foot, 0.0), (0.0, 0.0), (0.0, depth - curl), (curl / 3, depth - curl / 3), (curl, depth), (curl * 1.4, depth - curl / 3)]
+def rail_section(depth: float, foot: float, curl: float, lip: float = 0.0, jog: float = 0.0) -> List[Tuple[float, float]]:
+    """The centre line of a cold-formed rail, as (inward, height above the bottom) pairs: the bottom foot turned in (with its return `lip` up when given), the straight web, and over the top `curl` of the height
+    the S fold (`jog` deep) and the rolled hook, as in the catalogue sections. With no `lip` and no `jog` it is the plain C: foot, web and a small roll."""
+    if not jog:
+        return [(foot, 0.0), (0.0, 0.0), (0.0, depth - curl), (curl / 3, depth - curl / 3), (curl, depth), (curl * 1.4, depth - curl / 3)]
+    z = depth - curl
+    hook = [(0.0, z), (jog, z + 0.27 * curl), (0.25 * jog, z + 0.5 * curl), (0.5 * jog, z + 0.78 * curl),
+            (2.0 * jog, depth), (3.2 * jog, depth - 0.1 * curl), (3.6 * jog, depth - 0.3 * curl), (2.9 * jog, depth - 0.38 * curl)]
+    return ([(foot, lip)] if lip else []) + [(foot, 0.0), (0.0, 0.0)] + hook
+
+
+def _miter_offsets(section: Sequence[Tuple[float, float]], half: float) -> List[Tuple[float, float]]:
+    """For every point of an open polyline, the vector that moves it `half` to its left (mitred between the two segments, capped so a sharp fold cannot spike)."""
+    count = len(section)
+    normals = []
+    for (x0, y0), (x1, y1) in zip(section, section[1:]):
+        length = math.hypot(x1 - x0, y1 - y0) or 1.0
+        normals.append((-(y1 - y0) / length, (x1 - x0) / length))
+    offsets = []
+    for i in range(count):
+        a = normals[max(i - 1, 0)]
+        b = normals[min(i, count - 2)]
+        mx, my = a[0] + b[0], a[1] + b[1]
+        scale = 1.0 + a[0] * b[0] + a[1] * b[1]
+        k = half / max(scale, 0.4)
+        offsets.append((mx * k, my * k))
+    return offsets
+
+
+def rail_outline(section: Sequence[Tuple[float, float]], thick: float) -> List[Tuple[float, float]]:
+    """The closed outline of a rail of thickness `thick` whose centre line is `section`: the left side forward, then the right side back."""
+    off = _miter_offsets(section, thick / 2)
+    left = [(x + dx, y + dy) for (x, y), (dx, dy) in zip(section, off)]
+    right = [(x - dx, y - dy) for (x, y), (dx, dy) in zip(section, off)]
+    return left + right[::-1]
+
+
+def _sheet(vertices: List[List[float]], faces: List[List[int]], corners: Sequence[P3], direction: P3, thick: float) -> None:
+    """A plate: the four `corners` and the same corners moved `thick` along the unit vector `direction`, closed by its six faces."""
+    base = len(vertices)
+    vertices.extend([list(c) for c in corners])
+    vertices.extend([[c[k] + direction[k] * thick for k in range(3)] for c in corners])
+    faces.append([base, base + 1, base + 2, base + 3])
+    faces.append([base + 7, base + 6, base + 5, base + 4])
+    for i in range(4):
+        j = (i + 1) % 4
+        faces.append([base + i, base + j, base + 4 + j, base + 4 + i])
 
 
 def _quad(vertices: List[List[float]], faces: List[List[int]], corners: Sequence[P3]) -> None:
@@ -117,7 +161,8 @@ def _web(vertices: List[List[float]], faces: List[List[int]], a: P3, length: flo
             pieces.append((end, stop, mid + p["slot_height"], top))
         at = end + p["slot"]
     for s0, s1, h0, h1 in pieces:
-        _quad(vertices, faces, [tuple(a[k] + u[k] * x + n[k] * lateral + v[k] * (h - depth / 2) for k in range(3)) for x, h in ((s0, h0), (s1, h0), (s1, h1), (s0, h1))])
+        centre = tuple(a[k] + u[k] * (s0 + s1) / 2 + n[k] * lateral + v[k] * ((h0 + h1) / 2 - depth / 2) for k in range(3))
+        _box(vertices, faces, centre, axes, (s1 - s0, p["rail"], h1 - h0))
 
 
 def _rail_points(ends: Sequence[Tuple[P3, float]], leans: Sequence[P3], v: P3, side: int, section: Sequence[Tuple[float, float]], depth: float) -> List[List[float]]:
@@ -129,15 +174,18 @@ def _rail(vertices: List[List[float]], faces: List[List[int]], a: P3, b: P3, axe
           width_b: Optional[float] = None, ns: Optional[Tuple[P3, P3]] = None) -> None:
     """A rail as a sheet swept along a..b: one quad per segment of its section, the web with its side slots; with `width_b` the rail leans from `width` at a to `width_b` at b (a taper)."""
     u, n, v = axes
-    section = rail_section(depth, p["foot"], p["curl"])
+    section = rail_section(depth, p["foot"], p["curl"], p.get("lip", 0.0), p.get("jog", 0.0))
+    outline = rail_outline(section, p["rail"])
     base = len(vertices)
     slotted = "slot" in p and width_b is None
-    vertices.extend(_rail_points(((a, width), (b, width if width_b is None else width_b)), ns or (n, n), v, side, section, depth))
-    count = len(section)
-    for i in range(count - 1):
-        if i == 1 and slotted:
-            continue
-        faces.append([base + i, base + i + 1, base + count + i + 1, base + count + i])
+    vertices.extend(_rail_points(((a, width), (b, width if width_b is None else width_b)), ns or (n, n), v, side, outline, depth))
+    count = len(outline)
+    web = section.index((0.0, 0.0))
+    skipped = {web, count - 2 - web} if slotted else set()
+    for i in range(count):
+        if i not in skipped:
+            j = (i + 1) % count
+            faces.append([base + i, base + j, base + count + j, base + count + i])
     if slotted:
         _web(vertices, faces, a, math.dist(a, b), axes, side * width / 2, depth, p)
 
@@ -161,7 +209,7 @@ def _lid(vertices: List[List[float]], faces: List[List[int]], a: P3, b: P3, axes
     n, v = axes[1], axes[2]
     leans = ns or (n, n)
     corners = [tuple(e[k] + lean[k] * sy * (width / 2 + p["rail"]) + v[k] * (depth / 2 + p["cover"]) for k in range(3)) for e, sy, lean in ((a, -1, leans[0]), (b, -1, leans[1]), (b, 1, leans[1]), (a, 1, leans[0]))]
-    _quad(vertices, faces, corners)
+    _sheet(vertices, faces, corners, tuple(-x for x in v), p["cover"])
 
 
 def cover_mesh(path: Sequence[P3], width: float, depth: float, p: Dict[str, float]) -> Dict[str, list]:
@@ -239,7 +287,7 @@ def _floor(vertices: List[List[float]], faces: List[List[int]], a: P3, b: P3, ax
         else:
             at = length
     for s0, s1, y0, y1 in cells:
-        _quad(vertices, faces, [tuple(a[k] + u[k] * x + n[k] * y - v[k] * depth / 2 for k in range(3)) for x, y in ((s0, y0), (s1, y0), (s1, y1), (s0, y1))])
+        _sheet(vertices, faces, [tuple(a[k] + u[k] * x + n[k] * y - v[k] * depth / 2 for k in range(3)) for x, y in ((s0, y0), (s1, y0), (s1, y1), (s0, y1))], tuple(-x for x in v), p["rail"])
 
 
 def _tray_floor(vertices: List[List[float]], faces: List[List[int]], a: P3, b: P3, axes: Tuple[P3, P3, P3], width: float, depth: float, p: Dict[str, float], kind: str) -> None:
@@ -250,16 +298,21 @@ def _tray_floor(vertices: List[List[float]], faces: List[List[int]], a: P3, b: P
         _floor(vertices, faces, a, b, axes, width, depth, p, kind == "perforada")
 
 
-def _hole_cell(vertices: List[List[float]], faces: List[List[int]], at: P3, axes: Tuple[P3, P3, P3], size: Tuple[float, float], diameter: float) -> None:
-    """One square cell of the perforated floor: the sheet around a round hole (a hexagon of the given diameter). `at` is the centre of the cell, `size` its length and width."""
-    u, n = axes[0], axes[1]
+def _hole_cell(vertices: List[List[float]], faces: List[List[int]], at: P3, axes: Tuple[P3, P3, P3], size: Tuple[float, float], diameter: float, thick: float = 0.0) -> None:
+    """One square cell of the perforated floor: the sheet around a round hole (a hexagon of the given diameter), `thick` deep with the wall of the hole. `at` is the centre of the cell, `size` its length and width."""
+    u, n, v = axes[0], axes[1], axes[2]
     half_u, half_n, r = size[0] / 2, size[1] / 2, diameter / 2
     outer = [(-half_u, -half_n), (0.0, -half_n), (half_u, -half_n), (half_u, half_n), (0.0, half_n), (-half_u, half_n)]
     inner = [(r * math.cos(math.pi / 3 * k + math.pi / 6), r * math.sin(math.pi / 3 * k + math.pi / 6)) for k in range(6)]
     inner = [min(inner, key=lambda q, o=o: (q[0] - o[0] / 2) ** 2 + (q[1] - o[1] / 2) ** 2) for o in outer]
+    drop = tuple(-x * thick for x in v)
+    point = lambda x, y, low: tuple(at[j] + u[j] * x + n[j] * y + (drop[j] if low else 0.0) for j in range(3))    # noqa: E731
     for k in range(6):
         k2 = (k + 1) % 6
-        _quad(vertices, faces, [tuple(at[j] + u[j] * x + n[j] * y for j in range(3)) for x, y in (outer[k], outer[k2], inner[k2], inner[k])])
+        _quad(vertices, faces, [point(*outer[k], False), point(*outer[k2], False), point(*inner[k2], False), point(*inner[k], False)])
+        if thick:
+            _quad(vertices, faces, [point(*inner[k], True), point(*inner[k2], True), point(*outer[k2], True), point(*outer[k], True)])
+            _quad(vertices, faces, [point(*inner[k], False), point(*inner[k2], False), point(*inner[k2], True), point(*inner[k], True)])
 
 
 def _perforated(vertices: List[List[float]], faces: List[List[int]], a: P3, b: P3, axes: Tuple[P3, P3, P3], width: float, depth: float, p: Dict[str, float]) -> None:
@@ -269,7 +322,7 @@ def _perforated(vertices: List[List[float]], faces: List[List[int]], a: P3, b: P
     cols, rows = int((width - 2 * p["floor_margin"]) / pitch + 1e-9), int(length / pitch + 1e-9)
     side = (width - cols * pitch) / 2                                    # the margin and what is left of the width after the columns
     floor = tuple(a[k] - v[k] * depth / 2 for k in range(3))
-    sheet = lambda x0, x1, y0, y1: _quad(vertices, faces, [tuple(floor[k] + u[k] * x + n[k] * y for k in range(3)) for x, y in ((x0, y0), (x1, y0), (x1, y1), (x0, y1))])    # noqa: E731
+    sheet = lambda x0, x1, y0, y1: _sheet(vertices, faces, [tuple(floor[k] + u[k] * x + n[k] * y for k in range(3)) for x, y in ((x0, y0), (x1, y0), (x1, y1), (x0, y1))], tuple(-x for x in v), p["rail"])    # noqa: E731
     sheet(0, length, -width / 2, -width / 2 + side)
     sheet(0, length, width / 2 - side, width / 2)
     if rows * pitch < length - 1e-9:
@@ -277,7 +330,7 @@ def _perforated(vertices: List[List[float]], faces: List[List[int]], a: P3, b: P
     for i in range(rows):
         for j in range(cols):
             centre = tuple(floor[k] + u[k] * (i + 0.5) * pitch + n[k] * (-width / 2 + side + (j + 0.5) * pitch) for k in range(3))
-            _hole_cell(vertices, faces, centre, axes, (pitch, pitch), p["hole"])
+            _hole_cell(vertices, faces, centre, axes, (pitch, pitch), p["hole"], p["rail"])
 
 
 def _wire(vertices: List[List[float]], faces: List[List[int]], a: P3, b: P3, axes: Tuple[P3, P3, P3], width: float, depth: float, p: Dict[str, float]) -> None:
@@ -297,11 +350,13 @@ def _wire(vertices: List[List[float]], faces: List[List[int]], a: P3, b: P3, axe
         x += p["wire_pitch"]
 
 
-def _channel(vertices: List[List[float]], faces: List[List[int]], a: P3, b: P3, axes: Tuple[P3, P3, P3], width: float, depth: float) -> None:
-    """A U channel: the floor and the two walls, as sheets, with no return lip."""
+def _channel(vertices: List[List[float]], faces: List[List[int]], a: P3, b: P3, axes: Tuple[P3, P3, P3], width: float, depth: float, thick: float = 0.002) -> None:
+    """A U channel: the floor and the two walls, each a plate `thick` deep towards the outside, with no return lip."""
     n, v = axes[1], axes[2]
-    for (y0, z0), (y1, z1) in (((-width / 2, depth / 2), (-width / 2, -depth / 2)), ((-width / 2, -depth / 2), (width / 2, -depth / 2)), ((width / 2, -depth / 2), (width / 2, depth / 2))):
-        _quad(vertices, faces, [tuple(e[k] + n[k] * y + v[k] * z for k in range(3)) for e, y, z in ((a, y0, z0), (b, y0, z0), (b, y1, z1), (a, y1, z1))])
+    walls = (((-width / 2, depth / 2), (-width / 2, -depth / 2), tuple(-x for x in n)), ((-width / 2, -depth / 2), (width / 2, -depth / 2), tuple(-x for x in v)),
+             ((width / 2, -depth / 2), (width / 2, depth / 2), n))
+    for (y0, z0), (y1, z1), out in walls:
+        _sheet(vertices, faces, [tuple(e[k] + n[k] * y + v[k] * z for k in range(3)) for e, y, z in ((a, y0, z0), (b, y0, z0), (b, y1, z1), (a, y1, z1))], out, thick)
 
 
 def tray_mesh(path: Sequence[P3], width: float, depth: float, p: Dict[str, float], kind: str = "escalera") -> Dict[str, list]:
@@ -321,7 +376,7 @@ def tray_mesh(path: Sequence[P3], width: float, depth: float, p: Dict[str, float
             _wire(vertices, faces, a, b, axes, width, depth, p)
             continue
         if kind == "canal":
-            _channel(vertices, faces, a, b, axes, width, depth)
+            _channel(vertices, faces, a, b, axes, width, depth, p.get("rail", 0.002))
             continue
         _side_rails(vertices, faces, a, b, axes, width, depth, p, (turns[i], turns[i + 1]))
         _tray_floor(vertices, faces, a, b, axes, width, depth, p, kind)
@@ -358,7 +413,7 @@ def reducer_mesh(a: P3, b: P3, widths: Tuple[float, float], depth: float, p: Dic
     else:
         u, n, v = axes
         length = math.dist(a, b)
-        _quad(vertices, faces, [tuple(a[k] + u[k] * x + n[k] * y - v[k] * depth / 2 for k in range(3)) for x, y in ((0, -widths[0] / 2), (length, -widths[1] / 2), (length, widths[1] / 2), (0, widths[0] / 2))])
+        _sheet(vertices, faces, [tuple(a[k] + u[k] * x + n[k] * y - v[k] * depth / 2 for k in range(3)) for x, y in ((0, -widths[0] / 2), (length, -widths[1] / 2), (length, widths[1] / 2), (0, widths[0] / 2))], tuple(-x for x in v), p["rail"])
     return {"vertices": vertices, "faces": faces}
 
 
