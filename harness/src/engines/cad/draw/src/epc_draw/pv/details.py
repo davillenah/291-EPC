@@ -8,8 +8,8 @@ switch; the post profile of the structure. What a record does not give is drawn 
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
-from epc_drawing import pv_parts
-from epc_drawing.pv_diagrams import Pen, _layers, _new_doc
+from epc_draw.pv import parts as pv_parts
+from epc_draw.pv.diagrams import Pen, _layers, _new_doc
 
 TEXT = {
     "title": {"en": "PV EQUIPMENT DETAIL", "es": "DETALLE DEL EQUIPAMIENTO FOTOVOLTAICO"},
@@ -130,7 +130,7 @@ def build(parts: Dict[str, Any], language: str = "en"):
 
 def write(parts: Dict[str, Any], out_dir, name: str, language: str = "en", stamp_date=None) -> Optional[Path]:
     """Writes `<name>_equipment_detail.dxf` under `out_dir`; None when there is nothing to draw."""
-    from epc_dxf import deliverable
+    from epc_draw.core import deliverable
     doc = build(parts, language)
     if doc is None:
         return None

@@ -12,7 +12,7 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[3]
 SRC = REPO / "harness" / "src"
 REASON = re.compile(r"#\s*noqa:\s*BLE001\s+-\s+\S")                                  # the documented decision: "# noqa: BLE001 - <why>"
-ALLOWED = {"harness/src/engines/cad/drawing/src/epc_drawing/pv_freecad.py"}     # FreeCAD macro: Part.OCCError exists only inside FreeCAD
+ALLOWED = {"harness/src/engines/cad/draw/src/epc_draw/pv/freecad.py"}     # FreeCAD macro: Part.OCCError exists only inside FreeCAD
 
 
 def silent(body):

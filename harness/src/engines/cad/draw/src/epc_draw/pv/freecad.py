@@ -11,7 +11,7 @@ import json
 from pathlib import Path
 from typing import Any, Dict, Optional
 
-from epc_drawing import pv_model3d
+from epc_draw.pv import model3d as pv_model3d
 from epc_drawing.errors import DrawingError
 
 # ACI colour index of each layer -> RGB (0..1); a layer of the reference status family not listed here is drawn grey.

@@ -6,7 +6,7 @@ from pathlib import Path
 
 import ezdxf
 
-from epc_drawing import pv_details, pv_parts
+from epc_draw.pv import details as pv_details, parts as pv_parts
 
 DATA = Path(__file__).resolve().parents[3] / "calculation" / "pv" / "src" / "epc_pv" / "data"
 

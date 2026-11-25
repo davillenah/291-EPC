@@ -10,7 +10,7 @@ The raceway on the cabling plan is a reference (a line along the eave margin wit
 from pathlib import Path
 from typing import Any, Dict, List, Tuple
 
-from epc_drawing.pv_diagrams import PALETTE, Pen, _layers, _new_doc, _t
+from epc_draw.pv.diagrams import PALETTE, Pen, _layers, _new_doc, _t
 
 TEXT = {
     "roof_layout": {"en": "PV ROOF LAYOUT", "es": "IMPLANTACIÓN FOTOVOLTAICA EN CUBIERTA"},
@@ -169,7 +169,7 @@ def _inverters_of(a: Dict[str, Any]) -> List[Dict[str, Any]]:
 
 def _sld(roof: Dict[str, Any], result: Dict[str, Any], language: str):
     """The plant single-line diagram of a roof plant: the arrays of the run with their inverters (no positions) and strings, to the station."""
-    from epc_drawing import pv_diagrams as D
+    from epc_draw.pv import diagrams as D
     doc, style = D._new_doc(4)
     D._layers(doc, ("pv.DIAGRAM", "pv.TEXT", "pv.STATION"))
     pen = Pen(doc, style, 3.0)
@@ -183,7 +183,7 @@ def _sld(roof: Dict[str, Any], result: Dict[str, Any], language: str):
 
 def write_all(roof: Dict[str, Any], result: Dict[str, Any], out_dir, name: str, language: str = "en", stamp_date=None) -> Dict[str, Path]:
     """Writes `<name>_roof_layout.dxf`, `_roof_stringing.dxf`, `_roof_cabling.dxf` and `_roof_sld.dxf` (single-line) under `out_dir`; returns {plan name: path}."""
-    from epc_dxf import deliverable
+    from epc_draw.core import deliverable
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
     docs = {"roof_layout": _layout(roof, result, language), "roof_stringing": _stringing(roof, result, language), "roof_cabling": _cabling(roof, result, language), "roof_sld": _sld(roof, result, language)}

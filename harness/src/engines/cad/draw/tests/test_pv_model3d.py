@@ -8,7 +8,7 @@ from pathlib import Path
 
 import ezdxf
 
-from epc_drawing import pv_model3d
+from epc_draw.pv import model3d as pv_model3d
 
 PLANT = json.loads((Path(__file__).parent / "fixtures" / "pv_plant.json").read_text(encoding="utf-8"))
 
@@ -54,7 +54,7 @@ DATA = Path(__file__).resolve().parents[3] / "calculation" / "pv" / "src" / "epc
 
 
 def records():
-    from epc_drawing import pv_parts
+    from epc_draw.pv import parts as pv_parts
     return {"module": pv_parts.find_record(DATA / "pv_modules", "cs6_2_54tm_1961x1134x30"),
             "inverters": {"INV-01": pv_parts.find_record(DATA / "pv_inverters", "sma.stp25000tl-30")}}
 
@@ -105,7 +105,7 @@ class TestFoundation(unittest.TestCase):
 
 class TestPvModel3dStructure(unittest.TestCase):
     def test_a_post_section_comes_from_the_profile_dimensions_of_the_record(self):
-        from epc_drawing import pv_parts
+        from epc_draw.pv import parts as pv_parts
         for ident, folder, sides in (("carport_steel_s355", "ground", 1), ("ground_screw_fixed_table", "ground", 1), ("ramming_h_pile_fixed_table", "ground", 3), ("ramming_c_pile_fixed_table", "ground", 5)):
             rec = pv_parts.find_record(DATA / "mounting_structures" / folder, ident)
             section = pv_parts.post_section(rec)
@@ -114,7 +114,7 @@ class TestPvModel3dStructure(unittest.TestCase):
         self.assertIsNone(pv_parts.post_section(pv_parts.find_record(DATA / "mounting_structures" / "ground", "driven_pile_fixed_table")))   # section not given: reference post
 
     def test_posts_take_the_profile_and_go_to_the_layer_of_its_status(self):
-        from epc_drawing import pv_parts
+        from epc_draw.pv import parts as pv_parts
         g = geometry()
         parts = {"structure": pv_parts.find_record(DATA / "mounting_structures" / "ground", "carport_steel_s355")}
         doc = pv_model3d.build(g, PLANT["result"], parts)
@@ -126,7 +126,7 @@ class TestPvModel3dStructure(unittest.TestCase):
 
 class TestFreecadMacro(unittest.TestCase):
     def test_the_macro_is_valid_python_with_one_part_per_table_type_and_one_link_per_table(self):
-        from epc_drawing import pv_freecad
+        from epc_draw.pv import freecad as pv_freecad
         g = geometry()
         with tempfile.TemporaryDirectory() as tmp:
             done = pv_freecad.write(g, PLANT["result"], tmp, "PVT", parts=records())
@@ -141,7 +141,7 @@ class TestFreecadMacro(unittest.TestCase):
         self.assertIn("291-WS-TOPO-N", text)
 
     def test_a_layout_without_tables_is_refused(self):
-        from epc_drawing import pv_freecad
+        from epc_draw.pv import freecad as pv_freecad
         g = geometry()
         g["tables"] = []
         with tempfile.TemporaryDirectory() as tmp, self.assertRaises(ValueError):
@@ -150,7 +150,7 @@ class TestFreecadMacro(unittest.TestCase):
 
 class TestRoofModel(unittest.TestCase):
     def test_every_placed_module_is_six_faces_and_the_planes_are_slabs(self):
-        from epc_drawing import pv_roof_model3d
+        from epc_draw.pv import roof_model3d as pv_roof_model3d
         data = json.loads((Path(__file__).parent / "fixtures" / "pv_roof.json").read_text(encoding="utf-8"))
         with tempfile.TemporaryDirectory() as tmp:
             path = pv_roof_model3d.write(data["roof"], data["result"], tmp, "PVR", stamp_date="2026-11-20")
@@ -162,6 +162,6 @@ class TestRoofModel(unittest.TestCase):
         self.assertGreater(used["291-WS-OBST-N"], 0)
 
     def test_a_roof_without_planes_is_refused(self):
-        from epc_drawing import pv_roof_model3d
+        from epc_draw.pv import roof_model3d as pv_roof_model3d
         with self.assertRaises(ValueError):
             pv_roof_model3d.build({"planes": []}, {})

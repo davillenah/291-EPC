@@ -23,7 +23,7 @@ def draw_pv(entrada: PvDrawInput, out_dir: Any, name: str) -> Tuple[Dict[str, Pa
     """Writes the drafts the input asks for into `<out_dir>/pv_drafts` as `<name>_pv_*` and returns ({draft name: path}, the writers that ran, in order)."""
     if not isinstance(entrada, PvDrawInput):
         raise TypeError("draw_pv() takes a PvDrawInput")
-    from epc_drawing import pv_details, pv_diagrams, pv_roof
+    from epc_draw.pv import details as pv_details, diagrams as pv_diagrams, roof as pv_roof
     target = Path(out_dir) / "pv_drafts"
     stem, drafts, ran = f"{name}_pv", {}, []
     def detail() -> None:

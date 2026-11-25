@@ -3,7 +3,8 @@ import unittest
 from pathlib import Path
 from unittest import mock
 
-from epc_drawing import PvDrawInput, draw_pv, pv_details, pv_diagrams, pv_roof
+from epc_draw.pv import details as pv_details, diagrams as pv_diagrams, roof as pv_roof
+from epc_draw.pv.draw import PvDrawInput, draw_pv
 
 
 class TestDrawPv(unittest.TestCase):

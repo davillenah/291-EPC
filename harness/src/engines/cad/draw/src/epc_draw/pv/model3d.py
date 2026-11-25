@@ -12,7 +12,7 @@ import math
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
-from epc_drawing import pv_parts
+from epc_draw.pv import parts as pv_parts
 from epc_drawing.errors import DrawingError
 
 Point = Tuple[float, float, float]
@@ -133,7 +133,7 @@ def build(geometry: Dict[str, Any], result: Dict[str, Any], parts: Optional[Dict
     `parts` are the equipment records, `{"module": record, "inverters": {id: record}}`; without them the plain boxes are drawn. `level` is `low` (no detail), `standard` or `full` (one face per cell)."""
     parts = parts or {}
     import ezdxf
-    from epc_dxf import new_document
+    from epc_draw.core import new_document
     if not geometry.get("tables"):
         raise DrawingError("err_layout_no_tables")
     doc = new_document("R2018", setup=True)
@@ -168,7 +168,7 @@ def build(geometry: Dict[str, Any], result: Dict[str, Any], parts: Optional[Dict
 
 def write(geometry: Dict[str, Any], result: Dict[str, Any], out_dir, name: str, stamp_date=None, parts: Optional[Dict[str, Any]] = None, level: str = "standard") -> Path:
     """Writes `<name>_pv_model_3d.dxf` under `out_dir` (the stem keeps the `_model_3d` mark that sends it to the 3D folder of the transmittal)."""
-    from epc_dxf import deliverable
+    from epc_draw.core import deliverable
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
     path = out / f"{name}_pv_model_3d.dxf"
@@ -211,7 +211,7 @@ def _table_block(doc, geometry: Dict[str, Any], parts: Dict[str, Any], level: st
 
 def _new_document():
     import ezdxf
-    from epc_dxf import new_document
+    from epc_draw.core import new_document
     doc = new_document("R2018", setup=True)
     doc.units = 6
     for name, colour in LAYERS.items():
@@ -285,7 +285,7 @@ def build_common(geometry: Dict[str, Any], parts: Optional[Dict[str, Any]] = Non
 def write_assembly(geometry: Dict[str, Any], result: Dict[str, Any], out_dir, name: str, stamp_date=None, parts: Optional[Dict[str, Any]] = None, level: str = "standard", sector_modules: int = SECTOR_MODULES) -> Dict[str, Any]:
     """Writes the plant as parts and the assembly: `<name>_pv_model_3d_common.dxf`, `<name>_pv_model_3d_s01.dxf` ... one per sector, and the master `<name>_pv_model_3d.dxf` that attaches them as
     external references (same folder, relative names). Each part is saved and released before the next one is built. Returns {"master": path, "parts": [paths], "sectors": n}."""
-    from epc_dxf import deliverable
+    from epc_draw.core import deliverable
     if not geometry.get("tables"):
         raise DrawingError("err_layout_no_tables")
     out = Path(out_dir)
