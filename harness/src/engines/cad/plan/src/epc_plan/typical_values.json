@@ -288,7 +288,7 @@
     },
     "parts": {
       "note": "Which finish, gauge and rail heights each part of the ladder line comes in, as printed in the unit tables (own extract).",
-      "fittings": {"finish": "G", "gauges": ["18", "14"], "rail_heights_mm": [65, 90, 115, 150], "gauge_150": "14", "covers_finish": "G", "cover_widths_mm": [150, 300, 450, 600], "cross_cover_widths_mm": [150, 300, 450, 600, 750, 900]},
+      "fittings": {"Z": {"gauges": ["18"], "rail_heights_mm": [65, 90, 115]}, "G": {"gauges": ["18", "14"], "rail_heights_mm": [65, 90, 115, 150], "gauge_150": "14"}, "widths_mm": [150, 300, 450, 600], "cover_widths_mm": [150, 300, 450, 600], "cross_cover_widths_mm": [150, 300, 450, 600, 750, 900]},
       "barrier_strip": {"rail_heights_mm": [90, 115], "gauge_by_finish": {"Z": "22", "G": "18"}},
       "articulated_union": {"rail_heights_mm": [90, 115], "finish": "Z", "gauge": "18"},
       "supports_finish": {"wall_bracket": "Z", "heavy_bracket": "G", "trapeze": "Z", "adjustable_bracket": "Z", "mounting_plate": "Z", "suspension_clamp": "Z", "fixing_clamp": "Z", "lateral_splice": "Z", "splice_plate_traditional": "G"},
