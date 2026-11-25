@@ -105,6 +105,39 @@
    "note": "Widths 100-600 mm, height 50 mm; confirm with the catalogue."
   },
   {
+   "id": "plan.typical.sizing.tray_fill_max_pct",
+   "kind": "typical",
+   "title": {
+    "es": "Bandejas: ocupación máxima al dimensionar",
+    "en": "Trays: maximum fill when sizing"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "%",
+   "applies_to": "tray sizing",
+   "provenance": "typical",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/cad/plan/src/epc_plan/typical_values.json",
+    "pointer": "/sizing/tray_fill_max_pct"
+   },
+   "review_point": "table:plan-valores-tipicos|sizing:tray_fill_max_pct",
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "given by the owner (40 %, 'as the standard says'); no clause recorded: a person must confirm it against the standard"
+   ],
+   "note": "Limit used to choose the tray from the cables (number, system, section). Separate from occupancy.tray_pct, which is frozen (D15)."
+  },
+  {
    "id": "plan.typical.occupancy.default_cable_mm",
    "kind": "typical",
    "title": {
