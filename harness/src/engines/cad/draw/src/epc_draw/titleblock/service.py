@@ -18,8 +18,8 @@ import sys
 from pathlib import Path
 from typing import Any, Dict, List
 
-from epc_titleblock import layout, sheet_generator
-from epc_titleblock.logo import Logo, as_logo
+from epc_draw.titleblock import layout, sheet_generator
+from epc_draw.titleblock.logo import Logo, as_logo
 
 SCHEMA_VERSION = "1.0"
 FIELDS = ("formato", "proy_fecha", "proy_nombre", "ver_fecha", "ver_nombre", "val_fecha", "val_nombre", "empresa", "empresa_cuit", "empresa_email", "empresa_web",
@@ -149,7 +149,7 @@ def render(request: dict) -> dict:
 
 
 def write(result: dict, out_dir: Path, dxf: bool = False, stamp_date=None) -> List[Path]:
-    """Save the sheets of a result as <name>.svg in a folder (and their DXF when asked: it uses epc_dxf, the deliverable service).
+    """Save the sheets of a result as <name>.svg in a folder (and their DXF when asked: it uses epc_draw.core, the deliverable service).
     `stamp_date` (optional, ISO date) makes the DXF files reproducible; use the same date as the `today` of `project_request` so the dates of the sheet agree."""
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
@@ -159,18 +159,18 @@ def write(result: dict, out_dir: Path, dxf: bool = False, stamp_date=None) -> Li
         svg.write_text(sheet["svg"], encoding="utf-8", newline="\n")
         files.append(svg)
         if dxf:
-            from epc_dxf import deliverable
+            from epc_draw.core import deliverable
             done = deliverable.convert(svg, stamp_date=stamp_date)
             files += [Path(done["dxf"])] if done["dxf"] else []
     return files
 
 
 def main(argv=None) -> int:
-    """python -m epc_titleblock.service request.json out_dir [--dxf]"""
+    """python -m epc_draw.titleblock.service request.json out_dir [--dxf]"""
     argv = sys.argv[1:] if argv is None else argv
     args = [a for a in argv if not a.startswith("--")]
     if len(args) != 2:
-        print("usage: python -m epc_titleblock.service request.json out_dir [--dxf]", file=sys.stderr)
+        print("usage: python -m epc_draw.titleblock.service request.json out_dir [--dxf]", file=sys.stderr)
         return 2
     try:
         result = render(json.loads(Path(args[0]).read_text(encoding="utf-8-sig")))

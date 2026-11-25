@@ -46,7 +46,7 @@ def _iram_template(sheet_format: str, config_json: str):
             (Path(tmp) / "config.json").write_text(config_json, encoding="utf-8")
             extra = ["--config", str(Path(tmp) / "config.json")]
         try:
-            run = subprocess.run([sys.executable, "-m", "epc_titleblock.sheet_generator", sheet_format, str(out), *extra], capture_output=True, timeout=120)
+            run = subprocess.run([sys.executable, "-m", "epc_draw.titleblock.sheet_generator", sheet_format, str(out), *extra], capture_output=True, timeout=120)
         except (OSError, subprocess.SubprocessError):
             return None
         if run.returncode != 0 or not out.exists():

@@ -13,7 +13,7 @@ class TestSheets(unittest.TestCase):
     def sheet(self, fmt: str, tmp: Path) -> str:
         dst = tmp / f"sheet-IRAM-{fmt}.svg"
         env = {"PYTHONPATH": str(SRC), "SYSTEMROOT": __import__("os").environ.get("SYSTEMROOT", "")}
-        res = subprocess.run([sys.executable, "-m", "epc_titleblock.sheet_generator", fmt, str(dst)], capture_output=True, text=True, cwd=tmp, env=env)
+        res = subprocess.run([sys.executable, "-m", "epc_draw.titleblock.sheet_generator", fmt, str(dst)], capture_output=True, text=True, cwd=tmp, env=env)
         self.assertEqual(res.returncode, 0, res.stderr[-400:])
         return dst.read_text(encoding="utf-8")
 
@@ -27,7 +27,7 @@ class TestSheets(unittest.TestCase):
                 self.assertIn("rotulo_IRAM4508", svg)
 
     def test_the_package_carries_its_templates_and_assets(self):
-        base = SRC / "epc_titleblock"
+        base = SRC / "epc_draw" / "titleblock"
         self.assertFalse((base / "templates").exists())                              # no workbook any more: the title block is asked for with a JSON request
         self.assertTrue(any((base / "assets").glob("*-logo-*")))
 

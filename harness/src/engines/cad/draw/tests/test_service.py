@@ -10,7 +10,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parent / "src"))
 
-from epc_titleblock import service  # noqa: E402
+from epc_draw.titleblock import service  # noqa: E402
 
 LOGO = '<svg xmlns="http://www.w3.org/2000/svg" width="10mm" height="5mm" viewBox="0 0 10 5"><rect width="10" height="5" fill="#00f"/></svg>'
 
@@ -73,7 +73,7 @@ class TestCommandLine(unittest.TestCase):
         with tempfile.TemporaryDirectory() as t:
             req = Path(t) / "request.json"
             req.write_text(json.dumps(request()), encoding="utf-8")
-            res = subprocess.run([sys.executable, "-m", "epc_titleblock.service", str(req), str(Path(t) / "out")], capture_output=True, text=True,
+            res = subprocess.run([sys.executable, "-m", "epc_draw.titleblock.service", str(req), str(Path(t) / "out")], capture_output=True, text=True,
                                  env={"PYTHONPATH": str(HERE.parent / "src"), "SYSTEMROOT": __import__("os").environ.get("SYSTEMROOT", "")})
             self.assertEqual(res.returncode, 0, res.stderr[-300:])
             self.assertTrue((Path(t) / "out" / "SLD_T1_H1.svg").is_file() and (Path(t) / "out" / "SLD_T1_H2.svg").is_file())

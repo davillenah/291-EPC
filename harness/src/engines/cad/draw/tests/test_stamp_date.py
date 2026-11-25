@@ -8,7 +8,7 @@ from pathlib import Path
 ENGINES = Path(__file__).resolve().parents[3]
 sys.path[:0] = [str(ENGINES / "cad" / a / "src") for a in ("titleblock", "dxf", "symbols")]
 
-from epc_titleblock import service  # noqa: E402
+from epc_draw.titleblock import service  # noqa: E402
 
 
 def sheets_result():
