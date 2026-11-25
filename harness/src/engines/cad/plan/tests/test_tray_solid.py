@@ -32,6 +32,13 @@ class TestSolid(unittest.TestCase):
         scene3d.check({"schema_version": "1.0", "units": "m", "solids": [sol], "box": None})
 
 
+class TestMitre(unittest.TestCase):
+    def test_rails_of_neighbouring_stretches_meet_at_a_mitre_at_a_bend(self):
+        from epc_plan import tray_solid as T
+        turns = T._miters([(0, 0, 0), (1, 0, 0), (1, 1, 0)])
+        self.assertEqual([tuple(round(x, 6) + 0.0 for x in t) for t in turns], [(0.0, 1.0, 0.0), (-1.0, 1.0, 0.0), (-1.0, 0.0, 0.0)])     # at the corner the offset is the mitre, longer by 1 / cos(45 degrees)
+
+
 if __name__ == "__main__":
     unittest.main()
 
@@ -92,3 +99,4 @@ def test_a_vertical_bend_can_be_a_few_straight_links():
     smooth = tray_solid.path3d(run, 0.0, 0.5, 8)
     linked = tray_solid.path3d(run, 0.0, 0.5, 5)
     assert len(linked) < len(smooth)
+
