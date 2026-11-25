@@ -222,7 +222,11 @@ def _ladder(spec: Optional[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
     if not isinstance(layers, list) or not layers or not all(isinstance(x, str) for x in layers):
         raise core.PlanError("err_detail_number", key="ladder_trays")
     q = core.PARAMS["detail"]["ladder"]
+<<<<<<< HEAD
     return {"layers": layers, "sizes": {"rail": q["rail_m"], "rung": q["rung_m"], "rung_thick": q["rung_thick_m"], "rung_pitch": q["rung_pitch_m"], "foot": q["foot_m"], "curl": q["curl_m"], "slot_pitch": q["slot_pitch_m"], "slot": q["slot_m"], "slot_height": q["slot_height_m"]}}
+=======
+    return {"layers": layers, "sizes": {"rail": q["rail_m"], "rung": q["rung_m"], "rung_thick": q["rung_thick_m"], "rung_pitch": q["rung_pitch_m"], "foot": q["foot_m"], "curl": q["curl_m"]}}
+>>>>>>> 7db0f2b6fb07737f231929006b284f13d70df827
 
 
 def parts(solids: List[Dict[str, Any]], spec: Optional[Dict[str, Any]] = None) -> List[Dict[str, Any]]:

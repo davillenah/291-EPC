@@ -171,7 +171,11 @@
         "symbols",
         "titleblock"
       ],
+<<<<<<< HEAD
       "hash": "fe0b968755bb7f68"
+=======
+      "hash": "fb95a0b6b8c05e5b"
+>>>>>>> 7db0f2b6fb07737f231929006b284f13d70df827
     },
     "pm2-docs": {
       "version": "0.1.0",

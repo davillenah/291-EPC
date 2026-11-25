@@ -5,7 +5,10 @@ All notable changes. Format: Keep a Changelog; versions follow `harness/docs/BRA
 ## [Unreleased]
 
 ### Changed
+<<<<<<< HEAD
 - Ladder tray in 3D: the web of each rail now has the side slots of the Samet catalogue (pitch 100 mm, slot 50 x 12 mm; own values, unverified; `slot_*_m` in `epc_plan/params.json`).
+=======
+>>>>>>> 7db0f2b6fb07737f231929006b284f13d70df827
 - Ladder tray in 3D (owner request 2026-11-25): the rails are now a cold-formed C section (web, foot turned in, rolled top edge) and the rungs 15 mm high, read from the Samet catalogue pages (the PDF is not stored; the shape is recorded as `section_shape`, status unverified, in `samet/cable_trays.json`). Sizes `foot_m` and `curl_m` in `epc_plan/params.json`.
 - 3D DXF of the scene (owner request 2026-11-24): the solids go on the layers of the catalogue (NCS names, colour, line weight and description, as every other deliverable) and the file is made of blocks: each shape (a support, a section of tray, a wall piece, a luminaire) is one block of 3DFACEs and every solid of that shape is an insertion on its layer (`epc_plan.scene_blocks`; same shape up to its place and a turn of 90 degrees). The model of the example went from 8,166 loose faces to 250 insertions of 108 blocks. The test that counted loose faces now counts insertions and the faces in the blocks.
 - Single-line diagram: the three header lines of each feeder (name, section and protection, bar data) are spaced at 1.5 times the text height instead of 1.07, so they no longer touch. Goldens re-recorded for this change only.
