@@ -6,7 +6,7 @@ from pathlib import Path
 
 import ezdxf
 
-from epc_drawing import pv_roof
+from epc_draw.pv import roof as pv_roof
 
 ROOF = json.loads((Path(__file__).parent / "fixtures" / "pv_roof.json").read_text(encoding="utf-8"))
 NAMES = {"roof_layout", "roof_stringing", "roof_cabling", "roof_sld"}

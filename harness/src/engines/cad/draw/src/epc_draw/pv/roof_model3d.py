@@ -10,7 +10,7 @@ import math
 from pathlib import Path
 from typing import Any, Dict
 
-from epc_drawing import pv_model3d as m3
+from epc_draw.pv import model3d as m3
 from epc_drawing.errors import DrawingError
 
 SLAB_M, STANDOFF_M, MODULE_M, OBSTACLE_M, SPACING_M = 0.2, 0.12, 0.035, 1.0, 3.0
@@ -21,7 +21,7 @@ LAYERS = {**m3.LAYERS, LAYER_ROOF: 8, "291-WS-OBST-N": 1}
 def build(roof: Dict[str, Any], result: Dict[str, Any]):
     """The ezdxf document of the roof model."""
     import ezdxf
-    from epc_dxf import new_document
+    from epc_draw.core import new_document
     if not roof.get("planes"):
         raise DrawingError("err_roof_no_planes")
     doc = new_document("R2018", setup=True)
@@ -46,7 +46,7 @@ def build(roof: Dict[str, Any], result: Dict[str, Any]):
 
 def write(roof: Dict[str, Any], result: Dict[str, Any], out_dir, name: str, stamp_date=None) -> Path:
     """Writes `<name>_pv_roof_model_3d.dxf` in `out_dir` and returns its path."""
-    from epc_dxf import deliverable
+    from epc_draw.core import deliverable
     doc = build(roof, result)
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)

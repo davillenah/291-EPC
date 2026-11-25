@@ -6,7 +6,7 @@ from pathlib import Path
 
 import ezdxf
 
-from epc_drawing import pv_diagrams
+from epc_draw.pv import diagrams as pv_diagrams
 
 PLANT = json.loads((Path(__file__).parent / "fixtures" / "pv_plant.json").read_text(encoding="utf-8"))
 NAMES = {"layout", "stringing", "cabling", "sld"}

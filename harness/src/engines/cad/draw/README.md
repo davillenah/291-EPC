@@ -110,3 +110,7 @@ Limits: renders and photos are refused; a raster image reads horizontal, vertica
 Training tools (in `scripts/`): `registrar_muestras.py` (sample registry by SHA-256, samples never go to git), `generar_salidas.py` (`out/out_NN.svg` per sample), `informe_aprendizaje.py` (`out/aprendizaje.html`), `planta_prueba.py` (a designed house with known truth, as SVG, DXF and PNG), `generar_biblioteca.py` (furniture symbols in `epc_symbols/library/arch-symbol/`). What was learned from the samples and books: `epc_symbols/library/arch-symbol/REPERTORIO.md`.
 
 The old name `epc_arch` is a door to this package.
+
+## PV drawings (`epc_draw.pv`)
+
+The photovoltaic drawings: ground and roof layouts, the parts detail, the 3D model and the FreeCAD macro (`epc_draw.pv.diagrams`, `roof`, `details`, `model3d`, `roof_model3d`, `freecad`, `parts`; one call `epc_draw.pv.draw.draw_pv(PvDrawInput, ...)`). The old names `epc_drawing.pv_<name>` are a door to these modules. They still raise `epc_drawing.errors.DrawingError` until the reports of `epc_drawing` find their place (owner decision pending).

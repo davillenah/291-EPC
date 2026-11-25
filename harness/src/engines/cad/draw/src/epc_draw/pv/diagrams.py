@@ -30,8 +30,8 @@ def _t(key: str, language: str) -> str:
 
 def _new_doc(insunits: int):
     import ezdxf
-    from epc_dxf import new_document
-    from epc_dxf import textstyle
+    from epc_draw.core import new_document
+    from epc_draw.core import textstyle
     doc = new_document("R2018", setup=True)
     doc.units = insunits
     doc.styles.get("Standard").dxf.font = "arial.ttf"
@@ -166,7 +166,7 @@ def _symbol(pen: Pen, name: str, x: float, y: float, scale: float = SYMBOL_SCALE
     """Inserts the IEC 60617 symbol `lv_<name>` of the SLD library (`epc_symbols`, SVG source converted to DXF blocks) at (x, y); False when the library has no such symbol (the caller keeps its plain box)."""
     import ezdxf
     from ezdxf.addons.importer import Importer
-    from epc_symbols import dxf_block, UnknownSymbol
+    from epc_draw.symbols import dxf_block, UnknownSymbol
     try:
         path, block = dxf_block(f"lv_{name}", "sld")          # the file and the block come from the symbol API, no file name is built here (SYM-02)
     except UnknownSymbol:
@@ -224,7 +224,7 @@ def _array_block(pen: Pen, a: Dict[str, Any], inverters: List[Dict[str, Any]], y
 
 def write_all(geometry: Dict[str, Any], result: Dict[str, Any], out_dir, name: str, language: str = "en", stamp_date=None) -> Dict[str, Path]:
     """Writes `<name>_layout.dxf`, `_stringing.dxf`, `_cabling.dxf` and `_sld.dxf` under `out_dir`; returns {plan name: path}."""
-    from epc_dxf import deliverable
+    from epc_draw.core import deliverable
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
     docs = {"layout": _plan(geometry, "layout", language, False, "id"), "stringing": _plan(geometry, "stringing", language, True, "strings"),
