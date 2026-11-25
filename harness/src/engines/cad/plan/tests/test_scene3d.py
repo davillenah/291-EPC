@@ -113,14 +113,18 @@ class Files(unittest.TestCase):
             self.assertEqual(top, sum(len(s["mesh"]["vertices"]) for s in sc["solids"]))               # the numbering runs through the whole file
             self.assertTrue(all(len(x.split()) in (4, 5) for x in text if x.startswith("f ")))           # triangles and quads
 
-    def test_the_dxf_has_a_face_per_face_on_the_layer_of_its_solid(self):
+    def test_the_dxf_is_made_of_blocks_with_the_faces_of_the_scene_and_the_layer_of_each_solid(self):
         import ezdxf
         with tempfile.TemporaryDirectory() as tmp:
             path = Path(tmp) / "scene.dxf"
-            n = scene3d.write_dxf(scene3d.merge([building(), services()]), path)
-            msp = list(ezdxf.readfile(str(path)).modelspace())
-            self.assertEqual((len(msp), {e.dxftype() for e in msp}), (n, {"3DFACE"}))
-            self.assertEqual(sum(1 for e in msp if e.dxf.layer == "A-WALL-CUT"), 6)
+            sc = scene3d.merge([building(), services()])
+            n = scene3d.write_dxf(sc, path)
+            doc = ezdxf.readfile(str(path))
+            msp = list(doc.modelspace())
+            self.assertEqual((len(msp), {e.dxftype() for e in msp}), (len(sc["solids"]), {"INSERT"}))     # one insertion per solid, no loose face
+            faces = sum(len(list(doc.blocks.get(e.dxf.name).query("3DFACE"))) for e in msp)
+            self.assertEqual(faces, n)                                                                   # the blocks hold every face of the scene
+            self.assertEqual(sum(1 for e in msp if e.dxf.layer == "A-WALL-CUT"), 1)
 
 
 if __name__ == "__main__":

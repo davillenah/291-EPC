@@ -48,9 +48,11 @@ class TestDeliverable(unittest.TestCase):
 
     def test_the_weight_of_the_layer_governs_when_the_catalog_sets_one_and_the_stroke_when_it_does_not(self):
         with tempfile.TemporaryDirectory() as t:
-            plain = deliverable.convert(self.sheet(Path(t), "A"))["dxf"]
+            none = Path(t) / "none.json"                                              # the catalog holds a weight for these roles: a file may empty it
+            none.write_text(json.dumps({"layers": {"sld.diagram": {"lineweight": None}, "sld.text": {"lineweight": None}}}), encoding="utf-8")
+            plain = deliverable.convert(self.sheet(Path(t), "A"), layers_file=none)["dxf"]
             f = Path(t) / "layers.json"
-            f.write_text(json.dumps({"layers": {"sld.diagram": {"lineweight": 0.5}}}), encoding="utf-8")
+            f.write_text(json.dumps({"layers": {"sld.diagram": {"lineweight": 0.5}, "sld.text": {"lineweight": None}}}), encoding="utf-8")
             fixed = deliverable.convert(self.sheet(Path(t), "B"), layers_file=f)["dxf"]
 
             def weights(path):

@@ -4,9 +4,9 @@ Generado por `python harness/tools/build/norm_register.py --report`; no se edita
 
 ## Resumen
 
-- Registros a mano: **301** en 33 archivos.
+- Registros a mano: **302** en 33 archivos.
 - Reglas indexadas automáticamente: **200**.
-- Sin cláusula: **201**.
+- Sin cláusula: **202**.
 - Conflictos o duplicados señalados: **21**.
 
 ### Registros a mano por motor, procedencia y estado
@@ -19,7 +19,7 @@ Generado por `python harness/tools/build/norm_register.py --report`; no se edita
 | src | norm | pending | 133 |
 | src | physics | pending | 14 |
 | src | teaching | pending | 6 |
-| src | typical | pending | 65 |
+| src | typical | pending | 66 |
 
 ### Reglas indexadas por motor
 
@@ -451,17 +451,18 @@ Archivo: `harness/src/engines/cad/plan/src/epc_plan/norm_register/rules.json` (2
 
 ## plan / typical_values
 
-Archivo: `harness/src/engines/cad/plan/src/epc_plan/norm_register/typical_values.json` (7 registros)
+Archivo: `harness/src/engines/cad/plan/src/epc_plan/norm_register/typical_values.json` (8 registros)
 
 | id | norma | cláusula | página | valor / ubicación | unidad | procedencia | confianza | estado | problemas |
 |---|---|---|---|---|---|---|---|---|---|
-| `plan.typical.sizing.cable_mm_by_section` | - | - | - | `typical-values.json#/sizing/cable_mm_by_section` | mm (section in mm2) | typical | low | pending | no clause: file says confirm against the standard and the catalogue; catalogue dependent; not a norm value |
-| `plan.typical.sizing.conduit_mm` | - | - | - | `typical-values.json#/sizing/conduit_mm` | mm | typical | low | pending | no clause: file says confirm against the standard and the catalogue; list 16-110 mm; is it internal or nominal diameter? |
-| `plan.typical.sizing.tray_mm` | - | - | - | `typical-values.json#/sizing/tray_mm` | mm | typical | low | pending | no clause: file says confirm against the standard and the catalogue |
-| `plan.typical.occupancy.default_cable_mm` | - | - | - | `typical-values.json#/occupancy/default_cable_mm` | mm | typical | low | pending | no clause: file says confirm against the standard and the catalogue |
-| `plan.typical.occupancy.tray_pct` | - | - | - | `typical-values.json#/occupancy/tray_pct` | % | typical | low | pending | no clause: file says confirm against the standard and the catalogue; 50 % here vs 40 % ocupacion_max_pct in aea90364 rules/bandejas.json (line 59); criterion raceway_fill_max_pct (default 40, range 40-60) is a separate value: three copies |
-| `plan.typical.occupancy.conduit_pct` | - | - | - | `typical-values.json#/occupancy/conduit_pct` | % | typical | low | pending | no clause: file says confirm against the standard and the catalogue; 53/31/40 % (1 / 2 / many cables) vs 35 % in AEA rules canalizaciones (non-tabulated cases) and criterion raceway_fill_max_pct (default 40, range 40-60); the AEA rules refer to Tabla 771.12.IX for tabulated cases; compare these values with it |
-| `plan.typical.design.families` | - | - | - | `typical-values.json#/design/families` | outlets; VA | typical | low | pending | no clause: file says confirm against the standard and the catalogue; TUG 15 outlets and TUE 1 outlet repeat receptacles circuits values (two copies); IUG 100 VA, IUE 10 VA, ACU 1500 VA, FMO 7500 VA per outlet are design assumptions |
+| `plan.typical.sizing.cable_mm_by_section` | - | - | - | `typical_values.json#/sizing/cable_mm_by_section` | mm (section in mm2) | typical | low | pending | no clause: file says confirm against the standard and the catalogue; catalogue dependent; not a norm value |
+| `plan.typical.sizing.conduit_mm` | - | - | - | `typical_values.json#/sizing/conduit_mm` | mm | typical | low | pending | no clause: file says confirm against the standard and the catalogue; list 16-110 mm; is it internal or nominal diameter? |
+| `plan.typical.tray_catalogue` | - | - | - | `typical_values.json#/tray_catalogue` | mm | typical | low | pending | no clause: file says confirm against the standard and the catalogue |
+| `plan.typical.sizing.tray_fill_max_pct` | - | - | - | `typical_values.json#/sizing/tray_fill_max_pct` | % | typical | low | pending | given by the owner (40 %, 'as the standard says'); no clause recorded: a person must confirm it against the standard |
+| `plan.typical.occupancy.default_cable_mm` | - | - | - | `typical_values.json#/occupancy/default_cable_mm` | mm | typical | low | pending | no clause: file says confirm against the standard and the catalogue |
+| `plan.typical.occupancy.tray_pct` | - | - | - | `typical_values.json#/occupancy/tray_pct` | % | typical | low | pending | no clause: file says confirm against the standard and the catalogue; 50 % here vs 40 % ocupacion_max_pct in aea90364 rules/bandejas.json (line 59); criterion raceway_fill_max_pct (default 40, range 40-60) is a separate value: three copies |
+| `plan.typical.occupancy.conduit_pct` | - | - | - | `typical_values.json#/occupancy/conduit_pct` | % | typical | low | pending | no clause: file says confirm against the standard and the catalogue; 53/31/40 % (1 / 2 / many cables) vs 35 % in AEA rules canalizaciones (non-tabulated cases) and criterion raceway_fill_max_pct (default 40, range 40-60); the AEA rules refer to Tabla 771.12.IX for tabulated cases; compare these values with it |
+| `plan.typical.design.families` | - | - | - | `typical_values.json#/design/families` | outlets; VA | typical | low | pending | no clause: file says confirm against the standard and the catalogue; TUG 15 outlets and TUE 1 outlet repeat receptacles circuits values (two copies); IUG 100 VA, IUE 10 VA, ACU 1500 VA, FMO 7500 VA per outlet are design assumptions |
 
 ## pv / typical
 
@@ -512,8 +513,8 @@ Archivo: `harness/src/engines/calculation/receptacles/src/epc_receptacles/norm_r
 | `receptacles.data.mounting.771` | AEA 90364-7-771 (2006) | 771.8.6.2 | p. 44 | `uses.json#/mounting/771` | m | norm | medium | pending | clause/page taken from AEA rule tomacorrientes.altura_arista_inferior_771; the uses file only names the rule; min 0.15 m vs engine default 0.3 m (params.json) and criterion socket_height_m default 0.3 |
 | `receptacles.data.mounting.770` | AEA 90364-7-770 (2017) | 770.7.2 | p. 13 | `uses.json#/mounting/770` | m | norm | medium | pending | clause/page taken from AEA rule tomacorrientes.altura_arista_inferior_770; different edition (2017) than the 771 data (2006) |
 | `receptacles.data.mounting.wet_min_m` | - | - | - | `uses.json#/mounting/wet_min_m` | m | typical | low | pending | no clause in the data; AEA rules tomacorrientes.baldeado_771 / baldeado_770 exist; compare value |
-| `receptacles.data.circuits.tug` | - | - | - | `uses.json#/circuits/TUG` | outlets | typical | low | pending | no clause: 'typical value, to verify'; plan typical-values design.families repeats max_outlets (TUG 15, TUE 1): two copies |
-| `receptacles.data.circuits.tue` | - | - | - | `uses.json#/circuits/TUE` | outlets | typical | low | pending | no clause: 'typical value, to verify'; plan typical-values design.families repeats max_outlets (TUG 15, TUE 1): two copies |
+| `receptacles.data.circuits.tug` | - | - | - | `uses.json#/circuits/TUG` | outlets | typical | low | pending | no clause: 'typical value, to verify'; plan typical_values design.families repeats max_outlets (TUG 15, TUE 1): two copies |
+| `receptacles.data.circuits.tue` | - | - | - | `uses.json#/circuits/TUE` | outlets | typical | low | pending | no clause: 'typical value, to verify'; plan typical_values design.families repeats max_outlets (TUG 15, TUE 1): two copies |
 | `receptacles.data.receptacles` | IRAM 2071 (named in titles) | - | - | `receptacles.json#/receptacles` | A, VA, m | illustrative | low | pending | rating/power are typical, flagged illustrative; TUE height_m 1.2 and power 2200 VA are typical values; other outlets 0.3 m; height 0.3 m vs mounting limits above |
 
 ## receptacles / params
@@ -729,7 +730,8 @@ Archivo: `harness/src/engines/calculation/transformer_sizing/src/epc_transformer
 - `plan.typical.occupancy.tray_pct` (-; hand)
 - `plan.typical.sizing.cable_mm_by_section` (-; hand)
 - `plan.typical.sizing.conduit_mm` (-; hand)
-- `plan.typical.sizing.tray_mm` (-; hand)
+- `plan.typical.sizing.tray_fill_max_pct` (-; hand)
+- `plan.typical.tray_catalogue` (-; hand)
 - `pv.typical.faiman.u0` (-; hand)
 - `pv.typical.faiman.u1` (-; hand)
 - `pv.typical.iam_ashrae_b0` (-; hand)

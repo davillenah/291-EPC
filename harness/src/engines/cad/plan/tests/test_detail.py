@@ -41,6 +41,24 @@ class Parts(unittest.TestCase):
         self.assertEqual((min(xs), max(xs), min(ys), max(ys)), (9.7, 10.15, -0.15, 0.3))             # out to the outer corner of the bend
         self.assertTrue(all(0 <= i < len(elbow["mesh"]["vertices"]) for f in elbow["mesh"]["faces"] for i in f))
 
+    def test_the_straights_of_a_tray_layer_are_ladders_when_asked_and_boxes_otherwise(self):
+        box = detail.parts(tray())
+        layer = of(box, "straight")[0]["layer"]
+        ladder = detail.parts(tray(), {"ladder_trays": {"layers": [layer]}})
+        self.assertGreater(len(of(ladder, "straight")[0]["mesh"]["faces"]), len(of(box, "straight")[0]["mesh"]["faces"]))
+        self.assertEqual(len(of(detail.parts(tray(), {"ladder_trays": {"layers": ["OTHER"]}}), "straight")[0]["mesh"]["faces"]), len(of(box, "straight")[0]["mesh"]["faces"]))
+        with self.assertRaises(core.PlanError):
+            detail.parts(tray(), {"ladder_trays": {"layers": []}})
+
+    def test_the_elbows_of_a_tray_layer_follow_the_kind_of_tray(self):
+        box = detail.parts(tray())
+        layer = of(box, "elbow")[0]["layer"]
+        for kind in ("escalera", "perforada", "ciega", "alambre"):
+            parts = detail.parts(tray(), {"ladder_trays": {"layers": [layer], "kinds": {layer: kind}}})
+            self.assertGreater(len(of(parts, "elbow")[0]["mesh"]["faces"]), 0)
+        with self.assertRaises(core.PlanError):
+            detail.parts(tray(), {"ladder_trays": {"layers": [layer], "kinds": {layer: "nope"}}})
+
     def test_a_straight_run_has_no_fitting(self):
         items = detail.parts(solids(S.CONDUIT))
         self.assertEqual([(p["part"], p["length_m"], p["size"]) for p in items], [("straight", 10.0, "D50")])
@@ -50,6 +68,13 @@ class Parts(unittest.TestCase):
         items = detail.parts(solids(z))
         self.assertEqual(len(of(items, "elbow")), 2)
         self.assertEqual(sorted(p["length_m"] for p in of(items, "straight")), [4.8, 4.8])           # each elbow takes half of the 0.4 m between them (0.2 m, not its 0.3 m leg): the middle stretch is all elbow
+
+    def test_the_tee_of_a_tray_layer_is_a_tray_of_its_kind(self):
+        branch = S.line("b", "BN", [50, 0], [50, -30])
+        layer = of(detail.parts(solids(S.TRAY, branch)), "tee")[0]["layer"]
+        box = of(detail.parts(solids(S.TRAY, branch)), "tee")[0]["mesh"]["faces"]
+        ladder = of(detail.parts(solids(S.TRAY, branch), {"ladder_trays": {"layers": [layer]}}), "tee")[0]["mesh"]["faces"]
+        self.assertGreater(len(ladder), len(box))
 
     def test_a_run_that_ends_on_another_makes_a_tee(self):
         branch = S.line("b", "BN", [50, 0], [50, -30])                                 # leaves the first stretch of the tray at its middle
@@ -66,6 +91,26 @@ class Parts(unittest.TestCase):
         self.assertEqual([(r["run"], r["to"], r["size"], r["to_size"]) for r in red], [("w", "n", "300x100", "150x100")])
         ys = sorted({abs(v[1]) for v in red[0]["mesh"]["vertices"]})
         self.assertEqual(ys, [0.0, 0.075, 0.15])                                      # from 300 to 150 mm wide
+
+    def test_the_reducer_of_a_tray_layer_tapers_as_a_tray_of_its_kind(self):
+        wide = S.line("w", "BN", [0, 0], [50, 0])
+        narrow = S.line("n", "BN", [50, 0], [100, 0], ancho_m=0.15)
+        layer = of(detail.parts(solids(wide, narrow)), "reducer")[0]["layer"]
+        for kind in ("escalera", "perforada", "ciega", "alambre"):
+            red = of(detail.parts(solids(wide, narrow), {"ladder_trays": {"layers": [layer], "kinds": {layer: kind}}}), "reducer")
+            self.assertGreater(len(red[0]["mesh"]["faces"]), 0, kind)
+            ys = {round(abs(v[1]), 3) for v in red[0]["mesh"]["vertices"]}
+            self.assertTrue({0.15, 0.075} <= ys or kind == "alambre", kind)           # the rails reach both widths
+
+    def test_two_tray_runs_crossing_in_the_middle_at_one_height_make_a_cross(self):
+        main = S.line("m", "BN", [0, 0], [100, 0])
+        other = S.line("o", "BN", [50, -30], [50, 30])
+        items = detail.parts(solids(main, other))
+        cross = of(items, "cross")
+        self.assertEqual([(c["run"], c["branch"], c["at"]) for c in cross], [("m", "o", [5.0, 0.0, 2.6])])
+        self.assertEqual(cross[0]["path"], [[4.55, 0.0, 2.6], [5.45, 0.0, 2.6]])
+        self.assertIn("cross", [r["type"] for r in detail.takeoff(items)["fittings"]])                  # and it is in the bill
+        self.assertFalse(of(detail.parts(solids(main, S.line("o", "BN", [50, 0], [50, 30]))), "cross"))   # ending on the main run is a tee, not a cross
 
     def test_runs_of_another_discipline_do_not_join(self):
         pipe = solid.solids(S.sheet(discipline="sanitaria_cloacas", lines=[S.line("p", "CC", [50, 0], [50, -30], z_m=2.6)]), "S1")

@@ -543,6 +543,22 @@ Schema: `harness/src/engines/quality/design_basis/src/epc_design_basis/schema/in
 | `norm_status` | object or null |  |  |  |
 | `insulation_rules` | object or null |  |  |  |
 
+## epc_select
+
+### Input
+
+Schema: `harness/src/engines/quality/select/src/epc_select/schema/input.schema.json` (select (input))
+
+| Field | Type | Required | Limits | Notes |
+|---|---|---|---|---|
+| `records` | array | yes |  |  |
+| `conditions` | array | yes |  |  |
+| `conditions[].field` | string | yes | minLength 1 |  |
+| `conditions[].op` | one of `eq`, `ne`, `lt`, `le`, `gt`, `ge`, `in`, `contains`, `exists` | yes |  |  |
+| `conditions[].value` | any |  |  |  |
+| `match` | one of `all`, `any` | yes |  |  |
+| `max_results` | integer | yes | minimum 1 |  |
+
 ## epc_terminal_blocks
 
 ### Input

@@ -11,6 +11,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 import ezdxf  # noqa: E402
 
 from epc_dxf import layers as L  # noqa: E402
+from epc_dxf import settings  # noqa: E402
 
 
 class TestCatalog(unittest.TestCase):
@@ -47,14 +48,11 @@ class TestCatalog(unittest.TestCase):
             f = Path(t) / "layers.json"
             f.write_text(json.dumps({"layers": {"sld.diagram": {"name": "DIAGRAMA", "color": 3}, "custom.x": {**L.BLANK, "name": "X"}}}), encoding="utf-8")
             cat = L.load(f)
-            self.assertEqual((cat["sld.diagram"]["name"], cat["sld.diagram"]["color"], cat["sld.diagram"]["lineweight"]), ("DIAGRAMA", 3, None))
+            self.assertEqual((cat["sld.diagram"]["name"], cat["sld.diagram"]["color"], cat["sld.diagram"]["lineweight"]), ("DIAGRAMA", 3, L.defaults()["sld.diagram"]["lineweight"]))
             self.assertEqual(cat["sld.text"]["name"], "291-E-DIAG-TEXT")
             self.assertIn("custom.x", cat)
-            os.environ[L.ENV_VAR] = str(f)                                   # the global file the MASTER edits
-            try:
+            with settings.use(settings.DxfSettings(layer_files=(str(f),))):          # the global file the MASTER edits, handed in as data
                 self.assertEqual(L.name("sld.diagram"), "DIAGRAMA")
-            finally:
-                del os.environ[L.ENV_VAR]
 
     def test_validation_names_each_wrong_field(self):
         cat = L.load()
@@ -89,12 +87,9 @@ class TestScopes(unittest.TestCase):
             p.write_text(json.dumps({"layers": {"sld.text": {"color": 6}}}), encoding="utf-8")
             cat = L.load([g, c, p])
             self.assertEqual((cat["sld.diagram"]["name"], cat["sld.diagram"]["color"], cat["sld.text"]["name"], cat["sld.text"]["color"]), ("GLOBAL-D", 4, "EMPRESA-T", 6))
-            os.environ[L.ENV_VAR] = os.pathsep.join([str(g), str(c)])                          # the environment may name several files too
-            try:
+            with settings.use(settings.DxfSettings(layer_files=(str(g), str(c)))):            # the settings may name several files too
                 self.assertEqual(L.load(p)["sld.text"]["color"], 6)
                 self.assertEqual(L.name("sld.diagram"), "GLOBAL-D")
-            finally:
-                del os.environ[L.ENV_VAR]
             inherited = L.load([g, c])
             mine = {r: dict(a) for r, a in inherited.items()}
             mine["sld.text"]["color"] = 9

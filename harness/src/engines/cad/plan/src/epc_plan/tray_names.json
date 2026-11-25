@@ -1,0 +1,322 @@
+{
+ "note": "Own names of the tray models of the project, free of any maker: BN-<kind>-<width>x<rail height> for a straight, BN-<kind>-<fitting>-<width>x<rail height> for a fitting. Widths and heights in millimetres.",
+ "prefix": "BN",
+ "kinds": {
+  "escalera": {
+   "code": "ESC",
+   "name": {
+    "en": "Ladder tray",
+    "es": "Bandeja escalera"
+   }
+  },
+  "perforada": {
+   "code": "PER",
+   "name": {
+    "en": "Perforated tray",
+    "es": "Bandeja perforada"
+   }
+  },
+  "ciega": {
+   "code": "CIE",
+   "name": {
+    "en": "Solid-bottom tray",
+    "es": "Bandeja ciega"
+   }
+  },
+  "alambre": {
+   "code": "ALA",
+   "name": {
+    "en": "Wire-mesh tray",
+    "es": "Bandeja de alambre"
+   }
+  },
+  "canal": {
+   "code": "CAN",
+   "name": {
+    "en": "U channel",
+    "es": "Canal U"
+   }
+  }
+ },
+ "fittings": {
+  "straight": {
+   "code": "",
+   "name": {
+    "en": "Straight section",
+    "es": "Tramo recto"
+   }
+  },
+  "elbow90": {
+   "code": "C90",
+   "name": {
+    "en": "Horizontal elbow 90°",
+    "es": "Curva plana 90°"
+   }
+  },
+  "elbow45": {
+   "code": "C45",
+   "name": {
+    "en": "Horizontal elbow 45°",
+    "es": "Curva plana 45°"
+   }
+  },
+  "elbow_adjustable": {
+   "code": "CAJ",
+   "name": {
+    "en": "Adjustable elbow",
+    "es": "Curva ajustable"
+   }
+  },
+  "vertical_bend": {
+   "code": "CV",
+   "name": {
+    "en": "Vertical bend",
+    "es": "Curva vertical"
+   }
+  },
+  "tee": {
+   "code": "T",
+   "name": {
+    "en": "Tee",
+    "es": "Unión T"
+   }
+  },
+  "cross": {
+   "code": "X",
+   "name": {
+    "en": "Cross",
+    "es": "Unión cruz"
+   }
+  },
+  "reduction_central": {
+   "code": "RC",
+   "name": {
+    "en": "Central reducer",
+    "es": "Reducción central"
+   }
+  },
+  "reduction_side": {
+   "code": "RL",
+   "name": {
+    "en": "Side reducer",
+    "es": "Reducción lateral"
+   }
+  },
+  "end": {
+   "code": "FIN",
+   "name": {
+    "en": "End cap",
+    "es": "Tapa de fin"
+   }
+  },
+  "cover": {
+   "code": "TP",
+   "name": {
+    "en": "Cover",
+    "es": "Tapa"
+   }
+  },
+  "bracket_wall": {
+   "code": "MP",
+   "name": {
+    "en": "Wall bracket",
+    "es": "Ménsula de pared"
+   }
+  },
+  "bracket_heavy": {
+   "code": "MR",
+   "name": {
+    "en": "Heavy bracket",
+    "es": "Ménsula reforzada"
+   }
+  },
+  "splice": {
+   "code": "UN",
+   "name": {
+    "en": "Splice plate",
+    "es": "Placa de unión"
+   }
+  },
+  "divider": {
+   "code": "DIV",
+   "name": {
+    "en": "Divider",
+    "es": "Separador longitudinal"
+   }
+  },
+  "cover_elbow90": {
+   "code": "TC90",
+   "name": {
+    "en": "Cover for the 90° elbow",
+    "es": "Tapa de curva 90°"
+   }
+  },
+  "cover_elbow45": {
+   "code": "TC45",
+   "name": {
+    "en": "Cover for the 45° elbow",
+    "es": "Tapa de curva 45°"
+   }
+  },
+  "cover_adjustable": {
+   "code": "TCA",
+   "name": {
+    "en": "Cover for the adjustable elbow",
+    "es": "Tapa de curva ajustable"
+   }
+  },
+  "cover_tee": {
+   "code": "TT",
+   "name": {
+    "en": "Cover for the tee",
+    "es": "Tapa de unión T"
+   }
+  },
+  "cover_cross": {
+   "code": "TX",
+   "name": {
+    "en": "Cover for the cross",
+    "es": "Tapa de unión cruz"
+   }
+  },
+  "cover_link": {
+   "code": "TV",
+   "name": {
+    "en": "Cover for the vertical bend",
+    "es": "Tapa de curva vertical"
+   }
+  },
+  "bracket_adjustable": {
+   "code": "MG",
+   "name": {
+    "en": "Adjustable wall bracket",
+    "es": "Ménsula graduable de pared"
+   }
+  },
+  "splice_lateral": {
+   "code": "UNL",
+   "name": {
+    "en": "Lateral splice plate",
+    "es": "Placa de unión lateral"
+   }
+  },
+  "union_articulated": {
+   "code": "UA",
+   "name": {
+    "en": "Articulated union",
+    "es": "Unión articulada"
+   }
+  }
+ },
+ "hardware": {
+  "prefix": "SB",
+  "note": "Supports and fasteners: SB-<part>-<size>.",
+  "parts": {
+   "bolt": {
+    "code": "BUL",
+    "name": {
+     "en": "Hex bolt",
+     "es": "Bulón hexagonal"
+    }
+   },
+   "nut": {
+    "code": "TUE",
+    "name": {
+     "en": "Hex nut",
+     "es": "Tuerca hexagonal"
+    }
+   },
+   "washer": {
+    "code": "ARA",
+    "name": {
+     "en": "Flat washer",
+     "es": "Arandela plana"
+    }
+   },
+   "rod": {
+    "code": "VR",
+    "name": {
+     "en": "Threaded rod",
+     "es": "Varilla roscada"
+    }
+   },
+   "coupler": {
+    "code": "MAN",
+    "name": {
+     "en": "Rod coupler",
+     "es": "Manguito de varilla"
+    }
+   },
+   "strut": {
+    "code": "PRF",
+    "name": {
+     "en": "Strut channel",
+     "es": "Perfil C de soporte"
+    }
+   },
+   "trapeze": {
+    "code": "TRA",
+    "name": {
+     "en": "Trapeze hanger",
+     "es": "Soporte trapecio"
+    }
+   },
+   "clamp": {
+    "code": "GRA",
+    "name": {
+     "en": "Rod clamp",
+     "es": "Grapa de varilla"
+    }
+   },
+   "ceiling_plate": {
+    "code": "PLT",
+    "name": {
+     "en": "Ceiling plate",
+     "es": "Placa de techo"
+    }
+   },
+   "carriage_bolt": {
+    "code": "BUC",
+    "name": {
+     "en": "Carriage bolt",
+     "es": "Bulón de cabeza redonda y cuello cuadrado"
+    }
+   },
+   "retainer_bolt": {
+    "code": "RET",
+    "name": {
+     "en": "Cover retainer bolt",
+     "es": "Bulón de retén de tapa"
+    }
+   },
+   "suspension_clamp": {
+    "code": "GSU",
+    "name": {
+     "en": "Suspension clamp",
+     "es": "Grapa de suspensión"
+    }
+   },
+   "fixing_clamp": {
+    "code": "GFI",
+    "name": {
+     "en": "Fixing clamp",
+     "es": "Grapa de fijación"
+    }
+   },
+   "ground_clamp": {
+    "code": "GPT",
+    "name": {
+     "en": "Grounding clamp",
+     "es": "Grapa de puesta a tierra"
+    }
+   },
+   "mounting_plate": {
+    "code": "PUM",
+    "name": {
+     "en": "Universal mounting plate",
+     "es": "Placa universal de montaje"
+    }
+   }
+  }
+ }
+}

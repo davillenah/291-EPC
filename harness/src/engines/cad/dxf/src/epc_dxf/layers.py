@@ -3,16 +3,15 @@
 A drawing asks for a layer by its ROLE (`sld.diagram`, `sld.text`, `plan.ELEC-LUM`...), never by a name written in the code. The catalog says what that role is called and how it looks.
 Three sources, the later one winning role by role (a file may carry only the roles or fields it changes):
   1. `harness/config/dxf/layers.json`, the file the values live in: open it with any text editor, change a name, colour, weight or line type, save;
-  2. the same file name in another folder named in EPC_DXF_CONFIG_DIR;
-  3. the global file the platform's MASTER edits: the path in the environment variable EPC_LAYERS_JSON;
+  2. the same file name in another folder named by the settings in force (`epc_dxf.settings`, `config_dir`);
+  3. the global file the platform's MASTER edits, named by the settings (`layer_files`);
   4. files passed to `load` (later: the project's own file).
+The settings are handed in by the caller (`settings.use`); the process environment is never read here (ADR-0042).
 """
 import json
-import os
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional
 
-ENV_VAR = "EPC_LAYERS_JSON"
 DEFAULT_FILE = Path(__file__).resolve().parents[6] / "config" / "dxf" / "layers.json"      # harness/config/dxf: the file the values live in (one source)
 DISCIPLINES_FILE = Path(__file__).resolve().parent / "data" / "disciplines.json"
 LINEWEIGHTS = (0.0, 0.05, 0.09, 0.13, 0.15, 0.18, 0.2, 0.25, 0.3, 0.35, 0.4, 0.5, 0.53, 0.6, 0.7, 0.8, 0.9, 1.0, 1.06, 1.2, 1.4, 1.58, 2.0, 2.11)      # mm: the ones DXF knows
@@ -35,14 +34,15 @@ def _editable_file() -> List[str]:
 
 
 def _files(*extra: Any) -> List[Path]:
-    """The override files in order of authority: those the environment names (several are separated as paths are), then `extra` (each a path or a list of paths)."""
-    named = _editable_file() + [x for x in (os.environ.get(ENV_VAR) or "").split(os.pathsep) if x]
+    """The override files in order of authority: those the settings in force name, then `extra` (each a path or a list of paths)."""
+    from epc_dxf import settings
+    named = _editable_file() + list(settings.current().layer_files)
     flat = [y for x in extra for y in (x if isinstance(x, (list, tuple)) else [x]) if y]
     return [Path(x) for x in [*named, *flat]]
 
 
 def load(*extra: Any) -> Dict[str, dict]:
-    """The catalog: role -> attributes, the default one overridden, in order, by the files of the environment (the global one, the company's, the project's) and by `extra` (those that exist)."""
+    """The catalog: role -> attributes, the default one overridden, in order, by the files of the settings in force (the global one, the company's, the project's) and by `extra` (those that exist)."""
     out = {role: dict(a) for role, a in _read(DEFAULT_FILE).items()}
     for p in _files(*extra):
         if p.is_file():
@@ -174,7 +174,7 @@ def _looks_differ(a: dict, b: dict) -> bool:
     return any(a.get(k) != b.get(k) for k in LOOK_FIELDS)
 
 
-def dump(catalog: Dict[str, dict], path: os.PathLike) -> None:
+def dump(catalog: Dict[str, dict], path: Any) -> None:
     Path(path).parent.mkdir(parents=True, exist_ok=True)
     Path(path).write_text(json.dumps({"schema_version": "1.0", "layers": catalog}, indent=1, ensure_ascii=False) + "\n", encoding="utf-8", newline="\n")
 

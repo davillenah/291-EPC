@@ -5,11 +5,12 @@ plan to `epc_plan.solid`; `epc_plan.detail` turns the runs into the parts they a
 `epc_plan.scene3d` writes the model and cuts the sections.
 
     "model3d": {"floors": {"PB": {"wall_height_m": 2.8, "door_head_m": 2.05, "window_sill_m": 0.9, "window_head_m": 2.1, "slab_m": 0.2, "elevation_m": 0.0}},     # every routed floor, all heights: none is assumed
-                "supports": {"spacing_m": 1.5},                               # optional: without it no support is drawn (the spacing comes from the standard and the manufacturer)
+                "supports": {"spacing_m": 1.5},                               # optional: without it no support is drawn (the spacing comes from the standard and the manufacturer); with "mount": "wall" and "reach_m" they are brackets on the walls (and "heavy_over_m": the heavy bracket for trays wider than that)
+                "ladder_trays": {"layers": ["ELEC-BANDEJA"], "kinds": {"ELEC-BANDEJA": "perforada"}, "cover": False},    # optional: the trays are ladder trays by default; false = swept boxes
                 "sections": [{"name": "A", "axis": "x", "at_m": 12.0, "look": "+", "depth_m": 3.0}],     # optional: the detail sections to cut (depth_m optional)
                 "elevations": [{"floor": "PB", "side": "S"}]}                  # optional: the elevations of the building of a floor (N, S, E or W), on the IRAM sheet
 
-Files (in the drawings folder, so stage 12 packages them): `<board>_model_3d.dxf`, `<board>_section_<name>.dxf` and `<board>_elevation_<floor>_<side>.dxf`. The take-off goes in the outputs of the stage (`model3d.takeoff`).
+Files (in the drawings folder, so stage 12 packages them): `<board>_model_3d.dxf`, `<board>_clashes.xlsx` (every clash between the solids, hard ones and, with `clearance_m`, trays too close: the solution is decided later), `<board>_section_<name>.dxf` and `<board>_elevation_<floor>_<side>.dxf`. The take-off goes in the outputs of the stage (`model3d.takeoff`).
 The underside of the slab a run hangs from is the level of its floor plus the height of its walls: both given by the engineer.
 """
 import copy
@@ -18,10 +19,11 @@ from disciplines.electrical_lv.stages.base import StageInputError
 from disciplines.electrical_lv.stages.routing_stage import routed_document
 
 ARCH_ENGINE, ARCH_FUNCTION = "cad/arch", "epc_arch.model3d.building_solids"
-PLAN_ENGINE, PLAN_FUNCTIONS = "cad/plan", ("epc_plan.solid.solids", "epc_plan.detail.parts", "epc_plan.scene3d.write_dxf")
+PLAN_ENGINE, PLAN_FUNCTIONS = "cad/plan", ("epc_plan.solid.solids", "epc_plan.detail.parts", "epc_plan.clash_scene.detect", "epc_plan.scene3d.write_dxf")
 SECTION_KEYS = {"name", "axis", "at_m", "look", "depth_m"}
-KEYS = {"floors", "supports", "sections", "elevations"}
+KEYS = {"floors", "supports", "sections", "elevations", "ladder_trays", "clearance_m"}
 SIDES = ("N", "S", "E", "W")
+TRAY_LAYER = "ELEC-BANDEJA"                                              # the layer of the tray kind (BN) in the electrical profile
 
 
 def _is_section(s):
@@ -43,7 +45,15 @@ def _elevation_errors(elevations, routing):
 
 
 def _is_supports(given):
-    return isinstance(given, dict) and set(given) <= {"spacing_m", "rod_m", "channel_m", "overhang_m"} and "spacing_m" in given
+    """Supports: hangers under the slab (the default) or, with `mount: "wall"`, brackets on the wall beside the tray, which need `reach_m` (the engineer's value, none assumed)."""
+    if not isinstance(given, dict) or not set(given) <= {"spacing_m", "rod_m", "channel_m", "overhang_m", "mount", "reach_m", "heavy_over_m"} or "spacing_m" not in given:
+        return False
+    return given.get("mount", "slab") == "slab" and not {"reach_m", "heavy_over_m"} & set(given) or given.get("mount") == "wall" and "reach_m" in given
+
+
+def _is_ladder(given):
+    layers = given.get("layers") if isinstance(given, dict) else None
+    return isinstance(layers, list) and bool(layers) and all(isinstance(x, str) for x in layers) and set(given) <= {"layers", "kinds", "cover"}
 
 
 def _floor_errors(floors, routing):
@@ -61,14 +71,25 @@ def _section_errors(sections):
     return out + [f"model3d/sections: the name {n} is used twice" for n in sorted({n for n in names if names.count(n) > 1})]
 
 
+def _tray_errors(given):
+    """The tray options (`ladder_trays`) and the clearance asked for between trays (`clearance_m`, a design value only the engineer gives: none is assumed)."""
+    out = []
+    if given.get("ladder_trays", {"layers": []}) is not False and "ladder_trays" in given and not _is_ladder(given["ladder_trays"]):
+        out.append("model3d/ladder_trays: false, or {layers: [layer names of the trays], kinds?: {layer: escalera|perforada|ciega|alambre|canal}, cover?: bool}")
+    clearance = given.get("clearance_m", 0)
+    if isinstance(clearance, bool) or not isinstance(clearance, (int, float)) or clearance < 0:
+        out.append("model3d/clearance_m: a number of metres, zero or more")
+    return out
+
+
 def errors_of(given, routing):
     """What is wrong with the `model3d` section for the routed floors (empty when the model can be built)."""
     if not isinstance(given, dict) or set(given) - KEYS or not isinstance(given.get("floors"), dict):
         return ["model3d: {floors: {floor id: heights}, supports?: {spacing_m}, sections?: [...]}"]
     out = _floor_errors(given["floors"], routing)
     if "supports" in given and not _is_supports(given["supports"]):
-        out.append("model3d/supports: {spacing_m, rod_m?, channel_m?, overhang_m?}")
-    return out + _section_errors(given.get("sections", [])) + _elevation_errors(given.get("elevations", []), routing)
+        out.append("model3d/supports: {spacing_m, rod_m?, channel_m?, overhang_m?} or {spacing_m, mount: 'wall', reach_m, heavy_over_m?}")
+    return out + _tray_errors(given) + _section_errors(given.get("sections", [])) + _elevation_errors(given.get("elevations", []), routing)
 
 
 def _building(design, floor, heights):
@@ -102,6 +123,23 @@ def _hangers(given):
     return dict(copy.deepcopy(given["supports"]), slab_underside_m=under)
 
 
+def _supports(given, services, building):
+    """The supports of the runs: hangers from the slab, or wall brackets on the walls of the building (`supports.mount`); none when no spacing was given."""
+    from epc_plan import detail, wall_brackets
+    if "supports" not in given:
+        return []
+    if given["supports"].get("mount") == "wall":
+        return wall_brackets(services, [s for s in building if s["kind"] == "wall"], {k: given["supports"][k] for k in ("spacing_m", "reach_m", "heavy_over_m") if k in given["supports"]})
+    return detail.supports(services, _hangers(given))
+
+
+def _parts_spec(given):
+    """The spec of the parts: the trays as the engineer asked (`ladder_trays: {layers, kinds?, cover?}`); when he does not say, the runs of the tray layer are drawn as ladder trays, the
+    default kind; `ladder_trays: false` keeps every run a swept box."""
+    given_trays = given.get("ladder_trays", {"layers": [TRAY_LAYER]})
+    return {"ladder_trays": given_trays} if given_trays else None
+
+
 def build(given, routing):
     """(scene, parts) of the whole building: the building and the equipment as they are, the runs as their parts and, when asked, their supports."""
     from epc_plan import detail, scene3d, solid
@@ -110,11 +148,26 @@ def build(given, routing):
         heights = given["floors"][floor]
         building += _building(routing[floor], floor, heights)
         services += _services(routing[floor], floor, heights)
-    hangers = _hangers(given)
-    parts = detail.parts(services) + (detail.supports(services, hangers) if hangers else [])
+    parts = detail.parts(services, _parts_spec(given)) + _supports(given, services, building)
     boxes = [s for s in services if s["shape"] != "run"]
     whole = scene3d.merge([{"schema_version": "1.0", "units": "m", "solids": building, "box": None}, solid.scene(boxes + parts)])
     return whole, parts
+
+
+CLASH_HEADERS = ("ID", "Type / Tipo", "Severity / Gravedad", "Level / Nivel", "A", "B", "Gap (m) / Separación (m)", "Overlap (m) / Solape (m)", "Point x, y, z (m) / Punto", "Description (EN)", "Descripción (ES)")
+
+
+def _clash_rows(clashes):
+    ref = lambda r: f"{r['tag']} ({r['kind']}, {r['layer']})"      # noqa: E731
+    return [[c["id"], c["type"], c["severity"], c["level"], ref(c["a"]), ref(c["b"]), c["gap_m"], ", ".join(str(v) for v in c["overlap_m"] or []), ", ".join(str(v) for v in c["point_m"]), c["text"]["en"], c["text"]["es"]] for c in clashes]
+
+
+def _write_clashes(clashes, out_dir, board):
+    """The list of clashes as a workbook, bilingual, in the drawings folder; the solution is decided later, by a person. Returns the file name."""
+    from epc_drawing import write_tables
+    name = f"{board}_clashes.xlsx"
+    write_tables(out_dir / name, [("Clashes", CLASH_HEADERS, _clash_rows(clashes))])
+    return name
 
 
 def _elevations(given, routing, out_dir, board):
@@ -150,5 +203,8 @@ def write(context_inputs, out_dir, board, stamp_date=None):
         elevations = _elevations(given, routing, out_dir, board)
     except (ValueError, KeyError) as exc:
         raise StageInputError([f"model3d: {exc}"]) from exc
-    outputs = {"solids": len(scene["solids"]), "faces": faces, "sections": cuts, "elevations": elevations, "takeoff": detail.takeoff(parts)}
+    from epc_plan import clash_scene
+    clashes = clash_scene.detect(scene, float(given.get("clearance_m", 0.0)))
+    outputs = {"solids": len(scene["solids"]), "faces": faces, "sections": cuts, "elevations": elevations, "takeoff": detail.takeoff(parts),
+               "clashes": {"count": len(clashes), "hard": sum(c["type"] == "hard" for c in clashes), "file": _write_clashes(clashes, out_dir, board)}}
     return {"model3d": outputs}, [(ARCH_ENGINE, ARCH_FUNCTION)] + ([(ARCH_ENGINE, "epc_arch.sections.elevation")] if elevations else []) + [(PLAN_ENGINE, f) for f in PLAN_FUNCTIONS]

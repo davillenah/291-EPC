@@ -48,6 +48,43 @@ def stage10(**extra):
 MODEL = {"floors": {"PB": HEIGHTS}, "supports": {"spacing_m": 1.5}, "sections": [{"name": "A", "axis": "x", "at_m": 3.0, "look": "+", "depth_m": 2.0}]}
 
 
+class TheTraysOfTheModel(unittest.TestCase):
+    def test_the_trays_are_ladders_unless_the_engineer_says_otherwise(self):
+        self.assertEqual(model3d._parts_spec({}), {"ladder_trays": {"layers": ["ELEC-BANDEJA"]}})
+        self.assertIsNone(model3d._parts_spec({"ladder_trays": False}))
+        mine = {"layers": ["ELEC-BANDEJA"], "kinds": {"ELEC-BANDEJA": "perforada"}, "cover": True}
+        self.assertEqual(model3d._parts_spec({"ladder_trays": mine}), {"ladder_trays": mine})
+
+    def test_the_supports_are_hangers_or_wall_brackets_with_their_reach(self):
+        ok = lambda supports: model3d._is_supports(supports)               # noqa: E731
+        self.assertTrue(ok({"spacing_m": 1.5}))
+        self.assertTrue(ok({"spacing_m": 1.5, "mount": "wall", "reach_m": 0.6}))
+        self.assertFalse(ok({"spacing_m": 1.5, "mount": "wall"}))           # the reach is the engineer's value: none is assumed
+        self.assertFalse(ok({"spacing_m": 1.5, "reach_m": 0.6}))
+        self.assertFalse(ok({"spacing_m": 1.5, "mount": "ceiling"}))
+
+    def test_a_bad_tray_option_is_an_error_and_false_is_not(self):
+        routing = {"PB": {}}
+        base = {"floors": {"PB": HEIGHTS}}
+        self.assertFalse([e for e in model3d.errors_of(dict(base, ladder_trays=False), routing) if "ladder_trays" in e])
+        self.assertTrue([e for e in model3d.errors_of(dict(base, ladder_trays={"layers": []}), routing) if "ladder_trays" in e])
+
+
+class TheClashListOfTheModel(unittest.TestCase):
+    def test_a_bad_clearance_is_an_error(self):
+        base = {"floors": {"PB": HEIGHTS}}
+        routing = {"PB": {}}
+        self.assertFalse([e for e in model3d.errors_of(dict(base, clearance_m=0.05), routing) if "clearance" in e])
+        for bad in (-1, "a", True):
+            self.assertTrue([e for e in model3d.errors_of(dict(base, clearance_m=bad), routing) if "clearance" in e], bad)
+
+    def test_the_rows_of_the_list_say_both_languages(self):
+        clash = {"id": "x", "type": "hard", "severity": "error", "level": "L0", "a": {"tag": "BN1", "kind": "BN", "layer": "L"}, "b": {"tag": "CN1", "kind": "CN", "layer": "M"},
+                 "gap_m": -0.1, "overlap_m": [0.1, 0.1, 0.1], "point_m": [1, 2, 3], "text": {"en": "clash", "es": "choque"}}
+        row = model3d._clash_rows([clash])[0]
+        self.assertEqual((row[0], row[4], row[9], row[10]), ("x", "BN1 (BN, L)", "clash", "choque"))
+
+
 class Model3dInTheRun(unittest.TestCase):
     def test_without_the_section_nothing_is_written(self):
         res, files, _, _ = stage10()
@@ -65,8 +102,10 @@ class Model3dInTheRun(unittest.TestCase):
         self.assertTrue(out["takeoff"]["straights"] and out["takeoff"]["supports"])
         self.assertEqual(sorted(out["sections"]), ["A"])
         self.assertGreater(out["sections"]["A"]["outlines"], 0)
+        self.assertEqual(len([f for f in files if f.endswith("_clashes.xlsx")]), 1, files)                  # the list of clashes is a file of the run
+        self.assertEqual(out["clashes"]["file"].rsplit("_", 1)[-1], "clashes.xlsx")
         calls = [c["function"] for c in res.engine_calls]
-        self.assertTrue({"epc_arch.model3d.building_solids", "epc_plan.detail.parts", "epc_plan.scene3d.write_dxf"} <= set(calls))
+        self.assertTrue({"epc_arch.model3d.building_solids", "epc_plan.detail.parts", "epc_plan.clash_scene.detect", "epc_plan.scene3d.write_dxf"} <= set(calls))
 
     def test_the_section_names_what_it_cuts_with_its_level(self):
         res, _, texts, _ = stage10(model3d=MODEL)
@@ -100,6 +139,22 @@ class Model3dInTheRun(unittest.TestCase):
     def test_a_plane_that_cannot_be_blocks(self):
         res, _, _, _ = stage10(model3d=dict(MODEL, sections=[{"name": "A", "axis": "z", "at_m": 1.0, "look": "+"}]))
         self.assertEqual(res.status, "blocked")
+
+
+class TheTrayLinesOfTheBoq(unittest.TestCase):
+    def test_the_boq_gets_the_tray_lines_from_the_takeoff_of_the_model(self):
+        from types import SimpleNamespace as NS
+        from disciplines.electrical_lv.stages import output_stages
+        take = {"straights": [{"layer": "ELEC-BANDEJA", "size": "300x90", "model": "BN-ESC-300x90", "length_m": 12.0}],
+                "fittings": [{"layer": "ELEC-BANDEJA", "size": "300x90", "model": "BN-ESC-C90-300x90", "type": "elbow", "count": 2}],
+                "supports": [{"layer": "MEC-SOPORTE", "size": "300x90", "model": "", "type": "wall_bracket", "count": 4}]}
+        ctx = NS(results={10: NS(status="ok", outputs={"takeoff": take})})
+        lines = output_stages.tray_equipment(ctx)
+        self.assertEqual([(l["unit"], l["quantity"]) for l in lines], [("m", 12.0), ("un", 2), ("un", 4)])
+        self.assertTrue(all(l["category"] == "tray_system" for l in lines))
+        self.assertIn("BN-ESC-C90-300x90", lines[1]["description"])
+        self.assertIsNone(output_stages.tray_equipment(NS(results={})))
+        self.assertEqual(len(output_stages.boq_equipment(ctx)), 3)
 
 
 class Errors(unittest.TestCase):

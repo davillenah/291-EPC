@@ -15,7 +15,7 @@ couplings, covers or fixings to the structure, and supports only for horizontal 
 import math
 from typing import Any, Dict, List, Optional, Tuple
 
-from epc_plan import core
+from epc_plan import core, tray_catalogue
 from epc_plan import solid as S
 from epc_plan.core import PlanError
 
@@ -126,7 +126,27 @@ def _toward(a, b, d: float) -> V3:
     return _add(a, _unit(_sub(b, a)), d)
 
 
-def _run_parts(s: Dict[str, Any], ring: List[Tuple[float, float]], leg: float) -> List[Dict[str, Any]]:
+def _straight_mesh(piece: Dict[str, Any], ladder: Optional[Dict[str, Any]]) -> Dict[str, Any]:
+    """The mesh of a straight piece: the rails and rungs of a ladder tray when `ladder` says its layer is one, else the swept box."""
+    if ladder and piece.get("layer") in ladder["layers"] and piece["section"] == "rect":
+        from epc_plan import tray_solid
+        kind = ladder.get("kinds", {}).get(piece["layer"], "escalera")
+        return tray_solid.tray_mesh([tuple(p) for p in piece["path"]], piece["width_m"], piece["height_m"], ladder["sizes"], kind)
+    return S.mesh(piece)
+
+
+def _elbow_mesh_for(s: Dict[str, Any], a, corner, b, ring, ladder: Optional[Dict[str, Any]]) -> Dict[str, Any]:
+    """The mesh of an elbow: the tray of its kind turned through the bend (inner radius of the catalogue, never more than the legs) on a ladder layer, else the swept box."""
+    if not (ladder and s.get("layer") in ladder["layers"] and s["section"] == "rect"):
+        return _elbow_mesh(a, corner, b, ring)
+    from epc_plan import tray_solid
+    reach = min(_len(a, corner), _len(corner, b))
+    radius = min(ladder["elbow_radius"] + s["width_m"] / 2, reach)
+    path = tray_solid.path3d([a, corner, b], radius, radius, ladder["links"])
+    return tray_solid.tray_mesh(path, s["width_m"], s["height_m"], ladder["sizes"], ladder.get("kinds", {}).get(s["layer"], "escalera"))
+
+
+def _run_parts(s: Dict[str, Any], ring: List[Tuple[float, float]], leg: float, ladder: Optional[Dict[str, Any]] = None) -> List[Dict[str, Any]]:
     """One run as its straight pieces (cut to the elbows) and the elbow at each bend."""
     path = [tuple(p) for p in s["path"]]
     legs = _legs(path, leg)
@@ -135,11 +155,11 @@ def _run_parts(s: Dict[str, Any], ring: List[Tuple[float, float]], leg: float) -
         a, b = _toward(path[i], path[i + 1], legs[i]), _toward(path[i + 1], path[i], legs[i + 1])
         if _len(a, b) > 1e-6:
             piece = dict(s, path=[_r(a), _r(b)])
-            out.append(_part(s, "straight", i + 1, S.mesh(piece), path=piece["path"], length_m=round(_len(a, b), 3)))
+            out.append(_part(s, "straight", i + 1, _straight_mesh(piece, ladder), path=piece["path"], length_m=round(_len(a, b), 3)))
     for i in range(1, len(path) - 1):
         if legs[i] > 0:
             a, b = _toward(path[i], path[i - 1], legs[i]), _toward(path[i], path[i + 1], legs[i])
-            out.append(_part(s, "elbow", i, _elbow_mesh(a, path[i], b, ring), path=[_r(a), _r(path[i]), _r(b)], angle_deg=_angle(path[i - 1], path[i], path[i + 1])))
+            out.append(_part(s, "elbow", i, _elbow_mesh_for(s, a, path[i], b, ring, ladder), path=[_r(a), _r(path[i]), _r(b)], angle_deg=_angle(path[i - 1], path[i], path[i + 1])))
     return out
 
 
@@ -163,7 +183,7 @@ def _stretches(s: Dict[str, Any]) -> List[Tuple[V3, V3]]:
     return list(zip(path, path[1:]))
 
 
-def _tees(runs: List[Dict[str, Any]], rings, leg_of) -> List[Dict[str, Any]]:
+def _tees(runs: List[Dict[str, Any]], rings, leg_of, ladder: Optional[Dict[str, Any]] = None) -> List[Dict[str, Any]]:
     """Where a run ends on the side of another of its discipline: a tee of the main run, as long as the branch is wide plus a leg each way."""
     out = []
     for branch in runs:
@@ -176,11 +196,65 @@ def _tees(runs: List[Dict[str, Any]], rings, leg_of) -> List[Dict[str, Any]]:
                         half = branch["width_m"] / 2 + leg_of(main)
                         p, q = _toward(end, a, min(half, _len(end, a))), _toward(end, b, min(half, _len(end, b)))
                         piece = dict(main, path=[_r(p), _r(q)])
-                        out.append(_part(main, "tee", len(out) + 1, S.mesh(piece), path=piece["path"], branch=branch["id"], branch_size=_size(branch), at=_r(end)))
+                        out.append(_part(main, "tee", len(out) + 1, _straight_mesh(piece, ladder), path=piece["path"], branch=branch["id"], branch_size=_size(branch), at=_r(end)))
     return out
 
 
-def _reducers(runs: List[Dict[str, Any]], rings, leg_of) -> List[Dict[str, Any]]:
+def _reducer_for(big: Dict[str, Any], small: Dict[str, Any], p, tip, rings, ladder: Optional[Dict[str, Any]]) -> Dict[str, Any]:
+    """The mesh of a reducer: a tapering tray of the kind of the layer, else the skin between the two sections."""
+    if not (ladder and big.get("layer") in ladder["layers"] and big["section"] == small["section"] == "rect"):
+        return _reducer_mesh(p, tip, rings[big["id"]], rings[small["id"]])
+    from epc_plan import tray_solid
+    return tray_solid.reducer_mesh(p, tip, (big["width_m"], small["width_m"]), big["height_m"], ladder["sizes"], ladder.get("kinds", {}).get(big["layer"], "escalera"))
+
+
+def _cross_at(a, b, c, d) -> Optional[V3]:
+    """Where the stretches a-b and c-d cross in plan, away from their ends and at the same height, else None."""
+    r, q = _sub(b, a), _sub(d, c)
+    det = r[0] * q[1] - r[1] * q[0]
+    if abs(det) < 1e-9:
+        return None
+    w = _sub(c, a)
+    t, u = (w[0] * q[1] - w[1] * q[0]) / det, (w[0] * r[1] - w[1] * r[0]) / det
+    lo_t, lo_u = TOUCH / max(_len(a, b), 1e-9), TOUCH / max(_len(c, d), 1e-9)
+    if not (lo_t < t < 1 - lo_t and lo_u < u < 1 - lo_u):
+        return None
+    mine, other = _add(a, r, t), _add(c, q, u)
+    return mine if abs(mine[2] - other[2]) <= TOUCH else None
+
+
+def _arm(point: V3, a, b, half: float) -> List[List[float]]:
+    """The piece of the stretch a-b that centres on `point`, `half` each way."""
+    return [_r(_toward(point, a, min(half, _len(point, a)))), _r(_toward(point, b, min(half, _len(point, b))))]
+
+
+def _same_tray(first: Dict[str, Any], second: Dict[str, Any]) -> bool:
+    return first["discipline"] == second["discipline"] and first.get("layer") == second.get("layer") and first["section"] == second["section"] == "rect"
+
+
+def _cross_part(first, second, stretch_a, stretch_b, at: V3, leg_of, ladder, n: int) -> Dict[str, Any]:
+    """The cross of two runs at `at`: both arms, each as long as the other tray is wide plus a leg each way."""
+    pieces = [dict(first, path=_arm(at, *stretch_a, second["width_m"] / 2 + leg_of(first))), dict(second, path=_arm(at, *stretch_b, first["width_m"] / 2 + leg_of(second)))]
+    meshes = [_straight_mesh(piece, ladder) for piece in pieces]
+    shift = len(meshes[0]["vertices"])
+    mesh = {"vertices": meshes[0]["vertices"] + meshes[1]["vertices"], "faces": meshes[0]["faces"] + [[v + shift for v in f] for f in meshes[1]["faces"]]}
+    return _part(first, "cross", n, mesh, path=pieces[0]["path"], branch=second["id"], branch_size=_size(second), at=_r(at))
+
+
+def _crosses(runs: List[Dict[str, Any]], leg_of, ladder: Optional[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    """Where two tray runs of one layer cross in the middle at the same height: a cross."""
+    out = []
+    for i, first in enumerate(runs):
+        for second in (r for r in runs[i + 1:] if _same_tray(first, r)):
+            for sa in _stretches(first):
+                for sb in _stretches(second):
+                    at = _cross_at(*sa, *sb)
+                    if at is not None:
+                        out.append(_cross_part(first, second, sa, sb, at, leg_of, ladder, len(out) + 1))
+    return out
+
+
+def _reducers(runs: List[Dict[str, Any]], rings, leg_of, ladder: Optional[Dict[str, Any]] = None) -> List[Dict[str, Any]]:
     """Where two runs of one discipline and different size meet end to end: a reducer, drawn on the end of the smaller one."""
     out = []
     for i, big in enumerate(runs):
@@ -193,7 +267,7 @@ def _reducers(runs: List[Dict[str, Any]], rings, leg_of) -> List[Dict[str, Any]]
                 far = next((q for q, e in zip(reversed(_ends(small)), _ends(small)) if _len(p, e) <= TOUCH), None)
                 if far is not None:
                     tip = _toward(p, far, min(leg_of(big), _len(p, far)))
-                    out.append(_part(big, "reducer", len(out) + 1, _reducer_mesh(p, tip, rings[big["id"]], rings[small["id"]]), path=[_r(p), _r(tip)], to=small["id"], to_size=_size(small)))
+                    out.append(_part(big, "reducer", len(out) + 1, _reducer_for(big, small, p, tip, rings, ladder), path=[_r(p), _r(tip)], to=small["id"], to_size=_size(small)))
     return out
 
 
@@ -205,16 +279,67 @@ def _setting(spec: Optional[Dict[str, Any]], key: str) -> float:
     return float(value)
 
 
+def tray_kinds() -> tuple:
+    from epc_plan import tray_draw
+    return tray_draw.KINDS
+
+
+def _ladder_params() -> Dict[str, Any]:
+    """`detail.ladder` with the sheet, section length and bends of the catalogue."""
+    return tray_catalogue.ladder(core.PARAMS["detail"]["ladder"], core.PARAMS["tray_catalogue"])
+
+
+def _ladder_sizes(cover: bool) -> Dict[str, float]:
+    """The sizes of rail, rungs, floor and wires (`params.json`, `detail.ladder`, in metres), and the lid when there is one."""
+    q = _ladder_params()
+    keys = ("rail", "rung", "rung_thick", "rung_pitch", "foot", "curl", "lip", "jog", "slot_pitch", "slot", "slot_height", "floor_margin", "hole_pitch", "hole", "wire", "wire_pitch", "joint", "bolt")
+    sizes = {k: q[k + "_m"] for k in keys}
+    if cover:
+        sizes["cover"] = q["cover_m"]                                    # the lid, a flat sheet over the rails
+        sizes["cover_wide"], sizes["cover_wide_from"] = q["cover_wide_m"], q["cover_wide_from_m"]    # thicker from this width
+    return sizes
+
+
+def _kinds_ok(kinds: Any, layers: List[str]) -> bool:
+    return isinstance(kinds, dict) and all(k in layers and v in tray_kinds() for k, v in kinds.items())
+
+
+def _ladder(spec: Optional[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
+    """The trays asked for in `spec["ladder_trays"]` ({"layers": [...], "kinds": {layer: kind}, "cover": bool}): the layers, the kind of each and the sizes they are drawn with."""
+    given = (spec or {}).get("ladder_trays")
+    if not given:
+        return None
+    layers = given.get("layers") if isinstance(given, dict) else None
+    if not isinstance(layers, list) or not layers or not all(isinstance(x, str) for x in layers) or not _kinds_ok(given.get("kinds", {}), layers):
+        raise core.PlanError("err_detail_number", key="ladder_trays")
+    return {"layers": layers, "sizes": _ladder_sizes(bool(given.get("cover"))), "kinds": given.get("kinds", {}), "elbow_radius": _ladder_params()["elbow_radius_m"], "links": _ladder_params()["vertical_links"]}
+
+
 def parts(solids: List[Dict[str, Any]], spec: Optional[Dict[str, Any]] = None) -> List[Dict[str, Any]]:
     """The runs of the solids as the parts they are built from: straights, elbows, tees and reducers, each with its mesh. Boxes (equipment, boards, chambers) are not parts: they stay as
-    they are in the scene. `spec` may give `elbow_leg_factor` (the leg of an elbow in widths of its run)."""
+    they are in the scene. `spec` may give `elbow_leg_factor` (the leg of an elbow in widths of its run) and `ladder_trays` ({"layers": [...]}: the straights on those layers are drawn as ladder trays, with rails and rungs)."""
     factor = _setting(spec, "elbow_leg_factor")
     sides = core.PARAMS["solid"]["sides"]
     runs = [s for s in solids if s.get("shape") == "run"]
     rings = {s["id"]: S._ring(s, sides) for s in runs}
     leg_of = lambda s: factor * s["width_m"]                                  # noqa: E731
-    out = [p for s in runs for p in _run_parts(s, rings[s["id"]], leg_of(s))]
-    return out + _tees(runs, rings, leg_of) + _reducers(runs, rings, leg_of)
+    ladder = _ladder(spec)
+    out = [p for s in runs for p in _run_parts(s, rings[s["id"]], leg_of(s), ladder)]
+    return _named(out + _tees(runs, rings, leg_of, ladder) + _reducers(runs, rings, leg_of, ladder) + _crosses(runs, leg_of, ladder), ladder)
+
+
+def _named(items: List[Dict[str, Any]], ladder: Optional[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    """The parts of the tray layers with their kind of tray and the own name of their model (`tray_code`): BN-ESC-C90-300x90."""
+    if not ladder:
+        return items
+    from epc_plan import tray_code
+    for p in items:
+        fitting = tray_code.fitting_of(p["part"], p.get("angle_deg"))
+        if p.get("layer") in ladder["layers"] and p["section"] == "rect" and fitting:
+            kind = ladder.get("kinds", {}).get(p["layer"], "escalera")
+            p["tray_kind"] = kind
+            p["model"] = tray_code.code(kind, p["width_m"] * 1000, p["height_m"] * 1000, fitting)
+    return items
 
 
 # ---------------------------------------------------------------- supports
@@ -311,10 +436,10 @@ def takeoff(items: List[Dict[str, Any]]) -> Dict[str, List[Dict[str, Any]]]:
     fittings: Dict[tuple, Dict[str, Any]] = {}
     hangers: Dict[tuple, Dict[str, Any]] = {}
     for p in items:
-        base = {"discipline": p.get("discipline", ""), "layer": p.get("layer", ""), "size": p.get("size", "")}
+        base = {"discipline": p.get("discipline", ""), "layer": p.get("layer", ""), "size": p.get("size", ""), "model": p.get("model", "")}
         if p.get("part") == "straight":
             _count(straights, tuple(base.values()), base, length_m=p["length_m"])
-        elif p.get("part") in ("elbow", "tee", "reducer"):
+        elif p.get("part") in ("elbow", "tee", "cross", "reducer"):
             extra = {"type": p["part"], "angle_deg": p.get("angle_deg"), "to_size": p.get("branch_size") or p.get("to_size")}
             _count(fittings, tuple(base.values()) + tuple(extra.values()), dict(base, **extra))
         elif p.get("part") == "support":

@@ -15,7 +15,7 @@ def library_dir(kind: str = "sld-lv-symbol") -> Path:
     return LIBRARY / kind
 __version__ = "0.1.0"
 
-__all__ = ["AmbiguousSymbol", "SymbolRecord", "SymbolsError", "UnknownSymbol", "dxf_block", "library_dir", "arch_symbols", "list_ids", "plan_symbols", "resolve", "svg_fragment", "terminals"]
+__all__ = ["AmbiguousSymbol", "SymbolRecord", "SymbolsError", "UnknownSymbol", "dxf_block", "library_dir", "arch_symbols", "list_ids", "placeholder", "plan_symbols", "resolve", "svg_fragment", "terminals"]
 
 
 def __getattr__(name):

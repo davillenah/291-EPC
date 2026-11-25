@@ -1,0 +1,842 @@
+{
+ "manufacturer": "samet",
+ "category": "cable_trays",
+ "products": [
+  {
+   "id": "samet-smarttray-tres",
+   "family": "Smarttray ladder tray, straight section",
+   "type": "cable_tray_ladder_straight",
+   "status": "unverified",
+   "source": "Samet Smarttray escalera catalogue, pages 7-27 (data extracted; the PDF is not stored)",
+   "code_pattern": "TRES-<width>-<ala>-<gauge>-<finish>",
+   "nominal_length_mm": 3000,
+   "widths_mm": [
+    150,
+    300,
+    450,
+    600,
+    750,
+    900
+   ],
+   "rail_profiles": [
+    {
+     "ala": 65,
+     "height_mm": 65,
+     "inner_height_mm": 44,
+     "seat_mm": 15
+    },
+    {
+     "ala": 90,
+     "height_mm": 90,
+     "inner_height_mm": 70,
+     "seat_mm": 15
+    },
+    {
+     "ala": 115,
+     "height_mm": 115,
+     "inner_height_mm": 95,
+     "seat_mm": 15
+    },
+    {
+     "ala": 150,
+     "height_mm": 150,
+     "inner_height_mm": 130
+    }
+   ],
+   "gauges": [
+    {
+     "gauge": 18,
+     "thickness_mm": 1.24
+    },
+    {
+     "gauge": 14,
+     "thickness_mm": 2.1
+    }
+   ],
+   "finishes": [
+    {
+     "code": "Z",
+     "en": "pre-galvanised steel",
+     "es": "chapa galvanizada en origen"
+    },
+    {
+     "code": "G",
+     "en": "hot-dip galvanised (ASTM A123)",
+     "es": "galvanizado por inmersión en caliente"
+    }
+   ],
+   "availability": [
+    {
+     "finish": "Z",
+     "gauge": 18,
+     "alas": [
+      65,
+      90,
+      115
+     ],
+     "widths_mm": [
+      150,
+      300,
+      450,
+      600
+     ]
+    },
+    {
+     "finish": "G",
+     "gauge": 18,
+     "alas": [
+      65,
+      90,
+      115
+     ],
+     "widths_mm": [
+      150,
+      300,
+      450,
+      600
+     ]
+    },
+    {
+     "finish": "G",
+     "gauge": 14,
+     "alas": [
+      65,
+      90,
+      115,
+      150
+     ],
+     "widths_mm": [
+      150,
+      300,
+      450,
+      600
+     ]
+    }
+   ],
+   "notes": "Cold-assembled rails and crossbars; joined with four 3/8 in carriage bolt sets, no splice plates. The second height of each profile is the dimension printed inside the profile drawing (to verify).",
+   "section_shape": {
+    "status": "unverified",
+    "rail": "cold-formed C: web, bottom foot turned in (15 mm), top edge rolled",
+    "rung": "channel seated on the foot, 15 mm high",
+    "joint": "built-in coupling, 4 carriage bolts 3/8 in per joint",
+    "side_slots": true,
+    "elbow_inner_radius_mm": 300
+   }
+  },
+  {
+   "id": "samet-load-test",
+   "family": "Load test of the straight section (IEC 61537:2006, clause 10.3)",
+   "type": "cable_tray_load_test",
+   "status": "unverified",
+   "source": "Samet Smarttray escalera catalogue, pages 7-27 (data extracted; the PDF is not stored)",
+   "support_distance_m": 1.5,
+   "span_m": 3.0,
+   "results": [
+    {
+     "finish": "Z",
+     "gauge": 18,
+     "ala": 65,
+     "width_mm": 150,
+     "deflection_mm": 6.5,
+     "safe_working_load_kg_per_m": 300
+    },
+    {
+     "finish": "Z",
+     "gauge": 18,
+     "ala": 65,
+     "width_mm": 300,
+     "deflection_mm": 7.3,
+     "safe_working_load_kg_per_m": 300
+    },
+    {
+     "finish": "Z",
+     "gauge": 18,
+     "ala": 65,
+     "width_mm": 450,
+     "deflection_mm": 8.1,
+     "safe_working_load_kg_per_m": 300
+    },
+    {
+     "finish": "Z",
+     "gauge": 18,
+     "ala": 65,
+     "width_mm": 600,
+     "deflection_mm": 9.8,
+     "safe_working_load_kg_per_m": 300
+    },
+    {
+     "finish": "Z",
+     "gauge": 18,
+     "ala": 90,
+     "width_mm": 150,
+     "deflection_mm": 7.6,
+     "safe_working_load_kg_per_m": 400
+    },
+    {
+     "finish": "Z",
+     "gauge": 18,
+     "ala": 90,
+     "width_mm": 300,
+     "deflection_mm": 8.5,
+     "safe_working_load_kg_per_m": 400
+    },
+    {
+     "finish": "Z",
+     "gauge": 18,
+     "ala": 90,
+     "width_mm": 450,
+     "deflection_mm": 8.8,
+     "safe_working_load_kg_per_m": 400
+    },
+    {
+     "finish": "Z",
+     "gauge": 18,
+     "ala": 90,
+     "width_mm": 600,
+     "deflection_mm": 11.5,
+     "safe_working_load_kg_per_m": 400
+    },
+    {
+     "finish": "G",
+     "gauge": 18,
+     "ala": 65,
+     "width_mm": 150,
+     "deflection_mm": 6.2,
+     "safe_working_load_kg_per_m": 310
+    },
+    {
+     "finish": "G",
+     "gauge": 18,
+     "ala": 65,
+     "width_mm": 300,
+     "deflection_mm": 7.1,
+     "safe_working_load_kg_per_m": 310
+    },
+    {
+     "finish": "G",
+     "gauge": 18,
+     "ala": 65,
+     "width_mm": 450,
+     "deflection_mm": 8.6,
+     "safe_working_load_kg_per_m": 310
+    },
+    {
+     "finish": "G",
+     "gauge": 18,
+     "ala": 65,
+     "width_mm": 600,
+     "deflection_mm": 9.7,
+     "safe_working_load_kg_per_m": 310
+    },
+    {
+     "finish": "G",
+     "gauge": 18,
+     "ala": 90,
+     "width_mm": 150,
+     "deflection_mm": 6.5,
+     "safe_working_load_kg_per_m": 440
+    },
+    {
+     "finish": "G",
+     "gauge": 18,
+     "ala": 90,
+     "width_mm": 300,
+     "deflection_mm": 8.3,
+     "safe_working_load_kg_per_m": 440
+    },
+    {
+     "finish": "G",
+     "gauge": 18,
+     "ala": 90,
+     "width_mm": 450,
+     "deflection_mm": 9.5,
+     "safe_working_load_kg_per_m": 440
+    },
+    {
+     "finish": "G",
+     "gauge": 18,
+     "ala": 90,
+     "width_mm": 600,
+     "deflection_mm": 11,
+     "safe_working_load_kg_per_m": 440
+    }
+   ],
+   "notes": "Only the 1.5 m support distance is filled in the catalogue tables; the other distances (1.75, 2, 2.25, 2.5 m) are empty there."
+  },
+  {
+   "id": "samet-smarttray-cs90",
+   "family": "Smarttray Horizontal 90 degree elbow",
+   "type": "cable_tray_elbow",
+   "status": "unverified",
+   "source": "Samet Smarttray escalera catalogue, pages 7-27 (data extracted; the PDF is not stored)",
+   "code_pattern": "CS-<width>-90-<ala>-<gauge>-<finish>",
+   "widths_mm": [
+    150,
+    300,
+    450,
+    600
+   ],
+   "alas": [
+    65,
+    90,
+    115,
+    150
+   ],
+   "inner_radius_mm": 300
+  },
+  {
+   "id": "samet-smarttray-cs45",
+   "family": "Smarttray Horizontal 45 degree elbow",
+   "type": "cable_tray_elbow",
+   "status": "unverified",
+   "source": "Samet Smarttray escalera catalogue, pages 7-27 (data extracted; the PDF is not stored)",
+   "code_pattern": "CS-<width>-45-<ala>-<gauge>-<finish>",
+   "widths_mm": [
+    150,
+    300,
+    450,
+    600
+   ],
+   "alas": [
+    65,
+    90,
+    115,
+    150
+   ],
+   "inner_radius_mm": 300
+  },
+  {
+   "id": "samet-smarttray-cas",
+   "family": "Smarttray Adjustable elbow",
+   "type": "cable_tray_elbow_adjustable",
+   "status": "unverified",
+   "source": "Samet Smarttray escalera catalogue, pages 7-27 (data extracted; the PDF is not stored)",
+   "code_pattern": "CAS-<width>-<ala>-<gauge>-<finish>",
+   "widths_mm": [
+    150,
+    300,
+    450,
+    600
+   ],
+   "alas": [
+    65,
+    90,
+    115,
+    150
+   ]
+  },
+  {
+   "id": "samet-smarttray-cus",
+   "family": "Smarttray Vertical articulated bend (5 links)",
+   "type": "cable_tray_elbow_vertical",
+   "status": "unverified",
+   "source": "Samet Smarttray escalera catalogue, pages 7-27 (data extracted; the PDF is not stored)",
+   "code_pattern": "CUS-<width>-5-<ala>-<gauge>-<finish>",
+   "widths_mm": [
+    150,
+    300,
+    450,
+    600
+   ],
+   "alas": [
+    65,
+    90,
+    115,
+    150
+   ],
+   "links": 5,
+   "approx_radius_mm_by_link_count": {
+    "3": 125,
+    "4": 210,
+    "5": 294,
+    "6": 376,
+    "7": 460,
+    "8": 540,
+    "9": 625,
+    "10": 705
+   }
+  },
+  {
+   "id": "samet-smarttray-ts",
+   "family": "Smarttray Horizontal tee",
+   "type": "cable_tray_tee",
+   "status": "unverified",
+   "source": "Samet Smarttray escalera catalogue, pages 7-27 (data extracted; the PDF is not stored)",
+   "code_pattern": "TS-<width>-<ala>-<gauge>-<finish>",
+   "widths_mm": [
+    150,
+    300,
+    450,
+    600
+   ],
+   "alas": [
+    65,
+    90,
+    115,
+    150
+   ],
+   "inner_radius_mm": 300
+  },
+  {
+   "id": "samet-smarttray-xs",
+   "family": "Smarttray Horizontal cross",
+   "type": "cable_tray_cross",
+   "status": "unverified",
+   "source": "Samet Smarttray escalera catalogue, pages 7-27 (data extracted; the PDF is not stored)",
+   "code_pattern": "XS-<width>-<ala>-<gauge>-<finish>",
+   "widths_mm": [
+    150,
+    300,
+    450,
+    600
+   ],
+   "alas": [
+    65,
+    90,
+    115,
+    150
+   ],
+   "inner_radius_mm": 300
+  },
+  {
+   "id": "samet-smarttray-rcs",
+   "family": "Smarttray central reduction",
+   "type": "cable_tray_reduction_central",
+   "status": "unverified",
+   "source": "Samet Smarttray escalera catalogue, pages 7-27 (data extracted; the PDF is not stored)",
+   "code_pattern": "RCS-<big>/<small>-<ala>-<gauge>-<finish> (widths in cm)",
+   "width_pairs_mm": [
+    [
+     300,
+     150
+    ],
+    [
+     450,
+     150
+    ],
+    [
+     450,
+     300
+    ],
+    [
+     600,
+     150
+    ],
+    [
+     600,
+     300
+    ],
+    [
+     600,
+     450
+    ]
+   ],
+   "alas": [
+    65,
+    90,
+    115,
+    150
+   ]
+  },
+  {
+   "id": "samet-smarttray-ris",
+   "family": "Smarttray side reduction",
+   "type": "cable_tray_reduction_side",
+   "status": "unverified",
+   "source": "Samet Smarttray escalera catalogue, pages 7-27 (data extracted; the PDF is not stored)",
+   "code_pattern": "RIS-<big>/<small>-<ala>-<gauge>-<finish> (widths in cm; letter D instead of I for the right side)",
+   "width_pairs_mm": [
+    [
+     300,
+     150
+    ],
+    [
+     450,
+     150
+    ],
+    [
+     450,
+     300
+    ],
+    [
+     600,
+     150
+    ],
+    [
+     600,
+     300
+    ],
+    [
+     600,
+     450
+    ]
+   ],
+   "alas": [
+    65,
+    90,
+    115,
+    150
+   ]
+  },
+  {
+   "id": "samet-smarttray-rss",
+   "family": "Smarttray blind end and reducer splice plate",
+   "type": "cable_tray_end",
+   "status": "unverified",
+   "source": "Samet Smarttray escalera catalogue, pages 7-27 (data extracted; the PDF is not stored)",
+   "code_pattern": "RSS-<width>-<ala>-<gauge>-<finish>",
+   "widths_mm": [
+    75,
+    150,
+    225,
+    300,
+    450,
+    600
+   ],
+   "alas": [
+    65,
+    90,
+    115,
+    150
+   ]
+  },
+  {
+   "id": "samet-smarttray-bases",
+   "family": "Smarttray bases (perforated PPTRES, blind PCTRES)",
+   "type": "cable_tray_base",
+   "status": "unverified",
+   "source": "Samet Smarttray escalera catalogue, pages 7-27 (data extracted; the PDF is not stored)",
+   "code_pattern": "<PPTRES|PCTRES>-<width>-<gauge>-<finish>",
+   "widths_mm": [
+    150,
+    300,
+    450,
+    600
+   ]
+  },
+  {
+   "id": "samet-cover-ttrs",
+   "family": "Smarttray straight section cover",
+   "type": "cable_tray_cover",
+   "status": "unverified",
+   "source": "Samet Smarttray escalera catalogue, pages 7-27 (data extracted; the PDF is not stored)",
+   "code_pattern": "TTRS-<width>-<thickness code>-<finish>",
+   "widths_mm": [
+    150,
+    300,
+    450,
+    600
+   ],
+   "thickness_mm": {
+    "Z": {
+     "150-300": 0.71,
+     "450-600": 0.89
+    },
+    "G": 1.24
+   }
+  },
+  {
+   "id": "samet-cover-tcs90",
+   "family": "Smarttray 90 degree elbow cover",
+   "type": "cable_tray_cover",
+   "status": "unverified",
+   "source": "Samet Smarttray escalera catalogue, pages 7-27 (data extracted; the PDF is not stored)",
+   "code_pattern": "TCS-<width>-90-<thickness code>-<finish>",
+   "widths_mm": [
+    150,
+    300,
+    450,
+    600
+   ],
+   "thickness_mm": {
+    "Z": {
+     "150-300": 0.71,
+     "450-600": 0.89
+    },
+    "G": 1.24
+   }
+  },
+  {
+   "id": "samet-cover-tcs45",
+   "family": "Smarttray 45 degree elbow cover",
+   "type": "cable_tray_cover",
+   "status": "unverified",
+   "source": "Samet Smarttray escalera catalogue, pages 7-27 (data extracted; the PDF is not stored)",
+   "code_pattern": "TCS-<width>-45-<thickness code>-<finish>",
+   "widths_mm": [
+    150,
+    300,
+    450,
+    600
+   ],
+   "thickness_mm": {
+    "Z": {
+     "150-300": 0.71,
+     "450-600": 0.89
+    },
+    "G": 1.24
+   }
+  },
+  {
+   "id": "samet-cover-tts",
+   "family": "Smarttray tee cover",
+   "type": "cable_tray_cover",
+   "status": "unverified",
+   "source": "Samet Smarttray escalera catalogue, pages 7-27 (data extracted; the PDF is not stored)",
+   "code_pattern": "TTS-<width>-<thickness code>-<finish>",
+   "widths_mm": [
+    150,
+    300,
+    450,
+    600
+   ],
+   "thickness_mm": {
+    "Z": {
+     "150-300": 0.71,
+     "450-600": 0.89
+    },
+    "G": 1.24
+   }
+  },
+  {
+   "id": "samet-cover-txs",
+   "family": "Smarttray cross cover",
+   "type": "cable_tray_cover",
+   "status": "unverified",
+   "source": "Samet Smarttray escalera catalogue, pages 7-27 (data extracted; the PDF is not stored)",
+   "code_pattern": "TXS-<width>-<thickness code>-<finish>",
+   "widths_mm": [
+    150,
+    300,
+    450,
+    600,
+    750,
+    900
+   ],
+   "thickness_mm": {
+    "Z": {
+     "150-300": 0.71,
+     "450-600": 0.89
+    },
+    "G": 1.24
+   }
+  },
+  {
+   "id": "samet-cover-tcas",
+   "family": "Smarttray adjustable elbow cover",
+   "type": "cable_tray_cover",
+   "status": "unverified",
+   "source": "Samet Smarttray escalera catalogue, pages 7-27 (data extracted; the PDF is not stored)",
+   "code_pattern": "TCAS-<width>-<thickness code>-<finish>",
+   "widths_mm": [
+    150,
+    300,
+    450,
+    600
+   ],
+   "thickness_mm": {
+    "Z": {
+     "150-300": 0.71,
+     "450-600": 0.89
+    },
+    "G": 1.24
+   }
+  },
+  {
+   "id": "samet-cover-teps",
+   "family": "Smarttray universal link cover",
+   "type": "cable_tray_cover",
+   "status": "unverified",
+   "source": "Samet Smarttray escalera catalogue, pages 7-27 (data extracted; the PDF is not stored)",
+   "code_pattern": "TEPS-<width>-<thickness code>-<finish>",
+   "widths_mm": [
+    150,
+    300,
+    450,
+    600
+   ],
+   "thickness_mm": {
+    "Z": {
+     "150-300": 0.71,
+     "450-600": 0.89
+    },
+    "G": 1.24
+   }
+  },
+  {
+   "id": "samet-support-s",
+   "family": "Wall bracket",
+   "type": "support_bracket",
+   "status": "unverified",
+   "source": "Samet Smarttray escalera catalogue, pages 7-27 (data extracted; the PDF is not stored)",
+   "code_pattern": "S-<width>-Z",
+   "sizes_mm": [
+    130,
+    180,
+    230,
+    330
+   ],
+   "finish": "Z"
+  },
+  {
+   "id": "samet-support-sr",
+   "family": "Heavy-duty wall bracket",
+   "type": "support_bracket",
+   "status": "unverified",
+   "source": "Samet Smarttray escalera catalogue, pages 7-27 (data extracted; the PDF is not stored)",
+   "code_pattern": "SR-<width>-G",
+   "sizes_mm": [
+    130,
+    180,
+    230,
+    330,
+    480,
+    630
+   ],
+   "finish": "G"
+  },
+  {
+   "id": "samet-support-sts",
+   "family": "Trapeze hanger",
+   "type": "support_hanger",
+   "status": "unverified",
+   "source": "Samet Smarttray escalera catalogue, pages 7-27 (data extracted; the PDF is not stored)",
+   "code_pattern": "STS-<size>-Z",
+   "sizes_mm": [
+    200,
+    250,
+    350,
+    500,
+    650
+   ],
+   "finish": "Z"
+  },
+  {
+   "id": "samet-support-sar",
+   "family": "Regulable wall bracket",
+   "type": "support_bracket",
+   "status": "unverified",
+   "source": "Samet Smarttray escalera catalogue, pages 7-27 (data extracted; the PDF is not stored)",
+   "code_pattern": "SAR-<size>-Z",
+   "sizes_mm": [
+    200,
+    250,
+    370
+   ],
+   "finish": "Z"
+  },
+  {
+   "id": "samet-support-scus",
+   "family": "Universal Smarttray mounting plate",
+   "type": "support_plate",
+   "status": "unverified",
+   "source": "Samet Smarttray escalera catalogue, pages 7-27 (data extracted; the PDF is not stored)",
+   "codes": [
+    "SCUS-190",
+    "SCUS-130",
+    "SCUSP-130"
+   ],
+   "dimensions_mm": [
+    "190x190",
+    "130x125",
+    "130x125 with cable gland entry"
+   ],
+   "finish": "Z"
+  },
+  {
+   "id": "samet-acc-bds",
+   "family": "Barrier strip",
+   "type": "tray_accessory",
+   "status": "unverified",
+   "source": "Samet Smarttray escalera catalogue, pages 7-27 (data extracted; the PDF is not stored)",
+   "code_pattern": "BDS<ala>",
+   "alas": [
+    90,
+    115
+   ],
+   "finishes": [
+    "G (1.24 mm)",
+    "Z (0.71 mm)"
+   ]
+  },
+  {
+   "id": "samet-acc-caes",
+   "family": "Articulated union",
+   "type": "tray_accessory",
+   "status": "unverified",
+   "source": "Samet Smarttray escalera catalogue, pages 7-27 (data extracted; the PDF is not stored)",
+   "code_pattern": "CAES-<ala>-Z",
+   "alas": [
+    90,
+    115
+   ]
+  },
+  {
+   "id": "samet-acc-gss",
+   "family": "Suspension clamp",
+   "type": "tray_accessory",
+   "status": "unverified",
+   "source": "Samet Smarttray escalera catalogue, pages 7-27 (data extracted; the PDF is not stored)",
+   "code": "GSS-01-Z"
+  },
+  {
+   "id": "samet-acc-gfs",
+   "family": "Fixing clamp",
+   "type": "tray_accessory",
+   "status": "unverified",
+   "source": "Samet Smarttray escalera catalogue, pages 7-27 (data extracted; the PDF is not stored)",
+   "code": "GFS-02-Z"
+  },
+  {
+   "id": "samet-acc-gfce",
+   "family": "Grounding clamp (equipotential)",
+   "type": "tray_accessory",
+   "status": "unverified",
+   "source": "Samet Smarttray escalera catalogue, pages 7-27 (data extracted; the PDF is not stored)",
+   "code": "GFCE-B"
+  },
+  {
+   "id": "samet-acc-jb-cc-m6",
+   "family": "M6 carriage bolt with nut",
+   "type": "tray_hardware",
+   "status": "unverified",
+   "source": "Samet Smarttray escalera catalogue, pages 7-27 (data extracted; the PDF is not stored)",
+   "code": "JB-CC-M6",
+   "pack": 100
+  },
+  {
+   "id": "samet-acc-jb-cc-38",
+   "family": "3/8 in carriage bolt with nut",
+   "type": "tray_hardware",
+   "status": "unverified",
+   "source": "Samet Smarttray escalera catalogue, pages 7-27 (data extracted; the PDF is not stored)",
+   "code": "JB-CC-3/8",
+   "pack": 100
+  },
+  {
+   "id": "samet-acc-jb-truts",
+   "family": "M6 bolt and cover retainer nut",
+   "type": "tray_hardware",
+   "status": "unverified",
+   "source": "Samet Smarttray escalera catalogue, pages 7-27 (data extracted; the PDF is not stored)",
+   "code": "JB-TRUTS-M6",
+   "pack": 100
+  },
+  {
+   "id": "samet-acc-cu-tres-trl",
+   "family": "Splice plate to the traditional Samet ladder",
+   "type": "tray_accessory",
+   "status": "unverified",
+   "source": "Samet Smarttray escalera catalogue, pages 7-27 (data extracted; the PDF is not stored)",
+   "code": "CU-TRES-TRL-G"
+  },
+  {
+   "id": "samet-acc-ules",
+   "family": "Smart lateral splice plate",
+   "type": "tray_accessory",
+   "status": "unverified",
+   "source": "Samet Smarttray escalera catalogue, pages 7-27 (data extracted; the PDF is not stored)",
+   "code": "ULES-Z"
+  }
+ ]
+}

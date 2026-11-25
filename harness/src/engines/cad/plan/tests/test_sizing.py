@@ -38,7 +38,16 @@ class TestSizing(unittest.TestCase):
     def test_a_tray_is_chosen_by_width_and_the_cables_of_a_circuit_count_by_its_ternas(self):
         out = sizing.size_containers([box("BN", ["TUG-1"], 2)], {"TUG-1": 4}, {"TUG-1": 2}, KINDS, P)[0]
         self.assertEqual(len(out["cable_mm"]), 2)
-        self.assertEqual(out["size"], {"ancho_mm": 100.0, "alto_mm": 50.0})
+        self.assertEqual(out["size"], {"ancho_mm": 150.0, "alto_mm": 44.0, "ala_mm": 65.0})      # the smallest of the list: 150 wide, rail 65, useful height 44
+
+    def test_a_tray_never_goes_over_forty_percent_and_gets_our_own_model_code(self):
+        cables = [f"C{i}" for i in range(8)]
+        out = sizing.size_containers([box("BN", cables, 8)], {c: 25 for c in cables}, {}, KINDS, P)[0]    # 8 cables of 23 mm
+        self.assertLessEqual(out["used_pct"], 40.0)
+        self.assertEqual(out["limit_pct"], 40.0)
+        self.assertTrue(out["fits"])
+        self.assertEqual(out["model"], f"BN-ESC-{int(out['size']['ancho_mm'])}x{int(out['size']['ala_mm'])}")    # the code carries the rail height
+        self.assertIsNone(sizing.size_containers([box("CN", ["A"], 1)], {"A": 2.5}, {}, KINDS, P)[0]["model"])
 
     def test_when_nothing_holds_them_the_largest_is_returned_and_it_is_said(self):
         out = sizing.size_containers([box("CN", ["X"] * 1, 1)], {"X": 240}, {"X": 40}, KINDS, P)[0]
