@@ -142,7 +142,7 @@ def _elbow_mesh_for(s: Dict[str, Any], a, corner, b, ring, ladder: Optional[Dict
     from epc_plan import tray_solid
     reach = min(_len(a, corner), _len(corner, b))
     radius = min(ladder["elbow_radius"] + s["width_m"] / 2, reach)
-    path = tray_solid.path3d([a, corner, b], radius, radius)
+    path = tray_solid.path3d([a, corner, b], radius, radius, ladder["links"])
     return tray_solid.tray_mesh(path, s["width_m"], s["height_m"], ladder["sizes"], ladder.get("kinds", {}).get(s["layer"], "escalera"))
 
 
@@ -287,7 +287,7 @@ def tray_kinds() -> tuple:
 def _ladder_sizes(cover: bool) -> Dict[str, float]:
     """The sizes of rail, rungs, floor and wires (`params.json`, `detail.ladder`, in metres), and the lid when there is one."""
     q = core.PARAMS["detail"]["ladder"]
-    keys = ("rail", "rung", "rung_thick", "rung_pitch", "foot", "curl", "slot_pitch", "slot", "slot_height", "floor_margin", "wire", "wire_pitch")
+    keys = ("rail", "rung", "rung_thick", "rung_pitch", "foot", "curl", "slot_pitch", "slot", "slot_height", "floor_margin", "wire", "wire_pitch", "joint", "bolt")
     sizes = {k: q[k + "_m"] for k in keys}
     if cover:
         sizes["cover"] = q["cover_m"]                                    # the lid, a flat sheet over the rails
@@ -306,7 +306,7 @@ def _ladder(spec: Optional[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
     layers = given.get("layers") if isinstance(given, dict) else None
     if not isinstance(layers, list) or not layers or not all(isinstance(x, str) for x in layers) or not _kinds_ok(given.get("kinds", {}), layers):
         raise core.PlanError("err_detail_number", key="ladder_trays")
-    return {"layers": layers, "sizes": _ladder_sizes(bool(given.get("cover"))), "kinds": given.get("kinds", {}), "elbow_radius": core.PARAMS["detail"]["ladder"]["elbow_radius_m"]}
+    return {"layers": layers, "sizes": _ladder_sizes(bool(given.get("cover"))), "kinds": given.get("kinds", {}), "elbow_radius": core.PARAMS["detail"]["ladder"]["elbow_radius_m"], "links": core.PARAMS["detail"]["ladder"]["vertical_links"]}
 
 
 def parts(solids: List[Dict[str, Any]], spec: Optional[Dict[str, Any]] = None) -> List[Dict[str, Any]]:

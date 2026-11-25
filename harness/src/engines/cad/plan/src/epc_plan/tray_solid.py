@@ -24,14 +24,14 @@ def _z_at(profile: Sequence[Tuple[float, float]], s: float) -> float:
     return profile[-1][1]
 
 
-def _profile(run: Sequence[P3], vertical_radius: float) -> List[Tuple[float, float]]:
+def _profile(run: Sequence[P3], vertical_radius: float, links: int = 8) -> List[Tuple[float, float]]:
     """(distance walked in plan, height) of the run, with the changes of height rounded by `vertical_radius`."""
     walked, profile = 0.0, []
     for i, p in enumerate(run):
         if i:
             walked += math.dist(run[i - 1][:2], p[:2])
         profile.append((walked, p[2]))
-    return tray_draw.fillet_path(profile, vertical_radius) if vertical_radius > 0 else profile
+    return tray_draw.fillet_path(profile, vertical_radius, links) if vertical_radius > 0 else profile
 
 
 def _point_at(plan: Sequence[Tuple[float, float]], marks: Sequence[float], s: float) -> Tuple[float, float]:
@@ -43,10 +43,10 @@ def _point_at(plan: Sequence[Tuple[float, float]], marks: Sequence[float], s: fl
     return plan[-1]
 
 
-def path3d(run: Sequence[P3], radius: float, vertical_radius: float) -> List[P3]:
-    """The axis of a run as 3D points: plan corners rounded by `radius`, height changes rounded by `vertical_radius`."""
+def path3d(run: Sequence[P3], radius: float, vertical_radius: float, links: int = 8) -> List[P3]:
+    """The axis of a run as 3D points: plan corners rounded by `radius`, height changes rounded by `vertical_radius` in `links` straight stretches (the articulated bend of a catalogue has 5)."""
     plan = tray_draw.fillet_path([p[:2] for p in run], radius)
-    profile = _profile(run, vertical_radius)
+    profile = _profile(run, vertical_radius, links)
     walked = profile[-1][0]
     marks = [0.0]
     for a, b in zip(plan, plan[1:]):
@@ -147,6 +147,27 @@ def _lid(vertices: List[List[float]], faces: List[List[int]], a: P3, b: P3, axes
     _quad(vertices, faces, corners)
 
 
+def _joints(vertices: List[List[float]], faces: List[List[int]], path: Sequence[P3], width: float, depth: float, p: Dict[str, float]) -> None:
+    """The bolts of the joints: every `joint` of length of the path, four bolt heads on the outer faces of the two rails (two on each), the same for every kind of tray."""
+    if "joint" not in p:
+        return
+    due, walked = p["joint"], 0.0
+    for a, b in zip(path, path[1:]):
+        length = math.dist(a, b)
+        if length < 1e-9:
+            continue
+        axes = _frame(a, b)
+        u, n, v = axes
+        while due < walked + length - 1e-6:
+            at = tuple(a[k] + u[k] * (due - walked) for k in range(3))
+            for side in (-1, 1):
+                for height in (-depth / 4, depth / 4):
+                    centre = tuple(at[k] + n[k] * side * (width / 2 + p["bolt"] / 2) + v[k] * height for k in range(3))
+                    _box(vertices, faces, centre, axes, (p["bolt"], p["bolt"], p["bolt"]))
+            due += p["joint"]
+        walked += length
+
+
 def ladder_mesh(path: Sequence[P3], width: float, depth: float, p: Dict[str, float]) -> Dict[str, list]:
     """The mesh of a ladder tray along `path`: `width` clear width, `depth` rail height; `p` has `rail` (thickness of the rail), `rung` (width of a rung), `rung_thick` and `rung_pitch`;
     `foot`, `curl`, `slot_pitch`, `slot` and `slot_height` give the rails their section and side slots; `cover` adds a lid."""
@@ -168,6 +189,7 @@ def ladder_mesh(path: Sequence[P3], width: float, depth: float, p: Dict[str, flo
             _box(vertices, faces, tuple(at[k] - v[k] * (depth / 2 - p["rung_thick"] / 2) for k in range(3)), axes, (p["rung"], width, p["rung_thick"]))
             due += p["rung_pitch"]
         walked += length
+    _joints(vertices, faces, path, width, depth, p)
     return {"vertices": vertices, "faces": faces}
 
 
@@ -227,6 +249,8 @@ def tray_mesh(path: Sequence[P3], width: float, depth: float, p: Dict[str, float
         _floor(vertices, faces, a, b, axes, width, depth, p, kind == "perforada")
         if p.get("cover"):
             _lid(vertices, faces, a, b, axes, width, depth, p)
+    if kind != "alambre":
+        _joints(vertices, faces, path, width, depth, p)
     return {"vertices": vertices, "faces": faces}
 
 

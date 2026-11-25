@@ -75,3 +75,19 @@ def test_every_tray_kind_has_a_mesh():
     assert counts["alambre"] > counts["escalera"]                    # a mesh is many wires
     with pytest.raises(core.PlanError):
         tray_solid.tray_mesh(path, 0.3, 0.09, p, "nope")
+
+
+def test_joints_carry_four_bolts_every_section_length():
+    from epc_plan import tray_solid
+    p = {"rail": 0.002, "rung": 0.03, "rung_thick": 0.015, "rung_pitch": 0.3, "joint": 3.0, "bolt": 0.016}
+    plain = tray_solid.ladder_mesh([(0, 0, 0), (7, 0, 0)], 0.3, 0.09, {k: v for k, v in p.items() if k not in ("joint", "bolt")})
+    bolted = tray_solid.ladder_mesh([(0, 0, 0), (7, 0, 0)], 0.3, 0.09, p)
+    assert len(bolted["faces"]) - len(plain["faces"]) == 2 * 4 * 6          # joints at 3 m and 6 m, four boxes of six faces each
+
+
+def test_a_vertical_bend_can_be_a_few_straight_links():
+    from epc_plan import tray_solid
+    run = [(0, 0, 0), (2, 0, 0), (2, 0, 1)]
+    smooth = tray_solid.path3d(run, 0.0, 0.5, 8)
+    linked = tray_solid.path3d(run, 0.0, 0.5, 5)
+    assert len(linked) < len(smooth)
