@@ -38,3 +38,12 @@ def name(kind: str, fitting: str = "straight") -> Dict[str, str]:
     names = _names()
     k, f = names["kinds"][kind]["name"], names["fittings"][fitting]["name"]
     return {lang: f"{f[lang]} ({k[lang]})" for lang in ("en", "es")}
+
+
+def part(key: str, size: str) -> Dict[str, Any]:
+    """The own code and the bilingual name of a support or fastener: SB-BUL-M8x25. `key` is one of the parts of `tray_names.json` (`hardware`)."""
+    hw = _names()["hardware"]
+    if key not in hw["parts"]:
+        raise PlanError("err_tray_kind", kind=key, kinds=", ".join(hw["parts"]))
+    item = hw["parts"][key]
+    return {"code": "-".join((hw["prefix"], item["code"], size)), "name": dict(item["name"])}
