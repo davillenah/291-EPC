@@ -3,6 +3,7 @@
 The engine is a function: `SldInput` holds everything it needs (the board workbook, the calculation, the figures, the title block request and the sheet options), nothing is read from the process
 environment, and the answer is the list of sheets drawn. The files it names are the contract of `epc_aea90364` (`aea_export`, `board_figures`) and of the title block service."""
 import os
+import sys
 from dataclasses import dataclass
 from typing import List, Optional
 
@@ -55,6 +56,16 @@ def environ_of(entrada: SldInput) -> dict:
     if entrada.layout_json:
         env["SLD_LAYOUT_JSON"] = entrada.layout_json
     return env
+
+
+def draw_files(entrada: SldInput, name: str, maxl: int = 18, stamp_date: Optional[str] = None) -> dict:
+    """`draw` with the sheets as data: {file name: bytes}. The engine writes nothing; the caller puts the bytes where it wants (ADR-0042). Same bytes as the files `draw` writes."""
+    _check(entrada, maxl)
+    from epc_sld import sld_paginate
+    files, notes = sld_paginate.paginate_files(entrada.lib, entrada.board if entrada.board is not None else entrada.xlsx, name, entrada.lamina, entrada.modblock, maxl=maxl, environ=environ_of(entrada), stamp_date=stamp_date)
+    for line in notes:
+        print(line, file=sys.stderr)
+    return files
 
 
 def draw(entrada: SldInput, out_dir, name: str, maxl: int = 18, stamp_date: Optional[str] = None) -> List[str]:

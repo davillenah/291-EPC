@@ -35,6 +35,14 @@ def draw_hashes(files: dict) -> dict:
         return {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(Path(d).iterdir())}
 
 
+def files_hashes(files: dict) -> dict:
+    """The same drawing through the function that returns bytes and writes no folder: {file name: sha256}."""
+    from epc_sld import SldInput, draw_files
+    with contextlib.redirect_stdout(io.StringIO()):
+        made = draw_files(SldInput(**files), "SLD_V1", stamp_date=STAMP)
+    return {name: hashlib.sha256(data).hexdigest() for name, data in sorted(made.items())}
+
+
 class DrawingParallel(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -50,9 +58,22 @@ class DrawingParallel(unittest.TestCase):
         self.assertTrue(self.sequential)
         self.assertEqual(draw_hashes(self.files), self.sequential)
 
+    def test_the_bytes_function_gives_the_files_the_folder_function_writes(self):
+        self.assertEqual(files_hashes(self.files), self.sequential)
+
     def test_threads_give_the_sequential_bytes(self):
         with cf.ThreadPoolExecutor(4) as pool:
             runs = list(pool.map(draw_hashes, [self.files] * 4))
+        self.assertEqual(runs, [self.sequential] * 4)
+
+    def test_threads_on_the_bytes_function_give_the_sequential_bytes(self):
+        with cf.ThreadPoolExecutor(4) as pool:
+            runs = list(pool.map(files_hashes, [self.files] * 4))
+        self.assertEqual(runs, [self.sequential] * 4)
+
+    def test_processes_on_the_bytes_function_give_the_sequential_bytes(self):
+        with cf.ProcessPoolExecutor(3) as pool:
+            runs = list(pool.map(files_hashes, [self.files] * 4))
         self.assertEqual(runs, [self.sequential] * 4)
 
     def test_processes_give_the_sequential_bytes(self):

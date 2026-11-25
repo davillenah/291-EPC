@@ -63,8 +63,8 @@ def _table_sheet(base, n_groups, names):
     return env
 
 
-def paginate(lib, xlsx, out, name, lam='default', mod='default', maxl=18, environ=None, stamp_date=None):
-    """Returns the names of the sheets drawn, in order (diagram sheets, then the calculation table)."""
+def _sheets(lib, xlsx, name, maxl, environ, make):
+    """Draws every sheet with `make(sheet name, environment)` and returns the names, diagram sheets first, then the calculation table."""
     base = dict(os.environ if environ is None else environ)
     data, pcol = _circuits(xlsx)
     groups = _sheet_groups(data, pcol, maxl)
@@ -72,10 +72,26 @@ def paginate(lib, xlsx, out, name, lam='default', mod='default', maxl=18, enviro
     diagrams = [name if len(groups) == 1 else f'{name}_H{k}' for k in range(1, len(groups) + 1)]
     names = ','.join(diagrams + [table])                       # one title block row per sheet (diagrams + table)
     for i in range(1, len(groups) + 1):
-        sheet, env = _diagram_sheet(base, name, i, groups, names)
-        sld_generator.generate(lib, xlsx, out, sheet, lam, mod, environ=env, stamp_date=stamp_date)
-    sld_generator.generate(lib, xlsx, out, table, lam, mod, environ=_table_sheet(base, len(groups), names), stamp_date=stamp_date)
+        make(*_diagram_sheet(base, name, i, groups, names))
+    make(table, _table_sheet(base, len(groups), names))
     return diagrams + [table]
+
+
+def paginate(lib, xlsx, out, name, lam='default', mod='default', maxl=18, environ=None, stamp_date=None):
+    """Returns the names of the sheets drawn, in order (diagram sheets, then the calculation table)."""
+    return _sheets(lib, xlsx, name, maxl, environ, lambda sheet, env: sld_generator.generate(lib, xlsx, out, sheet, lam, mod, environ=env, stamp_date=stamp_date))
+
+
+def paginate_files(lib, xlsx, name, lam='default', mod='default', maxl=18, environ=None, stamp_date=None):
+    """`paginate` with the sheets as data: ({file name: bytes}, notes). Nothing is written."""
+    files, notes = {}, []
+
+    def make(sheet, env):
+        made, said = sld_generator.generate_files(lib, xlsx, sheet, lam, mod, environ=env, stamp_date=stamp_date)
+        files.update(made)
+        notes.extend(said)
+    _sheets(lib, xlsx, name, maxl, environ, make)
+    return files, notes
 
 
 def main(argv=None, environ=None):
