@@ -8,6 +8,7 @@ import math
 from typing import Dict, List, Sequence, Tuple
 
 from . import tray_draw
+from .core import PlanError
 
 P3 = Tuple[float, float, float]
 
@@ -165,6 +166,65 @@ def ladder_mesh(path: Sequence[P3], width: float, depth: float, p: Dict[str, flo
             _box(vertices, faces, tuple(at[k] - v[k] * (depth / 2 - p["rung_thick"] / 2) for k in range(3)), axes, (p["rung"], width, p["rung_thick"]))
             due += p["rung_pitch"]
         walked += length
+    return {"vertices": vertices, "faces": faces}
+
+
+def _floor(vertices: List[List[float]], faces: List[List[int]], a: P3, b: P3, axes: Tuple[P3, P3, P3], width: float, depth: float, p: Dict[str, float], slotted: bool) -> None:
+    """The floor of a solid-bottom tray between its rails; with `slotted`, the perforated one: a band of slots across it every `slot_pitch`."""
+    u, n, v = axes
+    length = math.dist(a, b)
+    edge = p["floor_margin"]
+    cells = []
+    at = 0.0
+    while at < length - 1e-9:
+        solid_end = min(at + (p["slot_pitch"] - p["slot"] if slotted else length), length)
+        cells.append((at, solid_end, -width / 2, width / 2))
+        if slotted and solid_end < length - 1e-9:
+            stop = min(solid_end + p["slot"], length)
+            cells.extend([(solid_end, stop, -width / 2, -width / 2 + edge), (solid_end, stop, width / 2 - edge, width / 2)])
+            at = stop
+        else:
+            at = length
+    for s0, s1, y0, y1 in cells:
+        _quad(vertices, faces, [tuple(a[k] + u[k] * x + n[k] * y - v[k] * depth / 2 for k in range(3)) for x, y in ((s0, y0), (s1, y0), (s1, y1), (s0, y1))])
+
+
+def _wire(vertices: List[List[float]], faces: List[List[int]], a: P3, b: P3, axes: Tuple[P3, P3, P3], width: float, depth: float, p: Dict[str, float]) -> None:
+    """A wire-mesh tray: a longitudinal wire along each top edge and every `wire_pitch` across the floor, and a transverse wire every `wire_pitch`."""
+    u, n, v = axes
+    length = math.dist(a, b)
+    w = p["wire"]
+    mid = tuple((a[k] + b[k]) / 2 for k in range(3))
+    for y, z in [(-width / 2, depth / 2), (width / 2, depth / 2)] + [(-width / 2 + i * p["wire_pitch"], -depth / 2) for i in range(1, int(width / p["wire_pitch"]))]:
+        _box(vertices, faces, tuple(mid[k] + n[k] * y + v[k] * z for k in range(3)), axes, (length, w, w))
+    x = p["wire_pitch"] / 2
+    while x < length:
+        at = tuple(a[k] + u[k] * x for k in range(3))
+        _box(vertices, faces, tuple(at[k] - v[k] * depth / 2 for k in range(3)), axes, (w, width, w))
+        for side in (-1, 1):
+            _box(vertices, faces, tuple(at[k] + n[k] * side * width / 2 for k in range(3)), axes, (w, w, depth))
+        x += p["wire_pitch"]
+
+
+def tray_mesh(path: Sequence[P3], width: float, depth: float, p: Dict[str, float], kind: str = "escalera") -> Dict[str, list]:
+    """The mesh of a tray of the given kind (`escalera`, `perforada`, `ciega`, `alambre`) along `path`: the ladder, or the same rails with a floor (slotted for `perforada`), or a wire mesh."""
+    if kind == "escalera":
+        return ladder_mesh(path, width, depth, p)
+    if kind not in ("perforada", "ciega", "alambre"):
+        raise PlanError("err_tray_kind", kind=kind, kinds=", ".join(tray_draw.KINDS))
+    vertices: List[List[float]] = []
+    faces: List[List[int]] = []
+    for a, b in zip(path, path[1:]):
+        if math.dist(a, b) < 1e-9:
+            continue
+        axes = _frame(a, b)
+        if kind == "alambre":
+            _wire(vertices, faces, a, b, axes, width, depth, p)
+            continue
+        _side_rails(vertices, faces, a, b, axes, width, depth, p)
+        _floor(vertices, faces, a, b, axes, width, depth, p, kind == "perforada")
+        if p.get("cover"):
+            _lid(vertices, faces, a, b, axes, width, depth, p)
     return {"vertices": vertices, "faces": faces}
 
 

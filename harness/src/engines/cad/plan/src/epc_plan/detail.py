@@ -130,7 +130,8 @@ def _straight_mesh(piece: Dict[str, Any], ladder: Optional[Dict[str, Any]]) -> D
     """The mesh of a straight piece: the rails and rungs of a ladder tray when `ladder` says its layer is one, else the swept box."""
     if ladder and piece.get("layer") in ladder["layers"] and piece["section"] == "rect":
         from epc_plan import tray_solid
-        return tray_solid.ladder_mesh([tuple(p) for p in piece["path"]], piece["width_m"], piece["height_m"], ladder["sizes"])
+        kind = ladder.get("kinds", {}).get(piece["layer"], "escalera")
+        return tray_solid.tray_mesh([tuple(p) for p in piece["path"]], piece["width_m"], piece["height_m"], ladder["sizes"], kind)
     return S.mesh(piece)
 
 
@@ -213,6 +214,11 @@ def _setting(spec: Optional[Dict[str, Any]], key: str) -> float:
     return float(value)
 
 
+def tray_kinds() -> tuple:
+    from epc_plan import tray_draw
+    return tray_draw.KINDS
+
+
 def _ladder(spec: Optional[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
     """The ladder trays asked for in `spec["ladder_trays"]` ({"layers": [...]}): the layers and the sizes of rail and rungs (`params.json`, `detail.ladder`, in metres)."""
     given = (spec or {}).get("ladder_trays")
@@ -222,10 +228,13 @@ def _ladder(spec: Optional[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
     if not isinstance(layers, list) or not layers or not all(isinstance(x, str) for x in layers):
         raise core.PlanError("err_detail_number", key="ladder_trays")
     q = core.PARAMS["detail"]["ladder"]
-    sizes = {"rail": q["rail_m"], "rung": q["rung_m"], "rung_thick": q["rung_thick_m"], "rung_pitch": q["rung_pitch_m"], "foot": q["foot_m"], "curl": q["curl_m"], "slot_pitch": q["slot_pitch_m"], "slot": q["slot_m"], "slot_height": q["slot_height_m"]}
+    sizes = {"rail": q["rail_m"], "rung": q["rung_m"], "rung_thick": q["rung_thick_m"], "rung_pitch": q["rung_pitch_m"], "foot": q["foot_m"], "curl": q["curl_m"], "slot_pitch": q["slot_pitch_m"], "slot": q["slot_m"], "slot_height": q["slot_height_m"], "floor_margin": q["floor_margin_m"], "wire": q["wire_m"], "wire_pitch": q["wire_pitch_m"]}
     if given.get("cover"):
         sizes["cover"] = q["cover_m"]                                    # the lid, a flat sheet over the rails
-    return {"layers": layers, "sizes": sizes}
+    kinds = given.get("kinds", {})
+    if not isinstance(kinds, dict) or any(k not in layers or v not in tray_kinds() for k, v in kinds.items()):
+        raise core.PlanError("err_detail_number", key="ladder_trays")
+    return {"layers": layers, "sizes": sizes, "kinds": kinds}
 
 
 def parts(solids: List[Dict[str, Any]], spec: Optional[Dict[str, Any]] = None) -> List[Dict[str, Any]]:

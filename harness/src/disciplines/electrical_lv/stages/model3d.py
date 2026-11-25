@@ -48,7 +48,7 @@ def _is_supports(given):
 
 def _is_ladder(given):
     layers = given.get("layers") if isinstance(given, dict) else None
-    return isinstance(layers, list) and bool(layers) and all(isinstance(x, str) for x in layers) and set(given) == {"layers"}
+    return isinstance(layers, list) and bool(layers) and all(isinstance(x, str) for x in layers) and set(given) <= {"layers", "kinds", "cover"}
 
 
 def _floor_errors(floors, routing):
