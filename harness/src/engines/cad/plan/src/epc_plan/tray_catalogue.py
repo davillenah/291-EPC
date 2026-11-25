@@ -57,3 +57,8 @@ def ladder(q: Dict[str, Any], cat: Dict[str, Any], ala_mm: float = 90, width_mm:
 def thread_turns(cat: Dict[str, Any], size: str, length_mm: float) -> int:
     """The turns of the thread over a threaded length: the length over the pitch of the named bolt (`3/8` or `M6`), rounded down."""
     return int(length_mm / cat["threads"][size]["pitch_mm"] + 1e-9)
+
+
+def divider_thickness_mm(cat: Dict[str, Any], finish: str = "") -> float:
+    """The sheet of the barrier strip by finish (the thin gauge in Z, the 18 gauge in G)."""
+    return gauge_mm(cat, cat["parts"]["barrier_strip"]["gauge_by_finish"][finish or cat["default"]["finish"]])
