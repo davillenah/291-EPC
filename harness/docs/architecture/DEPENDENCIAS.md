@@ -9,7 +9,7 @@ Cómo leerlo: **Usa** = de qué depende la unidad; **Lo usan** = quién se rompe
 | Unidad | Usa | Lo usan | Impacto si la modificas |
 |---|---|---|---|
 | `aea90364` | `calc_common`, `feeder_sizing`, `grounding`, `load_balance`, `selectivity`, `short_circuit`, `voltage_drop` | `calc_check`, `calc_common`, `drawing`, `feeder_sizing`, `grounding`, `lighting`, `load_balance`, `mld`, `selectivity`, `short_circuit`, `sld`, `voltage_drop` | `calc_check`, `calc_common`, `design_basis`, `drawing`, `feeder_sizing`, `grounding`, `lighting`, `load_balance`, `mld`, `selectivity`, `short_circuit`, `sld`, `transformer_sizing`, `voltage_drop` |
-| `arch` | `plan`, `titleblock` | `plan` | `boq`, `plan`, `rfq` |
+| `arch` | `dxf`, `plan`, `titleblock` | `plan` | `boq`, `plan`, `rfq` |
 | `arrays` | — | — | — |
 | `boq` | `plan`, `pv` | `rfq` | `rfq` |
 | `calc_check` | `aea90364` | — | — |
@@ -22,7 +22,7 @@ Cómo leerlo: **Usa** = de qué depende la unidad; **Lo usan** = quién se rompe
 | `dims` | — | — | — |
 | `documents` | — | — | — |
 | `drawing` | `aea90364`, `dxf`, `mld`, `pv`, `sld`, `symbols`, `titleblock` | — | — |
-| `dxf` | `symbols` | `drawing`, `mld`, `plan`, `sld`, `titleblock` | `arch`, `boq`, `drawing`, `mld`, `plan`, `rfq`, `sld`, `titleblock` |
+| `dxf` | `symbols` | `arch`, `drawing`, `mld`, `plan`, `sld`, `titleblock` | `arch`, `boq`, `drawing`, `mld`, `plan`, `rfq`, `sld`, `titleblock` |
 | `expr` | — | — | — |
 | `feeder_sizing` | `aea90364`, `calc_common`, `voltage_drop` | `aea90364`, `grounding`, `short_circuit` | `aea90364`, `calc_check`, `calc_common`, `design_basis`, `drawing`, `grounding`, `lighting`, `load_balance`, `mld`, `selectivity`, `short_circuit`, `sld`, `transformer_sizing`, `voltage_drop` |
 | `grounding` | `aea90364`, `calc_common`, `feeder_sizing` | `aea90364`, `design_basis`, `selectivity` | `aea90364`, `calc_check`, `calc_common`, `design_basis`, `drawing`, `feeder_sizing`, `lighting`, `load_balance`, `mld`, `selectivity`, `short_circuit`, `sld`, `transformer_sizing`, `voltage_drop` |
@@ -59,7 +59,7 @@ Lo declarado en `pyproject.toml` frente a lo que el código importa de verdad.
 | Unidad | Importa | Declarado | Falta declarar |
 |---|---|---|---|
 | `aea90364` | `openpyxl` | `openpyxl` | — |
-| `arch` | `ezdxf`, `numpy`, `pillow`, `pypdfium2` | `ezdxf`, `numpy`, `pillow`, `pypdfium2` | — |
+| `arch` | `ezdxf`, `numpy`, `pillow`, `pypdfium2` | `epc-dxf`, `ezdxf`, `numpy`, `pillow`, `pypdfium2` | — |
 | `arrays` | — | — | — |
 | `boq` | — | — | — |
 | `calc_check` | — | `epc-aea90364` | — |

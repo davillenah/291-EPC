@@ -5,7 +5,6 @@ import io
 import math
 from typing import Dict, List, Optional
 
-import ezdxf
 from ezdxf.enums import TextEntityAlignment
 from ezdxf.colors import rgb2int
 
@@ -112,7 +111,8 @@ class _BlockWriter(_Writer):
 
 def _signature(kind: str, items: List[object], group: tuple, d: Drawing, style: Style) -> str:
     """A name for the block that depends only on its shape: equal doors (and windows) share one block."""
-    probe = _BlockWriter(ezdxf.new("R2018", setup=False).blocks.new("_"), d, style, group)
+    from epc_dxf import new_document
+    probe = _BlockWriter(new_document("R2018", setup=False).blocks.new("_"), d, style, group)
     parts = [kind] + [(type(i).__name__, i.layer, tuple(round(v, 3) for p in (i.points if isinstance(i, Poly) else [i.c]) for v in probe.pt(p)), round(getattr(i, "r", 0.0), 3),
                        round(getattr(i, "start", 0.0) - probe.angle, 2), round(getattr(i, "end", 0.0) - probe.angle, 2)) for i in items]
     return f"{BLOCK_NAMES[kind]}_{hashlib.sha1(repr(parts).encode()).hexdigest()[:8].upper()}"
@@ -164,7 +164,8 @@ def _write_items(doc, d: Drawing, style: Style) -> None:
 
 def to_dxf(d: Drawing, style: Optional[Style] = None) -> str:
     style = style or load_style()
-    doc = ezdxf.new("R2018", setup=False)
+    from epc_dxf import new_document
+    doc = new_document("R2018", setup=False)
     _setup(doc, d, style)
     _write_items(doc, d, style)
     _extents(doc, d)
