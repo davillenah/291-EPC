@@ -4,7 +4,7 @@ All notable changes. Format: Keep a Changelog; versions follow `harness/docs/BRA
 
 
 ### Unreleased (one drawing engine)
-- Logos of the title block go to the layer `0-Logo-<company>` in the DXF (the sheet carries the company name in `data-empresa`); a logo without a name stays on layer 0. The viewport layer helpers (`0-Viewport`) exist and are tested but are not wired in yet: that changes the bytes of every sheet and waits for the owner to authorize the golden update.
+- Logos of the title block go to the layer `0-Logo-<company>` in the DXF (the sheet carries the company name in `data-empresa`); a logo without a name stays on layer 0. Every converted sheet has one paper-space viewport on the layer `0-Viewport` (not plotted). The two characterization goldens were re-recorded with the owner's authorization; they differ only by that layer and viewport.
 - `epc_draw` created (ADR-0042): the DXF kernel (`epc_draw.core`), the symbol library (`epc_draw.symbols`), the title block (`epc_draw.titleblock`) and one child per kind of drawing (`epc_draw.sld`, `mld`, `plan`, `arch`, `pv`) moved in, same bytes (12 files of the example single-line diagram identical, goldens untouched). The old names are doors to the same module objects, so no caller changed; `python -m epc_plan` and `python -m epc_arch` still run.
 - Not done yet: removing the doors (waits for the owner: the engines golden names the old packages, and the reports of `epc_drawing` wait for a decision on where they live).
 

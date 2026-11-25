@@ -225,6 +225,13 @@ def _crear_capas_logo(doc, capa_logo):
         _L.add_logo_layer(doc, empresa, rol)
 
 
+def _ventana_de_lamina(doc, svg, alto_mm):
+    """La ventana gráfica de la lámina (capa de rol `sheet.viewport`, que el entregable llama `0-Viewport`): del tamaño de la lámina, mostrando el modelo 1:1."""
+    ancho_mm = float(svg.width.in_px() if hasattr(svg.width, "in_px") else svg.width) / PX_POR_MM if svg.width is not None else 0.0
+    if ancho_mm > 0 and alto_mm > 0:
+        _L.add_sheet_viewport(doc, ancho_mm, alto_mm)
+
+
 def _capa_de_imagen(capa_logo):
     """La capa de la siguiente imagen del SVG (las imágenes se recorren en el orden del SVG): su logo, o la 0."""
     return capa_logo["imagenes"].pop(0) if capa_logo["imagenes"] else "0"
@@ -399,6 +406,7 @@ def convertir(svg_path, stamp=None):
     altura_rotulo, altura_legal = float(_look["heights"]["titleblock_mm"]), float(_look["heights"]["legal_notice_mm"])
     msp = doc.modelspace()
     _crear_capas_logo(doc, capa_logo)
+    _ventana_de_lamina(doc, svg, alto_mm)
 
     def y_dxf(y):
         return alto_mm - y
