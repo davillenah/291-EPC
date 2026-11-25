@@ -5,6 +5,8 @@ All notable changes. Format: Keep a Changelog; versions follow `harness/docs/BRA
 ## [Unreleased]
 
 ### Changed
+- 3D elbows of trays take the kind of their tray (ladder, perforated, solid, wire) and turn through the bend with the catalogue inner radius of 300 mm (`elbow_radius_m`, unverified), instead of a swept box.
+- 3D trays of every kind (owner request 2026-11-25): `tray_solid.tray_mesh` builds `escalera`, `perforada` (rails and floor with a band of slots every 100 mm), `ciega` (solid floor) and `alambre` (wire mesh: top-edge wires, floor wires, transverse wires every 50 mm). Stage 10 takes them from `ladder_trays.kinds` (`{layer: kind}`, default `escalera`) and `cover`. Sizes are own drawing values (`floor_margin_m`, `wire_m`, `wire_pitch_m` in `epc_plan/params.json`), unverified.
 - Ladder tray in 3D: fixed a flipped frame (the tray was built upside down: rungs on top, foot up) and added the optional lid (`ladder_trays.cover`), a flat sheet over the rails (`cover_m` in `epc_plan/params.json`).
 - Ladder tray in 3D: the web of each rail now has the side slots of the Samet catalogue (pitch 100 mm, slot 50 x 12 mm; own values, unverified; `slot_*_m` in `epc_plan/params.json`).
 - Ladder tray in 3D (owner request 2026-11-25): the rails are now a cold-formed C section (web, foot turned in, rolled top edge) and the rungs 15 mm high, read from the Samet catalogue pages (the PDF is not stored; the shape is recorded as `section_shape`, status unverified, in `samet/cable_trays.json`). Sizes `foot_m` and `curl_m` in `epc_plan/params.json`.

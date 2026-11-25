@@ -50,6 +50,15 @@ class Parts(unittest.TestCase):
         with self.assertRaises(core.PlanError):
             detail.parts(tray(), {"ladder_trays": {"layers": []}})
 
+    def test_the_elbows_of_a_tray_layer_follow_the_kind_of_tray(self):
+        box = detail.parts(tray())
+        layer = of(box, "elbow")[0]["layer"]
+        for kind in ("escalera", "perforada", "ciega", "alambre"):
+            parts = detail.parts(tray(), {"ladder_trays": {"layers": [layer], "kinds": {layer: kind}}})
+            self.assertGreater(len(of(parts, "elbow")[0]["mesh"]["faces"]), 0)
+        with self.assertRaises(core.PlanError):
+            detail.parts(tray(), {"ladder_trays": {"layers": [layer], "kinds": {layer: "nope"}}})
+
     def test_a_straight_run_has_no_fitting(self):
         items = detail.parts(solids(S.CONDUIT))
         self.assertEqual([(p["part"], p["length_m"], p["size"]) for p in items], [("straight", 10.0, "D50")])
