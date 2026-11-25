@@ -4,9 +4,9 @@ import unittest
 from pathlib import Path
 
 ENGINES = Path(__file__).resolve().parents[3]                # harness/src/engines: one folder per group (cad, calculation, ...)
-sys.path[:0] = [str(ENGINES / g / a / "src") for g, a in (("cad", "mld"), ("cad", "sld"), ("calculation", "aea90364"), ("cad", "symbols"), ("cad", "titleblock"))]
+sys.path[:0] = [str(ENGINES / g / a / "src") for g, a in (("cad", "draw"), ("calculation", "aea90364"))]
 
-from epc_mld import mld_generator as M   # noqa: E402
+from epc_draw.mld import mld_generator as M   # noqa: E402
 
 
 class TestPoles(unittest.TestCase):

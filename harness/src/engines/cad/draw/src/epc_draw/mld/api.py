@@ -1,5 +1,5 @@
 """The public door of the engine (COD-02): the names other packages may import. Everything else in the package is internal."""
-from epc_mld.mld_generator import (
+from epc_draw.mld.mld_generator import (
     library_dir,
     Sheet,
     pole_id,
@@ -10,6 +10,6 @@ from epc_mld.mld_generator import (
     generate,
     main,
 )  # noqa: F401
-from epc_mld.contract import MldInput, draw  # noqa: F401
+from epc_draw.mld.contract import MldInput, draw  # noqa: F401
 
 __all__ = ["Generator", "MldInput", "Sheet", "chain_of", "draw", "generate", "library_dir", "main", "nxt", "pole_id", "poles_of"]

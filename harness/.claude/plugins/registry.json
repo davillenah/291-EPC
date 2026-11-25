@@ -17,7 +17,7 @@
         "short_circuit",
         "voltage_drop"
       ],
-      "hash": "92ebf99fb05446e1"
+      "hash": "7b249da793fbd595"
     },
     "board-design": {
       "version": "0.2.1",
@@ -54,7 +54,7 @@
         "titleblock",
         "voltage_drop"
       ],
-      "hash": "bffa7723c5086827"
+      "hash": "a57579bcb5dc73e3"
     },
     "doc-quality": {
       "version": "0.1.0",
@@ -87,7 +87,7 @@
         "titleblock",
         "voltage_drop"
       ],
-      "hash": "e056c23594b1d1fd"
+      "hash": "e0205d1433effe93"
     },
     "equipment-catalog": {
       "version": "0.1.0",
@@ -118,7 +118,7 @@
         "titleblock",
         "voltage_drop"
       ],
-      "hash": "be2cdf5e9d6b3206"
+      "hash": "07ef35ad40055440"
     },
     "intake-analysis": {
       "version": "0.1.0",
@@ -151,19 +151,13 @@
         "titleblock",
         "voltage_drop"
       ],
-      "hash": "3dfd77eb2ff2855b"
+      "hash": "dea8edce4de2c768"
     },
     "mld": {
       "version": "0.2.2",
       "kind": "generator",
       "status": "active",
-      "requires": {
-        "aea-calc": "^1.8.0",
-        "dxf-output": "^0.1.0",
-        "iec-symbols": "^0.4.19",
-        "iram-titleblock": "^0.5.4",
-        "sld": "^0.1.4"
-      },
+      "requires": {},
       "skills": [],
       "engine": [
         "aea90364",
@@ -176,12 +170,11 @@
         "mld",
         "selectivity",
         "short_circuit",
-        "sld",
         "symbols",
         "titleblock",
         "voltage_drop"
       ],
-      "hash": "5a7b51b36cda36dd"
+      "hash": "ceda3049a972078d"
     },
     "plan-drawing": {
       "version": "0.1.0",
@@ -208,7 +201,7 @@
         "titleblock",
         "voltage_drop"
       ],
-      "hash": "7223b5b4db0c4374"
+      "hash": "3c764605c896c2ec"
     },
     "pm2-docs": {
       "version": "0.1.0",
@@ -259,7 +252,7 @@
         "titleblock",
         "voltage_drop"
       ],
-      "hash": "1041f746a14cb3bd"
+      "hash": "26ff1bb3d266f234"
     },
     "spec-writer": {
       "version": "0.1.0",
