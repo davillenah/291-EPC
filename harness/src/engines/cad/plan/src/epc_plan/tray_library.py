@@ -8,7 +8,7 @@ import math
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
 from epc_plan import core, tray_code
-from epc_plan import tray_hardware as H, tray_solid as T
+from epc_plan import tray_accessories as A, tray_hardware as H, tray_solid as T
 
 TRAY_LAYER, SUPPORT_LAYER, FASTENER_LAYER = "ELEC-BANDEJA", "MEC-SOPORTE", "MEC-FIJACION"
 
@@ -79,13 +79,37 @@ def _accessory(kind: str, width: float, depth: float, p: Dict[str, float], q: Di
     return _plate((q["straight_m"], width + 2 * q["lid_flange_m"], p["cover"] if "cover" in p else 0.004), (q["straight_m"] / 2, 0, 0))     # cover
 
 
+COVERS = {"straight": "cover", "elbow90": "cover_elbow90", "elbow45": "cover_elbow45", "elbow_adjustable": "cover_adjustable", "tee": "cover_tee", "cross": "cover_cross", "vertical_bend": "cover_link"}
+
+
+def _runs(fitting: str, q: Dict[str, float], radius: float) -> List[List[Tuple[float, float, float]]]:
+    """The axes of the stretches a fitting is made of, for its cover."""
+    leg, side = q["leg_m"], q["side_m"]
+    turn = {"elbow90": (leg, leg), "elbow45": (leg + side * math.cos(math.pi / 4), side * math.sin(math.pi / 4)), "elbow_adjustable": (leg + side * math.cos(math.pi / 3), side * math.sin(math.pi / 3))}
+    if fitting in turn:
+        return [_path([(0, 0, 0), (leg, 0, 0), (turn[fitting][0], turn[fitting][1], 0)], radius)]
+    if fitting == "vertical_bend":
+        return [_path([(0, 0, 0), (leg, 0, 0), (leg + side, 0, side)], radius)]
+    arms = {"straight": [[(0, 0, 0), (q["straight_m"], 0, 0)]], "tee": [[(-leg, 0, 0), (leg, 0, 0)], [(0, 0, 0), (0, leg, 0)]],
+            "cross": [[(-leg, 0, 0), (leg, 0, 0)], [(0, -leg, 0), (0, leg, 0)]]}
+    return arms[fitting]
+
+
+def _covers(width: float, depth: float) -> List[Dict[str, Any]]:
+    """The cover of the straight and of each fitting, for every kind that takes one (a wire-mesh tray has none)."""
+    p, q, radius = _sizes()
+    p = dict(p, cover=core.PARAMS["detail"]["ladder"]["cover_m"])
+    return [_piece(_tray_code(kind, width, depth, COVERS[fitting]), "tray", TRAY_LAYER, H.join(*[T.cover_mesh(path, width, depth, p) for path in _runs(fitting, q, radius)]))
+            for kind in ("escalera", "perforada", "ciega", "canal") for fitting in COVERS]
+
+
 def _trays(width: float, depth: float) -> List[Dict[str, Any]]:
     p, q, radius = _sizes()
     out = []
     for kind in ("escalera", "perforada", "ciega", "alambre", "canal"):
         for fitting in ("straight", "elbow90", "elbow45", "elbow_adjustable", "vertical_bend", "tee", "cross", "reduction_central", "reduction_side", "end", "splice", "divider", "cover"):
-            if fitting == "divider" and kind in ("escalera", "alambre"):
-                continue
+            if fitting == "divider" and kind in ("escalera", "alambre") or fitting == "cover":
+                continue                                                  # the covers come from `_covers`, one for each fitting
             out.append(_piece(_tray_code(kind, width, depth, fitting), "tray", TRAY_LAYER, _fitting(kind, width, depth, p, q, radius, fitting)))
     return out
 
@@ -109,8 +133,20 @@ def _fasteners() -> List[Dict[str, Any]]:
     return [_piece(c, "fastener", FASTENER_LAYER, mesh) for c, mesh in named]
 
 
+def _accessories(width: float, depth: float) -> List[Dict[str, Any]]:
+    q = _sizes()[1]
+    mm = lambda x: round(x * 1000)                                          # noqa: E731
+    named = [(_tray_code("escalera", width, depth, "bracket_adjustable"), A.adjustable_bracket(q, width, 0.15)), (_tray_code("escalera", width, depth, "splice_lateral"), A.lateral_splice(q, depth)),
+             (_tray_code("escalera", width, depth, "union_articulated"), A.articulated_union(q, depth)), (tray_code.part("mounting_plate", f"{mm(q['plate_m'])}x{mm(q['plate_m'])}"), A.mounting_plate(q)),
+             (tray_code.part("carriage_bolt", f"M{mm(q['bolt_m'])}x{mm(q['bolt_len_m'])}"), A.carriage_bolt(q, q["bolt_m"])),
+             (tray_code.part("carriage_bolt", f"3-8x{mm(q['bolt_len_m'])}"), A.carriage_bolt(q, q["bolt38_m"])),
+             (tray_code.part("retainer_bolt", f"M{mm(q['bolt_m'])}"), A.retainer_bolt(q)), (tray_code.part("suspension_clamp", f"M{mm(q['rod_m'])}"), A.suspension_clamp(q)),
+             (tray_code.part("fixing_clamp", f"M{mm(q['bolt_m'])}"), A.fixing_clamp(q)), (tray_code.part("ground_clamp", f"M{mm(q['bolt_m'])}"), A.grounding_clamp(q))]
+    return [_piece(c, "support" if "BN" in c["code"] or "PUM" in c["code"] else "fastener", SUPPORT_LAYER if "BN" in c["code"] or "PUM" in c["code"] else FASTENER_LAYER, m) for c, m in named]
+
+
 def pieces(width_m: float = 0.3, height_m: float = 0.09) -> List[Dict[str, Any]]:
     """Every part of the system for a tray `width_m` wide and `height_m` high, one solid each (id, code, bilingual name, group, layer, path, mesh)."""
     if width_m <= 0 or height_m <= 0:
         raise core.PlanError("err_detail_number", key="tray size")
-    return _trays(width_m, height_m) + _supports(width_m, height_m) + _fasteners()
+    return _trays(width_m, height_m) + _covers(width_m, height_m) + _supports(width_m, height_m) + _fasteners() + _accessories(width_m, height_m)

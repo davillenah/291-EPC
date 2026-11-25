@@ -155,11 +155,24 @@ def _side_rails(vertices: List[List[float]], faces: List[List[int]], a: P3, b: P
         _box(vertices, faces, tuple(mid[k] + n[k] * off for k in range(3)), axes, (math.dist(a, b), p["rail"], depth))
 
 
-def _lid(vertices: List[List[float]], faces: List[List[int]], a: P3, b: P3, axes: Tuple[P3, P3, P3], width: float, depth: float, p: Dict[str, float]) -> None:
-    """The cover of a stretch: a flat sheet `p["cover"]` over the top of the rails."""
+def _lid(vertices: List[List[float]], faces: List[List[int]], a: P3, b: P3, axes: Tuple[P3, P3, P3], width: float, depth: float, p: Dict[str, float],
+         ns: Optional[Tuple[P3, P3]] = None) -> None:
+    """The cover of a stretch: a flat sheet `p["cover"]` over the top of the rails (with `ns`, the mitred lateral vectors at its two ends)."""
     n, v = axes[1], axes[2]
-    corners = [tuple(e[k] + n[k] * sy * (width / 2 + p["rail"]) + v[k] * (depth / 2 + p["cover"]) for k in range(3)) for e, sy in ((a, -1), (b, -1), (b, 1), (a, 1))]
+    leans = ns or (n, n)
+    corners = [tuple(e[k] + lean[k] * sy * (width / 2 + p["rail"]) + v[k] * (depth / 2 + p["cover"]) for k in range(3)) for e, sy, lean in ((a, -1, leans[0]), (b, -1, leans[1]), (b, 1, leans[1]), (a, 1, leans[0]))]
     _quad(vertices, faces, corners)
+
+
+def cover_mesh(path: Sequence[P3], width: float, depth: float, p: Dict[str, float]) -> Dict[str, list]:
+    """The cover alone (a flat sheet over the rails, as `_lid` draws it) along `path`: for the covers of straights and fittings; `p` needs `rail` and `cover`."""
+    vertices: List[List[float]] = []
+    faces: List[List[int]] = []
+    turns = _miters(path)
+    for i, (a, b) in enumerate(zip(path, path[1:])):
+        if math.dist(a, b) > 1e-9:
+            _lid(vertices, faces, a, b, _frame(a, b), width, depth, p, (turns[i], turns[i + 1]))
+    return {"vertices": vertices, "faces": faces}
 
 
 def _joints(vertices: List[List[float]], faces: List[List[int]], path: Sequence[P3], width: float, depth: float, p: Dict[str, float]) -> None:
