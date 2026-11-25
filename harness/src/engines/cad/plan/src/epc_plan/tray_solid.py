@@ -191,11 +191,11 @@ def _rail(vertices: List[List[float]], faces: List[List[int]], a: P3, b: P3, axe
 
 
 def _side_rails(vertices: List[List[float]], faces: List[List[int]], a: P3, b: P3, axes: Tuple[P3, P3, P3], width: float, depth: float, p: Dict[str, float],
-                ns: Optional[Tuple[P3, P3]] = None) -> None:
+                ns: Optional[Tuple[P3, P3]] = None, sides: Tuple[int, ...] = (-1, 1)) -> None:
     """Both rails of a stretch: the cold-formed C when `p` has its sizes, a plain strip otherwise."""
     u, n, v = axes
     mid = tuple((a[k] + b[k]) / 2 for k in range(3))
-    for side in (-1, 1):
+    for side in sides:
         if "foot" in p:
             _rail(vertices, faces, a, b, axes, side, width, depth, p, ns=ns)
             continue
@@ -252,9 +252,9 @@ def _joints(vertices: List[List[float]], faces: List[List[int]], path: Sequence[
         walked += length
 
 
-def ladder_mesh(path: Sequence[P3], width: float, depth: float, p: Dict[str, float]) -> Dict[str, list]:
+def ladder_mesh(path: Sequence[P3], width: float, depth: float, p: Dict[str, float], sides: Tuple[int, ...] = (-1, 1)) -> Dict[str, list]:
     """The mesh of a ladder tray along `path`: `width` clear width, `depth` rail height; `p` has `rail` (thickness of the rail), `rung` (width of a rung), `rung_thick` and `rung_pitch`;
-    `foot`, `curl`, `slot_pitch`, `slot` and `slot_height` give the rails their section and side slots; `cover` adds a lid."""
+    `foot`, `curl`, `slot_pitch`, `slot` and `slot_height` give the rails their section and side slots; `cover` adds a lid; `sides` are the rails made (both by default)."""
     vertices: List[List[float]] = []
     faces: List[List[int]] = []
     due = p["rung_pitch"] / 2
@@ -266,7 +266,7 @@ def ladder_mesh(path: Sequence[P3], width: float, depth: float, p: Dict[str, flo
             continue
         axes = _frame(a, b)
         u, n, v = axes
-        _side_rails(vertices, faces, a, b, axes, width, depth, p, (turns[i], turns[i + 1]))
+        _side_rails(vertices, faces, a, b, axes, width, depth, p, (turns[i], turns[i + 1]), sides)
         if p.get("cover"):
             _lid(vertices, faces, a, b, axes, width, depth, p)
         while due < walked + length - 1e-9:
@@ -367,10 +367,10 @@ def _channel(vertices: List[List[float]], faces: List[List[int]], a: P3, b: P3, 
         _sheet(vertices, faces, [tuple(e[k] + n[k] * y + v[k] * z for k in range(3)) for e, y, z in ((a, y0, z0), (b, y0, z0), (b, y1, z1), (a, y1, z1))], out, thick)
 
 
-def tray_mesh(path: Sequence[P3], width: float, depth: float, p: Dict[str, float], kind: str = "escalera") -> Dict[str, list]:
+def tray_mesh(path: Sequence[P3], width: float, depth: float, p: Dict[str, float], kind: str = "escalera", sides: Tuple[int, ...] = (-1, 1)) -> Dict[str, list]:
     """The mesh of a tray of the given kind (`escalera`, `perforada`, `ciega`, `alambre`, `canal`) along `path`: the ladder, or the same rails with a floor (slotted for `perforada`), or a wire mesh."""
     if kind == "escalera":
-        return ladder_mesh(path, width, depth, p)
+        return ladder_mesh(path, width, depth, p, sides)
     if kind not in ("perforada", "ciega", "alambre", "canal"):
         raise PlanError("err_tray_kind", kind=kind, kinds=", ".join(tray_draw.KINDS))
     vertices: List[List[float]] = []
@@ -386,7 +386,7 @@ def tray_mesh(path: Sequence[P3], width: float, depth: float, p: Dict[str, float
         if kind == "canal":
             _channel(vertices, faces, a, b, axes, width, depth, p.get("rail", 0.002))
             continue
-        _side_rails(vertices, faces, a, b, axes, width, depth, p, (turns[i], turns[i + 1]))
+        _side_rails(vertices, faces, a, b, axes, width, depth, p, (turns[i], turns[i + 1]), sides)
         _tray_floor(vertices, faces, a, b, axes, width, depth, p, kind)
         if p.get("cover"):
             _lid(vertices, faces, a, b, axes, width, depth, p)

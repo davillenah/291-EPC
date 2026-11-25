@@ -114,10 +114,14 @@ def trapeze(q: Dict[str, float], width: float, drop: float) -> Mesh:
     return join(turned, *rods)
 
 
-def wall_bracket(q: Dict[str, float], width: float, reach: float, arm: float, plate: float, plate_height: float) -> Mesh:
-    """A bracket for the wall at x = reach: the arm under the tray (`reach` + half the tray) and the backplate on the wall; z = 0 is the underside of the tray."""
+def wall_bracket(q: Dict[str, float], width: float, reach: float, arm: float, plate: float, plate_height: float, gusset: bool = True) -> Mesh:
+    """A bracket for the wall at x = reach: the arm under the tray (`reach` + half the tray), the backplate on the wall and, under the arm, the triangular gusset of the catalogue brackets (a sheet
+    `splice_thick_m` thick, as deep as half the arm, never below the plate); z = 0 is the underside of the tray."""
     vertices, faces = _new()
     length = reach + width / 2
+    if gusset:
+        t, drop = q["splice_thick_m"], min(length / 2, plate_height - arm)
+        T._sheet(vertices, faces, [(reach - length, -t / 2, -arm), (reach, -t / 2, -arm), (reach, -t / 2, -arm - drop), (reach, -t / 2, -arm - drop)], (0.0, 1.0, 0.0), t)
     T._box(vertices, faces, (reach - length / 2, 0.0, -arm / 2), AXES, (length, arm, arm))
     T._box(vertices, faces, (reach - q["plate_thick_m"] / 2, 0.0, -plate_height / 2), AXES, (q["plate_thick_m"], plate, plate_height))
     return {"vertices": vertices, "faces": faces}
@@ -127,7 +131,7 @@ def heavy_bracket(q: Dict[str, float], width: float, reach: float = 0.0) -> Mesh
     """A heavy bracket: a long arm, a taller backplate and a diagonal brace from the plate up to the arm, for a wide tray with a heavy load."""
     reach = reach or q["heavy_reach_m"]
     arm = q["heavy_arm_m"] / 2
-    base = wall_bracket(q, width, reach, arm, q["plate_m"], q["heavy_plate_height_m"])
+    base = wall_bracket(q, width, reach, arm, q["plate_m"], q["heavy_plate_height_m"], False)
     angle = math.radians(q["heavy_brace_deg"])
     run = reach / 2
     x_end = reach - arm                                                   # the brace meets the plate a little in from the wall face

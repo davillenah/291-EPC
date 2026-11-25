@@ -8,7 +8,7 @@ import math
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
 from epc_plan import core, tray_code
-from epc_plan import tray_accessories as A, tray_hardware as H, tray_solid as T
+from epc_plan import tray_accessories as A, tray_hardware as H, tray_junction, tray_solid as T
 
 TRAY_LAYER, SUPPORT_LAYER, FASTENER_LAYER = "ELEC-BANDEJA", "MEC-SOPORTE", "MEC-FIJACION"
 
@@ -33,8 +33,15 @@ def _path(run: List[Tuple[float, float, float]], radius: float, links: int = 5) 
     return T.path3d(run, radius, radius, links)
 
 
+def _legs(q: Dict[str, float], width: float, radius: float) -> Tuple[float, float, float]:
+    """(leg, side, axis radius) of a bend: `radius` is the inner radius of the maker, so the axis of the tray turns on `radius` plus half the width, and the legs are long enough for that arc."""
+    axis = radius + width / 2
+    return max(q["leg_m"], 2 * axis + 0.1), max(q["side_m"], 2 * axis + 0.1), axis
+
+
 def _fitting(kind: str, width: float, depth: float, p: Dict[str, float], q: Dict[str, float], radius: float, fitting: str) -> Dict[str, list]:
-    leg, side = q["leg_m"], q["side_m"]
+    inner = radius
+    leg, side, radius = _legs(q, width, radius)
     if fitting == "straight":
         return T.tray_mesh([(0, 0, 0), (q["straight_m"], 0, 0)], width, depth, p, kind)
     if fitting == "elbow90":
@@ -44,13 +51,16 @@ def _fitting(kind: str, width: float, depth: float, p: Dict[str, float], q: Dict
     if fitting == "elbow_adjustable":
         return T.tray_mesh(_path([(0, 0, 0), (leg, 0, 0), (leg + side * math.cos(math.pi / 3), side * math.sin(math.pi / 3), 0)], radius), width, depth, p, kind)
     if fitting == "vertical_bend":
-        return T.tray_mesh(_path([(0, 0, 0), (leg, 0, 0), (leg + side, 0, side)], radius), width, depth, p, kind)
-    return _junction(kind, width, depth, p, q, fitting)
+        return T.tray_mesh(_path([(0, 0, 0), (q["leg_m"], 0, 0), (q["leg_m"] + q["side_m"], 0, q["side_m"])], inner), width, depth, p, kind)
+    return _junction(kind, width, depth, p, q, fitting, inner)
 
 
-def _junction(kind: str, width: float, depth: float, p: Dict[str, float], q: Dict[str, float], fitting: str) -> Dict[str, list]:
+def _junction(kind: str, width: float, depth: float, p: Dict[str, float], q: Dict[str, float], fitting: str, inner: float = 0.3) -> Dict[str, list]:
     leg = q["leg_m"]
     if fitting in ("tee", "cross"):
+        mesh = tray_junction.junction_mesh(kind, width, depth, p, width / 2 + inner + leg, inner, (1,) if fitting == "tee" else (-1, 1))
+        if mesh:
+            return mesh
         parts = [T.tray_mesh([(-leg, 0, 0), (leg, 0, 0)], width, depth, p, kind), T.tray_mesh([(0, 0, 0), (0, leg, 0)], width, depth, p, kind)]
         if fitting == "cross":
             parts.append(T.tray_mesh([(0, -leg, 0), (0, 0, 0)], width, depth, p, kind))
@@ -82,16 +92,18 @@ def _accessory(kind: str, width: float, depth: float, p: Dict[str, float], q: Di
 COVERS = {"straight": "cover", "elbow90": "cover_elbow90", "elbow45": "cover_elbow45", "elbow_adjustable": "cover_adjustable", "tee": "cover_tee", "cross": "cover_cross", "vertical_bend": "cover_link"}
 
 
-def _runs(fitting: str, q: Dict[str, float], radius: float) -> List[List[Tuple[float, float, float]]]:
+def _runs(fitting: str, q: Dict[str, float], radius: float, width: float = 0.0) -> List[List[Tuple[float, float, float]]]:
     """The axes of the stretches a fitting is made of, for its cover."""
-    leg, side = q["leg_m"], q["side_m"]
+    inner = radius
+    leg, side, radius = _legs(q, width, radius)
     turn = {"elbow90": (leg, leg), "elbow45": (leg + side * math.cos(math.pi / 4), side * math.sin(math.pi / 4)), "elbow_adjustable": (leg + side * math.cos(math.pi / 3), side * math.sin(math.pi / 3))}
     if fitting in turn:
         return [_path([(0, 0, 0), (leg, 0, 0), (turn[fitting][0], turn[fitting][1], 0)], radius)]
     if fitting == "vertical_bend":
-        return [_path([(0, 0, 0), (leg, 0, 0), (leg + side, 0, side)], radius)]
-    arms = {"straight": [[(0, 0, 0), (q["straight_m"], 0, 0)]], "tee": [[(-leg, 0, 0), (leg, 0, 0)], [(0, 0, 0), (0, leg, 0)]],
-            "cross": [[(-leg, 0, 0), (leg, 0, 0)], [(0, -leg, 0), (0, leg, 0)]]}
+        return [_path([(0, 0, 0), (q["leg_m"], 0, 0), (q["leg_m"] + q["side_m"], 0, q["side_m"])], inner)]
+    arm = width / 2 + inner + q["leg_m"]
+    arms = {"straight": [[(0, 0, 0), (q["straight_m"], 0, 0)]], "tee": [[(-arm, 0, 0), (arm, 0, 0)], [(0, 0, 0), (0, arm, 0)]],
+            "cross": [[(-arm, 0, 0), (arm, 0, 0)], [(0, -arm, 0), (0, arm, 0)]]}
     return arms[fitting]
 
 
@@ -100,7 +112,7 @@ def _covers(width: float, depth: float) -> List[Dict[str, Any]]:
     p, q, radius = _sizes()
     ladder = core.PARAMS["detail"]["ladder"]
     p = dict(p, cover=ladder["cover_m"], cover_wide=ladder["cover_wide_m"], cover_wide_from=ladder["cover_wide_from_m"])
-    return [_piece(_tray_code(kind, width, depth, COVERS[fitting]), "tray", TRAY_LAYER, H.join(*[T.cover_mesh(path, width, depth, p) for path in _runs(fitting, q, radius)]))
+    return [_piece(_tray_code(kind, width, depth, COVERS[fitting]), "tray", TRAY_LAYER, H.join(*[T.cover_mesh(path, width, depth, p) for path in _runs(fitting, q, radius, width)]))
             for kind in ("escalera", "perforada", "ciega", "canal") for fitting in COVERS]
 
 
