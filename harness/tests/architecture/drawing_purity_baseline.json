@@ -5,14 +5,8 @@
   "process": 2,
   "tempfile": 1
  },
- "harness/src/engines/cad/arch/src/epc_arch/export/export_raster.py": {
-  "environment": 1
- },
  "harness/src/engines/cad/arch/src/epc_arch/sources/dxf.py": {
   "tempfile": 1
- },
- "harness/src/engines/cad/drawing/src/epc_drawing/board_design.py": {
-  "environment": 1
  },
  "harness/src/engines/cad/drawing/src/epc_drawing/diagram_knowledge.py": {
   "environment": 1

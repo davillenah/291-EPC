@@ -2,7 +2,6 @@
 PDF operators) in Arial (named, not embedded: the viewer uses the Arial of the machine or its metric twin, so no font file is redistributed)."""
 import io
 import math
-import os
 import zlib
 from pathlib import Path
 from typing import List, Optional, Tuple
@@ -11,7 +10,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 from epc_arch.drawing import PAPER, ArcItem, Drawing, ImageItem, Poly, Style, TextItem, arc_points, dashes, hex_grey, load_style, pen_width, text_height, text_width
 
-FONT_DIRS = (os.environ.get("WINDIR", "C:/Windows") + "/Fonts", "/usr/share/fonts/truetype/msttcorefonts", "/usr/share/fonts/truetype/liberation", "/usr/share/fonts/truetype/dejavu", "/Library/Fonts")
+FONT_DIRS = ("C:/Windows/Fonts", "/usr/share/fonts/truetype/msttcorefonts", "/usr/share/fonts/truetype/liberation", "/usr/share/fonts/truetype/dejavu", "/Library/Fonts")
 PT = 72.0 / 25.4
 BS = chr(92)
 
