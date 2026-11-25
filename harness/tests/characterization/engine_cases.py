@@ -260,7 +260,7 @@ def more_engines():
         out["epc_rules"].update({"query": attempt(lambda: [r["id"] for r in rs.query(topic="trays")]), "param": attempt(rs.param, "tray.reserve", "reserve_min_pct"),
                                  "lookup": attempt(rs.lookup, "t1", size=2.5),
                                  "check": attempt(rs.check, {"reserve_pct": 10, "diagonal": True}, installation_type="dwellings")})
-    plan_dir = REPO / "harness" / "src" / "engines" / "cad" / "plan" / "tests" / "fixtures" / "plan"
+    plan_dir = REPO / "harness" / "src" / "engines" / "cad" / "draw" / "tests" / "fixtures" / "plan"
     from epc_plan import core
     arch_tests = REPO / "harness" / "src" / "engines" / "cad" / "arch" / "tests"
     sys.path.insert(0, str(arch_tests))

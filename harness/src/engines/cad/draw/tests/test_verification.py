@@ -10,8 +10,8 @@ sys.path.insert(0, str(SRC))
 import ezdxf  # noqa: E402
 
 import epc_dxf  # noqa: E402
-from epc_dxf import DxfError, verify  # noqa: E402
-from epc_dxf import verification  # noqa: E402
+from epc_draw.core import DxfError, verify  # noqa: E402
+from epc_draw.core import verification  # noqa: E402
 
 
 def document():

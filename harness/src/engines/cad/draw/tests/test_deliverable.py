@@ -9,7 +9,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 import ezdxf  # noqa: E402
 
-from epc_dxf import deliverable, package, roles  # noqa: E402
+from epc_draw.core import deliverable, package, roles  # noqa: E402
 
 SVG = """<svg xmlns="http://www.w3.org/2000/svg" width="200mm" height="100mm" viewBox="0 0 200 100">
 <rect id="papel" x="0" y="0" width="200" height="100" fill="#fff"/>

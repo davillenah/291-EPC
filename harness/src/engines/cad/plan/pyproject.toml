@@ -5,12 +5,9 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "epc-plan"
 version = "0.1.0"
-description = "EPC-291 plan-drawing engine: nodes and lines over a plan, graph, tags, circuit routes, schedules, DXF"
+description = "Door to the plan engine that moved into epc_draw.plan (ADR-0042)"
 requires-python = ">=3.10"
-dependencies = ["ezdxf", "epc-dxf", "epc-symbols"]
+dependencies = ["epc-draw"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
-
-[tool.setuptools.package-data]
-epc_plan = ["params.json", "typical_values.json", "clash_rules.json", "profiles/*.json", "knowledge/*.json", "schema/*.json"]

@@ -54,6 +54,7 @@
       "numpy",
       "openpyxl",
       "pillow",
+      "pypdfium2",
       "shapely",
       "svgelements",
       "vtracer"
@@ -75,6 +76,7 @@
   ],
   "engine": [
     "aea90364",
+    "arch",
     "calc_common",
     "draw",
     "drawing",
@@ -83,6 +85,7 @@
     "grounding",
     "load_balance",
     "mld",
+    "plan",
     "pv",
     "selectivity",
     "short_circuit",
