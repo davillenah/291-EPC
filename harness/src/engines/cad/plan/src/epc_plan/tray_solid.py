@@ -67,6 +67,18 @@ def _frame(a: P3, b: P3) -> Tuple[P3, P3, P3]:
     return u, n, v
 
 
+def _miters(path: Sequence[P3]) -> List[P3]:
+    """The lateral vector at each vertex of the path, scaled so that the rails of two neighbouring stretches meet at a mitre (n1 + n2) / (1 + n1.n2) and leave no wedge at a bend."""
+    sides = [_frame(a, b)[1] for a, b in zip(path, path[1:]) if math.dist(a, b) > 1e-9]
+    if len(sides) != len(path) - 1:
+        return [sides[0] if sides else (0.0, 1.0, 0.0)] * len(path)                # a path with a repeated point: no mitre
+    out = [sides[0]]
+    for n1, n2 in zip(sides, sides[1:]):
+        k = 1 + sum(x * y for x, y in zip(n1, n2))
+        out.append(tuple((x + y) / k for x, y in zip(n1, n2)) if k > 1e-6 else n1)
+    return out + [sides[-1]]
+
+
 def _box(vertices: List[List[float]], faces: List[List[int]], centre: P3, axes: Tuple[P3, P3, P3], size: Tuple[float, float, float]) -> None:
     """A box with the given centre, the three unit axes and the full size along each."""
     base = len(vertices)
@@ -108,17 +120,19 @@ def _web(vertices: List[List[float]], faces: List[List[int]], a: P3, length: flo
         _quad(vertices, faces, [tuple(a[k] + u[k] * x + n[k] * lateral + v[k] * (h - depth / 2) for k in range(3)) for x, h in ((s0, h0), (s1, h0), (s1, h1), (s0, h1))])
 
 
+def _rail_points(ends: Sequence[Tuple[P3, float]], leans: Sequence[P3], v: P3, side: int, section: Sequence[Tuple[float, float]], depth: float) -> List[List[float]]:
+    """The points of the section of a rail at its two ends; `leans` are the (mitred) lateral vectors there."""
+    return [[end[k] + lean[k] * (side * wide / 2 - side * inward) + v[k] * (height - depth / 2) for k in range(3)] for (end, wide), lean in zip(ends, leans) for inward, height in section]
+
+
 def _rail(vertices: List[List[float]], faces: List[List[int]], a: P3, b: P3, axes: Tuple[P3, P3, P3], side: int, width: float, depth: float, p: Dict[str, float],
-          width_b: Optional[float] = None) -> None:
+          width_b: Optional[float] = None, ns: Optional[Tuple[P3, P3]] = None) -> None:
     """A rail as a sheet swept along a..b: one quad per segment of its section, the web with its side slots; with `width_b` the rail leans from `width` at a to `width_b` at b (a taper)."""
     u, n, v = axes
     section = rail_section(depth, p["foot"], p["curl"])
     base = len(vertices)
     slotted = "slot" in p and width_b is None
-    for end, wide in ((a, width), (b, width if width_b is None else width_b)):
-        for inward, height in section:
-            lateral = side * wide / 2 - side * inward
-            vertices.append([end[k] + n[k] * lateral + v[k] * (height - depth / 2) for k in range(3)])
+    vertices.extend(_rail_points(((a, width), (b, width if width_b is None else width_b)), ns or (n, n), v, side, section, depth))
     count = len(section)
     for i in range(count - 1):
         if i == 1 and slotted:
@@ -128,13 +142,14 @@ def _rail(vertices: List[List[float]], faces: List[List[int]], a: P3, b: P3, axe
         _web(vertices, faces, a, math.dist(a, b), axes, side * width / 2, depth, p)
 
 
-def _side_rails(vertices: List[List[float]], faces: List[List[int]], a: P3, b: P3, axes: Tuple[P3, P3, P3], width: float, depth: float, p: Dict[str, float]) -> None:
+def _side_rails(vertices: List[List[float]], faces: List[List[int]], a: P3, b: P3, axes: Tuple[P3, P3, P3], width: float, depth: float, p: Dict[str, float],
+                ns: Optional[Tuple[P3, P3]] = None) -> None:
     """Both rails of a stretch: the cold-formed C when `p` has its sizes, a plain strip otherwise."""
     u, n, v = axes
     mid = tuple((a[k] + b[k]) / 2 for k in range(3))
     for side in (-1, 1):
         if "foot" in p:
-            _rail(vertices, faces, a, b, axes, side, width, depth, p)
+            _rail(vertices, faces, a, b, axes, side, width, depth, p, ns=ns)
             continue
         off = side * (width / 2 + p["rail"] / 2)
         _box(vertices, faces, tuple(mid[k] + n[k] * off for k in range(3)), axes, (math.dist(a, b), p["rail"], depth))
@@ -175,13 +190,14 @@ def ladder_mesh(path: Sequence[P3], width: float, depth: float, p: Dict[str, flo
     faces: List[List[int]] = []
     due = p["rung_pitch"] / 2
     walked = 0.0
-    for a, b in zip(path, path[1:]):
+    turns = _miters(path)
+    for i, (a, b) in enumerate(zip(path, path[1:])):
         length = math.dist(a, b)
         if length < 1e-9:
             continue
         axes = _frame(a, b)
         u, n, v = axes
-        _side_rails(vertices, faces, a, b, axes, width, depth, p)
+        _side_rails(vertices, faces, a, b, axes, width, depth, p, (turns[i], turns[i + 1]))
         if p.get("cover"):
             _lid(vertices, faces, a, b, axes, width, depth, p)
         while due < walked + length - 1e-9:
@@ -245,7 +261,8 @@ def tray_mesh(path: Sequence[P3], width: float, depth: float, p: Dict[str, float
         raise PlanError("err_tray_kind", kind=kind, kinds=", ".join(tray_draw.KINDS))
     vertices: List[List[float]] = []
     faces: List[List[int]] = []
-    for a, b in zip(path, path[1:]):
+    turns = _miters(path)
+    for i, (a, b) in enumerate(zip(path, path[1:])):
         if math.dist(a, b) < 1e-9:
             continue
         axes = _frame(a, b)
@@ -255,7 +272,7 @@ def tray_mesh(path: Sequence[P3], width: float, depth: float, p: Dict[str, float
         if kind == "canal":
             _channel(vertices, faces, a, b, axes, width, depth)
             continue
-        _side_rails(vertices, faces, a, b, axes, width, depth, p)
+        _side_rails(vertices, faces, a, b, axes, width, depth, p, (turns[i], turns[i + 1]))
         _floor(vertices, faces, a, b, axes, width, depth, p, kind == "perforada")
         if p.get("cover"):
             _lid(vertices, faces, a, b, axes, width, depth, p)
