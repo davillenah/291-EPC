@@ -6,6 +6,7 @@ plan to `epc_plan.solid`; `epc_plan.detail` turns the runs into the parts they a
 
     "model3d": {"floors": {"PB": {"wall_height_m": 2.8, "door_head_m": 2.05, "window_sill_m": 0.9, "window_head_m": 2.1, "slab_m": 0.2, "elevation_m": 0.0}},     # every routed floor, all heights: none is assumed
                 "supports": {"spacing_m": 1.5},                               # optional: without it no support is drawn (the spacing comes from the standard and the manufacturer)
+                "ladder_trays": {"layers": ["ELEC-BANDEJA"], "kinds": {"ELEC-BANDEJA": "perforada"}, "cover": False},    # optional: the trays are ladder trays by default; false = swept boxes
                 "sections": [{"name": "A", "axis": "x", "at_m": 12.0, "look": "+", "depth_m": 3.0}],     # optional: the detail sections to cut (depth_m optional)
                 "elevations": [{"floor": "PB", "side": "S"}]}                  # optional: the elevations of the building of a floor (N, S, E or W), on the IRAM sheet
 
@@ -22,6 +23,7 @@ PLAN_ENGINE, PLAN_FUNCTIONS = "cad/plan", ("epc_plan.solid.solids", "epc_plan.de
 SECTION_KEYS = {"name", "axis", "at_m", "look", "depth_m"}
 KEYS = {"floors", "supports", "sections", "elevations", "ladder_trays"}
 SIDES = ("N", "S", "E", "W")
+TRAY_LAYER = "ELEC-BANDEJA"                                              # the layer of the tray kind (BN) in the electrical profile
 
 
 def _is_section(s):
@@ -73,8 +75,8 @@ def errors_of(given, routing):
     out = _floor_errors(given["floors"], routing)
     if "supports" in given and not _is_supports(given["supports"]):
         out.append("model3d/supports: {spacing_m, rod_m?, channel_m?, overhang_m?}")
-    if "ladder_trays" in given and not _is_ladder(given["ladder_trays"]):
-        out.append("model3d/ladder_trays: {layers: [layer names of the trays]}")
+    if given.get("ladder_trays", {"layers": []}) is not False and "ladder_trays" in given and not _is_ladder(given["ladder_trays"]):
+        out.append("model3d/ladder_trays: false, or {layers: [layer names of the trays], kinds?: {layer: escalera|perforada|ciega|alambre}, cover?: bool}")
     return out + _section_errors(given.get("sections", [])) + _elevation_errors(given.get("elevations", []), routing)
 
 
@@ -110,8 +112,10 @@ def _hangers(given):
 
 
 def _parts_spec(given):
-    """The spec of the parts: the ladder trays when the engineer asked for them (`ladder_trays: {layers}`), else none (the runs stay swept boxes)."""
-    return {"ladder_trays": given["ladder_trays"]} if "ladder_trays" in given else None
+    """The spec of the parts: the trays as the engineer asked (`ladder_trays: {layers, kinds?, cover?}`); when he does not say, the runs of the tray layer are drawn as ladder trays, the
+    default kind; `ladder_trays: false` keeps every run a swept box."""
+    given_trays = given.get("ladder_trays", {"layers": [TRAY_LAYER]})
+    return {"ladder_trays": given_trays} if given_trays else None
 
 
 def build(given, routing):

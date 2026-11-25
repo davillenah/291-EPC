@@ -5,6 +5,7 @@ All notable changes. Format: Keep a Changelog; versions follow `harness/docs/BRA
 ## [Unreleased]
 
 ### Changed
+- Stage 10 now draws the runs of the tray layer (`ELEC-BANDEJA`) as ladder trays by default (rails with section and slots, rungs, elbows and tees of the same kind); `model3d.ladder_trays` chooses another kind per layer (`kinds`), adds the lid (`cover`) or, as `false`, keeps the old swept boxes.
 - The 3D tee of a tray takes the kind of its tray, like the straights and elbows.
 - 3D elbows of trays take the kind of their tray (ladder, perforated, solid, wire) and turn through the bend with the catalogue inner radius of 300 mm (`elbow_radius_m`, unverified), instead of a swept box.
 - 3D trays of every kind (owner request 2026-11-25): `tray_solid.tray_mesh` builds `escalera`, `perforada` (rails and floor with a band of slots every 100 mm), `ciega` (solid floor) and `alambre` (wire mesh: top-edge wires, floor wires, transverse wires every 50 mm). Stage 10 takes them from `ladder_trays.kinds` (`{layer: kind}`, default `escalera`) and `cover`. Sizes are own drawing values (`floor_margin_m`, `wire_m`, `wire_pitch_m` in `epc_plan/params.json`), unverified.
