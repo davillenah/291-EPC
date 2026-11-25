@@ -55,6 +55,14 @@ class TheTraysOfTheModel(unittest.TestCase):
         mine = {"layers": ["ELEC-BANDEJA"], "kinds": {"ELEC-BANDEJA": "perforada"}, "cover": True}
         self.assertEqual(model3d._parts_spec({"ladder_trays": mine}), {"ladder_trays": mine})
 
+    def test_the_supports_are_hangers_or_wall_brackets_with_their_reach(self):
+        ok = lambda supports: model3d._is_supports(supports)               # noqa: E731
+        self.assertTrue(ok({"spacing_m": 1.5}))
+        self.assertTrue(ok({"spacing_m": 1.5, "mount": "wall", "reach_m": 0.6}))
+        self.assertFalse(ok({"spacing_m": 1.5, "mount": "wall"}))           # the reach is the engineer's value: none is assumed
+        self.assertFalse(ok({"spacing_m": 1.5, "reach_m": 0.6}))
+        self.assertFalse(ok({"spacing_m": 1.5, "mount": "ceiling"}))
+
     def test_a_bad_tray_option_is_an_error_and_false_is_not(self):
         routing = {"PB": {}}
         base = {"floors": {"PB": HEIGHTS}}

@@ -5,6 +5,7 @@ All notable changes. Format: Keep a Changelog; versions follow `harness/docs/BRA
 ## [Unreleased]
 
 ### Changed
+- Wall brackets (owner request 2026-11-25): with `model3d.supports: {spacing_m, mount: "wall", reach_m}` the supports of the trays are brackets that sit on the wall beside them (`epc_plan.wall_brackets`): from each support place the nearer wall at the height of the tray within `reach_m` of its edge gets a backplate against its face and an arm under the width of the tray; a place with no wall in reach gets none. The reach is the engineer's value, none assumed; sizes of plate and arm are drawing data (`detail.bracket`).
 - Stage 10 lists the clashes of the 3D model (owner request 2026-11-25): every pair of solids that cross is written to `<board>_clashes.xlsx` (bilingual, in the drawings folder) and counted in the outputs (`model3d.clashes`); `clearance_m` (given by the engineer, none assumed) adds trays too close to each other. The solution is decided later by a person. `epc_drawing.write_tables` is now part of the drawing door.
 - New tray kind `canal` (U channel: floor and two walls, no return lip) in the plan drawing (`tray_draw`) and in 3D (`tray_solid`).
 - 3D trays: bolts at the joints (four bolt heads every 3 m of tray, `joint_m` and `bolt_m`) and the vertical bend of an elbow as 5 straight links, like the articulated bend of the catalogue (`vertical_links`). Own values, unverified.
