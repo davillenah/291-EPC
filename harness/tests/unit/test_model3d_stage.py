@@ -48,6 +48,20 @@ def stage10(**extra):
 MODEL = {"floors": {"PB": HEIGHTS}, "supports": {"spacing_m": 1.5}, "sections": [{"name": "A", "axis": "x", "at_m": 3.0, "look": "+", "depth_m": 2.0}]}
 
 
+class TheTraysOfTheModel(unittest.TestCase):
+    def test_the_trays_are_ladders_unless_the_engineer_says_otherwise(self):
+        self.assertEqual(model3d._parts_spec({}), {"ladder_trays": {"layers": ["ELEC-BANDEJA"]}})
+        self.assertIsNone(model3d._parts_spec({"ladder_trays": False}))
+        mine = {"layers": ["ELEC-BANDEJA"], "kinds": {"ELEC-BANDEJA": "perforada"}, "cover": True}
+        self.assertEqual(model3d._parts_spec({"ladder_trays": mine}), {"ladder_trays": mine})
+
+    def test_a_bad_tray_option_is_an_error_and_false_is_not(self):
+        routing = {"PB": {}}
+        base = {"floors": {"PB": HEIGHTS}}
+        self.assertFalse([e for e in model3d.errors_of(dict(base, ladder_trays=False), routing) if "ladder_trays" in e])
+        self.assertTrue([e for e in model3d.errors_of(dict(base, ladder_trays={"layers": []}), routing) if "ladder_trays" in e])
+
+
 class Model3dInTheRun(unittest.TestCase):
     def test_without_the_section_nothing_is_written(self):
         res, files, _, _ = stage10()
