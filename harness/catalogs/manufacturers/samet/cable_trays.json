@@ -113,7 +113,15 @@
      ]
     }
    ],
-   "notes": "Cold-assembled rails and crossbars; joined with four 3/8 in carriage bolt sets, no splice plates. The second height of each profile is the dimension printed inside the profile drawing (to verify)."
+   "notes": "Cold-assembled rails and crossbars; joined with four 3/8 in carriage bolt sets, no splice plates. The second height of each profile is the dimension printed inside the profile drawing (to verify).",
+   "section_shape": {
+    "status": "unverified",
+    "rail": "cold-formed C: web, bottom foot turned in (15 mm), top edge rolled",
+    "rung": "channel seated on the foot, 15 mm high",
+    "joint": "built-in coupling, 4 carriage bolts 3/8 in per joint",
+    "side_slots": true,
+    "elbow_inner_radius_mm": 300
+   }
   },
   {
    "id": "samet-load-test",
