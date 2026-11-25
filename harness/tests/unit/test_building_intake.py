@@ -841,8 +841,8 @@ class PlanFromInputsTests(unittest.TestCase):
         return {"luminaires": [dict(LUM)], "floors": [{"id": "PB", "name": "Ground floor", "phases": 1, "length": {"value": 20, "unit": "m"}, "plan": plan, "rooms": {"r1": data}}]}
 
     def project(self, tmp, name="PB.dxf", data=None):
-        sys.path.insert(0, str(Path(W.__file__).resolve().parents[2] / "src" / "engines" / "cad" / "arch" / "tests"))
-        import helpers
+        sys.path.insert(0, str(Path(W.__file__).resolve().parents[2] / "src" / "engines" / "cad" / "draw" / "tests"))
+        import arch_helpers as helpers
         plans = Path(tmp) / "inputs" / "plans"
         plans.mkdir(parents=True, exist_ok=True)
         (plans / name).write_bytes(data if data is not None else helpers.room_dxf())

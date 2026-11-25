@@ -262,9 +262,9 @@ def more_engines():
                                  "check": attempt(rs.check, {"reserve_pct": 10, "diagonal": True}, installation_type="dwellings")})
     plan_dir = REPO / "harness" / "src" / "engines" / "cad" / "draw" / "tests" / "fixtures" / "plan"
     from epc_plan import core
-    arch_tests = REPO / "harness" / "src" / "engines" / "cad" / "arch" / "tests"
+    arch_tests = REPO / "harness" / "src" / "engines" / "cad" / "draw" / "tests"
     sys.path.insert(0, str(arch_tests))
-    import helpers
+    import arch_helpers as helpers
     from epc_arch import recognize
     out["epc_arch"] = {"flat": attempt(lambda: recognize(helpers.room_dxf(), "flat.dxf").as_dict()),
                        "flat_in_millimetres": attempt(lambda: recognize(helpers.room_dxf(unit=1000.0, insunits=4), "flat.dxf").as_dict()),
