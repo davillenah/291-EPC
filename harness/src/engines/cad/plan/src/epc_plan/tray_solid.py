@@ -5,7 +5,7 @@ climbs, crosses over another and comes back down is one smooth path. `ladder_mes
 `rung_pitch` (a box `rung` wide and `rung_thick` thick), and returns {"vertices": [[x, y, z]], "faces": [[i, j, k, l]]}, the shape the 3D scene already uses.
 """
 import math
-from typing import Dict, List, Sequence, Tuple
+from typing import Dict, List, Optional, Sequence, Tuple
 
 from . import tray_draw
 from .core import PlanError
@@ -108,21 +108,23 @@ def _web(vertices: List[List[float]], faces: List[List[int]], a: P3, length: flo
         _quad(vertices, faces, [tuple(a[k] + u[k] * x + n[k] * lateral + v[k] * (h - depth / 2) for k in range(3)) for x, h in ((s0, h0), (s1, h0), (s1, h1), (s0, h1))])
 
 
-def _rail(vertices: List[List[float]], faces: List[List[int]], a: P3, b: P3, axes: Tuple[P3, P3, P3], side: int, width: float, depth: float, p: Dict[str, float]) -> None:
-    """A rail as a sheet swept along a..b: one quad per segment of its section, the web with its side slots."""
+def _rail(vertices: List[List[float]], faces: List[List[int]], a: P3, b: P3, axes: Tuple[P3, P3, P3], side: int, width: float, depth: float, p: Dict[str, float],
+          width_b: Optional[float] = None) -> None:
+    """A rail as a sheet swept along a..b: one quad per segment of its section, the web with its side slots; with `width_b` the rail leans from `width` at a to `width_b` at b (a taper)."""
     u, n, v = axes
     section = rail_section(depth, p["foot"], p["curl"])
     base = len(vertices)
-    for end in (a, b):
+    slotted = "slot" in p and width_b is None
+    for end, wide in ((a, width), (b, width if width_b is None else width_b)):
         for inward, height in section:
-            lateral = side * width / 2 - side * inward
+            lateral = side * wide / 2 - side * inward
             vertices.append([end[k] + n[k] * lateral + v[k] * (height - depth / 2) for k in range(3)])
     count = len(section)
     for i in range(count - 1):
-        if i == 1 and "slot" in p:
+        if i == 1 and slotted:
             continue
         faces.append([base + i, base + i + 1, base + count + i + 1, base + count + i])
-    if "slot" in p:
+    if slotted:
         _web(vertices, faces, a, math.dist(a, b), axes, side * width / 2, depth, p)
 
 
@@ -226,6 +228,44 @@ def tray_mesh(path: Sequence[P3], width: float, depth: float, p: Dict[str, float
         if p.get("cover"):
             _lid(vertices, faces, a, b, axes, width, depth, p)
     return {"vertices": vertices, "faces": faces}
+
+
+def _taper_rungs(vertices: List[List[float]], faces: List[List[int]], a: P3, b: P3, axes: Tuple[P3, P3, P3], widths: Tuple[float, float], depth: float, p: Dict[str, float]) -> None:
+    """The rungs of a reducer: one every `rung_pitch`, each as wide as the taper is there."""
+    u, v = axes[0], axes[2]
+    length = math.dist(a, b)
+    x = p["rung_pitch"] / 2
+    while x < length:
+        at = tuple(a[k] + u[k] * x for k in range(3))
+        wide = widths[0] + (widths[1] - widths[0]) * x / length
+        _box(vertices, faces, tuple(at[k] - v[k] * (depth / 2 - p["rung_thick"] / 2) for k in range(3)), axes, (p["rung"], wide, p["rung_thick"]))
+        x += p["rung_pitch"]
+
+
+def reducer_mesh(a: P3, b: P3, widths: Tuple[float, float], depth: float, p: Dict[str, float], kind: str = "escalera") -> Dict[str, list]:
+    """A central reducer from a (width `widths[0]`) to b (`widths[1]`): the rails lean in, with the rungs (ladder) or the floor (perforated and solid) as wide as the taper; a wire tray steps down."""
+    vertices: List[List[float]] = []
+    faces: List[List[int]] = []
+    if kind == "alambre":
+        return _stepped(a, b, tuple((a[k] + b[k]) / 2 for k in range(3)), widths, depth, p)
+    axes = _frame(a, b)
+    for side in (-1, 1):
+        _rail(vertices, faces, a, b, axes, side, widths[0], depth, p, widths[1])
+    if kind == "escalera":
+        _taper_rungs(vertices, faces, a, b, axes, widths, depth, p)
+    else:
+        u, n, v = axes
+        length = math.dist(a, b)
+        _quad(vertices, faces, [tuple(a[k] + u[k] * x + n[k] * y - v[k] * depth / 2 for k in range(3)) for x, y in ((0, -widths[0] / 2), (length, -widths[1] / 2), (length, widths[1] / 2), (0, widths[0] / 2))])
+    return {"vertices": vertices, "faces": faces}
+
+
+def _stepped(a: P3, b: P3, mid: P3, widths: Tuple[float, float], depth: float, p: Dict[str, float]) -> Dict[str, list]:
+    """A wire-mesh reducer: the wide half, then the narrow half."""
+    big = tray_mesh([a, mid], widths[0], depth, p, "alambre")
+    small = tray_mesh([mid, b], widths[1], depth, p, "alambre")
+    shift = len(big["vertices"])
+    return {"vertices": big["vertices"] + small["vertices"], "faces": big["faces"] + [[i + shift for i in f] for f in small["faces"]]}
 
 
 def solid(ident: str, tag: str, run: Sequence[P3], layer: str, width: float, depth: float, p: Dict[str, float], radius: float, vertical_radius: float,

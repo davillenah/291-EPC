@@ -200,7 +200,61 @@ def _tees(runs: List[Dict[str, Any]], rings, leg_of, ladder: Optional[Dict[str, 
     return out
 
 
-def _reducers(runs: List[Dict[str, Any]], rings, leg_of) -> List[Dict[str, Any]]:
+def _reducer_for(big: Dict[str, Any], small: Dict[str, Any], p, tip, rings, ladder: Optional[Dict[str, Any]]) -> Dict[str, Any]:
+    """The mesh of a reducer: a tapering tray of the kind of the layer, else the skin between the two sections."""
+    if not (ladder and big.get("layer") in ladder["layers"] and big["section"] == small["section"] == "rect"):
+        return _reducer_mesh(p, tip, rings[big["id"]], rings[small["id"]])
+    from epc_plan import tray_solid
+    return tray_solid.reducer_mesh(p, tip, (big["width_m"], small["width_m"]), big["height_m"], ladder["sizes"], ladder.get("kinds", {}).get(big["layer"], "escalera"))
+
+
+def _cross_at(a, b, c, d) -> Optional[V3]:
+    """Where the stretches a-b and c-d cross in plan, away from their ends and at the same height, else None."""
+    r, q = _sub(b, a), _sub(d, c)
+    det = r[0] * q[1] - r[1] * q[0]
+    if abs(det) < 1e-9:
+        return None
+    w = _sub(c, a)
+    t, u = (w[0] * q[1] - w[1] * q[0]) / det, (w[0] * r[1] - w[1] * r[0]) / det
+    lo_t, lo_u = TOUCH / max(_len(a, b), 1e-9), TOUCH / max(_len(c, d), 1e-9)
+    if not (lo_t < t < 1 - lo_t and lo_u < u < 1 - lo_u):
+        return None
+    mine, other = _add(a, r, t), _add(c, q, u)
+    return mine if abs(mine[2] - other[2]) <= TOUCH else None
+
+
+def _arm(point: V3, a, b, half: float) -> List[List[float]]:
+    """The piece of the stretch a-b that centres on `point`, `half` each way."""
+    return [_r(_toward(point, a, min(half, _len(point, a)))), _r(_toward(point, b, min(half, _len(point, b))))]
+
+
+def _same_tray(first: Dict[str, Any], second: Dict[str, Any]) -> bool:
+    return first["discipline"] == second["discipline"] and first.get("layer") == second.get("layer") and first["section"] == second["section"] == "rect"
+
+
+def _cross_part(first, second, stretch_a, stretch_b, at: V3, leg_of, ladder, n: int) -> Dict[str, Any]:
+    """The cross of two runs at `at`: both arms, each as long as the other tray is wide plus a leg each way."""
+    pieces = [dict(first, path=_arm(at, *stretch_a, second["width_m"] / 2 + leg_of(first))), dict(second, path=_arm(at, *stretch_b, first["width_m"] / 2 + leg_of(second)))]
+    meshes = [_straight_mesh(piece, ladder) for piece in pieces]
+    shift = len(meshes[0]["vertices"])
+    mesh = {"vertices": meshes[0]["vertices"] + meshes[1]["vertices"], "faces": meshes[0]["faces"] + [[v + shift for v in f] for f in meshes[1]["faces"]]}
+    return _part(first, "cross", n, mesh, path=pieces[0]["path"], branch=second["id"], branch_size=_size(second), at=_r(at))
+
+
+def _crosses(runs: List[Dict[str, Any]], leg_of, ladder: Optional[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    """Where two tray runs of one layer cross in the middle at the same height: a cross."""
+    out = []
+    for i, first in enumerate(runs):
+        for second in (r for r in runs[i + 1:] if _same_tray(first, r)):
+            for sa in _stretches(first):
+                for sb in _stretches(second):
+                    at = _cross_at(*sa, *sb)
+                    if at is not None:
+                        out.append(_cross_part(first, second, sa, sb, at, leg_of, ladder, len(out) + 1))
+    return out
+
+
+def _reducers(runs: List[Dict[str, Any]], rings, leg_of, ladder: Optional[Dict[str, Any]] = None) -> List[Dict[str, Any]]:
     """Where two runs of one discipline and different size meet end to end: a reducer, drawn on the end of the smaller one."""
     out = []
     for i, big in enumerate(runs):
@@ -213,7 +267,7 @@ def _reducers(runs: List[Dict[str, Any]], rings, leg_of) -> List[Dict[str, Any]]
                 far = next((q for q, e in zip(reversed(_ends(small)), _ends(small)) if _len(p, e) <= TOUCH), None)
                 if far is not None:
                     tip = _toward(p, far, min(leg_of(big), _len(p, far)))
-                    out.append(_part(big, "reducer", len(out) + 1, _reducer_mesh(p, tip, rings[big["id"]], rings[small["id"]]), path=[_r(p), _r(tip)], to=small["id"], to_size=_size(small)))
+                    out.append(_part(big, "reducer", len(out) + 1, _reducer_for(big, small, p, tip, rings, ladder), path=[_r(p), _r(tip)], to=small["id"], to_size=_size(small)))
     return out
 
 
@@ -265,7 +319,7 @@ def parts(solids: List[Dict[str, Any]], spec: Optional[Dict[str, Any]] = None) -
     leg_of = lambda s: factor * s["width_m"]                                  # noqa: E731
     ladder = _ladder(spec)
     out = [p for s in runs for p in _run_parts(s, rings[s["id"]], leg_of(s), ladder)]
-    return out + _tees(runs, rings, leg_of, ladder) + _reducers(runs, rings, leg_of)
+    return out + _tees(runs, rings, leg_of, ladder) + _reducers(runs, rings, leg_of, ladder) + _crosses(runs, leg_of, ladder)
 
 
 # ---------------------------------------------------------------- supports
@@ -365,7 +419,7 @@ def takeoff(items: List[Dict[str, Any]]) -> Dict[str, List[Dict[str, Any]]]:
         base = {"discipline": p.get("discipline", ""), "layer": p.get("layer", ""), "size": p.get("size", "")}
         if p.get("part") == "straight":
             _count(straights, tuple(base.values()), base, length_m=p["length_m"])
-        elif p.get("part") in ("elbow", "tee", "reducer"):
+        elif p.get("part") in ("elbow", "tee", "cross", "reducer"):
             extra = {"type": p["part"], "angle_deg": p.get("angle_deg"), "to_size": p.get("branch_size") or p.get("to_size")}
             _count(fittings, tuple(base.values()) + tuple(extra.values()), dict(base, **extra))
         elif p.get("part") == "support":
