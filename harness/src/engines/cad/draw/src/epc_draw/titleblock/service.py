@@ -108,6 +108,15 @@ def _fill(svg: str, values: Dict[str, str]) -> str:
     return svg
 
 
+def _name_logos(svg: str, values: Dict[str, str]) -> str:
+    """Each logo group of a sheet says which company it is (`data-empresa`), so the DXF puts it on its own layer `0-Logo-<company>`."""
+    for group, key in (("provider-logo", "empresa"), ("client-logo", "cliente")):
+        name = values.get(key, "").strip()
+        if name:
+            svg = svg.replace('<g id="%s" ' % group, '<g id="%s" data-empresa="%s" ' % (group, html.escape(name, quote=True)))
+    return svg
+
+
 def _values(request: dict, sheet: dict, position: int, total: int) -> Dict[str, str]:
     fmt = str(sheet["format"]).upper()
     merged = {"formato": fmt, "pagina": f"{position} / {total}", "plano_propio": sheet["name"], **(request.get("common") or {}), **(sheet.get("fields") or {})}
@@ -143,7 +152,7 @@ def render(request: dict) -> dict:
     for position, sheet in enumerate(request["sheets"], 1):
         values = _values(request, sheet, position, total)
         built = sheet_generator.build(str(sheet["format"]), bool(sheet.get("modifications")), logos, config=_config_of(request, values["formato"]))
-        sheets.append({"name": sheet["name"], "format": values["formato"], "svg": _fill(built["svg"], values), "title_block": _fill(built["title_block"], values),
+        sheets.append({"name": sheet["name"], "format": values["formato"], "svg": _name_logos(_fill(built["svg"], values), values), "title_block": _fill(built["title_block"], values),
                        "modifications_block": _fill(built["modifications_block"], values), "info": built["info"]})
     return {"sheets": sheets, "warnings": warnings}
 

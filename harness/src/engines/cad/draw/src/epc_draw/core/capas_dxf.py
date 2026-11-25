@@ -306,11 +306,16 @@ def _separar_textos(textos, pasadas=60):
             break
 
 
+def _sin_logos(entidades):
+    """Las entidades que no son de un logo: un logo ya tiene su capa `0-Logo-<empresa>`."""
+    return (e for e in entidades if not e.dxf.layer.startswith("0-Logo-"))
+
+
 def aplicar(dxf_path, catalog=None, stamp=None, doc=None, write=True):
     doc = _stamp.document(dxf_path, doc)
     cat = _catalogo(catalog)
     diagrama, textos, rotulo, lamina = (_L.apply(doc, r, cat) for r in ROLES)
-    for e in doc.modelspace():
+    for e in _sin_logos(doc.modelspace()):
         t = e.dxftype()
         if t not in ('LINE', 'LWPOLYLINE', 'TEXT', 'HATCH'):
             continue
