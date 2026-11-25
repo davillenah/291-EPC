@@ -5,7 +5,7 @@ of each sheet, the logos. It gets back the sheets with their title block filled 
 
 Request:
   {"schema_version": "1.0",
-   "logos":  {"provider": "<file>", "client": "<file>"},                  optional, svg or png
+   "logos":  {"provider": "<file>", "client": "<file>"},                  optional, svg or png; a value may be a `Logo(name, data)` (bytes) instead of a path
    "common": {"empresa": "...", "cliente": "...", "proy_nombre": "...", ...},   fields every sheet shares
    "sheet_config": {"A1": {...}, "A3": {...}},                           optional: how an organization changed the sheet of each format (see `layout`)
    "sheets": [{"name": "SLD_T1_H1", "format": "A1", "modifications": false, "fields": {"denominacion": "...", "pagina": "1 / 2"}}]}
@@ -19,6 +19,7 @@ from pathlib import Path
 from typing import Any, Dict, List
 
 from epc_titleblock import layout, sheet_generator
+from epc_titleblock.logo import Logo, as_logo
 
 SCHEMA_VERSION = "1.0"
 FIELDS = ("formato", "proy_fecha", "proy_nombre", "ver_fecha", "ver_nombre", "val_fecha", "val_nombre", "empresa", "empresa_cuit", "empresa_email", "empresa_web",
@@ -36,13 +37,18 @@ def _own_sheets(titleblock: dict) -> dict:
     return {"sheet_config": titleblock["sheet_config"]} if titleblock.get("sheet_config") else {}
 
 
+def _logo_source(value):
+    """A logo as the request keeps it: data stays data, a file is named by its path."""
+    return value if isinstance(value, Logo) else str(value)
+
+
 def project_request(titleblock: dict, logos: dict = None, today: datetime.date = None) -> dict:
     """The common part of a request from the title block data of a project (company, client, who drew, checked and approved, description...):
     the three dates are the day the drawing is made. `sheets` are added by whoever draws."""
     day = (today or datetime.date.today()).strftime("%d/%m/%Y")
     common = {field: titleblock.get(key) or "" for key, field in PROJECT_FIELDS.items()}
     common.update(proy_fecha=day, ver_fecha=day, val_fecha=day)
-    return {"schema_version": SCHEMA_VERSION, "logos": {k: str(v) for k, v in (logos or {}).items()}, "common": common, **_own_sheets(titleblock)}
+    return {"schema_version": SCHEMA_VERSION, "logos": {k: _logo_source(v) for k, v in (logos or {}).items()}, "common": common, **_own_sheets(titleblock)}
 
 
 class RequestError(ValueError):
@@ -116,11 +122,12 @@ def _config_of(request: dict, fmt: str):
 def _logos(request: dict) -> tuple:
     """(the logos that exist, the warnings about those that do not)."""
     found, warnings = {}, []
-    for who, path in (request.get("logos") or {}).items():
-        if path and Path(path).is_file():
-            found[who] = path
-        elif path:
-            warnings.append(f"logo {who}: file not found: {path}")
+    for who, source in (request.get("logos") or {}).items():
+        logo = as_logo(source)                     # a `Logo` (data) as it comes; a path is read here, by the caller's side of the door
+        if logo is not None:
+            found[who] = logo
+        elif source:
+            warnings.append(f"logo {who}: file not found: {source}")
     return found, warnings
 
 

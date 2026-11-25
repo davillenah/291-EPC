@@ -24,6 +24,7 @@ Unidades mm, origen arriba-izquierda. Uso: python3 sheet-generator.py A0|A1|A2|A
 Genera también title-block-IRAM4508.svg y modifications-block-IRAM4508.svg junto a la salida.
 """
 import base64
+import io
 import functools
 import glob
 import json
@@ -36,6 +37,7 @@ import xml.etree.ElementTree as ET
 
 from epc_titleblock import layout
 from epc_titleblock.errors import TitleblockError
+from epc_titleblock.logo import as_logo
 
 # formato: (ancho, alto, margen izq., margen sup./der./inf., columnas, filas)
 # A0: margen 20 en los 4 lados (archivado con banda adhesiva, fig. 16).
@@ -160,33 +162,30 @@ def build(fmt: str = "A0", modifications: bool = False, logos=None, iram: bool =
 
 
     def buscar_logo(prefijo):
-        """Archivo del logo `prefijo` ('provider' o 'client') que pidió quien llama, o None si no se dio o no existe."""
-        path = logos.get(prefijo)
-        return str(path) if path and os.path.isfile(path) else None
+        """El logo `prefijo` ('provider' o 'client') que pidió quien llama (datos, o la ruta de un archivo que existe), o None si no se dio."""
+        return as_logo(logos.get(prefijo))
 
 
-    def _tamano_png(path):
+    def _tamano_png(logo):
         """(ancho, alto) en píxeles de un PNG, leído de su cabecera IHDR."""
-        with open(path, "rb") as f:
-            cab = f.read(24)
+        cab = logo.data[:24]
         if cab[:8] != b"\x89PNG\r\n\x1a\n" or cab[12:16] != b"IHDR":
-            raise TitleblockError("err_png_invalid", basename=os.path.basename(path))
+            raise TitleblockError("err_png_invalid", basename=logo.name)
         return struct.unpack(">II", cab[16:24])
 
 
-    def logo_anidado(path, x, y, w, h, gid):
+    def logo_anidado(logo, x, y, w, h, gid):
         """Incrusta el logo (SVG o PNG) ajustado al recuadro (x, y, w, h en mm): escala uniforme y centrado.
         SVG: se anida su contenido, sin los metadatos de Inkscape/Sodipodi (no son SVG estándar).
         PNG: se incrusta como <image> con los datos en base64; el DXF lo vectoriza."""
-        if path.lower().endswith(".png"):
+        if logo.name.lower().endswith(".png"):
             vx = vy = 0.0
-            vw, vh = _tamano_png(path)
-            with open(path, "rb") as f:
-                datos = base64.b64encode(f.read()).decode("ascii")
+            vw, vh = _tamano_png(logo)
+            datos = base64.b64encode(logo.data).decode("ascii")
             contenido = (f'<image xmlns:xlink="{XLINK_NS}" width="{vw}" height="{vh}" '
                          f'xlink:href="data:image/png;base64,{datos}"/>')
         else:
-            root = ET.parse(path).getroot()
+            root = ET.parse(io.BytesIO(logo.data)).getroot()
             vb = root.get("viewBox")
             if vb:
                 vx, vy, vw, vh = (float(v) for v in vb.replace(",", " ").split())
@@ -195,7 +194,7 @@ def build(fmt: str = "A0", modifications: bool = False, logos=None, iram: bool =
                 vx, vy = 0.0, 0.0
                 vw, vh = (float(re.sub(r"[^0-9.]", "", root.get(a))) for a in ("width", "height"))
             else:
-                raise TitleblockError("err_svg_no_size", basename=os.path.basename(path))
+                raise TitleblockError("err_svg_no_size", basename=logo.name)
 
             def limpiar(el):
                 for hijo in list(el):
@@ -213,7 +212,7 @@ def build(fmt: str = "A0", modifications: bool = False, logos=None, iram: bool =
         k = min(w / vw, h / vh)                      # escala uniforme, ajustada al recuadro
         ox = x + (w - vw * k) / 2 - vx * k           # centrado dentro del recuadro
         oy = y + (h - vh * k) / 2 - vy * k
-        archivo = os.path.basename(path).replace("&", "&amp;").replace('"', "&quot;")
+        archivo = os.path.basename(logo.name).replace("&", "&amp;").replace('"', "&quot;")
         return (f'<g id="{gid}" data-archivo="{archivo}" transform="translate({ox:.4f} {oy:.4f}) scale({k:.6f})">'
                 + contenido + "</g>")
 
