@@ -5,12 +5,9 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "epc-mld"
 version = "0.1.0"
-description = "EPC-291 multi-line diagram generator: each line of the single-line expanded into its conductors"
+description = "Door to the multi-line diagram generator that moved into epc_draw.mld (ADR-0042)"
 requires-python = ">=3.10"
-dependencies = ["epc-aea90364", "epc-symbols", "epc-dxf", "epc-titleblock", "lxml"]
+dependencies = ["epc-draw"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
-
-[tool.setuptools.package-data]
-epc_mld = ["data/**/*", "templates/*"]

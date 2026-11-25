@@ -1,13 +1,13 @@
-"""OPT-02 (ADR-0040): `epc_mld.draw(MldInput, ...)` hands the input to `generate` unchanged."""
+"""OPT-02 (ADR-0040): `epc_draw.mld.draw(MldInput, ...)` hands the input to `generate` unchanged."""
 import sys
 import unittest
 from pathlib import Path
 from unittest import mock
 
 ENGINES = Path(__file__).resolve().parents[3]
-sys.path[:0] = [str(ENGINES / g / a / "src") for g, a in (("cad", "mld"), ("cad", "sld"), ("calculation", "aea90364"), ("cad", "symbols"), ("cad", "titleblock"), ("cad", "dxf"))]
+sys.path[:0] = [str(ENGINES / g / a / "src") for g, a in (("cad", "draw"), ("calculation", "aea90364"))]
 
-from epc_mld import MldInput, contract, draw   # noqa: E402
+from epc_draw.mld import MldInput, contract, draw   # noqa: E402
 
 
 class TestDraw(unittest.TestCase):

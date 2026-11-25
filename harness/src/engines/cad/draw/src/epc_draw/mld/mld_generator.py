@@ -3,7 +3,7 @@
 Parte del mismo dato que el unifilar y del cálculo de epc_aea90364 (que ya aplica los criterios de diseño): cada línea del unifilar se "despliega" en
 sus conductores (L1 L2 L3 N) a paso uniforme de 10 mm, con los símbolos MLD_LV de la biblioteca (`<id>_<n>p_mld`) sin escalar.
 
-  from epc_mld import mld_generator
+  from epc_draw.mld import mld_generator
   mld_generator.generate(data, calc, out_dir, "MLD_TGBT-01")
 
 `data` = {"board": {...}, "circuits": [...], "titleblock": {...}} (el JSON del formulario); `calc` = {"datos": {TAG: {In, Ib, icu, S, dU, disp}},
@@ -21,7 +21,7 @@ from xml.sax.saxutils import escape as xesc
 
 from lxml import etree
 
-from epc_dxf.roles import tag_iram_sheet
+from epc_draw.core.roles import tag_iram_sheet
 
 PITCH = 10.0                      # paso entre polos (mm), retícula de la biblioteca
 COL_GAP = 16.0                    # separación entre columnas de circuitos
@@ -38,7 +38,7 @@ POLE_NAMES = {1: ["L"], 2: ["L", "N"], 3: ["L1", "L2", "L3"], 4: ["L1", "L2", "L
 
 
 def library_dir() -> str:
-    from epc_symbols import library_dir as lib
+    from epc_draw.symbols import library_dir as lib
     return str(lib("mld-lv-symbol"))
 
 
@@ -47,7 +47,7 @@ def _notice(line: str) -> None:
 
 
 def _registry_file(sid: str) -> Optional[str]:
-    from epc_symbols import resolve, UnknownSymbol
+    from epc_draw.symbols import resolve, UnknownSymbol
     try:
         return str(resolve(sid, "mld").svg)
     except UnknownSymbol:
@@ -356,7 +356,7 @@ class Generator:
 
     def title_block_sheet(self, index: int, name: str) -> str:
         """The IRAM sheet of this diagram with its title block filled in, asked to epc_titleblock (the project's data: EPC_TITLEBLOCK_JSON, else the title block of the input)."""
-        from epc_titleblock import service
+        from epc_draw.titleblock import service
         request = self.titleblock_request or service.project_request(self.data.get("titleblock", {}))
         fields = {"denominacion": self.board.get("name"), "denominacion_2": "DIAGRAMA MULTIFILAR BT", "proyecto": self.board.get("project"), "pagina": f"{index + 1} / {len(self.names)}"}
         result = service.render({**request, "sheets": [{"name": name, "format": "A1", "fields": fields}]})
@@ -366,7 +366,7 @@ class Generator:
 
     def write_sheet(self, sh: Sheet, index: int, name: str, out_dir: Path) -> tuple:
         lam = tag_iram_sheet(self.title_block_sheet(index, name))
-        from epc_dxf import stamp
+        from epc_draw.core import stamp
         moment = stamp.moment_of(self.stamp_date)
         today = (moment.date() if moment else datetime.date.today()).strftime("%d/%m/%Y")
         vals = {"cliente": "No indicado", "denominacion": self.board.get("name", ""), "denominacion_2": "DIAGRAMA MULTIFILAR BT", "empresa": "—",
@@ -393,7 +393,7 @@ class Generator:
     @staticmethod
     def to_dxf(svg_path: Path, final: str, out_dir: Path, name: str, stamp_date=None, say=_notice, lib: Optional[str] = None):
         """DXF por el mismo convertidor del paquete (trazos) y las capas 291-* del unifilar."""
-        from epc_dxf import deliverable
+        from epc_draw.core import deliverable
         done = deliverable.convert(svg_path, symbol_library=lib, stamp_date=stamp_date, seed=name)
         for line in done["messages"]:
             say(line)
