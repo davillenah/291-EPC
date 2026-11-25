@@ -34,3 +34,12 @@ class TestSolid(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+def test_rail_section_is_a_c_with_foot_and_rolled_edge():
+    from epc_plan import tray_solid
+    section = tray_solid.rail_section(0.09, 0.015, 0.012)
+    assert section[0] == (0.015, 0.0) and section[1] == (0.0, 0.0)          # foot turned in, then the web
+    assert max(h for _, h in section) == 0.09                                # up to the rail height
+    mesh = tray_solid.ladder_mesh([(0, 0, 0), (1, 0, 0)], 0.3, 0.09, {"rail": 0.002, "rung": 0.03, "rung_thick": 0.015, "rung_pitch": 0.3, "foot": 0.015, "curl": 0.012})
+    assert len(mesh["faces"]) >= 2 * (len(section) - 1)

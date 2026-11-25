@@ -77,6 +77,25 @@ def _box(vertices: List[List[float]], faces: List[List[int]], centre: P3, axes: 
         faces.append([base + i for i in quad])
 
 
+def rail_section(depth: float, foot: float, curl: float) -> List[Tuple[float, float]]:
+    """The centre line of a cold-formed rail (a C with the bottom foot turned in and the top edge rolled), as (inward, height above the bottom) pairs."""
+    return [(foot, 0.0), (0.0, 0.0), (0.0, depth - curl), (curl / 3, depth - curl / 3), (curl, depth), (curl * 1.4, depth - curl / 3)]
+
+
+def _rail(vertices: List[List[float]], faces: List[List[int]], a: P3, b: P3, axes: Tuple[P3, P3, P3], side: int, width: float, depth: float, p: Dict[str, float]) -> None:
+    """A rail as a sheet swept along a..b: one quad per segment of its section."""
+    u, n, v = axes
+    section = rail_section(depth, p["foot"], p["curl"])
+    base = len(vertices)
+    for end in (a, b):
+        for inward, height in section:
+            lateral = side * width / 2 - side * inward
+            vertices.append([end[k] + n[k] * lateral + v[k] * (height - depth / 2) for k in range(3)])
+    count = len(section)
+    for i in range(count - 1):
+        faces.append([base + i, base + i + 1, base + count + i + 1, base + count + i])
+
+
 def ladder_mesh(path: Sequence[P3], width: float, depth: float, p: Dict[str, float]) -> Dict[str, list]:
     """The mesh of a ladder tray along `path`: `width` clear width, `depth` rail height; `p` has `rail` (thickness of the rail), `rung` (width of a rung), `rung_thick` and `rung_pitch`."""
     vertices: List[List[float]] = []
@@ -91,6 +110,9 @@ def ladder_mesh(path: Sequence[P3], width: float, depth: float, p: Dict[str, flo
         mid = tuple((a[k] + b[k]) / 2 for k in range(3))
         for side in (-1, 1):
             off = side * (width / 2 + p["rail"] / 2)
+            if "foot" in p:
+                _rail(vertices, faces, a, b, (u, n, v), side, width, depth, p)
+                continue
             _box(vertices, faces, tuple(mid[k] + n[k] * off for k in range(3)), (u, n, v), (length, p["rail"], depth))
         while due < walked + length - 1e-9:
             t = due - walked
