@@ -21,6 +21,8 @@ from ezdxf.colors import rgb2int
 from ezdxf.enums import TextEntityAlignment
 from svgelements import SVG, Circle, Ellipse, Image, Path, Polygon, Rect, Shape, SimpleLine, Text
 
+from epc_draw.core import layers as _L
+from epc_draw.core.errors import DxfError
 from epc_draw.core import stamp as _stamp
 from epc_draw.core import textstyle as _T
 
@@ -131,6 +133,26 @@ def _nombres_logos(svg_path):
     return nombres
 
 
+def _empresas_logos(svg_path):
+    """{id del logo: empresa} de los logos que traen `data-empresa` (la hoja del rótulo la pone al rellenar), y la lista de ids de logo de cada imagen, en el orden del SVG."""
+    empresas, imagenes = {}, []
+
+    def recorrer(el, dentro):
+        etiqueta = el.tag.split("}")[-1]
+        nombre = dentro
+        if etiqueta == "g" and el.get("id") in LOGOS:
+            nombre = el.get("id")
+            if el.get("data-empresa"):
+                empresas[nombre] = el.get("data-empresa")
+        if etiqueta == "image":
+            imagenes.append(nombre)
+        for hijo in el:
+            recorrer(hijo, nombre)
+
+    recorrer(ET.parse(stream(svg_path)).getroot(), None)
+    return empresas, imagenes
+
+
 def _centrar_en_celda(lineas, textos):
     """Textos del rótulo: se ubican en la esquina superior de su celda.
 
@@ -178,6 +200,34 @@ def _logos(svg_path, formas):
         caja = cajas.get(nombre, [x0, y0, x1, y1])
         cajas[nombre] = [min(caja[0], x0), min(caja[1], y0), max(caja[2], x1), max(caja[3], y1)]
     return {k: [v / PX_POR_MM for v in caja] for k, caja in cajas.items()}, omitir
+
+
+def _capas_logos(svg_path, formas):
+    """La capa de cada logo (`0-Logo-<empresa>`, ADR-0042): {"capas": {capa: (empresa, rol)}, "formas": {id de forma: capa}, "imagenes": [capa o "0" por cada imagen]}.
+    Un logo sin `data-empresa` en el SVG queda en la capa 0 como antes."""
+    empresas, imagenes = _empresas_logos(svg_path)
+    capas, por_logo = {}, {}
+    for logo, empresa in empresas.items():
+        try:
+            capa = _L.logo_layer_name(empresa)
+        except DxfError:                       # una empresa sin letras ni dígitos: el logo queda en la capa 0
+            continue
+        por_logo[logo] = capa
+        capas[capa] = (empresa, logo.split("-")[0])
+    nombres = _nombres_logos(svg_path)
+    formas_capa = {id(e): por_logo[n] for n, e in zip(nombres, formas) if n in por_logo} if len(nombres) == len(formas) else {}
+    return {"capas": capas, "formas": formas_capa, "imagenes": [por_logo.get(n, "0") for n in imagenes]}
+
+
+def _crear_capas_logo(doc, capa_logo):
+    """Crea la capa `0-Logo-<empresa>` de cada logo de la lámina."""
+    for empresa, rol in capa_logo["capas"].values():
+        _L.add_logo_layer(doc, empresa, rol)
+
+
+def _capa_de_imagen(capa_logo):
+    """La capa de la siguiente imagen del SVG (las imágenes se recorren en el orden del SVG): su logo, o la 0."""
+    return capa_logo["imagenes"].pop(0) if capa_logo["imagenes"] else "0"
 
 
 def _relleno(e):
@@ -243,10 +293,10 @@ def _aviso(clave, texto):
         print(f"aviso: {texto}", file=sys.stderr)
 
 
-def _rellenar(msp, bucles, color, y_dxf):
-    """HATCH de color (capa 0) para los contornos de una forma."""
+def _rellenar(msp, bucles, color, y_dxf, capa="0"):
+    """HATCH de color (capa 0, o la del logo) para los contornos de una forma."""
     for exterior, interiores in _area_relleno(bucles):
-        relleno = msp.add_hatch(dxfattribs={"layer": "0"})
+        relleno = msp.add_hatch(dxfattribs={"layer": capa})
         relleno.dxf.true_color = rgb2int(color)
         relleno.paths.add_polyline_path([(px, y_dxf(py)) for px, py in exterior], is_closed=True)
         for hueco in interiores:
@@ -320,6 +370,7 @@ def convertir(svg_path, stamp=None):
     elementos = list(svg.elements())
     formas = [e for e in elementos if isinstance(e, Shape) and not isinstance(e, Text)]
     cajas_logos, omitir = _logos(svg_path, formas)
+    capa_logo = _capas_logos(svg_path, formas)
 
     textos = []
     for e in elementos:
@@ -347,6 +398,7 @@ def convertir(svg_path, stamp=None):
     doc.styles.add(estilo, font=_look["font"]["regular"])
     altura_rotulo, altura_legal = float(_look["heights"]["titleblock_mm"]), float(_look["heights"]["legal_notice_mm"])
     msp = doc.modelspace()
+    _crear_capas_logo(doc, capa_logo)
 
     def y_dxf(y):
         return alto_mm - y
@@ -378,22 +430,24 @@ def convertir(svg_path, stamp=None):
             texto.set_placement((x, y_dxf(y) + desplazamiento), align=alineacion)
         elif isinstance(e, Image):
             # logo PNG: se vectoriza y se rellena, sin contorno (solo relleno de color)
+            capa = _capa_de_imagen(capa_logo)
             for forma, color in _formas_imagen(e):
                 bucles = [pts for pts, _ in _polilineas(forma, SEGMENTOS_CURVA_LOGO) if len(pts) > 2]
                 if bucles:
-                    _rellenar(msp, bucles, color, y_dxf)
+                    _rellenar(msp, bucles, color, y_dxf, capa)
         elif isinstance(e, (SimpleLine, Rect, Polygon, Circle, Ellipse, Path)):
             if getattr(e, "id", None) == "papel":
                 continue
             if id(e) in omitir:
+                capa = capa_logo["formas"].get(id(e), "0")
                 color = _relleno(e)
                 bucles = [pts for pts, _ in _polilineas(e) if len(pts) > 2]
                 if color and bucles:
-                    _rellenar(msp, bucles, color, y_dxf)
+                    _rellenar(msp, bucles, color, y_dxf, capa)
                 # contorno siempre, para que las letras blancas (p. ej. "ORD") se vean sobre el papel
                 for pts, cerrada in _polilineas(e):
                     msp.add_lwpolyline([(px, y_dxf(py)) for px, py in pts],
-                                       close=cerrada, dxfattribs={"layer": "0"})
+                                       close=cerrada, dxfattribs={"layer": capa})
                 continue
             for puntos, cerrada in _polilineas(e):
                 if len(puntos) == 2 and not cerrada:

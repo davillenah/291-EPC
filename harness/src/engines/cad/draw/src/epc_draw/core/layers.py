@@ -120,6 +120,31 @@ def add_logo_layer(doc, company: str, role: str = "provider") -> str:
     return name
 
 
+def add_sheet_viewport(doc, width_mm: float, height_mm: float, role: str = "sheet.viewport"):
+    """The viewport of the sheet: in paper space, the size of the sheet, showing the model space at 1:1. It sits on the layer of `role` (`0-Viewport`, not plotted);
+    the deliverable renames the role layer to the catalog name like every other role layer. Returns the viewport."""
+    layout = doc.layout("Layout1")
+    layout.page_setup(size=(width_mm, height_mm), margins=(0, 0, 0, 0), units="mm", scale=(1, 1))
+    if role not in doc.layers:
+        doc.layers.add(role)
+    centre = (width_mm / 2.0, height_mm / 2.0)
+    return layout.add_viewport(center=centre, size=(width_mm, height_mm), view_center_point=centre, view_height=height_mm, status=1, dxfattribs={"layer": role})
+
+
+def apply_viewport(doc, catalog: Dict[str, dict], role: str = "sheet.viewport") -> Optional[str]:
+    """The viewport layer of a draft takes the name and look of the catalog (`0-Viewport`) and the viewports follow; returns the name, or None when the draft has no viewport."""
+    if role not in doc.layers:
+        return None
+    final = apply(doc, role, catalog)
+    for layout in doc.layouts:
+        for entity in ([] if layout.name == "Model" else layout):
+            if entity.dxf.layer == role:
+                entity.dxf.layer = final
+    if final != role:
+        doc.layers.remove(role)
+    return final
+
+
 def describe_layers(doc, catalog: Optional[Dict[str, dict]] = None) -> List[str]:
     """Gives every layer of the document that has no description the English description of the catalog role of the same name; returns the layers still without one
     (the layers `0` and `Defpoints` that every DXF carries are not counted)."""
