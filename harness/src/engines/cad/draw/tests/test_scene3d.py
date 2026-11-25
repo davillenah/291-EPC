@@ -17,7 +17,7 @@ BOX = {"vertices": [[0, 0, 0], [1, 0, 0], [1, 1, 0], [0, 1, 0], [0, 0, 1], [1, 0
 
 
 def building():
-    """A scene as `epc_arch.model3d.building_scene` gives it (the data only: this engine imports no other)."""
+    """A scene as `epc_draw.arch.model3d.building_scene` gives it (the data only: this engine imports no other)."""
     wall = {"id": "PB:w1:1", "tag": "w1", "kind": "wall", "discipline": "arquitectura", "level": "PB", "layer": "A-WALL-CUT", "mesh": json.loads(json.dumps(BOX))}
     return {"schema_version": "1.0", "units": "m", "solids": [wall], "box": [[0, 0, 0], [1, 1, 1]]}
 
