@@ -5,6 +5,7 @@ All notable changes. Format: Keep a Changelog; versions follow `harness/docs/BRA
 ## [Unreleased]
 
 ### Changed
+- The tray system reaches the bill of quantities (owner request 2026-11-25): stage 11 adds the trays by model (metres), the fittings and the supports of the 3D model take-off of stage 10 as `tray_system` lines (`BAN-nnn`) of `epc_boq` (the equipment lines take an optional `category` and `basis`); no change when the run has no 3D model.
 - Parts library checked against the maker's catalogue (owner request 2026-11-25): added the covers of every fitting (90°, 45°, adjustable, tee, cross, vertical bend; mitred like the rails), the adjustable wall bracket, the lateral splice plate, the articulated union, the universal mounting plate, the carriage bolts (M8 and 3/8 in), the cover retainer bolt and the suspension, fixing and grounding clamps, each with our own code (`tray_accessories.py`); the library now has 107 parts.
 - 3D perforated tray (owner review 2026-11-25): the floor is a solid sheet with small round holes in a grid (`hole_pitch_m` 0.04, `hole_m` 0.016, own drawing values, unverified) instead of bands of slots; solid margin along the rails and a solid strip at the end.
 - 3D trays: the rails of neighbouring stretches of a bend meet at a mitre (`tray_solid._miters`), so an elbow has no wedge gap on its outer side.

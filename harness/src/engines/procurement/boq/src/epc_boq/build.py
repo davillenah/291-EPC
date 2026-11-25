@@ -10,7 +10,9 @@ from epc_boq import inputs
 from epc_boq.errors import BoqError
 
 UNSPECIFIED = "unspecified"
-PREFIX = {"cable": "CAB", "protective_device": "DEV", "terminal_block": "TRM", "enclosure": "ENC", "pv_equipment": "PVE"}
+PREFIX = {"cable": "CAB", "protective_device": "DEV", "terminal_block": "TRM", "enclosure": "ENC", "pv_equipment": "PVE", "tray_system": "BAN"}
+EQUIPMENT_CATEGORIES = ("pv_equipment", "tray_system")
+EQUIPMENT_BASIS = {"pv_equipment": "counted by the plant engine (epc_pv)", "tray_system": "counted by the 3D model take-off of the tray system (epc_plan)"}
 DEVICE_FIELDS = ("device_kind", "in_a", "poles", "breaking_capacity_ka")
 ASSUMPTIONS = (
     "quantities only: this engine holds no price and no cost; the cost engine is planned for a later phase",
@@ -159,13 +161,28 @@ def _totals(items):
     return {"lines": len(items), "cable_m": round(sum(cables), 6), "devices": sum(i["quantity"] for i in items if i["category"] == "protective_device")}
 
 
+def _equipment_category(e):
+    """The category of an equipment line: `pv_equipment` unless it names another of `EQUIPMENT_CATEGORIES`."""
+    category = e.get("category", "pv_equipment")
+    if category not in EQUIPMENT_CATEGORIES:
+        raise BoqError("err_equipment_line", e=e)
+    return category
+
+
+def _equipment_valid(e):
+    """An equipment line is an object with a description and a quantity of zero or more."""
+    return isinstance(e, dict) and bool(e.get("description")) and not isinstance(e.get("quantity"), bool) and isinstance(e.get("quantity"), (int, float)) and e["quantity"] >= 0
+
+
 def _equipment_lines(equipment):
-    """Lines for equipment counted by another engine (the photovoltaic plant: modules, strings, inverters): `[{"description", "unit", "quantity", "source"?}]`, quantities as the engine counted them."""
+    """Lines for equipment counted by another engine (the photovoltaic plant: modules, strings, inverters; the tray system: trays, fittings, supports): `[{"description", "unit", "quantity", "source"?,
+    "category"?, "basis"?}]`, quantities as the engine counted them."""
     lines = []
     for e in equipment or []:
-        if not isinstance(e, dict) or not e.get("description") or isinstance(e.get("quantity"), bool) or not isinstance(e.get("quantity"), (int, float)) or e["quantity"] < 0:
+        if not _equipment_valid(e):
             raise BoqError("err_equipment_line", e=e)
-        lines.append(("pv_equipment", str(e["description"]), str(e.get("unit") or "un"), e["quantity"], list(e.get("source") or []), "counted by the plant engine (epc_pv)", {}, []))
+        category = _equipment_category(e)
+        lines.append((category, str(e["description"]), str(e.get("unit") or "un"), e["quantity"], list(e.get("source") or []), str(e.get("basis") or EQUIPMENT_BASIS[category]), {}, []))
     return lines
 
 

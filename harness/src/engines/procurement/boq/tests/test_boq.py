@@ -237,6 +237,14 @@ class EquipmentTests(unittest.TestCase):
         self.assertEqual(found[1]["unit"], "un")
         self.assertEqual(by_cat(boq(), "pv_equipment"), [])
 
+    def test_tray_system_lines_are_numbered_apart_from_the_plant_ones(self):
+        result = boq(equipment=[{"description": "Tray BN-ESC-300x90", "unit": "m", "quantity": 12.5, "category": "tray_system"}, {"description": "PV module", "quantity": 4}])
+        self.assertEqual([i["item_id"] for i in by_cat(result, "tray_system")], ["BAN-001"])
+        self.assertIn("take-off", by_cat(result, "tray_system")[0]["basis"])
+        self.assertEqual([i["item_id"] for i in by_cat(result, "pv_equipment")], ["PVE-001"])
+        with self.assertRaises(ValueError):
+            boq(equipment=[{"description": "x", "quantity": 1, "category": "cable"}])
+
     def test_a_bad_equipment_line_is_refused(self):
         for bad in ({"description": "", "quantity": 1}, {"description": "x", "quantity": -1}, {"description": "x", "quantity": True}, "x"):
             with self.assertRaises(ValueError):
