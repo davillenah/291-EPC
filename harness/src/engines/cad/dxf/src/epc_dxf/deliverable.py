@@ -12,6 +12,7 @@ from typing import Dict, List, Optional
 import ezdxf
 
 from epc_dxf import layers as _L
+from epc_dxf import svg_to_dxf
 from epc_dxf import stamp as _stamp
 
 
@@ -19,22 +20,19 @@ def _sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def _prepare(text: str, symbol_library, tmp_svg: Path) -> list:
-    """Write the SVG the converter reads (without the symbols that go as blocks) and return those symbols."""
+def _prepare(text: str, symbol_library) -> tuple:
+    """The SVG the converter reads (without the symbols that go as blocks), kept in memory, and those symbols."""
     from epc_dxf import bloques_dxf
     stripped, instances = bloques_dxf.separar(text, symbol_library) if symbol_library else (text, [])
-    tmp_svg.write_text(stripped, encoding="utf-8", newline="\n")
-    return instances
+    return svg_to_dxf.SvgText(stripped), instances
 
 
-def _finish(tmp_dxf: Path, tmp_svg: Path, instances: list, symbol_library, height_mm: float, catalog: Dict[str, dict], a3: Optional[bool], stamp=None) -> tuple:
-    """(symbols inserted as blocks, entities per layer). Layers, colours and symbol blocks on the converted drawing: the file is read once, the three steps work on that one document and it is written once (COD-07)."""
+def _finish(doc, svg, instances: list, symbol_library, height_mm: float, catalog: Dict[str, dict], a3: Optional[bool], stamp=None) -> tuple:
+    """(symbols inserted as blocks, entities per layer). Layers, colours and symbol blocks on the converted drawing: the three steps work on that one document, in memory (COD-07)."""
     from epc_dxf import bloques_dxf, capas_dxf
-    doc = ezdxf.readfile(str(tmp_dxf))
-    capas_dxf.aplicar(str(tmp_dxf), catalog, stamp, doc=doc, write=False)
-    capas_dxf.colorear(str(tmp_svg), str(tmp_dxf), catalog, a3, stamp, doc=doc, write=False)       # colour, line weight and the layer of each entity by its role
-    blocks = bloques_dxf.insertar(str(tmp_dxf), symbol_library, instances, height_mm, catalog, stamp, doc=doc, write=False)[0] if instances else 0
-    _stamp.save(doc, str(tmp_dxf), stamp)
+    capas_dxf.aplicar(None, catalog, stamp, doc=doc, write=False)
+    capas_dxf.colorear(svg, None, catalog, a3, stamp, doc=doc, write=False)       # colour, line weight and the layer of each entity by its role
+    blocks = bloques_dxf.insertar(None, symbol_library, instances, height_mm, catalog, stamp, doc=doc, write=False)[0] if instances else 0
     return blocks, count_entities(doc)[0]
 
 
@@ -91,27 +89,41 @@ def layers_used(dxf: Path) -> Dict[str, int]:
     return inspect(dxf)[0]
 
 
+def convert_document(svg_text: str, *, symbol_library=None, layers_file=None, a3: Optional[bool] = None, stamp_date=None, seed: str = "drawing") -> dict:
+    """SVG in development -> DXF deliverable, all in memory: nothing is read from or written to a folder except the symbol library the caller names.
+    Returns {"doc": the ezdxf document, "stamp": the stamp to save it with, "blocks": ..., "layers": ..., "messages": [...]}."""
+    catalog = _L.load(layers_file)
+    stamp = _stamp.parse(stamp_date, seed)
+    svg, instances = _prepare(svg_text, symbol_library)
+    doc = _stamp.reload(svg_to_dxf.convertir(svg, stamp), stamp)      # as the file that was saved and read again
+    height = float(re.search(r'height="([\d.]+)mm"', svg_text).group(1)) if instances else 0.0
+    blocks, layers = _finish(doc, svg, instances, symbol_library, height, catalog, a3, stamp)
+    return {"doc": doc, "stamp": stamp, "blocks": blocks, "layers": layers}
+
+
+def convert_bytes(svg_text: str, **options) -> dict:
+    """Like `convert_document`, with the file as data: {"dxf": bytes, "blocks": ..., "layers": ..., "messages": [...]}. The caller writes the bytes where it wants (ADR-0042)."""
+    made = convert_document(svg_text, **options)
+    seed = options.get("seed", "drawing")
+    blocks = made["blocks"]
+    return {"dxf": _stamp.to_text(made["doc"], made["stamp"]).encode(made["doc"].output_encoding or "utf-8"), "blocks": blocks, "layers": made["layers"],
+            "messages": [f"DXF {seed}: {blocks} símbolos como bloques"] if blocks else []}
+
+
 def convert(svg_path, dxf_path=None, *, symbol_library=None, layers_file=None, a3: Optional[bool] = None, stamp_date=None, seed=None) -> dict:
     """SVG in development -> DXF deliverable. Returns {"dxf": path or None, "blocks": symbols inserted as blocks, "layers": {name: entities}, "messages": [...]}.
     `symbol_library` is the folder with the DXF blocks of the symbols (the SVG keeps those it does not know as strokes); `layers_file` an extra catalog that wins over the global one.
     `stamp_date` (optional, ISO date or datetime) makes the file reproducible: creation and update times are that date and the GUIDs are derived from it and `seed` (default: the
     name of the SVG), so the same drawing and date give the same bytes. Without it the file is stamped with the clock and random GUIDs, as ezdxf does."""
-    from epc_dxf import svg_to_dxf
     svg = Path(svg_path)
     dxf = Path(dxf_path) if dxf_path else svg.with_suffix(".dxf")
-    text = svg.read_text(encoding="utf-8")
-    tmp_svg, tmp_dxf = svg.with_name(svg.stem + "_trazos.svg"), svg.with_name(svg.stem + "_trazos.dxf")
-    catalog = _L.load(layers_file)
-    stamp = _stamp.parse(stamp_date, svg.stem if seed is None else seed)
+    made = convert_document(svg.read_text(encoding="utf-8"), symbol_library=symbol_library, layers_file=layers_file, a3=a3, stamp_date=stamp_date, seed=svg.stem if seed is None else seed)
+    tmp_dxf = svg.with_name(svg.stem + "_trazos.dxf")
     try:
-        instances = _prepare(text, symbol_library, tmp_svg)
-        svg_to_dxf.convertir(str(tmp_svg), None, stamp)
-        height = float(re.search(r'height="([\d.]+)mm"', text).group(1)) if instances else 0.0
-        blocks, layers = _finish(tmp_dxf, tmp_svg, instances, symbol_library, height, catalog, a3, stamp)
+        _stamp.save(made["doc"], str(tmp_dxf), made["stamp"])
         os.replace(tmp_dxf, dxf)
     except PermissionError:
         return {"dxf": None, "blocks": 0, "layers": {}, "messages": [f"AVISO no se pudo escribir {dxf.name}: está abierto en otro programa (cerrarlo y volver a generar)"]}
-    finally:
-        tmp_svg.unlink(missing_ok=True)
+    blocks = made["blocks"]
     msgs: List[str] = [f"DXF {svg.stem}: {blocks} símbolos como bloques"] if blocks else []
-    return {"dxf": str(dxf), "blocks": blocks, "layers": layers, "messages": msgs}
+    return {"dxf": str(dxf), "blocks": blocks, "layers": made["layers"], "messages": msgs}

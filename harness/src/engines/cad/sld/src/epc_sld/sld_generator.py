@@ -736,7 +736,14 @@ class _Sheet:
         svg_path = os.path.join(self.out, self.name + '.svg')
         open(svg_path, 'w', encoding='utf-8').write(final)
         from epc_dxf import deliverable as DL
-        for ln in DL.convert(svg_path, symbol_library=self.lib, a3=self.a3, stamp_date=self.stamp_date, seed=self.name)['messages']:
+        made = DL.convert_bytes(final, symbol_library=self.lib, a3=self.a3, stamp_date=self.stamp_date, seed=self.name)     # the drawing as bytes; this writer is the one that puts them in the folder
+        try:
+            with open(os.path.splitext(svg_path)[0] + '.dxf', 'wb') as f:
+                f.write(made['dxf'])
+            msgs = made['messages']
+        except PermissionError:
+            msgs = [f'AVISO no se pudo escribir {self.name}.dxf: está abierto en otro programa (cerrarlo y volver a generar)']
+        for ln in msgs:
             print(ln, file=sys.stderr)
         summ = {t: dict(In=self.r[t]['In'], Ib=round(self.r[t]['Ib'], 1), icu=self.r[t]['icu'], S=self.r[t]['S'], dU=round(self.r[t]['dv'], 2), disp=self.r[t]['disp']) for t in self.tree}
         json.dump(summ, open(os.path.join(self.out, self.name + '_calculo.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
