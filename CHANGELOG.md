@@ -5,6 +5,7 @@ All notable changes. Format: Keep a Changelog; versions follow `harness/docs/BRA
 ## [Unreleased]
 
 ### Changed
+- The 3D tee of a tray takes the kind of its tray, like the straights and elbows.
 - 3D elbows of trays take the kind of their tray (ladder, perforated, solid, wire) and turn through the bend with the catalogue inner radius of 300 mm (`elbow_radius_m`, unverified), instead of a swept box.
 - 3D trays of every kind (owner request 2026-11-25): `tray_solid.tray_mesh` builds `escalera`, `perforada` (rails and floor with a band of slots every 100 mm), `ciega` (solid floor) and `alambre` (wire mesh: top-edge wires, floor wires, transverse wires every 50 mm). Stage 10 takes them from `ladder_trays.kinds` (`{layer: kind}`, default `escalera`) and `cover`. Sizes are own drawing values (`floor_margin_m`, `wire_m`, `wire_pitch_m` in `epc_plan/params.json`), unverified.
 - Ladder tray in 3D: fixed a flipped frame (the tray was built upside down: rungs on top, foot up) and added the optional lid (`ladder_trays.cover`), a flat sheet over the rails (`cover_m` in `epc_plan/params.json`).

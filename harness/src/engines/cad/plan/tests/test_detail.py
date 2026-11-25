@@ -69,6 +69,13 @@ class Parts(unittest.TestCase):
         self.assertEqual(len(of(items, "elbow")), 2)
         self.assertEqual(sorted(p["length_m"] for p in of(items, "straight")), [4.8, 4.8])           # each elbow takes half of the 0.4 m between them (0.2 m, not its 0.3 m leg): the middle stretch is all elbow
 
+    def test_the_tee_of_a_tray_layer_is_a_tray_of_its_kind(self):
+        branch = S.line("b", "BN", [50, 0], [50, -30])
+        layer = of(detail.parts(solids(S.TRAY, branch)), "tee")[0]["layer"]
+        box = of(detail.parts(solids(S.TRAY, branch)), "tee")[0]["mesh"]["faces"]
+        ladder = of(detail.parts(solids(S.TRAY, branch), {"ladder_trays": {"layers": [layer]}}), "tee")[0]["mesh"]["faces"]
+        self.assertGreater(len(ladder), len(box))
+
     def test_a_run_that_ends_on_another_makes_a_tee(self):
         branch = S.line("b", "BN", [50, 0], [50, -30])                                 # leaves the first stretch of the tray at its middle
         items = detail.parts(solids(S.TRAY, branch))

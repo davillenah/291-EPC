@@ -183,7 +183,7 @@ def _stretches(s: Dict[str, Any]) -> List[Tuple[V3, V3]]:
     return list(zip(path, path[1:]))
 
 
-def _tees(runs: List[Dict[str, Any]], rings, leg_of) -> List[Dict[str, Any]]:
+def _tees(runs: List[Dict[str, Any]], rings, leg_of, ladder: Optional[Dict[str, Any]] = None) -> List[Dict[str, Any]]:
     """Where a run ends on the side of another of its discipline: a tee of the main run, as long as the branch is wide plus a leg each way."""
     out = []
     for branch in runs:
@@ -196,7 +196,7 @@ def _tees(runs: List[Dict[str, Any]], rings, leg_of) -> List[Dict[str, Any]]:
                         half = branch["width_m"] / 2 + leg_of(main)
                         p, q = _toward(end, a, min(half, _len(end, a))), _toward(end, b, min(half, _len(end, b)))
                         piece = dict(main, path=[_r(p), _r(q)])
-                        out.append(_part(main, "tee", len(out) + 1, S.mesh(piece), path=piece["path"], branch=branch["id"], branch_size=_size(branch), at=_r(end)))
+                        out.append(_part(main, "tee", len(out) + 1, _straight_mesh(piece, ladder), path=piece["path"], branch=branch["id"], branch_size=_size(branch), at=_r(end)))
     return out
 
 
@@ -265,7 +265,7 @@ def parts(solids: List[Dict[str, Any]], spec: Optional[Dict[str, Any]] = None) -
     leg_of = lambda s: factor * s["width_m"]                                  # noqa: E731
     ladder = _ladder(spec)
     out = [p for s in runs for p in _run_parts(s, rings[s["id"]], leg_of(s), ladder)]
-    return out + _tees(runs, rings, leg_of) + _reducers(runs, rings, leg_of)
+    return out + _tees(runs, rings, leg_of, ladder) + _reducers(runs, rings, leg_of)
 
 
 # ---------------------------------------------------------------- supports
