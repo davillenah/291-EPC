@@ -184,7 +184,6 @@ class _Sheet:
         self.stamp_date = env.get('EPC_STAMP_DATE') or None    # opcional: la fecha del plano (ISO) fija la emisión del rótulo y los sellos del DXF; sin ella, la de hoy
         self.default_lib = lib == 'default'
         self.lib = str(library_dir('sld-lv-symbol')) if self.default_lib else lib       # símbolos: epc_symbols
-        os.makedirs(out, exist_ok=True)
         self.cat = {i['id']: i for i in json.load(open(os.path.join(self.lib, '_catalog.json'), encoding='utf-8-sig'))['symbols']}
         self.pre, self.det, self.fig = (_calculo(env, v) for v in ('SLD_CALC_JSON', 'SLD_CALC_DETAIL', 'SLD_FIGURES_JSON'))
         self.formato = env.get('SLD_FORMATO', 'A1')            # A1 (por defecto) o A3 (diagrama reducido a la zona útil A3)
@@ -731,27 +730,46 @@ class _Sheet:
         acc = self.det[tag].get('du_acum_pct')
         return acc if isinstance(acc, (int, float)) else self.r[tag]['dv']
 
-    def export(self, final):
-        """El SVG en desarrollo pasa a entregable por el servicio de epc_dxf (capas del catálogo, símbolos como bloques, color y grosor del trazo)."""
-        svg_path = os.path.join(self.out, self.name + '.svg')
-        open(svg_path, 'w', encoding='utf-8').write(final)
+    def files(self, final):
+        """The sheet as data: ({file name: bytes}, notes). The SVG, its DXF through epc_dxf (layers of the catalog, symbols as blocks, colour and stroke weight) and the calculation summary; nothing is written."""
         from epc_dxf import deliverable as DL
-        made = DL.convert_bytes(final, symbol_library=self.lib, a3=self.a3, stamp_date=self.stamp_date, seed=self.name)     # the drawing as bytes; this writer is the one that puts them in the folder
-        try:
-            with open(os.path.splitext(svg_path)[0] + '.dxf', 'wb') as f:
-                f.write(made['dxf'])
-            msgs = made['messages']
-        except PermissionError:
-            msgs = [f'AVISO no se pudo escribir {self.name}.dxf: está abierto en otro programa (cerrarlo y volver a generar)']
-        for ln in msgs:
-            print(ln, file=sys.stderr)
+        made = DL.convert_bytes(final, symbol_library=self.lib, a3=self.a3, stamp_date=self.stamp_date, seed=self.name)
         summ = {t: dict(In=self.r[t]['In'], Ib=round(self.r[t]['Ib'], 1), icu=self.r[t]['icu'], S=self.r[t]['S'], dU=round(self.r[t]['dv'], 2), disp=self.r[t]['disp']) for t in self.tree}
-        json.dump(summ, open(os.path.join(self.out, self.name + '_calculo.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
+        files = {self.name + '.svg': final.encode('utf-8'), self.name + '.dxf': made['dxf'],
+                 self.name + '_calculo.json': json.dumps(summ, ensure_ascii=False, indent=1).encode('utf-8')}
+        return files, made['messages']
+
+    def report(self):
         dvmax = max((self.accumulated_drop(t) for t in self.order), default=0.0)     # the calculation's du_pct is the drop up to the circuit: own + the upstream ones
         print('OK', self.name, 'circuitos', len(self.tree), 'y_out', round(self.y_out, 1), 'fin tabla', round(self.ry, 1), 'dU max', round(dvmax, 2))
-        return {"name": self.name, "svg": svg_path, "circuits": len(self.tree)}
+
+    def export(self, final):
+        """Writes the sheet in the folder `out`: the writer of this engine; `files` makes the bytes."""
+        files, notes = self.files(final)
+        os.makedirs(self.out, exist_ok=True)
+        for fname, data in files.items():
+            try:
+                with open(os.path.join(self.out, fname), 'wb') as f:
+                    f.write(data)
+            except PermissionError:
+                if not fname.endswith('.dxf'):
+                    raise
+                notes = [f'AVISO no se pudo escribir {fname}: está abierto en otro programa (cerrarlo y volver a generar)']
+        for ln in notes:
+            print(ln, file=sys.stderr)
+        self.report()
+        return {"name": self.name, "svg": os.path.join(self.out, self.name + '.svg'), "circuits": len(self.tree)}
 
     def build(self):
+        return self.export(self.drawn())
+
+    def build_files(self):
+        """The sheet as data: ({file name: bytes}, notes); nothing is written."""
+        files = self.files(self.drawn())
+        self.report()
+        return files
+
+    def drawn(self):
         self.read_board()
         self.draw_header(); self.draw_service(); self.draw_extra_feeders(); self.draw_feeder_text(); self.draw_boards()
         self.draw_outputs(); self.draw_earth_bar(); self.draw_box(); self.apply_layout()
@@ -759,7 +777,19 @@ class _Sheet:
         for t in self.roots: self.walk(t)
         self.draw_table()
         self.draw_side_columns()
-        return self.export(self.assemble())
+        return self.assemble()
+
+
+def _environment(environ, stamp_date):
+    env = dict(os.environ if environ is None else environ)
+    if stamp_date:
+        env['EPC_STAMP_DATE'] = str(stamp_date)
+    return env
+
+
+def generate_files(lib, xlsx, name, lamina='default', modblock='default', environ=None, stamp_date=None):
+    """`generate` with the sheet as data: ({file name: bytes}, notes). The caller writes the bytes where it wants (ADR-0042)."""
+    return _Sheet(lib, xlsx, None, name, lamina, modblock, _environment(environ, stamp_date)).build_files()
 
 
 def generate(lib, xlsx, out, name, lamina='default', modblock='default', environ=None, stamp_date=None) -> dict:
@@ -767,10 +797,7 @@ def generate(lib, xlsx, out, name, lamina='default', modblock='default', environ
     (SLD_CALC_JSON, SLD_CALC_DETAIL, SLD_FIGURES_JSON, EPC_TITLEBLOCK_JSON) and so do the options of the sheet (SLD_SUBSET, SLD_NAMES, SLD_PREV, SLD_NEXT, SLD_TITLE_SUFFIX, SLD_FORMATO A1|A3,
     SLD_SIN_TABLA, SLD_SOLO_TABLA); `environ` is where they are read from (the process environment by default). `stamp_date` (or EPC_STAMP_DATE: an ISO date) is optional: it is the date of the drawing (title block issue date, DXF creation and update times
     and GUIDs derived from it), so the same inputs give the same files; without it the clock and random GUIDs are used. Nothing runs when the module is imported."""
-    env = dict(os.environ if environ is None else environ)
-    if stamp_date:
-        env['EPC_STAMP_DATE'] = str(stamp_date)
-    return _Sheet(lib, xlsx, out, name, lamina, modblock, env).build()
+    return _Sheet(lib, xlsx, out, name, lamina, modblock, _environment(environ, stamp_date)).build()
 
 
 def main(argv=None, environ=None) -> int:
