@@ -135,6 +135,17 @@ def _straight_mesh(piece: Dict[str, Any], ladder: Optional[Dict[str, Any]]) -> D
     return S.mesh(piece)
 
 
+def _elbow_mesh_for(s: Dict[str, Any], a, corner, b, ring, ladder: Optional[Dict[str, Any]]) -> Dict[str, Any]:
+    """The mesh of an elbow: the tray of its kind turned through the bend (inner radius of the catalogue, never more than the legs) on a ladder layer, else the swept box."""
+    if not (ladder and s.get("layer") in ladder["layers"] and s["section"] == "rect"):
+        return _elbow_mesh(a, corner, b, ring)
+    from epc_plan import tray_solid
+    reach = min(_len(a, corner), _len(corner, b))
+    radius = min(ladder["elbow_radius"] + s["width_m"] / 2, reach)
+    path = tray_solid.path3d([a, corner, b], radius, radius)
+    return tray_solid.tray_mesh(path, s["width_m"], s["height_m"], ladder["sizes"], ladder.get("kinds", {}).get(s["layer"], "escalera"))
+
+
 def _run_parts(s: Dict[str, Any], ring: List[Tuple[float, float]], leg: float, ladder: Optional[Dict[str, Any]] = None) -> List[Dict[str, Any]]:
     """One run as its straight pieces (cut to the elbows) and the elbow at each bend."""
     path = [tuple(p) for p in s["path"]]
@@ -148,7 +159,7 @@ def _run_parts(s: Dict[str, Any], ring: List[Tuple[float, float]], leg: float, l
     for i in range(1, len(path) - 1):
         if legs[i] > 0:
             a, b = _toward(path[i], path[i - 1], legs[i]), _toward(path[i], path[i + 1], legs[i])
-            out.append(_part(s, "elbow", i, _elbow_mesh(a, path[i], b, ring), path=[_r(a), _r(path[i]), _r(b)], angle_deg=_angle(path[i - 1], path[i], path[i + 1])))
+            out.append(_part(s, "elbow", i, _elbow_mesh_for(s, a, path[i], b, ring, ladder), path=[_r(a), _r(path[i]), _r(b)], angle_deg=_angle(path[i - 1], path[i], path[i + 1])))
     return out
 
 
@@ -219,22 +230,29 @@ def tray_kinds() -> tuple:
     return tray_draw.KINDS
 
 
+def _ladder_sizes(cover: bool) -> Dict[str, float]:
+    """The sizes of rail, rungs, floor and wires (`params.json`, `detail.ladder`, in metres), and the lid when there is one."""
+    q = core.PARAMS["detail"]["ladder"]
+    keys = ("rail", "rung", "rung_thick", "rung_pitch", "foot", "curl", "slot_pitch", "slot", "slot_height", "floor_margin", "wire", "wire_pitch")
+    sizes = {k: q[k + "_m"] for k in keys}
+    if cover:
+        sizes["cover"] = q["cover_m"]                                    # the lid, a flat sheet over the rails
+    return sizes
+
+
+def _kinds_ok(kinds: Any, layers: List[str]) -> bool:
+    return isinstance(kinds, dict) and all(k in layers and v in tray_kinds() for k, v in kinds.items())
+
+
 def _ladder(spec: Optional[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
-    """The ladder trays asked for in `spec["ladder_trays"]` ({"layers": [...]}): the layers and the sizes of rail and rungs (`params.json`, `detail.ladder`, in metres)."""
+    """The trays asked for in `spec["ladder_trays"]` ({"layers": [...], "kinds": {layer: kind}, "cover": bool}): the layers, the kind of each and the sizes they are drawn with."""
     given = (spec or {}).get("ladder_trays")
     if not given:
         return None
     layers = given.get("layers") if isinstance(given, dict) else None
-    if not isinstance(layers, list) or not layers or not all(isinstance(x, str) for x in layers):
+    if not isinstance(layers, list) or not layers or not all(isinstance(x, str) for x in layers) or not _kinds_ok(given.get("kinds", {}), layers):
         raise core.PlanError("err_detail_number", key="ladder_trays")
-    q = core.PARAMS["detail"]["ladder"]
-    sizes = {"rail": q["rail_m"], "rung": q["rung_m"], "rung_thick": q["rung_thick_m"], "rung_pitch": q["rung_pitch_m"], "foot": q["foot_m"], "curl": q["curl_m"], "slot_pitch": q["slot_pitch_m"], "slot": q["slot_m"], "slot_height": q["slot_height_m"], "floor_margin": q["floor_margin_m"], "wire": q["wire_m"], "wire_pitch": q["wire_pitch_m"]}
-    if given.get("cover"):
-        sizes["cover"] = q["cover_m"]                                    # the lid, a flat sheet over the rails
-    kinds = given.get("kinds", {})
-    if not isinstance(kinds, dict) or any(k not in layers or v not in tray_kinds() for k, v in kinds.items()):
-        raise core.PlanError("err_detail_number", key="ladder_trays")
-    return {"layers": layers, "sizes": sizes, "kinds": kinds}
+    return {"layers": layers, "sizes": _ladder_sizes(bool(given.get("cover"))), "kinds": given.get("kinds", {}), "elbow_radius": core.PARAMS["detail"]["ladder"]["elbow_radius_m"]}
 
 
 def parts(solids: List[Dict[str, Any]], spec: Optional[Dict[str, Any]] = None) -> List[Dict[str, Any]]:
