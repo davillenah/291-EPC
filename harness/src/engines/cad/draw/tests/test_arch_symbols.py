@@ -2,7 +2,7 @@
 import unittest
 from pathlib import Path
 
-from epc_symbols import arch_symbols
+from epc_draw.symbols import arch_symbols
 
 
 class ArchSymbols(unittest.TestCase):

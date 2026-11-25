@@ -22,7 +22,7 @@ def offenders():
     found = set()
     for path in sorted(ENGINES.glob("*/*/src/epc_*/**/*.py")):
         rel = path.relative_to(REPO).as_posix()
-        if "/src/epc_symbols/" in rel or "/tests/" in rel:
+        if "/src/epc_draw/symbols/" in rel or "/tests/" in rel:
             continue
         if PATTERN.search(path.read_text(encoding="utf-8-sig")):
             found.add(rel)

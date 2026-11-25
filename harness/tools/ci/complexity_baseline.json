@@ -1321,7 +1321,7 @@
 "harness/src/engines/cad/sld/src/epc_sld/sld_generator.py::generate": 3,
 "harness/src/engines/cad/sld/src/epc_sld/sld_generator.py::main": 2,
 "harness/src/engines/cad/sld/src/epc_sld/sld_paginate.py::leaves": 3,
-"harness/src/engines/cad/symbols/src/epc_symbols/__init__.py::library_dir": 2,
+"harness/src/engines/cad/draw/src/epc_draw/symbols/__init__.py::library_dir": 2,
 "harness/src/engines/cad/symbols/tools/symbols/build_cat9.py::display": 2,
 "harness/src/engines/cad/symbols/tools/symbols/build_cat9.py::vbsize": 1,
 "harness/src/engines/cad/symbols/tools/symbols/svg2dxf_all.py::P": 2,

@@ -8,7 +8,7 @@ from jsonschema import Draft202012Validator as V
 
 H = Path(__file__).resolve().parents[2]
 K = H / "knowledge" / "diagrams"
-LIB = H / "src" / "engines" / "cad" / "symbols" / "src" / "epc_symbols" / "library"
+LIB = H / "src" / "engines" / "cad" / "draw" / "src" / "epc_draw" / "symbols" / "library"
 PAIRS = [("sld_mld/devices", "sld_mld/schema/device.schema.json"), ("sld_mld/schemes", "sld_mld/schema/scheme.schema.json"),
          ("pv_sld_mld/devices", "pv_sld_mld/schema/pv_sld_mld.schema.json"), ("pv_sld_mld/schemes", "pv_sld_mld/schema/pv_sld_mld.schema.json"),
          ("funcional_iec60617/symbols", "funcional_iec60617/symbol.schema.json"), ("funcional_iec60617/circuits", "funcional_iec60617/circuit.schema.json"),

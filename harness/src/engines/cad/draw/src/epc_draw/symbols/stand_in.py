@@ -6,7 +6,7 @@ raises for a symbol that does not exist. A pure function: the answer is data (an
 from typing import Any, Dict
 from xml.sax.saxutils import escape
 
-from epc_symbols.errors import SymbolsError
+from epc_draw.symbols.errors import SymbolsError
 
 CHAR_WIDTH = 0.6        # average width of a character, as a fraction of the text height (the box only needs to hold the name)
 

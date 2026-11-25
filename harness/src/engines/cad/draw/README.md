@@ -7,3 +7,7 @@ Deliverable service: `deliverable.convert(svg)` turns an SVG in development into
 several sheets and writes `<name>_entregable.json`. SVG roles: `roles.tag_iram_sheet` marks the IRAM template; generators mark their own elements. See ADR-0023.
 
 Verification (read-only): `verify(doc_or_path, *, min_length, off=())` reports advisory findings of a DXF without changing it: zero-length and tiny lines (shorter than `min_length`, in drawing units, required: no default), duplicated lines, entities on layers that are not defined, inserts of blocks that are not defined and empty texts. Each finding has a rule id (switchable with `off`), a severity, the entity handle, where it is (layout or block) and a text in English and Spanish. `ok` is false only for findings of severity `error`. Nothing blocks and nothing is written; counts are exact and each rule keeps at most 200 findings.
+
+## Symbols (`epc_draw.symbols`)
+
+The IEC 60617 symbol library (SVG and DXF blocks, catalogs) for single-line and multi-line diagrams, LV and MV: `epc_draw.symbols.library_dir(kind)`, `resolve`, `placeholder`, `list_ids`, `terminals`, `svg_fragment`, `dxf_block`. Engines ask for a symbol by id and view and never build a symbol file name. Build scripts for the library: `tools/symbols/`. Schema: `symbols/schema/symbol_catalog.schema.json`. The old name `epc_symbols` is a door to this package.

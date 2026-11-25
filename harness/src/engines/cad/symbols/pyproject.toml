@@ -5,12 +5,9 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "epc-symbols"
 version = "0.1.0"
-description = "EPC-291 IEC 60617 symbol library (SVG and DXF blocks, catalogs) for single-line and multi-line diagrams"
+description = "Door to the IEC 60617 symbol library that moved into epc_draw.symbols (ADR-0042)"
 requires-python = ">=3.10"
-dependencies = []
+dependencies = ["epc-draw"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
-
-[tool.setuptools.package-data]
-epc_symbols = ["library/**/*", "schema/*.json"]

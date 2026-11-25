@@ -7,7 +7,7 @@ import ezdxf
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 from epc_dxf import symbol_blocks as SB  # noqa: E402
-from epc_symbols import registry as R  # noqa: E402
+from epc_draw.symbols import registry as R  # noqa: E402
 
 
 class TestSymbolBlocks(unittest.TestCase):

@@ -1,26 +1,33 @@
-"""IEC 60617 symbol library (SVG and DXF blocks) for single-line and multi-line diagrams, LV and MV."""
-from pathlib import Path
-from epc_symbols.errors import SymbolsError
+"""The symbol library moved into `epc_draw.symbols` (ADR-0042). This package is a door: `epc_symbols` and every `epc_symbols.<module>` are the same objects as `epc_draw.symbols` and `epc_draw.symbols.<module>`."""
+import importlib
+import importlib.abc
+import importlib.util
+import sys
 
-LIBRARY = Path(__file__).resolve().parent / "library"
-KINDS = ("sld-lv-symbol", "sld-mv-symbol", "mld-lv-symbol", "mld-mv-symbol", "ssd-mv-symbol")
-PLAN = "plan-symbol"
-ARCH = "arch-symbol"     # the architecture plan symbols (SYM-05): furniture, fixtures and openings, 1 unit = 1 cm, see `arch_symbols`     # the electrical-plan symbols (SYM-04): not a catalogue library, see `plan_symbols`
+from epc_draw import symbols as _symbols
 
-
-def library_dir(kind: str = "sld-lv-symbol") -> Path:
-    """Folder with `_catalog.json` and the symbol files of one library."""
-    if kind not in KINDS + (PLAN, ARCH):
-        raise SymbolsError("err_unknown_library", kind=kind, kinds=KINDS)
-    return LIBRARY / kind
 __version__ = "0.1.0"
+__all__ = list(_symbols.__all__)
 
-__all__ = ["AmbiguousSymbol", "SymbolRecord", "SymbolsError", "UnknownSymbol", "dxf_block", "library_dir", "arch_symbols", "list_ids", "placeholder", "plan_symbols", "resolve", "svg_fragment", "terminals"]
+
+class _Door(importlib.abc.MetaPathFinder, importlib.abc.Loader):
+    """`import epc_symbols.<name>` gives the module `epc_draw.symbols.<name>` itself (one copy, so classes and settings are shared)."""
+
+    def find_spec(self, name, path=None, target=None):
+        if name.startswith("epc_symbols."):
+            return importlib.util.spec_from_loader(name, self)
+        return None
+
+    def create_module(self, spec):
+        return importlib.import_module("epc_draw.symbols." + spec.name.split(".", 1)[1])
+
+    def exec_module(self, module):
+        return None
+
+
+if not any(isinstance(f, _Door) and f.__class__.__module__ == __name__ for f in sys.meta_path):
+    sys.meta_path.insert(0, _Door())
 
 
 def __getattr__(name):
-    """The public names load on first use (PEP 562), so importing the package stays as cheap as it was."""
-    if name in __all__:
-        from epc_symbols import api
-        return getattr(api, name)
-    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+    return getattr(_symbols, name)

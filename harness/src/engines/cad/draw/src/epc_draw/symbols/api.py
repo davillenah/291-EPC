@@ -1,6 +1,6 @@
 """The public door of the engine (COD-02): the names other packages may import. Everything else in the package is internal."""
-from epc_symbols import library_dir  # noqa: F401
-from epc_symbols.registry import (
+from epc_draw.symbols import library_dir  # noqa: F401
+from epc_draw.symbols.registry import (
     UnknownSymbol,
     AmbiguousSymbol,
     SymbolRecord,
@@ -12,7 +12,7 @@ from epc_symbols.registry import (
     plan_symbols,
     arch_symbols,
 )  # noqa: F401
-from epc_symbols.stand_in import placeholder  # noqa: F401
-from epc_symbols.errors import SymbolsError  # noqa: F401
+from epc_draw.symbols.stand_in import placeholder  # noqa: F401
+from epc_draw.symbols.errors import SymbolsError  # noqa: F401
 
 __all__ = ["AmbiguousSymbol", "SymbolRecord", "SymbolsError", "UnknownSymbol", "dxf_block", "library_dir", "arch_symbols", "list_ids", "placeholder", "plan_symbols", "resolve", "svg_fragment", "terminals"]
