@@ -75,6 +75,13 @@ def _on_wall(s: Dict[str, Any], at, sides, walls: Sequence[Box], reach: float, s
             "shape": "box", "part": "support", "support": "wall_bracket", "run": s["id"], "size": detail._size(s), "at": detail._r(at), "rod_m": 0.0, "mesh": _mesh(at, d, t, s, sizes)}
 
 
+def _level_stretches(s: Dict[str, Any]) -> List[Any]:
+    """The horizontal stretches of a rectangular tray run."""
+    if s.get("shape") != "run" or s.get("section") != "rect":
+        return []
+    return [(a, b) for a, b in detail._stretches(s) if abs(a[2] - b[2]) <= 1e-6 and detail._len(a, b) >= 1e-6]
+
+
 def brackets(runs: List[Dict[str, Any]], walls: Sequence[Dict[str, Any]], spec: Dict[str, Any]) -> List[Dict[str, Any]]:
     """The wall brackets of the horizontal tray runs (rectangular sections) that have a wall within `spec["reach_m"]` of an edge; one per support place and side-nearest wall."""
     bad = _wanted(spec)
@@ -84,11 +91,7 @@ def brackets(runs: List[Dict[str, Any]], walls: Sequence[Dict[str, Any]], spec: 
     boxes = [b for w in walls for b in clash_scene.boxes(w)]
     out: List[Dict[str, Any]] = []
     for s in runs:
-        if s.get("shape") != "run" or s.get("section") != "rect":
-            continue
-        for a, b in detail._stretches(s):
-            if abs(a[2] - b[2]) > 1e-6 or detail._len(a, b) < 1e-6:
-                continue
+        for a, b in _level_stretches(s):
             for at in detail._places(a, b, spec["spacing_m"]):
                 made = _on_wall(s, at, _sides(a, b), boxes, spec["reach_m"], sizes, len(out) + 1)
                 if made:
