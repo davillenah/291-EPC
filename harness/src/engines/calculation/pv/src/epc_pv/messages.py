@@ -26,6 +26,10 @@ MESSAGES: Dict[str, Dict[str, str]] = {
         "en": "Array {array}: {strings} strings per MPPT input exceed the {limit} the inverter inputs allow; add inverters or inputs.",
         "es": "Arreglo {array}: {strings} strings por entrada MPPT superan los {limit} que admiten las entradas del inversor; agregar inversores o entradas.",
     },
+    "shading_computed": {
+        "en": "Array {array}: the shade is computed (far horizon and row to row, direct beam only): {loss} % of the yearly plane-of-array energy; the typical shading loss is not added.",
+        "es": "Arreglo {array}: la sombra se calcula (horizonte lejano y fila a fila, solo haz directo): {loss} % de la energía anual en el plano del módulo; no se suma la pérdida típica de sombras.",
+    },
     "gap_hours": {
         "en": "The weather file has {n} hours with the sun above the horizon and no irradiance.",
         "es": "El archivo de clima tiene {n} horas con el sol sobre el horizonte y sin irradiancia.",
