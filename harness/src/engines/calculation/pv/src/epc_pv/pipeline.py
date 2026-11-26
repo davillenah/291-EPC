@@ -8,7 +8,7 @@ import json
 from datetime import datetime, timedelta
 from typing import Any, Dict, List, Optional, Sequence, Union
 
-from epc_pv import config, irradiance, power, solar, strings, thermal
+from epc_pv import config, irradiance, nearshade, power, shading, solar, strings, thermal
 from epc_pv.messages import bi, item
 from epc_pv.model import Options, PvError, Result
 
@@ -63,7 +63,8 @@ def _require(obj: Any, keys: Sequence[str], where: str) -> Dict[str, Any]:
 def _site(doc: dict) -> Dict[str, Any]:
     s = _require(doc["site"], ("latitude_deg", "longitude_deg", "albedo"), "site")
     return {"lat": _number(s, "latitude_deg", "site", -90, 90), "lon": _number(s, "longitude_deg", "site", -180, 180), "albedo": _number(s, "albedo", "site", 0, 1),
-            "t_min_c": _number(s, "design_t_min_c", "site", -90, 60) if "design_t_min_c" in s else None}
+            "t_min_c": _number(s, "design_t_min_c", "site", -90, 60) if "design_t_min_c" in s else None,
+            "horizon": shading.horizon_points(s["horizon"], "site.horizon") if "horizon" in s else None}
 
 
 def _weather(doc: dict) -> Dict[str, Any]:
@@ -120,15 +121,40 @@ def _array_spec(spec: Any, index: int) -> Dict[str, Any]:
     return s
 
 
-def _plane_series(spec: Dict[str, Any], w: Dict[str, Any], inst: List[Dict[str, Any]], site: Dict[str, Any], model: str, p: Dict[str, Any]) -> Dict[str, List[float]]:
-    """Plane-of-array global and effective irradiance and the cell temperature of every instant."""
+def _rows(spec: Dict[str, Any], index: int) -> Optional[Dict[str, float]]:
+    """The row-to-row shading data of an array (`row_shading`: slope_m, pitch_m, n_rows), or None when the array does not give it."""
+    if "row_shading" not in spec:
+        return None
+    r = _require(spec["row_shading"], ("slope_m", "pitch_m", "n_rows"), f"arrays[{index}].row_shading")
+    where = f"arrays[{index}].row_shading"
+    return {"slope_m": _number(r, "slope_m", where, positive=True), "pitch_m": _number(r, "pitch_m", where, positive=True), "n_rows": int(_number(r, "n_rows", where, 1))}
+
+
+def _shade(spec: Dict[str, Any], index: int) -> Dict[str, Any]:
+    """What shades one array besides the far horizon: its rows and its near obstacles (the sample points of the array are made once). Empty when it gives none."""
+    out: Dict[str, Any] = {}
+    rows = _rows(spec, index)
+    if rows:
+        out["rows"] = rows
+    if "near_obstacles" in spec:
+        block = nearshade.check(spec["near_obstacles"], f"arrays[{index}].near_obstacles")
+        out["near"] = {"points": nearshade.sample_points(block["array"], float(spec["tilt_deg"]), float(spec["azimuth_deg"])), "boxes": block["boxes"]}
+    return out
+
+
+def _plane_series(spec: Dict[str, Any], w: Dict[str, Any], inst: List[Dict[str, Any]], site: Dict[str, Any], model: str, p: Dict[str, Any], shade: Optional[Dict[str, Any]] = None) -> Dict[str, List[float]]:
+    """Plane-of-array global and effective irradiance and the cell temperature of every instant; the direct beam is reduced by the far horizon and the row shade when they are given
+    (`unshaded` is the global irradiance without that shade)."""
     surface = {"tilt_deg": float(spec["tilt_deg"]), "azimuth_deg": float(spec["azimuth_deg"])}
-    out: Dict[str, List[float]] = {"global": [], "effective": [], "cell": []}
+    out: Dict[str, List[float]] = {"global": [], "effective": [], "cell": [], "unshaded": []}
     for k in range(w["n"]):
         i = inst[k]
         sky = {"ghi": w["ghi"][k], "dni": w["dni"][k], "dhi": w["dhi"][k]}
         sun = {"zenith_deg": i["apparent"], "azimuth_deg": i["azimuth"], "dni_extra": i["extra"]}
         poa = irradiance.plane_of_array(model, surface, sun, sky, site["albedo"], p["iam_ashrae_b0"])
+        out["unshaded"].append(poa["global"])
+        if site["horizon"] or shade:
+            poa = shading.apply(poa, shading.direct_factor(90.0 - i["apparent"], i["azimuth"], surface["tilt_deg"], surface["azimuth_deg"], site["horizon"], (shade or {}).get("rows"), (shade or {}).get("near")))
         out["global"].append(poa["global"])
         out["effective"].append(poa["effective"])
         out["cell"].append(thermal.faiman_cell_c(poa["global"], w["temp_air_c"][k], w["wind_ms"][k], p["faiman"]["u0"], p["faiman"]["u1"]))
@@ -172,12 +198,33 @@ def _array_result(spec: Dict[str, Any], lay: Dict[str, Any], e: Dict[str, Any], 
             "capacity_factor": round(e["ac_kwh"] / (ac_rated_kw * total_hours), 5), "monthly_ac_kwh": [round(m, 3) for m in e["monthly_ac_kwh"]]}
 
 
+def _shading_loss_pct(series: Dict[str, List[float]]) -> float:
+    """Share of the yearly plane-of-array energy lost to the computed shade, in percent."""
+    total = sum(series["unshaded"])
+    return round(100.0 * (1.0 - sum(series["global"]) / total), 3) if total > 0 else 0.0
+
+
 def _totals(arrays: List[Dict[str, Any]]) -> Dict[str, Any]:
     kwp = sum(a["dc_kwp"] for a in arrays)
     ac = sum(a["ac_kw"] for a in arrays)
     e = sum(a["ac_kwh"] for a in arrays)
     return {"dc_kwp": round(kwp, 3), "ac_kw": round(ac, 3), "dc_kwh": round(sum(a["dc_kwh"] for a in arrays), 3), "ac_kwh": round(e, 3), "clipping_kwh": round(sum(a["clipping_kwh"] for a in arrays), 3),
             "specific_yield_kwh_kwp": round(e / kwp, 3), "monthly_ac_kwh": [round(sum(a["monthly_ac_kwh"][m] for a in arrays), 3) for m in range(12)]}
+
+
+def _array_run(spec: Dict[str, Any], index: int, site: Dict[str, Any], w: Dict[str, Any], inst: List[Dict[str, Any]], p: Dict[str, Any], t_min: float, opts: Options) -> tuple:
+    """(result, warnings) of one array: series, string layout, energy; with the shade computed the typical shading loss is not added on top."""
+    shade = _shade(spec, index)
+    computed = bool(site["horizon"] or shade)
+    series = _plane_series(spec, w, inst, site, opts.transposition, p, shade)
+    lay = strings.layout(spec, t_min, max(series["cell"]), p["strings"])
+    notes = list(lay["warnings"])
+    p_array = dict(p, losses_pct={k: v for k, v in p["losses_pct"].items() if k != "shading"}) if computed else p
+    result = _array_result(spec, lay, _energy(spec, lay, series, w, inst, p_array), series, w)
+    if computed:
+        result["shading_loss_pct"] = _shading_loss_pct(series)
+        notes.append(item("shading_computed", array=result["id"], loss=result["shading_loss_pct"]))
+    return result, notes
 
 
 def run(doc: Union[dict, str, bytes], options: Optional[Options] = None) -> Result:
@@ -192,9 +239,8 @@ def run(doc: Union[dict, str, bytes], options: Optional[Options] = None) -> Resu
         warnings.append(item("t_min_from_weather", t_min_c=round(t_min, 1)))
     inst = _instants(site, w, p["solar_constant_w_m2"])
     arrays: List[Dict[str, Any]] = []
-    for spec in specs:
-        series = _plane_series(spec, w, inst, site, opts.transposition, p)
-        lay = strings.layout(spec, t_min, max(series["cell"]), p["strings"])
-        warnings.extend(lay["warnings"])
-        arrays.append(_array_result(spec, lay, _energy(spec, lay, series, w, inst, p), series, w))
+    for index, spec in enumerate(specs):
+        result, notes = _array_run(spec, index, site, w, inst, p, t_min, opts)
+        warnings.extend(notes)
+        arrays.append(result)
     return Result(arrays=arrays, totals=_totals(arrays), warnings=warnings, hours=w["n"])

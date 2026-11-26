@@ -12,7 +12,7 @@ import math
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
-from epc_drawing import pv_parts
+from epc_draw.pv import parts as pv_parts
 
 Quad = Tuple[Tuple[float, float, float], ...]
 LAYER_FEATURE = "291-WS-DETL-OTLN-N"
@@ -152,7 +152,7 @@ def build(records: List[Dict[str, Any]]):
 def write(records: List[Dict[str, Any]], out_dir, name: str, stamp_date=None) -> Dict[str, Any]:
     """Writes `<name>_part_library.dxf` and `<name>_part_library_freecad.FCMacro` in `out_dir`."""
     from epc_dxf import deliverable
-    from epc_drawing import pv_freecad
+    from epc_draw.pv import freecad as pv_freecad
     doc, skipped = build(records)
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
@@ -164,5 +164,5 @@ def write(records: List[Dict[str, Any]], out_dir, name: str, stamp_date=None) ->
 
 
 def pv_parts_colours() -> Dict[str, Tuple[float, float, float]]:
-    from epc_drawing import pv_freecad
+    from epc_draw.pv import freecad as pv_freecad
     return {layer: pv_freecad.ACI_RGB.get(aci, (0.6, 0.6, 0.6)) for layer, aci in LAYERS.items()}

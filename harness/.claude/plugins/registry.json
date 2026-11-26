@@ -56,7 +56,7 @@
         "titleblock",
         "voltage_drop"
       ],
-      "hash": "ea547a6335bb1e6f"
+      "hash": "7bc58d1229d19c04"
     },
     "doc-quality": {
       "version": "0.1.0",
@@ -80,18 +80,22 @@
         "arch",
         "calc_common",
         "draw",
+        "drawing",
         "dxf",
         "feeder_sizing",
         "grounding",
         "load_balance",
+        "mld",
         "plan",
+        "pv",
         "selectivity",
         "short_circuit",
+        "sld",
         "symbols",
         "titleblock",
         "voltage_drop"
       ],
-      "hash": "6756adf5bdaf1e4d"
+      "hash": "9fa927fd2c6a4d14"
     },
     "equipment-catalog": {
       "version": "0.1.0",
@@ -113,18 +117,22 @@
         "arch",
         "calc_common",
         "draw",
+        "drawing",
         "dxf",
         "feeder_sizing",
         "grounding",
         "load_balance",
+        "mld",
         "plan",
+        "pv",
         "selectivity",
         "short_circuit",
+        "sld",
         "symbols",
         "titleblock",
         "voltage_drop"
       ],
-      "hash": "febb183638afbbd7"
+      "hash": "69255bcfb4ecaca5"
     },
     "intake-analysis": {
       "version": "0.1.0",
@@ -148,18 +156,22 @@
         "arch",
         "calc_common",
         "draw",
+        "drawing",
         "dxf",
         "feeder_sizing",
         "grounding",
         "load_balance",
+        "mld",
         "plan",
+        "pv",
         "selectivity",
         "short_circuit",
+        "sld",
         "symbols",
         "titleblock",
         "voltage_drop"
       ],
-      "hash": "6a876969f71677ad"
+      "hash": "2fc501c943b7fe13"
     },
     "mld": {
       "version": "0.2.2",
@@ -172,19 +184,22 @@
         "arch",
         "calc_common",
         "draw",
+        "drawing",
         "dxf",
         "feeder_sizing",
         "grounding",
         "load_balance",
         "mld",
         "plan",
+        "pv",
         "selectivity",
         "short_circuit",
+        "sld",
         "symbols",
         "titleblock",
         "voltage_drop"
       ],
-      "hash": "7174d575d0663b63"
+      "hash": "384e34b11019face"
     },
     "plan-drawing": {
       "version": "0.1.0",
@@ -197,18 +212,22 @@
         "arch",
         "calc_common",
         "draw",
+        "drawing",
         "dxf",
         "feeder_sizing",
         "grounding",
         "load_balance",
+        "mld",
         "plan",
+        "pv",
         "selectivity",
         "short_circuit",
+        "sld",
         "symbols",
         "titleblock",
         "voltage_drop"
       ],
-      "hash": "48c71208c8c2806b"
+      "hash": "74762517b6197883"
     },
     "pm2-docs": {
       "version": "0.1.0",
@@ -249,11 +268,14 @@
         "arch",
         "calc_common",
         "draw",
+        "drawing",
         "dxf",
         "feeder_sizing",
         "grounding",
         "load_balance",
+        "mld",
         "plan",
+        "pv",
         "selectivity",
         "short_circuit",
         "sld",
@@ -261,7 +283,7 @@
         "titleblock",
         "voltage_drop"
       ],
-      "hash": "60ddd613f2eab7e0"
+      "hash": "32ac6c040321982b"
     },
     "spec-writer": {
       "version": "0.1.0",

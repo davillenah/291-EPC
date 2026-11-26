@@ -1,21 +1,17 @@
 {
- "harness/src/engines/cad/arch/src/epc_arch/cli_v2.py": {
+ "harness/src/engines/cad/draw/src/epc_draw/arch/cli_v2.py": {
   "clock": 1,
   "environment": 2,
   "process": 2,
   "tempfile": 1
  },
- "harness/src/engines/cad/arch/src/epc_arch/sources/dxf.py": {
+ "harness/src/engines/cad/draw/src/epc_draw/arch/sources/dxf.py": {
   "tempfile": 1
  },
- "harness/src/engines/cad/drawing/src/epc_drawing/diagram_knowledge.py": {
-  "environment": 1
- },
- "harness/src/engines/cad/drawing/src/epc_drawing/export/plan_sheet.py": {
-  "tempfile": 1
+ "harness/src/engines/cad/draw/src/epc_draw/core/stamp.py": {
+  "clock": 1
  },
  "harness/src/engines/cad/draw/src/epc_draw/mld/mld_generator.py": {
-  "clock": 1,
   "environment": 2
  },
  "harness/src/engines/cad/draw/src/epc_draw/plan/jobs.py": {
@@ -25,13 +21,15 @@
   "tempfile": 1
  },
  "harness/src/engines/cad/draw/src/epc_draw/sld/sld_generator.py": {
-  "clock": 1,
   "environment": 1
  },
  "harness/src/engines/cad/draw/src/epc_draw/sld/sld_paginate.py": {
   "environment": 1
  },
- "harness/src/engines/cad/draw/src/epc_draw/titleblock/service.py": {
-  "clock": 1
+ "harness/src/engines/cad/drawing/src/epc_drawing/diagram_knowledge.py": {
+  "environment": 1
+ },
+ "harness/src/engines/cad/drawing/src/epc_drawing/export/plan_sheet.py": {
+  "tempfile": 1
  }
 }

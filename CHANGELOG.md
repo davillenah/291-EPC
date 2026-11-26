@@ -3,6 +3,11 @@
 All notable changes. Format: Keep a Changelog; versions follow `harness/docs/BRANCHING.md` (releases are tagged on `main`).
 
 
+### Unreleased (one drawing engine)
+- Logos of the title block go to the layer `0-Logo-<company>` in the DXF (the sheet carries the company name in `data-empresa`); a logo without a name stays on layer 0. Every converted sheet has one paper-space viewport on the layer `0-Viewport` (not plotted). The two characterization goldens were re-recorded with the owner's authorization; they differ only by that layer and viewport.
+- `epc_draw` created (ADR-0042): the DXF kernel (`epc_draw.core`), the symbol library (`epc_draw.symbols`), the title block (`epc_draw.titleblock`) and one child per kind of drawing (`epc_draw.sld`, `mld`, `plan`, `arch`, `pv`) moved in, same bytes (12 files of the example single-line diagram identical, goldens untouched). The old names are doors to the same module objects, so no caller changed; `python -m epc_plan` and `python -m epc_arch` still run.
+- Not done yet: removing the doors (waits for the owner: the engines golden names the old packages, and the reports of `epc_drawing` wait for a decision on where they live).
+
 ### Unreleased (tray catalogue)
 - Catalogue block `parts`: finish, gauge and rail heights each part comes in (fittings in Z with gauge 18 and rails 65 to 115, and in G with gauges 18 and 14 and rails 65 to 150, barrier strip 0.71 mm in Z and 1.24 mm in G, articulated union in Z for rails 90 and 115, finish of every support); the library takes the barrier strip sheet from it. The load test is printed for a 1.5 m span only.
 - The library names the sheet when asked (`pieces(width, height, gauge, finish)`, code suffix like `-18Z`) and takes the rail and cover thickness from the catalogue by rail height, finish and width.

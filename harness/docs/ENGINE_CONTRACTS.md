@@ -138,6 +138,9 @@ Schema: `harness/src/engines/calculation/pv/src/epc_pv/schema/input.schema.json`
 | `site.longitude_deg` | number | yes | minimum -180, maximum 180 | East positive. |
 | `site.albedo` | number | yes | minimum 0, maximum 1 |  |
 | `site.design_t_min_c` | number |  |  | Coldest air temperature for the voltage check; when missing, the coldest hour of the weather file. |
+| `site.horizon` | array |  | minItems 1 | Far horizon profile (hills, buildings): points joined by straight lines around the circle, azimuth clockwise from north. The sun below it gives no direct beam; with it the typical shading loss is not added. |
+| `site.horizon[].azimuth_deg` | number | yes | minimum 0, maximum 360 |  |
+| `site.horizon[].elevation_deg` | number | yes | minimum 0, maximum 90 |  |
 | `weather` | object | yes |  |  |
 | `weather.start` | string | yes |  | Local time of the first value, ISO without offset (2023-01-01T00:00). |
 | `weather.utc_offset_h` | number | yes | minimum -14, maximum 14 |  |
@@ -162,6 +165,21 @@ Schema: `harness/src/engines/calculation/pv/src/epc_pv/schema/input.schema.json`
 | `arrays[].n_modules` | integer | yes | minimum 1 | Wanted modules; the layout rounds up to whole strings. |
 | `arrays[].n_series` | integer |  | minimum 1 | Modules per string; chosen by the policy when missing. |
 | `arrays[].n_inverters` | integer |  | minimum 1 |  |
+| `arrays[].row_shading` | object |  |  | Row-to-row shade of tilted rows with the same azimuth; with it the typical shading loss is not added. |
+| `arrays[].row_shading.slope_m` | number | yes | exclusiveMinimum 0 | Slope length of a row of tables (m). |
+| `arrays[].row_shading.pitch_m` | number | yes | exclusiveMinimum 0 | Horizontal distance between the front edges of two rows (m). |
+| `arrays[].row_shading.n_rows` | integer | yes | minimum 1 |  |
+| `arrays[].near_obstacles` | object |  |  | Shade of near obstacles on the modules, by casting the sun ray from points of the array; with it the typical shading loss is not added. |
+| `arrays[].near_obstacles.array` | object | yes |  | The array as a tilted rectangle centred on the origin of the local frame (x east, y north): width along the lower edge, slope length, height of the lowest edge above the ground (m). |
+| `arrays[].near_obstacles.array.width_m` | number | yes | exclusiveMinimum 0 |  |
+| `arrays[].near_obstacles.array.slope_m` | number | yes | exclusiveMinimum 0 |  |
+| `arrays[].near_obstacles.array.base_height_m` | number | yes | minimum 0 |  |
+| `arrays[].near_obstacles.boxes` | array | yes |  | Near obstacles as boxes on the ground (centre, east-west width, north-south depth, height; m). |
+| `arrays[].near_obstacles.boxes[].x_m` | number | yes |  |  |
+| `arrays[].near_obstacles.boxes[].y_m` | number | yes |  |  |
+| `arrays[].near_obstacles.boxes[].width_m` | number | yes | exclusiveMinimum 0 |  |
+| `arrays[].near_obstacles.boxes[].depth_m` | number | yes | exclusiveMinimum 0 |  |
+| `arrays[].near_obstacles.boxes[].height_m` | number | yes | exclusiveMinimum 0 |  |
 | `arrays[].dc_ac_ratio` | number |  | exclusiveMinimum 0 | Used when n_inverters is missing. |
 | `arrays[].module` | object | yes |  |  |
 | `arrays[].inverter` | object | yes |  |  |

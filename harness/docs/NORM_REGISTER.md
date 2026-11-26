@@ -306,14 +306,6 @@ Archivo: `harness/src/engines/calculation/aea90364/src/epc_aea90364/norm_registe
 | `aea90364.table.771-16-ix` | AEA 90364-7-771 (2006) | 771.16.IX | PDF 121 | `aea_tables.json#/factores_correccion/771.16.IX` | - | norm | medium | pending | no printed page in data (PDF page only) |
 | `aea90364.table.771-16-x` | AEA 90364-7-771 (2006) | 771.16.X | PDF 121 | `aea_tables.json#/factores_correccion/771.16.X` | - | norm | medium | pending | no printed page in data (PDF page only) |
 
-## arch / sheet_iram
-
-Archivo: `harness/src/engines/cad/arch/src/epc_arch/norm_register/sheet_iram.json` (1 registros)
-
-| id | norma | cláusula | página | valor / ubicación | unidad | procedencia | confianza | estado | problemas |
-|---|---|---|---|---|---|---|---|---|---|
-| `arch.code.gap` | - | - | - | `5.0` | mm | design-default | low | pending | duplicates drawing plan_sheet.GAP (5.0): duplicates a value defined elsewhere (ADR-0012 single source); no clause |
-
 ## datasheets / params
 
 Archivo: `harness/src/engines/procurement/datasheets/src/epc_datasheets/norm_register/params.json` (4 registros)
@@ -378,6 +370,14 @@ Archivo: `harness/src/engines/cad/draw/src/epc_draw/norm_register/plan_typical_v
 | `plan.typical.occupancy.tray_pct` | - | - | - | `typical_values.json#/occupancy/tray_pct` | % | typical | low | pending | no clause: file says confirm against the standard and the catalogue; 50 % here vs 40 % ocupacion_max_pct in aea90364 rules/bandejas.json (line 59); criterion raceway_fill_max_pct (default 40, range 40-60) is a separate value: three copies |
 | `plan.typical.occupancy.conduit_pct` | - | - | - | `typical_values.json#/occupancy/conduit_pct` | % | typical | low | pending | no clause: file says confirm against the standard and the catalogue; 53/31/40 % (1 / 2 / many cables) vs 35 % in AEA rules canalizaciones (non-tabulated cases) and criterion raceway_fill_max_pct (default 40, range 40-60); the AEA rules refer to Tabla 771.12.IX for tabulated cases; compare these values with it |
 | `plan.typical.design.families` | - | - | - | `typical_values.json#/design/families` | outlets; VA | typical | low | pending | no clause: file says confirm against the standard and the catalogue; TUG 15 outlets and TUE 1 outlet repeat receptacles circuits values (two copies); IUG 100 VA, IUE 10 VA, ACU 1500 VA, FMO 7500 VA per outlet are design assumptions |
+
+## draw / sheet_iram
+
+Archivo: `harness/src/engines/cad/draw/src/epc_draw/norm_register/sheet_iram.json` (1 registros)
+
+| id | norma | cláusula | página | valor / ubicación | unidad | procedencia | confianza | estado | problemas |
+|---|---|---|---|---|---|---|---|---|---|
+| `arch.code.gap` | - | - | - | `5.0` | mm | design-default | low | pending | duplicates drawing plan_sheet.GAP (5.0): duplicates a value defined elsewhere (ADR-0012 single source); no clause |
 
 ## draw / svg_to_dxf
 

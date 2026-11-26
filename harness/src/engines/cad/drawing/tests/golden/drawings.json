@@ -21,7 +21,7 @@
      "EOF": 1,
      "HATCH": 32,
      "INSERT": 28,
-     "LAYER": 5,
+     "LAYER": 6,
      "LAYOUT": 2,
      "LINE": 469,
      "LTYPE": 6,
@@ -35,10 +35,11 @@
      "STYLE": 4,
      "TABLE": 9,
      "TEXT": 247,
+     "VIEWPORT": 2,
      "VPORT": 1
     },
-    "lines": 58284,
-    "sha256": "61b3d6f5008cc572d4c6908062682d2fafeb49eb1a95aa975a64e8e7ec725343"
+    "lines": 58528,
+    "sha256": "5c8c10504feaadab7431b3c9fd648d2ce648fb9abec08dce37304d7d6975f070"
    },
    "MLD_T1_H1.svg": {
     "elements": {
@@ -75,7 +76,7 @@
      "EOF": 1,
      "HATCH": 41,
      "INSERT": 13,
-     "LAYER": 5,
+     "LAYER": 6,
      "LAYOUT": 2,
      "LINE": 304,
      "LTYPE": 5,
@@ -89,10 +90,11 @@
      "STYLE": 3,
      "TABLE": 9,
      "TEXT": 175,
+     "VIEWPORT": 2,
      "VPORT": 1
     },
-    "lines": 47740,
-    "sha256": "cdcaf729d917721021822c8a77a40eb76a8e626aee0ded98660af51a72c00cb6"
+    "lines": 47984,
+    "sha256": "45d81539c85286efccac293e69651109d146a9fda47721ded6c6c96778d8f6fb"
    },
    "MLD_T1_H2.svg": {
     "elements": {
@@ -129,7 +131,7 @@
      "EOF": 1,
      "HATCH": 2,
      "INSERT": 37,
-     "LAYER": 5,
+     "LAYER": 6,
      "LAYOUT": 2,
      "LINE": 253,
      "LTYPE": 6,
@@ -143,10 +145,11 @@
      "STYLE": 4,
      "TABLE": 9,
      "TEXT": 140,
+     "VIEWPORT": 2,
      "VPORT": 1
     },
-    "lines": 30498,
-    "sha256": "dcf77ad6da06db3bc0d24786024a18ae80bdbcead1cf20de7b9e5ff95ab6b1aa"
+    "lines": 30742,
+    "sha256": "a19c20fe5f6aab5f89b231bc713b6a86675ac02bee53f8f61813b7ece18811cd"
    },
    "SLD_T1_H1.svg": {
     "elements": {
@@ -187,7 +190,7 @@
      "EOF": 1,
      "HATCH": 2,
      "INSERT": 24,
-     "LAYER": 5,
+     "LAYER": 6,
      "LAYOUT": 2,
      "LINE": 270,
      "LTYPE": 6,
@@ -201,10 +204,11 @@
      "STYLE": 3,
      "TABLE": 9,
      "TEXT": 140,
+     "VIEWPORT": 2,
      "VPORT": 1
     },
-    "lines": 27128,
-    "sha256": "ecec20e1ea65edffb2fb7d43a7348b9c86032081c21bb28422d98fc7405e46e0"
+    "lines": 27372,
+    "sha256": "e37135732fb987881f9d2ec69fc062d06c46ff56294dae20830ee9bb2a8b4eae"
    },
    "SLD_T1_H2.svg": {
     "elements": {
@@ -245,7 +249,7 @@
      "EOF": 1,
      "HATCH": 2,
      "INSERT": 25,
-     "LAYER": 5,
+     "LAYER": 6,
      "LAYOUT": 2,
      "LINE": 237,
      "LTYPE": 6,
@@ -259,10 +263,11 @@
      "STYLE": 3,
      "TABLE": 9,
      "TEXT": 131,
+     "VIEWPORT": 2,
      "VPORT": 1
     },
-    "lines": 25038,
-    "sha256": "351c7c964903456208efa0b1932b5085597a42672a62cb7570fede8bd048138b"
+    "lines": 25282,
+    "sha256": "7664b591afd43286ab0b64806c441336380820c99cfb4e326b2783a41efca097"
    },
    "SLD_T1_H3.svg": {
     "elements": {
@@ -303,7 +308,7 @@
      "EOF": 1,
      "HATCH": 2,
      "INSERT": 27,
-     "LAYER": 5,
+     "LAYER": 6,
      "LAYOUT": 2,
      "LINE": 222,
      "LTYPE": 6,
@@ -317,10 +322,11 @@
      "STYLE": 3,
      "TABLE": 9,
      "TEXT": 126,
+     "VIEWPORT": 2,
      "VPORT": 1
     },
-    "lines": 24256,
-    "sha256": "e2248ff21982c0aeb88ce2f8cfa0e8e4d5c23ac6abcb634af8a9ef86e0c58f9d"
+    "lines": 24500,
+    "sha256": "eb16232bde7e968403a98e3b32fd63d4b3b49b3d858ac8e7a94c85e35a388a60"
    },
    "SLD_T1_H4.svg": {
     "elements": {
@@ -358,7 +364,7 @@
      "ENDTAB": 9,
      "EOF": 1,
      "HATCH": 1,
-     "LAYER": 5,
+     "LAYER": 6,
      "LAYOUT": 2,
      "LINE": 104,
      "LTYPE": 3,
@@ -370,10 +376,11 @@
      "STYLE": 3,
      "TABLE": 9,
      "TEXT": 373,
+     "VIEWPORT": 2,
      "VPORT": 1
     },
-    "lines": 20168,
-    "sha256": "539289c2d084095cd8813483db2a868e4e87dc27b7e8ae77486c0e2c4fd64999"
+    "lines": 20412,
+    "sha256": "e8e90cc44a1f435a02c0de6b329e3e0fcc666cab20c8fecc650c8788b87d74c2"
    },
    "SLD_T1_TABLA.svg": {
     "elements": {
@@ -460,7 +467,7 @@
      "EOF": 1,
      "HATCH": 2,
      "INSERT": 45,
-     "LAYER": 5,
+     "LAYER": 6,
      "LAYOUT": 2,
      "LINE": 290,
      "LTYPE": 6,
@@ -474,10 +481,11 @@
      "STYLE": 4,
      "TABLE": 9,
      "TEXT": 150,
+     "VIEWPORT": 2,
      "VPORT": 1
     },
-    "lines": 34408,
-    "sha256": "1a5ef96da08de2ada5b3287ed1d19b7225e632ff80da41fa7452043f0659e556"
+    "lines": 34652,
+    "sha256": "bd3d8514a795501e3a51a07bae4e8548c784af791cf32638665e30810dd6f8ae"
    },
    "SLD_T1_H1.svg": {
     "elements": {
@@ -518,7 +526,7 @@
      "EOF": 1,
      "HATCH": 2,
      "INSERT": 34,
-     "LAYER": 5,
+     "LAYER": 6,
      "LAYOUT": 2,
      "LINE": 254,
      "LTYPE": 6,
@@ -532,10 +540,11 @@
      "STYLE": 3,
      "TABLE": 9,
      "TEXT": 137,
+     "VIEWPORT": 2,
      "VPORT": 1
     },
-    "lines": 28726,
-    "sha256": "299de53f07c762df2fcded138710e8ea77d0a06eee445b63d47b446a75b5d143"
+    "lines": 28970,
+    "sha256": "2505042f9111a5e5faac3a3e49a8987f0e346351f586ac784dad369fe0c62a5b"
    },
    "SLD_T1_H2.svg": {
     "elements": {
@@ -576,7 +585,7 @@
      "EOF": 1,
      "HATCH": 2,
      "INSERT": 31,
-     "LAYER": 5,
+     "LAYER": 6,
      "LAYOUT": 2,
      "LINE": 223,
      "LTYPE": 6,
@@ -590,10 +599,11 @@
      "STYLE": 3,
      "TABLE": 9,
      "TEXT": 126,
+     "VIEWPORT": 2,
      "VPORT": 1
     },
-    "lines": 25130,
-    "sha256": "a54131ff947b52a2580e7920528b18b9dae74e05c488b1f133ea65408f352bfc"
+    "lines": 25374,
+    "sha256": "02c698a531da49a6bf915e8abbc4264497a128ea0dea126bd8028e70b5da2b1c"
    },
    "SLD_T1_H3.svg": {
     "elements": {
@@ -631,7 +641,7 @@
      "ENDTAB": 9,
      "EOF": 1,
      "HATCH": 1,
-     "LAYER": 5,
+     "LAYER": 6,
      "LAYOUT": 2,
      "LINE": 104,
      "LTYPE": 3,
@@ -643,10 +653,11 @@
      "STYLE": 3,
      "TABLE": 9,
      "TEXT": 373,
+     "VIEWPORT": 2,
      "VPORT": 1
     },
-    "lines": 20168,
-    "sha256": "fdfb3cfb9eded28edd9c1f6445fd86c127a0e7e5db14e85f575daabd95f1345e"
+    "lines": 20412,
+    "sha256": "072d0d2d36d79fd0ee683193f0ef388cd28c0a386e22ac335879cfbf2b871d6c"
    },
    "SLD_T1_TABLA.svg": {
     "elements": {
@@ -733,7 +744,7 @@
      "EOF": 1,
      "HATCH": 17,
      "INSERT": 7,
-     "LAYER": 5,
+     "LAYER": 6,
      "LAYOUT": 2,
      "LINE": 235,
      "LTYPE": 6,
@@ -747,10 +758,11 @@
      "STYLE": 4,
      "TABLE": 9,
      "TEXT": 162,
+     "VIEWPORT": 2,
      "VPORT": 1
     },
-    "lines": 31552,
-    "sha256": "e79f12644df91893053965dc6f67b190bd47a7fd1b9fa86363b09c4324012735"
+    "lines": 31796,
+    "sha256": "e0ed0b4844d6e7410d169c81ceb0d8f336f7c35155198a0c2973adff81df5aef"
    },
    "MLD_T1.svg": {
     "elements": {
@@ -787,7 +799,7 @@
      "EOF": 1,
      "HATCH": 2,
      "INSERT": 18,
-     "LAYER": 5,
+     "LAYER": 6,
      "LAYOUT": 2,
      "LINE": 238,
      "LTYPE": 6,
@@ -801,10 +813,11 @@
      "STYLE": 4,
      "TABLE": 9,
      "TEXT": 136,
+     "VIEWPORT": 2,
      "VPORT": 1
     },
-    "lines": 24888,
-    "sha256": "17b868a0e5b88b141e41144d07b8dbd590d0b9028934d2e5ff57a572b20b5eba"
+    "lines": 25132,
+    "sha256": "9462fb3b81a55dbd30a9f8dbbe8b62f34f41638fb20b08bdc4257726ddd9890f"
    },
    "SLD_T1.svg": {
     "elements": {
@@ -838,7 +851,7 @@
      "ENDTAB": 9,
      "EOF": 1,
      "HATCH": 1,
-     "LAYER": 5,
+     "LAYER": 6,
      "LAYOUT": 2,
      "LINE": 84,
      "LTYPE": 3,
@@ -850,10 +863,11 @@
      "STYLE": 3,
      "TABLE": 9,
      "TEXT": 133,
+     "VIEWPORT": 2,
      "VPORT": 1
     },
-    "lines": 11008,
-    "sha256": "8058d17f15c5511d14fe9152b5f7c0a8de3e8fd3e2f893ab3b5f7f9c96a8ccd7"
+    "lines": 11252,
+    "sha256": "46d5beca80455d9c8a89965d3746c1c07a5a2ddf92ed8ae4df11d473f90bebb1"
    },
    "SLD_T1_TABLA.svg": {
     "elements": {
