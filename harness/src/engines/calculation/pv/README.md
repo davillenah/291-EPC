@@ -34,7 +34,7 @@ Nothing (standard library). `pvlib` is used only by the developer tool `tests/va
 - **The values are typical and not confirmed** (`data/params.json`): losses, thermal model, inverter curve, incidence modifier, short-circuit factor. The result says so in `warnings`; do not size or sell a plant with it until the owner confirms them on the norms page.
 - The sun is evaluated at the timestamp of each value (an hourly mean is not centred); no bifacial gain, no tracker, no soiling by season, no battery.
 - Diffuse and ground light are not reduced by the incidence modifier. The Perez transposition model is not included.
-- The coefficient of the maximum-power voltage is taken equal to that of the open-circuit voltage (the data sheet value should replace it).
+- The coefficient of the maximum-power voltage is the module's `beta_vmp_pct_c` (data sheet) when given; otherwise it is taken equal to that of the open-circuit voltage and the result says so (`wind_proxy`).
 - DC cables, protections and the connection to the low-voltage board are not calculated here (next step, with `epc_aea90364`).
 - The formulas are in `docs/formulas.md`.
 
