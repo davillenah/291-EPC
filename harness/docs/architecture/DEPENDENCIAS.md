@@ -32,9 +32,9 @@ Cómo leerlo: **Usa** = de qué depende la unidad; **Lo usan** = quién se rompe
 | `load_balance` | `aea90364`, `calc_common` | `aea90364`, `design_basis`, `selectivity` | `aea90364`, `arch`, `boq`, `calc_check`, `calc_common`, `design_basis`, `draw`, `drawing`, `dxf`, `feeder_sizing`, `grounding`, `lighting`, `mld`, `plan`, `report`, `rfq`, `selectivity`, `short_circuit`, `sld`, `symbols`, `titleblock`, `transformer_sizing`, `voltage_drop` |
 | `mld` | `draw` | `drawing` | `arch`, `boq`, `draw`, `drawing`, `dxf`, `plan`, `report`, `rfq`, `sld`, `symbols`, `titleblock` |
 | `plan` | `draw` | `boq`, `draw` | `arch`, `boq`, `draw`, `drawing`, `dxf`, `mld`, `report`, `rfq`, `sld`, `symbols`, `titleblock` |
-| `pv` | — | `boq`, `draw` | `arch`, `boq`, `draw`, `drawing`, `dxf`, `mld`, `plan`, `report`, `rfq`, `sld`, `symbols`, `titleblock` |
+| `pv` | — | `boq`, `draw`, `report` | `arch`, `boq`, `draw`, `drawing`, `dxf`, `mld`, `plan`, `report`, `rfq`, `sld`, `symbols`, `titleblock` |
 | `receptacles` | — | — | — |
-| `report` | `draw` | `drawing` | `arch`, `boq`, `draw`, `drawing`, `dxf`, `mld`, `plan`, `rfq`, `sld`, `symbols`, `titleblock` |
+| `report` | `draw`, `pv` | `drawing` | `arch`, `boq`, `draw`, `drawing`, `dxf`, `mld`, `plan`, `rfq`, `sld`, `symbols`, `titleblock` |
 | `rfq` | `boq`, `datasheets` | — | — |
 | `rules` | — | — | — |
 | `select` | — | — | — |
