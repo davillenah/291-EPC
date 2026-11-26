@@ -131,6 +131,21 @@ def add_sheet_viewport(doc, width_mm: float, height_mm: float, role: str = "shee
     return layout.add_viewport(center=centre, size=(width_mm, height_mm), view_center_point=centre, view_height=height_mm, status=1, dxfattribs={"layer": role})
 
 
+def add_extents_viewport(doc, margin_mm: float = 10.0, role: str = "sheet.viewport"):
+    """A drawing with no paper sheet (a plan or a diagram of a plant) gets one viewport that frames its model space at 1:1, with a margin. Returns the viewport, or None when the model space is empty."""
+    from ezdxf import bbox
+    box = bbox.extents(doc.modelspace())
+    if not box.has_data:
+        return None
+    width, height = box.size.x + 2 * margin_mm, box.size.y + 2 * margin_mm
+    layout = doc.layout("Layout1")
+    layout.page_setup(size=(width, height), margins=(0, 0, 0, 0), units="mm", scale=(1, 1))
+    if role not in doc.layers:
+        doc.layers.add(role)
+    centre = ((box.extmin.x + box.extmax.x) / 2.0, (box.extmin.y + box.extmax.y) / 2.0)
+    return layout.add_viewport(center=(width / 2.0, height / 2.0), size=(width, height), view_center_point=centre, view_height=height, status=1, dxfattribs={"layer": role})
+
+
 def apply_viewport(doc, catalog: Dict[str, dict], role: str = "sheet.viewport") -> Optional[str]:
     """The viewport layer of a draft takes the name and look of the catalog (`0-Viewport`) and the viewports follow; returns the name, or None when the draft has no viewport."""
     if role not in doc.layers:

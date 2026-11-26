@@ -10,6 +10,8 @@ import math
 from pathlib import Path
 from typing import Any, Dict, List, Tuple
 
+from epc_draw.pv.files import framed as _framed
+
 TEXT = {
     "layout": {"en": "PV PLANT LAYOUT", "es": "IMPLANTACIÓN DE PLANTA FOTOVOLTAICA"},
     "stringing": {"en": "STRINGING PLAN", "es": "PLANO DE CONEXIONADO DE STRINGS"},
@@ -227,7 +229,7 @@ def render_all(geometry: Dict[str, Any], result: Dict[str, Any], name: str, lang
     from epc_draw.core import deliverable
     docs = {"layout": _plan(geometry, "layout", language, False, "id"), "stringing": _plan(geometry, "stringing", language, True, "strings"),
             "cabling": _plan(geometry, "cabling", language, False, "id", cabling=True), "sld": _sld(geometry, result, language)}
-    return {f"{name}_{key}.dxf": deliverable.finish_draft_bytes(doc, None, stamp_date, f"{name}_{key}")["dxf"] for key, doc in docs.items()}
+    return {f"{name}_{key}.dxf": deliverable.finish_draft_bytes(_framed(doc), None, stamp_date, f"{name}_{key}")["dxf"] for key, doc in docs.items()}
 
 
 def write_all(geometry: Dict[str, Any], result: Dict[str, Any], out_dir, name: str, language: str = "en", stamp_date=None) -> Dict[str, Path]:

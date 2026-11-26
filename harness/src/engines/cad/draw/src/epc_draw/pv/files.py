@@ -12,3 +12,10 @@ def save(out_dir, files: Dict[str, bytes]) -> Dict[str, Path]:
         paths[file_name] = out / file_name
         paths[file_name].write_bytes(data)
     return paths
+
+
+def framed(doc):
+    """The 2D PV drawing with its viewport on the layer `0-Viewport` (the catalog role `sheet.viewport`)."""
+    from epc_draw.core import layers
+    layers.add_extents_viewport(doc)
+    return doc
