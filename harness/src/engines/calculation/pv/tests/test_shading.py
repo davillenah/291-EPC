@@ -1,7 +1,7 @@
 """Shading of the direct beam: the far horizon and the row-to-row shade (pure geometry), and their place in the pipeline."""
 import unittest
 
-from epc_pv import PvError, run, shading
+from epc_pv import PvError, nearshade, run, shading
 
 from test_pv import doc
 
@@ -51,6 +51,44 @@ class TestRows(unittest.TestCase):
     def test_the_front_row_is_never_shaded(self):
         rows = {"slope_m": 2.0, "pitch_m": 3.0, "n_rows": 1}
         self.assertEqual(shading.direct_factor(10, 0, 30, 0, rows=rows), 1.0)
+
+
+ARRAY = {"width_m": 10.0, "slope_m": 4.0, "base_height_m": 0.5}
+
+
+class TestNearObstacles(unittest.TestCase):
+    def points(self):
+        return nearshade.sample_points(ARRAY, 30, 0)
+
+    def test_no_obstacle_leaves_the_array_in_the_sun(self):
+        self.assertEqual(nearshade.sunlit_fraction(self.points(), [], 30, 0), 1.0)
+
+    def test_a_tall_box_between_the_array_and_the_sun_shades_it(self):
+        box = {"x_m": 0.0, "y_m": 6.0, "width_m": 20.0, "depth_m": 1.0, "height_m": 30.0}      # a wall to the north, the side of the sun
+        self.assertEqual(nearshade.sunlit_fraction(self.points(), [box], 30, 0), 0.0)
+        self.assertEqual(nearshade.sunlit_fraction(self.points(), [box], 30, 180), 1.0)         # sun from the south: the wall is behind
+
+    def test_a_low_box_shades_part_of_the_array_only_with_a_low_sun(self):
+        box = {"x_m": 0.0, "y_m": 7.0, "width_m": 20.0, "depth_m": 1.0, "height_m": 2.0}
+        high = nearshade.sunlit_fraction(self.points(), [box], 70, 0)
+        low = nearshade.sunlit_fraction(self.points(), [box], 8, 0)
+        self.assertEqual(high, 1.0)
+        self.assertLess(low, 1.0)
+
+    def test_the_sun_below_the_horizon_shades_nothing(self):
+        self.assertEqual(nearshade.sunlit_fraction(self.points(), [{"x_m": 0, "y_m": 6, "width_m": 5, "depth_m": 5, "height_m": 9}], -5, 0), 1.0)
+
+    def test_bad_data_is_an_error_in_both_languages(self):
+        for bad in ({}, {"array": ARRAY}, {"array": dict(ARRAY, slope_m=0), "boxes": []}, {"array": ARRAY, "boxes": [{"x_m": 0}]}):
+            with self.assertRaises(PvError) as ctx:
+                nearshade.check(bad, "near_obstacles")
+            self.assertTrue(ctx.exception.en and ctx.exception.es)
+
+    def test_in_the_pipeline_a_wall_to_the_north_costs_energy_and_replaces_the_typical_loss(self):
+        wall = {"array": ARRAY, "boxes": [{"x_m": 0.0, "y_m": 4.0, "width_m": 40.0, "depth_m": 1.0, "height_m": 12.0}]}
+        base, shaded = run(doc()), run(doc(near_obstacles=wall))
+        self.assertGreater(shaded.arrays[0]["shading_loss_pct"], 0.0)
+        self.assertLess(shaded.arrays[0]["poa_kwh_m2"], base.arrays[0]["poa_kwh_m2"])
 
 
 class TestApply(unittest.TestCase):

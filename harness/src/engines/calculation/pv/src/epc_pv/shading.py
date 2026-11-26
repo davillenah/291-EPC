@@ -11,6 +11,7 @@ Two causes, both on the direct component only (the diffuse and ground parts stay
 import math
 from typing import Any, Dict, List, Optional, Sequence
 
+from epc_pv import nearshade
 from epc_pv.model import PvError
 
 
@@ -57,14 +58,18 @@ def row_shaded_fraction(slope_m: float, pitch_m: float, tilt_deg: float, surface
 
 
 def direct_factor(sun_elevation_deg: float, sun_azimuth_deg: float, tilt_deg: float, surface_azimuth_deg: float,
-                  horizon: Optional[Sequence[Dict[str, float]]] = None, rows: Optional[Dict[str, float]] = None) -> float:
-    """Share of the direct beam kept (1 = no shade): 0 below the horizon profile, else one minus the shaded share of the rows (the front row is never shaded: (n - 1) / n of the rows)."""
+                  horizon: Optional[Sequence[Dict[str, float]]] = None, rows: Optional[Dict[str, float]] = None, near: Optional[Dict[str, Any]] = None) -> float:
+    """Share of the direct beam kept (1 = no shade): 0 below the horizon profile, else one minus the shaded share of the rows (the front row is never shaded: (n - 1) / n of the rows),
+    times the share of the array in the sun with the near obstacles (`near`: {"points", "boxes"} from `nearshade`)."""
     if horizon and sun_elevation_deg < horizon_elevation_deg(horizon, sun_azimuth_deg):
         return 0.0
+    kept = 1.0
     if rows and rows["n_rows"] > 1:
         shaded = row_shaded_fraction(rows["slope_m"], rows["pitch_m"], tilt_deg, surface_azimuth_deg, sun_elevation_deg, sun_azimuth_deg)
-        return 1.0 - shaded * (rows["n_rows"] - 1) / rows["n_rows"]
-    return 1.0
+        kept = 1.0 - shaded * (rows["n_rows"] - 1) / rows["n_rows"]
+    if near:
+        kept *= nearshade.sunlit_fraction(near["points"], near["boxes"], sun_elevation_deg, sun_azimuth_deg)
+    return kept
 
 
 def apply(poa: Dict[str, float], factor: float) -> Dict[str, float]:

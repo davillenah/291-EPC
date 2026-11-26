@@ -169,6 +169,17 @@ Schema: `harness/src/engines/calculation/pv/src/epc_pv/schema/input.schema.json`
 | `arrays[].row_shading.slope_m` | number | yes | exclusiveMinimum 0 | Slope length of a row of tables (m). |
 | `arrays[].row_shading.pitch_m` | number | yes | exclusiveMinimum 0 | Horizontal distance between the front edges of two rows (m). |
 | `arrays[].row_shading.n_rows` | integer | yes | minimum 1 |  |
+| `arrays[].near_obstacles` | object |  |  | Shade of near obstacles on the modules, by casting the sun ray from points of the array; with it the typical shading loss is not added. |
+| `arrays[].near_obstacles.array` | object | yes |  | The array as a tilted rectangle centred on the origin of the local frame (x east, y north): width along the lower edge, slope length, height of the lowest edge above the ground (m). |
+| `arrays[].near_obstacles.array.width_m` | number | yes | exclusiveMinimum 0 |  |
+| `arrays[].near_obstacles.array.slope_m` | number | yes | exclusiveMinimum 0 |  |
+| `arrays[].near_obstacles.array.base_height_m` | number | yes | minimum 0 |  |
+| `arrays[].near_obstacles.boxes` | array | yes |  | Near obstacles as boxes on the ground (centre, east-west width, north-south depth, height; m). |
+| `arrays[].near_obstacles.boxes[].x_m` | number | yes |  |  |
+| `arrays[].near_obstacles.boxes[].y_m` | number | yes |  |  |
+| `arrays[].near_obstacles.boxes[].width_m` | number | yes | exclusiveMinimum 0 |  |
+| `arrays[].near_obstacles.boxes[].depth_m` | number | yes | exclusiveMinimum 0 |  |
+| `arrays[].near_obstacles.boxes[].height_m` | number | yes | exclusiveMinimum 0 |  |
 | `arrays[].dc_ac_ratio` | number |  | exclusiveMinimum 0 | Used when n_inverters is missing. |
 | `arrays[].module` | object | yes |  |  |
 | `arrays[].inverter` | object | yes |  |  |
