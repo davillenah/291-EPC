@@ -166,14 +166,17 @@ def build(geometry: Dict[str, Any], result: Dict[str, Any], parts: Optional[Dict
     return doc
 
 
-def write(geometry: Dict[str, Any], result: Dict[str, Any], out_dir, name: str, stamp_date=None, parts: Optional[Dict[str, Any]] = None, level: str = "standard") -> Path:
-    """Writes `<name>_pv_model_3d.dxf` under `out_dir` (the stem keeps the `_model_3d` mark that sends it to the 3D folder of the transmittal)."""
+def render(geometry: Dict[str, Any], result: Dict[str, Any], name: str, stamp_date=None, parts: Optional[Dict[str, Any]] = None, level: str = "standard") -> Dict[str, bytes]:
+    """{`<name>_pv_model_3d.dxf`: bytes} (the stem keeps the `_model_3d` mark that sends it to the 3D folder of the transmittal). Nothing is written."""
     from epc_draw.core import deliverable
-    out = Path(out_dir)
-    out.mkdir(parents=True, exist_ok=True)
-    path = out / f"{name}_pv_model_3d.dxf"
-    deliverable.finish_draft(build(geometry, result, parts, level), path, None, stamp_date, f"{name}_pv_model_3d")
-    return path
+    stem = f"{name}_pv_model_3d"
+    return {f"{stem}.dxf": deliverable.finish_draft_bytes(build(geometry, result, parts, level), None, stamp_date, stem)["dxf"]}
+
+
+def write(geometry: Dict[str, Any], result: Dict[str, Any], out_dir, name: str, stamp_date=None, parts: Optional[Dict[str, Any]] = None, level: str = "standard") -> Path:
+    """Writes `<name>_pv_model_3d.dxf` under `out_dir`."""
+    from epc_draw.pv import files
+    return next(iter(files.save(out_dir, render(geometry, result, name, stamp_date, parts, level)).values()))
 
 
 # --- big plants: parts, sectors and an assembly ------------------------------------------------------------------------------------------------------------------------------------------
@@ -282,31 +285,36 @@ def build_common(geometry: Dict[str, Any], parts: Optional[Dict[str, Any]] = Non
     return doc
 
 
-def write_assembly(geometry: Dict[str, Any], result: Dict[str, Any], out_dir, name: str, stamp_date=None, parts: Optional[Dict[str, Any]] = None, level: str = "standard", sector_modules: int = SECTOR_MODULES) -> Dict[str, Any]:
-    """Writes the plant as parts and the assembly: `<name>_pv_model_3d_common.dxf`, `<name>_pv_model_3d_s01.dxf` ... one per sector, and the master `<name>_pv_model_3d.dxf` that attaches them as
-    external references (same folder, relative names). Each part is saved and released before the next one is built. Returns {"master": path, "parts": [paths], "sectors": n}."""
+def render_assembly(geometry: Dict[str, Any], result: Dict[str, Any], name: str, stamp_date=None, parts: Optional[Dict[str, Any]] = None, level: str = "standard", sector_modules: int = SECTOR_MODULES):
+    """The plant as parts and the assembly, one file at a time as (file name, bytes): `<name>_pv_model_3d_common.dxf`, `<name>_pv_model_3d_s01.dxf` ... one per sector, and last the master
+    `<name>_pv_model_3d.dxf` that attaches them as external references (same folder, relative names). A generator, so each part can be written and released before the next one is built
+    (a big plant does not fit in memory at once). Nothing is written here."""
     from epc_draw.core import deliverable
     if not geometry.get("tables"):
         raise DrawingError("err_layout_no_tables")
-    out = Path(out_dir)
-    out.mkdir(parents=True, exist_ok=True)
     stem = f"{name}_pv_model_3d"
     written = []
 
-    def save(doc, suffix):
-        path = out / f"{stem}_{suffix}.dxf"
-        deliverable.finish_draft(doc, path, None, stamp_date, f"{stem}_{suffix}")
-        written.append(path)
+    def part(doc, suffix):
+        file_name = f"{stem}_{suffix}.dxf"
+        written.append(file_name)
+        return file_name, deliverable.finish_draft_bytes(doc, None, stamp_date, f"{stem}_{suffix}")["dxf"]
 
-    save(build_common(geometry, parts, level), "common")
-    groups = sectors(geometry, sector_modules)
-    for k, tables in enumerate(groups, start=1):
-        save(build_sector(geometry, tables, parts, level), f"s{k:02d}")
+    yield part(build_common(geometry, parts, level), "common")
+    for k, tables in enumerate(sectors(geometry, sector_modules), start=1):
+        yield part(build_sector(geometry, tables, parts, level), f"s{k:02d}")
     master = _new_document()
-    for path in written:
-        ref = path.stem.replace(stem + "_", "PV-PART-")
-        master.add_xref_def(path.name, ref)
+    for file_name in written:
+        ref = file_name[:-4].replace(stem + "_", "PV-PART-")
+        master.add_xref_def(file_name, ref)
         master.modelspace().add_blockref(ref, (0.0, 0.0, 0.0), dxfattribs={"layer": "291-WS-STRC-N"})
-    master_path = out / f"{stem}.dxf"
-    deliverable.finish_draft(master, master_path, None, stamp_date, stem)
-    return {"master": master_path, "parts": written, "sectors": len(groups)}
+    yield f"{stem}.dxf", deliverable.finish_draft_bytes(master, None, stamp_date, stem)["dxf"]
+
+
+def write_assembly(geometry: Dict[str, Any], result: Dict[str, Any], out_dir, name: str, stamp_date=None, parts: Optional[Dict[str, Any]] = None, level: str = "standard", sector_modules: int = SECTOR_MODULES) -> Dict[str, Any]:
+    """Writes what `render_assembly` makes, each file as it comes. Returns {"master": path, "parts": [paths], "sectors": n}."""
+    from epc_draw.pv import files
+    paths = []
+    for file_name, data in render_assembly(geometry, result, name, stamp_date, parts, level, sector_modules):
+        paths.append(files.save(out_dir, {file_name: data})[file_name])
+    return {"master": paths[-1], "parts": paths[:-1], "sectors": len(paths) - 2}

@@ -181,15 +181,14 @@ def _sld(roof: Dict[str, Any], result: Dict[str, Any], language: str):
     return doc
 
 
-def write_all(roof: Dict[str, Any], result: Dict[str, Any], out_dir, name: str, language: str = "en", stamp_date=None) -> Dict[str, Path]:
-    """Writes `<name>_roof_layout.dxf`, `_roof_stringing.dxf`, `_roof_cabling.dxf` and `_roof_sld.dxf` (single-line) under `out_dir`; returns {plan name: path}."""
+def render_all(roof: Dict[str, Any], result: Dict[str, Any], name: str, language: str = "en", stamp_date=None) -> Dict[str, bytes]:
+    """{`<name>_roof_layout.dxf`, `_roof_stringing.dxf`, `_roof_cabling.dxf`, `_roof_sld.dxf`: bytes}. Nothing is written."""
     from epc_draw.core import deliverable
-    out = Path(out_dir)
-    out.mkdir(parents=True, exist_ok=True)
     docs = {"roof_layout": _layout(roof, result, language), "roof_stringing": _stringing(roof, result, language), "roof_cabling": _cabling(roof, result, language), "roof_sld": _sld(roof, result, language)}
-    written = {}
-    for key, doc in docs.items():
-        path = out / f"{name}_{key}.dxf"
-        deliverable.finish_draft(doc, path, None, stamp_date, f"{name}_{key}")
-        written[f"{name}_{key}"] = path
-    return written
+    return {f"{name}_{key}.dxf": deliverable.finish_draft_bytes(doc, None, stamp_date, f"{name}_{key}")["dxf"] for key, doc in docs.items()}
+
+
+def write_all(roof: Dict[str, Any], result: Dict[str, Any], out_dir, name: str, language: str = "en", stamp_date=None) -> Dict[str, Path]:
+    """Writes the four drawings of `render_all` under `out_dir`; returns {plan name: path}."""
+    from epc_draw.pv import files
+    return {Path(k).stem: v for k, v in files.save(out_dir, render_all(roof, result, name, language, stamp_date)).items()}

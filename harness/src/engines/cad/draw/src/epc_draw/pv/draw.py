@@ -44,3 +44,24 @@ def draw_pv(entrada: PvDrawInput, out_dir: Any, name: str) -> Tuple[Dict[str, Pa
         if entrada.layout is None:
             detail()
     return drafts, ran
+
+
+def render_pv(entrada: PvDrawInput, name: str) -> Dict[str, bytes]:
+    """The same drawings as `draw_pv`, as data: {file name: DXF bytes}, in the order the writers run. Nothing is read from the process and nothing is written (ADR-0042):
+    two calls with the same input give the same bytes and may run at the same time (give `stamp_date` for the same bytes every time)."""
+    if not isinstance(entrada, PvDrawInput):
+        raise TypeError("render_pv() takes a PvDrawInput")
+    from epc_draw.pv import details as pv_details, diagrams as pv_diagrams, roof as pv_roof
+    stem, files = f"{name}_pv", {}
+    def detail() -> None:
+        if entrada.parts is not None:
+            files.update(pv_details.render(dict(entrada.parts), stem, entrada.language, entrada.stamp_date))
+
+    if entrada.layout is not None:
+        files.update(pv_diagrams.render_all(copy.deepcopy(dict(entrada.layout)), entrada.result, stem, entrada.language, entrada.stamp_date))
+        detail()
+    if entrada.roof is not None:
+        files.update(pv_roof.render_all(copy.deepcopy(dict(entrada.roof)), entrada.result, stem, entrada.language, entrada.stamp_date))
+        if entrada.layout is None:
+            detail()
+    return files

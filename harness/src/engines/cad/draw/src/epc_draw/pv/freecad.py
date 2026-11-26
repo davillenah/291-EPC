@@ -7,6 +7,7 @@ big plant is not held in memory, and it carries no number of its own: every dime
 
   write(geometry, result, out_dir, name, stamp_date, parts, level, sector_modules) -> {"macro": path, "blocks": n, "instances": n}   `<name>_pv_model_3d_freecad.FCMacro`
 """
+import io
 import json
 from pathlib import Path
 from typing import Any, Dict, Optional
@@ -145,21 +146,26 @@ def write_document(doc, path, title: str, colours: Dict[str, Any]) -> Path:
     return Path(path)
 
 
-def write(geometry: Dict[str, Any], result: Dict[str, Any], out_dir, name: str, stamp_date=None, parts: Optional[Dict[str, Any]] = None, level: str = "standard",
-          sector_modules: int = pv_model3d.SECTOR_MODULES) -> Dict[str, Any]:
-    """Writes `<name>_pv_model_3d_freecad.FCMacro` in `out_dir`. Returns {"macro": path, "blocks": n, "instances": n}."""
+def render(geometry: Dict[str, Any], result: Dict[str, Any], name: str, stamp_date=None, parts: Optional[Dict[str, Any]] = None, level: str = "standard",
+           sector_modules: int = pv_model3d.SECTOR_MODULES) -> Dict[str, Any]:
+    """The macro as data: {"file": `<name>_pv_model_3d_freecad.FCMacro`, "bytes": the macro, "blocks": n, "instances": n}. Nothing is written."""
     if not geometry.get("tables"):
         raise DrawingError("err_layout_no_tables")
-    out = Path(out_dir)
-    out.mkdir(parents=True, exist_ok=True)
-    path = out / f"{name}_pv_model_3d_freecad.FCMacro"
     colours = {layer: ACI_RGB.get(aci, (0.6, 0.6, 0.6)) for layer, aci in pv_model3d.LAYERS.items()}
     stats = {"blocks": 0, "instances": 0}
     used: set = set()
-    with open(path, "w", encoding="utf-8", newline="\n") as fh:
-        fh.write(HEADER.format(title=f"{name}_PV".replace('"', ""), colours=json.dumps(colours)))
-        _emit(fh, pv_model3d.build_common(geometry, parts, level), used, stats)
-        for tables in pv_model3d.sectors(geometry, sector_modules):
-            _emit(fh, pv_model3d.build_sector(geometry, tables, parts, level), used, stats)
-        fh.write(FOOTER)
-    return {"macro": path, "blocks": stats["blocks"], "instances": stats["instances"]}
+    fh = io.StringIO()
+    fh.write(HEADER.format(title=f"{name}_PV".replace('"', ""), colours=json.dumps(colours)))
+    _emit(fh, pv_model3d.build_common(geometry, parts, level), used, stats)
+    for tables in pv_model3d.sectors(geometry, sector_modules):
+        _emit(fh, pv_model3d.build_sector(geometry, tables, parts, level), used, stats)
+    fh.write(FOOTER)
+    return {"file": f"{name}_pv_model_3d_freecad.FCMacro", "bytes": fh.getvalue().encode("utf-8"), "blocks": stats["blocks"], "instances": stats["instances"]}
+
+
+def write(geometry: Dict[str, Any], result: Dict[str, Any], out_dir, name: str, stamp_date=None, parts: Optional[Dict[str, Any]] = None, level: str = "standard",
+          sector_modules: int = pv_model3d.SECTOR_MODULES) -> Dict[str, Any]:
+    """Writes `<name>_pv_model_3d_freecad.FCMacro` in `out_dir`. Returns {"macro": path, "blocks": n, "instances": n}."""
+    from epc_draw.pv import files
+    made = render(geometry, result, name, stamp_date, parts, level, sector_modules)
+    return {"macro": files.save(out_dir, {made["file"]: made["bytes"]})[made["file"]], "blocks": made["blocks"], "instances": made["instances"]}

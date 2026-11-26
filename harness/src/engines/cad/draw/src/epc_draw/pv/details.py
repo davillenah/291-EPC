@@ -128,14 +128,17 @@ def build(parts: Dict[str, Any], language: str = "en"):
     return doc
 
 
-def write(parts: Dict[str, Any], out_dir, name: str, language: str = "en", stamp_date=None) -> Optional[Path]:
-    """Writes `<name>_equipment_detail.dxf` under `out_dir`; None when there is nothing to draw."""
+def render(parts: Dict[str, Any], name: str, language: str = "en", stamp_date=None) -> Dict[str, bytes]:
+    """`{<name>_equipment_detail.dxf: bytes}`; empty when there is nothing to draw. Nothing is written."""
     from epc_draw.core import deliverable
     doc = build(parts, language)
     if doc is None:
-        return None
-    out = Path(out_dir)
-    out.mkdir(parents=True, exist_ok=True)
-    path = out / f"{name}_equipment_detail.dxf"
-    deliverable.finish_draft(doc, path, None, stamp_date, f"{name}_equipment_detail")
-    return path
+        return {}
+    return {f"{name}_equipment_detail.dxf": deliverable.finish_draft_bytes(doc, None, stamp_date, f"{name}_equipment_detail")["dxf"]}
+
+
+def write(parts: Dict[str, Any], out_dir, name: str, language: str = "en", stamp_date=None) -> Optional[Path]:
+    """Writes `<name>_equipment_detail.dxf` under `out_dir`; None when there is nothing to draw."""
+    from epc_draw.pv import files
+    saved = files.save(out_dir, render(parts, name, language, stamp_date))
+    return next(iter(saved.values()), None)
