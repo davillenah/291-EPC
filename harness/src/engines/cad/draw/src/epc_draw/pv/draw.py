@@ -15,6 +15,8 @@ class PvDrawInput:
     layout: Optional[Mapping[str, Any]] = None      # ground layout (`epc_pv.plan_layout`)
     roof: Optional[Mapping[str, Any]] = None        # roof placement
     parts: Optional[Mapping[str, Any]] = None       # equipment records for the detail sheet (None: no detail sheet)
+    disk: Optional[Mapping[str, Any]] = None        # irradiation disk data (`epc_pv.disk`, refined by the caller); None: no disk drawing
+    abacus: Optional[Mapping[str, Any]] = None      # shading abacus data (`epc_pv.abacus.compute`); None: no abacus drawing
     language: str = "en"
     stamp_date: Optional[str] = None
 
@@ -43,7 +45,23 @@ def draw_pv(entrada: PvDrawInput, out_dir: Any, name: str) -> Tuple[Dict[str, Pa
         ran.append("pv_roof.write_all")
         if entrada.layout is None:
             detail()
+    charts = _charts(entrada, stem)                 # irradiation disk and shading abacus
+    if charts:
+        from epc_draw.pv import files as pv_files
+        drafts.update({Path(k).stem: v for k, v in pv_files.save(target, charts).items()})
+        ran.append("pv_charts.render")
     return drafts, ran
+
+
+def _charts(entrada: PvDrawInput, stem: str) -> Dict[str, bytes]:
+    """The irradiation disk and the shading abacus, as {file name: DXF bytes}, for the data the input carries."""
+    from epc_draw.pv import abacus as pv_abacus, disk as pv_disk
+    files: Dict[str, bytes] = {}
+    if entrada.disk is not None:
+        files.update(pv_disk.render(dict(entrada.disk), stem, entrada.language, "color", entrada.stamp_date))
+    if entrada.abacus is not None:
+        files.update(pv_abacus.render(dict(entrada.abacus), stem, entrada.language, entrada.stamp_date))
+    return files
 
 
 def render_pv(entrada: PvDrawInput, name: str) -> Dict[str, bytes]:
@@ -64,4 +82,5 @@ def render_pv(entrada: PvDrawInput, name: str) -> Dict[str, bytes]:
         files.update(pv_roof.render_all(copy.deepcopy(dict(entrada.roof)), entrada.result, stem, entrada.language, entrada.stamp_date))
         if entrada.layout is None:
             detail()
+    files.update(_charts(entrada, stem))
     return files

@@ -24,6 +24,24 @@ Units: W, W/m2, degrees (angles), degrees C, V, A, kWh. Each one is in `src/epc_
 | Strings, upper limit | n_series <= min(Vdc_max / Voc_cold, Vmppt_max / Vmp_cold) | `strings.series_range` |
 | Strings, lower limit | n_series >= Vmppt_min / Vmp_hot | `strings.series_range` |
 | Strings per input | <= min(I_max / I_mp, I_sc,max / (I_sc k)) | `strings.layout` |
+| Voltage coefficient of Vmp | V_mp(T) = V_mp,stc (1 + beta_vmp (T - 25)); beta_vmp defaults to beta_voc when not given | `strings.series_range` |
+| Horizon elevation | linear interpolation of the profile points around the circle (azimuth 0..360, wraps) | `shading.horizon_elevation_deg` |
+| Horizon shading | the direct beam is zero when sun elevation < horizon elevation at the sun azimuth | `shading.direct_factor` |
+| Row shadow reach | reach = (l sin b + l cos b tan a' + D tan b) / (tan b + tan a'), tan a' = tan a / cos psi; l slope length, D pitch, a sun elevation, psi = az_sun - az_surface | `shading.row_shaded_fraction` |
+| Row shaded fraction | f = clip((reach - D) / (cos b l), 0, 1) of the slope length; direct factor = 1 - f (1 - 1/n_rows); the front row is never shaded | `shading.row_shaded_fraction` |
+| Shading loss | loss % = (E_unshaded - E_shaded) / E_unshaded 100, over the year, per array | `pipeline._shading_loss_pct` |
+| Near obstacle | the array is sampled on a 4 x 4 grid; each point sends a ray to the sun; sunlit fraction = points whose ray misses every box (slab test) / points | `nearshade.sunlit_fraction` |
+| Tracker, ideal rotation | theta = atan2(cos(el) sin(az_sun - az_axis), sin(el)), el sun elevation | `tracker.rotation_deg` |
+| Tracker, backtracking | theta_bt = theta - sign(theta) acos(min(1, cos theta / gcr)); clipped to +/- max angle | `tracker.rotation_deg` |
+| Tracker surface | tilt and azimuth of the rotated plane from the rotation and the axis azimuth | `tracker.surface` |
+| Degradation | E_n = E_1 (1 - d)^n, n = 0..years-1 (year 1 as computed); total = sum E_n | `lifetime.project` |
+| Irradiation disk | kWh/m2 (b, g) = sum G_poa(b, g) dt over the weather year; pct = 100 kWh/m2 / max over all planes | `disk.compute` |
+| Disk, any plane | bilinear interpolation between the cells; the azimuth wraps at 360 | `disk.pct_at` |
+| Abacus bands | declination edges d_k = d_A - k (23.44 / 2) sign, k = 0..4, from the lowest sun path (A) | `abacus._edges` |
+| Abacus sun position | sin e = sin lat sin d + cos lat cos d cos H; azimuth as in the sun position | `abacus.sun_xy` |
+| Abacus cell | band of d, hour slot ceil(abs(H) / 15), side of the sign of H (afternoon odd, morning even) | `abacus.cell_id` |
+| Abacus weight | share of the annual G_poa of the instants inside the cell | `abacus.weights` |
+| Abacus loss | loss % = sum(weight % x cover), cover = hidden share of the cell by the profile rounded to 0, 0.25, 0.5, 0.75, 1 | `abacus.compute` |
 
 Temperature of a voltage: V(T) = V_stc (1 + beta (T - 25)). Cold is the design minimum air temperature; hot is the hottest cell temperature of the year.
 

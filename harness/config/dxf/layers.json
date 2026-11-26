@@ -1531,6 +1531,112 @@
    },
    "ncs_match": "official_combination"
   },
+  "pv.DISK_FILL": {
+   "name": "291-WP-DISK-FILL",
+   "color": 8,
+   "lineweight": 0.09,
+   "linetype": "CONTINUOUS",
+   "on": true,
+   "frozen": false,
+   "locked": false,
+   "plot": true,
+   "description": {
+    "es": "Relleno por banda de porcentaje del disco de irradiación",
+    "en": "Fill by percentage band of the irradiation disk"
+   },
+   "ncs_match": "official_combination"
+  },
+  "pv.DISK_GRID": {
+   "name": "291-WP-DISK-GRID",
+   "color": 7,
+   "lineweight": 0.13,
+   "transparency_pct": 80,
+   "linetype": "CONTINUOUS",
+   "on": true,
+   "frozen": false,
+   "locked": false,
+   "plot": true,
+   "description": {
+    "es": "Anillos de inclinación, rayos de orientación y contorno del disco de irradiación",
+    "en": "Tilt rings, orientation spokes and outline of the irradiation disk"
+   },
+   "ncs_match": "official_combination"
+  },
+  "pv.DISK_TEXT": {
+   "name": "291-WP-DISK-TEXT",
+   "color": 7,
+   "lineweight": 0.18,
+   "linetype": "CONTINUOUS",
+   "on": true,
+   "frozen": false,
+   "locked": false,
+   "plot": true,
+   "description": {
+    "es": "Rótulos, escala y leyenda del disco de irradiación",
+    "en": "Labels, scale and legend of the irradiation disk"
+   },
+   "ncs_match": "official_combination"
+  },
+  "pv.ABACUS_CELL": {
+   "name": "291-WP-ABAC-CELL",
+   "color": 7,
+   "lineweight": 0.13,
+   "linetype": "CONTINUOUS",
+   "on": true,
+   "frozen": false,
+   "locked": false,
+   "plot": true,
+   "description": {
+    "es": "Celdas A1 a D14 y ejes del ábaco de asoleamiento",
+    "en": "Cells A1 to D14 and axes of the shading abacus"
+   },
+   "ncs_match": "official_combination"
+  },
+  "pv.ABACUS_COVER": {
+   "name": "291-WP-ABAC-COVR",
+   "color": 8,
+   "lineweight": 0.09,
+   "linetype": "CONTINUOUS",
+   "on": true,
+   "frozen": false,
+   "locked": false,
+   "plot": true,
+   "description": {
+    "es": "Relleno de la parte de cada celda tapada por el perfil de obstáculos",
+    "en": "Fill of the part of each cell hidden by the obstacle profile"
+   },
+   "ncs_match": "official_combination"
+  },
+  "pv.ABACUS_PROFILE": {
+   "name": "291-WP-ABAC-PROF",
+   "color": 1,
+   "lineweight": 0.35,
+   "linetype": "CONTINUOUS",
+   "on": true,
+   "frozen": false,
+   "locked": false,
+   "plot": true,
+   "description": {
+    "es": "Perfil de obstáculos sobre el ábaco",
+    "en": "Obstacle profile on the abacus"
+   },
+   "ncs_match": "official_combination"
+  },
+  "pv.ABACUS_TEXT": {
+   "name": "291-WP-ABAC-TEXT",
+   "color": 7,
+   "lineweight": 0.18,
+   "linetype": "CONTINUOUS",
+   "on": true,
+   "frozen": false,
+   "locked": false,
+   "plot": true,
+   "description": {
+    "es": "Rótulos, pesos y leyenda del ábaco",
+    "en": "Labels, weights and legend of the abacus"
+   },
+   "ncs_match": "official_combination"
+  },
   "plan.ELEC-LUX-MAPA": {
    "name": "291-E-LITE-PATT-N",
    "color": 3,

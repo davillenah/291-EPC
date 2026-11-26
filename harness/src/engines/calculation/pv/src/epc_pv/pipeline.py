@@ -8,7 +8,7 @@ import json
 from datetime import datetime, timedelta
 from typing import Any, Dict, List, Optional, Sequence, Union
 
-from epc_pv import config, irradiance, nearshade, power, shading, solar, strings, thermal
+from epc_pv import config, irradiance, lifetime, nearshade, power, shading, solar, strings, thermal, tracker
 from epc_pv.messages import bi, item
 from epc_pv.model import Options, PvError, Result
 
@@ -18,12 +18,17 @@ INVERTER_KEYS = ("pac0_w", "mppt_v_min", "mppt_v_max", "vdc_max_v", "n_mppt", "i
 OPTIONAL_INVERTER_KEYS = ("isc_max_input_a",)      # a data sheet may not give it: the string count then follows the operating current only and the result says so
 
 
-def _document(doc: Union[dict, str, bytes]) -> dict:
+def _parsed(doc: Union[dict, str, bytes]) -> Any:
     if isinstance(doc, (str, bytes)):
         try:
-            doc = json.loads(doc)
+            return json.loads(doc)
         except ValueError as e:
             raise PvError("err_json", detail=str(e)) from e
+    return doc
+
+
+def _document(doc: Union[dict, str, bytes]) -> dict:
+    doc = _parsed(doc)
     if not isinstance(doc, dict):
         raise PvError("err_type", name=bi("the input", "la entrada"), kind=bi("a JSON object", "un objeto JSON"))
     missing = [k for k in ("site", "weather", "arrays") if k not in doc]
@@ -107,12 +112,23 @@ def _assumptions(doc: dict) -> Dict[str, Any]:
     return p
 
 
+def _with_tracker(s: Dict[str, Any], index: int) -> Dict[str, Any]:
+    """The array with its `tracker` block checked (a copy: the caller's document is never changed); a tracker array takes no row or near-obstacle shade."""
+    if "tracker" not in s:
+        return s
+    if "row_shading" in s or "near_obstacles" in s:
+        raise PvError("err_tracker_shade", array=s["id"])
+    return dict(s, tracker=tracker.check(s["tracker"], f"arrays[{index}].tracker"))
+
+
 def _array_spec(spec: Any, index: int) -> Dict[str, Any]:
-    s = _require(spec, ("id", "tilt_deg", "azimuth_deg", "n_modules", "module", "inverter"), f"arrays[{index}]")
+    fixed = ("tilt_deg", "azimuth_deg") if "tracker" not in (spec if isinstance(spec, dict) else {}) else ()        # a tracker array has no fixed plane
+    s = _require(spec, ("id",) + fixed + ("n_modules", "module", "inverter"), f"arrays[{index}]")
     _require(s["module"], MODULE_KEYS, f"arrays[{index}].module")
     _require(s["inverter"], INVERTER_KEYS, f"arrays[{index}].inverter")
-    _number(s, "tilt_deg", f"arrays[{index}]", 0, 90)
-    _number(s, "azimuth_deg", f"arrays[{index}]", 0, 360)
+    for key, high in zip(fixed, (90, 360)):
+        _number(s, key, f"arrays[{index}]", 0, high)
+    s = _with_tracker(s, index)
     _number(s, "n_modules", f"arrays[{index}]", positive=True)
     for k in ("pmax_w", "voc_v", "vmp_v", "isc_a", "imp_a"):
         _number(s["module"], k, f"arrays[{index}].module", positive=True)
@@ -145,12 +161,15 @@ def _shade(spec: Dict[str, Any], index: int) -> Dict[str, Any]:
 def _plane_series(spec: Dict[str, Any], w: Dict[str, Any], inst: List[Dict[str, Any]], site: Dict[str, Any], model: str, p: Dict[str, Any], shade: Optional[Dict[str, Any]] = None) -> Dict[str, List[float]]:
     """Plane-of-array global and effective irradiance and the cell temperature of every instant; the direct beam is reduced by the far horizon and the row shade when they are given
     (`unshaded` is the global irradiance without that shade)."""
-    surface = {"tilt_deg": float(spec["tilt_deg"]), "azimuth_deg": float(spec["azimuth_deg"])}
+    track = spec.get("tracker")
+    surface = {"tilt_deg": float(spec["tilt_deg"]), "azimuth_deg": float(spec["azimuth_deg"])} if not track else {}
     out: Dict[str, List[float]] = {"global": [], "effective": [], "cell": [], "unshaded": []}
     for k in range(w["n"]):
         i = inst[k]
         sky = {"ghi": w["ghi"][k], "dni": w["dni"][k], "dhi": w["dhi"][k]}
         sun = {"zenith_deg": i["apparent"], "azimuth_deg": i["azimuth"], "dni_extra": i["extra"]}
+        if track:
+            surface = dict(zip(("tilt_deg", "azimuth_deg"), tracker.surface(tracker.rotation_deg(90.0 - i["apparent"], i["azimuth"], track), track["axis_azimuth_deg"])))
         poa = irradiance.plane_of_array(model, surface, sun, sky, site["albedo"], p["iam_ashrae_b0"])
         out["unshaded"].append(poa["global"])
         if site["horizon"] or shade:
@@ -227,6 +246,28 @@ def _array_run(spec: Dict[str, Any], index: int, site: Dict[str, Any], w: Dict[s
     return result, notes
 
 
+def _add_lifetime(arrays: List[Dict[str, Any]], totals: Dict[str, Any], life: Dict[str, float]) -> None:
+    """The yearly AC energy over the years of the plant, per array and in total, from the degradation the document gives."""
+    for a in arrays:
+        a["lifetime_ac_kwh"] = lifetime.project(a["ac_kwh"], life)
+    totals["lifetime_ac_kwh"] = lifetime.project(totals["ac_kwh"], life)
+    totals["lifetime_total_ac_kwh"] = round(sum(totals["lifetime_ac_kwh"]), 3)
+
+
+def sky_context(doc: Union[dict, str, bytes]) -> tuple:
+    """(site, weather, parameters) of a document with `site` and `weather` (the arrays may be missing): the shared inputs of the studies that need no plant (the irradiation disk)."""
+    doc = _parsed(doc)
+    if isinstance(doc, dict) and "arrays" not in doc:
+        doc = dict(doc, arrays=[{}])
+    document = _document(doc)
+    return _site(document), _weather(document), _assumptions(document)
+
+
+def instants(site: Dict[str, Any], w: Dict[str, Any], p: Dict[str, Any]) -> List[Dict[str, Any]]:
+    """The sun position and extraterrestrial irradiance of every instant of the weather file."""
+    return _instants(site, w, p["solar_constant_w_m2"])
+
+
 def run(doc: Union[dict, str, bytes], options: Optional[Options] = None) -> Result:
     """The yield and the layout of every array of the document (see `schema/input.schema.json`)."""
     opts = options or Options()
@@ -234,7 +275,9 @@ def run(doc: Union[dict, str, bytes], options: Optional[Options] = None) -> Resu
     site, w, p = _site(document), _weather(document), _assumptions(document)
     specs = [_array_spec(s, i) for i, s in enumerate(document["arrays"])]
     t_min = site["t_min_c"] if site["t_min_c"] is not None else min(w["temp_air_c"])
-    warnings = [item("typical_values"), item("wind_proxy")]
+    warnings = [item("typical_values")]
+    if any("beta_vmp_pct_c" not in s["module"] for s in specs):
+        warnings.append(item("wind_proxy"))
     if site["t_min_c"] is None:
         warnings.append(item("t_min_from_weather", t_min_c=round(t_min, 1)))
     inst = _instants(site, w, p["solar_constant_w_m2"])
@@ -243,4 +286,8 @@ def run(doc: Union[dict, str, bytes], options: Optional[Options] = None) -> Resu
         result, notes = _array_run(spec, index, site, w, inst, p, t_min, opts)
         warnings.extend(notes)
         arrays.append(result)
-    return Result(arrays=arrays, totals=_totals(arrays), warnings=warnings, hours=w["n"])
+    totals = _totals(arrays)
+    life = lifetime.parse(document.get("assumptions"))
+    if life:
+        _add_lifetime(arrays, totals, life)
+    return Result(arrays=arrays, totals=totals, warnings=warnings, hours=w["n"])

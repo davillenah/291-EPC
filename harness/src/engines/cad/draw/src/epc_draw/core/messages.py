@@ -18,6 +18,10 @@ MESSAGES: Dict[str, Dict[str, str]] = {
         "en": "stamp date must be an ISO date or datetime, not {type_name}",
         "es": "la fecha del sello debe ser una fecha o fecha y hora ISO, no {type_name}",
     },
+    "err_disk_palette": {
+        "en": "the palette of the irradiation disk must be one of {choices} (got {value!r})",
+        "es": "la paleta del disco de irradiación debe ser una de {choices} (recibido {value!r})",
+    },
 }
 
 

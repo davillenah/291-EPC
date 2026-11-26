@@ -276,6 +276,24 @@ class PvDrawingsTests(unittest.TestCase):
             self.assertTrue(any(k.endswith("_pv_equipment_detail_sheet") for k in res.outputs["pv_sheets"]))      # the module format of the fixture has a record, so its detail sheet is drawn
             self.assertTrue(any(str(f.get("path", f.get("name", ""))).endswith("_pv_model_3d.dxf") for f in res.outputs["files"]))
 
+    def test_the_disk_and_the_abacus_come_by_themselves_on_their_sheets_and_charts_false_switches_them_off(self):
+        inputs = W.inputs_doc()
+        inputs["pv"] = {"document": PV.doc(), "layout": dict(copy.deepcopy(LAYOUT), front_clearance_m=0.5)}
+        with tempfile.TemporaryDirectory() as tmp:
+            ctx = W.context(engine_inputs=inputs, work_dir=tmp)
+            run(ctx, stop_after=10, run_id="r1")
+            charts = ctx.results[3].outputs["pv"]["charts"]
+            names = {k.rsplit("_pv_", 1)[1] for k in ctx.results[10].outputs["pv_sheets"]}
+        self.assertEqual(set(charts), {"disk", "abacus"})
+        self.assertTrue({"irradiation_disk_sheet", "shading_abacus_sheet"} <= names)
+        inputs["pv"]["charts"] = False
+        with tempfile.TemporaryDirectory() as tmp:
+            ctx = W.context(engine_inputs=inputs, work_dir=tmp)
+            run(ctx, stop_after=10, run_id="r1")
+            names = {k.rsplit("_pv_", 1)[1] for k in ctx.results[10].outputs["pv_sheets"]}
+        self.assertNotIn("charts", ctx.results[3].outputs["pv"])
+        self.assertFalse({"irradiation_disk_sheet", "shading_abacus_sheet"} & names)
+
     def test_the_four_drafts_are_written_from_the_engine_geometry(self):
         import epc_pv
         from epc_drawing import pv_diagrams
@@ -302,7 +320,7 @@ class PvDrawingsTests(unittest.TestCase):
             run(ctx, stop_after=10, run_id="r1")
             res = ctx.results[10]
         self.assertEqual(res.status, "ok")
-        self.assertEqual({k.rsplit("_pv_", 1)[1] for k in res.outputs["pv_sheets"]}, {"roof_layout_sheet", "roof_stringing_sheet", "roof_cabling_sheet", "roof_sld_sheet", "equipment_detail_sheet"})      # the detail sheet of the module record of the outline (PVX-04)
+        self.assertEqual({k.rsplit("_pv_", 1)[1] for k in res.outputs["pv_sheets"]}, {"roof_layout_sheet", "roof_stringing_sheet", "roof_cabling_sheet", "roof_sld_sheet", "equipment_detail_sheet", "irradiation_disk_sheet", "shading_abacus_sheet"})      # the detail sheet of the module record of the outline (PVX-04); the disk and the abacus of the site come by themselves
 
 
 

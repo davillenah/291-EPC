@@ -157,11 +157,14 @@ Schema: `harness/src/engines/calculation/pv/src/epc_pv/schema/input.schema.json`
 | `assumptions.inverter` | object |  |  |  |
 | `assumptions.strings` | object |  |  |  |
 | `assumptions.solar_constant_w_m2` | number |  |  |  |
+| `assumptions.degradation` | object |  |  | Yearly degradation of the energy (compound) over the years of the plant; no default. With it the result carries `lifetime_ac_kwh` per array and in total. |
+| `assumptions.degradation.pct_per_year` | number | yes | minimum 0, maximum 100 |  |
+| `assumptions.degradation.years` | integer | yes | minimum 1, maximum 100 |  |
 | `arrays` | array | yes | minItems 1 |  |
 | `arrays[].id` | string | yes |  |  |
 | `arrays[].name` | string |  |  |  |
-| `arrays[].tilt_deg` | number | yes | minimum 0, maximum 90 |  |
-| `arrays[].azimuth_deg` | number | yes | minimum 0, maximum 360 | From north, clockwise (0 faces north, the sunny side in the southern hemisphere). |
+| `arrays[].tilt_deg` | number |  | minimum 0, maximum 90 |  |
+| `arrays[].azimuth_deg` | number |  | minimum 0, maximum 360 | From north, clockwise (0 faces north, the sunny side in the southern hemisphere). |
 | `arrays[].n_modules` | integer | yes | minimum 1 | Wanted modules; the layout rounds up to whole strings. |
 | `arrays[].n_series` | integer |  | minimum 1 | Modules per string; chosen by the policy when missing. |
 | `arrays[].n_inverters` | integer |  | minimum 1 |  |
@@ -180,8 +183,14 @@ Schema: `harness/src/engines/calculation/pv/src/epc_pv/schema/input.schema.json`
 | `arrays[].near_obstacles.boxes[].width_m` | number | yes | exclusiveMinimum 0 |  |
 | `arrays[].near_obstacles.boxes[].depth_m` | number | yes | exclusiveMinimum 0 |  |
 | `arrays[].near_obstacles.boxes[].height_m` | number | yes | exclusiveMinimum 0 |  |
+| `arrays[].tracker` | object |  |  | Horizontal single-axis tracker instead of a fixed plane (tilt_deg and azimuth_deg are then not needed). Takes no row_shading or near_obstacles. |
+| `arrays[].tracker.axis_azimuth_deg` | number | yes | minimum 0, maximum 360 |  |
+| `arrays[].tracker.max_angle_deg` | number | yes | minimum 1, maximum 90 |  |
+| `arrays[].tracker.backtracking` | boolean |  |  | Default true. |
+| `arrays[].tracker.gcr` | number |  | minimum 0.01, maximum 1 | Ground coverage ratio (module width / row pitch); required with backtracking. |
 | `arrays[].dc_ac_ratio` | number |  | exclusiveMinimum 0 | Used when n_inverters is missing. |
 | `arrays[].module` | object | yes |  |  |
+| `arrays[].module.beta_vmp_pct_c` | number |  |  | Temperature coefficient of the maximum-power voltage (%/C), from the data sheet; when missing the open-circuit one is used. |
 | `arrays[].inverter` | object | yes |  |  |
 
 ### Output

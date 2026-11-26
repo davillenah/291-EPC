@@ -96,6 +96,8 @@ def _set_flags(lay, a: dict) -> None:
     if a["lineweight"] is not None:                 # empty: the layer keeps the standard weight (what drawings had before the catalog)
         lay.dxf.lineweight = int(round(float(a["lineweight"]) * 100))
     lay.on, lay.is_frozen, lay.is_locked = bool(a["on"]), bool(a["frozen"]), bool(a["locked"])
+    if a.get("transparency_pct"):                   # optional: percent of transparency of the whole layer (0 or absent: opaque)
+        lay.transparency = int(a["transparency_pct"]) / 100.0
     lay.description = (a.get("description") or {}).get("en") or lay.description      # in the LAYER table: every layer of a deliverable has one
     if not a["plot"]:
         lay.dxf.plot = 0
@@ -182,11 +184,18 @@ def _name_problems(role: str, a: dict) -> Iterable[str]:
         yield f"{role}.name: required, up to 255 characters, none of {FORBIDDEN_IN_NAME}"
 
 
+def _transparency_problems(role: str, a: dict) -> Iterable[str]:
+    t = a.get("transparency_pct")
+    if t is not None and (not isinstance(t, int) or isinstance(t, bool) or not 0 <= t <= 90):
+        yield f"{role}.transparency_pct: absent or a whole number of percent from 0 to 90"
+
+
 def _look_problems(role: str, a: dict) -> Iterable[str]:
     if not isinstance(a.get("color"), int) or isinstance(a.get("color"), bool) or not 1 <= a["color"] <= 255:
         yield f"{role}.color: a whole number from 1 to 255 (AutoCAD colour index)"
     if a.get("lineweight") is not None and a.get("lineweight") not in LINEWEIGHTS:
         yield f"{role}.lineweight: empty (standard) or one of {', '.join(str(x) for x in LINEWEIGHTS)} mm"
+    yield from _transparency_problems(role, a)
     if a.get("linetype") not in LINETYPES:
         yield f"{role}.linetype: one of {', '.join(LINETYPES)}"
 

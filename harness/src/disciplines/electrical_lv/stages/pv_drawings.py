@@ -14,6 +14,7 @@ ENGINE = "cad/drawing"
 WRITE = "epc_drawing.pv_diagrams.write_all"
 WRITE_ROOF = "epc_drawing.pv_roof.write_all"
 WRITE_DETAIL = "epc_drawing.pv_details.write"
+WRITE_CHARTS = "epc_drawing.pv_charts.render"
 COMPOSE = "epc_drawing.export.plan_sheet.compose"
 
 
@@ -40,10 +41,18 @@ def _drafts(context, target, name, stamp_date, language, calls):
         return {}
     parts = equipment_parts(found[0]) if found is not None else roof_parts(roof[0])
     result = (found or roof)[1]
-    drafts, ran = draw_pv(PvDrawInput(result=result, layout=found[0] if found else None, roof=roof[0] if roof else None, parts=parts, language=language, stamp_date=stamp_date), target, name)
-    records = {"pv_diagrams.write_all": WRITE, "pv_roof.write_all": WRITE_ROOF, "pv_details.write": WRITE_DETAIL}
+    charts = result.get("charts") or {}
+    disk = refine_disk(charts["disk"]) if charts.get("disk") else None
+    drafts, ran = draw_pv(PvDrawInput(result=result, layout=found[0] if found else None, roof=roof[0] if roof else None, parts=parts, disk=disk, abacus=charts.get("abacus"), language=language, stamp_date=stamp_date), target, name)
+    records = {"pv_diagrams.write_all": WRITE, "pv_roof.write_all": WRITE_ROOF, "pv_details.write": WRITE_DETAIL, "pv_charts.render": WRITE_CHARTS}
     calls.extend(EC.record_for("cad/drawing", records[r]) for r in ran)
     return drafts
+
+
+def refine_disk(disk):
+    """The coarse disk of stage 3 on the fine grid the drawing needs (bilinear, `epc_pv.disk.refine`)."""
+    from epc_pv import disk as pv_disk
+    return pv_disk.refine(disk)
 
 
 def roof_parts(roof):

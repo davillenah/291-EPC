@@ -146,7 +146,7 @@ def _routes(pen: Pen, geometry: Dict[str, Any]) -> None:
 
 # ---- single-line diagram (millimetres)
 
-PER_ROW, CELL_W, CELL_H, ROW_STEP = 8, 52.0, 26.0, 62.0
+PER_ROW, CELL_W, CELL_H, ROW_STEP, AC_DROP = 8, 52.0, 26.0, 84.0, 26.0
 
 
 def _sld(geometry: Dict[str, Any], result: Dict[str, Any], language: str):
@@ -194,7 +194,11 @@ def _inverter_cell(pen: Pen, inv: Dict[str, Any], x: float, y: float) -> float:
     pen.text("pv.TEXT", "DC", mid + 4, y + 5, 0.7)
     _symbol(pen, "pv_module", x + 2, y + 14, 0.35)          # the strings that feed this inverter
     _symbol(pen, "dc_disconnect", mid - 6, y + 6, 0.3)       # its DC isolator
-    pen.line("pv.DIAGRAM", (mid, y - CELL_H), (mid, y - CELL_H - 10))
+    _symbol(pen, "pv_combiner_box", mid + 3, y + 14, 0.3)     # the combiner that joins the strings of this inverter (topology only, no rating)
+    _symbol(pen, "fuse", mid - 14, y + 14, 0.25)                # the protection of each string, before the combiner
+    _symbol(pen, "mccb_basic", mid + 3, y - CELL_H - 6, 0.3)  # the AC protection of the inverter output
+    _symbol(pen, "spd_varistor", mid - 14, y - CELL_H - 6, 0.25)  # surge protection on the AC side
+    pen.line("pv.DIAGRAM", (mid, y - CELL_H), (mid, y - CELL_H - AC_DROP))
     return mid
 
 
@@ -210,7 +214,7 @@ def _array_block(pen: Pen, a: Dict[str, Any], inverters: List[Dict[str, Any]], y
         top = y_start - 40 - r * ROW_STEP
         row = inverters[r * PER_ROW:(r + 1) * PER_ROW]
         mids = [_inverter_cell(pen, inv, c * CELL_W, top) for c, inv in enumerate(row)]
-        by = top - CELL_H - 10
+        by = top - CELL_H - AC_DROP
         pen.line("pv.DIAGRAM", (mids[0], by), (width + 10, by))
         pen.text("pv.TEXT", f"AC {r + 1}", mids[0], by - 5, 0.8)
         bus_y.append(by)
