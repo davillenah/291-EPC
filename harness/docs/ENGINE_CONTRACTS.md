@@ -182,6 +182,7 @@ Schema: `harness/src/engines/calculation/pv/src/epc_pv/schema/input.schema.json`
 | `arrays[].near_obstacles.boxes[].height_m` | number | yes | exclusiveMinimum 0 |  |
 | `arrays[].dc_ac_ratio` | number |  | exclusiveMinimum 0 | Used when n_inverters is missing. |
 | `arrays[].module` | object | yes |  |  |
+| `arrays[].module.beta_vmp_pct_c` | number |  |  | Temperature coefficient of the maximum-power voltage (%/C), from the data sheet; when missing the open-circuit one is used. |
 | `arrays[].inverter` | object | yes |  |  |
 
 ### Output

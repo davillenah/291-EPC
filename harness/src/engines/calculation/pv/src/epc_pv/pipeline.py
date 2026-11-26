@@ -234,7 +234,9 @@ def run(doc: Union[dict, str, bytes], options: Optional[Options] = None) -> Resu
     site, w, p = _site(document), _weather(document), _assumptions(document)
     specs = [_array_spec(s, i) for i, s in enumerate(document["arrays"])]
     t_min = site["t_min_c"] if site["t_min_c"] is not None else min(w["temp_air_c"])
-    warnings = [item("typical_values"), item("wind_proxy")]
+    warnings = [item("typical_values")]
+    if any("beta_vmp_pct_c" not in s["module"] for s in specs):
+        warnings.append(item("wind_proxy"))
     if site["t_min_c"] is None:
         warnings.append(item("t_min_from_weather", t_min_c=round(t_min, 1)))
     inst = _instants(site, w, p["solar_constant_w_m2"])
