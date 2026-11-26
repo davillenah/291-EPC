@@ -4,6 +4,7 @@ All notable changes. Format: Keep a Changelog; versions follow `harness/docs/BRA
 
 
 ### Unreleased (one drawing engine)
+- Layers catalog: optional `transparency_pct` (0 to 90) per role, applied to the layer of the DXF; the layer `291-WP-DISK-GRID` of the irradiation disk is at 80 % (owner decision, 2026-11-26).
 - Irradiation disk drawing (2026-11-26): the bands follow the contour (tilt intervals per azimuth ray, exact along the ray) instead of stepped cells; the text roles of the disk and the abacus are black on white (colour 7).
 - Shading abacus of the PV engine (2026-11-26): `epc_pv.abacus` (standard cells A1 to D14, weight of each cell for the plane, part hidden by the obstacle profile, loss) and its DXF drawing `epc_draw.pv.abacus` (a block per cell, grid, profile, legend); four layer roles `pv.ABACUS_*`. `solar.sun_angles` gives declination and hour angle. No golden touched.
 - Irradiation disk of the PV engine (2026-11-26): `epc_pv.disk` (annual irradiation on every tilt and orientation of a site, as a percentage of the best plane) and its DXF drawing `epc_draw.pv.disk` (blocks per 5 % band, grid, legend and best-plane marker; colour or grey palette); three layer roles `pv.DISK_FILL`, `pv.DISK_GRID`, `pv.DISK_TEXT`. No golden touched.
