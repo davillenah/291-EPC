@@ -79,9 +79,12 @@ def _draw_shape(canvas, shape, scale: float, origin: Point) -> None:
     _stroke(canvas, shape, subs, scale)
 
 
-def _shapes(path: Path) -> list:
+def _shapes(source) -> list:
+    """The shapes of an SVG given as a file path or as bytes."""
+    import io
     from svgelements import SVG, Shape, Text
-    return [e for e in SVG.parse(str(path), reify=True).elements() if isinstance(e, Shape) and not isinstance(e, Text)]
+    parsed = SVG.parse(io.BytesIO(source) if isinstance(source, (bytes, bytearray)) else str(source), reify=True)
+    return [e for e in parsed.elements() if isinstance(e, Shape) and not isinstance(e, Text)]
 
 
 def _extent(shapes: list) -> Optional[Tuple[float, float, float, float]]:
@@ -92,8 +95,8 @@ def _extent(shapes: list) -> Optional[Tuple[float, float, float, float]]:
     return min(b[0] for b in boxes), min(b[1] for b in boxes), max(b[2] for b in boxes), max(b[3] for b in boxes)
 
 
-def from_svg(path: Path):
-    """The SVG as a PIL image, or None."""
+def from_svg(path):
+    """The SVG (a file path or its bytes) as a PIL image, or None."""
     try:
         from PIL import Image
         shapes = _shapes(path)
@@ -110,8 +113,38 @@ def from_svg(path: Path):
         return None
 
 
+def data_of(logo) -> Optional[bytes]:
+    """The bytes of a logo given as data: bytes, or `{"data": bytes}`; None for a path or anything else."""
+    if isinstance(logo, (bytes, bytearray)):
+        return bytes(logo)
+    if isinstance(logo, dict) and isinstance(logo.get("data"), (bytes, bytearray)):
+        return bytes(logo["data"])
+    return None
+
+
+def _is_svg(data: bytes) -> bool:
+    return b"<svg" in data[:2048].lower() or data.lstrip()[:5].lower() == b"<?xml"
+
+
+def _from_data(data: bytes):
+    """A logo that arrives as bytes (PNG, JPEG or SVG) as a PIL image, or None."""
+    if _is_svg(data):
+        return from_svg(data)
+    try:
+        import io
+        from PIL import Image
+        with Image.open(io.BytesIO(data)) as im:
+            return im.convert("RGBA")
+    except (OSError, ValueError):
+        return None
+
+
 def image(path) -> Optional[object]:
-    """A logo as a PIL image (RGBA), or None when its file is missing or cannot be read."""
+    """A logo as a PIL image (RGBA), or None when it is missing or cannot be read. `path` is a file path (as before) or the logo as data (bytes or `{"data": bytes}`): a report
+    that is called with the logos as data reads no file (ADR-0043)."""
+    data = data_of(path)
+    if data is not None:
+        return _from_data(data)
     if not path or not Path(path).is_file():
         return None
     suffix = Path(path).suffix.lower()

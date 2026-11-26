@@ -146,7 +146,8 @@ def _footer(rep: dict) -> str:
     return f'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:ftr {NS}>{_para(runs=runs, style="Footer")}</w:ftr>'
 
 
-def render(rep: dict, dst: Path) -> Path:
+def render_bytes(rep: dict, date=None) -> bytes:
+    """The Word document of a report as bytes; nothing is written. `date` (a datetime) is the time of every entry of the file: given, the same report gives the same bytes."""
     images: List[Tuple[str, bytes, str]] = []
     body = _cover(rep, images) if rep.get("cover") else _para(rep.get("title", ""), "Title") + (_para(rep.get("subtitle", ""), "Subtitle") if rep.get("subtitle") else "")
     body += _blocks(rep.get("blocks") or [], images)
@@ -156,16 +157,25 @@ def render(rep: dict, dst: Path) -> Path:
             '<Relationship Id="rIdStyles" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>'
             '<Relationship Id="rIdFooter" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/footer" Target="footer1.xml"/>'
             + "".join(f'<Relationship Id="{rid}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="media/{rid}.{ext}"/>' for rid, _, ext in images) + "</Relationships>")
+    import io
+    files = [("[Content_Types].xml", CONTENT_TYPES), ("_rels/.rels", ROOT_RELS), ("word/document.xml", document), ("word/styles.xml", STYLES),
+             ("word/footer1.xml", _footer(rep)), ("word/_rels/document.xml.rels", rels)] + [(f"word/media/{rid}.{ext}", data) for rid, data, ext in images]
+    out = io.BytesIO()
+    with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as z:
+        for name, content in files:
+            if date is None:
+                z.writestr(name, content)                                                   # the clock is the time of every entry (as `render` always did)
+            else:
+                info = zipfile.ZipInfo(name, date_time=(date.year, date.month, date.day, date.hour, date.minute, date.second))
+                info.compress_type = zipfile.ZIP_DEFLATED
+                z.writestr(info, content)
+    return out.getvalue()
+
+
+def render(rep: dict, dst: Path) -> Path:
+    """The Word document written to `dst` (a thin caller of `render_bytes`)."""
     Path(dst).parent.mkdir(parents=True, exist_ok=True)
-    with zipfile.ZipFile(dst, "w", zipfile.ZIP_DEFLATED) as z:
-        z.writestr("[Content_Types].xml", CONTENT_TYPES)
-        z.writestr("_rels/.rels", ROOT_RELS)
-        z.writestr("word/document.xml", document)
-        z.writestr("word/styles.xml", STYLES)
-        z.writestr("word/footer1.xml", _footer(rep))
-        z.writestr("word/_rels/document.xml.rels", rels)
-        for rid, data, ext in images:
-            z.writestr(f"word/media/{rid}.{ext}", data)
+    Path(dst).write_bytes(render_bytes(rep))
     return Path(dst)
 
 

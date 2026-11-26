@@ -69,6 +69,11 @@ def _logo_size(path: str, box_w: float, box_h: float):
     return w * scale, h * scale
 
 
+def logo_data(logo):
+    from epc_report.core import logo as _logo
+    return _logo.data_of(logo)
+
+
 def cover_ops(cover: dict, rep: dict) -> list:
     """The first page of a report: the logos of the issuer and of the client, the title, the document and its data (`cover` = {"logos": [path, path], "rows": [[label, value]]})."""
     ops = [("line", M, 120, W - M, 120, 0.8, "#c8cdd5")]
@@ -76,7 +81,7 @@ def cover_ops(cover: dict, rep: dict) -> list:
         size = _logo_size(path, 150, 60) if path else None
         if size:
             x = M if k == 0 else W - M - size[0]
-            ops.append(("image", x, 120 - 12 - size[1], size[0], size[1], str(path)))
+            ops.append(("image", x, 120 - 12 - size[1], size[0], size[1], path if logo_data(path) is not None else str(path)))
     ops.append(("text", M, 300, rep.get("title", ""), 26, "bold", "#111111", "left"))
     ops.append(("text", M, 330, rep.get("subtitle", ""), 15, "bold", "#1f4e8c", "left"))
     ops.append(("line", M, 345, W - M, 345, 1.4, "#1f4e8c"))
@@ -282,7 +287,9 @@ def figure_png(b: dict, width_pt: float = 480.0):
     return out.getvalue(), w, h
 
 
-def render(rep: dict, dst: Path) -> Path:
+def render_bytes(rep: dict, date=None) -> bytes:
+    """The PDF of a report as bytes; nothing is written. `date` (a datetime) is the creation date of the file: given, the same report always gives the same bytes; without it the clock is used (as `render` did)."""
+    import io
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
@@ -290,8 +297,11 @@ def render(rep: dict, dst: Path) -> Path:
     from matplotlib import patches
 
     pages = layout(rep)
-    Path(dst).parent.mkdir(parents=True, exist_ok=True)
-    with PdfPages(str(dst), metadata={"Title": f"{rep.get('title', '')} {rep.get('subtitle', '')}".strip()}) as pdf:
+    metadata = {"Title": f"{rep.get('title', '')} {rep.get('subtitle', '')}".strip()}
+    if date is not None:
+        metadata.update({"CreationDate": date, "ModDate": date})
+    out = io.BytesIO()
+    with PdfPages(out, metadata=metadata) as pdf:
         for page in pages:
             fig = plt.figure(figsize=(W / 72, H / 72))
             try:
@@ -304,6 +314,13 @@ def render(rep: dict, dst: Path) -> Path:
                 pdf.savefig(fig, facecolor="white")
             finally:
                 plt.close(fig)
+    return out.getvalue()
+
+
+def render(rep: dict, dst: Path) -> Path:
+    """The PDF of a report written to `dst` (a thin caller of `render_bytes`; the engine itself writes nothing)."""
+    Path(dst).parent.mkdir(parents=True, exist_ok=True)
+    Path(dst).write_bytes(render_bytes(rep))
     return Path(dst)
 
 

@@ -34,3 +34,47 @@ class TestBytes(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestCalledAsAFunction(unittest.TestCase):
+    """ADR-0043: a report is called with all its data and answers bytes; with a date given the clock is not read."""
+    DATE = __import__("datetime").datetime(2026, 11, 26, 12, 0, 0)
+
+    @staticmethod
+    def _png_bytes():
+        import io
+        from PIL import Image
+        out = io.BytesIO()
+        Image.new("RGB", (200, 80), (200, 30, 30)).save(out, format="PNG")
+        return out.getvalue()
+
+    def _report(self, logos):
+        return {**REPORT, "cover": {"logos": logos, "rows": [["Proyecto", "Demo"]]}}
+
+    def test_same_bytes_with_a_date_and_without_patching_the_clock(self):
+        report = self._report([self._png_bytes(), None])
+        for module in (report_pdf, report_docx):
+            first, second = module.render_bytes(report, date=self.DATE), module.render_bytes(report, date=self.DATE)
+            self.assertEqual(first, second, module.__name__)
+            self.assertTrue(first)
+
+    def test_a_logo_as_data_gives_the_same_report_as_the_file(self):
+        with tempfile.TemporaryDirectory() as d:
+            logo = Path(d) / "l.png"
+            logo.write_bytes(self._png_bytes())
+            for module in (report_pdf, report_docx):
+                from_file = module.render_bytes(self._report([str(logo), None]), date=self.DATE)
+                from_data = module.render_bytes(self._report([self._png_bytes(), None]), date=self.DATE)
+                self.assertEqual(from_file, from_data, module.__name__)
+                self.assertEqual(from_data, module.render_bytes(self._report([{"data": self._png_bytes()}, None]), date=self.DATE), module.__name__)
+
+    def test_a_logo_as_svg_data_is_drawn_and_an_unreadable_one_is_left_out(self):
+        svg = b'<svg xmlns="http://www.w3.org/2000/svg" width="40" height="20"><rect width="40" height="20" fill="#1f4e8c"/></svg>'
+        self.assertTrue(report_pdf.render_bytes(self._report([svg]), date=self.DATE).startswith(b"%PDF"))
+        self.assertTrue(report_pdf.render_bytes(self._report([b"not an image"]), date=self.DATE).startswith(b"%PDF"))
+
+    def test_render_writes_what_render_bytes_returns(self):
+        with tempfile.TemporaryDirectory() as d, mock.patch.object(time, "time", return_value=1700000000.0), mock.patch.dict(os.environ, {"SOURCE_DATE_EPOCH": "1700000000"}):
+            dst = Path(d) / "r.docx"
+            report_docx.render(REPORT, dst)
+            self.assertEqual(dst.read_bytes(), report_docx.render_bytes(REPORT))
