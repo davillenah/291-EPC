@@ -30,6 +30,10 @@ MESSAGES: Dict[str, Dict[str, str]] = {
         "en": "Array {array}: the shade is computed (far horizon and row to row, direct beam only): {loss} % of the yearly plane-of-array energy; the typical shading loss is not added.",
         "es": "Arreglo {array}: la sombra se calcula (horizonte lejano y fila a fila, solo haz directo): {loss} % de la energía anual en el plano del módulo; no se suma la pérdida típica de sombras.",
     },
+    "err_tracker_shade": {
+        "en": "Array {array}: a tracker array takes no `row_shading` or `near_obstacles` (backtracking handles the rows); remove them.",
+        "es": "Arreglo {array}: un arreglo con seguidor no admite `row_shading` ni `near_obstacles` (el backtracking resuelve las filas); quitarlos.",
+    },
     "gap_hours": {
         "en": "The weather file has {n} hours with the sun above the horizon and no irradiance.",
         "es": "El archivo de clima tiene {n} horas con el sol sobre el horizonte y sin irradiancia.",
