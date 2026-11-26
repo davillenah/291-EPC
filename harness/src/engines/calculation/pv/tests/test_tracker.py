@@ -39,7 +39,8 @@ class TestRotation(unittest.TestCase):
 
     def test_bad_blocks_are_errors_in_both_languages(self):
         for bad in ("x", {"axis_azimuth_deg": 0}, {"axis_azimuth_deg": 400, "max_angle_deg": 60, "backtracking": False},
-                    {"axis_azimuth_deg": 0, "max_angle_deg": 60}, {"axis_azimuth_deg": 0, "max_angle_deg": 60, "gcr": 2}):
+                    {"axis_azimuth_deg": 0, "max_angle_deg": 60}, {"axis_azimuth_deg": 0, "max_angle_deg": 60, "gcr": 2},
+                    {"axis_azimuth_deg": "north", "max_angle_deg": 60, "backtracking": False}):
             with self.assertRaises(PvError) as ctx:
                 tracker.check(bad, "arrays[0].tracker")
             self.assertTrue(ctx.exception.en and ctx.exception.es)
