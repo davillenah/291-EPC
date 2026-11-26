@@ -13,7 +13,7 @@ REPORT = {"title": "Informe de Estado", "subtitle": "STATUS-01", "footer": "Proy
 
 class TestReportPdf(unittest.TestCase):
     def render(self, rep):
-        from epc_drawing.export.report_pdf import render
+        from epc_report.core.report_pdf import render
         self.tmp = tempfile.TemporaryDirectory()
         out = Path(self.tmp.name) / "r.pdf"
         render(rep, out)
@@ -46,7 +46,7 @@ class TestRenderMany(unittest.TestCase):
     def test_the_processes_write_the_same_files_in_the_same_order(self):
         import os
         from unittest import mock
-        from epc_drawing.export.report_pdf import render, render_many
+        from epc_report.core.report_pdf import render, render_many
         reports = [{**REPORT, "subtitle": f"DOC-{n}"} for n in range(3)]
         with tempfile.TemporaryDirectory() as t, mock.patch.dict(os.environ, {"SOURCE_DATE_EPOCH": "1768435200"}):
             one = [render(r, Path(t) / f"one{n}.pdf") for n, r in enumerate(reports)]
@@ -66,7 +66,7 @@ class TestFigure(unittest.TestCase):
                          {"s": "text", "x": 20, "y": 90, "text": "Aula", "size": 9}]}
 
     def test_a_figure_is_scaled_to_the_page_and_drawn_with_its_shapes_and_caption(self):
-        from epc_drawing.export.report_pdf import layout
+        from epc_report.core.report_pdf import layout
         pages = layout({"title": "T", "blocks": [self.FIGURE]})
         kinds = [op[0] for op in pages[0]]
         for kind in ("poly", "circle", "rect", "line", "text"):
@@ -78,7 +78,7 @@ class TestFigure(unittest.TestCase):
         self.assertTrue(any(op[0] == "text" and op[3] == "Plano" for op in pages[0]))                  # the heading is part of the figure
 
     def test_a_tall_figure_is_limited_in_height_and_a_figure_that_does_not_fit_starts_a_page(self):
-        from epc_drawing.export.report_pdf import layout
+        from epc_report.core.report_pdf import layout
         tall = {**self.FIGURE, "bounds": [0, 0, 100, 1000], "max_height": 200}
         pages = layout({"title": "T", "blocks": [tall]})
         self.assertLessEqual(max(op[4] for op in pages[0] if op[0] == "rect" and op[5] == "#fbfbfd"), 200.0001)
@@ -87,7 +87,7 @@ class TestFigure(unittest.TestCase):
 
     def test_it_renders_to_a_pdf_with_the_caption(self):
         self.tmp = tempfile.TemporaryDirectory()
-        from epc_drawing.export.report_pdf import render
+        from epc_report.core.report_pdf import render
         out = Path(self.tmp.name) / "f.pdf"
         render({"title": "Memoria", "blocks": [self.FIGURE]}, out)
         import pypdfium2 as pdfium

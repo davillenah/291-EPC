@@ -4,7 +4,7 @@ import unittest
 import zipfile
 from pathlib import Path
 
-from epc_drawing.export import logo, report_docx, report_pdf
+from epc_report.core import logo, report_docx, report_pdf
 
 SVG = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 50" width="100" height="50">
 <rect x="0" y="0" width="100" height="50" fill="#ff0000"/>

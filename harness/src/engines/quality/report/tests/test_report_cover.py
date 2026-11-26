@@ -4,7 +4,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from epc_drawing.export import report_pdf
+from epc_report.core import report_pdf
 
 
 def _png(path: Path) -> None:

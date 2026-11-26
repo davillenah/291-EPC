@@ -5,7 +5,7 @@ import zipfile
 from pathlib import Path
 from xml.etree import ElementTree as ET
 
-from epc_drawing.export import report_docx
+from epc_report.core import report_docx
 
 W = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
 REPORT = {"title": "Estudio de cortocircuito", "subtitle": "P-1-ELE-005", "footer": "Demo · P-1", "page_label": "Página {n} de {total}",

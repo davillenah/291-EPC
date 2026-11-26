@@ -4,6 +4,7 @@ All notable changes. Format: Keep a Changelog; versions follow `harness/docs/BRA
 
 
 ### Unreleased (one drawing engine)
+- One report engine, step 1 (2026-11-26, ADR-0043 proposed, BACKLOG REP-01): `epc_report` (`engines/quality/report`) with `epc_report.core` holding the PDF, Word and Excel writers moved from `epc_drawing.export` (`report_pdf`, `report_docx`, `logo`, `tables_xlsx`, `transmittal_pdf`); the old names are doors (same module objects); same bytes with a fixed clock.
 - PV run (2026-11-26): the irradiation disk and the shading abacus come by themselves (stage 3 `outputs.pv.charts`, `charts: false` switches them off), each on its IRAM sheet with title block and in the transmittal; `PvDrawInput` takes `disk` and `abacus`. The PV single-line draws per inverter the string fuse, the combiner box, the AC breaker and the surge protector as blocks (topology only, no rating).
 - Layers catalog: optional `transparency_pct` (0 to 90) per role, applied to the layer of the DXF; the layer `291-WP-DISK-GRID` of the irradiation disk is at 80 % (owner decision, 2026-11-26).
 - Irradiation disk drawing (2026-11-26): the bands follow the contour (tilt intervals per azimuth ray, exact along the ray) instead of stepped cells; the text roles of the disk and the abacus are black on white (colour 7).

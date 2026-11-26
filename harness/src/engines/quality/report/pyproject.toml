@@ -1,0 +1,13 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "epc-report"
+version = "0.1.0"
+description = "EPC-291 one report engine: the kernel (PDF, DOCX and XLSX writers, cover, logos) and one function per kind of report (ADR-0043, proposed)"
+requires-python = ">=3.10"
+dependencies = ["matplotlib", "numpy", "openpyxl>=3.1", "pillow", "svgelements"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
