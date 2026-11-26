@@ -75,6 +75,10 @@ class TestNearObstacles(unittest.TestCase):
         self.assertEqual(high, 1.0)
         self.assertLess(low, 1.0)
 
+    def test_a_box_off_to_the_side_of_a_sun_in_the_plane_north_south_shades_nothing(self):
+        beside = {"x_m": 30.0, "y_m": 6.0, "width_m": 2.0, "depth_m": 20.0, "height_m": 30.0}      # sun due north: its ray never moves east or west
+        self.assertEqual(nearshade.sunlit_fraction(self.points(), [beside], 30, 0), 1.0)
+
     def test_the_sun_below_the_horizon_shades_nothing(self):
         self.assertEqual(nearshade.sunlit_fraction(self.points(), [{"x_m": 0, "y_m": 6, "width_m": 5, "depth_m": 5, "height_m": 9}], -5, 0), 1.0)
 
