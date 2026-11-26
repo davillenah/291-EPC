@@ -76,5 +76,32 @@ class TestPvDisk(unittest.TestCase):
         self.assertEqual(disk.rgb(95, "color", 25), (150, 0, 0))
 
 
+class TestRuns(unittest.TestCase):
+    def test_a_ray_that_falls_from_100_to_0_crosses_each_band_once_at_its_exact_tilt(self):
+        tilts, values = [0.0, 10.0], [100.0, 0.0]
+        self.assertEqual(disk._runs(tilts, values, 45, 50), [(5.0, 5.5)])
+        self.assertEqual(disk._runs(tilts, values, 95, 101), [(0.0, 0.5)])
+
+    def test_pieces_over_several_nodes_are_joined(self):
+        runs = disk._runs([0.0, 10.0, 20.0], [60.0, 62.0, 64.0], 60, 65)
+        self.assertEqual(runs, [(0.0, 20.0)])
+
+    def test_a_flat_ray_is_in_one_band_or_none(self):
+        self.assertEqual(disk._runs([0.0, 10.0], [47.0, 47.0], 45, 50), [(0.0, 10.0)])
+        self.assertEqual(disk._runs([0.0, 10.0], [47.0, 47.0], 50, 55), [])
+
+    def test_a_ray_that_dips_and_returns_gives_two_runs(self):
+        self.assertEqual(len(disk._runs([0.0, 10.0, 20.0], [70.0, 40.0, 70.0], 60, 80)), 2)
+
+    def test_the_first_ring_is_a_fan_and_the_others_quads(self):
+        self.assertEqual(len(disk._ray_polygon(0.0, 10.0, 0.0, 2.0)), 3)
+        self.assertEqual(len(disk._ray_polygon(10.0, 20.0, 0.0, 2.0)), 4)
+
+    def test_the_bands_cover_the_whole_ray_without_overlap(self):
+        tilts, values = [0.0, 30.0, 60.0, 90.0], [100.0, 80.0, 52.0, 18.0]
+        length = sum(tb - ta for band in range(15, 100, 5) for ta, tb in disk._runs(tilts, values, band, 101.0 if band == 95 else band + 5))
+        self.assertAlmostEqual(length, 90.0)
+
+
 if __name__ == "__main__":
     unittest.main()

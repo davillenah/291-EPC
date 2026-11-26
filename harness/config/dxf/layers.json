@@ -1563,7 +1563,7 @@
   },
   "pv.DISK_TEXT": {
    "name": "291-WP-DISK-TEXT",
-   "color": 3,
+   "color": 7,
    "lineweight": 0.18,
    "linetype": "CONTINUOUS",
    "on": true,
@@ -1623,7 +1623,7 @@
   },
   "pv.ABACUS_TEXT": {
    "name": "291-WP-ABAC-TEXT",
-   "color": 3,
+   "color": 7,
    "lineweight": 0.18,
    "linetype": "CONTINUOUS",
    "on": true,
