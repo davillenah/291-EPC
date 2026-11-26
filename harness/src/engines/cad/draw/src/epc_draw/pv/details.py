@@ -10,6 +10,7 @@ from typing import Any, Dict, List, Optional, Tuple
 
 from epc_draw.pv import parts as pv_parts
 from epc_draw.pv.diagrams import Pen, _layers, _new_doc
+from epc_draw.pv.files import framed as _framed
 
 TEXT = {
     "title": {"en": "PV EQUIPMENT DETAIL", "es": "DETALLE DEL EQUIPAMIENTO FOTOVOLTAICO"},
@@ -134,7 +135,7 @@ def render(parts: Dict[str, Any], name: str, language: str = "en", stamp_date=No
     doc = build(parts, language)
     if doc is None:
         return {}
-    return {f"{name}_equipment_detail.dxf": deliverable.finish_draft_bytes(doc, None, stamp_date, f"{name}_equipment_detail")["dxf"]}
+    return {f"{name}_equipment_detail.dxf": deliverable.finish_draft_bytes(_framed(doc), None, stamp_date, f"{name}_equipment_detail")["dxf"]}
 
 
 def write(parts: Dict[str, Any], out_dir, name: str, language: str = "en", stamp_date=None) -> Optional[Path]:
