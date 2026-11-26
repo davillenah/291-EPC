@@ -1531,6 +1531,51 @@
    },
    "ncs_match": "official_combination"
   },
+  "pv.DISK_FILL": {
+   "name": "291-WP-DISK-FILL",
+   "color": 8,
+   "lineweight": 0.09,
+   "linetype": "CONTINUOUS",
+   "on": true,
+   "frozen": false,
+   "locked": false,
+   "plot": true,
+   "description": {
+    "es": "Relleno por banda de porcentaje del disco de irradiación",
+    "en": "Fill by percentage band of the irradiation disk"
+   },
+   "ncs_match": "official_combination"
+  },
+  "pv.DISK_GRID": {
+   "name": "291-WP-DISK-GRID",
+   "color": 7,
+   "lineweight": 0.13,
+   "linetype": "CONTINUOUS",
+   "on": true,
+   "frozen": false,
+   "locked": false,
+   "plot": true,
+   "description": {
+    "es": "Anillos de inclinación, rayos de orientación y contorno del disco de irradiación",
+    "en": "Tilt rings, orientation spokes and outline of the irradiation disk"
+   },
+   "ncs_match": "official_combination"
+  },
+  "pv.DISK_TEXT": {
+   "name": "291-WP-DISK-TEXT",
+   "color": 3,
+   "lineweight": 0.18,
+   "linetype": "CONTINUOUS",
+   "on": true,
+   "frozen": false,
+   "locked": false,
+   "plot": true,
+   "description": {
+    "es": "Rótulos, escala y leyenda del disco de irradiación",
+    "en": "Labels, scale and legend of the irradiation disk"
+   },
+   "ncs_match": "official_combination"
+  },
   "plan.ELEC-LUX-MAPA": {
    "name": "291-E-LITE-PATT-N",
    "color": 3,
