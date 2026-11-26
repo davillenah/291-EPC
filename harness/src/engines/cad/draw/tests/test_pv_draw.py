@@ -33,6 +33,18 @@ class TestDrawPv(unittest.TestCase):
         with mock.patch.object(pv_roof, "write_all", return_value={}), mock.patch.object(pv_details, "write", return_value=None):
             self.assertEqual(draw_pv(entrada, "out", "P"), ({}, ["pv_roof.write_all"]))
 
+    def test_the_disk_and_the_abacus_are_drawn_when_the_input_carries_them(self):
+        import tempfile
+        from test_pv_disk import sample
+        abacus = {"latitude_deg": -34.6, "cells": [{"id": "A1", "band": 1, "declination_deg": -23.4, "hour_angle_deg": 0.0, "outline": [[0, 30], [10, 30], [10, 40], [0, 40]], "cover": 0.5, "weight_pct": 1.0}],
+                  "profile": [[-90, 5], [0, 12], [90, 5]], "loss_pct": 0.5, "tilt_deg": 30.0, "azimuth_deg": 0.0}
+        entrada = PvDrawInput(result={}, disk=sample(), abacus=abacus, stamp_date="2026-03-04")
+        from epc_draw.pv.draw import render_pv
+        self.assertEqual(sorted(render_pv(entrada, "P")), ["P_pv_irradiation_disk.dxf", "P_pv_shading_abacus.dxf"])
+        with tempfile.TemporaryDirectory() as tmp:
+            drafts, ran = draw_pv(entrada, tmp, "P")
+        self.assertEqual((sorted(drafts), ran), (["P_pv_irradiation_disk", "P_pv_shading_abacus"], ["pv_charts.render"]))
+
     def test_the_input_is_frozen_and_checked(self):
         with self.assertRaises(Exception):
             PvDrawInput(result={}).language = "es"
