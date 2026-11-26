@@ -3,7 +3,6 @@
 It is the graphic method of the solar resource studies: a polar chart whose radius is the tilt and whose angle is the orientation (azimuth from north, clockwise). Each cell is the sum over the weather
 year of the plane-of-array global irradiance (the same transposition the yield uses), divided by the largest cell. A pure function of the input: same input, same numbers.
 """
-import json
 from typing import Any, Dict, List, Optional, Union
 
 from epc_pv import irradiance, pipeline
@@ -21,16 +20,6 @@ def _steps(tilt_step_deg: float, azimuth_step_deg: float) -> None:
 
 def _daylight(inst: List[Dict[str, Any]], w: Dict[str, Any]) -> List[int]:
     return [k for k in range(w["n"]) if inst[k]["apparent"] < 90.0 and (w["ghi"][k] > 0.0 or w["dni"][k] > 0.0)]
-
-
-def _document(doc: Union[dict, str, bytes]) -> Any:
-    """The document as a dict; a disk needs no arrays, so an empty one is added for the shared validation."""
-    if isinstance(doc, (str, bytes)):
-        try:
-            doc = json.loads(doc)
-        except ValueError as e:
-            raise PvError("err_json", detail=str(e)) from e
-    return dict(doc, arrays=[{}]) if isinstance(doc, dict) and "arrays" not in doc else doc
 
 
 def _annual_kwh_m2(surface: Dict[str, float], hours: List[int], inst: List[Dict[str, Any]], ctx: Dict[str, Any]) -> float:
@@ -59,7 +48,7 @@ def compute(doc: Union[dict, str, bytes], options: Optional[Options] = None, til
 
     The document needs `site` and `weather` (see `schema/input.schema.json`); arrays are not needed."""
     _steps(tilt_step_deg, azimuth_step_deg)
-    site, w, p = pipeline.sky_context(_document(doc))
+    site, w, p = pipeline.sky_context(doc)
     inst = pipeline.instants(site, w, p)
     ctx = {"site": site, "weather": w, "params": p, "model": (options or Options()).transposition}
     tilts = [float(t) for t in range(0, 91, int(tilt_step_deg))]

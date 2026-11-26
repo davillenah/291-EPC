@@ -35,6 +35,13 @@ Units: W, W/m2, degrees (angles), degrees C, V, A, kWh. Each one is in `src/epc_
 | Tracker, backtracking | theta_bt = theta - sign(theta) acos(min(1, cos theta / gcr)); clipped to +/- max angle | `tracker.rotation_deg` |
 | Tracker surface | tilt and azimuth of the rotated plane from the rotation and the axis azimuth | `tracker.surface` |
 | Degradation | E_n = E_1 (1 - d)^n, n = 0..years-1 (year 1 as computed); total = sum E_n | `lifetime.project` |
+| Irradiation disk | kWh/m2 (b, g) = sum G_poa(b, g) dt over the weather year; pct = 100 kWh/m2 / max over all planes | `disk.compute` |
+| Disk, any plane | bilinear interpolation between the cells; the azimuth wraps at 360 | `disk.pct_at` |
+| Abacus bands | declination edges d_k = d_A - k (23.44 / 2) sign, k = 0..4, from the lowest sun path (A) | `abacus._edges` |
+| Abacus sun position | sin e = sin lat sin d + cos lat cos d cos H; azimuth as in the sun position | `abacus.sun_xy` |
+| Abacus cell | band of d, hour slot ceil(abs(H) / 15), side of the sign of H (afternoon odd, morning even) | `abacus.cell_id` |
+| Abacus weight | share of the annual G_poa of the instants inside the cell | `abacus.weights` |
+| Abacus loss | loss % = sum(weight % x cover), cover = hidden share of the cell by the profile rounded to 0, 0.25, 0.5, 0.75, 1 | `abacus.compute` |
 
 Temperature of a voltage: V(T) = V_stc (1 + beta (T - 25)). Cold is the design minimum air temperature; hot is the hottest cell temperature of the year.
 

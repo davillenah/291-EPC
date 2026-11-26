@@ -18,12 +18,17 @@ INVERTER_KEYS = ("pac0_w", "mppt_v_min", "mppt_v_max", "vdc_max_v", "n_mppt", "i
 OPTIONAL_INVERTER_KEYS = ("isc_max_input_a",)      # a data sheet may not give it: the string count then follows the operating current only and the result says so
 
 
-def _document(doc: Union[dict, str, bytes]) -> dict:
+def _parsed(doc: Union[dict, str, bytes]) -> Any:
     if isinstance(doc, (str, bytes)):
         try:
-            doc = json.loads(doc)
+            return json.loads(doc)
         except ValueError as e:
             raise PvError("err_json", detail=str(e)) from e
+    return doc
+
+
+def _document(doc: Union[dict, str, bytes]) -> dict:
+    doc = _parsed(doc)
     if not isinstance(doc, dict):
         raise PvError("err_type", name=bi("the input", "la entrada"), kind=bi("a JSON object", "un objeto JSON"))
     missing = [k for k in ("site", "weather", "arrays") if k not in doc]
@@ -250,7 +255,10 @@ def _add_lifetime(arrays: List[Dict[str, Any]], totals: Dict[str, Any], life: Di
 
 
 def sky_context(doc: Union[dict, str, bytes]) -> tuple:
-    """(site, weather, parameters) of a document with `site`, `weather` and a non-empty `arrays` list: the shared inputs of the studies that need no plant (the irradiation disk)."""
+    """(site, weather, parameters) of a document with `site` and `weather` (the arrays may be missing): the shared inputs of the studies that need no plant (the irradiation disk)."""
+    doc = _parsed(doc)
+    if isinstance(doc, dict) and "arrays" not in doc:
+        doc = dict(doc, arrays=[{}])
     document = _document(doc)
     return _site(document), _weather(document), _assumptions(document)
 
