@@ -1,7 +1,10 @@
 """The PV drawings as bytes (ADR-0042): `render_pv` writes nothing, gives what `draw_pv` writes, and gives the same bytes on four threads."""
+import io
 import json
 import tempfile
 import unittest
+
+import ezdxf
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
@@ -28,6 +31,13 @@ class TestPvBytes(unittest.TestCase):
         with ThreadPoolExecutor(4) as pool:
             for got in pool.map(lambda _: render_pv(entrada(), "PVT"), range(4)):
                 self.assertEqual(got, once)
+
+    def test_every_2d_drawing_has_its_viewport_on_the_viewport_layer(self):
+        for file_name, data in render_pv(entrada(), "PVT").items():
+            doc = ezdxf.read(io.StringIO(data.decode()))
+            self.assertIn("0-Viewport", doc.layers, file_name)
+            self.assertNotIn("sheet.viewport", doc.layers, file_name)
+            self.assertTrue([e for e in doc.layout("Layout1") if e.dxf.layer == "0-Viewport"], file_name)
 
     def test_it_takes_a_pv_draw_input(self):
         with self.assertRaises(TypeError):

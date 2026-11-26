@@ -11,6 +11,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Tuple
 
 from epc_draw.pv.diagrams import PALETTE, Pen, _layers, _new_doc, _t
+from epc_draw.pv.files import framed as _framed
 
 TEXT = {
     "roof_layout": {"en": "PV ROOF LAYOUT", "es": "IMPLANTACIÓN FOTOVOLTAICA EN CUBIERTA"},
@@ -185,7 +186,7 @@ def render_all(roof: Dict[str, Any], result: Dict[str, Any], name: str, language
     """{`<name>_roof_layout.dxf`, `_roof_stringing.dxf`, `_roof_cabling.dxf`, `_roof_sld.dxf`: bytes}. Nothing is written."""
     from epc_draw.core import deliverable
     docs = {"roof_layout": _layout(roof, result, language), "roof_stringing": _stringing(roof, result, language), "roof_cabling": _cabling(roof, result, language), "roof_sld": _sld(roof, result, language)}
-    return {f"{name}_{key}.dxf": deliverable.finish_draft_bytes(doc, None, stamp_date, f"{name}_{key}")["dxf"] for key, doc in docs.items()}
+    return {f"{name}_{key}.dxf": deliverable.finish_draft_bytes(_framed(doc), None, stamp_date, f"{name}_{key}")["dxf"] for key, doc in docs.items()}
 
 
 def write_all(roof: Dict[str, Any], result: Dict[str, Any], out_dir, name: str, language: str = "en", stamp_date=None) -> Dict[str, Path]:
