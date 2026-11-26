@@ -1,0 +1,139 @@
+{
+ "schema_version": "1.0",
+ "engine": "draw",
+ "topic": "plan_params",
+ "records": [
+  {
+   "id": "plan.params.geometry.snap_tolerance_m",
+   "kind": "constant",
+   "title": {
+    "es": "Tolerancia de unión de nodos",
+    "en": "Node snap tolerance"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "m",
+   "applies_to": "",
+   "provenance": "design-default",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/cad/draw/src/epc_draw/plan/params.json",
+    "pointer": "/geometry/snap_tolerance_m"
+   },
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "algorithm setting, not a norm"
+   ],
+   "note": "0.15 m; design default."
+  },
+  {
+   "id": "plan.params.coordination.story_height_m",
+   "kind": "constant",
+   "title": {
+    "es": "Altura de entrepiso por defecto",
+    "en": "Default story height"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "m",
+   "applies_to": "vertical coordination between levels",
+   "provenance": "design-default",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/cad/draw/src/epc_draw/plan/params.json",
+    "pointer": "/coordination/story_height_m"
+   },
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no source; project dependent"
+   ],
+   "note": "3.0 m; confirm as default."
+  },
+  {
+   "id": "plan.params.dxf.text_height_m",
+   "kind": "constant",
+   "title": {
+    "es": "Altura de texto DXF",
+    "en": "DXF text height"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "m (plan units)",
+   "applies_to": "",
+   "provenance": "design-default",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/cad/draw/src/epc_draw/plan/params.json",
+    "pointer": "/dxf/text_height_m"
+   },
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "0.15 m in plan units (was 0.25 m: labels ran into each other); no scale link, no IRAM 4503 text height cited"
+   ],
+   "note": "Plan-unit text height; design default."
+  },
+  {
+   "id": "plan.params.style",
+   "kind": "constant",
+   "title": {
+    "es": "Estilo gráfico: ancho de línea y tamaño de fuente",
+    "en": "Graphic style: line width and font size"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "mm",
+   "applies_to": "",
+   "provenance": "design-default",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "json",
+    "file": "harness/src/engines/cad/draw/src/epc_draw/plan/params.json",
+    "pointer": "/style"
+   },
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "0.25 mm line and 2.0 mm font; no IRAM 4502/4503 reference; sheet pens are in titleblock"
+   ],
+   "note": "Compare with IRAM 4502 line groups and 4503 text heights."
+  }
+ ]
+}

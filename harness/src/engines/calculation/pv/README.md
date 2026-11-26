@@ -32,8 +32,26 @@ Nothing (standard library). `pvlib` is used only by the developer tool `tests/va
 
 ## Known limits
 - **The values are typical and not confirmed** (`data/params.json`): losses, thermal model, inverter curve, incidence modifier, short-circuit factor. The result says so in `warnings`; do not size or sell a plant with it until the owner confirms them on the norms page.
-- The sun is evaluated at the timestamp of each value (an hourly mean is not centred); no shading by the horizon or between rows, no bifacial gain, no tracker, no soiling by season, no degradation by year, no battery.
+- The sun is evaluated at the timestamp of each value (an hourly mean is not centred); no bifacial gain, no soiling by season, no battery.
 - Diffuse and ground light are not reduced by the incidence modifier. The Perez transposition model is not included.
-- The coefficient of the maximum-power voltage is taken equal to that of the open-circuit voltage (the data sheet value should replace it).
+- The coefficient of the maximum-power voltage is the module's `beta_vmp_pct_c` (data sheet) when given; otherwise it is taken equal to that of the open-circuit voltage and the result says so (`wind_proxy`).
 - DC cables, protections and the connection to the low-voltage board are not calculated here (next step, with `epc_aea90364`).
 - The formulas are in `docs/formulas.md`.
+
+## Shading (2026-11-26)
+
+`epc_pv.shading` computes the shade of the direct beam from geometry, with no norm value: the far horizon (`site.horizon`: points `{azimuth_deg, elevation_deg}`, joined by straight lines around the circle, azimuth clockwise from north; the sun below the profile gives no direct beam) and the shade of one row on the next (`arrays[].row_shading`: `slope_m`, `pitch_m`, `n_rows`; the sun is taken in the plane normal to the rows, the front row is never shaded, the share of a row shaded is the share of its direct beam lost). Only the direct part is reduced; the diffuse and ground parts stay. When either is given, the typical `losses_pct.shading` is not added to that array (no double count) and the array result carries `shading_loss_pct` (yearly plane-of-array energy lost) with the warning `shading_computed`. Without them nothing changes. Near obstacles (`arrays[].near_obstacles`, `epc_pv.nearshade`): the array as a tilted rectangle and the obstacles as boxes on the ground, in a local frame (x east, y north, metres); the sun ray is cast from a grid of 16 points of the array and the share of points in the sun multiplies the direct beam (with the rows and the horizon). Not covered: obstacles that are not boxes, electrical mismatch by shaded cells (the loss is proportional to the area), diffuse-sky obstruction.
+
+## Tracker (2026-11-26)
+
+`arrays[].tracker` (`axis_azimuth_deg`, `max_angle_deg`, `backtracking` default true, `gcr` with backtracking) replaces the fixed plane with a horizontal single-axis tracker: `epc_pv.tracker` gives the rotation angle of every instant (ideal angle in the plane normal to the axis, backtracking from the ground coverage ratio, clipped to the maximum angle) and the plane it gives, and the irradiance is computed on that plane instant by instant. `tilt_deg` and `azimuth_deg` are not needed. A tracker array takes no `row_shading` or `near_obstacles` (error `err_tracker_shade`). The layout, strings and drawings are not changed by the tracker (the 3D tracker structure is not modelled). Checked with closed-form cases (sun over the axis, east and west symmetry, clipping, backtracking); there is no pvlib reference for it in this environment.
+
+## Life of the plant (2026-11-26)
+
+`assumptions.degradation` (`{"pct_per_year": 0.5, "years": 25}`, no default: the value comes from the module data sheet or from the owner) adds `lifetime_ac_kwh` (year 1 is the run, each later year keeps `1 - degradation` of the year before, compound) to every array and to the totals, with `lifetime_total_ac_kwh`. Without the block nothing changes. `epc_pv.lifetime`.
+
+## Irradiation disk (2026-11-26)
+`epc_pv.disk.compute(doc)` gives the annual irradiation on every fixed plane of a site (tilt 0 to 90, azimuth 0 to 360 from north, clockwise) and its percentage of the best plane: the polar "disk" of the solar resource studies. Same transposition and sun position as the yield; the document needs `site` and `weather` only. `pct_at` reads any tilt and azimuth by bilinear interpolation, `refine` gives a finer grid for drawing. The drawing is `epc_draw.pv.disk.render` (DXF blocks, colour or grey palette). Formula: `kwh_m2 = sum(G_poa) dt`, `pct = 100 kwh_m2 / max(kwh_m2)`.
+
+## Shading abacus (2026-11-26)
+`epc_pv.abacus.compute(doc, tilt_deg, azimuth_deg)` gives the standard shading abacus of a site: the sun paths of the year cut into the cells A1 to D14 (four bands of equal declination, A the lowest sun; seven solar hours on each side of noon, odd numbers in the afternoon and even in the morning), the share of the annual irradiation of each cell for the plane (`weights`, the engine transposition) and the part of each cell the profile `site.horizon` hides (0, 0.25, 0.5, 0.75 or 1). The loss is the sum of weight times hidden part. It is a visual check: the ray-cast shading of the yield stays the source of the numbers (it reduces the direct beam only; the abacus method hides the whole irradiation of a cell, so the two losses are of the same order but not equal). The drawing is `epc_draw.pv.abacus.render` (DXF blocks).

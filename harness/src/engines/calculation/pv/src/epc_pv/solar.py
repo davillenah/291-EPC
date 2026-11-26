@@ -33,6 +33,13 @@ def _declination_and_eot(jd: float) -> Tuple[float, float]:
     return decl, eot
 
 
+def sun_angles(day: date, minutes_utc: float, longitude_deg: float) -> Tuple[float, float]:
+    """(declination, hour angle) in degrees of an instant; the hour angle is 0 at solar noon and grows in the afternoon (-180 to 180)."""
+    decl, eot = _declination_and_eot(julian_day(day, minutes_utc))
+    solar_minutes = (minutes_utc + eot + 4.0 * longitude_deg) % 1440.0
+    return math.degrees(decl), solar_minutes / 4.0 - 180.0
+
+
 def refraction_deg(elevation_deg: float) -> float:
     """Atmospheric refraction (degrees) at a true elevation, NOAA approximation."""
     if elevation_deg > 85.0:

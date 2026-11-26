@@ -13,10 +13,10 @@ import ezdxf
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import characterization as C  # noqa: E402
-from epc_drawing import pv_model3d  # noqa: E402
+from epc_draw.pv import model3d as pv_model3d  # noqa: E402
 
 NAME = re.compile(r"^(291-[A-Z]{1,2}(-[A-Z]{4}){1,3}(-[A-Z0-9])?|0-[A-Za-z]+(-[A-Za-z0-9]+)?)$")
-PLANT = json.loads((HERE / "fixtures" / "pv_plant.json").read_text(encoding="utf-8"))
+PLANT = json.loads((HERE.parent.parent / "draw" / "tests" / "fixtures" / "pv_plant.json").read_text(encoding="utf-8"))
 
 
 def problems(doc):

@@ -13,8 +13,8 @@ ENGINES = REPO / "harness" / "src" / "engines"
 PATTERN = re.compile(r"291_E_LV_SLD_IEC60617_|\blibrary_dir\(")
 # the generators keep the library folder for the catalogue rows and for a library given by path (SYM-02 pending: the rest of the SLD and MLD symbol handling)
 ALLOWED = {
-    "harness/src/engines/cad/mld/src/epc_mld/mld_generator.py",
-    "harness/src/engines/cad/sld/src/epc_sld/sld_generator.py",
+    "harness/src/engines/cad/draw/src/epc_draw/mld/mld_generator.py",
+    "harness/src/engines/cad/draw/src/epc_draw/sld/sld_generator.py",
 }
 
 
@@ -22,7 +22,7 @@ def offenders():
     found = set()
     for path in sorted(ENGINES.glob("*/*/src/epc_*/**/*.py")):
         rel = path.relative_to(REPO).as_posix()
-        if "/src/epc_symbols/" in rel or "/tests/" in rel:
+        if "/src/epc_draw/symbols/" in rel or "/tests/" in rel:
             continue
         if PATTERN.search(path.read_text(encoding="utf-8-sig")):
             found.add(rel)

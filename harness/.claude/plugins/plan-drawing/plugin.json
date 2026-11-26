@@ -10,10 +10,7 @@
   "jurisdiction": [
     "AR"
   ],
-  "requires": {
-    "dxf-output": "^0.1.0",
-    "iec-symbols": "^0.4.19"
-  },
+  "requires": {},
   "consumes": [
     "PlanDrawing"
   ],
@@ -36,7 +33,9 @@
     "requires": [
       "ezdxf",
       "lxml",
+      "matplotlib",
       "numpy",
+      "openpyxl",
       "pillow",
       "pypdfium2",
       "shapely",
@@ -49,10 +48,23 @@
     "plan"
   ],
   "engine": [
+    "aea90364",
     "arch",
+    "calc_common",
+    "draw",
+    "drawing",
     "dxf",
+    "feeder_sizing",
+    "grounding",
+    "load_balance",
+    "mld",
     "plan",
+    "pv",
+    "selectivity",
+    "short_circuit",
+    "sld",
     "symbols",
-    "titleblock"
+    "titleblock",
+    "voltage_drop"
   ]
 }

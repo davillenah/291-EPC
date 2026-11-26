@@ -20,8 +20,9 @@ def series_range(module: Dict[str, float], inverter: Dict[str, float], t_min_c: 
     """Smallest and largest number of modules in series the inverter accepts (s_min can exceed s_max: no layout)."""
     beta = module["beta_voc_pct_c"] / 100.0
     voc_cold = module["voc_v"] * (1.0 + beta * (t_min_c - 25.0))
-    vmp_cold = module["vmp_v"] * (1.0 + beta * (t_min_c - 25.0))
-    vmp_hot = module["vmp_v"] * (1.0 + beta * (t_cell_max_c - 25.0))
+    beta_vmp = module.get("beta_vmp_pct_c", module["beta_voc_pct_c"]) / 100.0        # the data sheet value when given, else the open-circuit one (warning `wind_proxy`)
+    vmp_cold = module["vmp_v"] * (1.0 + beta_vmp * (t_min_c - 25.0))
+    vmp_hot = module["vmp_v"] * (1.0 + beta_vmp * (t_cell_max_c - 25.0))
     s_max = min(math.floor(inverter["vdc_max_v"] / voc_cold), math.floor(inverter["mppt_v_max"] / vmp_cold))
     s_min = max(1, math.ceil(inverter["mppt_v_min"] / vmp_hot))
     return {"s_min": int(s_min), "s_max": int(s_max)}

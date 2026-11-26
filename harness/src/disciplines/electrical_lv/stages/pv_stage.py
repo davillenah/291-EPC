@@ -40,7 +40,7 @@ from disciplines.electrical_lv.stages.base import Stage, StageInputError, reason
 ENGINE = "calculation/pv"
 FUNCTION = "epc_pv.run"
 LAYOUT_FUNCTION = "epc_pv.plan_layout"
-KEYS = ("document", "options", "layout", "weather_file", "roof", "flat_roof", "roof_dxf", "economics")
+KEYS = ("document", "options", "layout", "weather_file", "roof", "flat_roof", "roof_dxf", "economics", "charts")
 NOT_PROVIDED = "pv inputs not provided"
 
 
@@ -404,6 +404,35 @@ def _trim_to_site(section, result, proposal):
     return section, _run(section)
 
 
+def _fixed_plane(section):
+    """(tilt, azimuth) of the first fixed array of the document, or None (tracker, no array, or a document still as text)."""
+    document = section["document"]
+    for array in (document.get("arrays") or []) if isinstance(document, dict) else []:
+        if "tilt_deg" in array and "azimuth_deg" in array:
+            return float(array["tilt_deg"]), float(array["azimuth_deg"])
+    return None
+
+
+def charts_of(section, result):
+    """({"disk": ..., "abacus": ...}, engine calls): the irradiation disk of the site (coarse grid; the drawing refines it) and the shading abacus of the first fixed plane. `charts: false` in the section switches them off;
+    a site the sky model cannot read (no weather) gives none, and the rest of the run goes on."""
+    import epc_pv
+    from epc_pv import abacus, disk
+    if section.get("charts") is False:
+        return {}, []
+    out, calls = {}, []
+    try:
+        out["disk"] = disk.compute(section["document"], epc_pv.Options(**(section.get("options") or {})))
+        calls.append(EC.record_for(ENGINE, "epc_pv.disk.compute"))
+        plane = _fixed_plane(section)
+        if plane is not None:
+            out["abacus"] = abacus.compute(section["document"], plane[0], plane[1], epc_pv.Options(**(section.get("options") or {})))
+            calls.append(EC.record_for(ENGINE, "epc_pv.abacus.compute"))
+    except epc_pv.PvError:
+        return {}, []
+    return out, calls
+
+
 def economic_summary(result, economics):
     """The saving the client's own price gives: yearly and monthly kWh times `energy_price`; the simple payback when the client gave its investment."""
     if not economics:
@@ -509,6 +538,8 @@ class PvStage(Stage):
         findings += [warning_finding(len(findings) + n, context.pipeline_run_id, self.spec.slug, w) for n, w in enumerate(warnings, start=1)]
         totals, counts = result["totals"], result["counts"]
         result = dict(result, technical_feasibility=technical_summary(result, section.get("economics")))
+        charts, chart_calls = charts_of(section, result)
+        result, calls = dict(result, charts=charts) if charts else result, calls + chart_calls
         context.engine_cache[PF.CACHE_KEY] = result
         return self.result("ok", outputs=result, findings=findings, engine_calls=calls,
                            message=f"{counts['arrays']} array(s), {counts['inverters']} inverter(s), {counts['modules']} module(s), "

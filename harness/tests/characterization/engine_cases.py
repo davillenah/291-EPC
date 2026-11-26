@@ -260,11 +260,11 @@ def more_engines():
         out["epc_rules"].update({"query": attempt(lambda: [r["id"] for r in rs.query(topic="trays")]), "param": attempt(rs.param, "tray.reserve", "reserve_min_pct"),
                                  "lookup": attempt(rs.lookup, "t1", size=2.5),
                                  "check": attempt(rs.check, {"reserve_pct": 10, "diagonal": True}, installation_type="dwellings")})
-    plan_dir = REPO / "harness" / "src" / "engines" / "cad" / "plan" / "tests" / "fixtures" / "plan"
+    plan_dir = REPO / "harness" / "src" / "engines" / "cad" / "draw" / "tests" / "fixtures" / "plan"
     from epc_plan import core
-    arch_tests = REPO / "harness" / "src" / "engines" / "cad" / "arch" / "tests"
+    arch_tests = REPO / "harness" / "src" / "engines" / "cad" / "draw" / "tests"
     sys.path.insert(0, str(arch_tests))
-    import helpers
+    import arch_helpers as helpers
     from epc_arch import recognize
     out["epc_arch"] = {"flat": attempt(lambda: recognize(helpers.room_dxf(), "flat.dxf").as_dict()),
                        "flat_in_millimetres": attempt(lambda: recognize(helpers.room_dxf(unit=1000.0, insunits=4), "flat.dxf").as_dict()),
@@ -278,7 +278,7 @@ def more_engines():
 STAGES = {"intake": ["epc_calc_common"], "requirements_inputs": ["epc_design_basis"], "loads_demand": ["epc_load_balance", "epc_calc_common"],
           "supply_transformer": ["epc_transformer_sizing", "epc_short_circuit"], "board_structure": ["epc_load_balance"],
           "cable_sizing": ["epc_feeder_sizing", "epc_voltage_drop", "epc_aea90364"], "selectivity": ["epc_selectivity"], "earthing": ["epc_grounding"],
-          "calc_check": ["epc_calc_check", "epc_rules"], "drawings": ["epc_sld", "epc_mld", "epc_dxf", "epc_symbols", "epc_titleblock", "epc_drawing"],
+          "calc_check": ["epc_calc_check", "epc_rules"], "drawings": ["epc_sld", "epc_mld", "epc_dxf", "epc_draw", "epc_symbols", "epc_titleblock", "epc_drawing"],
           "documents": ["epc_documents", "epc_boq", "epc_datasheets", "epc_rfq", "epc_terminal_blocks", "epc_descriptive_report", "epc_design_basis"],
           "package_issue": ["epc_documents"]}
 

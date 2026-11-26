@@ -5,12 +5,9 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "epc-titleblock"
 version = "0.1.0"
-description = "EPC-291 IRAM A0-A4 sheets with the IRAM 4504/4508 title block, custom company/client blocks and logos"
+description = "Door to the IRAM sheets and title blocks that moved into epc_draw.titleblock (ADR-0042)"
 requires-python = ">=3.10"
-dependencies = ["epc-dxf"]
+dependencies = ["epc-draw"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
-
-[tool.setuptools.package-data]
-epc_titleblock = ["assets/*"]

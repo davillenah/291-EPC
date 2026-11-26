@@ -1,12 +1,33 @@
-"""Multi-line diagram data and templates (generator pending)."""
-__version__ = "0.1.0"
+"""The multi-line diagram generator moved into `epc_draw.mld` (ADR-0042). This package is a door: `epc_mld` and every `epc_mld.<module>` are the same objects as `epc_draw.mld` and `epc_draw.mld.<module>`."""
+import importlib
+import importlib.abc
+import importlib.util
+import sys
 
-__all__ = ["Generator", "MldInput", "Sheet", "chain_of", "draw", "generate", "library_dir", "main", "nxt", "pole_id", "poles_of"]
+from epc_draw import mld as _symbols
+
+__version__ = "0.1.0"
+__all__ = list(_symbols.__all__)
+
+
+class _Door(importlib.abc.MetaPathFinder, importlib.abc.Loader):
+    """`import epc_mld.<name>` gives the module `epc_draw.mld.<name>` itself (one copy, so classes and settings are shared)."""
+
+    def find_spec(self, name, path=None, target=None):
+        if name.startswith("epc_mld."):
+            return importlib.util.spec_from_loader(name, self)
+        return None
+
+    def create_module(self, spec):
+        return importlib.import_module("epc_draw.mld." + spec.name.split(".", 1)[1])
+
+    def exec_module(self, module):
+        return None
+
+
+if not any(isinstance(f, _Door) and f.__class__.__module__ == __name__ for f in sys.meta_path):
+    sys.meta_path.insert(0, _Door())
 
 
 def __getattr__(name):
-    """The public names load on first use (PEP 562), so importing the package stays as cheap as it was."""
-    if name in __all__:
-        from epc_mld import api
-        return getattr(api, name)
-    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+    return getattr(_symbols, name)

@@ -45,68 +45,6 @@ Schema: `harness/src/engines/bim/walls/src/epc_walls/schema/input.schema.json` (
 | `walls[].join_off.a` | boolean |  |  |  |
 | `walls[].join_off.b` | boolean |  |  |  |
 
-## epc_plan
-
-### Input
-
-Schema: `harness/src/engines/cad/plan/src/epc_plan/schema/input.schema.json` (plan drawing (input))
-
-| Field | Type | Required | Limits | Notes |
-|---|---|---|---|---|
-| `schema_version` | `1.0` | yes |  |  |
-| `plan` | object | yes |  |  |
-| `plan.id` | string |  |  |  |
-| `plan.level` | string |  | pattern ^L(0\|[1-9][0-9]*\|-[1-9][0-9]*)$ | L0 ground, L1.. up, L-1.. down |
-| `plan.scale` | object | yes |  |  |
-| `plan.scale.p1` | array | yes | minItems 2, maxItems 2 |  |
-| `plan.scale.p2` | array | yes | minItems 2, maxItems 2 |  |
-| `plan.scale.distance_m` | number | yes | exclusiveMinimum 0 |  |
-| `plan.origin` | array |  | minItems 2, maxItems 2 | the point 0,0 the person set, in view units |
-| `discipline` | string | yes |  |  |
-| `dxf_version` | string |  |  |  |
-| `outlet` | string |  |  | id of the node where a network drains to |
-| `outlet_invert_m` | number |  |  |  |
-| `circuits` | array |  |  | circuits to route from an origin node to a destination node over the drawn stretches |
-| `circuits[].tag` | string | yes |  |  |
-| `circuits[].from` | string | yes |  |  |
-| `circuits[].to` | string | yes |  |  |
-| `circuits[].via` | array |  |  |  |
-| `circuits[].ternas` | integer |  | minimum 1 |  |
-| `nodes` | array |  |  |  |
-| `nodes[].id` | string | yes |  |  |
-| `nodes[].kind` | string | yes |  |  |
-| `nodes[].x` | number | yes |  |  |
-| `nodes[].y` | number | yes |  |  |
-| `nodes[].tag` | string |  |  |  |
-| `nodes[].circuit` | string |  |  | circuit of the board a load belongs to |
-| `nodes[].board` | string |  |  | id of the board (made in Engineering) a board symbol stands for, or a load is fed from |
-| `nodes[].attrs` | object |  |  |  |
-| `lines` | array |  |  |  |
-| `lines[].id` | string | yes |  |  |
-| `lines[].kind` | string | yes |  |  |
-| `lines[].points` | array | yes | minItems 2 |  |
-| `lines[].tag` | string |  |  |  |
-| `lines[].circuit` | string |  |  | tag of the circuit in the board: the line references it, it never creates it |
-| `lines[].attrs` | object |  |  |  |
-
-### Output
-
-Schema: `harness/src/engines/cad/plan/src/epc_plan/schema/output.schema.json` (plan result (output))
-
-| Field | Type | Required | Limits | Notes |
-|---|---|---|---|---|
-| `schema_version` | `1.0` | yes |  |  |
-| `plan` | object | yes |  |  |
-| `discipline` | string | yes |  |  |
-| `nodes` | array | yes |  |  |
-| `stretches` | array | yes |  |  |
-| `schedule` | object | yes |  |  |
-| `circuits` | object | yes |  | route of each circuit: found, stretches, length_m (with the height of the plenums it goes through), plenums, rise_m, ternas, cable_length_m |
-| `network` | object or null | yes |  |  |
-| `rules_used` | array | yes |  |  |
-| `warnings` | array | yes |  |  |
-| `files` | object |  |  |  |
-
 ## epc_hvac
 
 ### Input
@@ -200,6 +138,9 @@ Schema: `harness/src/engines/calculation/pv/src/epc_pv/schema/input.schema.json`
 | `site.longitude_deg` | number | yes | minimum -180, maximum 180 | East positive. |
 | `site.albedo` | number | yes | minimum 0, maximum 1 |  |
 | `site.design_t_min_c` | number |  |  | Coldest air temperature for the voltage check; when missing, the coldest hour of the weather file. |
+| `site.horizon` | array |  | minItems 1 | Far horizon profile (hills, buildings): points joined by straight lines around the circle, azimuth clockwise from north. The sun below it gives no direct beam; with it the typical shading loss is not added. |
+| `site.horizon[].azimuth_deg` | number | yes | minimum 0, maximum 360 |  |
+| `site.horizon[].elevation_deg` | number | yes | minimum 0, maximum 90 |  |
 | `weather` | object | yes |  |  |
 | `weather.start` | string | yes |  | Local time of the first value, ISO without offset (2023-01-01T00:00). |
 | `weather.utc_offset_h` | number | yes | minimum -14, maximum 14 |  |
@@ -216,16 +157,40 @@ Schema: `harness/src/engines/calculation/pv/src/epc_pv/schema/input.schema.json`
 | `assumptions.inverter` | object |  |  |  |
 | `assumptions.strings` | object |  |  |  |
 | `assumptions.solar_constant_w_m2` | number |  |  |  |
+| `assumptions.degradation` | object |  |  | Yearly degradation of the energy (compound) over the years of the plant; no default. With it the result carries `lifetime_ac_kwh` per array and in total. |
+| `assumptions.degradation.pct_per_year` | number | yes | minimum 0, maximum 100 |  |
+| `assumptions.degradation.years` | integer | yes | minimum 1, maximum 100 |  |
 | `arrays` | array | yes | minItems 1 |  |
 | `arrays[].id` | string | yes |  |  |
 | `arrays[].name` | string |  |  |  |
-| `arrays[].tilt_deg` | number | yes | minimum 0, maximum 90 |  |
-| `arrays[].azimuth_deg` | number | yes | minimum 0, maximum 360 | From north, clockwise (0 faces north, the sunny side in the southern hemisphere). |
+| `arrays[].tilt_deg` | number |  | minimum 0, maximum 90 |  |
+| `arrays[].azimuth_deg` | number |  | minimum 0, maximum 360 | From north, clockwise (0 faces north, the sunny side in the southern hemisphere). |
 | `arrays[].n_modules` | integer | yes | minimum 1 | Wanted modules; the layout rounds up to whole strings. |
 | `arrays[].n_series` | integer |  | minimum 1 | Modules per string; chosen by the policy when missing. |
 | `arrays[].n_inverters` | integer |  | minimum 1 |  |
+| `arrays[].row_shading` | object |  |  | Row-to-row shade of tilted rows with the same azimuth; with it the typical shading loss is not added. |
+| `arrays[].row_shading.slope_m` | number | yes | exclusiveMinimum 0 | Slope length of a row of tables (m). |
+| `arrays[].row_shading.pitch_m` | number | yes | exclusiveMinimum 0 | Horizontal distance between the front edges of two rows (m). |
+| `arrays[].row_shading.n_rows` | integer | yes | minimum 1 |  |
+| `arrays[].near_obstacles` | object |  |  | Shade of near obstacles on the modules, by casting the sun ray from points of the array; with it the typical shading loss is not added. |
+| `arrays[].near_obstacles.array` | object | yes |  | The array as a tilted rectangle centred on the origin of the local frame (x east, y north): width along the lower edge, slope length, height of the lowest edge above the ground (m). |
+| `arrays[].near_obstacles.array.width_m` | number | yes | exclusiveMinimum 0 |  |
+| `arrays[].near_obstacles.array.slope_m` | number | yes | exclusiveMinimum 0 |  |
+| `arrays[].near_obstacles.array.base_height_m` | number | yes | minimum 0 |  |
+| `arrays[].near_obstacles.boxes` | array | yes |  | Near obstacles as boxes on the ground (centre, east-west width, north-south depth, height; m). |
+| `arrays[].near_obstacles.boxes[].x_m` | number | yes |  |  |
+| `arrays[].near_obstacles.boxes[].y_m` | number | yes |  |  |
+| `arrays[].near_obstacles.boxes[].width_m` | number | yes | exclusiveMinimum 0 |  |
+| `arrays[].near_obstacles.boxes[].depth_m` | number | yes | exclusiveMinimum 0 |  |
+| `arrays[].near_obstacles.boxes[].height_m` | number | yes | exclusiveMinimum 0 |  |
+| `arrays[].tracker` | object |  |  | Horizontal single-axis tracker instead of a fixed plane (tilt_deg and azimuth_deg are then not needed). Takes no row_shading or near_obstacles. |
+| `arrays[].tracker.axis_azimuth_deg` | number | yes | minimum 0, maximum 360 |  |
+| `arrays[].tracker.max_angle_deg` | number | yes | minimum 1, maximum 90 |  |
+| `arrays[].tracker.backtracking` | boolean |  |  | Default true. |
+| `arrays[].tracker.gcr` | number |  | minimum 0.01, maximum 1 | Ground coverage ratio (module width / row pitch); required with backtracking. |
 | `arrays[].dc_ac_ratio` | number |  | exclusiveMinimum 0 | Used when n_inverters is missing. |
 | `arrays[].module` | object | yes |  |  |
+| `arrays[].module.beta_vmp_pct_c` | number |  |  | Temperature coefficient of the maximum-power voltage (%/C), from the data sheet; when missing the open-circuit one is used. |
 | `arrays[].inverter` | object | yes |  |  |
 
 ### Output
@@ -584,9 +549,11 @@ Schema: `harness/src/engines/quality/terminal_blocks/src/epc_terminal_blocks/sch
 These engines do not yet validate their input against a schema at the entry point (OPT-09):
 
 - `epc_arch`
+- `epc_draw`
 - `epc_drawing`
 - `epc_dxf`
 - `epc_mld`
+- `epc_plan`
 - `epc_sld`
 - `epc_symbols`
 - `epc_titleblock`

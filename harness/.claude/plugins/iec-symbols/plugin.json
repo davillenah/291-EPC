@@ -26,7 +26,18 @@
   ],
   "entitlement": "feature.drawing.electrical",
   "python": {
-    "requires": [],
+    "requires": [
+      "ezdxf",
+      "lxml",
+      "matplotlib",
+      "numpy",
+      "openpyxl",
+      "pillow",
+      "pypdfium2",
+      "shapely",
+      "svgelements",
+      "vtracer"
+    ],
     "optional": true,
     "note": "only for the tools/ build scripts"
   },
@@ -36,7 +47,24 @@
     "source": "291_E_IEC60617_Symbols_Generator"
   },
   "engine": [
-    "symbols"
+    "aea90364",
+    "arch",
+    "calc_common",
+    "draw",
+    "drawing",
+    "dxf",
+    "feeder_sizing",
+    "grounding",
+    "load_balance",
+    "mld",
+    "plan",
+    "pv",
+    "selectivity",
+    "short_circuit",
+    "sld",
+    "symbols",
+    "titleblock",
+    "voltage_drop"
   ],
   "owns": [
     "symbols"

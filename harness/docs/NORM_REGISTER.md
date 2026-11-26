@@ -306,14 +306,6 @@ Archivo: `harness/src/engines/calculation/aea90364/src/epc_aea90364/norm_registe
 | `aea90364.table.771-16-ix` | AEA 90364-7-771 (2006) | 771.16.IX | PDF 121 | `aea_tables.json#/factores_correccion/771.16.IX` | - | norm | medium | pending | no printed page in data (PDF page only) |
 | `aea90364.table.771-16-x` | AEA 90364-7-771 (2006) | 771.16.X | PDF 121 | `aea_tables.json#/factores_correccion/771.16.X` | - | norm | medium | pending | no printed page in data (PDF page only) |
 
-## arch / sheet_iram
-
-Archivo: `harness/src/engines/cad/arch/src/epc_arch/norm_register/sheet_iram.json` (1 registros)
-
-| id | norma | cláusula | página | valor / ubicación | unidad | procedencia | confianza | estado | problemas |
-|---|---|---|---|---|---|---|---|---|---|
-| `arch.code.gap` | - | - | - | `5.0` | mm | design-default | low | pending | duplicates drawing plan_sheet.GAP (5.0): duplicates a value defined elsewhere (ADR-0012 single source); no clause |
-
 ## datasheets / params
 
 Archivo: `harness/src/engines/procurement/datasheets/src/epc_datasheets/norm_register/params.json` (4 registros)
@@ -325,6 +317,80 @@ Archivo: `harness/src/engines/procurement/datasheets/src/epc_datasheets/norm_reg
 | `datasheets.params.catalog_siemens_breakers` | - | - | - | `breakers.json#/products` | A, kA, V | convention | low | pending | no clause: manufacturer catalog (unverified); every product has status unverified and a source URL to check |
 | `datasheets.params.catalog_prysmian_cables` | - | - | - | `cables.json#/products` | - | convention | low | pending | no clause: manufacturer catalog (unverified); every product has status unverified and a source URL to check |
 
+## draw / iram_sheet
+
+Archivo: `harness/src/engines/cad/draw/src/epc_draw/norm_register/iram_sheet.json` (12 registros)
+
+| id | norma | cláusula | página | valor / ubicación | unidad | procedencia | confianza | estado | problemas |
+|---|---|---|---|---|---|---|---|---|---|
+| `titleblock.code.formatos` | IRAM 4504 (Manual IRAM Ed. XXVII (as cited in code docstring)) | 2.3.1, 2.3.2, 2.3.3, fig. 5, fig. 6 | - | `{"A0": [1189, 841, 20, 20, 12, 6], "A1": [841, 594, 25, 1...` | mm; columns x rows | norm | medium | pending | A0 12x6 and A2 6x3 coordinate grids are derived by the code authors (module ~99 x 140), only A1 8x4 and A3 4x2 are as in fig. 6; A0 margin 20 on four sides (fig. 16), A1-A4 left 25 and 10 elsewhere; A4 has no coordinates; entry is portrait (210x297) while others are landscape; engine/drawing plan_sheet.FORMATS repeats the format names |
+| `titleblock.code.w_rec_w_util_w_cent` | IRAM 4502 / IRAM 4504 (Manual IRAM Ed. XXVII (as cited in code docstring)) | 4502 line A group d (recuadro); 4504 2.4.1 (centring) | - | `{"W_REC": 1.0, "W_UTIL": 0.5, "W_CENT": 0.5}` | mm | norm | medium | pending | W_UTIL has no clause in the code comment; layout.DEFAULT_PENS repeats 1.0/0.5 (frame/zone): duplicates a value defined elsewhere (ADR-0012 single source) |
+| `titleblock.code.w_rotulo` | IRAM 4508 (Manual IRAM Ed. XXVII (as cited in code docstring)) | fig. 2 | - | `{"W_08": 0.8, "W_04": 0.4, "W_02": 0.2}` | mm | norm | medium | pending | layout.DEFAULT_PENS repeats outline 0.8 / cell 0.4 / fine 0.2: duplicates a value defined elsewhere (ADR-0012 single source) |
+| `titleblock.code.bloque_rotulo_dim` | IRAM 4508 (Manual IRAM Ed. XXVII (as cited in code docstring)) | fig. 2 (175 x 51), fig. 3 (175 x 21.5) | - | `{"RW": 175, "RH": 51, "MH": 21.5}` | mm | norm | medium | pending | layout.DEFAULT_BLOCK repeats 175/51/21.5: duplicates a value defined elsewhere (ADR-0012 single source) |
+| `titleblock.code.cx_columnas` | IRAM 4508 (Manual IRAM Ed. XXVII (as cited in code docstring)) | fig. 2 (columns 26/20/10/19/45/55) | - | `[0, 26, 46, 56, 75, 120, 175]` | mm | norm | medium | pending | cell geometry inside the block (rows, cell positions) is hard-coded in dibujar_rotulo and not registered individually |
+| `titleblock.code.xv` | IRAM 4508 (Manual IRAM Ed. XXVII (as cited in code docstring)) | fig. 2 | - | `64` | mm | norm | medium | pending | - |
+| `titleblock.code.t25` | IRAM 4503 (Manual IRAM Ed. XXVII (as cited in code docstring)) | - | - | `2.5` | mm | norm | low | pending | no clause in code beyond 'IRAM 4503' for capital height; text heights 2.5 / 1.8 here, 2.0 in layout.DEFAULT_TEXT block, 1.7 in dxf ALTURA_TEXTO_MM: inconsistent |
+| `titleblock.code.lab` | IRAM 4508 (Manual IRAM Ed. XXVII (as cited in code docstring)) | fig. 2 | - | `1.8` | mm | norm | low | pending | see t25 text-height inconsistency |
+| `titleblock.code.fr` | IRAM 4504 (Manual IRAM Ed. XXVII (as cited in code docstring)) | fig. 6 (not cited at the line) | - | `{"with_coordinates": 5, "without": 0}` | mm | norm | low | pending | value is conditional in code: 5 if the format has coordinates else 0; no clause cited at the definition |
+| `titleblock.layout.default_pens` | IRAM 4502 / 4508 | - | - | `{"cut": 0.1, "frame": 1.0, "zone": 0.5, "outline": 0.8, "...` | mm | norm | medium | pending | no clause in layout.py; values repeat lamina_iram W_* constants: duplicates a value defined elsewhere (ADR-0012 single source) |
+| `titleblock.layout.default_text` | - | - | - | `{"coordinates": 3.5, "block": 2.0}` | mm | design-default | low | pending | block text 2.0 vs 2.5/1.8 in lamina_iram and 1.7 in dxf; no clause |
+| `titleblock.layout.default_block` | IRAM 4508 | - | - | `{"width": 175, "height": 51, "modifications_height": 21.5}` | mm | norm | medium | pending | repeats RW/RH/MH of lamina_iram: duplicates a value defined elsewhere (ADR-0012 single source); no clause in layout.py |
+
+## draw / plan_params
+
+Archivo: `harness/src/engines/cad/draw/src/epc_draw/norm_register/plan_params.json` (4 registros)
+
+| id | norma | cláusula | página | valor / ubicación | unidad | procedencia | confianza | estado | problemas |
+|---|---|---|---|---|---|---|---|---|---|
+| `plan.params.geometry.snap_tolerance_m` | - | - | - | `params.json#/geometry/snap_tolerance_m` | m | design-default | low | pending | algorithm setting, not a norm |
+| `plan.params.coordination.story_height_m` | - | - | - | `params.json#/coordination/story_height_m` | m | design-default | low | pending | no source; project dependent |
+| `plan.params.dxf.text_height_m` | - | - | - | `params.json#/dxf/text_height_m` | m (plan units) | design-default | low | pending | 0.15 m in plan units (was 0.25 m: labels ran into each other); no scale link, no IRAM 4503 text height cited |
+| `plan.params.style` | - | - | - | `params.json#/style` | mm | design-default | low | pending | 0.25 mm line and 2.0 mm font; no IRAM 4502/4503 reference; sheet pens are in titleblock |
+
+## draw / plan_rules
+
+Archivo: `harness/src/engines/cad/draw/src/epc_draw/norm_register/plan_rules.json` (2 registros)
+
+| id | norma | cláusula | página | valor / ubicación | unidad | procedencia | confianza | estado | problemas |
+|---|---|---|---|---|---|---|---|---|---|
+| `plan.clash.rules` | - | - | - | `clash_rules.json#/rules` | m | typical | low | pending | file says typical values, not a standard; 0.30 m electrical-to-sewer has no clause |
+| `plan.knowledge.sanitaria_cloacas.pendiente_minima` | - | - | - | `rules.json#/rules/0/table` | % (diameter mm) | norm | low | pending | slope_pct values are all null: waiting for the sewer standard the owner provides; source norma/edicion/clausula empty: no clause |
+
+## draw / plan_typical_values
+
+Archivo: `harness/src/engines/cad/draw/src/epc_draw/norm_register/plan_typical_values.json` (8 registros)
+
+| id | norma | cláusula | página | valor / ubicación | unidad | procedencia | confianza | estado | problemas |
+|---|---|---|---|---|---|---|---|---|---|
+| `plan.typical.sizing.cable_mm_by_section` | - | - | - | `typical_values.json#/sizing/cable_mm_by_section` | mm (section in mm2) | typical | low | pending | no clause: file says confirm against the standard and the catalogue; catalogue dependent; not a norm value |
+| `plan.typical.sizing.conduit_mm` | - | - | - | `typical_values.json#/sizing/conduit_mm` | mm | typical | low | pending | no clause: file says confirm against the standard and the catalogue; list 16-110 mm; is it internal or nominal diameter? |
+| `plan.typical.tray_catalogue` | - | - | - | `typical_values.json#/tray_catalogue` | mm | typical | low | pending | no clause: file says confirm against the standard and the catalogue |
+| `plan.typical.sizing.tray_fill_max_pct` | - | - | - | `typical_values.json#/sizing/tray_fill_max_pct` | % | typical | low | pending | given by the owner (40 %, 'as the standard says'); no clause recorded: a person must confirm it against the standard |
+| `plan.typical.occupancy.default_cable_mm` | - | - | - | `typical_values.json#/occupancy/default_cable_mm` | mm | typical | low | pending | no clause: file says confirm against the standard and the catalogue |
+| `plan.typical.occupancy.tray_pct` | - | - | - | `typical_values.json#/occupancy/tray_pct` | % | typical | low | pending | no clause: file says confirm against the standard and the catalogue; 50 % here vs 40 % ocupacion_max_pct in aea90364 rules/bandejas.json (line 59); criterion raceway_fill_max_pct (default 40, range 40-60) is a separate value: three copies |
+| `plan.typical.occupancy.conduit_pct` | - | - | - | `typical_values.json#/occupancy/conduit_pct` | % | typical | low | pending | no clause: file says confirm against the standard and the catalogue; 53/31/40 % (1 / 2 / many cables) vs 35 % in AEA rules canalizaciones (non-tabulated cases) and criterion raceway_fill_max_pct (default 40, range 40-60); the AEA rules refer to Tabla 771.12.IX for tabulated cases; compare these values with it |
+| `plan.typical.design.families` | - | - | - | `typical_values.json#/design/families` | outlets; VA | typical | low | pending | no clause: file says confirm against the standard and the catalogue; TUG 15 outlets and TUE 1 outlet repeat receptacles circuits values (two copies); IUG 100 VA, IUE 10 VA, ACU 1500 VA, FMO 7500 VA per outlet are design assumptions |
+
+## draw / sheet_iram
+
+Archivo: `harness/src/engines/cad/draw/src/epc_draw/norm_register/sheet_iram.json` (1 registros)
+
+| id | norma | cláusula | página | valor / ubicación | unidad | procedencia | confianza | estado | problemas |
+|---|---|---|---|---|---|---|---|---|---|
+| `arch.code.gap` | - | - | - | `5.0` | mm | design-default | low | pending | duplicates drawing plan_sheet.GAP (5.0): duplicates a value defined elsewhere (ADR-0012 single source); no clause |
+
+## draw / svg_to_dxf
+
+Archivo: `harness/src/engines/cad/draw/src/epc_draw/norm_register/svg_to_dxf.json` (5 registros)
+
+| id | norma | cláusula | página | valor / ubicación | unidad | procedencia | confianza | estado | problemas |
+|---|---|---|---|---|---|---|---|---|---|
+| `dxf.code.altura_texto_mm` | - | - | - | `1.7` | mm | design-default | low | pending | 1.7 mm vs 2.0 (layout.DEFAULT_TEXT block, FS_ROTULO comment says 2 mm) and 2.5/1.8 in lamina_iram; no clause |
+| `dxf.code.fs_rotulo` | - | - | - | `2.778` | svg units | convention | low | pending | comment says it is the font-size generated for 2 mm; ratio 2.778/2 differs from FS_LEGAL/ALTURA_LEGAL 1.528/1.0 |
+| `dxf.code.altura_legal_mm` | - | - | - | `1.0` | mm | design-default | low | pending | no clause |
+| `dxf.code.px_por_mm` | - | - | - | `3.77953` | px/mm | physics | medium | pending | exact 96/25.4 = 3.7795276; code uses 3.779530 |
+| `dxf.layers.lineweights` | - | - | - | `[0.0, 0.05, 0.09, 0.13, 0.15, 0.18, 0.2, 0.25, 0.3, 0.35,...` | mm | convention | medium | pending | layer names (e.g. '0' used for all converted entities) are not registered |
+
 ## drawing / plan_sheet
 
 Archivo: `harness/src/engines/cad/drawing/src/epc_drawing/norm_register/plan_sheet.json` (4 registros)
@@ -335,18 +401,6 @@ Archivo: `harness/src/engines/cad/drawing/src/epc_drawing/norm_register/plan_she
 | `drawing.code.formats` | - | - | - | `["A0", "A1", "A2", "A3", "A4"]` | - | convention | medium | pending | duplicates titleblock FORMATOS keys (names only): duplicates a value defined elsewhere (ADR-0012 single source) |
 | `drawing.code.gap` | - | - | - | `5.0` | mm | design-default | low | pending | duplicates arch sheet_iram.GAP (5.0): duplicates a value defined elsewhere (ADR-0012 single source); no clause |
 | `drawing.code.unit_mm` | - | - | - | `{"4": 1.0, "5": 10.0, "6": 1000.0}` | mm per unit | physics | medium | pending | codes 4/5/6 = mm/cm/m of DXF $INSUNITS |
-
-## dxf / svg_to_dxf
-
-Archivo: `harness/src/engines/cad/dxf/src/epc_dxf/norm_register/svg_to_dxf.json` (5 registros)
-
-| id | norma | cláusula | página | valor / ubicación | unidad | procedencia | confianza | estado | problemas |
-|---|---|---|---|---|---|---|---|---|---|
-| `dxf.code.altura_texto_mm` | - | - | - | `1.7` | mm | design-default | low | pending | 1.7 mm vs 2.0 (layout.DEFAULT_TEXT block, FS_ROTULO comment says 2 mm) and 2.5/1.8 in lamina_iram; no clause |
-| `dxf.code.fs_rotulo` | - | - | - | `2.778` | svg units | convention | low | pending | comment says it is the font-size generated for 2 mm; ratio 2.778/2 differs from FS_LEGAL/ALTURA_LEGAL 1.528/1.0 |
-| `dxf.code.altura_legal_mm` | - | - | - | `1.0` | mm | design-default | low | pending | no clause |
-| `dxf.code.px_por_mm` | - | - | - | `3.77953` | px/mm | physics | medium | pending | exact 96/25.4 = 3.7795276; code uses 3.779530 |
-| `dxf.layers.lineweights` | - | - | - | `[0.0, 0.05, 0.09, 0.13, 0.15, 0.18, 0.2, 0.25, 0.3, 0.35,...` | mm | convention | medium | pending | layer names (e.g. '0' used for all converted entities) are not registered |
 
 ## hvac / constants
 
@@ -429,41 +483,6 @@ Archivo: `harness/src/engines/calculation/lighting/src/epc_lighting/norm_registe
 | `lighting.params.point_grid` | - | - | - | `params.json#/point_grid` | m | design-default | low | pending | numerical setting; not a norm value |
 | `lighting.params.photometry_max_output_ratio` | - | - | - | `params.json#/photometry_max_output_ratio` | ratio | design-default | low | pending | tolerance setting, no source |
 
-## plan / params
-
-Archivo: `harness/src/engines/cad/plan/src/epc_plan/norm_register/params.json` (4 registros)
-
-| id | norma | cláusula | página | valor / ubicación | unidad | procedencia | confianza | estado | problemas |
-|---|---|---|---|---|---|---|---|---|---|
-| `plan.params.geometry.snap_tolerance_m` | - | - | - | `params.json#/geometry/snap_tolerance_m` | m | design-default | low | pending | algorithm setting, not a norm |
-| `plan.params.coordination.story_height_m` | - | - | - | `params.json#/coordination/story_height_m` | m | design-default | low | pending | no source; project dependent |
-| `plan.params.dxf.text_height_m` | - | - | - | `params.json#/dxf/text_height_m` | m (plan units) | design-default | low | pending | 0.15 m in plan units (was 0.25 m: labels ran into each other); no scale link, no IRAM 4503 text height cited |
-| `plan.params.style` | - | - | - | `params.json#/style` | mm | design-default | low | pending | 0.25 mm line and 2.0 mm font; no IRAM 4502/4503 reference; sheet pens are in titleblock |
-
-## plan / rules
-
-Archivo: `harness/src/engines/cad/plan/src/epc_plan/norm_register/rules.json` (2 registros)
-
-| id | norma | cláusula | página | valor / ubicación | unidad | procedencia | confianza | estado | problemas |
-|---|---|---|---|---|---|---|---|---|---|
-| `plan.clash.rules` | - | - | - | `clash_rules.json#/rules` | m | typical | low | pending | file says typical values, not a standard; 0.30 m electrical-to-sewer has no clause |
-| `plan.knowledge.sanitaria_cloacas.pendiente_minima` | - | - | - | `rules.json#/rules/0/table` | % (diameter mm) | norm | low | pending | slope_pct values are all null: waiting for the sewer standard the owner provides; source norma/edicion/clausula empty: no clause |
-
-## plan / typical_values
-
-Archivo: `harness/src/engines/cad/plan/src/epc_plan/norm_register/typical_values.json` (8 registros)
-
-| id | norma | cláusula | página | valor / ubicación | unidad | procedencia | confianza | estado | problemas |
-|---|---|---|---|---|---|---|---|---|---|
-| `plan.typical.sizing.cable_mm_by_section` | - | - | - | `typical_values.json#/sizing/cable_mm_by_section` | mm (section in mm2) | typical | low | pending | no clause: file says confirm against the standard and the catalogue; catalogue dependent; not a norm value |
-| `plan.typical.sizing.conduit_mm` | - | - | - | `typical_values.json#/sizing/conduit_mm` | mm | typical | low | pending | no clause: file says confirm against the standard and the catalogue; list 16-110 mm; is it internal or nominal diameter? |
-| `plan.typical.tray_catalogue` | - | - | - | `typical_values.json#/tray_catalogue` | mm | typical | low | pending | no clause: file says confirm against the standard and the catalogue |
-| `plan.typical.sizing.tray_fill_max_pct` | - | - | - | `typical_values.json#/sizing/tray_fill_max_pct` | % | typical | low | pending | given by the owner (40 %, 'as the standard says'); no clause recorded: a person must confirm it against the standard |
-| `plan.typical.occupancy.default_cable_mm` | - | - | - | `typical_values.json#/occupancy/default_cable_mm` | mm | typical | low | pending | no clause: file says confirm against the standard and the catalogue |
-| `plan.typical.occupancy.tray_pct` | - | - | - | `typical_values.json#/occupancy/tray_pct` | % | typical | low | pending | no clause: file says confirm against the standard and the catalogue; 50 % here vs 40 % ocupacion_max_pct in aea90364 rules/bandejas.json (line 59); criterion raceway_fill_max_pct (default 40, range 40-60) is a separate value: three copies |
-| `plan.typical.occupancy.conduit_pct` | - | - | - | `typical_values.json#/occupancy/conduit_pct` | % | typical | low | pending | no clause: file says confirm against the standard and the catalogue; 53/31/40 % (1 / 2 / many cables) vs 35 % in AEA rules canalizaciones (non-tabulated cases) and criterion raceway_fill_max_pct (default 40, range 40-60); the AEA rules refer to Tabla 771.12.IX for tabulated cases; compare these values with it |
-| `plan.typical.design.families` | - | - | - | `typical_values.json#/design/families` | outlets; VA | typical | low | pending | no clause: file says confirm against the standard and the catalogue; TUG 15 outlets and TUE 1 outlet repeat receptacles circuits values (two copies); IUG 100 VA, IUE 10 VA, ACU 1500 VA, FMO 7500 VA per outlet are design assumptions |
-
 ## pv / typical
 
 Archivo: `harness/src/engines/calculation/pv/src/epc_pv/norm_register/typical.json` (18 registros)
@@ -533,25 +552,6 @@ Archivo: `harness/src/engines/quality/terminal_blocks/src/epc_terminal_blocks/no
 | id | norma | cláusula | página | valor / ubicación | unidad | procedencia | confianza | estado | problemas |
 |---|---|---|---|---|---|---|---|---|---|
 | `terminal_blocks.params.terminal_sizes` | - | - | - | `terminal_sizes.json#/terminal_sizes` | mm2, A | convention | low | pending | no clause: catalog/convention; values to verify against the chosen manufacturer catalog |
-
-## titleblock / iram_sheet
-
-Archivo: `harness/src/engines/cad/titleblock/src/epc_titleblock/norm_register/iram_sheet.json` (12 registros)
-
-| id | norma | cláusula | página | valor / ubicación | unidad | procedencia | confianza | estado | problemas |
-|---|---|---|---|---|---|---|---|---|---|
-| `titleblock.code.formatos` | IRAM 4504 (Manual IRAM Ed. XXVII (as cited in code docstring)) | 2.3.1, 2.3.2, 2.3.3, fig. 5, fig. 6 | - | `{"A0": [1189, 841, 20, 20, 12, 6], "A1": [841, 594, 25, 1...` | mm; columns x rows | norm | medium | pending | A0 12x6 and A2 6x3 coordinate grids are derived by the code authors (module ~99 x 140), only A1 8x4 and A3 4x2 are as in fig. 6; A0 margin 20 on four sides (fig. 16), A1-A4 left 25 and 10 elsewhere; A4 has no coordinates; entry is portrait (210x297) while others are landscape; engine/drawing plan_sheet.FORMATS repeats the format names |
-| `titleblock.code.w_rec_w_util_w_cent` | IRAM 4502 / IRAM 4504 (Manual IRAM Ed. XXVII (as cited in code docstring)) | 4502 line A group d (recuadro); 4504 2.4.1 (centring) | - | `{"W_REC": 1.0, "W_UTIL": 0.5, "W_CENT": 0.5}` | mm | norm | medium | pending | W_UTIL has no clause in the code comment; layout.DEFAULT_PENS repeats 1.0/0.5 (frame/zone): duplicates a value defined elsewhere (ADR-0012 single source) |
-| `titleblock.code.w_rotulo` | IRAM 4508 (Manual IRAM Ed. XXVII (as cited in code docstring)) | fig. 2 | - | `{"W_08": 0.8, "W_04": 0.4, "W_02": 0.2}` | mm | norm | medium | pending | layout.DEFAULT_PENS repeats outline 0.8 / cell 0.4 / fine 0.2: duplicates a value defined elsewhere (ADR-0012 single source) |
-| `titleblock.code.bloque_rotulo_dim` | IRAM 4508 (Manual IRAM Ed. XXVII (as cited in code docstring)) | fig. 2 (175 x 51), fig. 3 (175 x 21.5) | - | `{"RW": 175, "RH": 51, "MH": 21.5}` | mm | norm | medium | pending | layout.DEFAULT_BLOCK repeats 175/51/21.5: duplicates a value defined elsewhere (ADR-0012 single source) |
-| `titleblock.code.cx_columnas` | IRAM 4508 (Manual IRAM Ed. XXVII (as cited in code docstring)) | fig. 2 (columns 26/20/10/19/45/55) | - | `[0, 26, 46, 56, 75, 120, 175]` | mm | norm | medium | pending | cell geometry inside the block (rows, cell positions) is hard-coded in dibujar_rotulo and not registered individually |
-| `titleblock.code.xv` | IRAM 4508 (Manual IRAM Ed. XXVII (as cited in code docstring)) | fig. 2 | - | `64` | mm | norm | medium | pending | - |
-| `titleblock.code.t25` | IRAM 4503 (Manual IRAM Ed. XXVII (as cited in code docstring)) | - | - | `2.5` | mm | norm | low | pending | no clause in code beyond 'IRAM 4503' for capital height; text heights 2.5 / 1.8 here, 2.0 in layout.DEFAULT_TEXT block, 1.7 in dxf ALTURA_TEXTO_MM: inconsistent |
-| `titleblock.code.lab` | IRAM 4508 (Manual IRAM Ed. XXVII (as cited in code docstring)) | fig. 2 | - | `1.8` | mm | norm | low | pending | see t25 text-height inconsistency |
-| `titleblock.code.fr` | IRAM 4504 (Manual IRAM Ed. XXVII (as cited in code docstring)) | fig. 6 (not cited at the line) | - | `{"with_coordinates": 5, "without": 0}` | mm | norm | low | pending | value is conditional in code: 5 if the format has coordinates else 0; no clause cited at the definition |
-| `titleblock.layout.default_pens` | IRAM 4502 / 4508 | - | - | `{"cut": 0.1, "frame": 1.0, "zone": 0.5, "outline": 0.8, "...` | mm | norm | medium | pending | no clause in layout.py; values repeat lamina_iram W_* constants: duplicates a value defined elsewhere (ADR-0012 single source) |
-| `titleblock.layout.default_text` | - | - | - | `{"coordinates": 3.5, "block": 2.0}` | mm | design-default | low | pending | block text 2.0 vs 2.5/1.8 in lamina_iram and 1.7 in dxf; no clause |
-| `titleblock.layout.default_block` | IRAM 4508 | - | - | `{"width": 175, "height": 51, "modifications_height": 21.5}` | mm | norm | medium | pending | repeats RW/RH/MH of lamina_iram: duplicates a value defined elsewhere (ADR-0012 single source); no clause in layout.py |
 
 ## transformer_sizing / params
 

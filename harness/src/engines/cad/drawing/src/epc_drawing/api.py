@@ -37,15 +37,15 @@ from epc_drawing.part_library import (
     write,
     pv_parts_colours,
 )  # noqa: F401
-from epc_drawing.pv_draw import PvDrawInput, draw_pv  # noqa: F401
-from epc_drawing.pv_diagrams import (
+from epc_draw.pv.draw import PvDrawInput, draw_pv  # noqa: F401
+from epc_draw.pv.diagrams import (
     Pen,
     write_all,
 )  # noqa: F401
-from epc_drawing.pv_freecad import (
+from epc_draw.pv.freecad import (
     write_document,
 )  # noqa: F401
-from epc_drawing.pv_model3d import (
+from epc_draw.pv.model3d import (
     box,
     tilted_box,
     embedment_m,

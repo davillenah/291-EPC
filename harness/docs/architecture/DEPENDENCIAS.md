@@ -8,12 +8,12 @@ Cómo leerlo: **Usa** = de qué depende la unidad; **Lo usan** = quién se rompe
 
 | Unidad | Usa | Lo usan | Impacto si la modificas |
 |---|---|---|---|
-| `aea90364` | `calc_common`, `feeder_sizing`, `grounding`, `load_balance`, `selectivity`, `short_circuit`, `voltage_drop` | `calc_check`, `calc_common`, `drawing`, `feeder_sizing`, `grounding`, `lighting`, `load_balance`, `mld`, `selectivity`, `short_circuit`, `sld`, `voltage_drop` | `calc_check`, `calc_common`, `design_basis`, `drawing`, `feeder_sizing`, `grounding`, `lighting`, `load_balance`, `mld`, `selectivity`, `short_circuit`, `sld`, `transformer_sizing`, `voltage_drop` |
-| `arch` | `plan`, `titleblock` | `plan` | `boq`, `plan`, `rfq` |
+| `aea90364` | `calc_common`, `feeder_sizing`, `grounding`, `load_balance`, `selectivity`, `short_circuit`, `voltage_drop` | `calc_check`, `calc_common`, `draw`, `drawing`, `feeder_sizing`, `grounding`, `lighting`, `load_balance`, `selectivity`, `short_circuit`, `voltage_drop` | `arch`, `boq`, `calc_check`, `calc_common`, `design_basis`, `draw`, `drawing`, `dxf`, `feeder_sizing`, `grounding`, `lighting`, `load_balance`, `mld`, `plan`, `rfq`, `selectivity`, `short_circuit`, `sld`, `symbols`, `titleblock`, `transformer_sizing`, `voltage_drop` |
+| `arch` | `draw` | `draw` | `boq`, `draw`, `drawing`, `dxf`, `mld`, `plan`, `rfq`, `sld`, `symbols`, `titleblock` |
 | `arrays` | — | — | — |
 | `boq` | `plan`, `pv` | `rfq` | `rfq` |
 | `calc_check` | `aea90364` | — | — |
-| `calc_common` | `aea90364` | `aea90364`, `feeder_sizing`, `grounding`, `load_balance`, `selectivity`, `short_circuit`, `voltage_drop` | `aea90364`, `calc_check`, `design_basis`, `drawing`, `feeder_sizing`, `grounding`, `lighting`, `load_balance`, `mld`, `selectivity`, `short_circuit`, `sld`, `transformer_sizing`, `voltage_drop` |
+| `calc_common` | `aea90364` | `aea90364`, `feeder_sizing`, `grounding`, `load_balance`, `selectivity`, `short_circuit`, `voltage_drop` | `aea90364`, `arch`, `boq`, `calc_check`, `design_basis`, `draw`, `drawing`, `dxf`, `feeder_sizing`, `grounding`, `lighting`, `load_balance`, `mld`, `plan`, `rfq`, `selectivity`, `short_circuit`, `sld`, `symbols`, `titleblock`, `transformer_sizing`, `voltage_drop` |
 | `changes` | — | — | — |
 | `cutlist` | — | — | — |
 | `datasheets` | — | `rfq` | `rfq` |
@@ -21,30 +21,31 @@ Cómo leerlo: **Usa** = de qué depende la unidad; **Lo usan** = quién se rompe
 | `design_basis` | `grounding`, `load_balance`, `short_circuit`, `voltage_drop` | — | — |
 | `dims` | — | — | — |
 | `documents` | — | — | — |
-| `drawing` | `aea90364`, `dxf`, `mld`, `pv`, `sld`, `symbols`, `titleblock` | — | — |
-| `dxf` | `symbols` | `drawing`, `mld`, `plan`, `sld`, `titleblock` | `arch`, `boq`, `drawing`, `mld`, `plan`, `rfq`, `sld`, `titleblock` |
+| `draw` | `aea90364`, `arch`, `drawing`, `dxf`, `plan`, `pv`, `symbols`, `titleblock` | `arch`, `drawing`, `dxf`, `mld`, `plan`, `sld`, `symbols`, `titleblock` | `arch`, `boq`, `drawing`, `dxf`, `mld`, `plan`, `rfq`, `sld`, `symbols`, `titleblock` |
+| `drawing` | `aea90364`, `draw`, `dxf`, `mld`, `sld`, `symbols`, `titleblock` | `draw` | `arch`, `boq`, `draw`, `dxf`, `mld`, `plan`, `rfq`, `sld`, `symbols`, `titleblock` |
+| `dxf` | `draw` | `draw`, `drawing` | `arch`, `boq`, `draw`, `drawing`, `mld`, `plan`, `rfq`, `sld`, `symbols`, `titleblock` |
 | `expr` | — | — | — |
-| `feeder_sizing` | `aea90364`, `calc_common`, `voltage_drop` | `aea90364`, `grounding`, `short_circuit` | `aea90364`, `calc_check`, `calc_common`, `design_basis`, `drawing`, `grounding`, `lighting`, `load_balance`, `mld`, `selectivity`, `short_circuit`, `sld`, `transformer_sizing`, `voltage_drop` |
-| `grounding` | `aea90364`, `calc_common`, `feeder_sizing` | `aea90364`, `design_basis`, `selectivity` | `aea90364`, `calc_check`, `calc_common`, `design_basis`, `drawing`, `feeder_sizing`, `lighting`, `load_balance`, `mld`, `selectivity`, `short_circuit`, `sld`, `transformer_sizing`, `voltage_drop` |
+| `feeder_sizing` | `aea90364`, `calc_common`, `voltage_drop` | `aea90364`, `grounding`, `short_circuit` | `aea90364`, `arch`, `boq`, `calc_check`, `calc_common`, `design_basis`, `draw`, `drawing`, `dxf`, `grounding`, `lighting`, `load_balance`, `mld`, `plan`, `rfq`, `selectivity`, `short_circuit`, `sld`, `symbols`, `titleblock`, `transformer_sizing`, `voltage_drop` |
+| `grounding` | `aea90364`, `calc_common`, `feeder_sizing` | `aea90364`, `design_basis`, `selectivity` | `aea90364`, `arch`, `boq`, `calc_check`, `calc_common`, `design_basis`, `draw`, `drawing`, `dxf`, `feeder_sizing`, `lighting`, `load_balance`, `mld`, `plan`, `rfq`, `selectivity`, `short_circuit`, `sld`, `symbols`, `titleblock`, `transformer_sizing`, `voltage_drop` |
 | `hvac` | — | — | — |
 | `lighting` | `aea90364` | — | — |
-| `load_balance` | `aea90364`, `calc_common` | `aea90364`, `design_basis`, `selectivity` | `aea90364`, `calc_check`, `calc_common`, `design_basis`, `drawing`, `feeder_sizing`, `grounding`, `lighting`, `mld`, `selectivity`, `short_circuit`, `sld`, `transformer_sizing`, `voltage_drop` |
-| `mld` | `aea90364`, `dxf`, `sld`, `symbols`, `titleblock` | `drawing` | `drawing` |
-| `plan` | `arch`, `dxf`, `symbols` | `arch`, `boq` | `arch`, `boq`, `rfq` |
-| `pv` | — | `boq`, `drawing` | `boq`, `drawing`, `rfq` |
+| `load_balance` | `aea90364`, `calc_common` | `aea90364`, `design_basis`, `selectivity` | `aea90364`, `arch`, `boq`, `calc_check`, `calc_common`, `design_basis`, `draw`, `drawing`, `dxf`, `feeder_sizing`, `grounding`, `lighting`, `mld`, `plan`, `rfq`, `selectivity`, `short_circuit`, `sld`, `symbols`, `titleblock`, `transformer_sizing`, `voltage_drop` |
+| `mld` | `draw` | `drawing` | `arch`, `boq`, `draw`, `drawing`, `dxf`, `plan`, `rfq`, `sld`, `symbols`, `titleblock` |
+| `plan` | `draw` | `boq`, `draw` | `arch`, `boq`, `draw`, `drawing`, `dxf`, `mld`, `rfq`, `sld`, `symbols`, `titleblock` |
+| `pv` | — | `boq`, `draw` | `arch`, `boq`, `draw`, `drawing`, `dxf`, `mld`, `plan`, `rfq`, `sld`, `symbols`, `titleblock` |
 | `receptacles` | — | — | — |
 | `rfq` | `boq`, `datasheets` | — | — |
 | `rules` | — | — | — |
 | `select` | — | — | — |
-| `selectivity` | `aea90364`, `calc_common`, `grounding`, `load_balance` | `aea90364` | `aea90364`, `calc_check`, `calc_common`, `design_basis`, `drawing`, `feeder_sizing`, `grounding`, `lighting`, `load_balance`, `mld`, `short_circuit`, `sld`, `transformer_sizing`, `voltage_drop` |
-| `short_circuit` | `aea90364`, `calc_common`, `feeder_sizing` | `aea90364`, `design_basis`, `transformer_sizing` | `aea90364`, `calc_check`, `calc_common`, `design_basis`, `drawing`, `feeder_sizing`, `grounding`, `lighting`, `load_balance`, `mld`, `selectivity`, `sld`, `transformer_sizing`, `voltage_drop` |
-| `sld` | `aea90364`, `dxf`, `symbols`, `titleblock` | `drawing`, `mld` | `drawing`, `mld` |
+| `selectivity` | `aea90364`, `calc_common`, `grounding`, `load_balance` | `aea90364` | `aea90364`, `arch`, `boq`, `calc_check`, `calc_common`, `design_basis`, `draw`, `drawing`, `dxf`, `feeder_sizing`, `grounding`, `lighting`, `load_balance`, `mld`, `plan`, `rfq`, `short_circuit`, `sld`, `symbols`, `titleblock`, `transformer_sizing`, `voltage_drop` |
+| `short_circuit` | `aea90364`, `calc_common`, `feeder_sizing` | `aea90364`, `design_basis`, `transformer_sizing` | `aea90364`, `arch`, `boq`, `calc_check`, `calc_common`, `design_basis`, `draw`, `drawing`, `dxf`, `feeder_sizing`, `grounding`, `lighting`, `load_balance`, `mld`, `plan`, `rfq`, `selectivity`, `sld`, `symbols`, `titleblock`, `transformer_sizing`, `voltage_drop` |
+| `sld` | `draw` | `drawing` | `arch`, `boq`, `draw`, `drawing`, `dxf`, `mld`, `plan`, `rfq`, `symbols`, `titleblock` |
 | `standards` | — | — | — |
-| `symbols` | — | `drawing`, `dxf`, `mld`, `plan`, `sld` | `arch`, `boq`, `drawing`, `dxf`, `mld`, `plan`, `rfq`, `sld`, `titleblock` |
+| `symbols` | `draw` | `draw`, `drawing` | `arch`, `boq`, `draw`, `drawing`, `dxf`, `mld`, `plan`, `rfq`, `sld`, `titleblock` |
 | `terminal_blocks` | — | — | — |
-| `titleblock` | `dxf` | `arch`, `drawing`, `mld`, `sld` | `arch`, `boq`, `drawing`, `mld`, `plan`, `rfq`, `sld` |
+| `titleblock` | `draw` | `draw`, `drawing` | `arch`, `boq`, `draw`, `drawing`, `dxf`, `mld`, `plan`, `rfq`, `sld`, `symbols` |
 | `transformer_sizing` | `short_circuit` | — | — |
-| `voltage_drop` | `aea90364`, `calc_common` | `aea90364`, `design_basis`, `feeder_sizing` | `aea90364`, `calc_check`, `calc_common`, `design_basis`, `drawing`, `feeder_sizing`, `grounding`, `lighting`, `load_balance`, `mld`, `selectivity`, `short_circuit`, `sld`, `transformer_sizing` |
+| `voltage_drop` | `aea90364`, `calc_common` | `aea90364`, `design_basis`, `feeder_sizing` | `aea90364`, `arch`, `boq`, `calc_check`, `calc_common`, `design_basis`, `draw`, `drawing`, `dxf`, `feeder_sizing`, `grounding`, `lighting`, `load_balance`, `mld`, `plan`, `rfq`, `selectivity`, `short_circuit`, `sld`, `symbols`, `titleblock`, `transformer_sizing` |
 | `walls` | — | — | — |
 
 ## Módulos del backend
@@ -59,7 +60,7 @@ Lo declarado en `pyproject.toml` frente a lo que el código importa de verdad.
 | Unidad | Importa | Declarado | Falta declarar |
 |---|---|---|---|
 | `aea90364` | `openpyxl` | `openpyxl` | — |
-| `arch` | `ezdxf`, `numpy`, `pillow`, `pypdfium2` | `ezdxf`, `numpy`, `pillow`, `pypdfium2` | — |
+| `arch` | — | `epc-draw` | — |
 | `arrays` | — | — | — |
 | `boq` | — | — | — |
 | `calc_check` | — | `epc-aea90364` | — |
@@ -71,16 +72,17 @@ Lo declarado en `pyproject.toml` frente a lo que el código importa de verdad.
 | `design_basis` | — | — | — |
 | `dims` | — | — | — |
 | `documents` | `playwright`, `pypdf`, `python-docx` | `playwright`, `pypdf`, `python-docx` | — |
-| `drawing` | `ezdxf`, `matplotlib`, `numpy`, `openpyxl`, `pillow`, `svgelements` | `epc-aea90364`, `epc-mld`, `epc-sld`, `epc-titleblock`, `ezdxf`, `matplotlib`, `numpy`, `openpyxl`, `pillow`, `svgelements` | — |
-| `dxf` | `ezdxf`, `lxml`, `shapely`, `svgelements`, `vtracer` | `ezdxf`, `lxml`, `shapely`, `svgelements`, `vtracer` | — |
+| `draw` | `cairosvg`, `engines`, `ezdxf`, `lxml`, `numpy`, `openpyxl`, `pillow`, `pypdfium2`, `shapely`, `svgelements`, `vtracer` | `cairosvg`, `epc-aea90364`, `ezdxf`, `lxml`, `numpy`, `openpyxl`, `pillow`, `pypdfium2`, `shapely`, `svgelements`, `vtracer` | `engines` |
+| `drawing` | `ezdxf`, `matplotlib`, `numpy`, `openpyxl`, `pillow`, `svgelements` | `epc-aea90364`, `epc-draw`, `epc-mld`, `epc-sld`, `epc-titleblock`, `ezdxf`, `matplotlib`, `numpy`, `openpyxl`, `pillow`, `svgelements` | — |
+| `dxf` | — | `ezdxf`, `lxml`, `shapely`, `svgelements`, `vtracer` | — |
 | `expr` | — | — | — |
 | `feeder_sizing` | — | `epc-calc-common`, `epc-voltage-drop` | — |
 | `grounding` | — | `epc-calc-common`, `epc-feeder-sizing` | — |
 | `hvac` | — | — | — |
 | `lighting` | `engines` | — | `engines` |
 | `load_balance` | — | `epc-calc-common` | — |
-| `mld` | `lxml` | `epc-aea90364`, `epc-dxf`, `epc-symbols`, `epc-titleblock`, `lxml` | — |
-| `plan` | `engines`, `ezdxf` | `epc-dxf`, `epc-symbols`, `ezdxf` | `engines` |
+| `mld` | — | `epc-draw` | — |
+| `plan` | — | `epc-draw` | — |
 | `pv` | `timezonefinder` | `timezonefinder` | — |
 | `receptacles` | — | — | — |
 | `rfq` | — | — | — |
@@ -88,11 +90,11 @@ Lo declarado en `pyproject.toml` frente a lo que el código importa de verdad.
 | `select` | — | — | — |
 | `selectivity` | — | `epc-calc-common`, `epc-grounding`, `epc-load-balance` | — |
 | `short_circuit` | — | `epc-calc-common`, `epc-feeder-sizing` | — |
-| `sld` | `cairosvg`, `lxml`, `openpyxl` | `cairosvg`, `epc-aea90364`, `epc-dxf`, `epc-symbols`, `epc-titleblock`, `lxml`, `openpyxl` | — |
+| `sld` | — | `epc-draw` | — |
 | `standards` | `engines`, `jsonschema`, `pypdf`, `pypdfium2` | `jsonschema`, `pillow`, `pypdf`, `pypdfium2` | `engines` |
-| `symbols` | — | — | — |
+| `symbols` | — | `epc-draw` | — |
 | `terminal_blocks` | — | — | — |
-| `titleblock` | — | `epc-dxf` | — |
+| `titleblock` | — | `epc-draw` | — |
 | `transformer_sizing` | — | `epc-short-circuit` | — |
 | `voltage_drop` | — | `epc-calc-common` | — |
 | `walls` | — | — | — |
@@ -101,18 +103,18 @@ Lo declarado en `pyproject.toml` frente a lo que el código importa de verdad.
 
 | Plugin | Empaqueta (motor) | Requiere (plugins) | Lo requieren |
 |---|---|---|---|
-| `aea-calc` | `aea90364`, `calc_common`, `feeder_sizing`, `grounding`, `load_balance`, `selectivity`, `short_circuit`, `voltage_drop` | — | `board-design`, `mld`, `sld` |
-| `board-design` | `aea90364`, `calc_common`, `drawing`, `dxf`, `feeder_sizing`, `grounding`, `load_balance`, `mld`, `pv`, `selectivity`, `short_circuit`, `sld`, `symbols`, `titleblock`, `voltage_drop` | `aea-calc`, `dxf-output`, `iec-symbols`, `iram-titleblock`, `mld`, `sld` | — |
+| `aea-calc` | `aea90364`, `calc_common`, `feeder_sizing`, `grounding`, `load_balance`, `selectivity`, `short_circuit`, `voltage_drop` | — | `board-design` |
+| `board-design` | `aea90364`, `arch`, `calc_common`, `draw`, `drawing`, `dxf`, `feeder_sizing`, `grounding`, `load_balance`, `mld`, `plan`, `pv`, `selectivity`, `short_circuit`, `sld`, `symbols`, `titleblock`, `voltage_drop` | `aea-calc`, `dxf-output`, `iec-symbols`, `iram-titleblock`, `mld`, `sld` | — |
 | `doc-quality` | `documents` | — | `pm2-docs`, `spec-writer` |
-| `dxf-output` | `dxf`, `symbols` | `iec-symbols` | `board-design`, `iram-titleblock`, `mld`, `plan-drawing`, `sld` |
+| `dxf-output` | `aea90364`, `arch`, `calc_common`, `draw`, `drawing`, `dxf`, `feeder_sizing`, `grounding`, `load_balance`, `mld`, `plan`, `pv`, `selectivity`, `short_circuit`, `sld`, `symbols`, `titleblock`, `voltage_drop` | — | `board-design` |
 | `equipment-catalog` | — | — | `procurement` |
-| `iec-symbols` | `symbols` | — | `board-design`, `dxf-output`, `mld`, `plan-drawing`, `sld` |
+| `iec-symbols` | `aea90364`, `arch`, `calc_common`, `draw`, `drawing`, `dxf`, `feeder_sizing`, `grounding`, `load_balance`, `mld`, `plan`, `pv`, `selectivity`, `short_circuit`, `sld`, `symbols`, `titleblock`, `voltage_drop` | — | `board-design` |
 | `intake-analysis` | — | — | — |
-| `iram-titleblock` | `dxf`, `symbols`, `titleblock` | `dxf-output` | `board-design`, `mld`, `sld` |
-| `mld` | `aea90364`, `calc_common`, `dxf`, `feeder_sizing`, `grounding`, `load_balance`, `mld`, `selectivity`, `short_circuit`, `sld`, `symbols`, `titleblock`, `voltage_drop` | `aea-calc`, `dxf-output`, `iec-symbols`, `iram-titleblock`, `sld` | `board-design` |
-| `plan-drawing` | `arch`, `dxf`, `plan`, `symbols`, `titleblock` | `dxf-output`, `iec-symbols` | — |
+| `iram-titleblock` | `aea90364`, `arch`, `calc_common`, `draw`, `drawing`, `dxf`, `feeder_sizing`, `grounding`, `load_balance`, `mld`, `plan`, `pv`, `selectivity`, `short_circuit`, `sld`, `symbols`, `titleblock`, `voltage_drop` | — | `board-design` |
+| `mld` | `aea90364`, `arch`, `calc_common`, `draw`, `drawing`, `dxf`, `feeder_sizing`, `grounding`, `load_balance`, `mld`, `plan`, `pv`, `selectivity`, `short_circuit`, `sld`, `symbols`, `titleblock`, `voltage_drop` | — | `board-design` |
+| `plan-drawing` | `aea90364`, `arch`, `calc_common`, `draw`, `drawing`, `dxf`, `feeder_sizing`, `grounding`, `load_balance`, `mld`, `plan`, `pv`, `selectivity`, `short_circuit`, `sld`, `symbols`, `titleblock`, `voltage_drop` | — | — |
 | `pm2-docs` | `documents` | `doc-quality` | — |
 | `procurement` | — | `equipment-catalog` | — |
-| `sld` | `aea90364`, `calc_common`, `dxf`, `feeder_sizing`, `grounding`, `load_balance`, `selectivity`, `short_circuit`, `sld`, `symbols`, `titleblock`, `voltage_drop` | `aea-calc`, `dxf-output`, `iec-symbols`, `iram-titleblock` | `board-design`, `mld` |
+| `sld` | `aea90364`, `arch`, `calc_common`, `draw`, `drawing`, `dxf`, `feeder_sizing`, `grounding`, `load_balance`, `mld`, `plan`, `pv`, `selectivity`, `short_circuit`, `sld`, `symbols`, `titleblock`, `voltage_drop` | — | `board-design` |
 | `spec-writer` | `documents` | `doc-quality` | — |
 | `standard-ingest` | `rules`, `standards` | — | — |

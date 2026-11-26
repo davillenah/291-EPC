@@ -6,13 +6,7 @@
   "discipline": [
     "electrical"
   ],
-  "requires": {
-    "aea-calc": "^1.8.0",
-    "dxf-output": "^0.1.0",
-    "iec-symbols": "^0.4.19",
-    "iram-titleblock": "^0.5.4",
-    "sld": "^0.1.4"
-  },
+  "requires": {},
   "consumes": [
     "CircuitCalculation",
     "Board",
@@ -36,7 +30,11 @@
     "requires": [
       "ezdxf",
       "lxml",
+      "matplotlib",
+      "numpy",
       "openpyxl",
+      "pillow",
+      "pypdfium2",
       "shapely",
       "svgelements",
       "vtracer"
@@ -49,12 +47,17 @@
   },
   "engine": [
     "aea90364",
+    "arch",
     "calc_common",
+    "draw",
+    "drawing",
     "dxf",
     "feeder_sizing",
     "grounding",
     "load_balance",
     "mld",
+    "plan",
+    "pv",
     "selectivity",
     "short_circuit",
     "sld",

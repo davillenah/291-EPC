@@ -1,0 +1,511 @@
+{
+ "schema_version": "1.0",
+ "engine": "draw",
+ "topic": "iram_sheet",
+ "records": [
+  {
+   "id": "titleblock.code.formatos",
+   "kind": "table",
+   "title": {
+    "es": "Formatos A0-A4: tamaño, márgenes, grilla de coordenadas",
+    "en": "Sheet formats A0-A4: size, margins, coordinate grid"
+   },
+   "norm": "IRAM 4504",
+   "edition": "Manual IRAM Ed. XXVII (as cited in code docstring)",
+   "clause": "2.3.1, 2.3.2, 2.3.3, fig. 5, fig. 6",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "mm; columns x rows",
+   "applies_to": "IRAM sheets A0-A4",
+   "provenance": "norm",
+   "verification": "unverified",
+   "confidence": "medium",
+   "location": {
+    "type": "code",
+    "file": "harness/src/engines/cad/draw/src/epc_draw/titleblock/lamina_iram.py",
+    "symbol": "FORMATOS",
+    "line": 35
+   },
+   "value": {
+    "A0": [
+     1189,
+     841,
+     20,
+     20,
+     12,
+     6
+    ],
+    "A1": [
+     841,
+     594,
+     25,
+     10,
+     8,
+     4
+    ],
+    "A2": [
+     594,
+     420,
+     25,
+     10,
+     6,
+     3
+    ],
+    "A3": [
+     420,
+     297,
+     25,
+     10,
+     4,
+     2
+    ],
+    "A4": [
+     210,
+     297,
+     25,
+     10,
+     0,
+     0
+    ]
+   },
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "A0 12x6 and A2 6x3 coordinate grids are derived by the code authors (module ~99 x 140), only A1 8x4 and A3 4x2 are as in fig. 6",
+    "A0 margin 20 on four sides (fig. 16), A1-A4 left 25 and 10 elsewhere",
+    "A4 has no coordinates; entry is portrait (210x297) while others are landscape",
+    "engine/drawing plan_sheet.FORMATS repeats the format names"
+   ],
+   "note": "Check sizes (ISO 216), margins 20/25/10 and the coordinate grid counts per format against IRAM 4504 figs. 5, 6, 16."
+  },
+  {
+   "id": "titleblock.code.w_rec_w_util_w_cent",
+   "kind": "code_constant",
+   "title": {
+    "es": "Espesores de línea del marco: recuadro, zona útil, centrado",
+    "en": "Frame line weights: border, useful zone, centring marks"
+   },
+   "norm": "IRAM 4502 / IRAM 4504",
+   "edition": "Manual IRAM Ed. XXVII (as cited in code docstring)",
+   "clause": "4502 line A group d (recuadro); 4504 2.4.1 (centring)",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "mm",
+   "applies_to": "sheet frame",
+   "provenance": "norm",
+   "verification": "unverified",
+   "confidence": "medium",
+   "location": {
+    "type": "code",
+    "file": "harness/src/engines/cad/draw/src/epc_draw/titleblock/lamina_iram.py",
+    "symbol": null,
+    "line": 51
+   },
+   "value": {
+    "W_REC": 1.0,
+    "W_UTIL": 0.5,
+    "W_CENT": 0.5
+   },
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "W_UTIL has no clause in the code comment",
+    "layout.DEFAULT_PENS repeats 1.0/0.5 (frame/zone): duplicates a value defined elsewhere (ADR-0012 single source)"
+   ],
+   "note": "Frame 1.0, useful zone and centring 0.5 mm; check IRAM 4502 line groups and 4504 2.4.1."
+  },
+  {
+   "id": "titleblock.code.w_rotulo",
+   "kind": "code_constant",
+   "title": {
+    "es": "Espesores de línea del rótulo (0,8/0,4/0,2)",
+    "en": "Title block line weights (0.8/0.4/0.2)"
+   },
+   "norm": "IRAM 4508",
+   "edition": "Manual IRAM Ed. XXVII (as cited in code docstring)",
+   "clause": "fig. 2",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "mm",
+   "applies_to": "title block",
+   "provenance": "norm",
+   "verification": "unverified",
+   "confidence": "medium",
+   "location": {
+    "type": "code",
+    "file": "harness/src/engines/cad/draw/src/epc_draw/titleblock/lamina_iram.py",
+    "symbol": null,
+    "line": 54
+   },
+   "value": {
+    "W_08": 0.8,
+    "W_04": 0.4,
+    "W_02": 0.2
+   },
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "layout.DEFAULT_PENS repeats outline 0.8 / cell 0.4 / fine 0.2: duplicates a value defined elsewhere (ADR-0012 single source)"
+   ],
+   "note": "0.8 outline, 0.4 cell limits, 0.2 subdivisions; check IRAM 4508 fig. 2."
+  },
+  {
+   "id": "titleblock.code.bloque_rotulo_dim",
+   "kind": "code_constant",
+   "title": {
+    "es": "Dimensiones del bloque de rótulo y lista de modificaciones",
+    "en": "Title block and modifications list dimensions"
+   },
+   "norm": "IRAM 4508",
+   "edition": "Manual IRAM Ed. XXVII (as cited in code docstring)",
+   "clause": "fig. 2 (175 x 51), fig. 3 (175 x 21.5)",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "mm",
+   "applies_to": "title block 175 x 51; modifications list 175 x 21.5",
+   "provenance": "norm",
+   "verification": "unverified",
+   "confidence": "medium",
+   "location": {
+    "type": "code",
+    "file": "harness/src/engines/cad/draw/src/epc_draw/titleblock/lamina_iram.py",
+    "symbol": null,
+    "line": 141
+   },
+   "value": {
+    "RW": 175,
+    "RH": 51,
+    "MH": 21.5
+   },
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "layout.DEFAULT_BLOCK repeats 175/51/21.5: duplicates a value defined elsewhere (ADR-0012 single source)"
+   ],
+   "note": "Check overall block sizes against IRAM 4508 figs. 2 and 3."
+  },
+  {
+   "id": "titleblock.code.cx_columnas",
+   "kind": "table",
+   "title": {
+    "es": "Columnas del rótulo",
+    "en": "Title block column positions"
+   },
+   "norm": "IRAM 4508",
+   "edition": "Manual IRAM Ed. XXVII (as cited in code docstring)",
+   "clause": "fig. 2 (columns 26/20/10/19/45/55)",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "mm",
+   "applies_to": "title block cells",
+   "provenance": "norm",
+   "verification": "unverified",
+   "confidence": "medium",
+   "location": {
+    "type": "code",
+    "file": "harness/src/engines/cad/draw/src/epc_draw/titleblock/lamina_iram.py",
+    "symbol": "cx_",
+    "line": 143
+   },
+   "value": [
+    0,
+    26,
+    46,
+    56,
+    75,
+    120,
+    175
+   ],
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "cell geometry inside the block (rows, cell positions) is hard-coded in dibujar_rotulo and not registered individually"
+   ],
+   "note": "Column widths 26/20/10/19/45/55; check IRAM 4508 fig. 2."
+  },
+  {
+   "id": "titleblock.code.xv",
+   "kind": "constant",
+   "title": {
+    "es": "Borde izquierdo de la casilla 7",
+    "en": "Left edge of cell 7"
+   },
+   "norm": "IRAM 4508",
+   "edition": "Manual IRAM Ed. XXVII (as cited in code docstring)",
+   "clause": "fig. 2",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "mm",
+   "applies_to": "title block",
+   "provenance": "norm",
+   "verification": "unverified",
+   "confidence": "medium",
+   "location": {
+    "type": "code",
+    "file": "harness/src/engines/cad/draw/src/epc_draw/titleblock/lamina_iram.py",
+    "symbol": "XV",
+    "line": 144
+   },
+   "value": 64,
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [],
+   "note": "64 mm from block left; check IRAM 4508 fig. 2 cell 7."
+  },
+  {
+   "id": "titleblock.code.t25",
+   "kind": "constant",
+   "title": {
+    "es": "Altura de texto del rótulo (2,5)",
+    "en": "Title block text height (2.5)"
+   },
+   "norm": "IRAM 4503",
+   "edition": "Manual IRAM Ed. XXVII (as cited in code docstring)",
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "mm",
+   "applies_to": "title block text",
+   "provenance": "norm",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "code",
+    "file": "harness/src/engines/cad/draw/src/epc_draw/titleblock/lamina_iram.py",
+    "symbol": "t25",
+    "line": 145
+   },
+   "value": 2.5,
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause in code beyond 'IRAM 4503' for capital height",
+    "text heights 2.5 / 1.8 here, 2.0 in layout.DEFAULT_TEXT block, 1.7 in dxf ALTURA_TEXTO_MM: inconsistent"
+   ],
+   "note": "2.5 mm; check IRAM 4503 text heights and which text uses which."
+  },
+  {
+   "id": "titleblock.code.lab",
+   "kind": "constant",
+   "title": {
+    "es": "Altura de leyendas impresas del rótulo (1,8)",
+    "en": "Title block printed legend height (1.8)"
+   },
+   "norm": "IRAM 4508",
+   "edition": "Manual IRAM Ed. XXVII (as cited in code docstring)",
+   "clause": "fig. 2",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "mm",
+   "applies_to": "title block legends",
+   "provenance": "norm",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "code",
+    "file": "harness/src/engines/cad/draw/src/epc_draw/titleblock/lamina_iram.py",
+    "symbol": "lab",
+    "line": 146
+   },
+   "value": 1.8,
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "see t25 text-height inconsistency"
+   ],
+   "note": "1.8 mm printed legends in fig. 2; check."
+  },
+  {
+   "id": "titleblock.code.fr",
+   "kind": "code_constant",
+   "title": {
+    "es": "Franja de coordenadas",
+    "en": "Coordinate strip width"
+   },
+   "norm": "IRAM 4504",
+   "edition": "Manual IRAM Ed. XXVII (as cited in code docstring)",
+   "clause": "fig. 6 (not cited at the line)",
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "mm",
+   "applies_to": "sheets with coordinates (A0-A3)",
+   "provenance": "norm",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "code",
+    "file": "harness/src/engines/cad/draw/src/epc_draw/titleblock/lamina_iram.py",
+    "symbol": null,
+    "line": 47
+   },
+   "value": {
+    "with_coordinates": 5,
+    "without": 0
+   },
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "value is conditional in code: 5 if the format has coordinates else 0",
+    "no clause cited at the definition"
+   ],
+   "note": "5 mm strip; check IRAM 4504 fig. 6."
+  },
+  {
+   "id": "titleblock.layout.default_pens",
+   "kind": "table",
+   "title": {
+    "es": "Plumas por defecto de la lámina",
+    "en": "Default sheet pens"
+   },
+   "norm": "IRAM 4502 / 4508",
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "mm",
+   "applies_to": "editable sheet configuration",
+   "provenance": "norm",
+   "verification": "unverified",
+   "confidence": "medium",
+   "location": {
+    "type": "code",
+    "file": "harness/src/engines/cad/draw/src/epc_draw/titleblock/layout.py",
+    "symbol": "DEFAULT_PENS",
+    "line": 25
+   },
+   "value": {
+    "cut": 0.1,
+    "frame": 1.0,
+    "zone": 0.5,
+    "outline": 0.8,
+    "cell": 0.4,
+    "fine": 0.2
+   },
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "no clause in layout.py; values repeat lamina_iram W_* constants: duplicates a value defined elsewhere (ADR-0012 single source)"
+   ],
+   "note": "cut 0.1, frame 1.0, zone 0.5, outline 0.8, cell 0.4, fine 0.2; trace to the IRAM clauses of the W_* records."
+  },
+  {
+   "id": "titleblock.layout.default_text",
+   "kind": "table",
+   "title": {
+    "es": "Alturas de texto por defecto",
+    "en": "Default text heights"
+   },
+   "norm": null,
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "mm",
+   "applies_to": "coordinates 3.5, block 2.0",
+   "provenance": "design-default",
+   "verification": "unverified",
+   "confidence": "low",
+   "location": {
+    "type": "code",
+    "file": "harness/src/engines/cad/draw/src/epc_draw/titleblock/layout.py",
+    "symbol": "DEFAULT_TEXT",
+    "line": 26
+   },
+   "value": {
+    "coordinates": 3.5,
+    "block": 2.0
+   },
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "block text 2.0 vs 2.5/1.8 in lamina_iram and 1.7 in dxf",
+    "no clause"
+   ],
+   "note": "Check IRAM 4503 text heights."
+  },
+  {
+   "id": "titleblock.layout.default_block",
+   "kind": "table",
+   "title": {
+    "es": "Dimensiones del bloque por defecto",
+    "en": "Default block dimensions"
+   },
+   "norm": "IRAM 4508",
+   "edition": null,
+   "clause": null,
+   "page": {
+    "printed": null,
+    "pdf": null
+   },
+   "unit": "mm",
+   "applies_to": "title block",
+   "provenance": "norm",
+   "verification": "unverified",
+   "confidence": "medium",
+   "location": {
+    "type": "code",
+    "file": "harness/src/engines/cad/draw/src/epc_draw/titleblock/layout.py",
+    "symbol": "DEFAULT_BLOCK",
+    "line": 27
+   },
+   "value": {
+    "width": 175,
+    "height": 51,
+    "modifications_height": 21.5
+   },
+   "review_point": null,
+   "status": "pending",
+   "verified_by": null,
+   "verified_at": null,
+   "issues": [
+    "repeats RW/RH/MH of lamina_iram: duplicates a value defined elsewhere (ADR-0012 single source)",
+    "no clause in layout.py"
+   ],
+   "note": "175 x 51 and 21.5 mm; same check as IRAM 4508 figs. 2 and 3."
+  }
+ ]
+}

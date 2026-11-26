@@ -13,9 +13,7 @@
     "IRAM 4504",
     "IRAM 4508"
   ],
-  "requires": {
-    "dxf-output": "^0.1.0"
-  },
+  "requires": {},
   "consumes": [
     "TitleBlock"
   ],
@@ -37,6 +35,11 @@
     "requires": [
       "ezdxf",
       "lxml",
+      "matplotlib",
+      "numpy",
+      "openpyxl",
+      "pillow",
+      "pypdfium2",
       "shapely",
       "svgelements",
       "vtracer"
@@ -48,9 +51,24 @@
     "source": "291_G_IRAM_Custom_TitleBlocks_Generator"
   },
   "engine": [
+    "aea90364",
+    "arch",
+    "calc_common",
+    "draw",
+    "drawing",
     "dxf",
+    "feeder_sizing",
+    "grounding",
+    "load_balance",
+    "mld",
+    "plan",
+    "pv",
+    "selectivity",
+    "short_circuit",
+    "sld",
     "symbols",
-    "titleblock"
+    "titleblock",
+    "voltage_drop"
   ],
   "owns": [
     "titleblock"

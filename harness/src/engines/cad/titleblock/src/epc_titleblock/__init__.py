@@ -1,12 +1,33 @@
-"""IRAM A0-A4 sheets and custom title blocks (SVG, DXF)."""
-__version__ = "0.1.0"
+"""The title block moved into `epc_draw.titleblock` (ADR-0042). This package is a door: `epc_titleblock` and every `epc_titleblock.<module>` are the same objects as `epc_draw.titleblock` and `epc_draw.titleblock.<module>`."""
+import importlib
+import importlib.abc
+import importlib.util
+import sys
 
-__all__ = ["Pluma", "RequestError", "TitleblockError", "build", "main", "project_request", "render", "standard_config", "text_of", "validate", "write"]
+from epc_draw import titleblock as _symbols
+
+__version__ = "0.1.0"
+__all__ = list(_symbols.__all__)
+
+
+class _Door(importlib.abc.MetaPathFinder, importlib.abc.Loader):
+    """`import epc_titleblock.<name>` gives the module `epc_draw.titleblock.<name>` itself (one copy, so classes and settings are shared)."""
+
+    def find_spec(self, name, path=None, target=None):
+        if name.startswith("epc_titleblock."):
+            return importlib.util.spec_from_loader(name, self)
+        return None
+
+    def create_module(self, spec):
+        return importlib.import_module("epc_draw.titleblock." + spec.name.split(".", 1)[1])
+
+    def exec_module(self, module):
+        return None
+
+
+if not any(isinstance(f, _Door) and f.__class__.__module__ == __name__ for f in sys.meta_path):
+    sys.meta_path.insert(0, _Door())
 
 
 def __getattr__(name):
-    """The public names load on first use (PEP 562), so importing the package stays as cheap as it was."""
-    if name in __all__:
-        from epc_titleblock import api
-        return getattr(api, name)
-    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+    return getattr(_symbols, name)

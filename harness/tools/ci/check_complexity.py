@@ -22,7 +22,7 @@ import epc_paths as P  # noqa: E402
 REPO = P.REPO
 BASELINE = REPO / "harness" / "tools" / "ci" / "complexity_baseline.json"
 MAX_NEW = 10
-EXCLUDED = ("/tests/", "/test_", "incoming/", "local/", f"{P.ENGINE_FOLDERS_REL['arch']}/scripts/", "node_modules/", ".venv/", "/migrations/")
+EXCLUDED = ("/tests/", "/test_", "incoming/", "local/", f"{P.ENGINE_FOLDERS_REL['draw']}/scripts/", "node_modules/", ".venv/", "/migrations/")
 
 
 # a relocation (MIG-22) moves tracked files before they are committed: they are read from their new place (untracked files under these folders)

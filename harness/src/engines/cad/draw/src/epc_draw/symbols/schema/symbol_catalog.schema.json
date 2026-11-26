@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "epc_draw.symbols catalogue (_catalog.json of one library)",
+  "type": "object",
+  "required": ["symbols"],
+  "properties": {
+    "symbols": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "file", "name_en", "name_es", "size", "ports"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "file": {"type": "string", "pattern": "\\.svg$"},
+          "name_en": {"type": "string"},
+          "name_es": {"type": "string"},
+          "legend": {"type": "object", "required": ["abbr", "es", "en"], "properties": {"abbr": {"type": "string"}, "es": {"type": "string"}, "en": {"type": "string"}}},
+          "size": {"type": "object", "required": ["w", "h"], "properties": {"w": {"type": "number"}, "h": {"type": "number"}}},
+          "ports": {
+            "type": "array",
+            "items": {"type": "object", "required": ["id", "x", "y"], "properties": {"id": {"type": "string"}, "x": {"type": "number"}, "y": {"type": "number"}, "dir": {"type": "string"}}}
+          },
+          "label_slots": {
+            "type": "array",
+            "items": {"type": "object", "required": ["key"], "properties": {"key": {"type": "string"}}}
+          }
+        }
+      }
+    }
+  }
+}

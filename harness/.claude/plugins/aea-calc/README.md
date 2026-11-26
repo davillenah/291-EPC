@@ -32,9 +32,9 @@ This plugin is packaging only. The code lives in `harness/src/engines/calculatio
 | Incluye (motor) | `aea90364`, `calc_common`, `feeder_sizing`, `grounding`, `load_balance`, `selectivity`, `short_circuit`, `voltage_drop` |
 | Es dueño de | `aea90364` |
 | Necesita (plugins) | — |
-| Lo necesitan | `board-design`, `mld`, `sld` |
+| Lo necesitan | `board-design` |
 | Paquetes de Python | `openpyxl` |
-| Si lo modificas, revisa | plugins `board-design`, `mld`, `sld`; módulos del backend — |
+| Si lo modificas, revisa | plugins `board-design`; módulos del backend — |
 
 Generado por `python harness/tools/build/regen_plugins.py`; el mapa completo está en `harness/docs/architecture/DEPENDENCIAS.md`.
 <!-- deps:end -->
