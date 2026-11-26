@@ -44,12 +44,14 @@ def build(roof: Dict[str, Any], result: Dict[str, Any]):
     return doc
 
 
+def render(roof: Dict[str, Any], result: Dict[str, Any], name: str, stamp_date=None) -> Dict[str, bytes]:
+    """{`<name>_pv_roof_model_3d.dxf`: bytes}. Nothing is written."""
+    from epc_draw.core import deliverable
+    stem = f"{name}_pv_roof_model_3d"
+    return {f"{stem}.dxf": deliverable.finish_draft_bytes(build(roof, result), None, stamp_date, stem)["dxf"]}
+
+
 def write(roof: Dict[str, Any], result: Dict[str, Any], out_dir, name: str, stamp_date=None) -> Path:
     """Writes `<name>_pv_roof_model_3d.dxf` in `out_dir` and returns its path."""
-    from epc_draw.core import deliverable
-    doc = build(roof, result)
-    out = Path(out_dir)
-    out.mkdir(parents=True, exist_ok=True)
-    path = out / f"{name}_pv_roof_model_3d.dxf"
-    deliverable.finish_draft(doc, path, None, stamp_date, path.stem)
-    return path
+    from epc_draw.pv import files
+    return next(iter(files.save(out_dir, render(roof, result, name, stamp_date)).values()))
