@@ -70,6 +70,18 @@ class TestCatalog(unittest.TestCase):
         lay = doc.layers.get("291-E-DIAG")
         self.assertEqual((lay.color, lay.dxf.lineweight, lay.is_locked, lay.dxf.plot), (3, 50, True, 0))
 
+    def test_a_layer_can_be_transparent_and_a_bad_value_is_named(self):
+        doc = ezdxf.new("R2018")
+        cat = L.load()
+        cat["sld.diagram"] = {**cat["sld.diagram"], "transparency_pct": 50}
+        L.apply(doc, "sld.diagram", cat)
+        self.assertAlmostEqual(doc.layers.get("291-E-DIAG").transparency, 0.5, delta=0.01)
+        for bad in (95, -1, 20.5, True, "80"):
+            cat["sld.diagram"] = {**cat["sld.diagram"], "transparency_pct": bad}
+            self.assertIn("sld.diagram.transparency_pct", L.validate(cat), bad)
+        cat["sld.diagram"] = {k: v for k, v in cat["sld.diagram"].items() if k != "transparency_pct"}
+        self.assertNotIn("sld.diagram.transparency_pct", L.validate(cat))
+
     def test_an_unknown_role_gets_plain_defaults(self):
         self.assertEqual(L.get("plan.NEW-LAYER")["name"], "NEW-LAYER")
 

@@ -1550,6 +1550,7 @@
    "name": "291-WP-DISK-GRID",
    "color": 7,
    "lineweight": 0.13,
+   "transparency_pct": 80,
    "linetype": "CONTINUOUS",
    "on": true,
    "frozen": false,

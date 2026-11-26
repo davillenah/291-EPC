@@ -41,6 +41,11 @@ class TestPvDisk(unittest.TestCase):
             self.assertIn(name, doc.layers)
         self.assertNotIn("pv.DISK_FILL", doc.layers)
 
+    def test_the_grid_layer_is_80_percent_transparent(self):
+        doc = read(disk.render(sample(), "D", "en")["D_irradiation_disk.dxf"])
+        self.assertAlmostEqual(doc.layers.get("291-WP-DISK-GRID").transparency, 0.8, delta=0.01)
+        self.assertEqual(doc.layers.get("291-WP-DISK-FILL").transparency, 0.0)
+
     def test_the_two_languages_and_the_two_palettes_differ(self):
         en, es = (disk.render(sample(), "D", lang)["D_irradiation_disk.dxf"] for lang in ("en", "es"))
         self.assertIn(b"IRRADIATION DISK", en)
