@@ -187,6 +187,7 @@ Schema: `harness/src/engines/calculation/pv/src/epc_pv/schema/input.schema.json`
 | `arrays[].tracker.gcr` | number |  | minimum 0.01, maximum 1 | Ground coverage ratio (module width / row pitch); required with backtracking. |
 | `arrays[].dc_ac_ratio` | number |  | exclusiveMinimum 0 | Used when n_inverters is missing. |
 | `arrays[].module` | object | yes |  |  |
+| `arrays[].module.beta_vmp_pct_c` | number |  |  | Temperature coefficient of the maximum-power voltage (%/C), from the data sheet; when missing the open-circuit one is used. |
 | `arrays[].inverter` | object | yes |  |  |
 
 ### Output
