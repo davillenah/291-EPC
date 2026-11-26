@@ -32,8 +32,12 @@ Nothing (standard library). `pvlib` is used only by the developer tool `tests/va
 
 ## Known limits
 - **The values are typical and not confirmed** (`data/params.json`): losses, thermal model, inverter curve, incidence modifier, short-circuit factor. The result says so in `warnings`; do not size or sell a plant with it until the owner confirms them on the norms page.
-- The sun is evaluated at the timestamp of each value (an hourly mean is not centred); no shading by the horizon or between rows, no bifacial gain, no tracker, no soiling by season, no degradation by year, no battery.
+- The sun is evaluated at the timestamp of each value (an hourly mean is not centred); no bifacial gain, no tracker, no soiling by season, no degradation by year, no battery.
 - Diffuse and ground light are not reduced by the incidence modifier. The Perez transposition model is not included.
 - The coefficient of the maximum-power voltage is taken equal to that of the open-circuit voltage (the data sheet value should replace it).
 - DC cables, protections and the connection to the low-voltage board are not calculated here (next step, with `epc_aea90364`).
 - The formulas are in `docs/formulas.md`.
+
+## Shading (2026-11-26)
+
+`epc_pv.shading` computes the shade of the direct beam from geometry, with no norm value: the far horizon (`site.horizon`: points `{azimuth_deg, elevation_deg}`, joined by straight lines around the circle, azimuth clockwise from north; the sun below the profile gives no direct beam) and the shade of one row on the next (`arrays[].row_shading`: `slope_m`, `pitch_m`, `n_rows`; the sun is taken in the plane normal to the rows, the front row is never shaded, the share of a row shaded is the share of its direct beam lost). Only the direct part is reduced; the diffuse and ground parts stay. When either is given, the typical `losses_pct.shading` is not added to that array (no double count) and the array result carries `shading_loss_pct` (yearly plane-of-array energy lost) with the warning `shading_computed`. Without them nothing changes. Not covered: shade cast by near obstacles on the modules (give them as horizon points when they are far, or leave them out), electrical mismatch by shaded cells (the loss is proportional to the area), diffuse-sky obstruction.
