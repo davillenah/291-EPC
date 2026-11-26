@@ -35,6 +35,15 @@ class TestPvDiagrams(unittest.TestCase):
             boxes = [e for e in ezdxf.readfile(str(paths["PVT_layout"])).modelspace() if e.dxf.layer == "291-WS-MNTG-N" and e.dxftype() == "LWPOLYLINE"]
             self.assertGreaterEqual(len(boxes), len(PLANT["geometry"]["tables"]))
 
+    def test_each_inverter_shows_its_combiner_string_fuse_and_ac_protection_as_blocks(self):
+        data = pv_diagrams.render_all(PLANT["geometry"], PLANT["result"], "PVT", "en", "2026-11-26")["PVT_sld.dxf"]
+        import io
+        doc = ezdxf.read(io.StringIO(data.decode("utf-8", "ignore")))
+        used = {e.dxf.name for e in doc.modelspace().query("INSERT")}
+        for part in ("pv_combiner_box", "fuse", "mccb_basic", "spd_varistor"):
+            self.assertTrue(any(part in name for name in used), part)
+
 
 if __name__ == "__main__":
     unittest.main()
+
