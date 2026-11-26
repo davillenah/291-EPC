@@ -157,6 +157,9 @@ Schema: `harness/src/engines/calculation/pv/src/epc_pv/schema/input.schema.json`
 | `assumptions.inverter` | object |  |  |  |
 | `assumptions.strings` | object |  |  |  |
 | `assumptions.solar_constant_w_m2` | number |  |  |  |
+| `assumptions.degradation` | object |  |  | Yearly degradation of the energy (compound) over the years of the plant; no default. With it the result carries `lifetime_ac_kwh` per array and in total. |
+| `assumptions.degradation.pct_per_year` | number | yes | minimum 0, maximum 100 |  |
+| `assumptions.degradation.years` | integer | yes | minimum 1, maximum 100 |  |
 | `arrays` | array | yes | minItems 1 |  |
 | `arrays[].id` | string | yes |  |  |
 | `arrays[].name` | string |  |  |  |

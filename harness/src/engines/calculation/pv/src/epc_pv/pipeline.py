@@ -8,7 +8,7 @@ import json
 from datetime import datetime, timedelta
 from typing import Any, Dict, List, Optional, Sequence, Union
 
-from epc_pv import config, irradiance, nearshade, power, shading, solar, strings, thermal, tracker
+from epc_pv import config, irradiance, lifetime, nearshade, power, shading, solar, strings, thermal, tracker
 from epc_pv.messages import bi, item
 from epc_pv.model import Options, PvError, Result
 
@@ -241,6 +241,14 @@ def _array_run(spec: Dict[str, Any], index: int, site: Dict[str, Any], w: Dict[s
     return result, notes
 
 
+def _add_lifetime(arrays: List[Dict[str, Any]], totals: Dict[str, Any], life: Dict[str, float]) -> None:
+    """The yearly AC energy over the years of the plant, per array and in total, from the degradation the document gives."""
+    for a in arrays:
+        a["lifetime_ac_kwh"] = lifetime.project(a["ac_kwh"], life)
+    totals["lifetime_ac_kwh"] = lifetime.project(totals["ac_kwh"], life)
+    totals["lifetime_total_ac_kwh"] = round(sum(totals["lifetime_ac_kwh"]), 3)
+
+
 def run(doc: Union[dict, str, bytes], options: Optional[Options] = None) -> Result:
     """The yield and the layout of every array of the document (see `schema/input.schema.json`)."""
     opts = options or Options()
@@ -259,4 +267,8 @@ def run(doc: Union[dict, str, bytes], options: Optional[Options] = None) -> Resu
         result, notes = _array_run(spec, index, site, w, inst, p, t_min, opts)
         warnings.extend(notes)
         arrays.append(result)
-    return Result(arrays=arrays, totals=_totals(arrays), warnings=warnings, hours=w["n"])
+    totals = _totals(arrays)
+    life = lifetime.parse(document.get("assumptions"))
+    if life:
+        _add_lifetime(arrays, totals, life)
+    return Result(arrays=arrays, totals=totals, warnings=warnings, hours=w["n"])

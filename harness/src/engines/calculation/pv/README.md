@@ -32,7 +32,7 @@ Nothing (standard library). `pvlib` is used only by the developer tool `tests/va
 
 ## Known limits
 - **The values are typical and not confirmed** (`data/params.json`): losses, thermal model, inverter curve, incidence modifier, short-circuit factor. The result says so in `warnings`; do not size or sell a plant with it until the owner confirms them on the norms page.
-- The sun is evaluated at the timestamp of each value (an hourly mean is not centred); no bifacial gain, no soiling by season, no degradation by year, no battery.
+- The sun is evaluated at the timestamp of each value (an hourly mean is not centred); no bifacial gain, no soiling by season, no battery.
 - Diffuse and ground light are not reduced by the incidence modifier. The Perez transposition model is not included.
 - The coefficient of the maximum-power voltage is the module's `beta_vmp_pct_c` (data sheet) when given; otherwise it is taken equal to that of the open-circuit voltage and the result says so (`wind_proxy`).
 - DC cables, protections and the connection to the low-voltage board are not calculated here (next step, with `epc_aea90364`).
@@ -45,3 +45,7 @@ Nothing (standard library). `pvlib` is used only by the developer tool `tests/va
 ## Tracker (2026-11-26)
 
 `arrays[].tracker` (`axis_azimuth_deg`, `max_angle_deg`, `backtracking` default true, `gcr` with backtracking) replaces the fixed plane with a horizontal single-axis tracker: `epc_pv.tracker` gives the rotation angle of every instant (ideal angle in the plane normal to the axis, backtracking from the ground coverage ratio, clipped to the maximum angle) and the plane it gives, and the irradiance is computed on that plane instant by instant. `tilt_deg` and `azimuth_deg` are not needed. A tracker array takes no `row_shading` or `near_obstacles` (error `err_tracker_shade`). The layout, strings and drawings are not changed by the tracker (the 3D tracker structure is not modelled). Checked with closed-form cases (sun over the axis, east and west symmetry, clipping, backtracking); there is no pvlib reference for it in this environment.
+
+## Life of the plant (2026-11-26)
+
+`assumptions.degradation` (`{"pct_per_year": 0.5, "years": 25}`, no default: the value comes from the module data sheet or from the owner) adds `lifetime_ac_kwh` (year 1 is the run, each later year keeps `1 - degradation` of the year before, compound) to every array and to the totals, with `lifetime_total_ac_kwh`. Without the block nothing changes. `epc_pv.lifetime`.
