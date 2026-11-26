@@ -38,7 +38,8 @@
         "losses_pct": {"type": "object"},
         "inverter": {"type": "object", "required": ["eta_nom", "eta_ref"]},
         "strings": {"type": "object", "required": ["isc_factor", "policy"]},
-        "solar_constant_w_m2": {"type": "number"}
+        "solar_constant_w_m2": {"type": "number"},
+        "degradation": {"type": "object", "required": ["pct_per_year", "years"], "properties": {"pct_per_year": {"type": "number", "minimum": 0, "maximum": 100}, "years": {"type": "integer", "minimum": 1, "maximum": 100}}, "description": "Yearly degradation of the energy (compound) over the years of the plant; no default. With it the result carries `lifetime_ac_kwh` per array and in total."}
       }
     },
     "arrays": {

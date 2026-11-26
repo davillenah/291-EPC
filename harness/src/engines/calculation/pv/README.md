@@ -32,7 +32,7 @@ Nothing (standard library). `pvlib` is used only by the developer tool `tests/va
 
 ## Known limits
 - **The values are typical and not confirmed** (`data/params.json`): losses, thermal model, inverter curve, incidence modifier, short-circuit factor. The result says so in `warnings`; do not size or sell a plant with it until the owner confirms them on the norms page.
-- The sun is evaluated at the timestamp of each value (an hourly mean is not centred); no bifacial gain, no tracker, no soiling by season, no degradation by year, no battery.
+- The sun is evaluated at the timestamp of each value (an hourly mean is not centred); no bifacial gain, no tracker, no soiling by season, no battery.
 - Diffuse and ground light are not reduced by the incidence modifier. The Perez transposition model is not included.
 - The coefficient of the maximum-power voltage is the module's `beta_vmp_pct_c` (data sheet) when given; otherwise it is taken equal to that of the open-circuit voltage and the result says so (`wind_proxy`).
 - DC cables, protections and the connection to the low-voltage board are not calculated here (next step, with `epc_aea90364`).
@@ -41,3 +41,7 @@ Nothing (standard library). `pvlib` is used only by the developer tool `tests/va
 ## Shading (2026-11-26)
 
 `epc_pv.shading` computes the shade of the direct beam from geometry, with no norm value: the far horizon (`site.horizon`: points `{azimuth_deg, elevation_deg}`, joined by straight lines around the circle, azimuth clockwise from north; the sun below the profile gives no direct beam) and the shade of one row on the next (`arrays[].row_shading`: `slope_m`, `pitch_m`, `n_rows`; the sun is taken in the plane normal to the rows, the front row is never shaded, the share of a row shaded is the share of its direct beam lost). Only the direct part is reduced; the diffuse and ground parts stay. When either is given, the typical `losses_pct.shading` is not added to that array (no double count) and the array result carries `shading_loss_pct` (yearly plane-of-array energy lost) with the warning `shading_computed`. Without them nothing changes. Near obstacles (`arrays[].near_obstacles`, `epc_pv.nearshade`): the array as a tilted rectangle and the obstacles as boxes on the ground, in a local frame (x east, y north, metres); the sun ray is cast from a grid of 16 points of the array and the share of points in the sun multiplies the direct beam (with the rows and the horizon). Not covered: obstacles that are not boxes, electrical mismatch by shaded cells (the loss is proportional to the area), diffuse-sky obstruction.
+
+## Life of the plant (2026-11-26)
+
+`assumptions.degradation` (`{"pct_per_year": 0.5, "years": 25}`, no default: the value comes from the module data sheet or from the owner) adds `lifetime_ac_kwh` (year 1 is the run, each later year keeps `1 - degradation` of the year before, compound) to every array and to the totals, with `lifetime_total_ac_kwh`. Without the block nothing changes. `epc_pv.lifetime`.
