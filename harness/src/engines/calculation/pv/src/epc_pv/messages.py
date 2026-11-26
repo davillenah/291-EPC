@@ -7,8 +7,8 @@ MESSAGES: Dict[str, Dict[str, str]] = {
         "es": "Valores típicos aún no confirmados por el dueño: no usar el resultado para dimensionar ni para vender una planta.",
     },
     "wind_proxy": {
-        "en": "The temperature coefficient of the maximum-power voltage is taken equal to that of the open-circuit voltage.",
-        "es": "El coeficiente de temperatura de la tensión de máxima potencia se toma igual al de la tensión de circuito abierto.",
+        "en": "The temperature coefficient of the maximum-power voltage is taken equal to that of the open-circuit voltage; give `beta_vmp_pct_c` in the module (data sheet value).",
+        "es": "El coeficiente de temperatura de la tensión de máxima potencia se toma igual al de la tensión de circuito abierto; indicar `beta_vmp_pct_c` en el módulo (valor de la ficha técnica).",
     },
     "t_min_from_weather": {
         "en": "The design minimum temperature is the coldest hour of the weather file ({t_min_c} C); give `design_t_min_c` for a safer value.",

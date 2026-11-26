@@ -449,7 +449,7 @@ A code is stable: its text may be reworded, the code is never reused for another
 | `table_shrunk` | The table of {rows} x {per_row} modules does not fit the site; the harness uses {rows_fit} x {per_row_fit} (pending review). Give a table size in the advanced section to change it. | La mesa de {rows} x {per_row} módulos no entra en el predio; el harness usa {rows_fit} x {per_row_fit} (pendiente de revisión). Indicar el tamaño de mesa en la sección avanzada para cambiarlo. |
 | `typical_values` | Typical values not yet confirmed by the owner: do not use the result to size or to sell a plant. | Valores típicos aún no confirmados por el dueño: no usar el resultado para dimensionar ni para vender una planta. |
 | `warn_current` | Array {array}: {strings} strings per MPPT input exceed the {limit} the inverter inputs allow; add inverters or inputs. | Arreglo {array}: {strings} strings por entrada MPPT superan los {limit} que admiten las entradas del inversor; agregar inversores o entradas. |
-| `wind_proxy` | The temperature coefficient of the maximum-power voltage is taken equal to that of the open-circuit voltage. | El coeficiente de temperatura de la tensión de máxima potencia se toma igual al de la tensión de circuito abierto. |
+| `wind_proxy` | The temperature coefficient of the maximum-power voltage is taken equal to that of the open-circuit voltage; give `beta_vmp_pct_c` in the module (data sheet value). | El coeficiente de temperatura de la tensión de máxima potencia se toma igual al de la tensión de circuito abierto; indicar `beta_vmp_pct_c` en el módulo (valor de la ficha técnica). |
 
 ## epc_receptacles
 
