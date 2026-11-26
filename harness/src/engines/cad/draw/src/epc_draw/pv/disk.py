@@ -57,19 +57,43 @@ def rgb(band: int, palette: str, low: int) -> Tuple[int, int, int]:
     return COLOR_STOPS[-1][1]
 
 
+def _runs(tilts: List[float], values: List[float], lo: float, hi: float) -> List[Tuple[float, float]]:
+    """The tilt intervals of one ray where the percentage (linear between nodes) lies in [lo, hi), touching pieces joined."""
+    runs: List[Tuple[float, float]] = []
+    for t0, t1, v0, v1 in zip(tilts, tilts[1:], values, values[1:]):
+        if v0 == v1:
+            span = (0.0, 1.0) if lo <= v0 < hi else None
+        else:
+            ua, ub = sorted(((lo - v0) / (v1 - v0), (hi - v0) / (v1 - v0)))
+            span = (max(ua, 0.0), min(ub, 1.0)) if max(ua, 0.0) < min(ub, 1.0) else None
+        if span is None:
+            continue
+        piece = (t0 + (t1 - t0) * span[0], t0 + (t1 - t0) * span[1])
+        if runs and abs(runs[-1][1] - piece[0]) < 1e-9:
+            piece = (runs.pop()[0], piece[1])
+        runs.append(piece)
+    return runs
+
+
+def _ray_polygon(ta: float, tb: float, a0: float, a1: float) -> List[Tuple[float, float]]:
+    if ta <= 0.0:
+        return [point(0, 0), point(tb, a0), point(tb, a1)]
+    return [point(ta, a0), point(tb, a0), point(tb, a1), point(ta, a1)]
+
+
 def _sectors(disk: Dict[str, Any]) -> Dict[int, List[List[Tuple[float, float]]]]:
-    """The filled sectors grouped by band: {band: [polygon, ...]}. One sector per cell between four neighbouring nodes of the disk grid, valued at their mean
-    (the caller refines the grid when a smoother disk is wanted); the first ring is a fan around the centre."""
+    """The filled areas grouped by band: {band: [polygon, ...]}. Every azimuth ray of the disk grid gives, per band, the tilt intervals inside the band (exact along the ray, linear between nodes) and each
+    interval becomes a thin sector as wide as the ray step, so the edges of a band follow its contour; the caller refines the grid (1 degree of tilt, 2 of azimuth) for a smooth drawing."""
     tilts, azs, pct = disk["tilt_deg"], disk["azimuth_deg"], disk["pct"]
+    half = (azs[1] - azs[0]) / 2.0 if len(azs) > 1 else 180.0
+    low = band_of(min(min(r) for r in pct))
     bands: Dict[int, List[List[Tuple[float, float]]]] = {}
-    for i in range(len(tilts) - 1):
-        for j, a0 in enumerate(azs):
-            k = (j + 1) % len(azs)
-            a1 = azs[j + 1] if j + 1 < len(azs) else 360.0
-            t0, t1 = tilts[i], tilts[i + 1]
-            value = (pct[i][j] + pct[i][k] + pct[i + 1][j] + pct[i + 1][k]) / 4.0
-            poly = [point(t0, a0), point(t1, a0), point(t1, a1), point(t0, a1)] if t0 > 0 else [point(0, 0), point(t1, a0), point(t1, a1)]
-            bands.setdefault(band_of(value), []).append(poly)
+    for j, az in enumerate(azs):
+        column = [row[j] for row in pct]
+        for band in range(low, 100, BAND_PCT):
+            hi = 101.0 if band >= 100 - BAND_PCT else band + BAND_PCT
+            for ta, tb in _runs(tilts, column, band, hi):
+                bands.setdefault(band, []).append(_ray_polygon(ta, tb, az - half, az + half))
     return bands
 
 
