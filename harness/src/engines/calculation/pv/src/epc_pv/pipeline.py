@@ -249,6 +249,17 @@ def _add_lifetime(arrays: List[Dict[str, Any]], totals: Dict[str, Any], life: Di
     totals["lifetime_total_ac_kwh"] = round(sum(totals["lifetime_ac_kwh"]), 3)
 
 
+def sky_context(doc: Union[dict, str, bytes]) -> tuple:
+    """(site, weather, parameters) of a document with `site`, `weather` and a non-empty `arrays` list: the shared inputs of the studies that need no plant (the irradiation disk)."""
+    document = _document(doc)
+    return _site(document), _weather(document), _assumptions(document)
+
+
+def instants(site: Dict[str, Any], w: Dict[str, Any], p: Dict[str, Any]) -> List[Dict[str, Any]]:
+    """The sun position and extraterrestrial irradiance of every instant of the weather file."""
+    return _instants(site, w, p["solar_constant_w_m2"])
+
+
 def run(doc: Union[dict, str, bytes], options: Optional[Options] = None) -> Result:
     """The yield and the layout of every array of the document (see `schema/input.schema.json`)."""
     opts = options or Options()

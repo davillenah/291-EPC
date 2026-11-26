@@ -49,3 +49,6 @@ Nothing (standard library). `pvlib` is used only by the developer tool `tests/va
 ## Life of the plant (2026-11-26)
 
 `assumptions.degradation` (`{"pct_per_year": 0.5, "years": 25}`, no default: the value comes from the module data sheet or from the owner) adds `lifetime_ac_kwh` (year 1 is the run, each later year keeps `1 - degradation` of the year before, compound) to every array and to the totals, with `lifetime_total_ac_kwh`. Without the block nothing changes. `epc_pv.lifetime`.
+
+## Irradiation disk (2026-11-26)
+`epc_pv.disk.compute(doc)` gives the annual irradiation on every fixed plane of a site (tilt 0 to 90, azimuth 0 to 360 from north, clockwise) and its percentage of the best plane: the polar "disk" of the solar resource studies. Same transposition and sun position as the yield; the document needs `site` and `weather` only. `pct_at` reads any tilt and azimuth by bilinear interpolation, `refine` gives a finer grid for drawing. The drawing is `epc_draw.pv.disk.render` (DXF blocks, colour or grey palette). Formula: `kwh_m2 = sum(G_poa) dt`, `pct = 100 kwh_m2 / max(kwh_m2)`.
