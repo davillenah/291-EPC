@@ -86,6 +86,15 @@ def _plausible(key: str, values: List[float], high: float) -> None:
         raise PvError("err_range", name=f"weather.{key}", rule=bi(f"<= {high:g}", f"<= {high:g}"), value=max(values))
 
 
+def _check_ranges(series: Dict[str, List[float]]) -> None:
+    """`PvError` when an irradiance, the wind or the air temperature is outside the plausible range of the Earth's surface (or not a number)."""
+    for k, high in WEATHER_LIMITS.items():
+        _plausible(k, series[k], high)
+    low, high = TEMPERATURE_LIMITS_C
+    if any(v != v or not low <= v <= high for v in series["temp_air_c"]):
+        raise PvError("err_range", name="weather.temp_air_c", rule=bi(f"between {low:g} and {high:g}", f"entre {low:g} y {high:g}"), value=max(series["temp_air_c"], key=lambda v: abs(v) if v == v else 1e9))
+
+
 def _weather(doc: dict) -> Dict[str, Any]:
     w = _require(doc["weather"], ("start", "utc_offset_h", "step_minutes") + WEATHER_SERIES, "weather")
     try:
@@ -99,11 +108,7 @@ def _weather(doc: dict) -> Dict[str, Any]:
             raise PvError("err_length", name=k, n=len(values), expected=n)
     if n == 0:
         raise PvError("err_type", name="weather.ghi", kind=bi("a non-empty list", "una lista no vacía"))
-    for k, high in WEATHER_LIMITS.items():
-        _plausible(k, series[k], high)
-    low, high = TEMPERATURE_LIMITS_C
-    if any(v != v or not low <= v <= high for v in series["temp_air_c"]):
-        raise PvError("err_range", name="weather.temp_air_c", rule=bi(f"between {low:g} and {high:g}", f"entre {low:g} y {high:g}"), value=max(series["temp_air_c"], key=lambda v: abs(v) if v == v else 1e9))
+    _check_ranges(series)
     return {"start": start, "offset_h": _number(w, "utc_offset_h", "weather", -14, 14), "step_min": _number(w, "step_minutes", "weather", positive=True), "n": n, **series}
 
 

@@ -254,6 +254,13 @@ def _economics_errors(economics):
     return out
 
 
+def _rounded_notes(asked, result):
+    """A note per array whose installed modules differ from the modules asked (they go in whole strings)."""
+    from epc_pv.messages import item
+    return [item("modules_rounded", array=a["id"], asked=int(asked[str(a["id"])]), installed=a["modules"], n_series=a["strings"]["n_series"])
+            for a in result["arrays"] if str(a["id"]) in asked and int(asked[str(a["id"])]) != a["modules"]]
+
+
 def check_templates(section):
     """Raises StageInputError (English and Spanish) for an array template with a value that is not a number or not in range, and for two arrays or roof planes with the same id."""
     errors = [e for a in _templates(section) for e in _template_errors(a)] + _economics_errors(section.get("economics"))
@@ -313,11 +320,10 @@ def ground_fill_finding(n, run_id, slug, proposal):
 def _check_fill_layout(layout, target):
     """The site, table, module size, gaps and the optional `target_modules` of a `fill` layout are checked with the layout rules (names as the person wrote them), in English and Spanish."""
     import epc_pv
-    import epc_pv.layout as plan
     if target is not None and not (_is_number(target) and target >= 1 and float(target).is_integer()):
         raise StageInputError([_bad_value("layout.target_modules", target, "a whole number of at least 1", "un número entero de al menos 1")])
     try:
-        plan.check(layout)
+        epc_pv.check_layout(layout)
     except epc_pv.PvError as exc:
         raise StageInputError([f"layout: {exc} / {exc.es}"]) from exc
 
@@ -567,12 +573,14 @@ class PvStage(Stage):
             return self.result("not_available", message=NOT_PROVIDED, reason="no_pv_inputs")
         found = self._prepare(context)
         section, _, flat, roof, _, _ = found
+        asked = {str(a["id"]): a["n_modules"] for a in _templates(section) if isinstance(a, dict) and "id" in a and "n_modules" in a}
         result = _run(section)
         section, result = _add_inverters_for_current(section, result)
         if flat is not None:
             section, result = _trim_to_site(section, result, flat)
         result = dict(result, **_proposals(roof, flat))
         warnings, calls, findings = list(result["warnings"]) + (roof or flat or {"warnings": []})["warnings"], [EC.record_for(ENGINE, FUNCTION)], []
+        warnings += _rounded_notes(asked, result)
         calls += [EC.record_for(ENGINE, "epc_pv.plan_roof")] if roof is not None else []
         result, warnings, calls, findings = self._with_layout(context, section, result, (warnings, calls, findings))
         findings += self._notes(context, found, len(findings))

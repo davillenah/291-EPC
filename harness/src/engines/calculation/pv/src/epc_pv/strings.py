@@ -23,11 +23,9 @@ def series_range(module: Dict[str, float], inverter: Dict[str, float], t_min_c: 
     beta_vmp = module.get("beta_vmp_pct_c", module["beta_voc_pct_c"]) / 100.0        # the data sheet value when given, else the open-circuit one (warning `wind_proxy`)
     vmp_cold = module["vmp_v"] * (1.0 + beta_vmp * (t_min_c - 25.0))
     vmp_hot = module["vmp_v"] * (1.0 + beta_vmp * (t_cell_max_c - 25.0))
-    by_vdc, by_mppt = math.floor(inverter["vdc_max_v"] / voc_cold), math.floor(inverter["mppt_v_max"] / vmp_cold)
-    s_max = min(by_vdc, by_mppt)
+    s_max = min(math.floor(inverter["vdc_max_v"] / voc_cold), math.floor(inverter["mppt_v_max"] / vmp_cold))
     s_min = max(1, math.ceil(inverter["mppt_v_min"] / vmp_hot))
-    # the voltages at the design temperatures and the two floors are returned so a memorandum can show the substitution of the formula with the engine's own numbers
-    return {"s_min": int(s_min), "s_max": int(s_max), "voc_cold_v": round(voc_cold, 3), "vmp_cold_v": round(vmp_cold, 3), "vmp_hot_v": round(vmp_hot, 3), "n_by_vdc_max": int(by_vdc), "n_by_mppt_max": int(by_mppt)}
+    return {"s_min": int(s_min), "s_max": int(s_max)}
 
 
 def choose_series(rng: Dict[str, int], module: Dict[str, float], inverter: Dict[str, float], policy: str, given, array_id: str) -> int:
@@ -66,8 +64,6 @@ def layout(spec: Dict[str, Any], t_min_c: float, t_cell_max_c: float, rules: Dic
     per_mppt = math.ceil(per_inverter / int(inverter["n_mppt"]))
     limit = math.floor(inverter["i_max_input_a"] / module["imp_a"])
     warnings: List[Dict[str, str]] = []
-    if modules != int(spec["n_modules"]):
-        warnings.append(item("modules_rounded", array=array_id, asked=int(spec["n_modules"]), installed=modules, n_series=n_series))
     if inverter.get("isc_max_input_a") is None:
         warnings.append(item("isc_not_checked", array=array_id))
     else:

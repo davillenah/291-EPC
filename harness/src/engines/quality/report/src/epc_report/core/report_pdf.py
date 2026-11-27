@@ -98,6 +98,14 @@ def _first_pages(rep: dict) -> List[list]:
     return [cover_ops(rep["cover"], rep), []] if rep.get("cover") else [[]]
 
 
+def _footer(page: list, rep: dict, n: int, total: int, tw: float) -> None:
+    """The rule, the footer text and the page label at the foot of a page; a long footer goes on two lines and never runs under the page label."""
+    page.append(("line", M, H - 44, W - M, H - 44, 0.5, "#c8cdd5"))
+    for k, line in enumerate(_wrap(rep.get("footer", ""), tw - 90, FS_SMALL)[:2]):
+        page.append(("text", M, H - 33 + k * 9, line, FS_SMALL, "normal", "#777777", "left"))
+    page.append(("text", W - M, H - 30, rep.get("page_label", "{n}/{total}").format(n=n, total=total), FS_SMALL, "normal", "#777777", "right"))
+
+
 def layout(rep: dict) -> List[list]:
     pages: List[list] = _first_pages(rep)
     y = M
@@ -215,10 +223,7 @@ def layout(rep: dict) -> List[list]:
             y += 10
     total = len(pages)
     for n, p in enumerate(pages, 1):
-        p.append(("line", M, H - 44, W - M, H - 44, 0.5, "#c8cdd5"))
-        for k, line in enumerate(_wrap(rep.get("footer", ""), tw - 90, FS_SMALL)[:2]):              # a long footer goes on two lines and never runs under the page label
-            p.append(("text", M, H - 33 + k * 9, line, FS_SMALL, "normal", "#777777", "left"))
-        p.append(("text", W - M, H - 30, rep.get("page_label", "{n}/{total}").format(n=n, total=total), FS_SMALL, "normal", "#777777", "right"))
+        _footer(p, rep, n, total, tw)
     return pages
 
 

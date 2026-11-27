@@ -14,11 +14,10 @@ def _calc(lang, ident, name_key, data, formula, subst, result, criterion, verdic
 
 
 def _series_substitution(lang, rng, inv):
-    """The substitution of the series formula with the voltages and floors the engine returned; the text `not available` when the engine result or the inverter data are missing."""
-    if not isinstance(inv, dict) or "voc_cold_v" not in rng or not all(k in inv for k in ("vdc_max_v", "mppt_v_max", "mppt_v_min")):
+    """The substitution of the series formula with the inverter limits of the array and the range the engine returned; `not available` without the inverter data."""
+    if not isinstance(inv, dict) or not all(k in inv for k in ("vdc_max_v", "mppt_v_max", "mppt_v_min")):
         return tr(lang, "not_returned")
-    return (f"N_s,max = min(⌊{inv['vdc_max_v']} / {rng['voc_cold_v']}⌋, ⌊{inv['mppt_v_max']} / {rng['vmp_cold_v']}⌋) = min({rng['n_by_vdc_max']}, {rng['n_by_mppt_max']}) = {rng['s_max']};  "
-            f"N_s,min = ⌈{inv['mppt_v_min']} / {rng['vmp_hot_v']}⌉ = {rng['s_min']}")
+    return (f"N_s,max = min(⌊{inv['vdc_max_v']} / Voc(Tmin)⌋, ⌊{inv['mppt_v_max']} / Vmp(Tmin)⌋) = {rng['s_max']};  N_s,min = ⌈{inv['mppt_v_min']} / Vmp(Tc,max)⌉ = {rng['s_min']}")
 
 
 def _series(lang, array, spec):

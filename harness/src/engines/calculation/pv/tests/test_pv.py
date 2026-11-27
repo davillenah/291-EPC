@@ -143,7 +143,7 @@ class TestStrings(unittest.TestCase):
 
     def test_too_many_strings_per_input_is_a_warning(self):
         lay = strings.layout({"id": "A", "n_modules": 5000, "module": MODULE, "inverter": INVERTER, "n_inverters": 1}, -5.0, 70.0, config.params()["strings"])
-        self.assertIn("warn_current", [w["code"] for w in lay["warnings"]])      # the 5000 modules asked are also rounded to whole strings, which the other warning says
+        self.assertEqual([w["code"] for w in lay["warnings"]], ["warn_current"])
 
     def test_the_inverters_need_a_count_or_a_ratio(self):
         with self.assertRaises(PvError):
