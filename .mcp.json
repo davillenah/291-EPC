@@ -4,6 +4,10 @@
       "command": "uvx",
       "args": ["freecad-mcp"],
       "disabled": true
+    },
+    "solidcraft": {
+      "command": "C:\\Program Files\\SolidCraft\\solidcraft-cli.exe",
+      "args": ["mcp"]
     }
   }
 }

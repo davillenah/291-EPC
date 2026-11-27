@@ -3,6 +3,7 @@
 Nothing is calculated here: a value is read from the engine result, or it is written 'not available'. The plant orientation is matched to the nearest cell of the disk (a reading, not an interpolation).
 """
 from epc_report.pv.calc_memo import _calc
+from epc_report.pv.figures import abacus_figure, disk_figure
 from epc_report.pv.texts import tr
 
 
@@ -33,5 +34,5 @@ def shading_blocks(lang, result, specs):
     if not charts.get("abacus") or not charts.get("disk"):
         return []
     first = next(iter(specs.values()), None)
-    return ([{"type": "h", "text": tr(lang, "h_shade")}, {"type": "p", "text": tr(lang, "l_shade")}] + _shade(lang, charts["abacus"]) + _disk(lang, charts["disk"], first)
-            + [{"type": "p", "text": tr(lang, "t_shade")}])
+    return ([{"type": "h", "text": tr(lang, "h_shade")}, {"type": "p", "text": tr(lang, "l_shade")}] + _shade(lang, charts["abacus"]) + ([abacus_figure(lang, charts["abacus"])] if charts["abacus"].get("cells") else [])
+            + _disk(lang, charts["disk"], first) + [disk_figure(lang, charts["disk"])] + [{"type": "p", "text": tr(lang, "t_shade")}])
