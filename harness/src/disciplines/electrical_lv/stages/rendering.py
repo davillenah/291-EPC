@@ -131,6 +131,25 @@ def _pv_report(d, project):
     return pv_yield_study.pv_yield_report(d, project, _pv_weight_of(d["result"]))
 
 
+PV_TEXT_REPORTS = ("pv_calc_memo", "pv_summary", "pv_descriptive_report", "pv_savings_memo", "pv_economic_memo", "pv_savings_descriptive", "pv_economic_descriptive")
+
+
+def _pv_text_report(name, d, project, language):
+    """The PV documents written by the report engine in English or Spanish: the engine result, the engine input and the one-line problem the person gave are all it gets."""
+    from epc_report.pv import calc_memo, economics, narrative, summary
+    from epc_report.pv.texts import tr
+    lang = "es" if language == "es" else "en"
+    problem = d.get("problem")
+    builders = {"pv_calc_memo": lambda: calc_memo.pv_calc_memo(d, d.get("inputs") or {}, project, lang),
+                "pv_summary": lambda: summary.pv_summary(d, d.get("inputs") or {}, project, problem or tr(lang, "n_a"), lang),
+                "pv_descriptive_report": lambda: narrative.pv_descriptive_report(d, project, problem, lang),
+                "pv_savings_memo": lambda: economics.pv_savings_memo(d, project, lang),
+                "pv_economic_memo": lambda: economics.pv_economic_memo(d, project, lang),
+                "pv_savings_descriptive": lambda: narrative.pv_savings_descriptive(d, project, problem, lang),
+                "pv_economic_descriptive": lambda: narrative.pv_economic_descriptive(d, project, problem, lang)}
+    return builders[name]()
+
+
 def _boq_report(d, project):
     rows = [[i["item_id"], i["category"], i["description"], i["unit"], i["quantity"]] for i in d["items"]]
     totals = d["totals"]
@@ -216,6 +235,8 @@ def to_report(name, document, project, language="en"):
     """The report structure of a document, or None when its structure is its own (not rendered). `language` is the one of the project (`es` writes the platform's own words in Spanish)."""
     if name == "descriptive_report" and language == "es" and isinstance(document.get("sections"), list):
         return _descriptive_report_es(document, project)
+    if name in PV_TEXT_REPORTS:
+        return _pv_text_report(name, document, project, language)                     # the PV memorandum and summary come in English and Spanish from the report engine
     report = _lighting_report(document, project, language) if name == "lighting_study" else _to_report(name, document, project)
     return _in_spanish(report) if report is not None and language == "es" else report
 

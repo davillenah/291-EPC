@@ -64,3 +64,42 @@ class TestPvReports(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestPvEconomicReports(unittest.TestCase):
+    ECO = {"energy_kwh_year": 15000.0, "energy_price": 0.1, "currency": "USD", "saving_year": 1500.0, "saving_month": [125.0] * 12, "investment": 9000.0, "simple_payback_years": 6.0,
+           "assumes": {"en": "all the energy is used on site", "es": "toda la energía se usa en el sitio"}}
+
+    def doc(self, eco=None):
+        d = copy.deepcopy(DOCUMENT)
+        d["result"]["totals"]["monthly_ac_kwh"] = [1000.0] * 12
+        if eco is not None:
+            d["result"]["technical_feasibility"] = {"economic": eco}
+        return d
+
+    def test_savings_and_economic_memos_are_two_documents_that_agree(self):
+        from epc_report.pv import economics
+        d = self.doc(self.ECO)
+        sav, eco = economics.pv_savings_memo(d, "P-1"), economics.pv_economic_memo(d, "P-1", "es")
+        self.assertNotEqual(sav["title"], eco["title"])
+        self.assertIn("A = 15000.0 kWh × 0.1 USD/kWh", texts(sav))
+        self.assertIn("T = 6.0", texts(eco))
+        self.assertEqual(sav["facts"]["pv.saving_year"], eco["facts"]["pv.saving_year"])
+        self.assertEqual([f for f in audit.audit([sav, eco]) if f["severity"] == "error"], [])
+
+    def test_what_the_client_did_not_give_is_not_verified_never_assumed(self):
+        from epc_report.pv import economics
+        self.assertIn("price is not given", texts(economics.pv_savings_memo(self.doc(), "P-1")))
+        no_invest = dict(self.ECO)
+        del no_invest["investment"]
+        self.assertIn("investment is not given", texts(economics.pv_economic_memo(self.doc(no_invest), "P-1")))
+
+    def test_the_descriptive_reports_are_narrative_in_both_languages(self):
+        from epc_report.pv import narrative
+        d = self.doc(self.ECO)
+        for fn in (narrative.pv_descriptive_report, narrative.pv_savings_descriptive, narrative.pv_economic_descriptive):
+            en, es = fn(d, "P-1", "consumption", "en"), fn(d, "P-1", "consumo", "es")
+            self.assertNotEqual(en["title"], es["title"])
+            self.assertEqual([f for f in audit.audit([en, es]) if f["severity"] == "error"], [])
+        self.assertIn("simple payback of 6.0 years", texts(narrative.pv_economic_descriptive(d, "P-1", "x")))
+        self.assertIn("not calculated", texts(narrative.pv_savings_descriptive(self.doc(), "P-1", "x")))

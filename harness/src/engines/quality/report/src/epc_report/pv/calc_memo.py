@@ -13,8 +13,12 @@ def _calc(lang, ident, name_key, data, formula, subst, result, criterion, verdic
 
 
 def _series(lang, array, spec):
-    s, mod, inv = array["strings"], spec["module"], spec["inverter"]
-    data = f"Voc = {mod['voc_v']} V, Vmp = {mod['vmp_v']} V, βVoc = {mod['beta_voc_pct_c']} %/°C; Vdc,max = {inv['vdc_max_v']} V, MPPT {inv['mppt_v_min']}-{inv['mppt_v_max']} V"
+    s = array["strings"]
+    if spec:
+        mod, inv = spec["module"], spec["inverter"]
+        data = f"Voc = {mod['voc_v']} V, Vmp = {mod['vmp_v']} V, βVoc = {mod['beta_voc_pct_c']} %/°C; Vdc,max = {inv['vdc_max_v']} V, MPPT {inv['mppt_v_min']}-{inv['mppt_v_max']} V"
+    else:
+        data = tr(lang, "n_a")                      # the array comes from a roof plane or a site fill: its module and inverter data are not in the input under this id
     rng = s["series_range"]
     ok = rng["s_min"] <= s["n_series"] <= rng["s_max"]
     return _calc(lang, "C-05 / C-07 / C-08", "c_series", data, "N_s,max = min(⌊Vdc,max / Voc(Tmin)⌋, ⌊Vmppt,max / Vmp(Tmin)⌋);  N_s,min = ⌈Vmppt,min / Vmp(Tc,max)⌉",
@@ -58,11 +62,11 @@ def count_states(lang, arrays):
 
 def pv_calc_memo(d, inputs, project, lang="en"):
     """The memorandum as a report structure. `d` is the document of `epc_pv` (`result`, `engine`); `inputs` the document the engine received (`site`, `arrays` with `module` and `inverter`)."""
-    result, specs = d["result"], {str(s["id"]): s for s in inputs["arrays"]}
+    result, specs = d["result"], {str(s["id"]): s for s in inputs.get("arrays", [])}
     blocks = [{"type": "p", "text": tr(lang, "engine_line", name=d["engine"]["name"], version=d["engine"]["version"]) + " " + tr(lang, "edit_mode")},
               {"type": "h", "text": tr(lang, "h_input")}, {"type": "p", "text": tr(lang, "t_input")}, {"type": "h", "text": tr(lang, "h_strings")}, {"type": "p", "text": tr(lang, "l_strings")}]
     for a in result["arrays"]:
-        blocks += _series(lang, a, specs[str(a["id"])]) + _mppt(lang, a)
+        blocks += _series(lang, a, specs.get(str(a["id"]))) + _mppt(lang, a)
     blocks += [{"type": "p", "text": tr(lang, "t_strings")}, {"type": "h", "text": tr(lang, "h_power")}, {"type": "p", "text": tr(lang, "l_power")}]
     for a in result["arrays"]:
         blocks += _ratio(lang, a)

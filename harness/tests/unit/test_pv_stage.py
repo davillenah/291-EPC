@@ -398,6 +398,23 @@ class PvEquipmentListTests(unittest.TestCase):
         self.assertEqual(len(blocks), 4)
 
 
+class PvTextReportsTests(unittest.TestCase):
+    def test_the_documents_stage_makes_the_pv_memorandum_and_summary_in_both_languages(self):
+        from disciplines.electrical_lv.stages import output_stages, rendering
+        ctx = ctx_with({"document": PV.doc(), "problem": "consumption 600000 kWh/year"})
+        ctx.results[3] = STAGES[2].run(ctx)
+        docs = output_stages.DocumentsStage.pv_study(ctx)
+        self.assertEqual(len(docs), 8)
+        for name in docs:
+            if name != "pv_yield_study":
+                self.assertEqual(rendering.to_report(name, docs[name], "P-1", "es")["footer"].split(" - ")[1], "P-1")
+        for lang, title in (("en", "PV calculation memorandum"), ("es", "Memoria de cálculo fotovoltaica")):
+            memo = rendering.to_report("pv_calc_memo", docs["pv_calc_memo"], "P-1", lang)
+            self.assertEqual(memo["title"], title)
+        summary = rendering.to_report("pv_summary", docs["pv_summary"], "P-1", "en")
+        self.assertIn("consumption 600000 kWh/year", [c for b in summary["blocks"] for r in b.get("rows", []) for c in r])
+
+
 class PvModel3dFormatTests(unittest.TestCase):
     def test_the_person_chooses_the_dxf_the_freecad_macro_or_both(self):
         from disciplines.electrical_lv.stages import pv_drawings

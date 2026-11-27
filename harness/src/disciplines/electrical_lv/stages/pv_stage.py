@@ -40,7 +40,8 @@ from disciplines.electrical_lv.stages.base import Stage, StageInputError, reason
 ENGINE = "calculation/pv"
 FUNCTION = "epc_pv.run"
 LAYOUT_FUNCTION = "epc_pv.plan_layout"
-KEYS = ("document", "options", "layout", "weather_file", "roof", "flat_roof", "roof_dxf", "economics", "charts")
+# `problem`: one line of text the person gives (consumption, tariff, the need); the summary prints it, the stage does not read it.
+KEYS = ("document", "options", "layout", "weather_file", "roof", "flat_roof", "roof_dxf", "economics", "charts", "problem")
 NOT_PROVIDED = "pv inputs not provided"
 
 

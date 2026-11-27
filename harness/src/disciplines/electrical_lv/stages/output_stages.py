@@ -287,6 +287,9 @@ def document_entry(name, document):
     return {"name": name, "sha256": hashlib.sha256(json.dumps(document, sort_keys=True, ensure_ascii=False).encode("utf-8")).hexdigest(), "document": document}
 
 
+PV_TEXT_DOCUMENTS = ("pv_calc_memo", "pv_summary", "pv_descriptive_report", "pv_savings_memo", "pv_economic_memo", "pv_savings_descriptive", "pv_economic_descriptive")
+
+
 class DocumentsStage(Stage):
     """Stage 11: calculation memo and project summary from the engine, the terminal-block list (MIG-39b); the other documents are reported as planned."""
 
@@ -400,13 +403,18 @@ class DocumentsStage(Stage):
 
     @staticmethod
     def pv_study(context):
-        """{"pv_yield_study": document} from stage 3 (the engine result as it is, draft); empty when stage 3 did not run the photovoltaic slice."""
+        """{"pv_yield_study" and the seven PV text documents: document} from stage 3 (the engine result as it is, draft; the memorandum and the summary also carry the input of the engine and the problem the person gave in the `pv` section); empty when stage 3 did not run the photovoltaic slice."""
         res = context.results.get(3)
         result = (res.outputs.get("pv") if res is not None and res.status == "ok" else None)
         if result is None:
             return {}
         record = EC.record_for("calculation/pv", "epc_pv.run")
-        return {"pv_yield_study": {"document": "pv_yield_study", "status": "draft", "engine": {"name": record["engine"], "version": record["version"]}, "result": copy.deepcopy(result)}}
+        engine = {"name": record["engine"], "version": record["version"]}
+        inputs = copy.deepcopy(((context.engine_inputs or {}).get("pv") or {}).get("document") or {})
+        problem = ((context.engine_inputs or {}).get("pv") or {}).get("problem")
+        base = {"status": "draft", "engine": engine, "result": copy.deepcopy(result)}
+        return {"pv_yield_study": dict(base, document="pv_yield_study"),
+                **{n: dict(base, document=n, inputs=inputs, problem=problem) for n in PV_TEXT_DOCUMENTS}}
 
     @staticmethod
     def routing(context):
