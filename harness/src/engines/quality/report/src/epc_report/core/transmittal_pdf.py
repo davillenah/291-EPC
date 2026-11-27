@@ -42,16 +42,16 @@ def layout(data: dict) -> List[list]:
         y = M
 
     ops = lambda: pages[-1]
-    ops().append(("text", M, y + 14, data.get("title", ""), 17, "bold", "#111111", "left"))
-    ops().append(("text", W - M, y + 14, data.get("subtitle", ""), 17, "bold", "#1f4e8c", "right"))
+    ops().append(("text", M, y + 14, data.get("title", ""), 17, "bold", "#000000", "left"))
+    ops().append(("text", W - M, y + 14, data.get("subtitle", ""), 17, "bold", "#000000", "right"))
     y += 26
-    ops().append(("line", M, y, W - M, y, 1.4, "#1f4e8c"))
+    ops().append(("line", M, y, W - M, y, 1.4, "#000000"))
     y += 16
     for label, value in data.get("header", []):
         vl = _wrap(value, W - M - 190, FS)
-        ops().append(("text", M, y + 9, label, FS_SMALL, "bold", "#666666", "left"))
+        ops().append(("text", M, y + 9, label, FS_SMALL, "bold", "#000000", "left"))
         for i, line in enumerate(vl):
-            ops().append(("text", 190, y + 9 + i * LINE, line, FS, "normal", "#111111", "left"))
+            ops().append(("text", 190, y + 9 + i * LINE, line, FS, "normal", "#000000", "left"))
         y += max(len(vl), 1) * LINE + 3
     y += 10
 
@@ -63,9 +63,9 @@ def layout(data: dict) -> List[list]:
 
     def header_row():
         nonlocal y
-        ops().append(("rect", M, y, tw, 20, "#e8edf4"))
+        ops().append(("rect", M, y, tw, 20, "#d9d9d9"))
         for (label, _), x in zip(cols, xs):
-            ops().append(("text", x + 4, y + 13.5, label, FS_SMALL, "bold", "#222222", "left"))
+            ops().append(("text", x + 4, y + 13.5, label, FS_SMALL, "bold", "#000000", "left"))
         y += 20
 
     header_row()
@@ -77,9 +77,9 @@ def layout(data: dict) -> List[list]:
             header_row()
         for i, lines in enumerate(cells):
             for j, line in enumerate(lines):
-                ops().append(("text", xs[i] + 4, y + 13 + j * LINE, line, FS, "normal", "#111111", "left"))
+                ops().append(("text", xs[i] + 4, y + 13 + j * LINE, line, FS, "normal", "#000000", "left"))
         y += h
-        ops().append(("line", M, y, W - M, y, 0.5, "#c8cdd5"))
+        ops().append(("line", M, y, W - M, y, 0.5, "#808080"))
     y += 18
 
     for title, body in data.get("sections", []):
@@ -87,18 +87,18 @@ def layout(data: dict) -> List[list]:
         need = (len(lines) + 1) * LINE + 10
         if y + need > H - 70:
             new_page()
-        ops().append(("text", M, y + 9, title, FS, "bold", "#222222", "left"))
+        ops().append(("text", M, y + 9, title, FS, "bold", "#000000", "left"))
         y += LINE + 2
         for line in lines:
-            ops().append(("text", M, y + 9, line, FS, "normal", "#111111", "left"))
+            ops().append(("text", M, y + 9, line, FS, "normal", "#000000", "left"))
             y += LINE
         y += 10
 
     total = len(pages)
     for n, p in enumerate(pages, 1):
-        p.append(("line", M, H - 44, W - M, H - 44, 0.5, "#c8cdd5"))
-        p.append(("text", M, H - 30, data.get("footer", ""), FS_SMALL, "normal", "#777777", "left"))
-        p.append(("text", W - M, H - 30, data.get("page_label", "{n}/{total}").format(n=n, total=total), FS_SMALL, "normal", "#777777", "right"))
+        p.append(("line", M, H - 44, W - M, H - 44, 0.5, "#808080"))
+        p.append(("text", M, H - 30, data.get("footer", ""), FS_SMALL, "normal", "#000000", "left"))
+        p.append(("text", W - M, H - 30, data.get("page_label", "{n}/{total}").format(n=n, total=total), FS_SMALL, "normal", "#000000", "right"))
     return pages
 
 
@@ -106,6 +106,7 @@ def render(data: dict, dst: Path) -> Path:
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
+    plt.rcParams.update({"font.family": "sans-serif", "font.sans-serif": ["Arial", "Liberation Sans", "Helvetica", "DejaVu Sans"], "text.color": "#000000"})
     from matplotlib.backends.backend_pdf import PdfPages
     from matplotlib.patches import Rectangle
 
