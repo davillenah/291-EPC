@@ -41,3 +41,7 @@ The repository has an `origin` remote. Nothing is pushed automatically. Pushing 
 - The applications (`backend`, `parked/web/frontend/*`) and the repository release share one version (`vX.Y.Z`, tagged on `main`).
 - Each Claude plugin has its own `version` in `plugin.json` (bumped when the plugin or the engine it wraps changes; the registry hash checks it).
 - The packages under `engine/` have their own versions: `harness/src/engines/calculation/aea90364` continues the numbering of the legacy calculator, the others start at 0.1.0 and change only when their public contract changes.
+
+## Release schedule (owner rule, 2026-11-27)
+
+Daily at 00:00 (Buenos Aires): pull request of the day's work to `dev`, CI, fixes, merge. Mondays at 01:00: release branch from `dev` in production mode, full gate, CI green, merge to `main`, sync. See `harness/CLAUDE.md`, "Release schedule".
