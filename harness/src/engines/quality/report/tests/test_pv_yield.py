@@ -14,6 +14,16 @@ DOCUMENT = {"engine": {"name": "epc_pv", "version": "1"}, "result": RESULT}
 
 
 class TestPvYield(unittest.TestCase):
+    def test_the_study_in_spanish_has_no_english_words_and_writes_its_numbers_with_dot_thousands(self):
+        report = yield_study.pv_yield_report(DOCUMENT, "P-1", module_weight_kg=25.0, lang="es")
+        text_es = " ".join(str(v) for b in report["blocks"] for v in ([b.get("text", "")] + [c for c, _ in b.get("columns", [])] + [c for r in b.get("rows", []) for c in r] + b.get("items", [])))
+        self.assertEqual(report["title"], "Estudio de producción fotovoltaica")
+        self.assertEqual(report["blocks"][-1]["items"], ["Clima típico"])
+        for english in ("Monthly AC energy", "Open issues", "Arrays:", "hours simulated", "Equipment of the plant", "Jan", "Module weight"):
+            self.assertNotIn(english, text_es)
+        self.assertIn("Peso de los módulos", text_es)
+        self.assertIn("Ene", text_es)
+
     def test_the_report_has_the_tables_of_the_study(self):
         report = yield_study.pv_yield_report(DOCUMENT, "P-1")
         self.assertEqual((report["title"], report["subtitle"]), ("PV yield study", "P-1"))
@@ -21,7 +31,7 @@ class TestPvYield(unittest.TestCase):
         self.assertIn("Monthly AC energy (kWh)", texts)
         self.assertIn("Equipment of the plant", texts)
         self.assertEqual(len([b for b in report["blocks"] if b["type"] == "table"]), 4)
-        self.assertEqual(report["blocks"][-1]["items"], ["Typical weather / Clima típico"])
+        self.assertEqual(report["blocks"][-1]["items"], ["Typical weather"])
 
     def test_the_weight_is_a_line_only_when_the_caller_gives_it(self):
         text = lambda r: " ".join(b.get("text", "") for b in r["blocks"])      # noqa: E731

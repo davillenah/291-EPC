@@ -130,9 +130,9 @@ def _pv_fill_blocks(result):
     return pv_yield_study.fill_blocks(result)
 
 
-def _pv_report(d, project):
+def _pv_report(d, project, language="en"):
     from epc_report.pv import yield_study as pv_yield_study
-    return pv_yield_study.pv_yield_report(d, project, _pv_weight_of(d["result"]))
+    return pv_yield_study.pv_yield_report(d, project, _pv_weight_of(d["result"]), language)
 
 
 PV_TEXT_REPORTS = ("pv_calc_memo", "pv_summary", "pv_descriptive_report", "pv_savings_memo", "pv_economic_memo", "pv_savings_descriptive", "pv_economic_descriptive")
@@ -241,6 +241,8 @@ def to_report(name, document, project, language="en"):
         return _descriptive_report_es(document, project)
     if name in PV_TEXT_REPORTS:
         return _pv_text_report(name, document, project, language)                     # the PV memorandum and summary come in English and Spanish from the report engine
+    if name == "pv_yield_study":
+        return _pv_report(document, project, language)                                 # the yield study is written in the language of the project, not translated after
     report = _lighting_report(document, project, language) if name == "lighting_study" else _to_report(name, document, project)
     return _in_spanish(report) if report is not None and language == "es" else report
 

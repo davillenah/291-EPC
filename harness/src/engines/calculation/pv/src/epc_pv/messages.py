@@ -26,6 +26,10 @@ MESSAGES: Dict[str, Dict[str, str]] = {
         "en": "Array {array}: {strings} strings per MPPT input exceed the {limit} the inverter inputs allow; add inverters or inputs.",
         "es": "Arreglo {array}: {strings} strings por entrada MPPT superan los {limit} que admiten las entradas del inversor; agregar inversores o entradas.",
     },
+    "modules_rounded": {
+        "en": "Array {array}: {asked} module(s) asked, {installed} installed: the modules are whole strings of {n_series} in series.",
+        "es": "Arreglo {array}: se pidieron {asked} módulo(s) y se instalan {installed}: los módulos van en strings completos de {n_series} en serie.",
+    },
     "shading_computed": {
         "en": "Array {array}: the shade is computed (far horizon and row to row, direct beam only): {loss} % of the yearly plane-of-array energy; the typical shading loss is not added.",
         "es": "Arreglo {array}: la sombra se calcula (horizonte lejano y fila a fila, solo haz directo): {loss} % de la energía anual en el plano del módulo; no se suma la pérdida típica de sombras.",
@@ -45,6 +49,10 @@ MESSAGES: Dict[str, Dict[str, str]] = {
     "roof_short": {
         "en": "The roof holds {capacity} modules and {n} more were asked: add planes, reduce the margin or ask for fewer modules.",
         "es": "El techo admite {capacity} módulos y se pidieron {n} más: agregar faldones, reducir el retiro o pedir menos módulos.",
+    },
+    "tracker_drawn_fixed": {
+        "en": "Array {array} has a tracker: the layout, the plans and the 3D model draw it as fixed-tilt tables at the array tilt.",
+        "es": "El arreglo {array} tiene seguidor: la implantación, los planos y el modelo 3D lo dibujan como mesas de inclinación fija a la inclinación del arreglo.",
     },
     "layout_pad_tight": {
         "en": "{n} inverter(s) do not fit in the gap between rows (pad deeper than the gap): move them to the end of the row.",
@@ -100,8 +108,8 @@ MESSAGES: Dict[str, Dict[str, str]] = {
     "err_type": {"en": "{name} must be {kind}", "es": "{name} debe ser {kind}"},
     "err_range": {"en": "{name} must be {rule} (got {value})", "es": "{name} debe ser {rule} (se recibió {value})"},
     "err_length": {
-        "en": "weather.{name} has {n} values and the file has {expected} hours",
-        "es": "weather.{name} tiene {n} valores y el archivo tiene {expected} horas",
+        "en": "weather.{name} has {n} values but weather.ghi has {expected}: every series needs the same number of hours",
+        "es": "weather.{name} tiene {n} valores pero weather.ghi tiene {expected}: todas las series necesitan la misma cantidad de horas",
     },
     "err_pvgis_http": {"en": "PVGIS did not answer: {detail}", "es": "PVGIS no respondió: {detail}"},
     "err_pvgis_payload": {"en": "the PVGIS answer is not the expected one: {detail}", "es": "la respuesta de PVGIS no es la esperada: {detail}"},

@@ -117,6 +117,10 @@ def _input_file(inputs_dir, name, label):
     return target
 
 
+def _refuse_constant(name):
+    raise ValueError(f"{name} is not a number")
+
+
 def _with_weather_file(section, inputs_dir):
     """(section with the weather of the PVGIS file in its document, source) or raises StageInputError; `section` without `weather_file` comes back as it is."""
     name = section.get("weather_file")
@@ -124,7 +128,7 @@ def _with_weather_file(section, inputs_dir):
         return section, None
     target = _input_file(inputs_dir, name, "weather_file")
     try:
-        data = json.loads(target.read_text(encoding="utf-8"))
+        data = json.loads(target.read_text(encoding="utf-8"), parse_constant=_refuse_constant)
         document = dict(_document_of(section), weather=data["weather"])
     except (ValueError, KeyError, TypeError) as exc:
         raise StageInputError([f"weather_file: `{name}` is not a PVGIS weather file ({exc}) / no es un archivo de clima de PVGIS"]) from exc
@@ -209,6 +213,81 @@ def _templates(section):
     return [a for a in arrays + [(section.get(k) or {}).get("array") for k in ("roof", "flat_roof")] if isinstance(a, dict)]
 
 
+MODULE_NUMBERS = ("pmax_w", "voc_v", "vmp_v", "isc_a", "imp_a")
+
+
+def _is_number(value):
+    return isinstance(value, (int, float)) and not isinstance(value, bool) and value == value and abs(value) != float("inf")
+
+
+def _bad_value(name, value, rule_en, rule_es):
+    return f"{name} must be {rule_en} (got {value!r}) / {name} debe ser {rule_es} (se recibió {value!r})"
+
+
+def _positive(name, value, rule_en="a number greater than 0", rule_es="un número mayor que 0"):
+    """The message for a value that is not a number greater than 0, else None."""
+    return None if _is_number(value) and value > 0 else _bad_value(name, value, rule_en, rule_es)
+
+
+def _numbers_to_check(array):
+    """(name, value) of each array number that must be greater than 0."""
+    name, module = f"array {array.get('id', '?')}", array.get("module")
+    own = isinstance(module, dict) and not module.get("auto")
+    return [(f"{name} module.{k}", module[k]) for k in MODULE_NUMBERS if own and k in module] + [(f"{name} {k}", array[k]) for k in ("dc_ac_ratio", "n_inverters") if k in array]
+
+
+def _template_errors(array):
+    """The problems of one array template before any pick divides by its numbers: module data, `dc_ac_ratio`, `n_inverters`, `n_modules`."""
+    out = [_positive(n, v) for n, v in _numbers_to_check(array)]
+    count = array.get("n_modules")
+    if "n_modules" in array and not (_is_number(count) and count > 0 and float(count).is_integer()):
+        out.append(_bad_value(f"array {array.get('id', '?')} n_modules", count, "a whole number greater than 0", "un número entero mayor que 0"))
+    return [m for m in out if m]
+
+
+def _economics_errors(economics):
+    """The problems of the client's economics block: price and investment must be numbers greater than 0."""
+    if economics is None:
+        return []
+    if not isinstance(economics, dict):
+        return ["economics must be an object / economics debe ser un objeto"]
+    out = [_positive(f"economics.{k}", economics[k]) for k in ("energy_price", "investment") if economics.get(k) is not None]
+    if "energy_price" not in economics:
+        out.append("economics.energy_price is required / economics.energy_price es obligatorio")
+    return [m for m in out if m]
+
+
+def _asked_modules(section):
+    """The modules each array template asked for, by id."""
+    return {str(a["id"]): a["n_modules"] for a in _templates(section) if "id" in a and "n_modules" in a}
+
+
+def _rounded_notes(asked, result):
+    """A note per array whose installed modules differ from the modules asked (they go in whole strings)."""
+    from epc_pv.messages import item
+    return [item("modules_rounded", array=a["id"], asked=int(asked[str(a["id"])]), installed=a["modules"], n_series=a["strings"]["n_series"])
+            for a in result["arrays"] if str(a["id"]) in asked and int(asked[str(a["id"])]) != a["modules"]]
+
+
+def _all_ids(section):
+    """The ids of the array templates and of the roof planes."""
+    planes = [p for p in (section.get("roof") or {}).get("planes") or [] if isinstance(p, dict)]
+    return [str(x["id"]) for x in _templates(section) + planes if "id" in x]
+
+
+def _duplicate_ids(section):
+    """A message per id used twice among the arrays and the roof planes."""
+    ids = _all_ids(section)
+    return [f"the id {d!r} is used twice (arrays and roof planes need their own id) / el id {d!r} se usa dos veces (arreglos y planos de techo necesitan un id propio)" for d in sorted({i for i in ids if ids.count(i) > 1})]
+
+
+def check_templates(section):
+    """Raises StageInputError (English and Spanish) for an array template with a value that is not a number or not in range, and for two arrays or roof planes with the same id."""
+    errors = [e for a in _templates(section) for e in _template_errors(a)] + _economics_errors(section.get("economics")) + _duplicate_ids(section)
+    if errors:
+        raise StageInputError(errors)
+
+
 def equipment_finding(n, run_id, slug, warning):
     """A note finding for an equipment assumption of the harness (inverter chosen, short-circuit current assumed)."""
     out = warning_finding(n, run_id, slug, warning)
@@ -255,6 +334,17 @@ def ground_fill_finding(n, run_id, slug, proposal):
             "clause": "engine proposal", "action": "Confirm the site, the table and the tilt; the plant size is the result of the fill (pending review).", "evidence": ["engine epc_pv.flatroof.propose"], "status": "open"}
 
 
+def _check_fill_layout(layout, target):
+    """The site, table, module size, gaps and the optional `target_modules` of a `fill` layout are checked with the layout rules (names as the person wrote them), in English and Spanish."""
+    import epc_pv
+    if target is not None and not (_is_number(target) and target >= 1 and float(target).is_integer()):
+        raise StageInputError([_bad_value("layout.target_modules", target, "a whole number of at least 1", "un número entero de al menos 1")])
+    try:
+        epc_pv.check_layout(layout)
+    except epc_pv.PvError as exc:
+        raise StageInputError([f"layout: {exc} / {exc.es}"]) from exc
+
+
 def _with_fill(section):
     """(section whose arrays and layout come from filling the site with tables, proposal or None): only for a `layout` with `fill: true`."""
     layout = section.get("layout")
@@ -270,6 +360,7 @@ def _with_fill(section):
         raise StageInputError(["layout.fill: needs one array with the module and inverter / necesita un arreglo con el módulo y el inversor"])
     target = layout.pop("target_modules", None)
     layout.pop("fill")
+    _check_fill_layout(layout, target)
     wanted, picked, array = layout["table"], [], dict(arrays[0])
     try:
         if _auto_module(array):
@@ -367,6 +458,8 @@ def _with_roof(section, inputs_dir=None):
         result = epc_pv.plan_roof(roof)
     except epc_pv.PvError as exc:
         raise StageInputError([f"roof: {exc} / {exc.es}"]) from exc
+    if not result["arrays"]:
+        raise StageInputError(["roof: no module fits on the planes (smaller than one module plus the setbacks) / ningún módulo cabe en los planos (menores que un módulo más los retiros)"])
     return dict(section, document=dict(document, arrays=result["arrays"])), dict(result, warnings=warned + result["warnings"] + picked), chosen
 
 
@@ -462,6 +555,7 @@ class PvStage(Stage):
     def _prepare(self, context):
         """(section ready for the engine, source, flat roof proposal, roof result, orientation chosen): every step that completes the section before the run."""
         section, source = _with_weather_file(_section(context), context.inputs_dir)
+        check_templates(section)
         originals = [dict(a) for a in _templates(section)]
         section, assumed = _with_equipment(section)
         section, flat = _with_flat_roof(section)
@@ -496,12 +590,14 @@ class PvStage(Stage):
             return self.result("not_available", message=NOT_PROVIDED, reason="no_pv_inputs")
         found = self._prepare(context)
         section, _, flat, roof, _, _ = found
+        asked = _asked_modules(section)
         result = _run(section)
         section, result = _add_inverters_for_current(section, result)
         if flat is not None:
             section, result = _trim_to_site(section, result, flat)
         result = dict(result, **_proposals(roof, flat))
         warnings, calls, findings = list(result["warnings"]) + (roof or flat or {"warnings": []})["warnings"], [EC.record_for(ENGINE, FUNCTION)], []
+        warnings += _rounded_notes(asked, result)
         calls += [EC.record_for(ENGINE, "epc_pv.plan_roof")] if roof is not None else []
         result, warnings, calls, findings = self._with_layout(context, section, result, (warnings, calls, findings))
         findings += self._notes(context, found, len(findings))

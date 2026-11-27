@@ -47,6 +47,11 @@ def pv_savings_memo(d, project, lang="en"):
     return _frame(lang, d, project, "sav_title", blocks, dict(facts, **{"pv.saving_year": eco["saving_year"]}))
 
 
+def _sentence(text):
+    """A text that starts a new sentence, with its first letter in capitals."""
+    return text[:1].upper() + text[1:]
+
+
 def pv_economic_memo(d, project, lang="en"):
     """The economic memorandum: simple payback = investment / yearly saving; the other indicators are listed as not verified."""
     eco, facts = economic_of(d), _facts(d)
@@ -60,5 +65,5 @@ def pv_economic_memo(d, project, lang="en"):
                {"type": "p", "text": tr(lang, "t_eco_data")}, {"type": "h", "text": tr(lang, "h_eco_pay")}, {"type": "p", "text": tr(lang, "l_eco_pay")}]
     blocks += _calc(lang, "E-01", "c_payback", f"I = {eco['investment']} {cur}; A = {eco['saving_year']} {cur}/{yr}", "T = I / A", f"T = {eco['investment']} / {eco['saving_year']}",
                     f"T = {eco['simple_payback_years']}", "-", "not_verified")
-    blocks += [{"type": "p", "text": tr(lang, "t_eco_pay")}, {"type": "h", "text": tr(lang, "h_eco_more")}, {"type": "p", "text": tr(lang, "eco_more_list") + " " + tr(lang, "pending_engine", item="PV-10")}]
+    blocks += [{"type": "p", "text": tr(lang, "t_eco_pay")}, {"type": "h", "text": tr(lang, "h_eco_more")}, {"type": "p", "text": tr(lang, "eco_more_list") + " " + _sentence(tr(lang, "pending_engine", item="PV-10"))}]
     return _frame(lang, d, project, "eco_title", blocks, dict(facts, **{"pv.saving_year": eco["saving_year"]}))

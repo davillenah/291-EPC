@@ -98,6 +98,14 @@ def _first_pages(rep: dict) -> List[list]:
     return [cover_ops(rep["cover"], rep), []] if rep.get("cover") else [[]]
 
 
+def _footer(page: list, rep: dict, n: int, total: int, tw: float) -> None:
+    """The rule, the footer text and the page label at the foot of a page; a long footer goes on two lines and never runs under the page label."""
+    page.append(("line", M, H - 44, W - M, H - 44, 0.5, "#c8cdd5"))
+    for k, line in enumerate(_wrap(rep.get("footer", ""), tw - 90, FS_SMALL)[:2]):
+        page.append(("text", M, H - 33 + k * 9, line, FS_SMALL, "normal", "#777777", "left"))
+    page.append(("text", W - M, H - 30, rep.get("page_label", "{n}/{total}").format(n=n, total=total), FS_SMALL, "normal", "#777777", "right"))
+
+
 def layout(rep: dict) -> List[list]:
     pages: List[list] = _first_pages(rep)
     y = M
@@ -120,11 +128,12 @@ def layout(rep: dict) -> List[list]:
     ops().append(("line", M, y, W - M, y, 1.4, "#1f4e8c"))
     y += 14
 
-    def _bullets(items, y):
+    def _bullets(items, start):
+        nonlocal y
+        y = start
         for item in items:
             lines = _wrap(item, tw - 14, FS)
-            if need(len(lines) * LINE):                                               # a new page starts at the top: the caller's y is not the one of the page any more
-                y = M
+            need(len(lines) * LINE)                                                   # `need` reads and resets the page position `y` that this loop advances (a local copy never saw the page fill up)
             ops().append(("text", M + 2, y + 9, "•", FS, "normal", "#111111", "left"))
             for i, line in enumerate(lines):
                 ops().append(("text", M + 14, y + 9 + i * LINE, line, FS, "normal", "#111111", "left"))
@@ -154,10 +163,13 @@ def layout(rep: dict) -> List[list]:
 
     def table_header(cols, xs):
         nonlocal y
-        ops().append(("rect", M, y, tw, 20, "#e8edf4"))
-        for (label, _), x in zip(cols, xs):
-            ops().append(("text", x + 4, y + 13.5, label, FS_SMALL, "bold", "#222222", "left"))
-        y += 20
+        wrapped = [_wrap(label, max(xs[i + 1] - xs[i] - 8, 20.0), FS_SMALL) or [""] for i, (label, _) in enumerate(cols)]       # a long heading goes on several lines instead of over its neighbour
+        height = max(len(lines) for lines in wrapped) * 10 + 10
+        ops().append(("rect", M, y, tw, height, "#e8edf4"))
+        for lines, x in zip(wrapped, xs):
+            for j, line in enumerate(lines):
+                ops().append(("text", x + 4, y + 13.5 + j * 10, line, FS_SMALL, "bold", "#222222", "left"))
+        y += height
 
     for b in rep.get("blocks", []):
         kind = b.get("type")
@@ -211,9 +223,7 @@ def layout(rep: dict) -> List[list]:
             y += 10
     total = len(pages)
     for n, p in enumerate(pages, 1):
-        p.append(("line", M, H - 44, W - M, H - 44, 0.5, "#c8cdd5"))
-        p.append(("text", M, H - 30, rep.get("footer", ""), FS_SMALL, "normal", "#777777", "left"))
-        p.append(("text", W - M, H - 30, rep.get("page_label", "{n}/{total}").format(n=n, total=total), FS_SMALL, "normal", "#777777", "right"))
+        _footer(p, rep, n, total, tw)
     return pages
 
 

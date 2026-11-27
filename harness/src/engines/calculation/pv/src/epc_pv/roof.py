@@ -37,7 +37,7 @@ def _check_plane(plane: Dict[str, Any], where: str) -> None:
     _number(plane, "setback_m", where, positive=False)
     for key, hi in (("tilt_deg", 90), ("azimuth_deg", 360)):
         if isinstance(plane[key], bool) or not isinstance(plane[key], (int, float)) or not 0 <= plane[key] <= hi:
-            raise PvError("err_range", name=f"{where}.{key}", rule=f"0 to {hi}", value=plane[key])
+            raise PvError("err_range", name=f"{where}.{key}", rule=bi(f"from 0 to {hi}", f"de 0 a {hi}"), value=plane[key])
     for j, ob in enumerate(plane.get("obstacles", [])):
         _need(ob, OBSTACLE_KEYS, f"{where}.obstacles[{j}]")
         for key in OBSTACLE_KEYS:
@@ -54,7 +54,7 @@ def check(roof: Any) -> None:
         _check_plane(plane, f"roof.planes[{k}]")
     target = roof.get("target_modules")
     if target is not None and (isinstance(target, bool) or not isinstance(target, int) or target < 1):
-        raise PvError("err_range", name="roof.target_modules", rule=">=1 (integer)", value=target)
+        raise PvError("err_range", name="roof.target_modules", rule=bi("a whole number of at least 1", "un número entero de al menos 1"), value=target)
 
 
 def _hits(cell: Tuple[float, float, float, float], obstacles: List[Dict[str, Any]]) -> bool:
