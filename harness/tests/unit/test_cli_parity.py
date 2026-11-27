@@ -118,7 +118,7 @@ class RunParity(Base):
 class QueryParity(Base):
     def test_engines_list_has_the_24_engines_and_equals_mcp_and_api(self):
         code, via_cli = epc(self.cli_root, "engines", "list")
-        self.assertEqual((code, via_cli["data"]["count"], len(via_cli["data"]["engines"])), (0, 39, 39))
+        self.assertEqual((code, via_cli["data"]["count"], len(via_cli["data"]["engines"])), (0, 40, 40))
         self.assertEqual(via_cli, self.mcp("epc_engine_list"))
         self.assertEqual(via_cli, json.loads(json.dumps(api.list_engines(actor=ORC))))
 

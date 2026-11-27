@@ -16,30 +16,35 @@ from disciplines.electrical_lv.stages import engine_calls as EC
 
 FORMATS = ("pdf", "docx", "xlsx")
 BUILDING_FORMATS = ("pdf", "docx", "xlsx")
+PV_FORMATS = ("pdf", "docx")
 ENGINE = "cad/drawing"
 FUNCTIONS = {"pdf": "epc_drawing.export.report_pdf.render", "docx": "epc_drawing.export.report_docx.render"}
-PAGE_LABEL = "Page {n} of {total}"
+PAGE_LABEL = "Page {n} of {total}"      # the same text as `epc_report.core.blocks.PAGE_LABEL`; engines are imported when used, so the permission hook (standard library only) can load this module
 EDIT_MARK = "EDIT MODE: norm values not verified, not for production"
+EDIT_MARK_ES = "MODO EDICIÓN: valores de norma sin verificar, no apto para producción"
 
 
 def formats_of(context):
-    """The formats to write: the ones `engine_inputs["documents"]["formats"]` lists, or all of them on a building run, else none."""
+    """The formats to write: the ones `engine_inputs["documents"]["formats"]` lists, all of them on a building run, PDF and Word on a PV run (PV-16), else none."""
     given = (EC.inputs_of(context).get("documents") or {}).get("formats")
     if given is not None:
         bad = [f for f in given if f not in FORMATS]
         if bad or not isinstance(given, list):
             raise ValueError(f"engine_inputs.documents.formats: {bad or given!r} is not a list of {', '.join(FORMATS)}")
         return tuple(given)
-    return BUILDING_FORMATS if EC.inputs_of(context).get("routing") else ()
+    if EC.inputs_of(context).get("routing"):
+        return BUILDING_FORMATS
+    return PV_FORMATS if EC.inputs_of(context).get("pv") else ()
 
 
 def _cell(value):
-    return "" if value is None else str(value)
+    from epc_report.core import blocks
+    return blocks.cell(value)
 
 
 def _table(columns, rows):
-    width = 1.0 / max(len(columns), 1)
-    return {"type": "table", "columns": [(str(c), width) for c in columns], "rows": [[_cell(v) for v in r] for r in rows]}
+    from epc_report.core import blocks
+    return blocks.table(columns, rows)
 
 
 def _block(b):
@@ -76,12 +81,8 @@ def _cable_list_report(document, project):
 
 
 def _notes(document):
-    """The assumptions and the issues a structured document carries, as headings and bullets."""
-    out = []
-    for key, title in (("assumptions", "Assumptions"), ("issues", "Open issues")):
-        if document.get(key):
-            out += [{"type": "h", "text": title}, {"type": "bullets", "items": [str(i) for i in document[key]]}]
-    return out
+    from epc_report.core import blocks
+    return blocks.notes(document)
 
 
 def _terminal_block_report(d, project):
@@ -112,82 +113,45 @@ def _lighting_report(d, project, language="en"):
             "blocks": blocks + lux_map.study_blocks(d["result"], language) + _notes({"issues": d["result"].get("warnings")})}
 
 
-MONTHS = ("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
-
-
-def _pv_array_rows(arrays):
-    """One row per array and a total row: modules, strings, modules per string, inverters, strings per inverter."""
-    rows = [[a["id"], a["modules"], a["strings"]["strings"], a["strings"]["n_series"], a["inverters"], a["strings"]["strings_per_inverter"]] for a in arrays]
-    return rows + [["total", sum(a["modules"] for a in arrays), sum(a["strings"]["strings"] for a in arrays), "", sum(a["inverters"] for a in arrays), ""]]
-
-
-def _pv_inverter_blocks(result):
-    placed = [i for i in (result.get("layout") or {}).get("inverters", []) if i.get("x") is not None]
-    rows = [[i["id"], i.get("catalog_id") or "", round(i["x"], 2), round(i["y"], 2)] for i in placed]
-    return [{"type": "h", "text": "Inverters (position in the layout)"}, _table(["inverter", "model", "x_m", "y_m"], rows)] if rows else []
-
-
-def _pv_fill_blocks(result):
-    """The alternatives the harness compared for a ground plant filled to its site: the tilts tried and the structures tried on the same site (relative energy: modules x kWh/kWp). Cost is not compared."""
-    fill = result.get("site_fill")
-    if not fill:
-        return []
-    blocks = [{"type": "h", "text": "Alternatives compared (ground plant)"},
-              {"type": "p", "text": f"Chosen: tilt {fill['tilt_deg']:g} deg, azimuth {fill['azimuth_deg']:g} deg, {fill['modules']} module(s) in {fill['structure']['frames']} table(s)."},
-              _table(["tilt_deg", "modules", "kwh_per_kwp"], [[o["tilt_deg"], o["modules"], o["specific_yield_kwh_kwp"]] for o in fill["options"]])]
-    rows = fill.get("structure_options") or []
-    if rows:
-        blocks += [{"type": "p", "text": "Structures tried on the same site (best first; the structure of the project is the one the person gave, and the foundation and cost of each are not compared):"},
-                   _table(["structure", "tilt_deg", "modules", "kwh_per_kwp", "energy_index"], [[r["structure_id"], r["tilt_deg"], r["modules"], r["specific_yield_kwh_kwp"], r["energy_index"]] for r in rows])]
-    return blocks
-
-
-def _pv_weight_blocks(result):
-    """The weight of the modules when the module format record gives one (`epc_pv.equipment.module_weight_kg`): each and in total. A load figure for the structure designer, not a structural check."""
+def _pv_weight_of(result):
+    """The weight of one module of the format record (`epc_pv.equipment.module_weight_kg`), or None; the report engine reads no record, so the discipline looks it up."""
     from epc_pv import equipment
     dims = ((result.get("layout") or {}).get("module") or {}).get("dimensions_mm")
-    each = equipment.module_weight_kg(dims) if dims else None
-    if each is None:
-        return []
-    total = each * sum(a["modules"] for a in result["arrays"])
-    return [{"type": "p", "text": f"Module weight (record of the module format): {each:g} kg each, {total / 1000.0:.1f} t in total. Loads on the structure and the roof are not checked."}]
+    return equipment.module_weight_kg(dims) if dims else None
 
 
 def _pv_equipment_blocks(result):
-    """The equipment the plant needs, as the engine counted it (nothing is added): modules, strings and inverters per array with the totals, and one line per inverter of the layout (its model and position)."""
-    head = [{"type": "h", "text": "Equipment of the plant"}, _table(["array", "modules", "strings", "modules_per_string", "inverters", "strings_per_inverter"], _pv_array_rows(result["arrays"]))]
-    return head + _pv_inverter_blocks(result) + _pv_weight_blocks(result)
+    from epc_report.pv import yield_study as pv_yield_study
+    return pv_yield_study.equipment_blocks(result, _pv_weight_of(result))
+
+
+def _pv_fill_blocks(result):
+    from epc_report.pv import yield_study as pv_yield_study
+    return pv_yield_study.fill_blocks(result)
 
 
 def _pv_report(d, project):
-    result = d["result"]
-    layout_rows = [[a["id"], a["modules"], a["inverters"], a["dc_kwp"], a["ac_kw"], a["dc_ac_ratio"], a["strings"]["n_series"], a["strings"]["strings"]] for a in result["arrays"]]
-    yield_rows = [[a["id"], a["poa_kwh_m2"], a["ac_kwh"], a["specific_yield_kwh_kwp"], a["performance_ratio"], a["capacity_factor"]] for a in result["arrays"]]
-    totals = result["totals"]
-    months = [[m, round(a, 1)] for m, a in zip(MONTHS, totals["monthly_ac_kwh"])]
-    warnings = [f"{w['en']} / {w['es']}" for w in result["warnings"]]
-    counts = result["counts"]
-    blocks = [{"type": "p", "text": f"Arrays: {counts['arrays']}; inverters: {counts['inverters']}; modules: {counts['modules']}; hours simulated: {counts['hours']}. Engine {d['engine']['name']} {d['engine']['version']}."},
-              _table(["array", "modules", "inverters", "dc_kwp", "ac_kw", "dc_ac_ratio", "modules_in_series", "strings"], layout_rows),
-              _table(["array", "poa_kwh_m2", "ac_kwh", "kwh_per_kwp", "pr", "cf"], yield_rows),
-              {"type": "h", "text": "Monthly AC energy (kWh)"}, _table(["month", "ac_kwh"], months),
-              {"type": "p", "text": f"Total: DC {totals['dc_kwp']} kWp, AC {totals['ac_kw']} kW, {totals['ac_kwh']} kWh per year, specific yield {totals['specific_yield_kwh_kwp']} kWh/kWp, clipping {totals['clipping_kwh']} kWh."}]
-    blocks += _pv_equipment_blocks(result) + _pv_fill_blocks(result)
-    plan = result.get("layout")
-    if plan:
-        blocks += [{"type": "h", "text": "Plant layout"},
-                   {"type": "p", "text": f"Tables: {plan['counts']['tables']} in {plan['counts']['rows']} row(s); row pitch {', '.join(str(p) for p in plan['pitch_m'])} m; solar altitude at the design hour {plan['solar_altitude_deg']} deg; "
-                                         f"site {plan['site']['width_m']} x {plan['site']['length_m']} m; all tables inside the site: {'yes' if plan['fits'] else 'no'}."}]
-    flat = result.get("flat_roof")
-    if flat:
-        st = flat["structure"]
-        blocks += [{"type": "h", "text": "Roof structure (assumed flat roof)"},
-                   {"type": "p", "text": f"No roof information was given: the roof is assumed flat and the modules go on tilted frames facing the equator. Tilt {flat['tilt_deg']:g} deg, azimuth {flat['azimuth_deg']:g} deg "
-                                         f"(from north), chosen as the most energy from the roof. {st['frames']} frame(s) of {st['modules_per_frame']} module(s), frame {st['frame_width_m']} x {st['frame_slope_m']} m, "
-                                         f"front height {st['front_height_m']} m, rear height {st['rear_height_m']} m, row pitch {st['row_pitch_m']} m. "
-                                         f"Not calculated: {st['not_calculated']['en']}. / No calculado: {st['not_calculated']['es']}."},
-                   _table(["tilt_deg", "modules", "kwh_per_kwp"], [[o["tilt_deg"], o["modules"], o["specific_yield_kwh_kwp"]] for o in flat["options"]])]
-    return {"title": "PV yield study", "subtitle": project, "footer": f"PV yield study - {project}", "page_label": PAGE_LABEL, "blocks": blocks + _notes({"issues": warnings})}
+    from epc_report.pv import yield_study as pv_yield_study
+    return pv_yield_study.pv_yield_report(d, project, _pv_weight_of(d["result"]))
+
+
+PV_TEXT_REPORTS = ("pv_calc_memo", "pv_summary", "pv_descriptive_report", "pv_savings_memo", "pv_economic_memo", "pv_savings_descriptive", "pv_economic_descriptive")
+
+
+def _pv_text_report(name, d, project, language):
+    """The PV documents written by the report engine in English or Spanish: the engine result, the engine input and the one-line problem the person gave are all it gets."""
+    from epc_report.pv import calc_memo, economics, narrative, summary
+    from epc_report.pv.texts import tr
+    lang = "es" if language == "es" else "en"
+    problem = d.get("problem")
+    builders = {"pv_calc_memo": lambda: calc_memo.pv_calc_memo(d, d.get("inputs") or {}, project, lang),
+                "pv_summary": lambda: summary.pv_summary(d, d.get("inputs") or {}, project, problem or tr(lang, "n_a"), lang),
+                "pv_descriptive_report": lambda: narrative.pv_descriptive_report(d, project, problem, lang),
+                "pv_savings_memo": lambda: economics.pv_savings_memo(d, project, lang),
+                "pv_economic_memo": lambda: economics.pv_economic_memo(d, project, lang),
+                "pv_savings_descriptive": lambda: narrative.pv_savings_descriptive(d, project, problem, lang),
+                "pv_economic_descriptive": lambda: narrative.pv_economic_descriptive(d, project, problem, lang)}
+    return builders[name]()
 
 
 def _boq_report(d, project):
@@ -223,11 +187,11 @@ def _has_sections(document):
     return isinstance(sections, list) and all(isinstance(x, dict) and ("blocks" in x or "items" in x) for x in sections)
 
 
-def marked(report, mode):
+def marked(report, mode, language="en"):
     """The report with the mark of the edit mode in its footer (a production report is returned as it is)."""
     if report is None or mode != "edit":
         return report
-    return dict(report, footer=(f"{report['footer']} - " if report.get("footer") else "") + EDIT_MARK)
+    return dict(report, footer=(f"{report['footer']} - " if report.get("footer") else "") + (EDIT_MARK_ES if language == "es" else EDIT_MARK))
 
 
 # Spanish for the words the platform itself puts in a document (SIM-14): titles and the columns of the generic tables. The engines that write Spanish already (the memo, the summary) are not touched.
@@ -275,6 +239,8 @@ def to_report(name, document, project, language="en"):
     """The report structure of a document, or None when its structure is its own (not rendered). `language` is the one of the project (`es` writes the platform's own words in Spanish)."""
     if name == "descriptive_report" and language == "es" and isinstance(document.get("sections"), list):
         return _descriptive_report_es(document, project)
+    if name in PV_TEXT_REPORTS:
+        return _pv_text_report(name, document, project, language)                     # the PV memorandum and summary come in English and Spanish from the report engine
     report = _lighting_report(document, project, language) if name == "lighting_study" else _to_report(name, document, project)
     return _in_spanish(report) if report is not None and language == "es" else report
 
@@ -373,7 +339,7 @@ def render_transmittal(data, work_dir, transmittal):
 
 def _reports(docs, project, mode="production", language="en"):
     """([(name, report)] of the documents that have a report structure, [names of the ones that do not])."""
-    every = [(name, marked(to_report(name, document, project, language), mode)) for name, document in docs.items()]
+    every = [(name, marked(to_report(name, document, project, language), mode, language)) for name, document in docs.items()]
     return [(n, r) for n, r in every if r is not None], [n for n, r in every if r is None]
 
 

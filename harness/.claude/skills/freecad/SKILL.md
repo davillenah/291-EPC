@@ -1,9 +1,11 @@
 ---
 name: freecad
-description: Builds an editable FreeCAD model (FCStd, STEP, IFC) of what the harness has already designed, for example the frames and modules of a PV plant on a roof or on the ground, through the `freecad` MCP server. Use when the engineer asks for the editable model or the 3D structure.
+description: DISABLED (owner, 2026-11-27): the editable 3D model goes through the SolidCraft MCP; do not use this skill. Kept for reference. Builds an editable FreeCAD model (FCStd, STEP, IFC) of what the harness has already designed, for example the frames and modules of a PV plant on a roof or on the ground, through the `freecad` MCP server. Use when the engineer asks for the editable model or the 3D structure.
 ---
 
 # FreeCAD: the editable model of what the harness designed
+
+> **Disabled (owner decision, 2026-11-27).** FreeCAD is not used any more and is not removed: the editable 3D model goes through the SolidCraft MCP. This file is kept for reference only.
 
 FreeCAD is optional and outside the 12 stages. This skill draws what the engines already decided; it never decides anything. The result is a working copy for the engineer to open and edit by hand. Changes made in FreeCAD do not return to the harness and are not approved.
 

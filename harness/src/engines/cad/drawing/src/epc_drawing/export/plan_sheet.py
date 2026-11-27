@@ -69,6 +69,13 @@ def _sheet_dxf(request: dict, fmt: str, name: str, scale: int, tmp: Path) -> Tup
     return Path(done["dxf"]), result["sheets"][0]["svg"]
 
 
+def _keep_transparency(plan, sheet) -> None:
+    """The importer copies the layers without their transparency (an extended-data record): the sheet gives each layer the transparency it has in the plan (PV-18: the disk grid at 80 %)."""
+    for lay in plan.layers:
+        if lay.transparency > 0 and lay.dxf.name in sheet.layers:
+            sheet.layers.get(lay.dxf.name).transparency = lay.transparency
+
+
 def compose(plan_dxf: Path, request: dict, out_dxf: Path, fmt: str = "A1", scale: Optional[int] = None, name: str = "PLAN") -> Dict[str, object]:
     """Draw the plan on the sheet and save it as `out_dxf`; returns {"format", "scale", "dxf"}."""
     import ezdxf
@@ -96,6 +103,7 @@ def compose(plan_dxf: Path, request: dict, out_dxf: Path, fmt: str = "A1", scale
         importer = Importer(plan, sheet)
         importer.import_modelspace()
         importer.finalize()
+        _keep_transparency(plan, sheet)
         k = mm_per_unit / used                                                         # paper millimetres per plan unit
         cx, cy = (area[0] + area[2]) / 2.0, height - (area[1] + area[3]) / 2.0          # centre of the free zone, in DXF coordinates (y up)
         move = Matrix44.translate(-(ext[0] + ext[2]) / 2.0, -(ext[1] + ext[3]) / 2.0, 0) @ Matrix44.scale(k, k, k) @ Matrix44.translate(cx, cy, 0)

@@ -49,6 +49,7 @@
         "mld",
         "plan",
         "pv",
+        "report",
         "selectivity",
         "short_circuit",
         "sld",
@@ -56,7 +57,7 @@
         "titleblock",
         "voltage_drop"
       ],
-      "hash": "336d16643a7692ff"
+      "hash": "b1219e9136179dca"
     },
     "doc-quality": {
       "version": "0.1.0",
@@ -88,6 +89,7 @@
         "mld",
         "plan",
         "pv",
+        "report",
         "selectivity",
         "short_circuit",
         "sld",
@@ -95,7 +97,7 @@
         "titleblock",
         "voltage_drop"
       ],
-      "hash": "dfa7afd36a817643"
+      "hash": "c40f8d0892bb777a"
     },
     "equipment-catalog": {
       "version": "0.1.0",
@@ -125,6 +127,7 @@
         "mld",
         "plan",
         "pv",
+        "report",
         "selectivity",
         "short_circuit",
         "sld",
@@ -132,7 +135,7 @@
         "titleblock",
         "voltage_drop"
       ],
-      "hash": "a9351b7e8c68118e"
+      "hash": "6c13d31a2b4e89fb"
     },
     "intake-analysis": {
       "version": "0.1.0",
@@ -164,6 +167,7 @@
         "mld",
         "plan",
         "pv",
+        "report",
         "selectivity",
         "short_circuit",
         "sld",
@@ -171,7 +175,7 @@
         "titleblock",
         "voltage_drop"
       ],
-      "hash": "28849f7875e32662"
+      "hash": "7f2ede3a71080cd5"
     },
     "mld": {
       "version": "0.2.2",
@@ -192,6 +196,7 @@
         "mld",
         "plan",
         "pv",
+        "report",
         "selectivity",
         "short_circuit",
         "sld",
@@ -199,7 +204,7 @@
         "titleblock",
         "voltage_drop"
       ],
-      "hash": "529adcad1638c937"
+      "hash": "14adb6ee6ccead97"
     },
     "plan-drawing": {
       "version": "0.1.0",
@@ -220,6 +225,7 @@
         "mld",
         "plan",
         "pv",
+        "report",
         "selectivity",
         "short_circuit",
         "sld",
@@ -227,7 +233,7 @@
         "titleblock",
         "voltage_drop"
       ],
-      "hash": "812b032c3026c474"
+      "hash": "6a83008c2c6180f0"
     },
     "pm2-docs": {
       "version": "0.1.0",
@@ -276,6 +282,7 @@
         "mld",
         "plan",
         "pv",
+        "report",
         "selectivity",
         "short_circuit",
         "sld",
@@ -283,7 +290,7 @@
         "titleblock",
         "voltage_drop"
       ],
-      "hash": "1bbcfe75d9568142"
+      "hash": "fa1b8f036643490d"
     },
     "spec-writer": {
       "version": "0.1.0",

@@ -322,3 +322,53 @@ class TestCli(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestFeasibility(unittest.TestCase):
+    """The saving, the payback, the technical summary and the inverters raised for the input current (moved from the discipline stage, same numbers)."""
+
+    def run_doc(self, **array):
+        return run(doc(**array)).as_dict()
+
+    def test_the_saving_is_the_yearly_energy_times_the_price_and_the_payback_the_investment_over_it(self):
+        from epc_pv import feasibility
+        result = self.run_doc()
+        eco = feasibility.economic_summary(result, {"energy_price": 0.1, "currency": "USD", "investment": 20000})
+        kwh = result["totals"]["ac_kwh"]
+        self.assertAlmostEqual(eco["saving_year"], kwh * 0.1, delta=0.01)
+        self.assertAlmostEqual(eco["simple_payback_years"], 20000 / (kwh * 0.1), delta=0.01)
+        self.assertEqual(len(eco["saving_month"]), 12)
+
+    def test_without_a_price_it_says_what_to_give_in_both_languages(self):
+        from epc_pv import feasibility
+        said = feasibility.economic_summary(self.run_doc(), None)
+        self.assertTrue(said["en"] and said["es"])
+
+    def test_the_technical_summary_reads_only_the_result(self):
+        from epc_pv import feasibility
+        summary = feasibility.technical_summary(self.run_doc(), None)
+        self.assertEqual(summary["status"], "pending review")
+        self.assertIn("economic", summary)
+        self.assertEqual(set(summary["installed"]), {"modules", "dc_kwp", "ac_kw", "inverters"})
+
+    def test_inverters_are_raised_only_for_an_auto_count_over_the_current_limit(self):
+        from epc_pv import feasibility
+        section = {"document": doc()}
+        result = self.run_doc()
+        self.assertIs(feasibility.add_inverters_for_current(section, result)[1], result)
+
+    def test_an_auto_count_over_the_current_limit_is_raised_and_said_with_the_real_ratio(self):
+        from epc_pv import feasibility
+        inverter = {"auto": True, "n_mppt": 6, "pac0_w": 100000.0}
+        section = {"document": {"arrays": [{"id": "A1", "inverter": inverter, "n_modules": 100}]}}
+        first = {"arrays": [{"inverters": 90, "dc_kwp": 10800.0, "strings": {"strings": 672, "strings_per_mppt": 2, "strings_per_mppt_limit": 1}}], "warnings": []}
+        real, feasibility._rerun = feasibility._rerun, lambda sec: {"arrays": [], "warnings": []}
+        self.addCleanup(setattr, feasibility, "_rerun", real)
+        new_section, out = feasibility.add_inverters_for_current(section, first)
+        self.assertEqual(new_section["document"]["arrays"][0]["n_inverters"], 112)
+        self.assertEqual([w["code"] for w in out["warnings"]], ["inverters_raised"])
+
+    def test_the_rerun_takes_the_options_of_the_section(self):
+        from epc_pv import feasibility
+        out = feasibility._rerun({"document": doc(), "options": {}})
+        self.assertIn("totals", out)
