@@ -23,7 +23,7 @@ The writers moved here from `epc_drawing.export` with the same output: `report_p
 - The Excel and transmittal writers still take a destination path (the PDF and Word writers already return bytes).
 - The text of the PV yield study is still English only (the discipline translates titles and columns afterwards); proper Spanish text comes with the templates.
 - The other kinds of report (PV calculation memorandum, summary, descriptive, savings and economic memorandums) and the text templates as data in English and Spanish.
-- The auditor agent in the roster (path scope limited to `engines/quality/report`, needs a permission rule) that supplies the corrector.
+- The builders of each report kind call `review_round` before the result is shown (the roles are in the bodies of `documentation` and `calc_check`: the first corrects, the second audits).
 - The reports built in `epc_aea90364.board_memo` and in `disciplines/electrical_lv/stages/rendering.py` move here later.
 
 Tests: `python -m unittest discover -s tests` (needs `matplotlib`, `openpyxl`, `pillow`, `pypdfium2`).
