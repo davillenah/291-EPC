@@ -147,8 +147,8 @@ def layout(rep: dict) -> List[list]:
         for s in b.get("shapes", []):
             _shape(s, at, scale, ops)
         y = top + height + 4
-        if b.get("caption"):
-            ops().append(("text", M, y + 9, b["caption"], FS_SMALL, "italic", "#555555", "left"))
+        for line in _wrap(b["caption"], tw, FS_SMALL) if b.get("caption") else []:        # a long caption goes on several lines
+            ops().append(("text", M, y + 9, line, FS_SMALL, "italic", "#555555", "left"))
             y += LINE
         return y + 8
 

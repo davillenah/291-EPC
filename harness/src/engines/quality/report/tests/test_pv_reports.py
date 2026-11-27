@@ -128,5 +128,18 @@ class TestPvShadingSection(unittest.TestCase):
             self.assertIn(part, text)
         self.assertIn("5. Shading and irradiation", texts(self.memo("en", True)))
 
+    def test_the_memo_and_the_descriptive_report_carry_the_disk_and_the_abacus_as_figures(self):
+        from epc_report.pv import narrative
+        charts = copy.deepcopy(self.CHARTS)
+        charts["abacus"]["cells"] = [{"id": "A1", "cover": 0.25, "outline": [[0.0, 30.0], [10.0, 30.0], [10.0, 40.0], [0.0, 40.0]]}]
+        d = copy.deepcopy(DOCUMENT)
+        d["result"]["charts"] = charts
+        for rep in (calc_memo.pv_calc_memo(d, INPUTS, "P-1", "es"), narrative.pv_descriptive_report(d, "P-1", None, "en")):
+            figures = [b for b in rep["blocks"] if b["type"] == "figure"]
+            self.assertEqual(len(figures), 2)
+            self.assertTrue(all(f["shapes"] for f in figures))
+        self.assertTrue(report_pdf.render_bytes(calc_memo.pv_calc_memo(d, INPUTS, "P-1", "es"), datetime.datetime(2026, 1, 1)).startswith(b"%PDF"))
+        self.assertTrue(report_docx.render_bytes(narrative.pv_descriptive_report(d, "P-1", None, "en"), datetime.datetime(2026, 1, 1)).startswith(b"PK"))
+
     def test_without_charts_the_section_is_left_out(self):
         self.assertNotIn("Shading and irradiation", texts(self.memo("en", False)))

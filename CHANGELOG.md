@@ -4,6 +4,7 @@ All notable changes. Format: Keep a Changelog; versions follow `harness/docs/BRA
 
 
 ### Unreleased (one drawing engine)
+- PV reports with figures (2026-11-27, owner): the irradiation disk and the shading abacus are drawn inside the PV calculation memorandum and the PV descriptive report (PDF and Word) from `result.charts` (`epc_report.pv.figures`); a long figure caption wraps in the PDF.
 - FreeCAD disabled, not removed (2026-11-27, owner): the PV 3D model defaults to the DXF, `model3d_format` `freecad` or `both` is refused with a message in English and Spanish, the skill is marked disabled; the editable 3D model will go through the SolidCraft MCP (BACKLOG PVX-19).
 - PV-18 (2026-11-27, owner): the layer `291-WP-DISK-GRID` keeps its 80 % transparency on the IRAM sheet of the irradiation disk (the sheet composition dropped it).
 - PV-17 (2026-11-27, owner): the PV calculation memorandum has a section 5 with the shading loss (abacus) and the irradiation by orientation (disk), read from the engine result; the other sections move down one number.
