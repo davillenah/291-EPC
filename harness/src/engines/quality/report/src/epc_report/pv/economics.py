@@ -4,6 +4,7 @@ They read the `economic` block of the stage (`technical_feasibility.economic`, c
 not given (the client's price, the investment) is written 'not verified', never assumed.
 """
 from epc_report.core.blocks import table
+from epc_report.core.numbers import localize
 from epc_report.pv.calc_memo import _calc
 from epc_report.pv.texts import tr
 
@@ -22,7 +23,7 @@ def _facts(d):
 
 
 def _frame(lang, d, project, title, blocks, facts):
-    return {"title": tr(lang, title), "subtitle": project, "footer": f"{tr(lang, title)} - {project}", "blocks": blocks, "facts": facts}
+    return localize({"title": tr(lang, title), "subtitle": project, "footer": f"{tr(lang, title)} - {project}", "blocks": blocks, "facts": facts}, lang)
 
 
 def pv_savings_memo(d, project, lang="en"):
@@ -33,12 +34,12 @@ def pv_savings_memo(d, project, lang="en"):
     if eco is None:
         blocks += [{"type": "p", "text": tr(lang, "no_price")}]
         return _frame(lang, d, project, "sav_title", blocks, facts)
-    cur = eco["currency"]
-    blocks += [table([tr(lang, "col_calc"), tr(lang, "col_val")], [[tr(lang, "d_energy"), f"{eco['energy_kwh_year']} kWh/year"], [tr(lang, "d_price"), f"{eco['energy_price']} {cur}/kWh"],
+    cur, yr = eco["currency"], tr(lang, "per_year")
+    blocks += [table([tr(lang, "col_calc"), tr(lang, "col_val")], [[tr(lang, "d_energy"), f"{eco['energy_kwh_year']} kWh/{yr}"], [tr(lang, "d_price"), f"{eco['energy_price']} {cur}/kWh"],
                                                                     [tr(lang, "assumes"), eco["assumes"][lang]]]),
                {"type": "p", "text": tr(lang, "t_sav_data")}, {"type": "h", "text": tr(lang, "h_sav_year")}, {"type": "p", "text": tr(lang, "l_sav_year")}]
-    blocks += _calc(lang, "S-01", "c_saving", f"E = {eco['energy_kwh_year']} kWh/year; p = {eco['energy_price']} {cur}/kWh", "A = E · p",
-                    f"A = {eco['energy_kwh_year']} kWh × {eco['energy_price']} {cur}/kWh", f"A = {eco['saving_year']} {cur}/year", "-", "not_verified")
+    blocks += _calc(lang, "S-01", "c_saving", f"E = {eco['energy_kwh_year']} kWh/{yr}; p = {eco['energy_price']} {cur}/kWh", "A = E · p",
+                    f"A = {eco['energy_kwh_year']} kWh × {eco['energy_price']} {cur}/kWh", f"A = {eco['saving_year']} {cur}/{yr}", "-", "not_verified")
     months = d["result"]["totals"]["monthly_ac_kwh"]
     rows = [[m, e, s] for m, e, s in zip(MONTHS, months, eco["saving_month"])]
     blocks += [{"type": "p", "text": tr(lang, "t_sav_year")}, {"type": "h", "text": tr(lang, "h_sav_month")}, table([tr(lang, "month"), tr(lang, "kwh"), f"{tr(lang, 'saving')} ({cur})"], rows),
@@ -54,10 +55,10 @@ def pv_economic_memo(d, project, lang="en"):
     if eco is None or "investment" not in eco:
         blocks += [{"type": "p", "text": tr(lang, "no_price" if eco is None else "no_invest")}]
         return _frame(lang, d, project, "eco_title", blocks, facts)
-    cur = eco["currency"]
-    blocks += [table([tr(lang, "col_calc"), tr(lang, "col_val")], [[tr(lang, "d_invest"), f"{eco['investment']} {cur}"], [tr(lang, "sav_year"), f"{eco['saving_year']} {cur}/year"]]),
+    cur, yr = eco["currency"], tr(lang, "per_year")
+    blocks += [table([tr(lang, "col_calc"), tr(lang, "col_val")], [[tr(lang, "d_invest"), f"{eco['investment']} {cur}"], [tr(lang, "sav_year"), f"{eco['saving_year']} {cur}/{yr}"]]),
                {"type": "p", "text": tr(lang, "t_eco_data")}, {"type": "h", "text": tr(lang, "h_eco_pay")}, {"type": "p", "text": tr(lang, "l_eco_pay")}]
-    blocks += _calc(lang, "E-01", "c_payback", f"I = {eco['investment']} {cur}; A = {eco['saving_year']} {cur}/year", "T = I / A", f"T = {eco['investment']} / {eco['saving_year']}",
+    blocks += _calc(lang, "E-01", "c_payback", f"I = {eco['investment']} {cur}; A = {eco['saving_year']} {cur}/{yr}", "T = I / A", f"T = {eco['investment']} / {eco['saving_year']}",
                     f"T = {eco['simple_payback_years']}", "-", "not_verified")
     blocks += [{"type": "p", "text": tr(lang, "t_eco_pay")}, {"type": "h", "text": tr(lang, "h_eco_more")}, {"type": "p", "text": tr(lang, "eco_more_list") + " " + tr(lang, "pending_engine", item="PV-10")}]
     return _frame(lang, d, project, "eco_title", blocks, dict(facts, **{"pv.saving_year": eco["saving_year"]}))

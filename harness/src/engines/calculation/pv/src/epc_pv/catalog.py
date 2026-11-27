@@ -41,6 +41,8 @@ def pick_inverter(n_modules: int, pmax_w: float, dc_ac_ratio: float, module: Dic
         cold, hot = (25.0, 25.0) if t_min_c is None or t_cell_max_c is None else (t_min_c, t_cell_max_c)      # without the design temperatures: the STC voltages (a necessary condition only)
         fits = [r for r in pool if (lambda g: g["s_min"] <= g["s_max"])(series_range(module, r["inverter"], cold, hot))]
         pool = fits or pool
+        carries = [r for r in pool if int(r["inverter"]["i_max_input_a"] // float(module["imp_a"])) >= 1]      # an input that admits no string of the module is never picked
+        pool = carries or pool
 
     def score(rec: Dict[str, Any]):
         pac = float(rec["inverter"]["pac0_w"])

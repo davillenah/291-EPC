@@ -54,6 +54,18 @@ class PvSliceTests(unittest.TestCase):
         res = STAGES[2].run(ctx_with({"document": PV.doc(), "layout": small}))
         self.assertTrue([f for f in res.findings if f["severity"] == "major" and f["field"] == "layout/fits"])
 
+    def test_a_string_over_the_input_current_is_a_major_finding_and_other_warnings_stay_notes(self):
+        from disciplines.electrical_lv.stages import pv_stage
+        warning = {"code": "warn_current", "en": "x", "es": "y"}
+        self.assertEqual(pv_stage.warning_finding(1, "r", "pv", warning)["severity"], "major")
+        self.assertEqual(pv_stage.warning_finding(1, "r", "pv", dict(warning, code="isc_not_checked"))["severity"], "note")
+
+    def test_a_pv_run_renders_pdf_and_word_by_default_and_the_edit_mark_follows_the_language(self):
+        from disciplines.electrical_lv.stages import rendering
+        self.assertEqual(rendering.formats_of(ctx_with({"document": PV.doc()})), ("pdf", "docx"))
+        marked = rendering.marked({"footer": "f"}, "edit", "es")
+        self.assertIn("MODO EDICIÓN", marked["footer"])
+
     def test_an_unknown_key_or_a_bad_layout_blocks_in_both_languages(self):
         for section in ({"document": PV.doc(), "extra": 1}, {"document": PV.doc(), "layout": {"site": {}}}):
             res = STAGES[2].run(ctx_with(section))
@@ -416,7 +428,7 @@ class PvTextReportsTests(unittest.TestCase):
 
     def test_the_documents_stage_makes_the_pv_memorandum_and_summary_in_both_languages(self):
         from disciplines.electrical_lv.stages import output_stages, rendering
-        ctx = ctx_with({"document": PV.doc(), "problem": "consumption 600000 kWh/year"})
+        ctx = ctx_with({"document": PV.doc(), "problem": "consumption 600,000 kWh/year"})
         ctx.results[3] = STAGES[2].run(ctx)
         docs = output_stages.DocumentsStage.pv_study(ctx)
         self.assertEqual(len(docs), 8)
@@ -427,7 +439,7 @@ class PvTextReportsTests(unittest.TestCase):
             memo = rendering.to_report("pv_calc_memo", docs["pv_calc_memo"], "P-1", lang)
             self.assertEqual(memo["title"], title)
         summary = rendering.to_report("pv_summary", docs["pv_summary"], "P-1", "en")
-        self.assertIn("consumption 600000 kWh/year", [c for b in summary["blocks"] for r in b.get("rows", []) for c in r])
+        self.assertIn("consumption 600,000 kWh/year", [c for b in summary["blocks"] for r in b.get("rows", []) for c in r])
 
 
 class PvModel3dFormatTests(unittest.TestCase):

@@ -7,6 +7,7 @@ T = {
     "pending_engine": ("not verified: the engine for this calculation is not built yet ({item})", "no verificado: el motor de este cálculo aún no existe ({item})"),
     "not_returned": ("not available: the engine does not return it", "no disponible: el motor no lo devuelve"),
     "complies": ("complies", "cumple"), "fails": ("does not comply", "no cumple"), "not_verified": ("not verified", "no verificado"),
+    "per_year": ("year", "año"),
     "edit_mode": ("EDIT MODE: norm values not verified, not for production", "MODO EDICIÓN: valores de norma sin verificar, no apto para producción"),
     "memo_title": ("PV calculation memorandum", "Memoria de cálculo fotovoltaica"),
     "summary_title": ("PV project summary", "Síntesis del proyecto fotovoltaico"),

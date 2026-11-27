@@ -41,7 +41,7 @@ class TestPvReports(unittest.TestCase):
         rep = summary.pv_summary(many, INPUTS, "P-1", "consumption 20000 kWh/year")
         self.assertEqual(len(rep["blocks"][-1]["items"]), 3)
         self.assertIn("not available", texts(rep))
-        self.assertIn("Planta FV 11.0 kWp CC / 10.0 kW CA", texts(summary.pv_summary(DOCUMENT, INPUTS, "P-1", "x", "es")))
+        self.assertIn("Planta FV 11,0 kWp CC / 10,0 kW CA", texts(summary.pv_summary(DOCUMENT, INPUTS, "P-1", "x", "es")))
 
     def test_the_audit_finds_nothing_and_the_facts_agree(self):
         reports = [calc_memo.pv_calc_memo(DOCUMENT, INPUTS, "P-1"), summary.pv_summary(DOCUMENT, INPUTS, "P-1", "x")]
@@ -87,8 +87,8 @@ class TestPvEconomicReports(unittest.TestCase):
         d = self.doc(self.ECO)
         sav, eco = economics.pv_savings_memo(d, "P-1"), economics.pv_economic_memo(d, "P-1", "es")
         self.assertNotEqual(sav["title"], eco["title"])
-        self.assertIn("A = 15000.0 kWh × 0.1 USD/kWh", texts(sav))
-        self.assertIn("T = 6.0", texts(eco))
+        self.assertIn("A = 15,000.0 kWh × 0.1 USD/kWh", texts(sav))
+        self.assertIn("T = 6,0", texts(eco))
         self.assertEqual(sav["facts"]["pv.saving_year"], eco["facts"]["pv.saving_year"])
         self.assertEqual([f for f in audit.audit([sav, eco]) if f["severity"] == "error"], [])
 

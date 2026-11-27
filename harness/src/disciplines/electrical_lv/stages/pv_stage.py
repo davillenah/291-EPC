@@ -46,9 +46,12 @@ KEYS = ("document", "options", "layout", "weather_file", "roof", "flat_roof", "r
 NOT_PROVIDED = "pv inputs not provided"
 
 
+BLOCKING_WARNINGS = {"warn_current": "major"}      # a string over the input current of the inverter cannot be built: it blocks approval
+
+
 def warning_finding(n, run_id, slug, warning):
     """A note-severity finding that states one warning of the engine (text in English and Spanish)."""
-    return {"id": f"F-{n:04d}", "run_id": run_id, "verifier": "calc-check", "severity": "note", "document": slug, "field": f"warning/{warning['code']}",
+    return {"id": f"F-{n:04d}", "run_id": run_id, "verifier": "calc-check", "severity": BLOCKING_WARNINGS.get(warning["code"], "note"), "document": slug, "field": f"warning/{warning['code']}",
             "value": {"en": warning["en"], "es": warning["es"]}, "expected": "reviewed by the engineer of record", "clause": "engine warning",
             "action": "Review the warning or correct the input.", "evidence": [f"engine {FUNCTION}"], "status": "open"}
 

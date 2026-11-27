@@ -4,6 +4,7 @@ It is built from the result of `epc_pv` and the input document the engine receiv
 does not return is written 'not available', and a calculation no engine does yet is listed as 'not verified'. A verdict is a comparison of two numbers the engine gave.
 """
 from epc_report.core.blocks import table
+from epc_report.core.numbers import localize
 from epc_report.pv.texts import tr
 
 
@@ -77,5 +78,5 @@ def pv_calc_memo(d, inputs, project, lang="en"):
                {"type": "p", "text": tr(lang, "t_pending")}, {"type": "h", "text": tr(lang, "h_summary")},
                table([tr(lang, k) for k in ("col_calc", "col_mag", "col_val", "col_lim", "col_state")], verifications(lang, result["arrays"]))]
     totals = result["totals"]
-    return {"title": tr(lang, "memo_title"), "subtitle": project, "footer": f"{tr(lang, 'memo_title')} - {project}", "blocks": blocks,
-            "facts": {"pv.dc_kwp": totals["dc_kwp"], "pv.ac_kw": totals["ac_kw"], "pv.ac_kwh": totals["ac_kwh"], "pv.modules": sum(a["modules"] for a in result["arrays"])}}
+    return localize({"title": tr(lang, "memo_title"), "subtitle": project, "footer": f"{tr(lang, 'memo_title')} - {project}", "blocks": blocks,
+                     "facts": {"pv.dc_kwp": totals["dc_kwp"], "pv.ac_kw": totals["ac_kw"], "pv.ac_kwh": totals["ac_kwh"], "pv.modules": sum(a["modules"] for a in result["arrays"])}}, lang)

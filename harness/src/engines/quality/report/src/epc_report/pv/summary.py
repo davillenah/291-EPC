@@ -2,6 +2,7 @@
 
 What no engine gives yet (cables, protections, earthing) is written 'not available'; it is never filled in by hand."""
 from epc_report.core.blocks import table
+from epc_report.core.numbers import localize
 from epc_report.pv.calc_memo import count_states
 from epc_report.pv.texts import tr
 
@@ -50,5 +51,5 @@ def pv_summary(d, inputs, project, problem, lang="en"):
     blocks = [{"type": "p", "text": tr(lang, "edit_mode")}, table([tr(lang, "req"), tr(lang, "tech")], _rows(lang, d, inputs, problem))]
     if warns:
         blocks += [{"type": "h", "text": tr(lang, "obs")}, {"type": "bullets", "items": warns}]
-    return {"title": tr(lang, "summary_title"), "subtitle": project, "footer": f"{tr(lang, 'summary_title')} - {project}", "blocks": blocks,
-            "facts": {"pv.dc_kwp": totals["dc_kwp"], "pv.ac_kw": totals["ac_kw"], "pv.ac_kwh": totals["ac_kwh"], "pv.modules": sum(x["modules"] for x in result["arrays"])}}
+    return localize({"title": tr(lang, "summary_title"), "subtitle": project, "footer": f"{tr(lang, 'summary_title')} - {project}", "blocks": blocks,
+                     "facts": {"pv.dc_kwp": totals["dc_kwp"], "pv.ac_kw": totals["ac_kw"], "pv.ac_kwh": totals["ac_kwh"], "pv.modules": sum(x["modules"] for x in result["arrays"])}}, lang)

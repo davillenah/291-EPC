@@ -16,21 +16,25 @@ from disciplines.electrical_lv.stages import engine_calls as EC
 
 FORMATS = ("pdf", "docx", "xlsx")
 BUILDING_FORMATS = ("pdf", "docx", "xlsx")
+PV_FORMATS = ("pdf", "docx")
 ENGINE = "cad/drawing"
 FUNCTIONS = {"pdf": "epc_drawing.export.report_pdf.render", "docx": "epc_drawing.export.report_docx.render"}
 PAGE_LABEL = "Page {n} of {total}"      # the same text as `epc_report.core.blocks.PAGE_LABEL`; engines are imported when used, so the permission hook (standard library only) can load this module
 EDIT_MARK = "EDIT MODE: norm values not verified, not for production"
+EDIT_MARK_ES = "MODO EDICIÓN: valores de norma sin verificar, no apto para producción"
 
 
 def formats_of(context):
-    """The formats to write: the ones `engine_inputs["documents"]["formats"]` lists, or all of them on a building run, else none."""
+    """The formats to write: the ones `engine_inputs["documents"]["formats"]` lists, all of them on a building run, PDF and Word on a PV run (PV-16), else none."""
     given = (EC.inputs_of(context).get("documents") or {}).get("formats")
     if given is not None:
         bad = [f for f in given if f not in FORMATS]
         if bad or not isinstance(given, list):
             raise ValueError(f"engine_inputs.documents.formats: {bad or given!r} is not a list of {', '.join(FORMATS)}")
         return tuple(given)
-    return BUILDING_FORMATS if EC.inputs_of(context).get("routing") else ()
+    if EC.inputs_of(context).get("routing"):
+        return BUILDING_FORMATS
+    return PV_FORMATS if EC.inputs_of(context).get("pv") else ()
 
 
 def _cell(value):
@@ -183,11 +187,11 @@ def _has_sections(document):
     return isinstance(sections, list) and all(isinstance(x, dict) and ("blocks" in x or "items" in x) for x in sections)
 
 
-def marked(report, mode):
+def marked(report, mode, language="en"):
     """The report with the mark of the edit mode in its footer (a production report is returned as it is)."""
     if report is None or mode != "edit":
         return report
-    return dict(report, footer=(f"{report['footer']} - " if report.get("footer") else "") + EDIT_MARK)
+    return dict(report, footer=(f"{report['footer']} - " if report.get("footer") else "") + (EDIT_MARK_ES if language == "es" else EDIT_MARK))
 
 
 # Spanish for the words the platform itself puts in a document (SIM-14): titles and the columns of the generic tables. The engines that write Spanish already (the memo, the summary) are not touched.
@@ -335,7 +339,7 @@ def render_transmittal(data, work_dir, transmittal):
 
 def _reports(docs, project, mode="production", language="en"):
     """([(name, report)] of the documents that have a report structure, [names of the ones that do not])."""
-    every = [(name, marked(to_report(name, document, project, language), mode)) for name, document in docs.items()]
+    every = [(name, marked(to_report(name, document, project, language), mode, language)) for name, document in docs.items()]
     return [(n, r) for n, r in every if r is not None], [n for n, r in every if r is None]
 
 
