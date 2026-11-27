@@ -51,3 +51,16 @@ class TestAudit(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestReviewRound(unittest.TestCase):
+    def test_owner_edit_is_reviewed_again(self):
+        fix = lambda r, f: [dict(x, blocks=[{"type": "p", "text": "ok"}]) for x in r]  # noqa: E731
+        first = a.review_round([BAD], fix)
+        self.assertEqual(first["status"], "ready_for_owner")
+        second = a.review_round(first["reports"], fix, owner_edit=lambda r: [dict(x, blocks=[]) for x in r])
+        self.assertEqual((second["status"], second["iterations"]), ("ready_for_owner", 1))
+
+    def test_not_clean_after_five(self):
+        out = a.review_round([BAD], lambda r, f: [dict(x, n=x.get("n", 0) + 1) for x in r])
+        self.assertEqual((out["status"], out["iterations"]), ("needs_work", 5))

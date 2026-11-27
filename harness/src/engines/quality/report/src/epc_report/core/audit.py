@@ -114,3 +114,13 @@ def audit_loop(reports, corrector, max_iterations=MAX_ITERATIONS):
             break
         current, found = list(new), audit(new)
     return {"reports": current, "findings": found, "iterations": done, "clean": not any(f["severity"] == "error" for f in found)}
+
+
+def review_round(reports, corrector, owner_edit=None, max_iterations=MAX_ITERATIONS):
+    """One turn of the review the owner sees (ADR-0043): the owner's changes (if any) are applied, then the auditor reviews and corrects up to five times, and only then the set goes to the owner.
+
+    `owner_edit(reports)` returns the reports with the owner's corrections (None on the first draft). The result `status` is `ready_for_owner` when no error is left, else `needs_work` (the
+    caller keeps the loop going or says so). The findings stay inside the result for the harness; the owner is shown the reports, not the findings."""
+    start = owner_edit(list(reports)) if owner_edit else list(reports)
+    out = audit_loop(start, corrector, max_iterations)
+    return {"reports": out["reports"], "status": "ready_for_owner" if out["clean"] else "needs_work", "iterations": out["iterations"], "findings": out["findings"]}
