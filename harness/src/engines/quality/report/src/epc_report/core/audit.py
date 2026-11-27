@@ -22,6 +22,40 @@ def _texts(block):
     return out
 
 
+def _check_heading(name, where, b, blocks, n, seen):
+    out = []
+    if not b.get("text"):
+        out.append(finding("empty_heading", "error", name, where, "A heading has no text.", "Un título no tiene texto."))
+    elif b["text"] in seen:
+        out.append(finding("duplicate_heading", "warning", name, where, f"The heading '{b['text']}' appears twice.", f"El título '{b['text']}' aparece dos veces."))
+    seen.add(b.get("text"))
+    nxt = blocks[n + 1] if n + 1 < len(blocks) else None
+    if nxt is None or nxt.get("type") == "h":
+        out.append(finding("empty_section", "warning", name, where, f"The section '{b.get('text', '')}' has no content.", f"La sección '{b.get('text', '')}' no tiene contenido."))
+    return out
+
+
+def _check_table(name, where, b):
+    out, width = [], len(b.get("columns", []))
+    if not b.get("rows") and not b.get("empty"):
+        out.append(finding("empty_table", "warning", name, where, "A table has no rows and no empty-table text.", "Una tabla no tiene filas ni texto de tabla vacía."))
+    for r, row in enumerate(b.get("rows", [])):
+        if len(row) != width:
+            out.append(finding("row_width", "error", name, f"{where}, row {r + 1}", f"A row has {len(row)} cells and the table has {width} columns.", f"Una fila tiene {len(row)} celdas y la tabla tiene {width} columnas."))
+    return out
+
+
+def _check_texts(name, where, b):
+    out = []
+    for t in _texts(b):
+        hit = next((p for p in PLACEHOLDERS if p in t), None)
+        if hit:
+            out.append(finding("placeholder", "warning", name, where, f"Unresolved placeholder {hit}.", f"Marcador sin resolver {hit}."))
+        if t.strip().lower() in ("nan", "none"):
+            out.append(finding("bad_value", "error", name, where, f"A value reads '{t.strip()}'.", f"Un valor dice '{t.strip()}'."))
+    return out
+
+
 def _check_report(rep, index):
     name = rep.get("title") or f"report {index + 1}"
     out = []
@@ -29,33 +63,14 @@ def _check_report(rep, index):
         out.append(finding("missing_title", "error", name, "title", "The report has no title.", "El informe no tiene título."))
     if not rep.get("blocks"):
         out.append(finding("empty_report", "error", name, "blocks", "The report has no content.", "El informe no tiene contenido."))
-    seen = set()
-    for n, b in enumerate(rep.get("blocks", [])):
+    seen, blocks = set(), rep.get("blocks", [])
+    for n, b in enumerate(blocks):
         where = f"block {n + 1}"
-        kind = b.get("type")
-        if kind == "h":
-            if not b.get("text"):
-                out.append(finding("empty_heading", "error", name, where, "A heading has no text.", "Un título no tiene texto."))
-            elif b["text"] in seen:
-                out.append(finding("duplicate_heading", "warning", name, where, f"The heading '{b['text']}' appears twice.", f"El título '{b['text']}' aparece dos veces."))
-            seen.add(b.get("text"))
-            nxt = rep["blocks"][n + 1] if n + 1 < len(rep["blocks"]) else None
-            if nxt is None or nxt.get("type") == "h":
-                out.append(finding("empty_section", "warning", name, where, f"The section '{b.get('text', '')}' has no content.", f"La sección '{b.get('text', '')}' no tiene contenido."))
-        if kind == "table":
-            width = len(b.get("columns", []))
-            if not b.get("rows") and not b.get("empty"):
-                out.append(finding("empty_table", "warning", name, where, "A table has no rows and no empty-table text.", "Una tabla no tiene filas ni texto de tabla vacía."))
-            for r, row in enumerate(b.get("rows", [])):
-                if len(row) != width:
-                    out.append(finding("row_width", "error", name, f"{where}, row {r + 1}", f"A row has {len(row)} cells and the table has {width} columns.", f"Una fila tiene {len(row)} celdas y la tabla tiene {width} columnas."))
-        for t in _texts(b):
-            for p in PLACEHOLDERS:
-                if p in t:
-                    out.append(finding("placeholder", "warning", name, where, f"Unresolved placeholder {p}.", f"Marcador sin resolver {p}."))
-                    break
-            if "nan" == t.strip().lower() or "None" == t.strip():
-                out.append(finding("bad_value", "error", name, where, f"A value reads '{t.strip()}'.", f"Un valor dice '{t.strip()}'."))
+        if b.get("type") == "h":
+            out += _check_heading(name, where, b, blocks, n, seen)
+        if b.get("type") == "table":
+            out += _check_table(name, where, b)
+        out += _check_texts(name, where, b)
     return out
 
 
