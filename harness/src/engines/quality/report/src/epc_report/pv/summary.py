@@ -14,6 +14,12 @@ def _first_array(result, inputs):
     return a, spec
 
 
+def _block(spec, key):
+    """The module or inverter block of an array, or {} when it is not a block (a template such as "auto" is not data)."""
+    value = (spec or {}).get(key)
+    return value if isinstance(value, dict) else {}
+
+
 def _location(site, na):
     return f"{site['latitude_deg']}, {site['longitude_deg']}" if "latitude_deg" in site else na
 
@@ -24,7 +30,7 @@ def _rows(lang, d, inputs, problem):
     a, spec = _first_array(result, inputs)
     ok, no, nv = count_states(lang, result["arrays"])
     totals, na = result["totals"], tr(lang, "n_a")
-    module, inverter, strings = spec.get("module") or {}, spec.get("inverter") or {}, a["strings"]
+    module, inverter, strings = _block(spec, "module"), _block(spec, "inverter"), a["strings"]
     return [[tr(lang, "problem"), problem],
             [tr(lang, "solution"), tr(lang, "plant", kwp=totals["dc_kwp"], kw=totals["ac_kw"])],
             [tr(lang, "location"), _location(inputs.get("site") or {}, na)],

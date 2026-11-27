@@ -30,6 +30,7 @@ counterpart of the `lighting` section: the generation side cannot come from the 
 
 The result does not change the load list: the plant generates, the load list consumes. The auxiliary services of the plant are loads as any other.
 """
+import copy
 import json
 from pathlib import Path
 
@@ -505,6 +506,7 @@ class PvStage(Stage):
         totals, counts = result["totals"], result["counts"]
         from epc_pv import feasibility
         result = dict(result, technical_feasibility=feasibility.technical_summary(result, section.get("economics")))
+        result = dict(result, inputs_used={k: copy.deepcopy(section["document"][k]) for k in ("site", "arrays") if k in section["document"]})   # what the engine ran with (module and inverter chosen), without the weather: the reports read it
         charts, chart_calls = charts_of(section, result)
         result, calls = dict(result, charts=charts) if charts else result, calls + chart_calls
         context.engine_cache[PF.CACHE_KEY] = result

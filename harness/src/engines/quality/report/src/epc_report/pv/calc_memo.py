@@ -14,8 +14,8 @@ def _calc(lang, ident, name_key, data, formula, subst, result, criterion, verdic
 
 def _series(lang, array, spec):
     s = array["strings"]
-    if spec:
-        mod, inv = spec["module"], spec["inverter"]
+    mod, inv = (spec or {}).get("module"), (spec or {}).get("inverter")
+    if isinstance(mod, dict) and isinstance(inv, dict):
         data = f"Voc = {mod['voc_v']} V, Vmp = {mod['vmp_v']} V, βVoc = {mod['beta_voc_pct_c']} %/°C; Vdc,max = {inv['vdc_max_v']} V, MPPT {inv['mppt_v_min']}-{inv['mppt_v_max']} V"
     else:
         data = tr(lang, "n_a")                      # the array comes from a roof plane or a site fill: its module and inverter data are not in the input under this id

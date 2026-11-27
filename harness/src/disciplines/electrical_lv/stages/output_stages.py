@@ -410,7 +410,7 @@ class DocumentsStage(Stage):
             return {}
         record = EC.record_for("calculation/pv", "epc_pv.run")
         engine = {"name": record["engine"], "version": record["version"]}
-        inputs = copy.deepcopy(((context.engine_inputs or {}).get("pv") or {}).get("document") or {})
+        inputs = copy.deepcopy(result.get("inputs_used") or {})                    # what the engine ran with (the module and the inverter it chose), not the template the person gave
         problem = ((context.engine_inputs or {}).get("pv") or {}).get("problem")
         base = {"status": "draft", "engine": engine, "result": copy.deepcopy(result)}
         return {"pv_yield_study": dict(base, document="pv_yield_study"),

@@ -56,6 +56,11 @@ class TestPvReports(unittest.TestCase):
         self.assertEqual(report_pdf.render_bytes(rep, date=date), report_pdf.render_bytes(calc_memo.pv_calc_memo(DOCUMENT, INPUTS, "P-1"), date=date))
         self.assertEqual(report_docx.render_bytes(rep, date=date), report_docx.render_bytes(calc_memo.pv_calc_memo(DOCUMENT, INPUTS, "P-1"), date=date))
 
+    def test_a_template_that_is_not_a_block_reads_as_not_available(self):
+        inputs = {"site": INPUTS["site"], "arrays": [{"id": "A1", "module": "auto", "inverter": "auto"}]}
+        self.assertIn("not available", texts(calc_memo.pv_calc_memo(DOCUMENT, inputs, "P-1")))
+        self.assertIn("not available", texts(summary.pv_summary(DOCUMENT, inputs, "P-1", "x")))
+
     def test_unknown_language_is_an_error(self):
         with self.assertRaises(ReportError) as ctx:
             calc_memo.pv_calc_memo(DOCUMENT, INPUTS, "P-1", "fr")

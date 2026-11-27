@@ -400,6 +400,20 @@ class PvEquipmentListTests(unittest.TestCase):
 
 
 class PvTextReportsTests(unittest.TestCase):
+    def test_a_site_fill_with_auto_module_and_inverter_still_gives_every_report(self):
+        """Regression (sim-01): the reports read what the engine ran with (the module and inverter chosen), not the `auto` template the person gave."""
+        from disciplines.electrical_lv.stages import output_stages, rendering
+        section = PvFillTests("test_the_site_is_filled_and_the_inverter_is_picked_and_said")._section()
+        section["document"]["arrays"][0]["module"] = dict(section["document"]["arrays"][0]["module"], auto=True)
+        ctx = ctx_with(section)
+        res = STAGES[2].run(ctx)
+        self.assertEqual(res.status, "ok")
+        self.assertIn("inputs_used", res.outputs["pv"])
+        ctx.results[3] = res
+        for name, document in output_stages.DocumentsStage.pv_study(ctx).items():
+            for lang in ("en", "es"):
+                self.assertTrue(rendering.to_report(name, document, "P-1", lang)["blocks"], (name, lang))
+
     def test_the_documents_stage_makes_the_pv_memorandum_and_summary_in_both_languages(self):
         from disciplines.electrical_lv.stages import output_stages, rendering
         ctx = ctx_with({"document": PV.doc(), "problem": "consumption 600000 kWh/year"})
