@@ -7,11 +7,13 @@ import re
 
 DECIMALS = 2
 SEPARATORS = {"en": (",", "."), "es": (".", ",")}       # (thousands, decimal)
-_NUMBER = re.compile(r"(?<![\w.,])(\d+)(?:\.(\d+))?(?![\w]|\.\d|-\d)")
+_NUMBER = re.compile(r"\d{4}-\d{2}-\d{2}|(?<![\w.,])(\d+)(?:\.(\d+))?(?![\w]|\.\d)")
 
 
 def _write(match, lang):
     whole, frac = match.group(1), match.group(2)
+    if whole is None:
+        return match.group(0)                              # a date
     if len(whole) > 1 and whole.startswith("0"):
         return match.group(0)                              # a code such as 001 or 05
     thousands, decimal = SEPARATORS.get(lang, SEPARATORS["en"])
