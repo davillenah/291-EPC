@@ -42,6 +42,11 @@ def _energy(lang, array):
                  f"E = {array['ac_kwh']} kWh; Y_f = {array['specific_yield_kwh_kwp']} kWh/kWp; PR = {array['performance_ratio']}; FC = {array['capacity_factor']}", "-", "not_verified")
 
 
+def _shading(lang, result, specs):
+    from epc_report.pv.shading_section import shading_blocks      # imported here: the section reads `_calc` of this module
+    return shading_blocks(lang, result, specs)
+
+
 def verifications(lang, arrays):
     """The rows of the summary table: one per array and calculation, with the verdict the sections reached."""
     rows = []
@@ -74,7 +79,8 @@ def pv_calc_memo(d, inputs, project, lang="en"):
     blocks += [{"type": "p", "text": tr(lang, "t_power")}, {"type": "h", "text": tr(lang, "h_energy")}, {"type": "p", "text": tr(lang, "l_energy")}]
     for a in result["arrays"]:
         blocks += _energy(lang, a)
-    blocks += [{"type": "p", "text": tr(lang, "t_energy")}, {"type": "h", "text": tr(lang, "h_pending")}, {"type": "p", "text": tr(lang, "pending_list")},
+    blocks += [{"type": "p", "text": tr(lang, "t_energy")}] + _shading(lang, result, specs)
+    blocks += [{"type": "h", "text": tr(lang, "h_pending")}, {"type": "p", "text": tr(lang, "pending_list")},
                {"type": "p", "text": tr(lang, "t_pending")}, {"type": "h", "text": tr(lang, "h_summary")},
                table([tr(lang, k) for k in ("col_calc", "col_mag", "col_val", "col_lim", "col_state")], verifications(lang, result["arrays"]))]
     totals = result["totals"]

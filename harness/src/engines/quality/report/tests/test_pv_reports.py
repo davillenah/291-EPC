@@ -108,3 +108,25 @@ class TestPvEconomicReports(unittest.TestCase):
             self.assertEqual([f for f in audit.audit([en, es]) if f["severity"] == "error"], [])
         self.assertIn("simple payback of 6.0 years", texts(narrative.pv_economic_descriptive(d, "P-1", "x")))
         self.assertIn("not calculated", texts(narrative.pv_savings_descriptive(self.doc(), "P-1", "x")))
+
+
+class TestPvShadingSection(unittest.TestCase):
+    CHARTS = {"abacus": {"azimuth_deg": 0.0, "latitude_deg": -34.4, "loss_pct": 2.5, "profile": [], "tilt_deg": 5.0, "cells": []},
+              "disk": {"azimuth_deg": [0.0, 15.0], "tilt_deg": [0.0, 10.0], "best": {"azimuth_deg": 15.0, "kwh_m2": 1902.5, "tilt_deg": 10.0}, "hours": 8760, "pct": [[90.0, 91.0], [98.0, 100.0]]}}
+
+    def memo(self, lang, charts):
+        d = copy.deepcopy(DOCUMENT)
+        if charts:
+            d["result"]["charts"] = copy.deepcopy(self.CHARTS)
+        inputs = copy.deepcopy(INPUTS)
+        inputs["arrays"][0].update(tilt_deg=9.0, azimuth_deg=14.0)
+        return calc_memo.pv_calc_memo(d, inputs, "P-1", lang)
+
+    def test_the_memo_has_the_shading_and_disk_section_read_from_the_engine(self):
+        text = texts(self.memo("es", True))
+        for part in ("5. Sombras e irradiación", "pérdida por sombras = 2,5 %", "no se dio perfil de horizonte", "mejor: inclinación 10,0°", "100,0 % de la mejor", "6. Otros cálculos"):
+            self.assertIn(part, text)
+        self.assertIn("5. Shading and irradiation", texts(self.memo("en", True)))
+
+    def test_without_charts_the_section_is_left_out(self):
+        self.assertNotIn("Shading and irradiation", texts(self.memo("en", False)))

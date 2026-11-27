@@ -443,11 +443,20 @@ class PvTextReportsTests(unittest.TestCase):
 
 
 class PvModel3dFormatTests(unittest.TestCase):
-    def test_the_person_chooses_the_dxf_the_freecad_macro_or_both(self):
+    def test_the_3d_model_is_the_dxf_and_freecad_is_disabled_but_kept(self):
         from disciplines.electrical_lv.stages import pv_drawings
-        self.assertEqual(pv_drawings.model3d_formats(None), (True, True))
+        self.assertEqual(pv_drawings.model3d_formats(None), (True, False))
         self.assertEqual(pv_drawings.model3d_formats({"model3d_format": "dxf"}), (True, False))
-        self.assertEqual(pv_drawings.model3d_formats({"model3d_format": "freecad"}), (False, True))
+        for fmt in ("freecad", "both"):
+            with self.assertRaises(ValueError) as caught:
+                pv_drawings.model3d_formats({"model3d_format": fmt})
+            self.assertIn("SolidCraft", str(caught.exception))
+        pv_drawings.FREECAD_ENABLED = True                                                 # the macro writer is still there: switching the constant brings it back
+        try:
+            self.assertEqual(pv_drawings.model3d_formats({"model3d_format": "both"}), (True, True))
+            self.assertEqual(pv_drawings.model3d_formats({"model3d_format": "freecad"}), (False, True))
+        finally:
+            pv_drawings.FREECAD_ENABLED = False
         with self.assertRaises(ValueError):
             pv_drawings.model3d_formats({"model3d_format": "step"})
 
