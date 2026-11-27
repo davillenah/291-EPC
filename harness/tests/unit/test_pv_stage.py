@@ -4,6 +4,7 @@ import json
 import sys
 import tempfile
 import unittest
+from unittest import mock
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -287,6 +288,24 @@ class PvDrawingsTests(unittest.TestCase):
             self.assertTrue(res.outputs["pv_model_3d"].endswith("_pv_model_3d.dxf"))
             self.assertTrue(any(k.endswith("_pv_equipment_detail_sheet") for k in res.outputs["pv_sheets"]))      # the module format of the fixture has a record, so its detail sheet is drawn
             self.assertTrue(any(str(f.get("path", f.get("name", ""))).endswith("_pv_model_3d.dxf") for f in res.outputs["files"]))
+
+    def test_the_editable_3d_goes_through_solidcraft_the_script_always_and_the_sc_and_step_when_the_program_exists(self):
+        from disciplines.electrical_lv.stages import pv_drawings
+        inputs = W.inputs_doc()
+        inputs["pv"] = {"document": PV.doc(), "layout": dict(copy.deepcopy(LAYOUT), front_clearance_m=0.5)}
+        with tempfile.TemporaryDirectory() as tmp, mock.patch.object(pv_drawings, "solidcraft_cli", return_value=None):
+            ctx = W.context(engine_inputs=inputs, work_dir=tmp)
+            run(ctx, stop_after=10, run_id="r1")
+            out = ctx.results[10].outputs
+            self.assertTrue(out["pv_model_3d_solidcraft"].endswith("_pv_model_3d_solidcraft.json"))
+            self.assertIn("solidcraft-cli run", out["pv_model_3d_solidcraft_note"]["en"])
+            self.assertIn("solidcraft-cli run", out["pv_model_3d_solidcraft_note"]["es"])
+            self.assertTrue(out["pv_model_3d_materials"])
+            self.assertNotIn("pv_model_3d_step", out)
+        with tempfile.TemporaryDirectory() as tmp, mock.patch.object(pv_drawings, "solidcraft_cli", return_value="solidcraft-cli"), mock.patch.object(pv_drawings, "_run_solidcraft", return_value=None):
+            ctx = W.context(engine_inputs=inputs, work_dir=tmp)
+            run(ctx, stop_after=10, run_id="r2")
+            self.assertTrue(ctx.results[10].outputs["pv_model_3d_step"].endswith("_pv_model_3d.step"))
 
     def test_the_disk_and_the_abacus_come_by_themselves_on_their_sheets_and_charts_false_switches_them_off(self):
         inputs = W.inputs_doc()

@@ -13,6 +13,13 @@ def _calc(lang, ident, name_key, data, formula, subst, result, criterion, verdic
     return [{"type": "h", "text": f"[{ident}] {tr(lang, name_key)}"}, table([tr(lang, "col_calc"), ""], rows)]
 
 
+def _series_substitution(lang, rng, inv):
+    """The substitution of the series formula with the inverter limits of the array and the range the engine returned; `not available` without the inverter data."""
+    if not isinstance(inv, dict) or not all(k in inv for k in ("vdc_max_v", "mppt_v_max", "mppt_v_min")):
+        return tr(lang, "not_returned")
+    return (f"N_s,max = min(⌊{inv['vdc_max_v']} / Voc(Tmin)⌋, ⌊{inv['mppt_v_max']} / Vmp(Tmin)⌋) = {rng['s_max']};  N_s,min = ⌈{inv['mppt_v_min']} / Vmp(Tc,max)⌉ = {rng['s_min']}")
+
+
 def _series(lang, array, spec):
     s = array["strings"]
     mod, inv = (spec or {}).get("module"), (spec or {}).get("inverter")
@@ -23,12 +30,20 @@ def _series(lang, array, spec):
     rng = s["series_range"]
     ok = rng["s_min"] <= s["n_series"] <= rng["s_max"]
     return _calc(lang, "C-05 / C-07 / C-08", "c_series", data, "N_s,max = min(⌊Vdc,max / Voc(Tmin)⌋, ⌊Vmppt,max / Vmp(Tmin)⌋);  N_s,min = ⌈Vmppt,min / Vmp(Tc,max)⌉",
-                 tr(lang, "not_returned"), f"N_s,min = {rng['s_min']}; N_s,max = {rng['s_max']}; N_s = {s['n_series']}", f"{rng['s_min']} ≤ N_s ≤ {rng['s_max']}", "complies" if ok else "fails")
+                 _series_substitution(lang, rng, inv), f"N_s,min = {rng['s_min']}; N_s,max = {rng['s_max']}; N_s = {s['n_series']}", f"{rng['s_min']} ≤ N_s ≤ {rng['s_max']}", "complies" if ok else "fails")
 
 
-def _mppt(lang, array):
+def _mppt_substitution(lang, s, spec):
+    """The substitution of the current limit with the inverter and module data of the array and the limit the engine returned; `not available` without that data."""
+    mod, inv = (spec or {}).get("module"), (spec or {}).get("inverter")
+    if not (isinstance(mod, dict) and isinstance(inv, dict) and "imp_a" in mod and "i_max_input_a" in inv):
+        return tr(lang, "not_returned")
+    return f"N_p ≤ ⌊{inv['i_max_input_a']} / {mod['imp_a']}⌋ = {s['strings_per_mppt_limit']}" + ("" if inv.get("isc_max_input_a") is None else f" (Isc,max = {inv['isc_max_input_a']} A)")
+
+
+def _mppt(lang, array, spec=None):
     s = array["strings"]
-    return _calc(lang, "C-09", "c_mppt", f"strings/inverter = {s['strings_per_inverter']}", "N_p ≤ ⌊I_mppt,max / I_mp⌋  and  N_p ≤ ⌊Isc,max / (k·Isc)⌋", tr(lang, "not_returned"),
+    return _calc(lang, "C-09", "c_mppt", f"strings/inverter = {s['strings_per_inverter']}", "N_p ≤ ⌊I_mppt,max / I_mp⌋  and  N_p ≤ ⌊Isc,max / (k·Isc)⌋", _mppt_substitution(lang, s, spec),
                  f"N_p = {s['strings_per_mppt']}", f"N_p ≤ {s['strings_per_mppt_limit']}", "complies" if s["strings_per_mppt"] <= s["strings_per_mppt_limit"] else "fails")
 
 
@@ -72,7 +87,7 @@ def pv_calc_memo(d, inputs, project, lang="en"):
     blocks = [{"type": "p", "text": tr(lang, "engine_line", name=d["engine"]["name"], version=d["engine"]["version"]) + " " + tr(lang, "edit_mode")},
               {"type": "h", "text": tr(lang, "h_input")}, {"type": "p", "text": tr(lang, "t_input")}, {"type": "h", "text": tr(lang, "h_strings")}, {"type": "p", "text": tr(lang, "l_strings")}]
     for a in result["arrays"]:
-        blocks += _series(lang, a, specs.get(str(a["id"]))) + _mppt(lang, a)
+        blocks += _series(lang, a, specs.get(str(a["id"]))) + _mppt(lang, a, specs.get(str(a["id"])))
     blocks += [{"type": "p", "text": tr(lang, "t_strings")}, {"type": "h", "text": tr(lang, "h_power")}, {"type": "p", "text": tr(lang, "l_power")}]
     for a in result["arrays"]:
         blocks += _ratio(lang, a)

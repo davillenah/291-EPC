@@ -35,6 +35,13 @@ def _check_objects(loads, engine_inputs):
             raise ApiError("invalid_arguments", f"{name} must be an object")
 
 
+def _check_stop_after(stop_after):
+    """`invalid_arguments` (not a failed run) when `stop_after` is not a stage number."""
+    last = len(pipeline.STAGES)
+    if stop_after is not None and (not isinstance(stop_after, int) or isinstance(stop_after, bool) or not 1 <= stop_after <= last):
+        raise ApiError("invalid_arguments", f"stop_after must be a stage number 1..{last}, got {stop_after!r} / stop_after debe ser un número de etapa 1..{last}, se recibió {stop_after!r}")
+
+
 def _authorise(trail, actor, root):
     if may_trigger(actor["role"], "start_run"):
         return
@@ -165,6 +172,7 @@ def run_pipeline(project_dir, *, loads=None, engine_inputs=None, stop_after=None
     store, answers = _prepare(root, who, loads, engine_inputs)
     loads, engine_inputs = _with_building(loads, engine_inputs, store.inputs_dir)
     mode = _check_mode(mode)
+    _check_stop_after(stop_after)
     from_stage = _start_stage(store, (answers, loads, engine_inputs), from_stage, resume, mode)
     workflow = Workflow(root, log, store)
     flow.enter_running(workflow, who, trail.run_id)

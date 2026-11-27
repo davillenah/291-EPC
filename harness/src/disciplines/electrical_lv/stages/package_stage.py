@@ -32,7 +32,7 @@ from disciplines.electrical_lv.stages.base import Stage, StageInputError
 from disciplines.electrical_lv.stages.calc_check_stage import by_severity, engine_inputs_for_check, run_dict
 
 DRAWINGS, DOCUMENTS, LAST_PRODUCER = 10, 11, 11
-DRAWING_SUFFIXES = (".dxf", ".FCMacro")
+DRAWING_SUFFIXES = (".dxf", ".FCMacro", ".sc", ".step", "_solidcraft.json")
 # Folders of a transmittal, numbered in reading order (UPPER_CASE, as in the naming proposal): the first level of `deliverables/TR-NNN/`.
 FOLDER_SLD, FOLDER_MLD, FOLDER_ARCHITECTURE = "01_SLD", "02_MLD", "03_ARCHITECTURE"
 FOLDER_PLANS, FOLDER_3D, FOLDER_DOCUMENTS, FOLDER_TABLES, FOLDER_PV = "04_PLANS", "05_3D", "06_DOCUMENTS", "07_TABLES", "08_PV"

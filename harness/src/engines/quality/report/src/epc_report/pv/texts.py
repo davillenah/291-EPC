@@ -101,10 +101,15 @@ T = {
     "dc_cable": ("DC cable", "Cable CC"), "ac_cable": ("AC cable", "Cable CA"), "protections": ("Protections", "Protecciones"), "earthing": ("Earthing", "Puesta a tierra"),
     "n_a": ("not available", "no disponible"), "req": ("Requirement", "Requisito"), "tech": ("Technical data", "Dato técnico"), "obs": ("Observations", "Observaciones"),
     "plant": ("PV plant {kwp} kWp DC / {kw} kW AC", "Planta FV {kwp} kWp CC / {kw} kW CA"),
-    "strings_line": ("{strings} strings of {n_series} modules in series; {mppt} strings per MPPT input (limit {limit})", "{strings} strings de {n_series} módulos en serie; {mppt} strings por entrada MPPT (límite {limit})"),
+    "strings_line": ("{strings} {w_strings} of {n_series} modules in series; {mppt} {w_mppt} per MPPT input (limit {limit})", "{strings} {w_strings} de {n_series} módulos en serie; {mppt} {w_mppt} por entrada MPPT (límite {limit})"),
     "energy_line": ("{kwh} kWh/year · {yield_} kWh/kWp", "{kwh} kWh/año · {yield_} kWh/kWp"),
     "compl_line": ("{ok} comply · {no} do not comply · {nv} not verified", "{ok} cumplen · {no} no cumplen · {nv} no verificados"),
 }
+
+
+def string_word(n):
+    """`string` for one, `strings` for any other number (the word is the same in English and Spanish)."""
+    return "string" if n == 1 else "strings"
 
 
 def tr(lang, key, **fmt):
