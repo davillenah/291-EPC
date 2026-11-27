@@ -3,7 +3,8 @@ from epc_pv.model import Options, PvError, Result
 from epc_pv.layout import plan as plan_layout
 from epc_pv.roof import plan as plan_roof
 from epc_pv.pipeline import run
+from epc_pv.feasibility import add_inverters_for_current, economic_summary, technical_summary
 
 __version__ = "0.1.0"                                    # equals config.VERSION and pyproject.toml (the architecture test checks the last)
 
-__all__ = ["run", "plan_layout", "plan_roof", "Options", "Result", "PvError", "__version__"]
+__all__ = ["add_inverters_for_current", "economic_summary", "technical_summary", "run", "plan_layout", "plan_roof", "Options", "Result", "PvError", "__version__"]

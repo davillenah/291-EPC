@@ -30,6 +30,7 @@ counterpart of the `lighting` section: the generation side cannot come from the 
 
 The result does not change the load list: the plant generates, the load list consumes. The auxiliary services of the plant are loads as any other.
 """
+import copy
 import json
 from pathlib import Path
 
@@ -40,13 +41,17 @@ from disciplines.electrical_lv.stages.base import Stage, StageInputError, reason
 ENGINE = "calculation/pv"
 FUNCTION = "epc_pv.run"
 LAYOUT_FUNCTION = "epc_pv.plan_layout"
-KEYS = ("document", "options", "layout", "weather_file", "roof", "flat_roof", "roof_dxf", "economics", "charts")
+# `problem`: one line of text the person gives (consumption, tariff, the need); the summary prints it, the stage does not read it.
+KEYS = ("document", "options", "layout", "weather_file", "roof", "flat_roof", "roof_dxf", "economics", "charts", "problem")
 NOT_PROVIDED = "pv inputs not provided"
+
+
+BLOCKING_WARNINGS = {"warn_current": "major"}      # a string over the input current of the inverter cannot be built: it blocks approval
 
 
 def warning_finding(n, run_id, slug, warning):
     """A note-severity finding that states one warning of the engine (text in English and Spanish)."""
-    return {"id": f"F-{n:04d}", "run_id": run_id, "verifier": "calc-check", "severity": "note", "document": slug, "field": f"warning/{warning['code']}",
+    return {"id": f"F-{n:04d}", "run_id": run_id, "verifier": "calc-check", "severity": BLOCKING_WARNINGS.get(warning["code"], "note"), "document": slug, "field": f"warning/{warning['code']}",
             "value": {"en": warning["en"], "es": warning["es"]}, "expected": "reviewed by the engineer of record", "clause": "engine warning",
             "action": "Review the warning or correct the input.", "evidence": [f"engine {FUNCTION}"], "status": "open"}
 
@@ -433,33 +438,6 @@ def charts_of(section, result):
     return out, calls
 
 
-def economic_summary(result, economics):
-    """The saving the client's own price gives: yearly and monthly kWh times `energy_price`; the simple payback when the client gave its investment."""
-    if not economics:
-        return {"en": "Not calculated: give your energy price (per kWh) and the saving is the yearly energy times it.", "es": "No se calcula: indicá tu precio de la energía (por kWh) y el ahorro es la energía anual por ese precio."}
-    price, totals = float(economics["energy_price"]), result["totals"]
-    saving = totals["ac_kwh"] * price
-    out = {"energy_kwh_year": totals["ac_kwh"], "energy_price": price, "currency": economics.get("currency", ""), "saving_year": round(saving, 2),
-           "saving_month": [round(m * price, 2) for m in totals["monthly_ac_kwh"]], "assumes": {"en": "all the energy is used on site (no export), no degradation, no price escalation", "es": "toda la energía se usa en el sitio (sin inyección), sin degradación y sin aumento de precio"}, "status": "pending review"}
-    if economics.get("investment") is not None and saving > 0:
-        out["investment"] = float(economics["investment"])
-        out["simple_payback_years"] = round(float(economics["investment"]) / saving, 2)
-    return out
-
-
-def technical_summary(result, economics=None):
-    """The technical feasibility in one block, from the engine result only (no threshold is invented): what was installed, what it yields and which of the engine's own limits hold."""
-    arrays, totals = result["arrays"], result["totals"]
-    string_ok = all(a["strings"]["strings_per_mppt"] <= a["strings"]["strings_per_mppt_limit"] for a in arrays)
-    fits = result["layout"]["fits"] if result.get("layout") else (result["roof"]["fits"] if result.get("roof") else True)
-    clipping = round(100.0 * totals["clipping_kwh"] / (totals["ac_kwh"] + totals["clipping_kwh"]), 2) if totals["ac_kwh"] + totals["clipping_kwh"] else 0.0
-    return {"installed": {"modules": result["counts"]["modules"], "dc_kwp": totals["dc_kwp"], "ac_kw": totals["ac_kw"], "inverters": result["counts"]["inverters"]},
-            "yield": {"ac_kwh_year": totals["ac_kwh"], "specific_yield_kwh_kwp": totals["specific_yield_kwh_kwp"], "clipping_pct": clipping},
-            "checks": {"structure_holds_the_modules": bool(fits), "strings_inside_inverter_current_limits": string_ok},
-            "status": "pending review", "feasible": bool(fits and string_ok),
-            "economic": economic_summary(result, economics)}
-
-
 def _proposals(roof, flat):
     """The roof result and the flat roof / site fill proposal as extra outputs."""
     key = "site_fill" if flat is not None and flat["assumption"].startswith("ground") else "flat_roof"
@@ -467,21 +445,13 @@ def _proposals(roof, flat):
 
 
 def _add_inverters_for_current(section, result):
-    """(section, result) where an `auto` inverter count also respects the input current of its MPPT inputs: the ratio alone can leave more strings per input than the data sheet allows, so inverters are added."""
-    from epc_pv.messages import item
-    arrays, raised = [], []
-    for spec, res in zip(section["document"]["arrays"], result["arrays"]):
-        st, inv = res["strings"], spec["inverter"]
-        if inv.get("auto") and st["strings_per_mppt"] > st["strings_per_mppt_limit"] and st["strings_per_mppt_limit"] > 0:
-            count = -(-st["strings"] // (int(inv["n_mppt"]) * st["strings_per_mppt_limit"]))
-            raised.append(item("inverters_raised", array=str(spec["id"]), before=res["inverters"], after=count, ratio=round(res["dc_kwp"] * 1000.0 / (count * float(inv["pac0_w"])), 2)))
-            spec = dict(spec, n_inverters=count)
-        arrays.append(spec)
-    if not raised:
-        return section, result
-    section = dict(section, document=dict(section["document"], arrays=arrays))
-    new = _run(section)
-    return section, dict(new, warnings=list(new["warnings"]) + raised)      # the `inverter_auto` note states the count of the ratio alone: this one states what is installed
+    """(section, result) with the inverters raised for the input current: the calculation is `epc_pv.feasibility.add_inverters_for_current`; this only turns an engine error into a blocked input."""
+    import epc_pv
+    from epc_pv import feasibility
+    try:
+        return feasibility.add_inverters_for_current(section, result)
+    except epc_pv.PvError as exc:
+        raise StageInputError([f"{exc} / {exc.es}"]) from exc
 
 
 class PvStage(Stage):
@@ -537,7 +507,9 @@ class PvStage(Stage):
         findings += self._notes(context, found, len(findings))
         findings += [warning_finding(len(findings) + n, context.pipeline_run_id, self.spec.slug, w) for n, w in enumerate(warnings, start=1)]
         totals, counts = result["totals"], result["counts"]
-        result = dict(result, technical_feasibility=technical_summary(result, section.get("economics")))
+        from epc_pv import feasibility
+        result = dict(result, technical_feasibility=feasibility.technical_summary(result, section.get("economics")))
+        result = dict(result, inputs_used={k: copy.deepcopy(section["document"][k]) for k in ("site", "arrays") if k in section["document"]})   # what the engine ran with (module and inverter chosen), without the weather: the reports read it
         charts, chart_calls = charts_of(section, result)
         result, calls = dict(result, charts=charts) if charts else result, calls + chart_calls
         context.engine_cache[PF.CACHE_KEY] = result

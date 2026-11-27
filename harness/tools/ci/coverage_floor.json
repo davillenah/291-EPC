@@ -3,7 +3,7 @@
  "engine-rules": 77.1,
  "engine-standards": 35.8,
  "engine-calc_check": 96.6,
- "engine-drawing": 85.6,
+ "engine-drawing": 81.3,
  "engine-documents": 79.6,
  "engine-draw": 58.1,
  "engine-lighting": 99.0,
@@ -30,5 +30,6 @@
  "engine-changes": 100.0,
  "engine-select": 100.0,
  "engine-datasheets": 100.0,
- "engine-rfq": 100.0
+ "engine-rfq": 100.0,
+ "engine-report": 91.0
 }

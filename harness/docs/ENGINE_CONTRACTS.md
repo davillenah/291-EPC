@@ -567,6 +567,7 @@ These engines do not yet validate their input against a schema at the entry poin
 - `epc_transformer_sizing`
 - `epc_voltage_drop`
 - `epc_documents`
+- `epc_report`
 - `epc_calc_check`
 - `epc_rules`
 - `epc_standards`

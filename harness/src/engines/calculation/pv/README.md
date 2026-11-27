@@ -8,6 +8,7 @@ Photovoltaic engine: the hourly energy yield of a grid-connected plant and the s
 - Cell temperature (Faiman), DC power (PVWatts), combined losses, and the inverter curve with clipping (PVWatts inverter).
 - String layout: modules in series from the cold open-circuit voltage, the hot maximum-power voltage and the MPPT window; whole strings; inverter count from a DC/AC ratio or given; input-current check per MPPT.
 - Per array and in total: DC and AC energy, monthly energy, specific yield, performance ratio, capacity factor, peak power and the energy lost by clipping.
+- Feasibility (`epc_pv.feasibility`, moved from the discipline stage, same numbers): the saving (yearly kWh x the client's price), the simple payback (investment / saving), the technical summary (clipping, structure and strings checks) and the inverter count raised so that the strings per MPPT input respect the data sheet.
 - Every text the user can see (warnings, errors, labels) comes in English and Spanish.
 
 ## How it is used

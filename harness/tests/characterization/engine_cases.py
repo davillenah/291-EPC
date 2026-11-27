@@ -29,6 +29,7 @@ ALREADY_PINNED = {
     "epc_expr": "harness/src/engines/geometry/expr/tests",           # hand-checked values asserted in the engine's own tests
     "epc_select": "harness/src/engines/quality/select/tests",           # hand-checked selections asserted in the engine's own tests
     "epc_changes": "harness/src/engines/quality/changes/tests",           # hand-checked change summaries asserted in the engine's own tests
+    "epc_report": "harness/src/engines/quality/report/tests",           # the writers moved byte for byte from epc_drawing.export: door identity and fixed-clock reproducibility asserted in the engine's own tests
     "epc_arrays": "harness/src/engines/geometry/arrays/tests",       # hand-checked positions asserted in the engine's own tests
     "epc_dims": "harness/src/engines/bim/dims/tests",           # hand-checked dimensions asserted in the engine's own tests               # hand-checked geometry asserted in the engine's own tests
 }

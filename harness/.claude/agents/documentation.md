@@ -23,6 +23,13 @@ You build the project documents and drawings from the single source of truth (pi
 - Use the `generate-specification` and `create-management-document` skills for the text of specifications and management documents. Their text comes from the SSOT and the engines, never from memory.
 - Check that every document shows its project, revision, source stage and the review status of the norm values it uses.
 
+## The review loop of the reports (owner rule, 2026-11-26)
+
+- A report is drafted by you and reviewed by `calc_check` before the engineer sees it. The loop is part of generating the reports (`epc_report.core.audit.review_round`): `calc_check` audits the set and finds inconsistencies; you correct them; it audits again; at most five rounds.
+- Corrections stay inside the reports (text, structure, tables, the facts a report states) and inside the report engine. Never outside it, and never a number: a number that is wrong comes from the engine again.
+- Only when `calc_check` finds no error do you show the engineer the reports, without the list of findings. If five rounds do not clear the errors, say so plainly (status `needs_work`) and show what is left.
+- When the engineer asks for changes, apply them and run the loop again before showing the result.
+
 ## What you never do
 
 - You never write a number by hand. Every number comes from an engine through the MCP tools `epc_*` or the `epc` CLI. If a needed value is not available, say 'not available' and raise a finding.

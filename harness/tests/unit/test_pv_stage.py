@@ -54,6 +54,18 @@ class PvSliceTests(unittest.TestCase):
         res = STAGES[2].run(ctx_with({"document": PV.doc(), "layout": small}))
         self.assertTrue([f for f in res.findings if f["severity"] == "major" and f["field"] == "layout/fits"])
 
+    def test_a_string_over_the_input_current_is_a_major_finding_and_other_warnings_stay_notes(self):
+        from disciplines.electrical_lv.stages import pv_stage
+        warning = {"code": "warn_current", "en": "x", "es": "y"}
+        self.assertEqual(pv_stage.warning_finding(1, "r", "pv", warning)["severity"], "major")
+        self.assertEqual(pv_stage.warning_finding(1, "r", "pv", dict(warning, code="isc_not_checked"))["severity"], "note")
+
+    def test_a_pv_run_renders_pdf_and_word_by_default_and_the_edit_mark_follows_the_language(self):
+        from disciplines.electrical_lv.stages import rendering
+        self.assertEqual(rendering.formats_of(ctx_with({"document": PV.doc()})), ("pdf", "docx"))
+        marked = rendering.marked({"footer": "f"}, "edit", "es")
+        self.assertIn("MODO EDICIÓN", marked["footer"])
+
     def test_an_unknown_key_or_a_bad_layout_blocks_in_both_languages(self):
         for section in ({"document": PV.doc(), "extra": 1}, {"document": PV.doc(), "layout": {"site": {}}}):
             res = STAGES[2].run(ctx_with(section))
@@ -355,8 +367,9 @@ class PvInverterCountTests(unittest.TestCase):
         section = {"document": {"arrays": [{"id": "A1", "inverter": inverter, "n_modules": 100}]}}
         first = {"arrays": [{"inverters": 90, "dc_kwp": 10800.0, "strings": {"strings": 672, "strings_per_mppt": 2, "strings_per_mppt_limit": 1}}], "warnings": []}
         ran = {"arrays": [], "warnings": []}
-        real, pv_stage._run = pv_stage._run, lambda sec: ran
-        self.addCleanup(setattr, pv_stage, "_run", real)
+        from epc_pv import feasibility
+        real, feasibility._rerun = feasibility._rerun, lambda sec: ran                  # the calculation now lives in the engine
+        self.addCleanup(setattr, feasibility, "_rerun", real)
         _, out = pv_stage._add_inverters_for_current(section, first)
         raised = [w for w in out["warnings"] if w["code"] == "inverters_raised"]
         self.assertEqual(len(raised), 1)
@@ -398,12 +411,52 @@ class PvEquipmentListTests(unittest.TestCase):
         self.assertEqual(len(blocks), 4)
 
 
+class PvTextReportsTests(unittest.TestCase):
+    def test_a_site_fill_with_auto_module_and_inverter_still_gives_every_report(self):
+        """Regression (sim-01): the reports read what the engine ran with (the module and inverter chosen), not the `auto` template the person gave."""
+        from disciplines.electrical_lv.stages import output_stages, rendering
+        section = PvFillTests("test_the_site_is_filled_and_the_inverter_is_picked_and_said")._section()
+        section["document"]["arrays"][0]["module"] = dict(section["document"]["arrays"][0]["module"], auto=True)
+        ctx = ctx_with(section)
+        res = STAGES[2].run(ctx)
+        self.assertEqual(res.status, "ok")
+        self.assertIn("inputs_used", res.outputs["pv"])
+        ctx.results[3] = res
+        for name, document in output_stages.DocumentsStage.pv_study(ctx).items():
+            for lang in ("en", "es"):
+                self.assertTrue(rendering.to_report(name, document, "P-1", lang)["blocks"], (name, lang))
+
+    def test_the_documents_stage_makes_the_pv_memorandum_and_summary_in_both_languages(self):
+        from disciplines.electrical_lv.stages import output_stages, rendering
+        ctx = ctx_with({"document": PV.doc(), "problem": "consumption 600,000 kWh/year"})
+        ctx.results[3] = STAGES[2].run(ctx)
+        docs = output_stages.DocumentsStage.pv_study(ctx)
+        self.assertEqual(len(docs), 8)
+        for name in docs:
+            if name != "pv_yield_study":
+                self.assertEqual(rendering.to_report(name, docs[name], "P-1", "es")["footer"].split(" - ")[1], "P-1")
+        for lang, title in (("en", "PV calculation memorandum"), ("es", "Memoria de cálculo fotovoltaica")):
+            memo = rendering.to_report("pv_calc_memo", docs["pv_calc_memo"], "P-1", lang)
+            self.assertEqual(memo["title"], title)
+        summary = rendering.to_report("pv_summary", docs["pv_summary"], "P-1", "en")
+        self.assertIn("consumption 600,000 kWh/year", [c for b in summary["blocks"] for r in b.get("rows", []) for c in r])
+
+
 class PvModel3dFormatTests(unittest.TestCase):
-    def test_the_person_chooses_the_dxf_the_freecad_macro_or_both(self):
+    def test_the_3d_model_is_the_dxf_and_freecad_is_disabled_but_kept(self):
         from disciplines.electrical_lv.stages import pv_drawings
-        self.assertEqual(pv_drawings.model3d_formats(None), (True, True))
+        self.assertEqual(pv_drawings.model3d_formats(None), (True, False))
         self.assertEqual(pv_drawings.model3d_formats({"model3d_format": "dxf"}), (True, False))
-        self.assertEqual(pv_drawings.model3d_formats({"model3d_format": "freecad"}), (False, True))
+        for fmt in ("freecad", "both"):
+            with self.assertRaises(ValueError) as caught:
+                pv_drawings.model3d_formats({"model3d_format": fmt})
+            self.assertIn("SolidCraft", str(caught.exception))
+        pv_drawings.FREECAD_ENABLED = True                                                 # the macro writer is still there: switching the constant brings it back
+        try:
+            self.assertEqual(pv_drawings.model3d_formats({"model3d_format": "both"}), (True, True))
+            self.assertEqual(pv_drawings.model3d_formats({"model3d_format": "freecad"}), (False, True))
+        finally:
+            pv_drawings.FREECAD_ENABLED = False
         with self.assertRaises(ValueError):
             pv_drawings.model3d_formats({"model3d_format": "step"})
 

@@ -724,11 +724,11 @@ class RenderedDocumentsTests(unittest.TestCase):
         self.assertTrue(res["ok"], res)
         self.assertEqual(res["data"]["run"]["summary"]["by_status"], {"ok": 12})
         for name in ("calculation_memo.pdf", "calculation_memo.docx", "cable_list.pdf", "specification.docx", "short_circuit_study.pdf"):
-            self.assertIn(name, files)
+            self.assertIn(f"API-1_{name}", files)                       # own file names: the project code in front, never the engine's name alone (PV-16)
         self.assertTrue([f for f in files if f.endswith("_tables.xlsx")])
         rendered = res["data"]["run"]["results"][10]["outputs"]["rendered"]
         self.assertEqual(rendered["not_rendered"], [])                  # the terminal list, BOQ, datasheets, RFQ and lighting study have files too (SIM-19)
-        self.assertIn("terminal_block_list.pdf", files)
+        self.assertIn("API-1_terminal_block_list.pdf", files)
 
     def test_the_formats_can_be_chosen_and_a_wrong_one_blocks(self):
         res, files = self.run_api(documents={"formats": ["pdf"]})

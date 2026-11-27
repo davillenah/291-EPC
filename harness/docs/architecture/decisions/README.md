@@ -46,3 +46,4 @@ Format: `ADR-NNNN-title.md` with Status, Context, Decision, Consequences. A deci
 | [0040](ADR-0040-single-entry-points-for-drawing-engines.md) | One public entry point for the MLD, the plan, the architecture reader and the PV drawings, with a typed input and the same bytes | Accepted (owner, standing authorization 2026-11-23) |
 | [0041](ADR-0041-functional-and-control-schemes.md) | Functional and control schemes drawn from the relational model: a view of it, one drawing function, a ladder layout, symbols from the one symbol engine | Proposed |
 | [0042](ADR-0042-one-drawing-engine-called-and-parallel.md) | One drawing engine, called as a function (no self-sourced input, bytes returned) and safe to run in parallel | Accepted |
+| [0043](ADR-0043-one-report-engine-called-and-parallel.md) | One report engine, called as a function (bytes returned, text as data) and safe to run in parallel; the calculation engines only calculate | Proposed |

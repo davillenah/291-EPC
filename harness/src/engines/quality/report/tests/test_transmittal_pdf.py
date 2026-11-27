@@ -11,7 +11,7 @@ DATA = {"title": "TRANSMITTAL", "subtitle": "TR-002", "header": [["Proyecto", "N
 
 class TestTransmittalPdf(unittest.TestCase):
     def render(self, data):
-        from epc_drawing.export.transmittal_pdf import render
+        from epc_report.core.transmittal_pdf import render
         out = Path(self.tmp.name) / "t.pdf"
         render(data, out)
         import pypdfium2 as pdfium

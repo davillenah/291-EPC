@@ -152,11 +152,17 @@ def _documents(context):
             for d in docs]
 
 
+def own_file_name(project_code, name):
+    """The file name with the project code in front (own nomenclature, PV-16): the engine's name for a document is never the name of the delivered file. It is kept as it is when it already starts with the code or no code is known; a project code of the full form is named by `apply_names` instead."""
+    return name if not project_code or name.startswith(project_code) else f"{project_code}_{name}"
+
+
 def _rendered(context):
     """The files of the documents that stage 11 rendered (PDF, Word, workbook): named `<document>_<format>`, copied from `<work_dir>/documents/`."""
     res = _ok(context, DOCUMENTS)
     files = ((res.outputs.get("rendered") or {}).get("files") or []) if res is not None else []
-    return [in_folder({"name": f["name"], "title": f"Document file {f['path']}", "path": Path(f["path"]).name, "code": None, "file": Path(context.work_dir or "") / f["path"],
+    code = (context.profile or {}).get("project_code") or ""
+    return [in_folder({"name": f["name"], "title": f"Document file {f['path']}", "path": own_file_name(code, Path(f["path"]).name), "code": None, "file": Path(context.work_dir or "") / f["path"],
                        "recorded": f["sha256"], "source": f["path"]}, document_folder(Path(f["path"]).suffix)) for f in files]
 
 

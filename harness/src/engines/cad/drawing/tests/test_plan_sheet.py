@@ -56,6 +56,16 @@ class TestPlanSheet(unittest.TestCase):
             sheet_layers = {e.dxf.layer for e in ezdxf.readfile(str(out)).modelspace() if e.dxf.layer != "PLAN-ILU"}
             self.assertTrue(sheet_layers)                                                 # the frame and the title block are there too
 
+    def test_a_layer_keeps_its_transparency_on_the_sheet(self):
+        with tempfile.TemporaryDirectory() as d:
+            plan, out = Path(d) / "plan.dxf", Path(d) / "out.dxf"
+            _plan(plan, 30.0, 20.0)
+            doc = ezdxf.readfile(str(plan))
+            doc.layers.get("PLAN-ILU").transparency = 0.8
+            doc.saveas(plan)
+            plan_sheet.compose(plan, REQUEST, out, "A1", 100, "PLAN_L1")
+            self.assertAlmostEqual(ezdxf.readfile(str(out)).layers.get("PLAN-ILU").transparency, 0.8, delta=0.02)
+
     def test_a_plan_too_big_for_the_scale_asked_takes_a_smaller_one_and_a_bad_format_is_refused(self):
         with tempfile.TemporaryDirectory() as d:
             plan, out = Path(d) / "plan.dxf", Path(d) / "out.dxf"

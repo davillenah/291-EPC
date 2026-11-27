@@ -61,6 +61,12 @@ class TestInverters(unittest.TestCase):
         rec = catalog.pick_inverter(500, 560, 1.2, module=module)
         self.assertIn(rec["id"], {r["id"] for r in catalog.inverters()})
 
+    def test_the_pick_never_takes_an_input_that_cannot_carry_one_string(self):
+        module = {"pmax_w": 720, "voc_v": 49.5, "vmp_v": 41.5, "isc_a": 18.5, "imp_a": 17.3, "beta_voc_pct_c": -0.25, "gamma_pmax_pct_c": -0.29}
+        for n in (8, 48, 500):
+            rec = catalog.pick_inverter(n, 720, 1.2, module=module)
+            self.assertGreaterEqual(rec["inverter"]["i_max_input_a"], module["imp_a"])
+
 
 class TestMore(unittest.TestCase):
     def test_accessories_and_missing_ids(self):

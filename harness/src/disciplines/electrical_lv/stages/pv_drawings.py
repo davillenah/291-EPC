@@ -109,13 +109,17 @@ def model3d_plan(modules):
 
 
 MODEL3D_FORMATS = ("both", "dxf", "freecad")
+FREECAD_ENABLED = False      # owner decision (2026-11-27): FreeCAD is disabled, not removed; the editable 3D model goes through the SolidCraft MCP. Switch to True to write the macro again.
 
 
 def model3d_formats(given):
-    """(write the DXF, write the FreeCAD macro) from `engine_inputs["drawings"]["model3d_format"]` (`both` when not given)."""
-    fmt = (given or {}).get("model3d_format") or "both"
+    """(write the DXF, write the FreeCAD macro) from `engine_inputs["drawings"]["model3d_format"]` (`dxf` when not given; FreeCAD is disabled, see `FREECAD_ENABLED`)."""
+    fmt = (given or {}).get("model3d_format") or "dxf"
     if fmt not in MODEL3D_FORMATS:
         raise ValueError(f"engine_inputs.drawings.model3d_format: {fmt!r} is not one of {', '.join(MODEL3D_FORMATS)}")
+    if fmt != "dxf" and not FREECAD_ENABLED:
+        raise ValueError(f"engine_inputs.drawings.model3d_format: {fmt!r} needs FreeCAD, which is disabled; use 'dxf' (the editable 3D model goes through the SolidCraft MCP) / "
+                         f"engine_inputs.drawings.model3d_format: {fmt!r} necesita FreeCAD, que está deshabilitado; use 'dxf' (el modelo 3D editable va por el MCP de SolidCraft)")
     return fmt in ("both", "dxf"), fmt in ("both", "freecad")
 
 

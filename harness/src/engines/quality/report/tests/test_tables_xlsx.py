@@ -6,7 +6,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
-from epc_drawing.export import tables_xlsx   # noqa: E402
+from epc_report.core import tables_xlsx   # noqa: E402
 
 
 class SheetNames(unittest.TestCase):
