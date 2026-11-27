@@ -355,8 +355,9 @@ class PvInverterCountTests(unittest.TestCase):
         section = {"document": {"arrays": [{"id": "A1", "inverter": inverter, "n_modules": 100}]}}
         first = {"arrays": [{"inverters": 90, "dc_kwp": 10800.0, "strings": {"strings": 672, "strings_per_mppt": 2, "strings_per_mppt_limit": 1}}], "warnings": []}
         ran = {"arrays": [], "warnings": []}
-        real, pv_stage._run = pv_stage._run, lambda sec: ran
-        self.addCleanup(setattr, pv_stage, "_run", real)
+        from epc_pv import feasibility
+        real, feasibility._rerun = feasibility._rerun, lambda sec: ran                  # the calculation now lives in the engine
+        self.addCleanup(setattr, feasibility, "_rerun", real)
         _, out = pv_stage._add_inverters_for_current(section, first)
         raised = [w for w in out["warnings"] if w["code"] == "inverters_raised"]
         self.assertEqual(len(raised), 1)
