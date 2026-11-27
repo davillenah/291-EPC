@@ -143,7 +143,45 @@ def _model3d(context, target, name, stamp_date, calls):
         from epc_drawing import pv_freecad
         calls.append(EC.record_for("cad/drawing", "epc_drawing.pv_freecad.write"))
         out["pv_model_3d_freecad"] = pv_freecad.write(copy.deepcopy(found[0]), found[1], folder, f"{name}", stamp_date, parts=parts)["macro"].name
+    out.update(_solidcraft_model(found, folder, name, stamp_date, parts, calls))
     return dict(out, **(_dxf_model(found, folder, name, stamp_date, parts, modules, calls) if want_dxf else {}))
+
+
+SOLIDCRAFT_MISSING = {"en": "SolidCraft is not installed here, so the editable 3D model (.sc and .step) was not made: run `solidcraft-cli {arguments}` in the 3D folder where it is installed.",
+                      "es": "SolidCraft no está instalado aquí, por lo que no se hizo el modelo 3D editable (.sc y .step): ejecutar `solidcraft-cli {arguments}` en la carpeta 3D donde esté instalado."}
+SOLIDCRAFT_FAILED = {"en": "SolidCraft stopped at a step of the script ({detail}); the script is kept so it can be run again.", "es": "SolidCraft se detuvo en un paso del guion ({detail}); el guion se conserva para ejecutarlo de nuevo."}
+
+
+def solidcraft_cli():
+    """The `solidcraft-cli` program: `EPC_SOLIDCRAFT_CLI` when set, else the one on the path, else None (the harness never installs it)."""
+    import os
+    import shutil
+    return os.environ.get("EPC_SOLIDCRAFT_CLI") or shutil.which("solidcraft-cli") or shutil.which("solidcraft-cli.exe")
+
+
+def _run_solidcraft(cli, script, folder, name):
+    """Runs the script (the stage is the one that starts a process, never the engine); returns (stderr tail or None when it worked)."""
+    import subprocess
+    from epc_drawing import pv_solidcraft as solidcraft
+    done = subprocess.run([cli] + solidcraft.run_arguments(script.name, name), cwd=str(folder), capture_output=True, text=True, timeout=1800)
+    return None if done.returncode == 0 else (done.stdout + done.stderr)[-300:].strip()
+
+
+def _solidcraft_model(found, folder, name, stamp_date, parts, calls):
+    """The editable 3D model through SolidCraft (owner rule, 2026-11-27): the script always, `.sc` and `.step` when `solidcraft-cli` is available; a note in English and Spanish when it is not."""
+    from disciplines.electrical_lv.stages import engine_calls as EC
+    from epc_drawing import pv_solidcraft as solidcraft
+    calls.append(EC.record_for("cad/drawing", "epc_drawing.pv_solidcraft.write"))
+    done = solidcraft.write(copy.deepcopy(found[0]), found[1], folder, f"{name}", stamp_date, parts=parts)
+    out = {"pv_model_3d_solidcraft": done["script"].name, "pv_model_3d_materials": done["materials"]}
+    cli = solidcraft_cli()
+    arguments = " ".join(solidcraft.run_arguments(done["script"].name, name))
+    if cli is None:
+        return dict(out, pv_model_3d_solidcraft_note={k: v.format(arguments=arguments) for k, v in SOLIDCRAFT_MISSING.items()})
+    failed = _run_solidcraft(cli, done["script"], folder, name)
+    if failed:
+        return dict(out, pv_model_3d_solidcraft_note={k: v.format(detail=failed) for k, v in SOLIDCRAFT_FAILED.items()})
+    return dict(out, pv_model_3d_sc=f"{name}_pv_model_3d.sc", pv_model_3d_step=f"{name}_pv_model_3d.step")
 
 
 def _dxf_model(found, folder, name, stamp_date, parts, modules, calls):

@@ -4,6 +4,7 @@ All notable changes. Format: Keep a Changelog; versions follow `harness/docs/BRA
 
 
 ### Unreleased (one drawing engine)
+- PV 3D model through SolidCraft (2026-11-27, owner, BACKLOG PVX-19): `epc_drawing.pv_solidcraft` returns the SolidCraft script of the plant as bytes (each distinct module, table, inverter, ground and station once as a component, the plant as `occurrence.copy` instances, the material of each part from the datasheet mass of its record, `pending review` where the record gives none); the PV run writes `<name>_pv_model_3d_solidcraft.json` and, when `solidcraft-cli` is found (`EPC_SOLIDCRAFT_CLI` or the path), runs it to make `.sc` and `.step`; otherwise a note in English and Spanish gives the command. Not yet run against the real program.
 - PV reports with figures (2026-11-27, owner): the irradiation disk and the shading abacus are drawn inside the PV calculation memorandum and the PV descriptive report (PDF and Word) from `result.charts` (`epc_report.pv.figures`); a long figure caption wraps in the PDF.
 - FreeCAD disabled, not removed (2026-11-27, owner): the PV 3D model defaults to the DXF, `model3d_format` `freecad` or `both` is refused with a message in English and Spanish, the skill is marked disabled; the editable 3D model will go through the SolidCraft MCP (BACKLOG PVX-19).
 - PV-18 (2026-11-27, owner): the layer `291-WP-DISK-GRID` keeps its 80 % transparency on the IRAM sheet of the irradiation disk (the sheet composition dropped it).
