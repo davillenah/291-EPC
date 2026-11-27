@@ -224,19 +224,25 @@ def _bad_value(name, value, rule_en, rule_es):
     return f"{name} must be {rule_en} (got {value!r}) / {name} debe ser {rule_es} (se recibió {value!r})"
 
 
+def _positive(name, value, rule_en="a number greater than 0", rule_es="un número mayor que 0"):
+    """The message for a value that is not a number greater than 0, else None."""
+    return None if _is_number(value) and value > 0 else _bad_value(name, value, rule_en, rule_es)
+
+
+def _numbers_to_check(array):
+    """(name, value) of each array number that must be greater than 0."""
+    name, module = f"array {array.get('id', '?')}", array.get("module")
+    own = isinstance(module, dict) and not module.get("auto")
+    return [(f"{name} module.{k}", module[k]) for k in MODULE_NUMBERS if own and k in module] + [(f"{name} {k}", array[k]) for k in ("dc_ac_ratio", "n_inverters") if k in array]
+
+
 def _template_errors(array):
-    """The problems of one array template before any pick divides by its numbers: module data, `dc_ac_ratio`, `n_modules`."""
-    name, out = f"array {array.get('id', '?')}", []
-    module = array.get("module")
-    for key in MODULE_NUMBERS if isinstance(module, dict) and not module.get("auto") else ():
-        if key in module and not (_is_number(module[key]) and module[key] > 0):
-            out.append(_bad_value(f"{name} module.{key}", module[key], "a number greater than 0", "un número mayor que 0"))
-    for key in ("dc_ac_ratio", "n_inverters"):
-        if key in array and not (_is_number(array[key]) and array[key] > 0):
-            out.append(_bad_value(f"{name} {key}", array[key], "a number greater than 0", "un número mayor que 0"))
-    if "n_modules" in array and not (_is_number(array["n_modules"]) and array["n_modules"] > 0 and float(array["n_modules"]).is_integer()):
-        out.append(_bad_value(f"{name} n_modules", array["n_modules"], "a whole number greater than 0", "un número entero mayor que 0"))
-    return out
+    """The problems of one array template before any pick divides by its numbers: module data, `dc_ac_ratio`, `n_inverters`, `n_modules`."""
+    out = [_positive(n, v) for n, v in _numbers_to_check(array)]
+    count = array.get("n_modules")
+    if "n_modules" in array and not (_is_number(count) and count > 0 and float(count).is_integer()):
+        out.append(_bad_value(f"array {array.get('id', '?')} n_modules", count, "a whole number greater than 0", "un número entero mayor que 0"))
+    return [m for m in out if m]
 
 
 def _economics_errors(economics):
@@ -245,13 +251,15 @@ def _economics_errors(economics):
         return []
     if not isinstance(economics, dict):
         return ["economics must be an object / economics debe ser un objeto"]
-    out = []
-    for key in ("energy_price", "investment"):
-        if key in economics and economics[key] is not None and not (_is_number(economics[key]) and economics[key] > 0):
-            out.append(_bad_value(f"economics.{key}", economics[key], "a number greater than 0", "un número mayor que 0"))
+    out = [_positive(f"economics.{k}", economics[k]) for k in ("energy_price", "investment") if economics.get(k) is not None]
     if "energy_price" not in economics:
         out.append("economics.energy_price is required / economics.energy_price es obligatorio")
-    return out
+    return [m for m in out if m]
+
+
+def _asked_modules(section):
+    """The modules each array template asked for, by id."""
+    return {str(a["id"]): a["n_modules"] for a in _templates(section) if "id" in a and "n_modules" in a}
 
 
 def _rounded_notes(asked, result):
@@ -261,12 +269,21 @@ def _rounded_notes(asked, result):
             for a in result["arrays"] if str(a["id"]) in asked and int(asked[str(a["id"])]) != a["modules"]]
 
 
+def _all_ids(section):
+    """The ids of the array templates and of the roof planes."""
+    planes = [p for p in (section.get("roof") or {}).get("planes") or [] if isinstance(p, dict)]
+    return [str(x["id"]) for x in _templates(section) + planes if "id" in x]
+
+
+def _duplicate_ids(section):
+    """A message per id used twice among the arrays and the roof planes."""
+    ids = _all_ids(section)
+    return [f"the id {d!r} is used twice (arrays and roof planes need their own id) / el id {d!r} se usa dos veces (arreglos y planos de techo necesitan un id propio)" for d in sorted({i for i in ids if ids.count(i) > 1})]
+
+
 def check_templates(section):
     """Raises StageInputError (English and Spanish) for an array template with a value that is not a number or not in range, and for two arrays or roof planes with the same id."""
-    errors = [e for a in _templates(section) for e in _template_errors(a)] + _economics_errors(section.get("economics"))
-    ids = [str(a["id"]) for a in _templates(section) if "id" in a] + [str(p["id"]) for p in (section.get("roof") or {}).get("planes") or [] if isinstance(p, dict) and "id" in p]
-    for dup in sorted({i for i in ids if ids.count(i) > 1}):
-        errors.append(f"the id {dup!r} is used twice (arrays and roof planes need their own id) / el id {dup!r} se usa dos veces (arreglos y planos de techo necesitan un id propio)")
+    errors = [e for a in _templates(section) for e in _template_errors(a)] + _economics_errors(section.get("economics")) + _duplicate_ids(section)
     if errors:
         raise StageInputError(errors)
 
@@ -573,7 +590,7 @@ class PvStage(Stage):
             return self.result("not_available", message=NOT_PROVIDED, reason="no_pv_inputs")
         found = self._prepare(context)
         section, _, flat, roof, _, _ = found
-        asked = {str(a["id"]): a["n_modules"] for a in _templates(section) if isinstance(a, dict) and "id" in a and "n_modules" in a}
+        asked = _asked_modules(section)
         result = _run(section)
         section, result = _add_inverters_for_current(section, result)
         if flat is not None:

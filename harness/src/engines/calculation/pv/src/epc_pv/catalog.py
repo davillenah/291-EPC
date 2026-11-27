@@ -32,39 +32,46 @@ def with_isc(record: Dict[str, Any], given: Any = None) -> Dict[str, Any]:
     return block
 
 
+def _design_temperatures(t_min_c, t_cell_max_c):
+    """The design temperatures, or the STC ones (25 C, a necessary condition only) when they are not given."""
+    return (25.0, 25.0) if t_min_c is None or t_cell_max_c is None else (t_min_c, t_cell_max_c)
+
+
+def _candidates(module: Dict[str, Any], cold: float, hot: float) -> list:
+    """The catalog records that admit a string of the module and whose inputs carry at least one string (else all of them)."""
+    from epc_pv.strings import series_range
+    pool = inverters()
+    fits = [r for r in pool if (lambda g: g["s_min"] <= g["s_max"])(series_range(module, r["inverter"], cold, hot))]
+    pool = fits or pool
+    carries = [r for r in pool if int(r["inverter"]["i_max_input_a"] // float(module["imp_a"])) >= 1]      # an input that admits no string of the module is never picked
+    return carries or pool
+
+
+def _count(rec: Dict[str, Any], n_modules: int, dc_w: float, dc_ac_ratio: float, module, cold: float, hot: float) -> int:
+    """The inverters this record would really need: the ratio count, raised when the strings of the array overload its MPPT inputs (the rule `feasibility.add_inverters_for_current` applies later)."""
+    by_ratio = max(1, half_up(dc_w / (dc_ac_ratio * float(rec["inverter"]["pac0_w"]))))
+    if module is None:
+        return by_ratio
+    from epc_pv import config, strings
+    try:
+        lay = strings.layout({"id": "pick", "n_modules": n_modules, "module": module, "inverter": rec["inverter"], "n_inverters": by_ratio}, cold, hot, config.params()["strings"])
+    except PvError:
+        return by_ratio
+    limit = lay["strings_per_mppt_limit"]
+    if lay["strings_per_mppt"] > limit > 0:
+        return max(by_ratio, -(-lay["strings"] // (int(rec["inverter"]["n_mppt"]) * limit)))
+    return by_ratio
+
+
 def pick_inverter(n_modules: int, pmax_w: float, dc_ac_ratio: float, module: Dict[str, Any] = None, t_min_c: float = None, t_cell_max_c: float = None) -> Dict[str, Any]:
     """The catalog record whose count (as `strings.inverter_count` would give it) is closest to `dc_ac_ratio` (to two decimals); fewest units on a tie.
     With the `module` block (and the design temperatures, else the STC voltages), only inverters that admit a string of that module are candidates (`strings.series_range`)."""
     dc_w = n_modules * pmax_w
-    pool = inverters()
-    if module is not None:
-        from epc_pv.strings import series_range
-        cold, hot = (25.0, 25.0) if t_min_c is None or t_cell_max_c is None else (t_min_c, t_cell_max_c)      # without the design temperatures: the STC voltages (a necessary condition only)
-        fits = [r for r in pool if (lambda g: g["s_min"] <= g["s_max"])(series_range(module, r["inverter"], cold, hot))]
-        pool = fits or pool
-        carries = [r for r in pool if int(r["inverter"]["i_max_input_a"] // float(module["imp_a"])) >= 1]      # an input that admits no string of the module is never picked
-        pool = carries or pool
-
-    cold, hot = (25.0, 25.0) if t_min_c is None or t_cell_max_c is None else (t_min_c, t_cell_max_c)
-
-    def count(rec: Dict[str, Any]) -> int:
-        """The inverters this record would really need: the ratio count, raised when the strings of the array overload its MPPT inputs (the rule `feasibility.add_inverters_for_current` applies later)."""
-        pac = float(rec["inverter"]["pac0_w"])
-        by_ratio = max(1, half_up(dc_w / (dc_ac_ratio * pac)))
-        if module is None:
-            return by_ratio
-        from epc_pv import config, strings
-        try:
-            lay = strings.layout({"id": "pick", "n_modules": n_modules, "module": module, "inverter": rec["inverter"], "n_inverters": by_ratio}, cold, hot, config.params()["strings"])
-        except PvError:
-            return by_ratio
-        limit = lay["strings_per_mppt_limit"]
-        if lay["strings_per_mppt"] > limit > 0:
-            return max(by_ratio, -(-lay["strings"] // (int(rec["inverter"]["n_mppt"]) * limit)))
-        return by_ratio
+    cold, hot = _design_temperatures(t_min_c, t_cell_max_c)
+    pool = inverters() if module is None else _candidates(module, cold, hot)
 
     def score(rec: Dict[str, Any]):
-        pac, n = float(rec["inverter"]["pac0_w"]), count(rec)
+        pac, n = float(rec["inverter"]["pac0_w"]), _count(rec, n_modules, dc_w, dc_ac_ratio, module, cold, hot)
         return (round(abs(dc_w / (n * pac) - dc_ac_ratio), 2), n, pac)
 
     return min(pool, key=score)

@@ -216,14 +216,16 @@ def _foundation_warnings(found: Optional[Dict[str, Any]]) -> List[Dict[str, str]
     return [item("foundation_depth_not_found", structure=found["structure_id"])] if found["kind"] == "embedded" else []
 
 
+def _layout_notes(document, left_out, tight) -> List[Dict[str, str]]:
+    """The notes of the layout: a tracker drawn as fixed tables, tables left out, inverters that do not fit between the rows."""
+    out = [item("tracker_drawn_fixed", array=a["id"]) for a in document["arrays"] if a.get("tracker")]
+    out += [item("layout_no_fit", n=left_out)] if left_out else []
+    return out + ([item("layout_pad_tight", n=tight)] if tight else [])
+
+
 def _result(document, layout, size, frame, altitude, tables, inverters, left_out, tight) -> Dict[str, Any]:
     found = _structure(layout)
-    warnings = _foundation_warnings(found)
-    warnings += [item("tracker_drawn_fixed", array=a["id"]) for a in document["arrays"] if a.get("tracker")]
-    if left_out:
-        warnings.append(item("layout_no_fit", n=left_out))
-    if tight:
-        warnings.append(item("layout_pad_tight", n=tight))
+    warnings = _foundation_warnings(found) + _layout_notes(document, left_out, tight)
     site, st = layout["site"], layout["station"]
     s = float(site["setback_m"])
     station = {"x": s, "y": s, "width_m": float(st["width_m"]), "depth_m": float(st["depth_m"])}
