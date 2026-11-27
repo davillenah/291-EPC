@@ -4,7 +4,7 @@ What no engine gives yet (cables, protections, earthing) is written 'not availab
 from epc_report.core.blocks import table
 from epc_report.core.numbers import localize
 from epc_report.pv.calc_memo import count_states
-from epc_report.pv.texts import tr
+from epc_report.pv.texts import string_word, tr
 
 MAX_OBSERVATIONS = 3
 
@@ -36,7 +36,7 @@ def _rows(lang, d, inputs, problem):
             [tr(lang, "solution"), tr(lang, "plant", kwp=totals["dc_kwp"], kw=totals["ac_kw"])],
             [tr(lang, "location"), _location(inputs.get("site") or {}, na)],
             [tr(lang, "modules"), f"{sum(x['modules'] for x in result['arrays'])} × {module.get('model', na)} ({module.get('pmax_w', na)} Wp)"],
-            [tr(lang, "strings"), tr(lang, "strings_line", strings=strings["strings"], n_series=strings["n_series"], mppt=strings["strings_per_mppt"], limit=strings["strings_per_mppt_limit"])],
+            [tr(lang, "strings"), tr(lang, "strings_line", strings=strings["strings"], n_series=strings["n_series"], mppt=strings["strings_per_mppt"], limit=strings["strings_per_mppt_limit"], w_strings=string_word(strings["strings"]), w_mppt=string_word(strings["strings_per_mppt"]))],
             [tr(lang, "inverters"), f"{sum(x['inverters'] for x in result['arrays'])} × {inverter.get('model', na)} ({a['inverter_ac_kw']} kW); {tr(lang, 'c_ratio')} {a['dc_ac_ratio']}"],
             [tr(lang, "dc_cable"), na], [tr(lang, "ac_cable"), na], [tr(lang, "protections"), na], [tr(lang, "earthing"), na],
             [tr(lang, "energy"), tr(lang, "energy_line", kwh=totals["ac_kwh"], yield_=totals["specific_yield_kwh_kwp"])],

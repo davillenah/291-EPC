@@ -7,6 +7,8 @@ import re
 
 DECIMALS = 2
 SEPARATORS = {"en": (",", "."), "es": (".", ",")}       # (thousands, decimal)
+_SCIENTIFIC = re.compile(r"(?<![\w.])-?\d+(?:\.\d+)?e[+-]?\d+(?![\w.])", re.I)
+_NEGATIVE_ZERO = re.compile(r"(?<![\w.])-(0(?:\.0+)?)(?![\w.]|\d)")
 _NUMBER = re.compile(r"\d{4}-\d{2}-\d{2}|(?<![\w.,])(\d+)(?:\.(\d+))?(?![\w]|\.\d)")
 
 
@@ -25,9 +27,15 @@ def _write(match, lang):
     return text + (decimal + frac if frac is not None else "")
 
 
+def _plain(value):
+    """Python's `1.1e+18` written out and `-0.0` written as `0`: a reader never sees the exponent notation or a negative zero."""
+    value = _SCIENTIFIC.sub(lambda m: f"{float(m.group(0)):.{DECIMALS}f}", value)
+    return _NEGATIVE_ZERO.sub(lambda m: m.group(1), value)
+
+
 def text(value, lang):
     """One string with its numbers written for `lang`."""
-    return _NUMBER.sub(lambda m: _write(m, lang), value)
+    return _NUMBER.sub(lambda m: _write(m, lang), _plain(value))
 
 
 def _walk(value, lang):
@@ -40,11 +48,20 @@ def _walk(value, lang):
     return value
 
 
+def _figure(block, lang):
+    """A figure with its caption and its text labels written for `lang`; colours, sizes and coordinates are left alone."""
+    out = dict(block)
+    if isinstance(out.get("caption"), str):
+        out["caption"] = text(out["caption"], lang)
+    out["shapes"] = [dict(s, text=text(s["text"], lang)) if isinstance(s.get("text"), str) else s for s in block.get("shapes", [])]
+    return out
+
+
 def localize(report, lang):
-    """The report with the numbers of its text written for `lang` (title, subtitle, footer and every block except figures)."""
+    """The report with the numbers of its text written for `lang` (title, subtitle, footer and every block, figure captions and labels included)."""
     out = dict(report)
     for key in ("title", "subtitle", "footer"):
         if isinstance(out.get(key), str):
             out[key] = text(out[key], lang)
-    out["blocks"] = [b if b.get("type") == "figure" else _walk(b, lang) for b in report["blocks"]]
+    out["blocks"] = [_figure(b, lang) if b.get("type") == "figure" else _walk(b, lang) for b in report["blocks"]]
     return out

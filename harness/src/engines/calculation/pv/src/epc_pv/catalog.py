@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Any, Dict, List
 
 from epc_pv import equipment
+from epc_pv.model import PvError
 from epc_pv.strings import half_up
 
 AUTO = "auto"
@@ -44,9 +45,26 @@ def pick_inverter(n_modules: int, pmax_w: float, dc_ac_ratio: float, module: Dic
         carries = [r for r in pool if int(r["inverter"]["i_max_input_a"] // float(module["imp_a"])) >= 1]      # an input that admits no string of the module is never picked
         pool = carries or pool
 
-    def score(rec: Dict[str, Any]):
+    cold, hot = (25.0, 25.0) if t_min_c is None or t_cell_max_c is None else (t_min_c, t_cell_max_c)
+
+    def count(rec: Dict[str, Any]) -> int:
+        """The inverters this record would really need: the ratio count, raised when the strings of the array overload its MPPT inputs (the rule `feasibility.add_inverters_for_current` applies later)."""
         pac = float(rec["inverter"]["pac0_w"])
-        n = max(1, half_up(dc_w / (dc_ac_ratio * pac)))
+        by_ratio = max(1, half_up(dc_w / (dc_ac_ratio * pac)))
+        if module is None:
+            return by_ratio
+        from epc_pv import config, strings
+        try:
+            lay = strings.layout({"id": "pick", "n_modules": n_modules, "module": module, "inverter": rec["inverter"], "n_inverters": by_ratio}, cold, hot, config.params()["strings"])
+        except PvError:
+            return by_ratio
+        limit = lay["strings_per_mppt_limit"]
+        if lay["strings_per_mppt"] > limit > 0:
+            return max(by_ratio, -(-lay["strings"] // (int(rec["inverter"]["n_mppt"]) * limit)))
+        return by_ratio
+
+    def score(rec: Dict[str, Any]):
+        pac, n = float(rec["inverter"]["pac0_w"]), count(rec)
         return (round(abs(dc_w / (n * pac) - dc_ac_ratio), 2), n, pac)
 
     return min(pool, key=score)

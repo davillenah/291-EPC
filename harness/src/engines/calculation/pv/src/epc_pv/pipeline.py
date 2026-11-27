@@ -72,6 +72,20 @@ def _site(doc: dict) -> Dict[str, Any]:
             "horizon": shading.horizon_points(s["horizon"], "site.horizon") if "horizon" in s else None}
 
 
+WEATHER_LIMITS = {"ghi": 1500.0, "dni": 1500.0, "dhi": 1500.0, "wind_ms": 120.0}      # physical bounds of a terrestrial series (W/m2, m/s), not norm values: a value above is a data error
+TEMPERATURE_LIMITS_C = (-90.0, 60.0)
+
+
+def _plausible(key: str, values: List[float], high: float) -> None:
+    """A series with a value that is not a finite number, is negative or is above what the sun or the wind can give is refused (a data error, never silently used)."""
+    if any(v != v or v in (float("inf"), float("-inf")) for v in values):
+        raise PvError("err_range", name=f"weather.{key}", rule=bi("finite numbers", "números finitos"), value="nan")
+    if min(values) < 0:
+        raise PvError("err_range", name=f"weather.{key}", rule=">= 0", value=min(values))
+    if max(values) > high:
+        raise PvError("err_range", name=f"weather.{key}", rule=bi(f"<= {high:g}", f"<= {high:g}"), value=max(values))
+
+
 def _weather(doc: dict) -> Dict[str, Any]:
     w = _require(doc["weather"], ("start", "utc_offset_h", "step_minutes") + WEATHER_SERIES, "weather")
     try:
@@ -85,9 +99,11 @@ def _weather(doc: dict) -> Dict[str, Any]:
             raise PvError("err_length", name=k, n=len(values), expected=n)
     if n == 0:
         raise PvError("err_type", name="weather.ghi", kind=bi("a non-empty list", "una lista no vacía"))
-    for k in ("ghi", "dni", "dhi", "wind_ms"):
-        if min(series[k]) < 0:
-            raise PvError("err_range", name=f"weather.{k}", rule=">= 0", value=min(series[k]))
+    for k, high in WEATHER_LIMITS.items():
+        _plausible(k, series[k], high)
+    low, high = TEMPERATURE_LIMITS_C
+    if any(v != v or not low <= v <= high for v in series["temp_air_c"]):
+        raise PvError("err_range", name="weather.temp_air_c", rule=bi(f"between {low:g} and {high:g}", f"entre {low:g} y {high:g}"), value=max(series["temp_air_c"], key=lambda v: abs(v) if v == v else 1e9))
     return {"start": start, "offset_h": _number(w, "utc_offset_h", "weather", -14, 14), "step_min": _number(w, "step_minutes", "weather", positive=True), "n": n, **series}
 
 
@@ -279,7 +295,7 @@ def run(doc: Union[dict, str, bytes], options: Optional[Options] = None) -> Resu
     if any("beta_vmp_pct_c" not in s["module"] for s in specs):
         warnings.append(item("wind_proxy"))
     if site["t_min_c"] is None:
-        warnings.append(item("t_min_from_weather", t_min_c=round(t_min, 1)))
+        warnings.append(item("t_min_from_weather", t_min_c=round(t_min, 1) + 0.0))
     inst = _instants(site, w, p["solar_constant_w_m2"])
     arrays: List[Dict[str, Any]] = []
     for index, spec in enumerate(specs):

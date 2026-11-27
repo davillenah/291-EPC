@@ -71,12 +71,27 @@ def check(layout: Any) -> None:
     for key in ("rows", "modules_per_row"):
         _number(layout["table"], key, "layout.table")
     if layout["table"]["orientation"] not in ORIENTATIONS:
-        raise PvError("err_range", name="layout.table.orientation", rule="portrait or landscape", value=layout["table"]["orientation"])
+        raise PvError("err_range", name="layout.table.orientation", rule=bi("portrait or landscape", "portrait (vertical) o landscape (horizontal)"), value=layout["table"]["orientation"])
     dims = layout["module_dimensions_mm"]
     if not (isinstance(dims, list) and len(dims) == 2 and all(isinstance(d, (int, float)) and d > 0 for d in dims)):
         raise PvError("err_type", name="layout.module_dimensions_mm", kind=bi("[long side, short side] in mm", "[lado largo, lado corto] en mm"))
-    for key in ("module_gap_m", "table_gap_m", "road_width_m"):
-        _number(layout, key, "layout", positive=False)
+    for key in ("module_gap_m", "table_gap_m", "road_width_m", "front_clearance_m"):
+        if key in layout and layout[key] is not None:
+            _number(layout, key, "layout", positive=False)
+    _fits_site(layout)
+
+
+def _fits_site(layout: Dict[str, Any]) -> None:
+    """The station and the inverter pad must fit inside the site (its sides less the setback on both sides): a block larger than the site is a data error."""
+    site = layout["site"]
+    shorter = min(float(site["width_m"]), float(site["length_m"]))
+    if 2.0 * float(site["setback_m"]) >= shorter:
+        raise PvError("err_range", name="layout.site.setback_m", rule=bi(f"less than half of the shorter side of the site ({shorter / 2:g} m)", f"menor que la mitad del lado corto del predio ({shorter / 2:g} m)"), value=site["setback_m"])
+    usable = {"width_m": float(site["width_m"]) - 2.0 * float(site["setback_m"]), "depth_m": float(site["length_m"]) - 2.0 * float(site["setback_m"])}
+    for block in ("station", "inverter_pad"):
+        for key, room in usable.items():
+            if key in layout[block] and _number(layout[block], key, f"layout.{block}") > room:
+                raise PvError("err_range", name=f"layout.{block}.{key}", rule=bi(f"at most the usable size of the site ({room:g} m)", f"como máximo el tamaño útil del predio ({room:g} m)"), value=layout[block][key])
 
 
 def solar_altitude_deg(latitude_deg: float, longitude_deg: float) -> float:
@@ -204,6 +219,7 @@ def _foundation_warnings(found: Optional[Dict[str, Any]]) -> List[Dict[str, str]
 def _result(document, layout, size, frame, altitude, tables, inverters, left_out, tight) -> Dict[str, Any]:
     found = _structure(layout)
     warnings = _foundation_warnings(found)
+    warnings += [item("tracker_drawn_fixed", array=a["id"]) for a in document["arrays"] if a.get("tracker")]
     if left_out:
         warnings.append(item("layout_no_fit", n=left_out))
     if tight:
