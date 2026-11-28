@@ -38,6 +38,15 @@ When the owner gives the OK for a FEATURE (in that thread, in words), the owner 
 
 Unchanged by this authorization: agents never approve or change norm values, never edit golden files, and never commit `local/` or standards PDFs. If a step cannot be completed (for example a gate failure that needs a norm decision by a person), stop and report instead of forcing it.
 
+## Release schedule (owner rule, 2026-11-27)
+
+Work is done and checked locally (gate) during the day; only work branches are pushed, with no pull request, so GitHub CI does not run on every step.
+
+- **Every day at 00:00 (America/Argentina/Buenos_Aires):** open the pull request of the day's work to `dev`, wait for GitHub CI, fix any failure at its root (never weaken a test or a gate check, never touch a norm value or a golden file), merge to `dev`, and leave a short report in Spanish.
+- **Only on Mondays at 01:00:** release to `main` (release branch from `dev` in production mode, full gate, CI green, merge to `main`, sync `dev`, `main` and the local clone). A release is not made on any other day unless the owner asks for it in words.
+- If a failure cannot be fixed without the owner (a norm decision, a golden file, a change that could break something), stop, leave `main` at the last good release and report.
+- This replaces the release at the close of each thread in the sections below; the closing checks (gate, CI, clean tree, generated files, BACKLOG and CHANGELOG) still apply to each daily merge.
+
 ## Standing release authorization without asking (owner rule, 2026-11-21)
 
 The owner authorized, for every thread, committing, pushing, opening the pull request, merging to `dev`, releasing to `main` and syncing `main`, `dev` and the local clone with the remote **without asking and without reporting problems along the way**. Follow "Feature release" below for the steps.
