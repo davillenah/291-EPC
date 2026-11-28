@@ -52,10 +52,10 @@ def _shape(s: dict, at, scale: float, ops) -> None:
         ops().append(("circle", x, y, s["r"] * scale, s.get("fill"), s.get("stroke"), float(s.get("lw", 0.8))))
     elif kind == "line":
         (xa, ya), (xb, yb) = at(*s["points"][0]), at(*s["points"][1])
-        ops().append(("line", xa, ya, xb, yb, float(s.get("lw", 0.8)), s.get("stroke", "#111111")))
+        ops().append(("line", xa, ya, xb, yb, float(s.get("lw", 0.8)), s.get("stroke", "#000000")))
     elif kind == "text":
         x, y = at(s["x"], s["y"])
-        ops().append(("text", x, y, s["text"], float(s.get("size", 8)), "bold" if s.get("bold") else "normal", s.get("color", "#111111"), s.get("align", "left")))
+        ops().append(("text", x, y, s["text"], float(s.get("size", 8)), "bold" if s.get("bold") else "normal", s.get("color", "#000000"), s.get("align", "left")))
 
 
 def _logo_size(path: str, box_w: float, box_h: float):
@@ -76,19 +76,19 @@ def logo_data(logo):
 
 def cover_ops(cover: dict, rep: dict) -> list:
     """The first page of a report: the logos of the issuer and of the client, the title, the document and its data (`cover` = {"logos": [path, path], "rows": [[label, value]]})."""
-    ops = [("line", M, 120, W - M, 120, 0.8, "#c8cdd5")]
+    ops = [("line", M, 120, W - M, 120, 0.8, "#808080")]
     for k, path in enumerate((cover.get("logos") or [])[:2]):
         size = _logo_size(path, 150, 60) if path else None
         if size:
             x = M if k == 0 else W - M - size[0]
             ops.append(("image", x, 120 - 12 - size[1], size[0], size[1], path if logo_data(path) is not None else str(path)))
-    ops.append(("text", M, 300, rep.get("title", ""), 26, "bold", "#111111", "left"))
-    ops.append(("text", M, 330, rep.get("subtitle", ""), 15, "bold", "#1f4e8c", "left"))
-    ops.append(("line", M, 345, W - M, 345, 1.4, "#1f4e8c"))
+    ops.append(("text", M, 300, rep.get("title", ""), 26, "bold", "#000000", "left"))
+    ops.append(("text", M, 330, rep.get("subtitle", ""), 15, "bold", "#000000", "left"))
+    ops.append(("line", M, 345, W - M, 345, 1.4, "#000000"))
     y = 380.0
     for label, value in cover.get("rows") or []:
-        ops.append(("text", M, y, str(label), FS, "bold", "#777777", "left"))
-        ops.append(("text", M + 150, y, str(value), 11, "normal", "#111111", "left"))
+        ops.append(("text", M, y, str(label), FS, "bold", "#000000", "left"))
+        ops.append(("text", M + 150, y, str(value), 11, "normal", "#000000", "left"))
         y += 24
     return ops
 
@@ -100,10 +100,10 @@ def _first_pages(rep: dict) -> List[list]:
 
 def _footer(page: list, rep: dict, n: int, total: int, tw: float) -> None:
     """The rule, the footer text and the page label at the foot of a page; a long footer goes on two lines and never runs under the page label."""
-    page.append(("line", M, H - 44, W - M, H - 44, 0.5, "#c8cdd5"))
+    page.append(("line", M, H - 44, W - M, H - 44, 0.5, "#808080"))
     for k, line in enumerate(_wrap(rep.get("footer", ""), tw - 90, FS_SMALL)[:2]):
-        page.append(("text", M, H - 33 + k * 9, line, FS_SMALL, "normal", "#777777", "left"))
-    page.append(("text", W - M, H - 30, rep.get("page_label", "{n}/{total}").format(n=n, total=total), FS_SMALL, "normal", "#777777", "right"))
+        page.append(("text", M, H - 33 + k * 9, line, FS_SMALL, "normal", "#000000", "left"))
+    page.append(("text", W - M, H - 30, rep.get("page_label", "{n}/{total}").format(n=n, total=total), FS_SMALL, "normal", "#000000", "right"))
 
 
 def layout(rep: dict) -> List[list]:
@@ -122,10 +122,10 @@ def layout(rep: dict) -> List[list]:
             return True
         return False
 
-    ops().append(("text", M, y + 14, rep.get("title", ""), 17, "bold", "#111111", "left"))
-    ops().append(("text", W - M, y + 14, rep.get("subtitle", ""), 14, "bold", "#1f4e8c", "right"))
+    ops().append(("text", M, y + 14, rep.get("title", ""), 17, "bold", "#000000", "left"))
+    ops().append(("text", W - M, y + 14, rep.get("subtitle", ""), 14, "bold", "#000000", "right"))
     y += 26
-    ops().append(("line", M, y, W - M, y, 1.4, "#1f4e8c"))
+    ops().append(("line", M, y, W - M, y, 1.4, "#000000"))
     y += 14
 
     def _bullets(items, start):
@@ -134,9 +134,9 @@ def layout(rep: dict) -> List[list]:
         for item in items:
             lines = _wrap(item, tw - 14, FS)
             need(len(lines) * LINE)                                                   # `need` reads and resets the page position `y` that this loop advances (a local copy never saw the page fill up)
-            ops().append(("text", M + 2, y + 9, "•", FS, "normal", "#111111", "left"))
+            ops().append(("text", M + 2, y + 9, "•", FS, "normal", "#000000", "left"))
             for i, line in enumerate(lines):
-                ops().append(("text", M + 14, y + 9 + i * LINE, line, FS, "normal", "#111111", "left"))
+                ops().append(("text", M + 14, y + 9 + i * LINE, line, FS, "normal", "#000000", "left"))
             y += len(lines) * LINE
         return y + 6
 
@@ -149,7 +149,7 @@ def layout(rep: dict) -> List[list]:
         if need(height + 30 + heading):
             y = M
         if heading:
-            ops().append(("text", M, y + 17, b["title"], 11.5, "bold", "#1f4e8c", "left"))
+            ops().append(("text", M, y + 17, b["title"], 11.5, "bold", "#000000", "left"))
         top = y + heading
         at = lambda px, py: (M + (px - x0) * scale, top + (py - y0) * scale)               # noqa: E731
         ops().append(("rect", M, top, bw * scale, height, "#fbfbfd"))
@@ -157,7 +157,7 @@ def layout(rep: dict) -> List[list]:
             _shape(s, at, scale, ops)
         y = top + height + 4
         for line in _wrap(b["caption"], tw, FS_SMALL) if b.get("caption") else []:        # a long caption goes on several lines
-            ops().append(("text", M, y + 9, line, FS_SMALL, "italic", "#555555", "left"))
+            ops().append(("text", M, y + 9, line, FS_SMALL, "italic", "#000000", "left"))
             y += LINE
         return y + 8
 
@@ -165,10 +165,10 @@ def layout(rep: dict) -> List[list]:
         nonlocal y
         wrapped = [_wrap(label, max(xs[i + 1] - xs[i] - 8, 20.0), FS_SMALL) or [""] for i, (label, _) in enumerate(cols)]       # a long heading goes on several lines instead of over its neighbour
         height = max(len(lines) for lines in wrapped) * 10 + 10
-        ops().append(("rect", M, y, tw, height, "#e8edf4"))
+        ops().append(("rect", M, y, tw, height, "#d9d9d9"))
         for lines, x in zip(wrapped, xs):
             for j, line in enumerate(lines):
-                ops().append(("text", x + 4, y + 13.5 + j * 10, line, FS_SMALL, "bold", "#222222", "left"))
+                ops().append(("text", x + 4, y + 13.5 + j * 10, line, FS_SMALL, "bold", "#000000", "left"))
         y += height
 
     for b in rep.get("blocks", []):
@@ -177,20 +177,20 @@ def layout(rep: dict) -> List[list]:
             for label, value in b["rows"]:
                 lines = _wrap(value, W - M - 190, FS)
                 need(len(lines) * LINE + 4)
-                ops().append(("text", M, y + 9, label, FS_SMALL, "bold", "#666666", "left"))
+                ops().append(("text", M, y + 9, label, FS_SMALL, "bold", "#000000", "left"))
                 for i, line in enumerate(lines):
-                    ops().append(("text", 190, y + 9 + i * LINE, line, FS, "normal", "#111111", "left"))
+                    ops().append(("text", 190, y + 9 + i * LINE, line, FS, "normal", "#000000", "left"))
                 y += max(len(lines), 1) * LINE + 3
             y += 8
         elif kind == "h":
             need(60)
             y += 6
-            ops().append(("text", M, y + 11, b["text"], 11.5, "bold", "#1f4e8c", "left"))
+            ops().append(("text", M, y + 11, b["text"], 11.5, "bold", "#000000", "left"))
             y += 18
         elif kind == "p":
             for line in _wrap(b["text"], tw, FS):
                 need(LINE)
-                ops().append(("text", M, y + 9, line, FS, "normal", "#111111", "left"))
+                ops().append(("text", M, y + 9, line, FS, "normal", "#000000", "left"))
                 y += LINE
             y += 6
         elif kind == "bullets":
@@ -205,7 +205,7 @@ def layout(rep: dict) -> List[list]:
             rows = b.get("rows", [])
             if not rows:
                 need(30)
-                ops().append(("text", M, y + 9, b.get("empty", "-"), FS, "italic", "#777777", "left"))
+                ops().append(("text", M, y + 9, b.get("empty", "-"), FS, "italic", "#000000", "left"))
                 y += LINE + 8
                 continue
             need(20 + 30)
@@ -217,9 +217,9 @@ def layout(rep: dict) -> List[list]:
                     table_header(cols, xs)
                 for i, lines in enumerate(cells):
                     for j, line in enumerate(lines):
-                        ops().append(("text", xs[i] + 4, y + 13 + j * LINE, line, FS, "normal", "#111111", "left"))
+                        ops().append(("text", xs[i] + 4, y + 13 + j * LINE, line, FS, "normal", "#000000", "left"))
                 y += h
-                ops().append(("line", M, y, W - M, y, 0.5, "#c8cdd5"))
+                ops().append(("line", M, y, W - M, y, 0.5, "#808080"))
             y += 10
     total = len(pages)
     for n, p in enumerate(pages, 1):
@@ -273,6 +273,7 @@ def figure_png(b: dict, width_pt: float = 480.0):
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
+    plt.rcParams.update({"font.family": "sans-serif", "font.sans-serif": ["Arial", "Liberation Sans", "Helvetica", "DejaVu Sans"], "text.color": "#000000"})
     from matplotlib import patches
     x0, y0, x1, y1 = b["bounds"]
     bw, bh = max(x1 - x0, 1e-9), max(y1 - y0, 1e-9)
@@ -291,7 +292,7 @@ def figure_png(b: dict, width_pt: float = 480.0):
         for op in ops:
             _PAINTERS.get(op[0], _paint_rect)(ax, op, patches)
         out = io.BytesIO()
-        fig.savefig(out, format="png", dpi=200, facecolor="#fbfbfd")
+        fig.savefig(out, format="png", dpi=200, facecolor="#ffffff")
     finally:
         plt.close(fig)
     return out.getvalue(), w, h
@@ -303,6 +304,7 @@ def render_bytes(rep: dict, date=None) -> bytes:
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
+    plt.rcParams.update({"font.family": "sans-serif", "font.sans-serif": ["Arial", "Liberation Sans", "Helvetica", "DejaVu Sans"], "text.color": "#000000"})
     from matplotlib.backends.backend_pdf import PdfPages
     from matplotlib import patches
 

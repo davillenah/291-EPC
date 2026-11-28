@@ -19,15 +19,15 @@ NS = ('xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xm
 
 STYLES = f"""<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <w:styles {NS}>
-<w:docDefaults><w:rPrDefault><w:rPr><w:rFonts w:ascii="Calibri" w:hAnsi="Calibri" w:cs="Calibri"/><w:sz w:val="20"/><w:lang w:val="es-AR"/></w:rPr></w:rPrDefault><w:pPrDefault><w:pPr><w:spacing w:after="100" w:line="264" w:lineRule="auto"/></w:pPr></w:pPrDefault></w:docDefaults>
+<w:docDefaults><w:rPrDefault><w:rPr><w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial"/><w:color w:val="000000"/><w:sz w:val="20"/><w:lang w:val="es-AR"/></w:rPr></w:rPrDefault><w:pPrDefault><w:pPr><w:spacing w:after="100" w:line="264" w:lineRule="auto"/></w:pPr></w:pPrDefault></w:docDefaults>
 <w:style w:type="paragraph" w:default="1" w:styleId="Normal"><w:name w:val="Normal"/><w:qFormat/></w:style>
 <w:style w:type="paragraph" w:styleId="Title"><w:name w:val="Title"/><w:basedOn w:val="Normal"/><w:next w:val="Normal"/><w:qFormat/><w:pPr><w:spacing w:after="120"/></w:pPr><w:rPr><w:b/><w:sz w:val="44"/></w:rPr></w:style>
-<w:style w:type="paragraph" w:styleId="Subtitle"><w:name w:val="Subtitle"/><w:basedOn w:val="Normal"/><w:next w:val="Normal"/><w:qFormat/><w:rPr><w:b/><w:color w:val="1F4E8C"/><w:sz w:val="30"/></w:rPr></w:style>
-<w:style w:type="paragraph" w:styleId="Heading1"><w:name w:val="heading 1"/><w:basedOn w:val="Normal"/><w:next w:val="Normal"/><w:qFormat/><w:pPr><w:keepNext/><w:spacing w:before="280" w:after="100"/><w:outlineLvl w:val="0"/></w:pPr><w:rPr><w:b/><w:color w:val="1F4E8C"/><w:sz w:val="28"/></w:rPr></w:style>
+<w:style w:type="paragraph" w:styleId="Subtitle"><w:name w:val="Subtitle"/><w:basedOn w:val="Normal"/><w:next w:val="Normal"/><w:qFormat/><w:rPr><w:b/><w:color w:val="000000"/><w:sz w:val="30"/></w:rPr></w:style>
+<w:style w:type="paragraph" w:styleId="Heading1"><w:name w:val="heading 1"/><w:basedOn w:val="Normal"/><w:next w:val="Normal"/><w:qFormat/><w:pPr><w:keepNext/><w:spacing w:before="280" w:after="100"/><w:outlineLvl w:val="0"/></w:pPr><w:rPr><w:b/><w:color w:val="000000"/><w:sz w:val="28"/></w:rPr></w:style>
 <w:style w:type="paragraph" w:styleId="ListBullet"><w:name w:val="List Bullet"/><w:basedOn w:val="Normal"/><w:qFormat/><w:pPr><w:ind w:left="360" w:hanging="260"/></w:pPr></w:style>
-<w:style w:type="paragraph" w:styleId="Footer"><w:name w:val="footer"/><w:basedOn w:val="Normal"/><w:rPr><w:color w:val="777777"/><w:sz w:val="16"/></w:rPr></w:style>
+<w:style w:type="paragraph" w:styleId="Footer"><w:name w:val="footer"/><w:basedOn w:val="Normal"/><w:rPr><w:color w:val="000000"/><w:sz w:val="16"/></w:rPr></w:style>
 <w:style w:type="table" w:default="1" w:styleId="TableNormal"><w:name w:val="Normal Table"/><w:tblPr><w:tblInd w:w="0" w:type="dxa"/><w:tblCellMar><w:top w:w="0" w:type="dxa"/><w:left w:w="108" w:type="dxa"/><w:bottom w:w="0" w:type="dxa"/><w:right w:w="108" w:type="dxa"/></w:tblCellMar></w:tblPr></w:style>
-<w:style w:type="table" w:styleId="TableGrid"><w:name w:val="Table Grid"/><w:basedOn w:val="TableNormal"/><w:tblPr><w:tblBorders><w:top w:val="single" w:sz="4" w:space="0" w:color="C8CDD5"/><w:left w:val="single" w:sz="4" w:space="0" w:color="C8CDD5"/><w:bottom w:val="single" w:sz="4" w:space="0" w:color="C8CDD5"/><w:right w:val="single" w:sz="4" w:space="0" w:color="C8CDD5"/><w:insideH w:val="single" w:sz="4" w:space="0" w:color="C8CDD5"/><w:insideV w:val="single" w:sz="4" w:space="0" w:color="C8CDD5"/></w:tblBorders></w:tblPr></w:style>
+<w:style w:type="table" w:styleId="TableGrid"><w:name w:val="Table Grid"/><w:basedOn w:val="TableNormal"/><w:tblPr><w:tblBorders><w:top w:val="single" w:sz="4" w:space="0" w:color="808080"/><w:left w:val="single" w:sz="4" w:space="0" w:color="808080"/><w:bottom w:val="single" w:sz="4" w:space="0" w:color="808080"/><w:right w:val="single" w:sz="4" w:space="0" w:color="808080"/><w:insideH w:val="single" w:sz="4" w:space="0" w:color="808080"/><w:insideV w:val="single" w:sz="4" w:space="0" w:color="808080"/></w:tblBorders></w:tblPr></w:style>
 </w:styles>"""
 
 CONTENT_TYPES = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -55,7 +55,7 @@ def _table(columns: List[Tuple[str, float]], rows: List[list], empty: str = "") 
     total = sum(max(float(w), 0.01) for _, w in columns) or 1.0
     widths = [int(PAGE_W_TW * max(float(w), 0.01) / total) for _, w in columns]
     grid = "".join(f'<w:gridCol w:w="{w}"/>' for w in widths)
-    head = '<w:tr><w:trPr><w:tblHeader/></w:trPr>' + "".join(_cell(name, w, True, "E8EDF4") for (name, _), w in zip(columns, widths)) + "</w:tr>"
+    head = '<w:tr><w:trPr><w:tblHeader/></w:trPr>' + "".join(_cell(name, w, True, "D9D9D9") for (name, _), w in zip(columns, widths)) + "</w:tr>"
     body = "".join("<w:tr>" + "".join(_cell(str(c), w) for c, w in zip(row, widths)) + "</w:tr>" for row in rows)
     if not rows and empty:
         body = "<w:tr>" + _cell(empty, sum(widths)) + "</w:tr>"
@@ -64,7 +64,7 @@ def _table(columns: List[Tuple[str, float]], rows: List[list], empty: str = "") 
 
 def _kv(rows: List[list]) -> str:
     widths = [int(PAGE_W_TW * 0.3), int(PAGE_W_TW * 0.7)]
-    body = "".join("<w:tr>" + _cell(str(k), widths[0], True, "F3F5F8") + _cell(str(v), widths[1]) + "</w:tr>" for k, v in rows)
+    body = "".join("<w:tr>" + _cell(str(k), widths[0], True, "F2F2F2") + _cell(str(v), widths[1]) + "</w:tr>" for k, v in rows)
     return f'<w:tbl><w:tblPr><w:tblStyle w:val="TableGrid"/><w:tblW w:w="{sum(widths)}" w:type="dxa"/><w:tblLayout w:type="fixed"/></w:tblPr><w:tblGrid><w:gridCol w:w="{widths[0]}"/><w:gridCol w:w="{widths[1]}"/></w:tblGrid>{body}</w:tbl>' + _para()
 
 
