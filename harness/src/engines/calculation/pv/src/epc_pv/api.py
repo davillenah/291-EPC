@@ -5,9 +5,10 @@ from epc_pv import (
     PvError,
     Result,
     __version__,
+    check_layout,
     plan_layout,
     plan_roof,
     run,
 )  # noqa: F401
 
-__all__ = ["add_inverters_for_current", "economic_summary", "technical_summary", "Options", "PvError", "Result", "__version__", "plan_layout", "plan_roof", "run"]
+__all__ = ["add_inverters_for_current", "economic_summary", "technical_summary", "Options", "PvError", "Result", "__version__", "check_layout", "plan_layout", "plan_roof", "run"]

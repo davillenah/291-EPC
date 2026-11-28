@@ -152,7 +152,7 @@ def _plane(n: int, box: Dict[str, float], data: Dict[str, float], obstacles: Lis
     tilt, azimuth = data.get("tilt_deg"), data.get("azimuth_deg")
     for name, value, hi in (("tilt_deg", tilt, 90), ("azimuth_deg", azimuth, 360)):
         if value is not None and not 0 <= value <= hi:
-            raise PvError("err_range", name=f"dxf plane R{n}.{name}", rule=f"0 to {hi}", value=value)
+            raise PvError("err_range", name=f"dxf plane R{n}.{name}", rule=bi(f"from 0 to {hi}", f"de 0 a {hi}"), value=value)
     if azimuth is not None and int(round(azimuth)) % 360 not in MAIN_AZIMUTHS:
         raise PvError("err_dxf", detail=bi(f"plane R{n}: the azimuth {azimuth:g} is not 0, 90, 180 or 270 (the rectangle cannot say where its eave is)", f"faldón R{n}: el azimut {azimuth:g} no es 0, 90, 180 ni 270 (el rectángulo no dice dónde está su alero)"))
     to_local, width, depth = _frame(box, azimuth)

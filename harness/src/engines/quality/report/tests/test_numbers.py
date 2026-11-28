@@ -9,6 +9,13 @@ class TestNumbers(unittest.TestCase):
         self.assertEqual(numbers.text("E = 47983.544 kWh/año", "es"), "E = 47.983,54 kWh/año")
         self.assertEqual(numbers.text("R = 1.2", "es"), "R = 1,2")
 
+    def test_negative_zero_and_scientific_notation_are_written_plainly(self):
+        self.assertNotIn("e+", numbers.text("x = 1.1e+18 W", "en"))
+
+    def test_a_single_string_is_singular(self):
+        from epc_report.pv.texts import string_word
+        self.assertEqual((string_word(1), string_word(2)), ("string", "strings"))
+
     def test_codes_versions_and_dates_stay_as_written(self):
         for s in ("SIM02-PV TR-001 C-05", "v0.1.0", "2026-11-27", "PV-10"):
             self.assertEqual(numbers.text(s, "es"), s)
